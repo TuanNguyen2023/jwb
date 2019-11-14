@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/bapi/text
+END
+TextSaveBapi.java
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/bapi/text/TextSaveBapi.java
+END
+TextCreateBapi.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/bapi/text/TextCreateBapi.java
+END
+TextReadBapi.java
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/bapi/text/TextReadBapi.java
+END

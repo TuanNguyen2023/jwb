@@ -1,0 +1,26 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package com.gcs.wb.utils;
+
+/**
+ *
+ * @author gcsadmin
+ */
+public class Conversion_Exit {
+
+    public static String Conv_output_num(String input_string, int strlen){
+        if (strlen <= 0){
+            strlen = 10;
+        }
+        String val = (String) input_string;
+        //if (input_string.matches("[0-9]")){
+            while (val.length() < strlen) {
+                val = "0" + val;
+            }
+        //}
+        return val;
+    }
+}

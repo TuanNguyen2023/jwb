@@ -1,0 +1,113 @@
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/bapi/helper/structure
+END
+SLocsGetListStructure.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/bapi/helper/structure/SLocsGetListStructure.java
+END
+PoGetDetailItemStructure.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/bapi/helper/structure/PoGetDetailItemStructure.java
+END
+VendorGetDetailStructure.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/bapi/helper/structure/VendorGetDetailStructure.java
+END
+MatAvailableStructure.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/bapi/helper/structure/MatAvailableStructure.java
+END
+CustomerGetDetailStructure.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/bapi/helper/structure/CustomerGetDetailStructure.java
+END
+DoGetDetailStructure.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/bapi/helper/structure/DoGetDetailStructure.java
+END
+MvtGetDetailStructure.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/bapi/helper/structure/MvtGetDetailStructure.java
+END
+UserGetDetailAGRStructure.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/bapi/helper/structure/UserGetDetailAGRStructure.java
+END
+UserGetDetailAddrStructure.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/bapi/helper/structure/UserGetDetailAddrStructure.java
+END
+MvtReasonsGetListStructure.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/bapi/helper/structure/MvtReasonsGetListStructure.java
+END
+UnitsGetListStructure.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/bapi/helper/structure/UnitsGetListStructure.java
+END
+StoGetListStructure.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/bapi/helper/structure/StoGetListStructure.java
+END
+PlantGetDetailStructure.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/bapi/helper/structure/PlantGetDetailStructure.java
+END
+MatGetDetailStructure.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/bapi/helper/structure/MatGetDetailStructure.java
+END
+BatchStocksStructure.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/bapi/helper/structure/BatchStocksStructure.java
+END
+BOMReadStructure.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/bapi/helper/structure/BOMReadStructure.java
+END
+PoGetDetailHeaderStructure.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/bapi/helper/structure/PoGetDetailHeaderStructure.java
+END
+MatLookupStructure.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/bapi/helper/structure/MatLookupStructure.java
+END

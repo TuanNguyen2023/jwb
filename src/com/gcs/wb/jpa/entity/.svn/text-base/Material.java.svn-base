@@ -1,0 +1,107 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.gcs.wb.jpa.entity;
+
+import java.io.Serializable;
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+
+/**
+ *
+ * @author vunguyent
+ */
+@Entity
+@Table(name = "Material", catalog = "jWeighBridge", schema = "")
+@NamedQueries({
+    @NamedQuery(name = "Material.findAll", query = "SELECT m FROM Material m"),
+    @NamedQuery(name = "Material.findByMandt", query = "SELECT m FROM Material m WHERE m.materialPK.mandt = :mandt"),
+    @NamedQuery(name = "Material.findByMatnr", query = "SELECT m FROM Material m WHERE m.materialPK.matnr = :matnr"),
+    @NamedQuery(name = "Material.findByMaktx", query = "SELECT m FROM Material m WHERE m.maktx = :maktx"),
+    @NamedQuery(name = "Material.findByMaktg", query = "SELECT m FROM Material m WHERE m.maktg = :maktg"),
+    @NamedQuery(name = "Material.findByXchpf", query = "SELECT m FROM Material m WHERE m.xchpf = :xchpf")})
+public class Material implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    @EmbeddedId
+    protected MaterialPK materialPK;
+    @Column(name = "MAKTX")
+    private String maktx;
+    @Column(name = "MAKTG")
+    private String maktg;
+    @Column(name = "XCHPF")
+    private Character xchpf;
+
+    public Material() {
+    }
+
+    public Material(MaterialPK materialPK) {
+        this.materialPK = materialPK;
+    }
+
+    public Material(String mandt, String matnr) {
+        this.materialPK = new MaterialPK(mandt, matnr);
+    }
+
+    public MaterialPK getMaterialPK() {
+        return materialPK;
+    }
+
+    public void setMaterialPK(MaterialPK materialPK) {
+        this.materialPK = materialPK;
+    }
+
+    public String getMaktx() {
+        return maktx;
+    }
+
+    public void setMaktx(String maktx) {
+        this.maktx = maktx;
+    }
+
+    public String getMaktg() {
+        return maktg;
+    }
+
+    public void setMaktg(String maktg) {
+        this.maktg = maktg;
+    }
+
+    public Character getXchpf() {
+        return xchpf;
+    }
+
+    public void setXchpf(Character xchpf) {
+        this.xchpf = xchpf;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (materialPK != null ? materialPK.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+
+        if (!(object instanceof Material)) {
+            return false;
+        }
+        Material other = (Material) object;
+        if ((this.materialPK == null && other.materialPK != null) || (this.materialPK != null && !this.materialPK.equals(other.materialPK))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "com.gcs.wb.jpa.entity.Material[materialPK=" + materialPK + "]";
+    }
+}

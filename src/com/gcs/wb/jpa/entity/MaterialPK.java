@@ -1,0 +1,105 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.gcs.wb.jpa.entity;
+
+import java.io.Serializable;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+
+/**
+ *
+ * @author admin
+ */
+@Embeddable
+public class MaterialPK implements Serializable {
+    @Basic(optional = false)
+    @Column(name = "MANDT")
+    private String mandt;
+    @Basic(optional = false)
+    @Column(name = "WPLANT")
+    private String wplant;
+    @Basic(optional = false)
+    @Column(name = "MATNR")
+    private String matnr;
+
+    public MaterialPK() {
+    }
+
+    public MaterialPK(String mandt, String wplant, String matnr) {
+        this.mandt = mandt;
+        this.wplant = wplant;
+        this.matnr = matnr;
+    }
+    
+    public MaterialPK(String mandt, String wplant) {
+        this.mandt = mandt;
+        this.wplant = wplant;
+    }
+
+    public String getMandt() {
+        return mandt;
+    }
+
+    public void setMandt(String mandt) {
+        this.mandt = mandt;
+    }
+
+    public String getMatnr() {
+        return matnr;
+    }
+
+    public void setMatnr(String matnr) {
+        this.matnr = matnr;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (mandt != null ? mandt.hashCode() : 0);
+        hash += (matnr != null ? matnr.hashCode() : 0);
+        hash += (wplant != null ? wplant.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        
+        if (!(object instanceof MaterialPK)) {
+            return false;
+        }
+        MaterialPK other = (MaterialPK) object;
+        if ((this.mandt == null && other.mandt != null) || (this.mandt != null && !this.mandt.equals(other.mandt))) {
+            return false;
+        }
+        if ((this.matnr == null && other.matnr != null) || (this.matnr != null && !this.matnr.equals(other.matnr))) {
+            return false;
+        }
+        if ((this.wplant == null && other.wplant != null) || (this.wplant != null && !this.wplant.equals(other.wplant))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "com.gcs.wb.jpa.entity.MaterialPK[mandt=" + mandt + ", matnr=" + matnr + ", wplant=" + wplant + "]" ;
+    }
+
+    /**
+     * @return the wplant
+     */
+    public String getWplant() {
+        return wplant;
+    }
+
+    /**
+     * @param wplant the wplant to set
+     */
+    public void setWplant(String wplant) {
+        this.wplant = wplant;
+    }
+    
+}

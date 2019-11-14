@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/bapi/text/constants
+END
+TextSaveConstants.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/bapi/text/constants/TextSaveConstants.java
+END
+TextCreateConstants.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/bapi/text/constants/TextCreateConstants.java
+END
+TextLineConstants.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/bapi/text/constants/TextLineConstants.java
+END
+TextReadConstants.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/bapi/text/constants/TextReadConstants.java
+END

@@ -1,0 +1,770 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.gcs.wb.model;
+
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.log4j.Logger;
+
+/**
+ *
+ * @author vunguyent
+ */
+public class AppConfig {
+
+    private static final String FILE_NAME = "application.properties";
+    private PropertiesConfiguration config = null;
+    private boolean fullyConfigured = false;
+
+    @SuppressWarnings("OverridableMethodCallInConstructor")
+    public AppConfig() {
+        config = new PropertiesConfiguration();
+        config.setAutoSave(false);
+        config.setFileName(FILE_NAME);
+        try {
+            config.load();
+            getDbHost();
+            getDbName();
+            getDbUsr();
+            getDbPwd();
+
+            getsHost();
+            getsNumber();
+            getsClient();
+            getsRoute();
+            getB1Port();
+            getB1Speed();
+            getB1DBits();
+            getB1SBits();
+            getB1PC();
+            getB1Mettler();
+
+            getB2Port();
+            getB2Speed();
+            getB2DBits();
+            getB2SBits();
+            getB2PC();
+            getB1Mettler();
+
+            getwPlant();
+
+        } catch (ConfigurationException ex) {
+            try {
+                config.save();
+            } catch (ConfigurationException ex1) {
+                Logger.getLogger(this.getClass()).error(null, ex1);
+            }
+        }
+    }
+    // <editor-fold defaultstate="collapsed" desc="Keys">
+    /**
+     * Configuration Key: DB_HOST
+     */
+    public static final String DB_HOST = "DB_HOST";
+    /**
+     * Configuration Key: DB_NAME
+     */
+    public static final String DB_NAME = "DB_NAME";
+    /**
+     * Configuration Key: DB_USR
+     */
+    public static final String DB_USR = "DB_USR";
+    /**
+     * Configuration Key: DB_PWD
+     */
+    public static final String DB_PWD = "DB_PWD";
+    /**
+     * Configuration Key: SAP_HOST
+     */
+    public static final String SAP_HOST = "SAP_HOST";
+    /**
+     * Configuration Key: SAP_SN (System Number)
+     */
+    public static final String SAP_SN = "SAP_SN";
+    /**
+     * Configuration Key: SAP_RS (Route String)
+     */
+    public static final String SAP_RS = "SAP_RS";
+    /**
+     * Configuration Key: SAP_CLIENT
+     */
+    public static final String SAP_CLIENT = "SAP_CLIENT";
+    /**
+     * Configuration Key: WB1_PORT (Weigh Bridge 1: Port)
+     */
+    public static final String WB1_PORT = "WB1_PORT";
+    /**
+     * Configuration Key: WB1_BR (Weigh Bridge 1: Baud Rate | Speed)
+     */
+    public static final String WB1_BR = "WB1_BR";
+    /**
+     * Configuration Key: WB1_BR (Weigh Bridge 1: Data Bits)
+     */
+    public static final String WB1_DB = "WB1_DB";
+    /**
+     * Configuration Key: WB1_BR (Weigh Bridge 1: Stop Bits)
+     */
+    public static final String WB1_SB = "WB1_SB";
+    /**
+     * Configuration Key: WB1_BR (Weigh Bridge 1: Parity Control)
+     */
+    public static final String WB1_PC = "WB1_PC";
+    /**
+     * Configuration Key: WB1_METTLER (Weigh Bridge 1: Is Mettler scale)
+     */
+    public static final String WB1_METTLER = "WB1_METTLER";
+    /**
+     * Configuration Key: WB2_PORT (Weigh Bridge 2: Port)
+     */
+    public static final String WB2_PORT = "WB2_PORT";
+    /**
+     * Configuration Key: WB2_BR (Weigh Bridge 2: Baud Rate | Speed)
+     */
+    public static final String WB2_BR = "WB2_BR";
+    /**
+     * Configuration Key: WB2_BR (Weigh Bridge 2: Data Bits)
+     */
+    public static final String WB2_DB = "WB2_DB";
+    /**
+     * Configuration Key: WB2_BR (Weigh Bridge 2: Stop Bits)
+     */
+    public static final String WB2_SB = "WB2_SB";
+    /**
+     * Configuration Key: WB2_BR (Weigh Bridge 2: Parity Control)
+     */
+    public static final String WB2_PC = "WB2_PC";
+    /**
+     * Configuration Key: WB2_METTLER (Weigh Bridge 2: Is Mettler scale)
+     */
+    public static final String WB2_METTLER = "WB2_METTLER";
+    /**
+     * Configuration Key: WK_PLANT (Working plant)
+     */
+    public static final String WK_PLANT = "WK_PLANT";
+    /**
+     * Configuration Key: AD_USR (Administrator's User)
+     */
+    public static final String AD_USR = "AD_USR";
+    /**
+     * Configuration Key: AD_PWD (Administrator's Password)
+     */
+    public static final String AD_PWD = "AD_PWD";
+    // </editor-fold>
+    // <editor-fold defaultstate="collapsed" desc="Configuration Attributes">
+    /**
+     * DB Host String
+     */
+    private String dbHost = null;
+    /**
+     * DB Name
+     */
+    private String dbName = null;
+    /**
+     * DB login id
+     */
+    private String dbUsr = null;
+    /**
+     * DB login password
+     */
+    private String dbPwd = null;
+    /**
+     * SAP Host String
+     */
+    private String sHost = null;
+    /**
+     * SAP Route string
+     */
+    private String sRoute = null;
+    /**
+     * SAP System Number
+     */
+    private String sNumber = null;
+    /**
+     * SAP default Client
+     */
+    private String sClient = null;
+    /**
+     * Weigh Bridge 1: Port
+     */
+    private String b1Port = null;
+    /**
+     * Weigh Bridge 1: Baud rate (Speed)
+     */
+    private Integer b1Speed = null;
+    /**
+     * Weigh Bridge 1: Data bits
+     */
+    private Short b1DBits = null;
+    /**
+     * Weigh Bridge 1: Stop bits
+     */
+    private Float b1SBits = null;
+    /**
+     * Weigh Bridge 1: Parity Control
+     */
+    private Short b1PC = null;
+    /**
+     * Weigh Bridge 1: Mettler scale?
+     */
+    private Boolean b1Mettler = null;
+    /**
+     * Weigh Bridge 2: Port
+     */
+    private String b2Port = null;
+    /**
+     * Weigh Bridge 2: Baud rate (Speed)
+     */
+    private Integer b2Speed = null;
+    /**
+     * Weigh Bridge 2: Data bits
+     */
+    private Short b2DBits = null;
+    /**
+     * Weigh Bridge 2: Stop bits
+     */
+    private Float b2SBits = null;
+    /**
+     * Weigh Bridge 2: Parity Control
+     */
+    private Short b2PC = null;
+    /**
+     * Weigh Bridge 2: Mettler scale?
+     */
+    private Boolean b2Mettler = null;
+    /**
+     * Current SAP Working plant
+     */
+    private String wPlant = null;
+    /**
+     * Administrator user
+     */
+    private String adminUsr = null;
+    /**
+     * Administrator password
+     */
+    private String adminPwd = null;
+    // </editor-fold>
+    // <editor-fold defaultstate="collapsed" desc="Attribute's Getter Setter">
+
+    /**
+     * @return the fullyConfigured
+     */
+    public boolean isFullyConfigured() {
+        boolean b1Configured = !(b1Port == null || b1Speed == null || b1DBits == null || b1SBits == null || b1PC == null || b1Mettler == null);
+        boolean b2Configured = !(b2Port == null || b2Speed == null || b2DBits == null || b2SBits == null || b2PC == null || b1Mettler == null);
+        fullyConfigured = !(dbHost == null || dbName == null || dbUsr == null || dbPwd == null
+                || sHost == null || sNumber == null || sClient == null
+                || wPlant == null) && (b1Configured || b2Configured);
+        return fullyConfigured;
+    }
+
+    /**
+     * DB Host String
+     * @return the dbHost
+     */
+    public String getDbHost() {
+        dbHost = config.getString(DB_HOST, null);
+        return dbHost;
+    }
+
+    /**
+     * DB Host String
+     * @param dbHost the dbHost to set
+     */
+    public void setDbHost(String dbHost) {
+        config.setProperty(DB_HOST, dbHost);
+        this.dbHost = dbHost;
+    }
+
+    /**
+     * DB Name
+     * @return the dbName
+     */
+    public String getDbName() {
+        dbName = config.getString(DB_NAME, null);
+        return dbName;
+    }
+
+    /**
+     * DB Name
+     * @param dbName the dbName to set
+     */
+    public void setDbName(String dbName) {
+        config.setProperty(DB_NAME, dbName);
+        this.dbName = dbName;
+    }
+
+    /**
+     * DB login id
+     * @return the dbUsr
+     */
+    public String getDbUsr() {
+        dbUsr = config.getString(DB_USR, null);
+        return dbUsr;
+    }
+
+    /**
+     * DB login id
+     * @param dbUsr the dbUsr to set
+     */
+    public void setDbUsr(String dbUsr) {
+        config.setProperty(DB_USR, dbUsr);
+        this.dbUsr = dbUsr;
+    }
+
+    /**
+     * DB login password
+     * @return the dbPwd
+     */
+    public String getDbPwd() {
+        dbPwd = config.getString(DB_PWD, null);
+        return dbPwd;
+    }
+
+    /**
+     * DB login password
+     * @param dbPwd the dbPwd to set
+     */
+    public void setDbPwd(String dbPwd) {
+        config.setProperty(DB_PWD, dbPwd);
+        this.dbPwd = dbPwd;
+    }
+
+    /**
+     * SAP Host String
+     * @return the sHost
+     */
+    public String getsHost() {
+        sHost = config.getString(SAP_HOST, null);
+        return sHost;
+    }
+
+    /**
+     * SAP Host String
+     * @param sHost the sHost to set
+     */
+    public void setsHost(String sHost) {
+        config.setProperty(SAP_HOST, sHost);
+        this.sHost = sHost;
+    }
+
+    /**
+     * SAP System Number
+     * @return the sNumber
+     */
+    public String getsNumber() {
+        sNumber = config.getString(SAP_SN, null);
+        return sNumber;
+    }
+
+    /**
+     * SAP System Number
+     * @param sNumber the sNumber to set
+     */
+    public void setsNumber(String sNumber) {
+        config.setProperty(SAP_SN, sNumber);
+        this.sNumber = sNumber;
+    }
+
+    /**
+     * SAP Route string
+     * @return the sRoute
+     */
+    public String getsRoute() {
+        sRoute = config.getString(SAP_RS, null);
+        return sRoute;
+    }
+
+    /**
+     * SAP Route string
+     * @param sRoute the sRoute to set
+     */
+    public void setsRoute(String sRoute) {
+        config.setProperty(SAP_RS, sRoute);
+        this.sRoute = sRoute;
+    }
+
+    /**
+     * SAP default Client
+     * @return the sClient
+     */
+    public String getsClient() {
+        sClient = config.getString(SAP_CLIENT, null);
+        return sClient;
+    }
+
+    /**
+     * SAP default Client
+     * @param sClient the sClient to set
+     */
+    public void setsClient(String sClient) {
+        config.setProperty(SAP_CLIENT, sClient);
+        this.sClient = sClient;
+    }
+
+    /**
+     * Weigh Bridge 1: Port
+     * @return the b1Port
+     */
+    public String getB1Port() {
+        b1Port = config.getString(WB1_PORT, null);
+        return b1Port;
+    }
+
+    /**
+     * Weigh Bridge 1: Port
+     * @param b1Port the b1Port to set
+     */
+    public void setB1Port(String b1Port) {
+        config.setProperty(WB1_PORT, b1Port);
+        this.b1Port = b1Port;
+    }
+
+    /**
+     * Weigh Bridge 1: Baud rate (Speed)
+     * @return the b1Speed
+     */
+    public Integer getB1Speed() {
+        if (b1Port == null) {
+            b1Speed = null;
+        } else {
+            b1Speed = config.getInteger(WB1_BR, null);
+        }
+        return b1Speed;
+    }
+
+    /**
+     * Weigh Bridge 1: Baud rate (Speed)
+     * @param b1Speed the b1Speed to set
+     */
+    public void setB1Speed(Integer b1Speed) {
+        if (b1Port == null) {
+            b1Speed = null;
+        }
+        config.setProperty(WB1_BR, b1Speed);
+        this.b1Speed = b1Speed;
+    }
+
+    /**
+     * Weigh Bridge 1: Data bits
+     * @return the b1DBits
+     */
+    public Short getB1DBits() {
+        if (b1Port == null) {
+            b1DBits = (short) 5;
+        } else {
+            b1DBits = config.getShort(WB1_DB, null);
+        }
+        return b1DBits;
+    }
+
+    /**
+     * Weigh Bridge 1: Data bits
+     * @param b1DBits the b1DBits to set
+     */
+    public void setB1DBits(Short b1DBits) {
+        if (b1Port == null) {
+            b1DBits = (short) 5;
+        }
+        config.setProperty(WB1_DB, b1DBits);
+        this.b1DBits = b1DBits;
+    }
+
+    /**
+     * Weigh Bridge 1: Stop bits
+     * @return the b1SBits
+     */
+    public Float getB1SBits() {
+        if (b1Port == null) {
+            b1SBits = 1f;
+        } else {
+            b1SBits = config.getFloat(WB1_SB, null);
+        }
+        return b1SBits;
+    }
+
+    /**
+     * Weigh Bridge 1: Stop bits
+     * @param b1SBits the b1SBits to set
+     */
+    public void setB1SBits(Float b1SBits) {
+        if (b1Port == null) {
+            b1SBits = 1f;
+        }
+        config.setProperty(WB1_SB, b1SBits);
+        this.b1SBits = b1SBits;
+    }
+
+    /**
+     * Weigh Bridge 1: Parity Control
+     * @return the b1PC
+     */
+    public Short getB1PC() {
+        if (b1Port == null) {
+            b1PC = (short) 0;
+        } else {
+            b1PC = config.getShort(WB1_PC, null);
+        }
+        return b1PC;
+    }
+
+    /**
+     * Weigh Bridge 1: Parity Control
+     * @param b1PC the b1PC to set
+     */
+    public void setB1PC(Short b1PC) {
+        if (b1Port == null) {
+            b1PC = (short) 0;
+        }
+        config.setProperty(WB1_PC, b1PC);
+        this.b1PC = b1PC;
+    }
+
+    /**
+     * @return the b1Mettler
+     */
+    public Boolean getB1Mettler() {
+        if (b1Port == null) {
+            b1Mettler = null;
+        } else {
+            b1Mettler = config.getBoolean(WB1_METTLER, null);
+        }
+        return b1Mettler;
+    }
+
+    /**
+     * @param b1Mettler the b1Mettler to set
+     */
+    public void setB1Mettler(Boolean b1Mettler) {
+        if (b1Port == null) {
+            b1Mettler = null;
+        }
+        config.setProperty(WB1_METTLER, b1Mettler);
+        this.b1Mettler = b1Mettler;
+    }
+
+    /**
+     * Weigh Bridge 2: Port
+     * @return the b2Port
+     */
+    public String getB2Port() {
+        b2Port = config.getString(WB2_PORT, null);
+        return b2Port;
+    }
+
+    /**
+     * Weigh Bridge 2: Port
+     * @param b2Port the b2Port to set
+     */
+    public void setB2Port(String b2Port) {
+        config.setProperty(WB2_PORT, b2Port);
+        this.b2Port = b2Port;
+    }
+
+    /**
+     * Weigh Bridge 2: Baud rate (Speed)
+     * @return the b2Speed
+     */
+    public Integer getB2Speed() {
+        if (b2Port == null) {
+            b2Speed = null;
+        } else {
+            b2Speed = config.getInteger(WB2_BR, null);
+        }
+        return b2Speed;
+    }
+
+    /**
+     * Weigh Bridge 2: Baud rate (Speed)
+     * @param b2Speed the b2Speed to set
+     */
+    public void setB2Speed(Integer b2Speed) {
+        if (b2Port == null) {
+            b2Speed = null;
+        }
+        config.setProperty(WB2_BR, b2Speed);
+        this.b2Speed = b2Speed;
+    }
+
+    /**
+     * Weigh Bridge 2: Data bits
+     * @return the b2DBits
+     */
+    public Short getB2DBits() {
+        if (b2Port == null) {
+            b2DBits = (short) 5;
+        } else {
+            b2DBits = config.getShort(WB2_DB, null);
+        }
+        return b2DBits;
+    }
+
+    /**
+     * Weigh Bridge 2: Data bits
+     * @param b2DBits the b2DBits to set
+     */
+    public void setB2DBits(Short b2DBits) {
+        if (b2Port == null) {
+            b2DBits = (short) 5;
+        }
+        config.setProperty(WB2_DB, b2DBits);
+        this.b2DBits = b2DBits;
+    }
+
+    /**
+     * Weigh Bridge 2: Stop bits
+     * @return the b2SBits
+     */
+    public Float getB2SBits() {
+        if (b2Port == null) {
+            b2SBits = 1f;
+        } else {
+            b2SBits = config.getFloat(WB2_SB, null);
+        }
+        return b2SBits;
+    }
+
+    /**
+     * Weigh Bridge 2: Stop bits
+     * @param b2SBits the b2SBits to set
+     */
+    public void setB2SBits(Float b2SBits) {
+        if (b2Port == null) {
+            b2SBits = 1f;
+        }
+        config.setProperty(WB2_SB, b2SBits);
+        this.b2SBits = b2SBits;
+    }
+
+    /**
+     * Weigh Bridge 2: Parity Control
+     * @return the b2PC
+     */
+    public Short getB2PC() {
+        if (b2Port == null) {
+            b2PC = (short) 0;
+        } else {
+            b2PC = config.getShort(WB2_PC, null);
+        }
+        return b2PC;
+    }
+
+    /**
+     * Weigh Bridge 2: Parity Control
+     * @param b2PC the b2PC to set
+     */
+    public void setB2PC(Short b2PC) {
+        if (b2Port == null) {
+            b2PC = (short) 0;
+        }
+        config.setProperty(WB2_PC, b2PC);
+        this.b2PC = b2PC;
+    }
+
+    /**
+     * @return the b2Mettler
+     */
+    public Boolean getB2Mettler() {
+        if (b1Port == null) {
+            b2Mettler = null;
+        } else {
+            b2Mettler = config.getBoolean(WB2_METTLER, null);
+        }
+        return b2Mettler;
+    }
+
+    /**
+     * @param b2Mettler the b2Mettler to set
+     */
+    public void setB2Mettler(Boolean b2Mettler) {
+        if (b1Port == null) {
+            b2Mettler = null;
+        }
+        config.setProperty(WB2_METTLER, b2Mettler);
+        this.b2Mettler = b2Mettler;
+    }
+
+    /**
+     * Current SAP Working plant
+     * @return the wPlant
+     */
+    public String getwPlant() {
+        wPlant = config.getString(WK_PLANT, null);
+        return wPlant;
+    }
+
+    /**
+     * Current SAP Working plant
+     * @param wPlant the wPlant to set
+     */
+    public void setwPlant(String wPlant) {
+        config.setProperty(WK_PLANT, wPlant);
+        this.wPlant = wPlant;
+    }
+
+    /**
+     * Administrator user
+     * @return the adminUsr
+     */
+    public String getAdminUsr() {
+        adminUsr = config.getString(AD_USR, this.adminUsr);
+        return adminUsr;
+    }
+
+    /**
+     * Administrator user
+     * @param adminUsr the adminUsr to set
+     */
+    public void setAdminUsr(String adminUsr) {
+        if (adminUsr == null) {
+            adminUsr = this.adminUsr;
+        }
+        config.setProperty(AD_USR, adminUsr);
+        this.adminUsr = adminUsr;
+    }
+
+    /**
+     * Administrator password
+     * @return the adminPwd
+     */
+    public String getAdminPwd() {
+        adminPwd = config.getString(AD_PWD, null);
+        return adminPwd;
+    }
+
+    /**
+     * Administrator password
+     * @param adminPwd the adminPwd to set
+     */
+    public void setAdminPwd(String adminPwd) {
+        this.setAdminUsr(null);
+        config.setProperty(AD_PWD, adminPwd);
+        this.adminPwd = adminPwd;
+    }
+    // </editor-fold>
+
+    public void save() throws ConfigurationException {
+        try {
+            if (b1Port == null) {
+                config.setProperty(WB1_BR, null);
+                config.setProperty(WB1_DB, null);
+                config.setProperty(WB1_SB, null);
+                config.setProperty(WB1_PC, null);
+                config.setProperty(WB1_METTLER, null);
+            }
+            if (b2Port == null) {
+                config.setProperty(WB2_BR, null);
+                config.setProperty(WB2_DB, null);
+                config.setProperty(WB2_SB, null);
+                config.setProperty(WB2_PC, null);
+                config.setProperty(WB2_METTLER, null);
+            }
+            config.save();
+        } catch (ConfigurationException ex) {
+            Logger.getLogger(this.getClass()).error(null, ex);
+            throw ex;
+        }
+    }
+}

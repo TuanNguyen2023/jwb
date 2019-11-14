@@ -1,0 +1,83 @@
+10
+
+dir
+193
+http://192.168.0.251/TFC/JWB/jwb2/src/com/gcs/wb
+http://192.168.0.251/TFC/JWB
+
+
+
+2010-12-10T06:14:00.912500Z
+193
+hauld
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+0a1e9060-b316-4bd1-8b56-836609a0f872
+
+model
+dir
+
+utils
+dir
+
+WeighBridgeApp.java
+file
+
+
+
+
+2010-12-09T08:20:54.873664Z
+4efc53ff38a2b691e663c5ac333b5f98
+2010-12-10T06:05:52.756250Z
+192
+hauld
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+12057
+
+jpa
+dir
+
+resources
+dir
+
+bapi
+dir
+
+rs232
+dir
+
+views
+dir
+

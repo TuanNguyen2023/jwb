@@ -1,0 +1,56 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.gcs.wb.bapi.goodsmvt.constants;
+
+import org.hibersap.bapi.BapiConstants;
+
+/**
+ *
+ * @author Tran-Vu
+ */
+public interface GoodsMvtCreateConstants extends BapiConstants {
+
+    String BAPI_NAME = "ZBAPI_GOODSMVT_CREATE_V2";
+    // <editor-fold defaultstate="collapsed" desc="Import Parameteres">
+    String GOODSMVT_HEADER = "GOODSMVT_HEADER";
+    String GOODSMVT_CODE = "GOODSMVT_CODE";
+    // </editor-fold>
+    // <editor-fold defaultstate="collapsed" desc="Export Parameteres">
+    String MATERIALDOCUMENT = "MATERIALDOCUMENT";
+    String MATDOCUMENTYEAR = "MATDOCUMENTYEAR";
+    // </editor-fold>
+    // <editor-fold defaultstate="collapsed" desc="Table Parameteres">
+    String GOODSMVT_ITEM = "GOODSMVT_ITEM";
+    // </editor-fold>
+    // <editor-fold defaultstate="collapsed" desc="GOODSMVT_HEADER Structure">
+    String PSTNG_DATE = "PSTNG_DATE";
+    String DOC_DATE = "DOC_DATE";
+    String REF_DOC_NO = "REF_DOC_NO";
+    String REF_DOC_NO_LONG = "REF_DOC_NO_LONG";
+    /**Truck ID*/
+    String BILL_OF_LADING = "BILL_OF_LADING";
+    /**Identification Card*/
+    String GR_GI_SLIP_NO = "GR_GI_SLIP_NO";
+    /**Document Header Text*/
+    String HEADER_TXT = "HEADER_TXT";
+    // </editor-fold>
+    // <editor-fold defaultstate="collapsed" desc="GOODSMVT_CODE Structure">
+    String GM_CODE = "GM_CODE";
+    // </editor-fold>
+    // <editor-fold defaultstate="collapsed" desc="GOODSMVT_ITEM Structure">
+    String PLANT = "PLANT";
+    String STGE_LOC = "STGE_LOC";
+    String BATCH = "BATCH";
+    String MOVE_TYPE = "MOVE_TYPE";
+    String ENTRY_QNT = "ENTRY_QNT";
+    String ENTRY_UOM = "ENTRY_UOM";
+    String ENTRY_UOM_ISO = "ENTRY_UOM_ISO";
+    String GR_RCPT = "GR_RCPT";
+    String MVT_IND = "MVT_IND";
+    String NO_MORE_GR = "NO_MORE_GR";
+    String MOVE_REAS = "MOVE_REAS";
+    String ITEM_TEXT = "ITEM_TEXT";
+    // </editor-fold>
+}

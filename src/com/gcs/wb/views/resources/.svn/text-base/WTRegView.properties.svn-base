@@ -1,0 +1,47 @@
+# To change this template, choose Tools | Templates
+# and open the template in the editor.
+
+Form.title=\u0110\u0103ng t\u00e0i
+btnFind.text=Xem
+lblTo.text=\u0111\u1ebfn ng\u00e0y
+lblFrom.text=T\u1eeb ng\u00e0y
+pnFilter.border.title=B\u1ed9 l\u1ecdc theo Ng\u00e0y t\u1ea1o
+listWeightTickets.Action.shortDescription=
+listWeightTickets.Action.text=
+jXTable1.columnModel.title0=Title 1
+jXTable1.columnModel.title3=Title 4
+jXTable1.columnModel.title2=Title 3
+jXTable1.columnModel.title1=Title 2
+pnWTs.border.title=Danh s\u00e1ch phi\u1ebfu \u0111\u0103ng t\u00e0i
+tabWTs.columnModel.title3=Title 4
+tabWTs.columnModel.title2=Title 3
+tabWTs.columnModel.title1=Title 2
+tabWTs.columnModel.title0=Title 1
+btnPrint.text=In l\u1ea1i
+lblDelNum.text=S\u1ed1 D.O:
+lblUnit.text=T\u1ea5n (T)
+lblRegQty.text=Tr\u1ecdng l\u01b0\u1ee3ng:
+lblRegItem.text=Lo\u1ea1i h\u00e0ng:
+rbtOutward.text=Xu\u1ea5t (O)
+rbtInward.text=Nh\u1eadp (I)
+lblRegCat.text=\u0110\u0103ng k\u00fd:
+lblTrailerPlate.text=B.S R\u01a1mo\u00f3c:
+lblLicPlate.text=B.S Xe:
+lblCMNDBL.text=CMND/BL:
+lblDName.text=T\u00ean t\u00e0i x\u1ebf:
+btnSave.text=L\u01b0u xu\u1ed1ng
+btnClear.text=X\u00f3a
+btnNew.text=T\u1ea1o m\u1edbi
+reprintRecord.Action.shortDescription=
+reprintRecord.Action.text=
+newRecord.Action.shortDescription=
+newRecord.Action.text=
+clearForm.Action.shortDescription=
+clearForm.Action.text=
+saveRecord.Action.shortDescription=
+saveRecord.Action.text=
+entityManager.persistenceUnit=
+btnReprint.text=In l\u1ea1i
+btnPrintRpt.text=In b\u00e1o c\u00e1o
+printReport.Action.shortDescription=
+printReport.Action.text=

@@ -1,0 +1,29 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.gcs.wb.bapi.outbdlv.constants;
+
+import org.hibersap.bapi.BapiConstants;
+
+/**
+ *
+ * @author vunguyent
+ */
+public interface DOCreate2PGIConstants extends BapiConstants {
+
+//    String BAPI_NAME = "ZBAPI_WB2_DO_CREATE_AND_PGI_V2";
+    String BAPI_NAME = "ZJBAPI_WB2_DO_CR_N_PGI_V2_0207";
+    String VBKOK_WA = "VBKOK_WA";
+    String ID_PARNR = "ID_PARNR";
+    String DELIVERY = "DELIVERY";
+    String NUM_DELIVERIES = "NUM_DELIVERIES";
+    String MATERIALDOCUMENT = "MATERIALDOCUMENT";
+    String MATDOCUMENTYEAR = "MATDOCUMENTYEAR";
+    String STOCK_TRANS_ITEMS = "STOCK_TRANS_ITEMS";
+    String VBPOK_TAB = "VBPOK_TAB";
+    
+//    {[M001-DungDang-27062013] - fixing bug double post GoodsMovement
+    String I_WEIGHTTICKET = "I_WEIGHTTICKET";
+ 
+}

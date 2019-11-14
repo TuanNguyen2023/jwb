@@ -1,0 +1,179 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.gcs.wb.jpa.controller;
+
+import com.gcs.wb.WeighBridgeApp;
+import com.gcs.wb.jpa.entity.WeightTicket;
+import com.gcs.wb.jpa.entity.WeightTicketPK;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaQuery;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
+import org.apache.log4j.Logger;
+
+/**
+ *
+ * @author vunguyent
+ */
+public class WeightTicketJpaController {
+
+    private EntityManager gEM = null;
+    private Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
+
+    public WeightTicketJpaController(EntityManager em) {
+        this.gEM = em;
+    }
+
+    public EntityManager getEntityManager() {
+        return gEM;
+    }
+
+    public List<WeightTicket> findWeightTicketEntities() throws Exception {
+        return findWeightTicketEntities(true, -1, -1);
+    }
+
+    public List<WeightTicket> findWeightTicketEntities(int maxResults, int firstResult) throws Exception {
+        return findWeightTicketEntities(false, maxResults, firstResult);
+    }
+
+    private List<WeightTicket> findWeightTicketEntities(boolean all, int maxResults, int firstResult) throws Exception {
+        EntityManager em = getEntityManager();
+        try {
+            CriteriaQuery<WeightTicket> cq = em.getCriteriaBuilder().createQuery(WeightTicket.class);
+            cq.select(cq.from(WeightTicket.class));
+            TypedQuery<WeightTicket> q = em.createQuery(cq);
+            if (!all) {
+                q.setMaxResults(maxResults);
+                q.setFirstResult(firstResult);
+            }
+            return q.getResultList();
+        } catch (Exception ex) {
+            logger.error(null, ex);
+            throw ex;
+        }
+    }
+
+    public WeightTicket findWeightTicket(WeightTicketPK id) throws Exception {
+        EntityManager em = getEntityManager();
+        try {
+            return em.find(WeightTicket.class, id);
+        } catch (Exception ex) {
+            logger.error(id, ex);
+            throw ex;
+        }
+    }
+
+    public List<WeightTicket> findByCreateDateRange(Date from, Date to) throws Exception {
+        EntityManager em = getEntityManager();
+        em.clear();
+        try {
+            TypedQuery<WeightTicket> nq = em.createNamedQuery("WeightTicket.findByCreateDateRange", WeightTicket.class);
+            nq.setParameter("mandt", WeighBridgeApp.getApplication().getConfig().getsClient());
+            nq.setParameter("wPlant", WeighBridgeApp.getApplication().getConfig().getwPlant());
+            nq.setParameter("from", from);
+            nq.setParameter("to", to);
+            return nq.getResultList();
+        } catch (Exception ex) {
+            logger.error(null, ex);
+            throw ex;
+        }
+    }
+
+    public List<WeightTicket> findListWTs(String month, String year, String tagent, String matnr, List<Character> modes, boolean isDissovled, boolean isPosted) throws Exception {
+        String id = year.substring(2) + month + "%";
+        String name_query = null;
+        if (isDissovled) {
+            if (matnr == null) {
+                name_query = "WeightTicket.findByMandtWPlantIdSoxeRegcatDissovled";
+            } else {
+                name_query = "WeightTicket.findByMandtWPlantIdSoxeMatnrRegcatDissovled";
+            }
+        } else if (isPosted) {
+            if (matnr == null) {
+                name_query = "WeightTicket.findByMandtWPlantIdSoxeRegcatPosted";
+            } else {
+                name_query = "WeightTicket.findByMandtWPlantIdSoxeMatnrRegcatPosted";
+            }
+        } else {
+            if (matnr.equalsIgnoreCase("-1")) {
+                name_query = "WeightTicket.findByMandtWPlantIdSoxeRegcat";
+            } else {
+                name_query = "WeightTicket.findByMandtWPlantIdSoxeMatnrRegcat";
+            }
+        }
+        EntityManager em = getEntityManager();
+        em.clear();
+        try {
+            TypedQuery<WeightTicket> nq = em.createNamedQuery(name_query, WeightTicket.class);
+            nq.setParameter("mandt", WeighBridgeApp.getApplication().getConfig().getsClient());
+            nq.setParameter("wPlant", WeighBridgeApp.getApplication().getConfig().getwPlant());
+            nq.setParameter("id", id);
+            nq.setParameter("taAbbr", tagent);
+            if (!matnr.equalsIgnoreCase("-1")) {
+                nq.setParameter("matnrRef", matnr);
+            }
+            nq.setParameter("regCategory", modes);
+            return nq.getResultList();
+        } catch (Exception ex) {
+            logger.error(null, ex);
+            throw ex;
+        }
+    }
+
+    public int getNewSeqBDay() {
+        EntityManager em = getEntityManager();
+        em.clear();
+        Query q = em.createNativeQuery("SELECT MAX(SEQ_BY_DAY) FROM WeightTicket WHERE MANDT = ? AND WPLANT = ? AND ID LIKE ?");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyMMdd");
+        String qSeq = formatter.format(Calendar.getInstance().getTime()) + "%";
+
+        q.setParameter(1, WeighBridgeApp.getApplication().getConfig().getsClient());
+        q.setParameter(2, WeighBridgeApp.getApplication().getConfig().getwPlant());
+        q.setParameter(3, qSeq);
+
+        Integer lNumber = 0;
+        try {
+            Object obj = q.getSingleResult();
+            if (obj != null) {
+                lNumber = ((Long) obj).intValue();
+            }
+        } catch (NoResultException ex) {
+            lNumber = 0;
+        } finally {
+            lNumber++;
+        }
+        return lNumber;
+    }
+
+    public int getNewSeqBMonth() {
+        EntityManager em = getEntityManager();
+        em.clear();
+        Query q = em.createNativeQuery("SELECT MAX(SEQ_BY_MONTH) FROM WeightTicket WHERE MANDT = ? AND WPLANT = ? AND ID LIKE ?");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyMM");
+        String qSeq = formatter.format(Calendar.getInstance().getTime()) + "%";
+
+        q.setParameter(1, WeighBridgeApp.getApplication().getConfig().getsClient());
+        q.setParameter(2, WeighBridgeApp.getApplication().getConfig().getwPlant());
+        q.setParameter(3, qSeq);
+
+        Integer lNumber = 0;
+        try {
+            Object obj = q.getSingleResult();
+            if (obj != null) {
+                lNumber = ((Long) obj).intValue();
+            }
+        } catch (NoResultException ex) {
+            lNumber = 0;
+        } finally {
+            lNumber++;
+        }
+        return lNumber;
+    }
+}

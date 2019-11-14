@@ -1,0 +1,1169 @@
+<?xml version="1.1" encoding="UTF-8" ?>
+
+<Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JInternalFrameFormInfo">
+  <NonVisualComponents>
+    <Component class="javax.swing.ButtonGroup" name="grbType">
+    </Component>
+    <Component class="javax.swing.ButtonGroup" name="grbBridge">
+    </Component>
+    <Component class="javax.swing.ButtonGroup" name="grbCat">
+    </Component>
+    <Component class="javax.persistence.EntityManager" name="entityManager">
+      <Properties>
+        <Property name="persistenceUnit" type="java.lang.String" value="pu"/>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="WeighBridgeApp.getApplication().getEm()"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="entityManager.clear();"/>
+      </AuxValues>
+    </Component>
+    <Component class="com.gcs.wb.jpa.entity.WeightTicket" name="weightTicket">
+    </Component>
+    <Component class="com.gcs.wb.jpa.entity.PurOrder" name="purOrder">
+    </Component>
+    <Component class="com.gcs.wb.jpa.entity.OutbDel" name="outbDel">
+    </Component>
+    <Component class="com.gcs.wb.model.AppConfig" name="config">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="WeighBridgeApp.getApplication().getConfig()"/>
+      </AuxValues>
+    </Component>
+    <Component class="com.gcs.wb.jpa.entity.SAPSetting" name="setting">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="java.beans.Beans.isDesignTime() ? null : WeighBridgeApp.getApplication().getSapSetting()"/>
+      </AuxValues>
+    </Component>
+    <Component class="com.gcs.wb.jpa.entity.Material" name="material">
+    </Component>
+  </NonVisualComponents>
+  <Properties>
+    <Property name="background" type="java.awt.Color" resourceKey="Form.background"/>
+    <Property name="closable" type="boolean" value="true"/>
+    <Property name="maximizable" type="boolean" value="true"/>
+    <Property name="resizable" type="boolean" value="true"/>
+    <Property name="title" type="java.lang.String" resourceKey="Form.title"/>
+    <Property name="name" type="java.lang.String" value="Form" noResource="true"/>
+  </Properties>
+  <SyntheticProperties>
+    <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+  </SyntheticProperties>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="2"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="1" attributes="0">
+                      <Component id="pnWTFilter" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="pnCurScale" min="-2" max="-2" attributes="1"/>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Component id="btnReprint" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="btnSave" min="-2" pref="73" max="-2" attributes="0"/>
+                  </Group>
+                  <Component id="pnScaleData" alignment="0" max="32767" attributes="2"/>
+                  <Component id="pnWTicket" alignment="0" max="32767" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="pnWTFilter" min="-2" max="-2" attributes="1"/>
+                  <Component id="pnCurScale" alignment="0" min="-2" max="-2" attributes="3"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="pnScaleData" min="-2" max="-2" attributes="1"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="pnWTicket" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="btnSave" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnReprint" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace pref="43" max="32767" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Container class="javax.swing.JPanel" name="pnWTFilter">
+      <Properties>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+            <TitledBorder title="T&#xec;m phi&#x1ebf;u c&#xe2;n">
+              <Property name="titleX" resourceKey="pnWTFilter.border.title"/>
+            </TitledBorder>
+          </Border>
+        </Property>
+        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[306, 138]"/>
+        </Property>
+        <Property name="name" type="java.lang.String" value="pnWTFilter" noResource="true"/>
+        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[306, 138]"/>
+        </Property>
+      </Properties>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="lblWTNum" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="txtWTNum" pref="219" max="32767" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <Component id="rbtPO" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="txtPONum" pref="98" max="32767" attributes="0"/>
+                              </Group>
+                              <Component id="rbtMvt311" pref="147" max="32767" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="rbtMb1b" max="32767" attributes="1"/>
+                              <Component id="rbtMisc" alignment="0" pref="101" max="32767" attributes="1"/>
+                          </Group>
+                      </Group>
+                  </Group>
+                  <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="5" pref="5" max="5" attributes="0"/>
+                          <Component id="lblWTNum" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Component id="txtWTNum" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="rbtPO" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtPONum" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="rbtMb1b" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="rbtMisc" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="rbtMvt311" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace pref="32" max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JLabel" name="lblWTNum">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblWTNum.text"/>
+            <Property name="name" type="java.lang.String" value="lblWTNum" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JRadioButton" name="rbtPO">
+          <Properties>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="com.gcs.wb.views.WeightTicketView" id="selectRbtPO" methodName="selectRbtPO"/>
+            </Property>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="grbType"/>
+            </Property>
+            <Property name="text" type="java.lang.String" resourceKey="rbtPO.text"/>
+            <Property name="name" type="java.lang.String" value="rbtPO" noResource="true"/>
+          </Properties>
+          <BindingProperties>
+            <BindingProperty name="enabled" source="Form" sourcePath="${withoutDO}" target="rbtPO" targetPath="enabled" updateStrategy="0" immediately="false"/>
+          </BindingProperties>
+          <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="rbtPOItemStateChanged"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtPONum">
+          <Properties>
+            <Property name="font" type="java.awt.Font" noResource="true" editor="org.netbeans.modules.form.editors2.FontEditor">
+              <FontInfo relative="true">
+                <Font bold="true" component="txtPONum" property="font" relativeSize="true" size="2"/>
+              </FontInfo>
+            </Property>
+            <Property name="foreground" type="java.awt.Color" resourceKey="txtPONum.foreground"/>
+            <Property name="text" type="java.lang.String" resourceKey="txtPONum.text"/>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="com.gcs.wb.views.WeightTicketView" id="readPO" methodName="readPO"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="txtPONum" noResource="true"/>
+          </Properties>
+          <BindingProperties>
+            <BindingProperty name="editable" source="rbtPO" sourcePath="${selected}" target="txtPONum" targetPath="editable" updateStrategy="0" immediately="false"/>
+            <BindingProperty name="enabled" source="rbtPO" sourcePath="${enabled}" target="txtPONum" targetPath="enabled" updateStrategy="0" immediately="false"/>
+          </BindingProperties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="txtPONum.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;    public void insertUpdate(DocumentEvent e) {&#xa;        checkPONum(e);&#xa;    }&#xa;&#xa;    public void removeUpdate(DocumentEvent e) {&#xa;        checkPONum(e);&#xa;    }&#xa;&#xa;    public void changedUpdate(DocumentEvent e) {&#xa;        checkPONum(e);&#xa;    }&#xa;});"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JRadioButton" name="rbtMisc">
+          <Properties>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="com.gcs.wb.views.WeightTicketView" id="selectRbtMisc" methodName="selectRbtMisc"/>
+            </Property>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="grbType"/>
+            </Property>
+            <Property name="text" type="java.lang.String" resourceKey="rbtMisc.text"/>
+            <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[67, 20]"/>
+            </Property>
+            <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[67, 20]"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="rbtMisc" noResource="true"/>
+            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[67, 20]"/>
+            </Property>
+          </Properties>
+          <BindingProperties>
+            <BindingProperty name="enabled" source="Form" sourcePath="${withoutDO}" target="rbtMisc" targetPath="enabled" updateStrategy="0" immediately="false"/>
+          </BindingProperties>
+          <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="rbtMiscItemStateChanged"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtWTNum">
+          <Properties>
+            <Property name="font" type="java.awt.Font" noResource="true" editor="org.netbeans.modules.form.editors2.FontEditor">
+              <FontInfo relative="true">
+                <Font bold="true" component="txtWTNum" property="font" relativeSize="true" size="2"/>
+              </FontInfo>
+            </Property>
+            <Property name="foreground" type="java.awt.Color" resourceKey="txtWTNum.foreground"/>
+            <Property name="text" type="java.lang.String" resourceKey="txtWTNum.text"/>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="com.gcs.wb.views.WeightTicketView" id="readWT" methodName="readWT"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="txtWTNum" noResource="true"/>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="txtWTNum.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;    public void insertUpdate(DocumentEvent e) {&#xa;        checkWTNum(e);&#xa;    }&#xa;&#xa;    public void removeUpdate(DocumentEvent e) {&#xa;        checkWTNum(e);&#xa;    }&#xa;&#xa;    public void changedUpdate(DocumentEvent e) {&#xa;        checkWTNum(e);&#xa;    }&#xa;});"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JRadioButton" name="rbtMb1b">
+          <Properties>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="com.gcs.wb.views.WeightTicketView" id="showMB1BOption" methodName="showMB1BOption"/>
+            </Property>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="grbType"/>
+            </Property>
+            <Property name="text" type="java.lang.String" resourceKey="rbtMb1b.text"/>
+            <Property name="name" type="java.lang.String" value="rbtMb1b" noResource="true"/>
+          </Properties>
+          <BindingProperties>
+            <BindingProperty name="enabled" source="Form" sourcePath="${withoutDO}" target="rbtMb1b" targetPath="enabled" updateStrategy="0" immediately="false"/>
+          </BindingProperties>
+          <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="rbtMb1bItemStateChanged"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JRadioButton" name="rbtMvt311">
+          <Properties>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="com.gcs.wb.views.WeightTicketView" id="selectRbtMvt311" methodName="selectRbtMvt311"/>
+            </Property>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="grbType"/>
+            </Property>
+            <Property name="text" type="java.lang.String" resourceKey="rbtMvt311.text"/>
+            <Property name="name" type="java.lang.String" value="rbtMvt311" noResource="true"/>
+          </Properties>
+          <BindingProperties>
+            <BindingProperty name="enabled" source="Form" sourcePath="${withoutDO}" target="rbtMvt311" targetPath="enabled" updateStrategy="0" immediately="false"/>
+          </BindingProperties>
+          <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="rbtMvt311ItemStateChanged"/>
+          </Events>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JPanel" name="pnCurScale">
+      <Properties>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+            <TitledBorder title="Ch&#x1ec9; s&#x1ed1; c&#xe2;n hi&#x1ec7;n t&#x1ea1;i">
+              <Property name="titleX" resourceKey="pnCurScale.border.title"/>
+            </TitledBorder>
+          </Border>
+        </Property>
+        <Property name="focusable" type="boolean" value="false"/>
+        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[292, 138]"/>
+        </Property>
+        <Property name="name" type="java.lang.String" value="pnCurScale" noResource="true"/>
+        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[292, 138]"/>
+        </Property>
+      </Properties>
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout"/>
+      <SubComponents>
+        <Container class="javax.swing.JPanel" name="pnCurScaleData">
+          <Properties>
+            <Property name="background" type="java.awt.Color" resourceKey="pnCurScaleData.background"/>
+            <Property name="focusable" type="boolean" value="false"/>
+            <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[281, 89]"/>
+            </Property>
+            <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[281, 89]"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="pnCurScaleData" noResource="true"/>
+            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[280, 95]"/>
+            </Property>
+          </Properties>
+          <Constraints>
+            <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">
+              <BorderConstraints direction="Center"/>
+            </Constraint>
+          </Constraints>
+
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="rbtBridge1" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="18" pref="18" max="18" attributes="0"/>
+                              <Component id="rbtBridge2" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="txfCurScale" min="-2" pref="221" max="-2" attributes="0"/>
+                              <EmptySpace min="4" pref="4" max="4" attributes="0"/>
+                              <Component id="lblKG" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace pref="170" max="32767" attributes="0"/>
+                      <Component id="btnAccept" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="rbtBridge1" min="-2" max="-2" attributes="0"/>
+                          <Component id="rbtBridge2" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="txfCurScale" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblKG" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="btnAccept" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+          </Layout>
+          <SubComponents>
+            <Component class="javax.swing.JRadioButton" name="rbtBridge1">
+              <Properties>
+                <Property name="background" type="java.awt.Color" resourceKey="rbtBridge1.background"/>
+                <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+                  <ComponentRef name="grbBridge"/>
+                </Property>
+                <Property name="font" type="java.awt.Font" resourceKey="rbtBridge2.font"/>
+                <Property name="foreground" type="java.awt.Color" resourceKey="rbtBridge2.foreground"/>
+                <Property name="text" type="java.lang.String" resourceKey="rbtBridge1.text"/>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="rbtBridge1.toolTipText"/>
+                <Property name="name" type="java.lang.String" value="rbtBridge1" noResource="true"/>
+              </Properties>
+              <BindingProperties>
+                <BindingProperty name="enabled" source="Form" sourcePath="${bridge1}" target="rbtBridge1" targetPath="enabled" updateStrategy="0" immediately="false"/>
+              </BindingProperties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rbtBridge1ActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JRadioButton" name="rbtBridge2">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="com.gcs.wb.views.GIView" id="checkedBridge2" methodName="checkedBridge2"/>
+                </Property>
+                <Property name="background" type="java.awt.Color" resourceKey="rbtBridge2.background"/>
+                <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+                  <ComponentRef name="grbBridge"/>
+                </Property>
+                <Property name="font" type="java.awt.Font" resourceKey="rbtBridge2.font"/>
+                <Property name="foreground" type="java.awt.Color" resourceKey="rbtBridge2.foreground"/>
+                <Property name="text" type="java.lang.String" resourceKey="rbtBridge2.text"/>
+                <Property name="name" type="java.lang.String" value="rbtBridge2" noResource="true"/>
+              </Properties>
+              <BindingProperties>
+                <BindingProperty name="enabled" source="Form" sourcePath="${bridge2}" target="rbtBridge2" targetPath="enabled" updateStrategy="0" immediately="false"/>
+              </BindingProperties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rbtBridge2ActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JFormattedTextField" name="txfCurScale">
+              <Properties>
+                <Property name="background" type="java.awt.Color" resourceKey="txfCurScale.background"/>
+                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                  <Border info="null"/>
+                </Property>
+                <Property name="editable" type="boolean" value="false"/>
+                <Property name="foreground" type="java.awt.Color" resourceKey="txfCurScale.foreground"/>
+                <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+                  <Format subtype="0" type="0"/>
+                </Property>
+                <Property name="horizontalAlignment" type="int" value="4"/>
+                <Property name="font" type="java.awt.Font" resourceKey="txfCurScale.font"/>
+                <Property name="name" type="java.lang.String" value="txfCurScale" noResource="true"/>
+                <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                  <Dimension value="[227, 38]"/>
+                </Property>
+                <Property name="value" type="java.lang.Object" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="(Number)0" type="code"/>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblKG">
+              <Properties>
+                <Property name="background" type="java.awt.Color" resourceKey="lblKG.background"/>
+                <Property name="font" type="java.awt.Font" resourceKey="lblKG.font"/>
+                <Property name="foreground" type="java.awt.Color" resourceKey="lblKG.foreground"/>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" resourceKey="lblKG.text"/>
+                <Property name="name" type="java.lang.String" value="lblKG" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="btnAccept">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="com.gcs.wb.views.WeightTicketView" id="acceptScale" methodName="acceptScale"/>
+                </Property>
+                <Property name="font" type="java.awt.Font" resourceKey="btnAccept.font"/>
+                <Property name="text" type="java.lang.String" resourceKey="btnAccept.text"/>
+                <Property name="name" type="java.lang.String" value="btnAccept" noResource="true"/>
+              </Properties>
+            </Component>
+          </SubComponents>
+        </Container>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JPanel" name="pnScaleData">
+      <Properties>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+            <TitledBorder title="S&#x1ed1; li&#x1ec7;u C&#xe2;n">
+              <Property name="titleX" resourceKey="pnScaleData.border.title"/>
+            </TitledBorder>
+          </Border>
+        </Property>
+        <Property name="focusable" type="boolean" value="false"/>
+        <Property name="name" type="java.lang.String" value="pnScaleData" noResource="true"/>
+      </Properties>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Component id="lblGScale" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblOScale" alignment="1" min="-2" pref="43" max="-2" attributes="0"/>
+                      <Component id="lblIScale" alignment="1" min="-2" pref="43" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="txfGoodsQty" alignment="0" pref="199" max="32767" attributes="2"/>
+                      <Component id="txfOutQty" alignment="0" pref="199" max="32767" attributes="2"/>
+                      <Component id="txfInQty" alignment="0" pref="199" max="32767" attributes="2"/>
+                  </Group>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="lblIUnit" min="-2" max="-2" attributes="1"/>
+                              <Component id="lblOUnit" alignment="1" min="-2" max="-2" attributes="1"/>
+                          </Group>
+                          <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="lblITime" min="-2" max="-2" attributes="1"/>
+                              <Component id="lblOTime" min="-2" max="-2" attributes="1"/>
+                          </Group>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="txtOutTime" pref="204" max="32767" attributes="2"/>
+                              <Component id="txtInTime" alignment="0" pref="204" max="32767" attributes="2"/>
+                          </Group>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="btnIScaleReset" min="-2" max="-2" attributes="1"/>
+                              <Component id="btnOScaleReset" alignment="1" min="-2" max="-2" attributes="1"/>
+                          </Group>
+                      </Group>
+                      <Component id="lblGUnit" min="-2" max="-2" attributes="1"/>
+                  </Group>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblIScale" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txfInQty" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtInTime" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblITime" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblIUnit" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnIScaleReset" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblOScale" alignment="3" min="-2" pref="14" max="-2" attributes="1"/>
+                      <Component id="txfOutQty" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtOutTime" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblOTime" alignment="3" min="-2" pref="18" max="-2" attributes="1"/>
+                      <Component id="lblOUnit" alignment="3" min="-2" pref="14" max="-2" attributes="1"/>
+                      <Component id="btnOScaleReset" alignment="3" min="-2" max="-2" attributes="1"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblGScale" alignment="3" min="-2" max="-2" attributes="1"/>
+                      <Component id="txfGoodsQty" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblGUnit" alignment="3" min="-2" max="-2" attributes="1"/>
+                  </Group>
+                  <EmptySpace max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JLabel" name="lblIScale">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" resourceKey="lblIScale.text"/>
+            <Property name="name" type="java.lang.String" value="lblIScale" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblOScale">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" resourceKey="lblOScale.text"/>
+            <Property name="name" type="java.lang.String" value="lblOScale" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblGScale">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" resourceKey="lblGScale.text"/>
+            <Property name="name" type="java.lang.String" value="lblGScale" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JFormattedTextField" name="txfInQty">
+          <Properties>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
+                <EmptyBorder/>
+              </Border>
+            </Property>
+            <Property name="editable" type="boolean" value="false"/>
+            <Property name="foreground" type="java.awt.Color" resourceKey="txfInQty.foreground"/>
+            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+              <Format subtype="0" type="0"/>
+            </Property>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" resourceKey="txfInQty.text"/>
+            <Property name="font" type="java.awt.Font" resourceKey="txfGoodsQty.font"/>
+            <Property name="name" type="java.lang.String" value="txfInQty" noResource="true"/>
+          </Properties>
+          <BindingProperties>
+            <BindingProperty name="value" source="Form" sourcePath="${weightTicket.FScale}" target="txfInQty" targetPath="value" updateStrategy="0" immediately="false"/>
+          </BindingProperties>
+        </Component>
+        <Component class="javax.swing.JFormattedTextField" name="txfOutQty">
+          <Properties>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
+                <EmptyBorder/>
+              </Border>
+            </Property>
+            <Property name="editable" type="boolean" value="false"/>
+            <Property name="foreground" type="java.awt.Color" resourceKey="txfOutQty.foreground"/>
+            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+              <Format subtype="0" type="0"/>
+            </Property>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" resourceKey="txfOutQty.text"/>
+            <Property name="font" type="java.awt.Font" resourceKey="txfGoodsQty.font"/>
+            <Property name="name" type="java.lang.String" value="txfOutQty" noResource="true"/>
+          </Properties>
+          <BindingProperties>
+            <BindingProperty name="value" source="Form" sourcePath="${weightTicket.SScale}" target="txfOutQty" targetPath="value" updateStrategy="0" immediately="false"/>
+          </BindingProperties>
+        </Component>
+        <Component class="javax.swing.JFormattedTextField" name="txfGoodsQty">
+          <Properties>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
+                <EmptyBorder/>
+              </Border>
+            </Property>
+            <Property name="editable" type="boolean" value="false"/>
+            <Property name="foreground" type="java.awt.Color" resourceKey="txfGoodsQty.foreground"/>
+            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+              <Format subtype="0" type="0"/>
+            </Property>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" resourceKey="txfGoodsQty.text"/>
+            <Property name="font" type="java.awt.Font" resourceKey="txfGoodsQty.font"/>
+            <Property name="name" type="java.lang.String" value="txfGoodsQty" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblIUnit">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblIUnit.text"/>
+            <Property name="name" type="java.lang.String" value="lblIUnit" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblITime">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblITime.text"/>
+            <Property name="name" type="java.lang.String" value="lblITime" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblOUnit">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblOUnit.text"/>
+            <Property name="name" type="java.lang.String" value="lblOUnit" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblOTime">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblOTime.text"/>
+            <Property name="name" type="java.lang.String" value="lblOTime" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblGUnit">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblGUnit.text"/>
+            <Property name="name" type="java.lang.String" value="lblGUnit" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtInTime">
+          <Properties>
+            <Property name="background" type="java.awt.Color" resourceKey="txtInTime.background"/>
+            <Property name="font" type="java.awt.Font" noResource="true" editor="org.netbeans.modules.form.editors2.FontEditor">
+              <FontInfo relative="true">
+                <Font bold="true" component="txtInTime" property="font" relativeSize="true" size="1"/>
+              </FontInfo>
+            </Property>
+            <Property name="foreground" type="java.awt.Color" resourceKey="txtInTime.foreground"/>
+            <Property name="text" type="java.lang.String" resourceKey="txtInTime.text"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
+                <EmptyBorder/>
+              </Border>
+            </Property>
+            <Property name="name" type="java.lang.String" value="txtInTime" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtOutTime">
+          <Properties>
+            <Property name="background" type="java.awt.Color" resourceKey="txtOutTime.background"/>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.editors2.FontEditor">
+              <FontInfo relative="true">
+                <Font bold="true" component="txtOutTime" property="font" relativeSize="true" size="1"/>
+              </FontInfo>
+            </Property>
+            <Property name="foreground" type="java.awt.Color" resourceKey="txtInTime.foreground"/>
+            <Property name="text" type="java.lang.String" resourceKey="txtOutTime.text"/>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
+                <EmptyBorder/>
+              </Border>
+            </Property>
+            <Property name="name" type="java.lang.String" value="txtOutTime" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnIScaleReset">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="btnIScaleReset.text"/>
+            <Property name="focusable" type="boolean" value="false"/>
+            <Property name="name" type="java.lang.String" value="btnIScaleReset" noResource="true"/>
+            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[61, 21]"/>
+            </Property>
+          </Properties>
+          <BindingProperties>
+            <BindingProperty name="enabled" source="Form" sourcePath="${stage1}" target="btnIScaleReset" targetPath="enabled" updateStrategy="0" immediately="false"/>
+          </BindingProperties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnIScaleResetActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnOScaleReset">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="btnOScaleReset.text"/>
+            <Property name="focusable" type="boolean" value="false"/>
+            <Property name="name" type="java.lang.String" value="btnOScaleReset" noResource="true"/>
+            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[61, 21]"/>
+            </Property>
+          </Properties>
+          <BindingProperties>
+            <BindingProperty name="enabled" source="Form" sourcePath="${stage2}" target="btnOScaleReset" targetPath="enabled" updateStrategy="0" immediately="false"/>
+          </BindingProperties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnOScaleResetActionPerformed"/>
+          </Events>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JPanel" name="pnWTicket">
+      <Properties>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+            <TitledBorder title="Th&#xf4;ng tin phi&#x1ebf;u c&#xe2;n">
+              <Property name="titleX" resourceKey="pnWTicket.border.title"/>
+            </TitledBorder>
+          </Border>
+        </Property>
+        <Property name="name" type="java.lang.String" value="pnWTicket" noResource="true"/>
+      </Properties>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="1" attributes="0">
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="lblGRText" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblSLoc" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblTrailerPlate" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblLicPlate" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblCMNDBL" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblDName" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblReason" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="cbxReason" pref="199" max="32767" attributes="0"/>
+                              <Component id="txtGRText" pref="199" max="32767" attributes="0"/>
+                              <Component id="cbxSLoc" alignment="1" pref="199" max="32767" attributes="0"/>
+                              <Component id="txtLicPlate" alignment="0" pref="199" max="32767" attributes="0"/>
+                              <Component id="txtCMNDBL" alignment="0" pref="199" max="32767" attributes="2"/>
+                              <Component id="txtDName" alignment="0" pref="199" max="32767" attributes="2"/>
+                              <Component id="txtTrailerPlate" alignment="0" pref="199" max="32767" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" pref="49" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="lblRegItem" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblRegCat" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblMatnr" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblDelNum" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblBatch" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblCementDesc" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblComplete" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="rbtInward" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Component id="rbtOutward" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Component id="txtRegItem" alignment="0" pref="199" max="32767" attributes="0"/>
+                              <Component id="txtDelNum" alignment="0" pref="199" max="32767" attributes="0"/>
+                              <Component id="cbxBatch" alignment="0" pref="199" max="32767" attributes="0"/>
+                              <Component id="txtCementDesc" alignment="0" pref="199" max="32767" attributes="0"/>
+                              <Component id="cbxCompleted" alignment="0" pref="199" max="32767" attributes="0"/>
+                              <Component id="txtMatnr" alignment="0" pref="199" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <Component id="chkDissolved" alignment="1" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblDName" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtDName" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblRegCat" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="rbtInward" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="rbtOutward" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="lblCMNDBL" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtCMNDBL" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="lblLicPlate" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtLicPlate" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="lblTrailerPlate" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtTrailerPlate" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="lblRegItem" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtRegItem" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="lblMatnr" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtMatnr" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="lblDelNum" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtDelNum" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                          <Component id="lblSLoc" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbxSLoc" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                          <Component id="lblBatch" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbxBatch" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                          <Component id="lblCementDesc" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtCementDesc" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                          <Component id="lblReason" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbxReason" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                          <Component id="lblGRText" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtGRText" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                          <Component id="lblComplete" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbxCompleted" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Component id="chkDissolved" min="-2" max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JLabel" name="lblDName">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblDName.text"/>
+            <Property name="name" type="java.lang.String" value="lblDName" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtDName">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+            <Property name="name" type="java.lang.String" value="txtDName" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblCMNDBL">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblCMNDBL.text"/>
+            <Property name="name" type="java.lang.String" value="lblCMNDBL" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtCMNDBL">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+            <Property name="name" type="java.lang.String" value="txtCMNDBL" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblLicPlate">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblLicPlate.text"/>
+            <Property name="name" type="java.lang.String" value="lblLicPlate" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JFormattedTextField" name="txtLicPlate">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+            <Property name="name" type="java.lang.String" value="txtLicPlate" noResource="true"/>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JFormattedTextField(new RegexFormatter(&quot;\\d{2}\\w-\\d{4}&quot;))"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblTrailerPlate">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblTrailerPlate.text"/>
+            <Property name="name" type="java.lang.String" value="lblTrailerPlate" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JFormattedTextField" name="txtTrailerPlate">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+            <Property name="name" type="java.lang.String" value="txtTrailerPlate" noResource="true"/>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JFormattedTextField(new RegexFormatter(&quot;\\d{2}\\w-\\d{4}&quot;))"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblRegCat">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblRegCat.text"/>
+            <Property name="name" type="java.lang.String" value="lblRegCat" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JRadioButton" name="rbtInward">
+          <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="grbCat"/>
+            </Property>
+            <Property name="text" type="java.lang.String" resourceKey="rbtInward.text"/>
+            <Property name="enabled" type="boolean" value="false"/>
+            <Property name="name" type="java.lang.String" value="rbtInward" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JRadioButton" name="rbtOutward">
+          <Properties>
+            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+              <ComponentRef name="grbCat"/>
+            </Property>
+            <Property name="text" type="java.lang.String" resourceKey="rbtOutward.text"/>
+            <Property name="enabled" type="boolean" value="false"/>
+            <Property name="name" type="java.lang.String" value="rbtOutward" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblRegItem">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblRegItem.text"/>
+            <Property name="name" type="java.lang.String" value="lblRegItem" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtRegItem">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+            <Property name="name" type="java.lang.String" value="txtRegItem" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblMatnr">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblMatnr.text"/>
+            <Property name="name" type="java.lang.String" value="lblMatnr" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblDelNum">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblDelNum.text"/>
+            <Property name="name" type="java.lang.String" value="lblDelNum" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtDelNum">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+            <Property name="name" type="java.lang.String" value="txtDelNum" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblSLoc">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblSLoc.text"/>
+            <Property name="name" type="java.lang.String" value="lblSLoc" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbxSLoc">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor" postCode="cbxSLoc.setRenderer(new DefaultListCellRenderer() {&#xa;           @Override&#xa;           public Component getListCellRendererComponent(&#xa;                   JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {&#xa;               super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);&#xa;               if (value instanceof SLoc) {&#xa;                   SLoc sloc = (SLoc)value;&#xa;                   setText(sloc.getLgobe());&#xa;               }&#xa;               return this;&#xa;           }&#xa;       });">
+              <Connection code="SAP2Local.getSlocModel(config, entityManager)" type="code"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="cbxSLoc" noResource="true"/>
+          </Properties>
+          <BindingProperties>
+            <BindingProperty name="enabled" source="Form" sourcePath="${formEnable}" target="cbxSLoc" targetPath="enabled" updateStrategy="0" immediately="false"/>
+          </BindingProperties>
+          <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbxSLocItemStateChanged"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblBatch">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblBatch.text"/>
+            <Property name="name" type="java.lang.String" value="lblBatch" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbxBatch">
+          <Properties>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="com.gcs.wb.views.WeightTicketView" id="acceptBatch" methodName="acceptBatch"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="cbxBatch" noResource="true"/>
+          </Properties>
+          <BindingProperties>
+            <BindingProperty name="enabled" source="Form" sourcePath="${formEnable}" target="cbxBatch" targetPath="enabled" updateStrategy="0" immediately="false"/>
+          </BindingProperties>
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="cbxBatchKeyReleased"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblReason">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblReason.text"/>
+            <Property name="name" type="java.lang.String" value="lblReason" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbxReason">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor" postCode="cbxReason.setRenderer(new DefaultListCellRenderer() {&#xa;           @Override&#xa;           public Component getListCellRendererComponent(&#xa;                   JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {&#xa;               super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);&#xa;               if (value instanceof Reason) {&#xa;                   Reason r = (Reason)value;&#xa;                   setText(r.getGrtxt());&#xa;               }&#xa;               return this;&#xa;           }&#xa;       });">
+              <Connection code="getReasonModel()" type="code"/>
+            </Property>
+            <Property name="enabled" type="boolean" value="false"/>
+            <Property name="name" type="java.lang.String" value="cbxReason" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbxReasonItemStateChanged"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblCementDesc">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblCementDesc.text"/>
+            <Property name="name" type="java.lang.String" value="lblCementDesc" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtCementDesc">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="txtCementDesc.text"/>
+            <Property name="name" type="java.lang.String" value="txtCementDesc" noResource="true"/>
+          </Properties>
+          <BindingProperties>
+            <BindingProperty name="enabled" source="Form" sourcePath="${formEnable}" target="txtCementDesc" targetPath="enabled" updateStrategy="0" immediately="false"/>
+          </BindingProperties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblGRText">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblGRText.text"/>
+            <Property name="name" type="java.lang.String" value="lblGRText" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtGRText">
+          <Properties>
+            <Property name="enabled" type="boolean" value="false"/>
+            <Property name="name" type="java.lang.String" value="txtGRText" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtGRTextKeyReleased"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblComplete">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblComplete.text"/>
+            <Property name="name" type="java.lang.String" value="lblComplete" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbxCompleted">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="3">
+                <StringItem index="0" value="Auto"/>
+                <StringItem index="1" value="Set"/>
+                <StringItem index="2" value="NotSet"/>
+              </StringArray>
+            </Property>
+            <Property name="enabled" type="boolean" value="false"/>
+            <Property name="name" type="java.lang.String" value="cbxCompleted" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbxCompletedItemStateChanged"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="chkDissolved">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="chkDissolved.text"/>
+            <Property name="name" type="java.lang.String" value="chkDissolved" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkDissolvedItemStateChanged"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtMatnr">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+            <Property name="text" type="java.lang.String" resourceKey="txtMatnr.text"/>
+            <Property name="name" type="java.lang.String" value="txtMatnr" noResource="true"/>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Component class="javax.swing.JButton" name="btnSave">
+      <Properties>
+        <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+          <action class="com.gcs.wb.views.WeightTicketView" id="saveWT" methodName="saveWT"/>
+        </Property>
+        <Property name="font" type="java.awt.Font" resourceKey="btnSave.font"/>
+        <Property name="text" type="java.lang.String" resourceKey="btnSave.text"/>
+        <Property name="name" type="java.lang.String" value="btnSave" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnReprint">
+      <Properties>
+        <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+          <action class="com.gcs.wb.views.WeightTicketView" id="reprintWT" methodName="reprintWT"/>
+        </Property>
+        <Property name="text" type="java.lang.String" resourceKey="btnReprint.text"/>
+        <Property name="name" type="java.lang.String" value="btnReprint" noResource="true"/>
+      </Properties>
+    </Component>
+  </SubComponents>
+</Form>

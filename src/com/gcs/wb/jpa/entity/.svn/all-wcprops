@@ -1,0 +1,197 @@
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/jpa/entity
+END
+VariantPK.java
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/jpa/entity/VariantPK.java
+END
+PurOrder.java
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/jpa/entity/PurOrder.java
+END
+Variant.java
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/jpa/entity/Variant.java
+END
+UserPK.java
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/jpa/entity/UserPK.java
+END
+TransportAgent.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/jpa/entity/TransportAgent.java
+END
+SAPSettingPK.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/jpa/entity/SAPSettingPK.java
+END
+User.java
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/jpa/entity/User.java
+END
+Vehicle.java
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/jpa/entity/Vehicle.java
+END
+SAPSetting.java
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/jpa/entity/SAPSetting.java
+END
+WeightTicketPK.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/jpa/entity/WeightTicketPK.java
+END
+VendorPK.java
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/jpa/entity/VendorPK.java
+END
+MaterialPK.java
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/jpa/entity/MaterialPK.java
+END
+OutbDelPK.java
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/jpa/entity/OutbDelPK.java
+END
+WeightTicket.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/jpa/entity/WeightTicket.java
+END
+SLocPK.java
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/jpa/entity/SLocPK.java
+END
+CustomerPK.java
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/jpa/entity/CustomerPK.java
+END
+Vendor.java
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/jpa/entity/Vendor.java
+END
+Material.java
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/jpa/entity/Material.java
+END
+OutbDel.java
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/jpa/entity/OutbDel.java
+END
+SLoc.java
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/jpa/entity/SLoc.java
+END
+Customer.java
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/jpa/entity/Customer.java
+END
+BatchStocksPK.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/jpa/entity/BatchStocksPK.java
+END
+BatchStocks.java
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/jpa/entity/BatchStocks.java
+END
+UnitPK.java
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/jpa/entity/UnitPK.java
+END
+Unit.java
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/jpa/entity/Unit.java
+END
+ReasonPK.java
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/jpa/entity/ReasonPK.java
+END
+MovementPK.java
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/jpa/entity/MovementPK.java
+END
+Reason.java
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/jpa/entity/Reason.java
+END
+DocFlowPK.java
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/jpa/entity/DocFlowPK.java
+END
+Movement.java
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/jpa/entity/Movement.java
+END
+DocFlow.java
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/jpa/entity/DocFlow.java
+END
+PurOrderPK.java
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/TFC/JWB/!svn/ver/192/jwb2/src/com/gcs/wb/jpa/entity/PurOrderPK.java
+END
