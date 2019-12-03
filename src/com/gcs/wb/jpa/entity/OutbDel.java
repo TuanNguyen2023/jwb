@@ -76,6 +76,8 @@ public class OutbDel implements Serializable {
     private String delivItemFree;
     @Column(name = "MATNR")
     private String matnr;
+    @Column(name = "MATNR_FREE")
+    private String matnrFree;
     @Column(name = "ARKTX")
     private String arktx;
     @Column(name = "ERDAT")
@@ -196,6 +198,14 @@ public class OutbDel implements Serializable {
 
     public void setMatnr(String matnr) {
         this.matnr = matnr;
+    }
+    
+    public String getMatnrFree() {
+        return matnrFree;
+    }
+
+    public void setMatnrFree(String matnrFree) {
+        this.matnrFree = matnrFree;
     }
 
     public String getArktx() {
