@@ -4990,7 +4990,7 @@ private void txtWTNumFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
         //{+20101203#01 add free goods item
         VbpokStructure tab_wa_f = new VbpokStructure();
 
-        tab_wa_f.setMatnr(wt.getMatnrRef());
+        //tab_wa_f.setMatnr(wt.getMatnrRef());
         tab_wa_f.setWerks(config.getwPlant());
         tab_wa_f.setLgort(wt.getLgort());
         tab_wa_f.setCharg(wt.getCharg());
@@ -5004,6 +5004,7 @@ private void txtWTNumFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
             } else {
                 tab_wa_f.setVbeln_vl(doNum);
             }
+            tab_wa_f.setMatnr(outbDel.getMatnrFree());
             tab_wa_f.setPosnr_vl(outbDel.getDelivItemFree());
             tab_wa_f.setVbeln(tab_wa_f.getVbeln_vl());
             tab_wa_f.setPosnn(tab_wa_f.getPosnr_vl());
