@@ -106,8 +106,9 @@ public class SAP2Local {
                     // outb_details.setDelivNumb(number);
                 }
                 //end set
-                if (item_cat.equals("TANN")) {
+                if (item_cat.equals("ZTNN")) {
                     outb.setDelivItemFree(doItem.getPosnr());
+                    outb.setMatnrFree(doItem.getMatnr());
                     //set data cho details free goods
                     if (flag_detail == true) {
                         // outb_details.setDelivItem(doItem.getPosnr().substring(4, 5));
@@ -164,7 +165,7 @@ public class SAP2Local {
                 }
                 //end
                 //chi lay number item dong dau
-                if (!item_cat.equals("TANN")) {
+                if (!item_cat.equals("ZTNN")) {
                     item_qty = item_qty.add(doItem.getLfimg());
                     if (flag) {
                         item_num = doItem.getPosnr();
@@ -193,7 +194,9 @@ public class SAP2Local {
                 outb.setTraty(doItem.getTraty());
                 outb.setTraid(doItem.getTraid());
                 outb.setBldat(doItem.getBldat());
-                outb.setMatnr(doItem.getMatnr());
+                if(outb.getMatnr() == null || outb.getMatnr().trim().isEmpty()) {
+                    outb.setMatnr(doItem.getMatnr());
+                }
                 outb.setWerks(doItem.getWerks());
                 outb.setLgort(doItem.getLgort());
                 outb.setCharg(doItem.getCharg());
@@ -218,7 +221,7 @@ public class SAP2Local {
                 outb.setKostk(doItem.getKostk() == null || doItem.getKostk().trim().isEmpty() || doItem.getKostk().trim().charAt(0) != 'C' ? ' ' : 'X');
                 outb.setWbstk(doItem.getWbstk() == null || doItem.getWbstk().trim().isEmpty() || doItem.getWbstk().trim().charAt(0) != 'C' ? ' ' : 'X');
 //            }
-                if (item_cat.equals("TANN")) {
+                if (item_cat.equals("ZTNN")) {
 //                    outb.setDelivItemFree(doItem.getPosnr());
                     outb.setFreeQty(item_qty_free);
                 }

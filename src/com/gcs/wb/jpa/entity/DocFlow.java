@@ -21,7 +21,7 @@ import javax.persistence.TemporalType;
  * @author vunguyent
  */
 @Entity
-@Table(name = "DocFlow", catalog = "jWeighBridge", schema = "")
+@Table(name = "DocFlow")
 @NamedQueries({
     @NamedQuery(name = "DocFlow.findAll", query = "SELECT d FROM DocFlow d"),
     @NamedQuery(name = "DocFlow.findByMandt", query = "SELECT d FROM DocFlow d WHERE d.docFlowPK.mandt = :mandt"),

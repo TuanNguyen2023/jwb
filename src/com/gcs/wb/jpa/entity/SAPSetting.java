@@ -18,7 +18,7 @@ import javax.persistence.Table;
  * @author vunguyent
  */
 @Entity
-@Table(name = "SAPSetting", catalog = "jWeighBridge", schema = "")
+@Table(name = "SAPSetting")
 @NamedQueries({
     @NamedQuery(name = "SAPSetting.findAll", query = "SELECT s FROM SAPSetting s"),
     @NamedQuery(name = "SAPSetting.findByMandt", query = "SELECT s FROM SAPSetting s WHERE s.sAPSettingPK.mandt = :mandt"),

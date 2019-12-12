@@ -182,8 +182,8 @@
                 <Property name="name" type="java.lang.String" value="txtWPlantRPT" noResource="true"/>
               </Properties>
               <BindingProperties>
-                <BindingProperty name="text" source="sapSetting" sourcePath="${nameRpt}" target="txtWPlantRPT" targetPath="text" updateStrategy="2" immediately="false">
-                  <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
+                <BindingProperty name="text" source="sapSetting" sourcePath="${nameRpt}" target="txtWPlantRPT" targetPath="text" updateStrategy="0" immediately="false">
+                  <Property name="name" type="java.lang.String" value=""/>
                 </BindingProperty>
               </BindingProperties>
             </Component>
@@ -198,9 +198,7 @@
                 <Property name="name" type="java.lang.String" value="txtAddress" noResource="true"/>
               </Properties>
               <BindingProperties>
-                <BindingProperty name="text" source="sapSetting" sourcePath="${address}" target="txtAddress" targetPath="text" updateStrategy="2" immediately="false">
-                  <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                </BindingProperty>
+                <BindingProperty name="text" source="sapSetting" sourcePath="${address}" target="txtAddress" targetPath="text" updateStrategy="0" immediately="false"/>
               </BindingProperties>
             </Component>
             <Component class="javax.swing.JLabel" name="lblPhone">
@@ -214,9 +212,7 @@
                 <Property name="name" type="java.lang.String" value="txtPhone" noResource="true"/>
               </Properties>
               <BindingProperties>
-                <BindingProperty name="text" source="sapSetting" sourcePath="${phone}" target="txtPhone" targetPath="text" updateStrategy="2" immediately="false">
-                  <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                </BindingProperty>
+                <BindingProperty name="text" source="sapSetting" sourcePath="${phone}" target="txtPhone" targetPath="text" updateStrategy="0" immediately="false"/>
               </BindingProperties>
             </Component>
             <Component class="javax.swing.JLabel" name="lblFax">
@@ -230,9 +226,7 @@
                 <Property name="name" type="java.lang.String" value="txtFax" noResource="true"/>
               </Properties>
               <BindingProperties>
-                <BindingProperty name="text" source="sapSetting" sourcePath="${fax}" target="txtFax" targetPath="text" updateStrategy="2" immediately="false">
-                  <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                </BindingProperty>
+                <BindingProperty name="text" source="sapSetting" sourcePath="${fax}" target="txtFax" targetPath="text" updateStrategy="0" immediately="false"/>
               </BindingProperties>
             </Component>
           </SubComponents>
@@ -304,9 +298,7 @@
                 <Property name="name" type="java.lang.String" value="txtMatnrPCB40" noResource="true"/>
               </Properties>
               <BindingProperties>
-                <BindingProperty name="text" source="sapSetting" sourcePath="${matnrPcb40}" target="txtMatnrPCB40" targetPath="text" updateStrategy="2" immediately="false">
-                  <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                </BindingProperty>
+                <BindingProperty name="text" source="sapSetting" sourcePath="${matnrPcb40}" target="txtMatnrPCB40" targetPath="text" updateStrategy="0" immediately="false"/>
               </BindingProperties>
             </Component>
             <Component class="javax.swing.JLabel" name="lblMatnrBulk">
@@ -320,9 +312,7 @@
                 <Property name="name" type="java.lang.String" value="txtMatnrBulk" noResource="true"/>
               </Properties>
               <BindingProperties>
-                <BindingProperty name="text" source="sapSetting" sourcePath="${matnrXmxa}" target="txtMatnrBulk" targetPath="text" updateStrategy="2" immediately="false">
-                  <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                </BindingProperty>
+                <BindingProperty name="text" source="sapSetting" sourcePath="${matnrXmxa}" target="txtMatnrBulk" targetPath="text" updateStrategy="0" immediately="false"/>
               </BindingProperties>
             </Component>
             <Component class="javax.swing.JLabel" name="lblSubContractClinker">
@@ -336,9 +326,7 @@
                 <Property name="name" type="java.lang.String" value="txtSubContractClinker" noResource="true"/>
               </Properties>
               <BindingProperties>
-                <BindingProperty name="text" source="sapSetting" sourcePath="${matnrClinker}" target="txtSubContractClinker" targetPath="text" updateStrategy="2" immediately="false">
-                  <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                </BindingProperty>
+                <BindingProperty name="text" source="sapSetting" sourcePath="${matnrClinker}" target="txtSubContractClinker" targetPath="text" updateStrategy="0" immediately="false"/>
               </BindingProperties>
             </Component>
           </SubComponents>
@@ -441,7 +429,7 @@
                 <Property name="name" type="java.lang.String" value="txfAct1Val" noResource="true"/>
               </Properties>
               <BindingProperties>
-                <BindingProperty name="value" source="sapSetting" sourcePath="${bact1Val}" target="txfAct1Val" targetPath="value" updateStrategy="2" immediately="false"/>
+                <BindingProperty name="value" source="sapSetting" sourcePath="${bact1Val}" target="txfAct1Val" targetPath="value" updateStrategy="0" immediately="false"/>
               </BindingProperties>
             </Component>
             <Component class="javax.swing.JLabel" name="lblAct1Unit">
@@ -465,7 +453,7 @@
                 <Property name="name" type="java.lang.String" value="txfAct2Val" noResource="true"/>
               </Properties>
               <BindingProperties>
-                <BindingProperty name="value" source="sapSetting" sourcePath="${bact2Val}" target="txfAct2Val" targetPath="value" updateStrategy="2" immediately="false"/>
+                <BindingProperty name="value" source="sapSetting" sourcePath="${bact2Val}" target="txfAct2Val" targetPath="value" updateStrategy="0" immediately="false"/>
               </BindingProperties>
             </Component>
             <Component class="javax.swing.JLabel" name="lblAct2Unit">
@@ -489,7 +477,7 @@
                 <Property name="name" type="java.lang.String" value="txfAct3Val" noResource="true"/>
               </Properties>
               <BindingProperties>
-                <BindingProperty name="value" source="sapSetting" sourcePath="${bact3Val}" target="txfAct3Val" targetPath="value" updateStrategy="2" immediately="false"/>
+                <BindingProperty name="value" source="sapSetting" sourcePath="${bact3Val}" target="txfAct3Val" targetPath="value" updateStrategy="0" immediately="false"/>
               </BindingProperties>
             </Component>
             <Component class="javax.swing.JLabel" name="lblAct3Unit">
@@ -513,7 +501,7 @@
                 <Property name="name" type="java.lang.String" value="txfAct4Val" noResource="true"/>
               </Properties>
               <BindingProperties>
-                <BindingProperty name="value" source="sapSetting" sourcePath="${bact4Val}" target="txfAct4Val" targetPath="value" updateStrategy="2" immediately="false"/>
+                <BindingProperty name="value" source="sapSetting" sourcePath="${bact4Val}" target="txfAct4Val" targetPath="value" updateStrategy="0" immediately="false"/>
               </BindingProperties>
             </Component>
             <Component class="javax.swing.JLabel" name="lblAct4Unit">
@@ -589,7 +577,7 @@
                 <Property name="name" type="java.lang.String" value="txfWB1Tol" noResource="true"/>
               </Properties>
               <BindingProperties>
-                <BindingProperty name="value" source="sapSetting" sourcePath="${wb1Tol}" target="txfWB1Tol" targetPath="value" updateStrategy="2" immediately="false"/>
+                <BindingProperty name="value" source="sapSetting" sourcePath="${wb1Tol}" target="txfWB1Tol" targetPath="value" updateStrategy="0" immediately="false"/>
               </BindingProperties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel10">
@@ -613,7 +601,7 @@
                 <Property name="name" type="java.lang.String" value="txfWB2Tol" noResource="true"/>
               </Properties>
               <BindingProperties>
-                <BindingProperty name="value" source="sapSetting" sourcePath="${wb2Tol}" target="txfWB2Tol" targetPath="value" updateStrategy="2" immediately="false"/>
+                <BindingProperty name="value" source="sapSetting" sourcePath="${wb2Tol}" target="txfWB2Tol" targetPath="value" updateStrategy="0" immediately="false"/>
               </BindingProperties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel12">
@@ -692,9 +680,7 @@
                 <Property name="name" type="java.lang.String" value="txtRWMan" noResource="true"/>
               </Properties>
               <BindingProperties>
-                <BindingProperty name="text" source="sapSetting" sourcePath="${roleWm}" target="txtRWMan" targetPath="text" updateStrategy="2" immediately="false">
-                  <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                </BindingProperty>
+                <BindingProperty name="text" source="sapSetting" sourcePath="${roleWm}" target="txtRWMan" targetPath="text" updateStrategy="0" immediately="false"/>
               </BindingProperties>
             </Component>
             <Component class="javax.swing.JLabel" name="lblRStationStaff">
@@ -708,9 +694,7 @@
                 <Property name="name" type="java.lang.String" value="txtRSStaff" noResource="true"/>
               </Properties>
               <BindingProperties>
-                <BindingProperty name="text" source="sapSetting" sourcePath="${roleSs}" target="txtRSStaff" targetPath="text" updateStrategy="2" immediately="false">
-                  <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                </BindingProperty>
+                <BindingProperty name="text" source="sapSetting" sourcePath="${roleSs}" target="txtRSStaff" targetPath="text" updateStrategy="0" immediately="false"/>
               </BindingProperties>
             </Component>
             <Component class="javax.swing.JLabel" name="lblRAdministrator">
@@ -724,9 +708,7 @@
                 <Property name="name" type="java.lang.String" value="txtRAdmin" noResource="true"/>
               </Properties>
               <BindingProperties>
-                <BindingProperty name="text" source="sapSetting" sourcePath="${roleAd}" target="txtRAdmin" targetPath="text" updateStrategy="2" immediately="false">
-                  <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                </BindingProperty>
+                <BindingProperty name="text" source="sapSetting" sourcePath="${roleAd}" target="txtRAdmin" targetPath="text" updateStrategy="0" immediately="false"/>
               </BindingProperties>
             </Component>
           </SubComponents>

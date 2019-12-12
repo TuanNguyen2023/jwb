@@ -2662,9 +2662,9 @@ private void txtWTNumFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
                             weightTicket.setRegItemText(outbDel.getArktx());
                             weightTicket.setMatnrRef(outbDel.getMatnr());
                             weightTicket.setItem(outbDel.getDelivItem());
+                            weightTicket.setUnit(outbDel.getVrkme());
                         }
-//                    weightTicket.setUnit(outbDel.getVrkme());
-                        weightTicket.setUnit("TO");
+                        //weightTicket.setUnit("TO");
                         try {
                             //get list outdetails
                             details_list = con.findByMandtDelivNumb(do_list[i]);
@@ -3129,7 +3129,7 @@ private void txtWTNumFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
                 weightTicket.setRegItemText(purOrder.getShortText());
                 weightTicket.setMatnrRef(purOrder.getMaterial());
 //                weightTicket.setUnit(purOrder.getPoUnit());
-                weightTicket.setUnit("TO");
+                weightTicket.setUnit("TON");
             } else {
                 txtRegItem.setText(null);
                 txtMatnr.setText(null);
@@ -3353,12 +3353,12 @@ private void txtWTNumFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
                             }
                         } else if (rbtMisc.isSelected() || objBapi == null) {
                             weightTicket.setPosted(2);
-                            weightTicket.setUnit("TO");
+                            weightTicket.setUnit("TON");
                         }
                     } else {
                         bapi_message = "Đang post phiếu ở chế độ OFFLINE 3024";
                         weightTicket.setPosted(2);
-                        weightTicket.setUnit("TO");
+                        weightTicket.setUnit("TON");
                     }
                 }
                 /*} else if (weightTicket.getDelivNumb() != null || !weightTicket.getDelivNumb().equals("")) {*/
@@ -3648,11 +3648,11 @@ private void txtWTNumFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
 
                             } else if (rbtMisc.isSelected() || objBapi == null) {
                                 weightTicket.setPosted(2);
-                                weightTicket.setUnit("TO");
+                                weightTicket.setUnit("TON");
                             }
                         } else {
                             weightTicket.setPosted(2);
-                            weightTicket.setUnit("TO");
+                            weightTicket.setUnit("TON");
                         }
                     }
 
@@ -3665,7 +3665,7 @@ private void txtWTNumFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
             }
             if (rbtMisc.isSelected()) {
                 weightTicket.setPosted(2);
-                weightTicket.setUnit("TO");
+                weightTicket.setUnit("TON");
             }
             if (!entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().begin();
@@ -4773,8 +4773,8 @@ private void txtWTNumFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
         if (wt.getRegCategory() == 'O'
                 && wt.getRegItemText() != null
                 && wt.getRegItemText().toLowerCase().indexOf("bao") >= 0
-                && wt.getMatnrRef() != null
-                && wt.getMatnrRef().indexOf("1011304") >= 0) {
+                && wt.getMatnrRef() != null) {
+//                && wt.getMatnrRef().indexOf("1011304") >= 0) {
             _StockTransItems.add(new OutbDeliveryCreateStoStructure(wt.getEbeln(), wt.getItem(), wt.getRegItemQty(), wt.getUnit()));
         } else if (outbDel == null) {
             _StockTransItems.add(new OutbDeliveryCreateStoStructure(wt.getEbeln(), wt.getItem(), wt.getGQty(), wt.getUnit()));
@@ -4990,7 +4990,7 @@ private void txtWTNumFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
         //{+20101203#01 add free goods item
         VbpokStructure tab_wa_f = new VbpokStructure();
 
-        tab_wa_f.setMatnr(wt.getMatnrRef());
+        //tab_wa_f.setMatnr(wt.getMatnrRef());
         tab_wa_f.setWerks(config.getwPlant());
         tab_wa_f.setLgort(wt.getLgort());
         tab_wa_f.setCharg(wt.getCharg());
@@ -5004,6 +5004,7 @@ private void txtWTNumFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
             } else {
                 tab_wa_f.setVbeln_vl(doNum);
             }
+            tab_wa_f.setMatnr(outbDel.getMatnrFree());
             tab_wa_f.setPosnr_vl(outbDel.getDelivItemFree());
             tab_wa_f.setVbeln(tab_wa_f.getVbeln_vl());
             tab_wa_f.setPosnn(tab_wa_f.getPosnr_vl());

@@ -17,7 +17,7 @@ import javax.persistence.Table;
  * @author vunguyent
  */
 @Entity
-@Table(name = "Customer", catalog = "jWeighBridge", schema = "")
+@Table(name = "Customer")
 @NamedQueries({
     @NamedQuery(name = "Customer.findAll", query = "SELECT c FROM Customer c"),
     @NamedQuery(name = "Customer.findByMandt", query = "SELECT c FROM Customer c WHERE c.customerPK.mandt = :mandt"),

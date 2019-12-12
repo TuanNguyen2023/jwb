@@ -140,7 +140,7 @@ public class SettingView extends javax.swing.JDialog {
 
         txtWPlantRPT.setName("txtWPlantRPT"); // NOI18N
 
-        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_ONCE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${nameRpt}"), txtWPlantRPT, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${nameRpt}"), txtWPlantRPT, org.jdesktop.beansbinding.BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
 
         lblAddress.setText(resourceMap.getString("lblAddress.text")); // NOI18N
@@ -148,7 +148,7 @@ public class SettingView extends javax.swing.JDialog {
 
         txtAddress.setName("txtAddress"); // NOI18N
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_ONCE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${address}"), txtAddress, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${address}"), txtAddress, org.jdesktop.beansbinding.BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
 
         lblPhone.setText(resourceMap.getString("lblPhone.text")); // NOI18N
@@ -156,7 +156,7 @@ public class SettingView extends javax.swing.JDialog {
 
         txtPhone.setName("txtPhone"); // NOI18N
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_ONCE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${phone}"), txtPhone, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${phone}"), txtPhone, org.jdesktop.beansbinding.BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
 
         lblFax.setText(resourceMap.getString("lblFax.text")); // NOI18N
@@ -164,7 +164,7 @@ public class SettingView extends javax.swing.JDialog {
 
         txtFax.setName("txtFax"); // NOI18N
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_ONCE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${fax}"), txtFax, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${fax}"), txtFax, org.jdesktop.beansbinding.BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
 
         javax.swing.GroupLayout pnWPlantLayout = new javax.swing.GroupLayout(pnWPlant);
@@ -216,7 +216,7 @@ public class SettingView extends javax.swing.JDialog {
 
         txtMatnrPCB40.setName("txtMatnrPCB40"); // NOI18N
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_ONCE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${matnrPcb40}"), txtMatnrPCB40, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${matnrPcb40}"), txtMatnrPCB40, org.jdesktop.beansbinding.BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
 
         lblMatnrBulk.setText(resourceMap.getString("lblMatnrBulk.text")); // NOI18N
@@ -224,7 +224,7 @@ public class SettingView extends javax.swing.JDialog {
 
         txtMatnrBulk.setName("txtMatnrBulk"); // NOI18N
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_ONCE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${matnrXmxa}"), txtMatnrBulk, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${matnrXmxa}"), txtMatnrBulk, org.jdesktop.beansbinding.BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
 
         lblSubContractClinker.setText(resourceMap.getString("lblSubContractClinker.text")); // NOI18N
@@ -232,7 +232,7 @@ public class SettingView extends javax.swing.JDialog {
 
         txtSubContractClinker.setName("txtSubContractClinker"); // NOI18N
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_ONCE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${matnrClinker}"), txtSubContractClinker, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${matnrClinker}"), txtSubContractClinker, org.jdesktop.beansbinding.BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
 
         javax.swing.GroupLayout pnMaterialsLayout = new javax.swing.GroupLayout(pnMaterials);
@@ -280,7 +280,7 @@ public class SettingView extends javax.swing.JDialog {
         txfAct1Val.setText(resourceMap.getString("txfAct1Val.text")); // NOI18N
         txfAct1Val.setName("txfAct1Val"); // NOI18N
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_ONCE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${bact1Val}"), txfAct1Val, org.jdesktop.beansbinding.BeanProperty.create("value"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${bact1Val}"), txfAct1Val, org.jdesktop.beansbinding.BeanProperty.create("value"));
         bindingGroup.addBinding(binding);
 
         lblAct1Unit.setText(resourceMap.getString("lblAct1Unit.text")); // NOI18N
@@ -293,7 +293,7 @@ public class SettingView extends javax.swing.JDialog {
         txfAct2Val.setText(resourceMap.getString("txfAct2Val.text")); // NOI18N
         txfAct2Val.setName("txfAct2Val"); // NOI18N
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_ONCE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${bact2Val}"), txfAct2Val, org.jdesktop.beansbinding.BeanProperty.create("value"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${bact2Val}"), txfAct2Val, org.jdesktop.beansbinding.BeanProperty.create("value"));
         bindingGroup.addBinding(binding);
 
         lblAct2Unit.setText(resourceMap.getString("lblAct2Unit.text")); // NOI18N
@@ -306,7 +306,7 @@ public class SettingView extends javax.swing.JDialog {
         txfAct3Val.setText(resourceMap.getString("txfAct3Val.text")); // NOI18N
         txfAct3Val.setName("txfAct3Val"); // NOI18N
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_ONCE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${bact3Val}"), txfAct3Val, org.jdesktop.beansbinding.BeanProperty.create("value"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${bact3Val}"), txfAct3Val, org.jdesktop.beansbinding.BeanProperty.create("value"));
         bindingGroup.addBinding(binding);
 
         lblAct3Unit.setText(resourceMap.getString("lblAct3Unit.text")); // NOI18N
@@ -319,7 +319,7 @@ public class SettingView extends javax.swing.JDialog {
         txfAct4Val.setText(resourceMap.getString("txfAct4Val.text")); // NOI18N
         txfAct4Val.setName("txfAct4Val"); // NOI18N
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_ONCE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${bact4Val}"), txfAct4Val, org.jdesktop.beansbinding.BeanProperty.create("value"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${bact4Val}"), txfAct4Val, org.jdesktop.beansbinding.BeanProperty.create("value"));
         bindingGroup.addBinding(binding);
 
         lblAct4Unit.setText(resourceMap.getString("lblAct4Unit.text")); // NOI18N
@@ -393,7 +393,7 @@ public class SettingView extends javax.swing.JDialog {
         txfWB1Tol.setText(resourceMap.getString("txfWB1Tol.text")); // NOI18N
         txfWB1Tol.setName("txfWB1Tol"); // NOI18N
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_ONCE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${wb1Tol}"), txfWB1Tol, org.jdesktop.beansbinding.BeanProperty.create("value"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${wb1Tol}"), txfWB1Tol, org.jdesktop.beansbinding.BeanProperty.create("value"));
         bindingGroup.addBinding(binding);
 
         jLabel10.setText(resourceMap.getString("jLabel10.text")); // NOI18N
@@ -406,7 +406,7 @@ public class SettingView extends javax.swing.JDialog {
         txfWB2Tol.setText(resourceMap.getString("txfWB2Tol.text")); // NOI18N
         txfWB2Tol.setName("txfWB2Tol"); // NOI18N
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_ONCE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${wb2Tol}"), txfWB2Tol, org.jdesktop.beansbinding.BeanProperty.create("value"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${wb2Tol}"), txfWB2Tol, org.jdesktop.beansbinding.BeanProperty.create("value"));
         bindingGroup.addBinding(binding);
 
         jLabel12.setText(resourceMap.getString("jLabel12.text")); // NOI18N
@@ -454,7 +454,7 @@ public class SettingView extends javax.swing.JDialog {
 
         txtRWMan.setName("txtRWMan"); // NOI18N
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_ONCE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${roleWm}"), txtRWMan, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${roleWm}"), txtRWMan, org.jdesktop.beansbinding.BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
 
         lblRStationStaff.setText(resourceMap.getString("lblRStationStaff.text")); // NOI18N
@@ -462,7 +462,7 @@ public class SettingView extends javax.swing.JDialog {
 
         txtRSStaff.setName("txtRSStaff"); // NOI18N
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_ONCE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${roleSs}"), txtRSStaff, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${roleSs}"), txtRSStaff, org.jdesktop.beansbinding.BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
 
         lblRAdministrator.setText(resourceMap.getString("lblRAdministrator.text")); // NOI18N
@@ -470,7 +470,7 @@ public class SettingView extends javax.swing.JDialog {
 
         txtRAdmin.setName("txtRAdmin"); // NOI18N
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_ONCE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${roleAd}"), txtRAdmin, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${roleAd}"), txtRAdmin, org.jdesktop.beansbinding.BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
 
         javax.swing.GroupLayout pnRolesMapLayout = new javax.swing.GroupLayout(pnRolesMap);
