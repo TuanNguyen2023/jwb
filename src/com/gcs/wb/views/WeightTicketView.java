@@ -207,7 +207,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         
         try 
         {
-         q = (Query) entityManager.createNativeQuery("call pGetDev2 (? )" ); 
+         q = (Query) entityManager.createNativeQuery("{call pGetDev2 (?)}" );
          q.setParameter(1, WeighBridgeApp.getApplication().getConfig().getWbId());
          List sdev  = q.getResultList();
          
@@ -4015,14 +4015,14 @@ private void txtWTNumFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
                          boolean block  = false ; 
                          
                         String sql ="";                         
-                              sql = "call pGetMaxL ( ?,?,?)" ;                                 
+                              sql = "{call pGetMaxL ( ?,?,?)}" ;
                               Query q = (Query) entityManager.createNativeQuery(sql);
                               q.setParameter(1,config.getwPlant().toString().trim());
                               q.setParameter(2,config.getWbId().toString());
                               q.setParameter(3,weightTicket.getSoXe().toString().trim());
                              
                          List wts = q.getResultList();          
-                         sql = "call pGetMaxLLock ( ?,?,?)" ;    
+                         sql = "{call pGetMaxLLock ( ?,?,?)}" ;
                          
                               Query q2 = (Query) entityManager.createNativeQuery(sql);
                              
