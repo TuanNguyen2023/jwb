@@ -1859,7 +1859,7 @@ private void txtWTNumFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
         
         
         ///tuanna 02/10/2015 
-       String sql = "call pgetWT_Reg ( ?)" ;                                 
+       String sql = "{call pgetWT_Reg ( ?)}" ;                                 
                                Query q = (Query) entityManager.createNativeQuery(sql);
                                q.setParameter(1,txt); 
                                List wts = q.getResultList();         
@@ -2483,7 +2483,7 @@ private void txtWTNumFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
                 // get Niem Xa 
                 String SoNiemXa =""; 
                 String Posto =""; 
-                String sql = "call pgetWT_NiemXa ( ?)" ;                                 
+                String sql = "{call pgetWT_NiemXa ( ?)}" ;                                 
                                Query q = (Query) entityManager.createNativeQuery(sql);
                                q.setParameter(1,txtWTNum.getText().toString()); 
                                List wts = q.getResultList();         
@@ -2497,7 +2497,7 @@ private void txtWTNumFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
                         }
                          
                           try{
-                      sql = "call pvc_getTicketIndex ( ? ) " ;                                 
+                      sql = "{call pvc_getTicketIndex ( ? )}" ;                                 
                                Query qx = (Query) entityManager.createNativeQuery(sql);
                                qx.setParameter(1,txtWTNum.getText().toString()); 
                                List wtxxx = qx.getResultList();         
