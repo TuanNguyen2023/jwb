@@ -10,9 +10,11 @@ import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.helper.structure.CustomerGetDetailStructure;
 import com.gcs.wb.bapi.helper.structure.MatGetDetailStructure;
 import com.gcs.wb.bapi.helper.structure.MatLookupStructure;
+import com.gcs.wb.bapi.helper.structure.MaterialGetListStructure;
 import com.gcs.wb.bapi.helper.structure.PoGetDetailHeaderStructure;
 import com.gcs.wb.bapi.helper.structure.PoGetDetailItemStructure;
 import com.gcs.wb.bapi.helper.structure.SLocsGetListStructure;
+import com.gcs.wb.bapi.helper.structure.TransportagentGetListStructure;
 import com.gcs.wb.bapi.helper.structure.VendorGetDetailStructure;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.Customer;
@@ -24,6 +26,7 @@ import com.gcs.wb.jpa.entity.OutbDetailsV2;
 import com.gcs.wb.jpa.entity.OutbDetailsV2PK;
 import com.gcs.wb.jpa.entity.PurOrder;
 import com.gcs.wb.jpa.entity.SLoc;
+import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.Vendor;
 import com.gcs.wb.jpa.entity.VendorPK;
 import com.gcs.wb.model.AppConfig;
@@ -37,7 +40,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.swing.DefaultComboBoxModel;
 
-/**
+/** 
  *
  * @author vunguyent
  */
@@ -474,7 +477,134 @@ public class SAP2Local {
         }
         return result;
     }
+    
+//    public static List<Material> getLookUpMaterialsList(String wplant) {
+//        List<Material> result = new ArrayList<Material>();
+//        AppConfig config = WeighBridgeApp.getApplication().getConfig();
+//        MatLookupBapi bapi = new MatLookupBapi();
+//        bapi.setPlant(wplant);
+//        WeighBridgeApp.getApplication().getSAPSession().execute(bapi);
+//        List<MatLookupStructure> mats = bapi.getListMats();
+//        for (MatLookupStructure mat : mats) {
+//            Material m = null;
+//            m = new Material(config.getsClient(), mat.getMaterial());
+//            if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
+//                m = new Material(config.getsClient(), config.getwPlant(), mat.getMaterial());
+//            } else {
+//                m = new Material(config.getsClient(), mat.getMaterial());
+//            }
+//            //m.setWplant(wplant);
+//            m.setMaktx(mat.getDesc());
+//            m.setMaktg(m.getMaktx().toUpperCase());
+//            m.setXchpf(mat.getXchpf() != null && mat.getXchpf().equalsIgnoreCase("X") ? 'X' : ' ');
+//            result.add(m);
+//        }
+//        return result;
+//    }
+    
+    public static List<Material> getMaterialsList() {
+        List<Material> result = new ArrayList<Material>();
+        AppConfig config = WeighBridgeApp.getApplication().getConfig();
+        
+        MaterialGetListBapi bapi = new MaterialGetListBapi();
+        WeighBridgeApp.getApplication().getSAPSession().execute(bapi);
+        List<MaterialGetListStructure> mats = bapi.getEtMaterial();
+        for (MaterialGetListStructure mat : mats) {
+            Material m = null;
+            m = new Material(config.getsClient(),mat.getWerks(), mat.getMatnr());
+            m.setMaktx(mat.getMaktx());
+            m.setMaktg(mat.getMaktxLong());
+            //m.setXchpf(mat.);
+            result.add(m);
+        }
+        return result;
+    }
+    
+    public static List<TransportAgent> getTransportAgentList(String wplant) {
+        List<TransportAgent> result = new ArrayList<TransportAgent>();
+        TransportagentGetListBapi bapi = new TransportagentGetListBapi();
+        bapi.setIvEkorg(wplant);
+        try {
+            WeighBridgeApp.getApplication().getSAPSession().execute(bapi);
+            List<TransportagentGetListStructure> transports = bapi.getEtVendor();
+            for (TransportagentGetListStructure transport : transports) {
+                 TransportAgent tAgent = null;
+                tAgent = new TransportAgent(transport.getLifnr());
+                if (transport.getName1() != null || transport.getName1().length() <= 35) 
+                {
+                tAgent.setName(transport.getName1());
+            } else
+                {
+                    tAgent.setName(transport.getName2());
+                }
+                result.add(tAgent);
+            }
+        } catch (Exception ex) {
+            
+        }
+        return result;
+    }
+    
+    // Get data for Vendor van chuyen/boc xep
+    public static List<Vendor> getVendorList(String wplant) {
+        List<Vendor> result = new ArrayList<Vendor>();
+        TransportagentGetListBapi bapi = new TransportagentGetListBapi();
+        bapi.setIvEkorg(wplant);
+        try {
+            WeighBridgeApp.getApplication().getSAPSession().execute(bapi);
+            List<TransportagentGetListStructure> vendors = bapi.getEtVendor();
+            for (TransportagentGetListStructure vendor : vendors) {
+                Vendor v = null;
+                VendorPK vpk = new VendorPK(wplant, vendor.getLifnr());
+                v = new Vendor(vpk);
+                v.setName1(vendor.getName1());
+                v.setName2(vendor.getName2());
+                
+                result.add(v);
+            }
+        } catch (Exception ex) {  
+        }
+        return result;
+    }
 
+        // Get data for Vendor van chuyen/boc xep
+    public static DefaultComboBoxModel getVendorList(AppConfig config, EntityManager entityManager) {
+        config = WeighBridgeApp.getApplication().getConfig();
+        
+        TypedQuery<Vendor> tVendor = entityManager.createNamedQuery("Vendor.findByMandt", Vendor.class);
+            tVendor.setParameter("mandt", config.getsClient());
+        List<Vendor> vendors = tVendor.getResultList();
+        
+        TransportagentGetListBapi bapi = new TransportagentGetListBapi();
+        bapi.setIvEkorg(config.getwPlant());
+        try {
+            WeighBridgeApp.getApplication().getSAPSession().execute(bapi);
+            
+            List<TransportagentGetListStructure> venSaps = bapi.getEtVendor();
+            if (!entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().begin();
+            }
+            for (TransportagentGetListStructure venSap : venSaps) {
+                Vendor ven = null;
+                VendorPK vpk = new VendorPK(config.getsClient(), venSap.getLifnr());
+                ven = new Vendor(vpk);
+                ven.setName1(venSap.getName1());
+                ven.setName2(venSap.getName2());
+                 if(vendors.indexOf(ven)==-1) {
+                     entityManager.persist(ven);
+                     vendors.add(ven);
+                 } else {
+                     entityManager.merge(ven);
+                 }
+            }
+            entityManager.getTransaction().commit();
+            entityManager.clear();
+        } catch (Exception ex) {  
+        }
+        
+         return new DefaultComboBoxModel(vendors.toArray());
+        }
+    
     public static Material getMaterialDetail(String matnr) {
         Material result = null;
         MatGetDetailBapi bapi = new MatGetDetailBapi();

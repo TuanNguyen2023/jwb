@@ -67,19 +67,19 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="txtSodangtai" min="-2" pref="400" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="pnControl" pref="47" max="32767" attributes="2"/>
+              <Component id="pnControl" pref="109" max="32767" attributes="2"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="pnWTs" pref="896" max="32767" attributes="0"/>
+              <Component id="pnWTs" pref="900" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
                   <Component id="pnWTicket" alignment="0" max="32767" attributes="0"/>
-                  <Component id="pnPrintControl" alignment="0" pref="896" max="32767" attributes="0"/>
+                  <Component id="pnPrintControl" alignment="0" pref="900" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -112,7 +112,7 @@
                       </Group>
                   </Group>
               </Group>
-              <EmptySpace pref="93" max="32767" attributes="0"/>
+              <EmptySpace pref="97" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -164,7 +164,7 @@
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="lblType" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Component id="cbxType" pref="415" max="32767" attributes="2"/>
+                              <Component id="cbxType" pref="479" max="32767" attributes="2"/>
                           </Group>
                           <Component id="jPanel2" alignment="0" min="-2" pref="791" max="-2" attributes="0"/>
                       </Group>
@@ -185,7 +185,7 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jPanel2" min="-2" pref="65" max="-2" attributes="0"/>
-                      <EmptySpace pref="21" max="32767" attributes="0"/>
+                      <EmptySpace pref="25" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -288,7 +288,7 @@
                               <Component id="txtNguoitao" min="-2" pref="174" max="-2" attributes="0"/>
                               <Component id="btnFind" min="-2" pref="76" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="86" max="32767" attributes="0"/>
+                          <EmptySpace pref="133" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -606,7 +606,7 @@
                           <Component id="jButton1" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace pref="169" max="32767" attributes="0"/>
+                  <EmptySpace pref="180" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="1" attributes="0">
@@ -622,9 +622,9 @@
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Component id="rbtOutward" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="txtRegItem1" alignment="0" pref="231" max="32767" attributes="0"/>
+                              <Component id="txtRegItem1" alignment="0" pref="256" max="32767" attributes="0"/>
                               <Group type="102" alignment="1" attributes="0">
-                                  <Component id="txtDelNum" pref="151" max="32767" attributes="0"/>
+                                  <Component id="txtDelNum" pref="177" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="btnCheckDO" min="-2" pref="73" max="-2" attributes="0"/>
                               </Group>
@@ -637,7 +637,7 @@
                       </Group>
                       <Group type="102" attributes="0">
                           <EmptySpace min="-2" pref="88" max="-2" attributes="0"/>
-                          <Component id="txtRegItem" pref="223" max="32767" attributes="0"/>
+                          <Component id="txtRegItem" pref="234" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>

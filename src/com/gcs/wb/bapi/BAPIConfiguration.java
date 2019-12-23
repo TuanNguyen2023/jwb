@@ -15,12 +15,14 @@ import com.gcs.wb.bapi.helper.DoGetDetailBapi;
 import com.gcs.wb.bapi.helper.MatAvailableBapi;
 import com.gcs.wb.bapi.helper.MatGetDetailBapi;
 import com.gcs.wb.bapi.helper.MatLookupBapi;
+import com.gcs.wb.bapi.helper.MaterialGetListBapi;
 import com.gcs.wb.bapi.helper.MvtGetDetailBapi;
 import com.gcs.wb.bapi.helper.MvtReasonsGetListBapi;
 import com.gcs.wb.bapi.helper.PlantGetDetailBapi;
 import com.gcs.wb.bapi.helper.PoGetDetailBapi;
 import com.gcs.wb.bapi.helper.SLocsGetListBapi;
 import com.gcs.wb.bapi.helper.StoGetListBapi;
+import com.gcs.wb.bapi.helper.TransportagentGetListBapi;
 import com.gcs.wb.bapi.helper.UnitsGetListBapi;
 import com.gcs.wb.bapi.helper.UserGetDetailBapi;
 import com.gcs.wb.bapi.helper.VendorGetDetailBapi;
@@ -96,6 +98,8 @@ public class BAPIConfiguration {
         sessionConfig.addAnnotatedClass(MatLookupBapi.class);
         sessionConfig.addAnnotatedClass(DORevertBapi.class);
         sessionConfig.addAnnotatedClass(CheckVersionWBBapi.class);
+        sessionConfig.addAnnotatedClass(TransportagentGetListBapi.class);
+        sessionConfig.addAnnotatedClass(MaterialGetListBapi.class);
         
         AnnotationConfiguration configuration = new AnnotationConfiguration(sessionConfig);
         sessionManager = configuration.buildSessionManager();

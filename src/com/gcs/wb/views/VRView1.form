@@ -81,7 +81,7 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="spTAgent" alignment="0" pref="170" max="32767" attributes="0"/>
+                      <Component id="spTAgent" alignment="0" pref="171" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
                               <Component id="lblAName" alignment="0" max="32767" attributes="1"/>
@@ -95,7 +95,7 @@
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
                           <Component id="btnARemove" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="36" max="32767" attributes="0"/>
+                          <EmptySpace pref="37" max="32767" attributes="0"/>
                           <Component id="btnASave" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -106,7 +106,7 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="spTAgent" pref="144" max="32767" attributes="0"/>
+                  <Component id="spTAgent" pref="147" max="32767" attributes="0"/>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="lblAName" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -227,10 +227,10 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="spVehicle" alignment="0" pref="220" max="32767" attributes="0"/>
+                      <Component id="spVehicle" alignment="0" pref="221" max="32767" attributes="0"/>
                       <Group type="102" alignment="1" attributes="0">
                           <Component id="btnVRemove" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="86" max="32767" attributes="0"/>
+                          <EmptySpace pref="87" max="32767" attributes="0"/>
                           <Component id="btnVSave" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
@@ -246,7 +246,7 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="spVehicle" pref="170" max="32767" attributes="0"/>
+                  <Component id="spVehicle" pref="174" max="32767" attributes="0"/>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="lblLicPlate" alignment="3" min="-2" max="-2" attributes="0"/>

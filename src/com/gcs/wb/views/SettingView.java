@@ -32,12 +32,18 @@ public class SettingView extends javax.swing.JDialog {
     public SettingView(java.awt.Frame parent) {
         super(parent);
         initComponents();
-        if (sapSetting.getCheckTalp() == null || sapSetting.getCheckTalp() == false) {
-            chkTALP.setSelected(false);
-        } else {
-            chkTALP.setSelected(true);
-        }
+//        if (sapSetting.getCheckTalp() == null || sapSetting.getCheckTalp() == false) {
+//            chkTALP.setSelected(false);
+//        } else {
+//            chkTALP.setSelected(true);
+//        }
 
+        // set select for checkbox chkPOV
+        if (sapSetting.getCheckPov() == null || sapSetting.getCheckPov() == false) {
+            chkPOV.setSelected(false);
+        } else {
+            chkPOV.setSelected(true);
+        }
         //----------------------------------
         //+20110119#01
         Variant vari = new Variant();
@@ -55,9 +61,9 @@ public class SettingView extends javax.swing.JDialog {
             } catch (Exception e) {
             }
         }
-        if (chkPROC.equals("X")) {
-            chkPROC1.setSelected(true);
-        }
+//        if (chkPROC.equals("X")) {
+//            chkPROC1.setSelected(true);
+//        }
         entityManager.clear();
         //+20110119#01
         //----------------------------------
@@ -85,42 +91,8 @@ public class SettingView extends javax.swing.JDialog {
         txtPhone = new javax.swing.JTextField();
         lblFax = new javax.swing.JLabel();
         txtFax = new javax.swing.JTextField();
-        pnMaterials = new javax.swing.JPanel();
-        lblMatnrPCB40 = new javax.swing.JLabel();
-        txtMatnrPCB40 = new javax.swing.JTextField();
-        lblMatnrBulk = new javax.swing.JLabel();
-        txtMatnrBulk = new javax.swing.JTextField();
-        lblSubContractClinker = new javax.swing.JLabel();
-        txtSubContractClinker = new javax.swing.JTextField();
-        pnPPBaseVals = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        txfAct1Val = new javax.swing.JFormattedTextField();
-        lblAct1Unit = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        txfAct2Val = new javax.swing.JFormattedTextField();
-        lblAct2Unit = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        txfAct3Val = new javax.swing.JFormattedTextField();
-        lblAct3Unit = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        txfAct4Val = new javax.swing.JFormattedTextField();
-        lblAct4Unit = new javax.swing.JLabel();
-        pnWBTol = new javax.swing.JPanel();
-        jLabel9 = new javax.swing.JLabel();
-        txfWB1Tol = new javax.swing.JFormattedTextField();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        txfWB2Tol = new javax.swing.JFormattedTextField();
-        jLabel12 = new javax.swing.JLabel();
-        pnRolesMap = new javax.swing.JPanel();
-        lblRWatchman = new javax.swing.JLabel();
-        txtRWMan = new javax.swing.JTextField();
-        lblRStationStaff = new javax.swing.JLabel();
-        txtRSStaff = new javax.swing.JTextField();
-        lblRAdministrator = new javax.swing.JLabel();
-        txtRAdmin = new javax.swing.JTextField();
-        chkTALP = new javax.swing.JCheckBox();
-        chkPROC1 = new javax.swing.JCheckBox();
+        pnPO = new javax.swing.JPanel();
+        chkPOV = new javax.swing.JCheckBox();
         btnSave = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -140,7 +112,7 @@ public class SettingView extends javax.swing.JDialog {
 
         txtWPlantRPT.setName("txtWPlantRPT"); // NOI18N
 
-        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_ONCE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${nameRpt}"), txtWPlantRPT, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${nameRpt}"), txtWPlantRPT, org.jdesktop.beansbinding.BeanProperty.create("text"), "");
         bindingGroup.addBinding(binding);
 
         lblAddress.setText(resourceMap.getString("lblAddress.text")); // NOI18N
@@ -148,7 +120,7 @@ public class SettingView extends javax.swing.JDialog {
 
         txtAddress.setName("txtAddress"); // NOI18N
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_ONCE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${address}"), txtAddress, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${address}"), txtAddress, org.jdesktop.beansbinding.BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
 
         lblPhone.setText(resourceMap.getString("lblPhone.text")); // NOI18N
@@ -156,7 +128,7 @@ public class SettingView extends javax.swing.JDialog {
 
         txtPhone.setName("txtPhone"); // NOI18N
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_ONCE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${phone}"), txtPhone, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${phone}"), txtPhone, org.jdesktop.beansbinding.BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
 
         lblFax.setText(resourceMap.getString("lblFax.text")); // NOI18N
@@ -164,7 +136,7 @@ public class SettingView extends javax.swing.JDialog {
 
         txtFax.setName("txtFax"); // NOI18N
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_ONCE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${fax}"), txtFax, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${fax}"), txtFax, org.jdesktop.beansbinding.BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
 
         javax.swing.GroupLayout pnWPlantLayout = new javax.swing.GroupLayout(pnWPlant);
@@ -193,7 +165,7 @@ public class SettingView extends javax.swing.JDialog {
         pnWPlantLayout.setVerticalGroup(
             pnWPlantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnWPlantLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(17, Short.MAX_VALUE)
                 .addGroup(pnWPlantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblWPlantRPT)
                     .addComponent(txtWPlantRPT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -208,345 +180,47 @@ public class SettingView extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        pnMaterials.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("pnMaterials.border.title"))); // NOI18N
-        pnMaterials.setName("pnMaterials"); // NOI18N
+        pnPO.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("pnPO.border.title"))); // NOI18N
+        pnPO.setName("pnPO"); // NOI18N
 
-        lblMatnrPCB40.setText(resourceMap.getString("lblMatnrPCB40.text")); // NOI18N
-        lblMatnrPCB40.setName("lblMatnrPCB40"); // NOI18N
+        chkPOV.setText(resourceMap.getString("chkPOV.text")); // NOI18N
+        chkPOV.setToolTipText(resourceMap.getString("chkPOV.toolTipText")); // NOI18N
+        chkPOV.setName("chkPOV"); // NOI18N
 
-        txtMatnrPCB40.setName("txtMatnrPCB40"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_ONCE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${matnrPcb40}"), txtMatnrPCB40, org.jdesktop.beansbinding.BeanProperty.create("text"));
-        bindingGroup.addBinding(binding);
-
-        lblMatnrBulk.setText(resourceMap.getString("lblMatnrBulk.text")); // NOI18N
-        lblMatnrBulk.setName("lblMatnrBulk"); // NOI18N
-
-        txtMatnrBulk.setName("txtMatnrBulk"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_ONCE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${matnrXmxa}"), txtMatnrBulk, org.jdesktop.beansbinding.BeanProperty.create("text"));
-        bindingGroup.addBinding(binding);
-
-        lblSubContractClinker.setText(resourceMap.getString("lblSubContractClinker.text")); // NOI18N
-        lblSubContractClinker.setName("lblSubContractClinker"); // NOI18N
-
-        txtSubContractClinker.setName("txtSubContractClinker"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_ONCE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${matnrClinker}"), txtSubContractClinker, org.jdesktop.beansbinding.BeanProperty.create("text"));
-        bindingGroup.addBinding(binding);
-
-        javax.swing.GroupLayout pnMaterialsLayout = new javax.swing.GroupLayout(pnMaterials);
-        pnMaterials.setLayout(pnMaterialsLayout);
-        pnMaterialsLayout.setHorizontalGroup(
-            pnMaterialsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnMaterialsLayout.createSequentialGroup()
+        javax.swing.GroupLayout pnPOLayout = new javax.swing.GroupLayout(pnPO);
+        pnPO.setLayout(pnPOLayout);
+        pnPOLayout.setHorizontalGroup(
+            pnPOLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnPOLayout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(chkPOV, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(241, Short.MAX_VALUE))
+        );
+        pnPOLayout.setVerticalGroup(
+            pnPOLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnPOLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnMaterialsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblSubContractClinker)
-                    .addComponent(lblMatnrBulk)
-                    .addComponent(lblMatnrPCB40))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnMaterialsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtMatnrBulk, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
-                    .addComponent(txtMatnrPCB40, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
-                    .addComponent(txtSubContractClinker, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE))
-                .addContainerGap())
+                .addComponent(chkPOV)
+                .addContainerGap(15, Short.MAX_VALUE))
         );
-        pnMaterialsLayout.setVerticalGroup(
-            pnMaterialsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnMaterialsLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnMaterialsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblMatnrPCB40)
-                    .addComponent(txtMatnrPCB40, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnMaterialsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblMatnrBulk)
-                    .addComponent(txtMatnrBulk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnMaterialsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblSubContractClinker)
-                    .addComponent(txtSubContractClinker, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        pnPPBaseVals.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("pnPPBaseVals.border.title"))); // NOI18N
-        pnPPBaseVals.setName("pnPPBaseVals"); // NOI18N
-
-        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
-        jLabel1.setName("jLabel1"); // NOI18N
-
-        txfAct1Val.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.000"))));
-        txfAct1Val.setText(resourceMap.getString("txfAct1Val.text")); // NOI18N
-        txfAct1Val.setName("txfAct1Val"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_ONCE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${bact1Val}"), txfAct1Val, org.jdesktop.beansbinding.BeanProperty.create("value"));
-        bindingGroup.addBinding(binding);
-
-        lblAct1Unit.setText(resourceMap.getString("lblAct1Unit.text")); // NOI18N
-        lblAct1Unit.setName("lblAct1Unit"); // NOI18N
-
-        jLabel3.setText(resourceMap.getString("jLabel3.text")); // NOI18N
-        jLabel3.setName("jLabel3"); // NOI18N
-
-        txfAct2Val.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.000"))));
-        txfAct2Val.setText(resourceMap.getString("txfAct2Val.text")); // NOI18N
-        txfAct2Val.setName("txfAct2Val"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_ONCE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${bact2Val}"), txfAct2Val, org.jdesktop.beansbinding.BeanProperty.create("value"));
-        bindingGroup.addBinding(binding);
-
-        lblAct2Unit.setText(resourceMap.getString("lblAct2Unit.text")); // NOI18N
-        lblAct2Unit.setName("lblAct2Unit"); // NOI18N
-
-        jLabel5.setText(resourceMap.getString("jLabel5.text")); // NOI18N
-        jLabel5.setName("jLabel5"); // NOI18N
-
-        txfAct3Val.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.000"))));
-        txfAct3Val.setText(resourceMap.getString("txfAct3Val.text")); // NOI18N
-        txfAct3Val.setName("txfAct3Val"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_ONCE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${bact3Val}"), txfAct3Val, org.jdesktop.beansbinding.BeanProperty.create("value"));
-        bindingGroup.addBinding(binding);
-
-        lblAct3Unit.setText(resourceMap.getString("lblAct3Unit.text")); // NOI18N
-        lblAct3Unit.setName("lblAct3Unit"); // NOI18N
-
-        jLabel7.setText(resourceMap.getString("jLabel7.text")); // NOI18N
-        jLabel7.setName("jLabel7"); // NOI18N
-
-        txfAct4Val.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.000"))));
-        txfAct4Val.setText(resourceMap.getString("txfAct4Val.text")); // NOI18N
-        txfAct4Val.setName("txfAct4Val"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_ONCE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${bact4Val}"), txfAct4Val, org.jdesktop.beansbinding.BeanProperty.create("value"));
-        bindingGroup.addBinding(binding);
-
-        lblAct4Unit.setText(resourceMap.getString("lblAct4Unit.text")); // NOI18N
-        lblAct4Unit.setName("lblAct4Unit"); // NOI18N
-
-        javax.swing.GroupLayout pnPPBaseValsLayout = new javax.swing.GroupLayout(pnPPBaseVals);
-        pnPPBaseVals.setLayout(pnPPBaseValsLayout);
-        pnPPBaseValsLayout.setHorizontalGroup(
-            pnPPBaseValsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnPPBaseValsLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnPPBaseValsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnPPBaseValsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnPPBaseValsLayout.createSequentialGroup()
-                        .addComponent(txfAct1Val, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblAct1Unit)
-                        .addGap(45, 45, 45)
-                        .addComponent(jLabel3))
-                    .addGroup(pnPPBaseValsLayout.createSequentialGroup()
-                        .addComponent(txfAct3Val, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblAct3Unit)
-                        .addGap(42, 42, 42)
-                        .addComponent(jLabel7)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnPPBaseValsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnPPBaseValsLayout.createSequentialGroup()
-                        .addComponent(txfAct2Val, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblAct2Unit)
-                        .addGap(7, 7, 7))
-                    .addGroup(pnPPBaseValsLayout.createSequentialGroup()
-                        .addComponent(txfAct4Val, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblAct4Unit)))
-                .addContainerGap())
-        );
-        pnPPBaseValsLayout.setVerticalGroup(
-            pnPPBaseValsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnPPBaseValsLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnPPBaseValsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(txfAct1Val, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblAct2Unit)
-                    .addComponent(txfAct2Val, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblAct1Unit)
-                    .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnPPBaseValsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(txfAct3Val, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblAct3Unit)
-                    .addComponent(jLabel7)
-                    .addComponent(txfAct4Val, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblAct4Unit))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        pnWBTol.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("pnWBTol.border.title"))); // NOI18N
-        pnWBTol.setName("pnWBTol"); // NOI18N
-
-        jLabel9.setText(resourceMap.getString("jLabel9.text")); // NOI18N
-        jLabel9.setName("jLabel9"); // NOI18N
-
-        txfWB1Tol.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.000"))));
-        txfWB1Tol.setText(resourceMap.getString("txfWB1Tol.text")); // NOI18N
-        txfWB1Tol.setName("txfWB1Tol"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_ONCE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${wb1Tol}"), txfWB1Tol, org.jdesktop.beansbinding.BeanProperty.create("value"));
-        bindingGroup.addBinding(binding);
-
-        jLabel10.setText(resourceMap.getString("jLabel10.text")); // NOI18N
-        jLabel10.setName("jLabel10"); // NOI18N
-
-        jLabel11.setText(resourceMap.getString("jLabel11.text")); // NOI18N
-        jLabel11.setName("jLabel11"); // NOI18N
-
-        txfWB2Tol.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.000"))));
-        txfWB2Tol.setText(resourceMap.getString("txfWB2Tol.text")); // NOI18N
-        txfWB2Tol.setName("txfWB2Tol"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_ONCE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${wb2Tol}"), txfWB2Tol, org.jdesktop.beansbinding.BeanProperty.create("value"));
-        bindingGroup.addBinding(binding);
-
-        jLabel12.setText(resourceMap.getString("jLabel12.text")); // NOI18N
-        jLabel12.setName("jLabel12"); // NOI18N
-
-        javax.swing.GroupLayout pnWBTolLayout = new javax.swing.GroupLayout(pnWBTol);
-        pnWBTol.setLayout(pnWBTolLayout);
-        pnWBTolLayout.setHorizontalGroup(
-            pnWBTolLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnWBTolLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txfWB1Tol, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel10)
-                .addGap(33, 33, 33)
-                .addComponent(jLabel11)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txfWB2Tol, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel12)
-                .addContainerGap())
-        );
-        pnWBTolLayout.setVerticalGroup(
-            pnWBTolLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnWBTolLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnWBTolLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(txfWB1Tol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10)
-                    .addComponent(jLabel11)
-                    .addComponent(txfWB2Tol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel12))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        pnRolesMap.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("pnRolesMap.border.title"))); // NOI18N
-        pnRolesMap.setMinimumSize(new java.awt.Dimension(247, 84));
-        pnRolesMap.setName("pnRolesMap"); // NOI18N
-
-        lblRWatchman.setText(resourceMap.getString("lblRWatchman.text")); // NOI18N
-        lblRWatchman.setName("lblRWatchman"); // NOI18N
-
-        txtRWMan.setName("txtRWMan"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_ONCE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${roleWm}"), txtRWMan, org.jdesktop.beansbinding.BeanProperty.create("text"));
-        bindingGroup.addBinding(binding);
-
-        lblRStationStaff.setText(resourceMap.getString("lblRStationStaff.text")); // NOI18N
-        lblRStationStaff.setName("lblRStationStaff"); // NOI18N
-
-        txtRSStaff.setName("txtRSStaff"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_ONCE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${roleSs}"), txtRSStaff, org.jdesktop.beansbinding.BeanProperty.create("text"));
-        bindingGroup.addBinding(binding);
-
-        lblRAdministrator.setText(resourceMap.getString("lblRAdministrator.text")); // NOI18N
-        lblRAdministrator.setName("lblRAdministrator"); // NOI18N
-
-        txtRAdmin.setName("txtRAdmin"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_ONCE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${roleAd}"), txtRAdmin, org.jdesktop.beansbinding.BeanProperty.create("text"));
-        bindingGroup.addBinding(binding);
-
-        javax.swing.GroupLayout pnRolesMapLayout = new javax.swing.GroupLayout(pnRolesMap);
-        pnRolesMap.setLayout(pnRolesMapLayout);
-        pnRolesMapLayout.setHorizontalGroup(
-            pnRolesMapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnRolesMapLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnRolesMapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblRAdministrator)
-                    .addComponent(lblRWatchman))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnRolesMapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtRAdmin, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
-                    .addComponent(txtRWMan, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE))
-                .addGap(24, 24, 24)
-                .addComponent(lblRStationStaff)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtRSStaff, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        pnRolesMapLayout.setVerticalGroup(
-            pnRolesMapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnRolesMapLayout.createSequentialGroup()
-                .addGroup(pnRolesMapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblRWatchman)
-                    .addComponent(txtRWMan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtRSStaff, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblRStationStaff))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnRolesMapLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblRAdministrator)
-                    .addComponent(txtRAdmin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(29, Short.MAX_VALUE))
-        );
-
-        chkTALP.setText(resourceMap.getString("chkTALP.text")); // NOI18N
-        chkTALP.setName("chkTALP"); // NOI18N
-
-        chkPROC1.setText(resourceMap.getString("chkPROC.text")); // NOI18N
-        chkPROC1.setName("chkPROC"); // NOI18N
 
         javax.swing.GroupLayout pnWholeGroupLayout = new javax.swing.GroupLayout(pnWholeGroup);
         pnWholeGroup.setLayout(pnWholeGroupLayout);
         pnWholeGroupLayout.setHorizontalGroup(
             pnWholeGroupLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(pnWPlant, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(pnMaterials, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(pnPPBaseVals, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(pnWBTol, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(pnWholeGroupLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(chkTALP, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(chkPROC1, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(49, Short.MAX_VALUE))
-            .addComponent(pnRolesMap, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(pnPO, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         pnWholeGroupLayout.setVerticalGroup(
             pnWholeGroupLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnWholeGroupLayout.createSequentialGroup()
                 .addComponent(pnWPlant, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnMaterials, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnPPBaseVals, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnWBTol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnRolesMap, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addGroup(pnWholeGroupLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(chkPROC1)
-                    .addComponent(chkTALP))
-                .addContainerGap())
+                .addComponent(pnPO, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        pnPO.getAccessibleContext().setAccessibleName(resourceMap.getString("pnMaterials.AccessibleContext.accessibleName")); // NOI18N
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getActionMap(SettingView.class, this);
         btnSave.setAction(actionMap.get("save")); // NOI18N
@@ -557,18 +231,18 @@ public class SettingView extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnWholeGroup, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnSave, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(pnWholeGroup, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnSave))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(pnWholeGroup, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
                 .addComponent(btnSave)
                 .addContainerGap())
         );
@@ -603,31 +277,32 @@ public class SettingView extends javax.swing.JDialog {
             sapSetting.setPhone(tmp.isEmpty() ? null : tmp);
             tmp = txtFax.getText().trim();
             sapSetting.setFax(tmp.isEmpty() ? null : tmp);
-            tmp = txtSubContractClinker.getText().trim();
-            sapSetting.setMatnrClinker(tmp.isEmpty() ? null : tmp);
-            tmp = txtMatnrPCB40.getText().trim();
-            sapSetting.setMatnrPcb40(tmp.isEmpty() ? null : tmp);
-            tmp = txtMatnrBulk.getText().trim();
-            sapSetting.setMatnrXmxa(tmp.isEmpty() ? null : tmp);
-            tmpNum = (Number) txfAct1Val.getValue();
-            sapSetting.setBact1Val(tmpNum == null ? null : new BigDecimal(tmpNum.doubleValue()));
-            tmpNum = (Number) txfAct2Val.getValue();
-            sapSetting.setBact2Val(tmpNum == null ? null : new BigDecimal(tmpNum.doubleValue()));
-            tmpNum = (Number) txfAct3Val.getValue();
-            sapSetting.setBact3Val(tmpNum == null ? null : new BigDecimal(tmpNum.doubleValue()));
-            tmpNum = (Number) txfAct4Val.getValue();
-            sapSetting.setBact4Val(tmpNum == null ? null : new BigDecimal(tmpNum.doubleValue()));
-            tmpNum = (Number) txfWB1Tol.getValue();
-            sapSetting.setWb1Tol(tmpNum == null ? null : new BigDecimal(tmpNum.doubleValue()));
-            tmpNum = (Number) txfWB2Tol.getValue();
-            sapSetting.setWb2Tol(tmpNum == null ? null : new BigDecimal(tmpNum.doubleValue()));
-            tmp = txtRAdmin.getText().trim();
-            sapSetting.setRoleAd(tmp.isEmpty() ? null : tmp);
-            tmp = txtRSStaff.getText().trim();
-            sapSetting.setRoleSs(tmp.isEmpty() ? null : tmp);
-            tmp = txtRWMan.getText().trim();
+            sapSetting.setCheckPov(chkPOV.isSelected() ? true: false);
+//            tmp = txtSubContractClinker.getText().trim();
+//            sapSetting.setMatnrClinker(tmp.isEmpty() ? null : tmp);
+//            tmp = txtMatnrPCB40.getText().trim();
+//            sapSetting.setMatnrPcb40(tmp.isEmpty() ? null : tmp);
+//            tmp = txtMatnrBulk.getText().trim();
+//            sapSetting.setMatnrXmxa(tmp.isEmpty() ? null : tmp);
+//            tmpNum = (Number) txfAct1Val.getValue();
+//            sapSetting.setBact1Val(tmpNum == null ? null : new BigDecimal(tmpNum.doubleValue()));
+//            tmpNum = (Number) txfAct2Val.getValue();
+//            sapSetting.setBact2Val(tmpNum == null ? null : new BigDecimal(tmpNum.doubleValue()));
+//            tmpNum = (Number) txfAct3Val.getValue();
+//            sapSetting.setBact3Val(tmpNum == null ? null : new BigDecimal(tmpNum.doubleValue()));
+//            tmpNum = (Number) txfAct4Val.getValue();
+//            sapSetting.setBact4Val(tmpNum == null ? null : new BigDecimal(tmpNum.doubleValue()));
+//            tmpNum = (Number) txfWB1Tol.getValue();
+//            sapSetting.setWb1Tol(tmpNum == null ? null : new BigDecimal(tmpNum.doubleValue()));
+//            tmpNum = (Number) txfWB2Tol.getValue();
+//            sapSetting.setWb2Tol(tmpNum == null ? null : new BigDecimal(tmpNum.doubleValue()));
+//            tmp = txtRAdmin.getText().trim();
+//            sapSetting.setRoleAd(tmp.isEmpty() ? null : tmp);
+//            tmp = txtRSStaff.getText().trim();
+//            sapSetting.setRoleSs(tmp.isEmpty() ? null : tmp);
+//            tmp = txtRWMan.getText().trim();
             sapSetting.setRoleWm(tmp.isEmpty() ? null : tmp);
-            sapSetting.setCheckTalp(chkTALP.isSelected());
+            sapSetting.setCheckTalp(chkPOV.isSelected());
 
             if (!entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().begin();
@@ -648,11 +323,11 @@ public class SettingView extends javax.swing.JDialog {
                 variPK.setWPlant(lconfig.getwPlant().toString());
                 variPK.setParam("PROCESS_ORDER_CF");
                 vari.setVariantPK(variPK);
-                String checkP = "";
-                if (chkPROC1.isSelected()) {
-                    checkP = "X";
-                }
-                vari.setValue(checkP);
+//                String checkP = "";
+//                if (chkPROC1.isSelected()) {
+//                    checkP = "X";
+//                }
+//                vari.setValue(checkP);
                 if (!entityManager.getTransaction().isActive()) {
                     entityManager.getTransaction().begin();
                 }
@@ -680,53 +355,19 @@ public class SettingView extends javax.swing.JDialog {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSave;
-    private javax.swing.JCheckBox chkPROC1;
-    private javax.swing.JCheckBox chkTALP;
+    private javax.swing.JCheckBox chkPOV;
     private javax.persistence.EntityManager entityManager;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JLabel lblAct1Unit;
-    private javax.swing.JLabel lblAct2Unit;
-    private javax.swing.JLabel lblAct3Unit;
-    private javax.swing.JLabel lblAct4Unit;
     private javax.swing.JLabel lblAddress;
     private javax.swing.JLabel lblFax;
-    private javax.swing.JLabel lblMatnrBulk;
-    private javax.swing.JLabel lblMatnrPCB40;
     private javax.swing.JLabel lblPhone;
-    private javax.swing.JLabel lblRAdministrator;
-    private javax.swing.JLabel lblRStationStaff;
-    private javax.swing.JLabel lblRWatchman;
-    private javax.swing.JLabel lblSubContractClinker;
     private javax.swing.JLabel lblWPlantRPT;
-    private javax.swing.JPanel pnMaterials;
-    private javax.swing.JPanel pnPPBaseVals;
-    private javax.swing.JPanel pnRolesMap;
-    private javax.swing.JPanel pnWBTol;
+    private javax.swing.JPanel pnPO;
     private javax.swing.JPanel pnWPlant;
     private javax.swing.JPanel pnWholeGroup;
     private com.gcs.wb.jpa.entity.SAPSetting sapSetting;
-    private javax.swing.JFormattedTextField txfAct1Val;
-    private javax.swing.JFormattedTextField txfAct2Val;
-    private javax.swing.JFormattedTextField txfAct3Val;
-    private javax.swing.JFormattedTextField txfAct4Val;
-    private javax.swing.JFormattedTextField txfWB1Tol;
-    private javax.swing.JFormattedTextField txfWB2Tol;
     private javax.swing.JTextField txtAddress;
     private javax.swing.JTextField txtFax;
-    private javax.swing.JTextField txtMatnrBulk;
-    private javax.swing.JTextField txtMatnrPCB40;
     private javax.swing.JTextField txtPhone;
-    private javax.swing.JTextField txtRAdmin;
-    private javax.swing.JTextField txtRSStaff;
-    private javax.swing.JTextField txtRWMan;
-    private javax.swing.JTextField txtSubContractClinker;
     private javax.swing.JTextField txtWPlantRPT;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables

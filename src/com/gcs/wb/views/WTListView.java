@@ -68,7 +68,7 @@ public class WTListView extends javax.swing.JInternalFrame {
         yearModel.setSelectedItem(currYear);
         cbxYear.setModel(yearModel);
         // </editor-fold>
-        btnFind.setEnabled(false); 
+        btnFind.setEnabled(true); 
     }
 
     /** This method is called from within the constructor to

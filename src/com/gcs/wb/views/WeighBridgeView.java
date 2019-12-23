@@ -213,7 +213,7 @@ public class WeighBridgeView extends FrameView {
 
             jToolBar1.setRollover(true);
             jToolBar1.setName("jToolBar1"); // NOI18N
-            jToolBar1.setBounds(480, 90, 100, 25);
+            jToolBar1.setBounds(480, 90, 13, 2);
             dpVR.add(jToolBar1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
             tabPane.addTab(resourceMap.getString("dpVR.TabConstraints.tabTitle"), null, dpVR, resourceMap.getString("dpVR.TabConstraints.tabToolTip")); // NOI18N
@@ -292,7 +292,7 @@ public class WeighBridgeView extends FrameView {
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
+            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE)
         );
 
         menuBar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -372,7 +372,7 @@ public class WeighBridgeView extends FrameView {
                 .addComponent(txt_status, javax.swing.GroupLayout.PREFERRED_SIZE, 463, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusMessageLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 151, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 146, Short.MAX_VALUE)
                 .addComponent(statusAnimationLabel)
                 .addContainerGap())
         );

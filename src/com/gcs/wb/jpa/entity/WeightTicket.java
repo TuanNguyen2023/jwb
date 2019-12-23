@@ -368,6 +368,12 @@ public class WeightTicket implements Serializable {
     private String kunnr;
     @Column(name = "MANUAL")
     private String manual;
+    @Column(name = "MATNR")
+    private String matnr;
+    @Column(name = "VENDOR_BOC_XEP")
+    private String vendorBocxep;
+    @Column(name = "VENDOR_VAN_CHUYEN")
+    private String vendorVanchuyen;
 
     public WeightTicket() {
     }
@@ -782,6 +788,30 @@ public class WeightTicket implements Serializable {
 
     public void setWbId(String wbId) {
         this.wbId = wbId;
+    }
+    
+    public String getMatnr() {
+        return matnr;
+    }
+
+    public void setMatnr(String matnr) {
+        this.matnr = matnr;
+    }
+    
+    public String getVendorBocxep() {
+        return vendorBocxep;
+    }
+
+    public void setVendorBocxep(String vendorBocxep) {
+        this.vendorBocxep = vendorBocxep;
+    }
+    
+    public String getVendorVanchuyen() {
+        return vendorVanchuyen;
+    }
+
+    public void setVendorVanchuyen(String vendorVanchuyen) {
+        this.vendorVanchuyen = vendorVanchuyen;
     }
 
     @Override

@@ -100,6 +100,8 @@ public class SAPSetting implements Serializable {
     private BigDecimal wb1Tol;
     @Column(name = "WB2_TOL")
     private BigDecimal wb2Tol;
+    @Column(name = "CHECK_POV")
+    private Boolean checkPov;
 
     public SAPSetting() {
     }
@@ -310,6 +312,14 @@ public class SAPSetting implements Serializable {
 
     public void setWb2Tol(BigDecimal wb2Tol) {
         this.wb2Tol = wb2Tol;
+    }
+    
+    public Boolean getCheckPov() {
+        return checkPov;
+    }
+
+    public void setCheckPov(Boolean checkPov) {
+        this.checkPov = checkPov;
     }
 
     @Override

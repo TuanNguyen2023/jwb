@@ -40,6 +40,7 @@ import com.gcs.wb.jpa.entity.BatchStocksPK;
 import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.CustomerPK;
 import com.gcs.wb.jpa.entity.Material;
+import com.gcs.wb.jpa.entity.MaterialPK;
 import com.gcs.wb.jpa.entity.Movement;
 import com.gcs.wb.jpa.entity.MovementPK;
 import com.gcs.wb.jpa.entity.OutbDel;
@@ -76,6 +77,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
+import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
@@ -129,6 +131,20 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
    
     public WeightTicketView() {
         initComponents();
+        
+         cbxMaterial.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(
+                JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof Material) {
+                    Material material = (Material)value;
+                    setText(material.getMaktx());
+                    //                    setText(sloc.getLgobe().concat(" - ").concat(sloc.getSLocPK().getLgort()));
+                }
+                return this;
+            }
+        });
         
         txtMatnr.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -259,6 +275,25 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             timeFrom = 0;
             timeTo = 0;
         }
+        
+        // cấu hình cho cầu cân hiển thị PO và vendor
+        if((sapSetting.getCheckPov()) != null && (sapSetting.getCheckPov()) == true)
+        {
+            txtPoPosto.setVisible(true);
+            cbxVendorLoading.setVisible(true);
+            cbxVendorTransport.setVisible(true);
+            lblPoPosto.setVisible(true);
+            lblVendorLoading.setVisible(true);
+            lblVendorTransport.setVisible(true);
+        } else {
+            txtPoPosto.setVisible(false);
+            cbxVendorLoading.setVisible(false);
+            cbxVendorTransport.setVisible(false);
+            lblPoPosto.setVisible(false);
+            lblVendorLoading.setVisible(false);
+            lblVendorTransport.setVisible(false);
+        }
+        
     }
 
     /** This method is called from within the constructor to
@@ -350,6 +385,15 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         btnReprint = new javax.swing.JButton();
         btnSave = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        cbxMaterial = new javax.swing.JComboBox();
+        lblPoPosto = new javax.swing.JLabel();
+        lblVendorLoading = new javax.swing.JLabel();
+        cbxVendorLoading = new javax.swing.JComboBox();
+        lblVendorTransport = new javax.swing.JLabel();
+        cbxVendorTransport = new javax.swing.JComboBox();
+        lblReason1 = new javax.swing.JLabel();
+        txtPoPosto = new javax.swing.JTextField();
+        chkInternal = new javax.swing.JCheckBox();
 
         entityManager.clear();
 
@@ -509,7 +553,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnWTFilterLayout.createSequentialGroup()
                         .addComponent(lblWTNum)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtWTNum, javax.swing.GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE)
+                        .addComponent(txtWTNum, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -521,7 +565,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                 .addComponent(rbtPO)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(txtPONum, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(rbtMvt311, javax.swing.GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE))
+                            .addComponent(rbtMvt311, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
                         .addGroup(pnWTFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(rbtMb1b, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -549,7 +593,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 .addGroup(pnWTFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(rbtMvt311)
                     .addComponent(rbtMb1b))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(10, Short.MAX_VALUE))
         );
 
         pnCurScale.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("pnCurScale.border.title"))); // NOI18N
@@ -795,9 +839,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     .addComponent(lblIScale, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnScaleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txfGoodsQty, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE)
-                    .addComponent(txfOutQty, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE)
-                    .addComponent(txfInQty, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE))
+                    .addComponent(txfGoodsQty, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
+                    .addComponent(txfOutQty, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
+                    .addComponent(txfInQty, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnScaleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnScaleDataLayout.createSequentialGroup()
@@ -810,8 +854,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                             .addComponent(lblOTime))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(pnScaleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtOutTime, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
-                            .addComponent(txtInTime, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE))
+                            .addComponent(txtOutTime, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
+                            .addComponent(txtInTime, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(pnScaleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(btnIScaleReset, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1054,11 +1098,96 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             }
         });
 
+        cbxMaterial.setModel(getMaterialList());
+        cbxMaterial.setName("cbxMaterial"); // NOI18N
+        cbxMaterial.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbxMaterialItemStateChanged(evt);
+            }
+        });
+
+        lblPoPosto.setText(resourceMap.getString("lblPoPosto.text")); // NOI18N
+        lblPoPosto.setName("lblPoPosto"); // NOI18N
+
+        lblVendorLoading.setText(resourceMap.getString("lblVendorLoading.text")); // NOI18N
+        lblVendorLoading.setName("lblVendorLoading"); // NOI18N
+
+        cbxVendorLoading.setModel(SAP2Local.getVendorList(config, entityManager));
+        cbxVendorLoading.setAction(actionMap.get("acceptBatch")); // NOI18N
+        cbxVendorLoading.setName("cbxVendorLoading"); // NOI18N
+        cbxVendorLoading.setRenderer(new DefaultListCellRenderer() {
+
+            @Override
+            public Component getListCellRendererComponent(
+                JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof Vendor) {
+                    Vendor mat = (Vendor) value;
+                    setText(mat.getName1() + " " + mat.getName2());
+                }
+                return this;
+            }
+        });
+        cbxVendorLoading.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                cbxVendorLoadingKeyReleased(evt);
+            }
+        });
+
+        lblVendorTransport.setText(resourceMap.getString("lblVendorTransport.text")); // NOI18N
+        lblVendorTransport.setName("lblVendorTransport"); // NOI18N
+
+        cbxVendorTransport.setModel(SAP2Local.getVendorList(config, entityManager));
+        cbxVendorTransport.setAction(actionMap.get("acceptBatch")); // NOI18N
+        cbxVendorTransport.setName("cbxVendorTransport"); // NOI18N
+        cbxVendorTransport.setRenderer(new DefaultListCellRenderer() {
+
+            @Override
+            public Component getListCellRendererComponent(
+                JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof Vendor) {
+                    Vendor mat = (Vendor) value;
+                    setText(mat.getName1() + " " + mat.getName2());
+                }
+                return this;
+            }
+        });
+        cbxVendorTransport.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                cbxVendorTransportKeyReleased(evt);
+            }
+        });
+
+        lblReason1.setText(resourceMap.getString("lblReason1.text")); // NOI18N
+        lblReason1.setName("lblReason1"); // NOI18N
+
+        txtPoPosto.setName("txtPoPosto"); // NOI18N
+        txtPoPosto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPoPostoActionPerformed(evt);
+            }
+        });
+        txtPoPosto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtPoPostoKeyReleased(evt);
+            }
+        });
+
+        chkInternal.setAction(actionMap.get("selectInternal")); // NOI18N
+        chkInternal.setHideActionText(true);
+        chkInternal.setName("chkInternal"); // NOI18N
+        chkInternal.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                chkInternalItemStateChanged(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnWTicketLayout = new javax.swing.GroupLayout(pnWTicket);
         pnWTicket.setLayout(pnWTicketLayout);
         pnWTicketLayout.setHorizontalGroup(
             pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnWTicketLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnWTicketLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lblSLoc)
@@ -1067,50 +1196,65 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     .addComponent(lblCMNDBL)
                     .addComponent(lblDName)
                     .addComponent(lblGRText)
-                    .addComponent(lblReason))
+                    .addComponent(lblReason)
+                    .addComponent(lblReason1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbKunnr, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(pnWTicketLayout.createSequentialGroup()
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbxReason, 0, 189, Short.MAX_VALUE)
-                            .addComponent(txtGRText, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
-                            .addComponent(cbxSLoc, javax.swing.GroupLayout.Alignment.TRAILING, 0, 189, Short.MAX_VALUE)
-                            .addComponent(txtLicPlate, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
-                            .addComponent(txtDName, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
-                            .addComponent(txtTrailerPlate, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
-                            .addComponent(txtCMNDBL, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(25, 25, 25)
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lblRegItem)
-                            .addComponent(lblRegCat)
-                            .addComponent(lblMatnr)
-                            .addComponent(lblDelNum)
-                            .addComponent(lblBatch)
-                            .addComponent(lblCementDesc)
-                            .addComponent(lblComplete)))
-                    .addComponent(chkDissolved))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnWTicketLayout.createSequentialGroup()
-                        .addComponent(rbtInward)
-                        .addGap(18, 18, 18)
-                        .addComponent(rbtOutward))
-                    .addComponent(txtRegItem, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtDelNum, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 383, Short.MAX_VALUE)
-                    .addComponent(cbxBatch, javax.swing.GroupLayout.Alignment.LEADING, 0, 383, Short.MAX_VALUE)
-                    .addComponent(txtCementDesc, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 383, Short.MAX_VALUE)
-                    .addComponent(cbxCompleted, javax.swing.GroupLayout.Alignment.LEADING, 0, 383, Short.MAX_VALUE)
-                    .addComponent(txtMatnr, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 383, Short.MAX_VALUE)
-                    .addComponent(cbxKunnr, javax.swing.GroupLayout.Alignment.LEADING, 0, 383, Short.MAX_VALUE)
-                    .addGroup(pnWTicketLayout.createSequentialGroup()
+                        .addComponent(chkDissolved)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 285, Short.MAX_VALUE)
                         .addComponent(jButton3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnPostAgain)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnReprint)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnWTicketLayout.createSequentialGroup()
+                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnWTicketLayout.createSequentialGroup()
+                                .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cbxReason, 0, 206, Short.MAX_VALUE)
+                                    .addComponent(txtGRText, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE)
+                                    .addComponent(cbxSLoc, javax.swing.GroupLayout.Alignment.TRAILING, 0, 206, Short.MAX_VALUE)
+                                    .addComponent(txtLicPlate, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE)
+                                    .addComponent(txtDName, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE)
+                                    .addComponent(txtTrailerPlate, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE)
+                                    .addComponent(txtCMNDBL, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(25, 25, 25)
+                                .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lblRegItem)
+                                    .addComponent(lblRegCat)
+                                    .addComponent(lblMatnr)
+                                    .addComponent(lblDelNum)
+                                    .addComponent(lblBatch)
+                                    .addComponent(lblCementDesc)
+                                    .addComponent(lblComplete)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnWTicketLayout.createSequentialGroup()
+                                .addComponent(cbxMaterial, 0, 206, Short.MAX_VALUE)
+                                .addGap(21, 21, 21)
+                                .addComponent(lbKunnr))
+                            .addComponent(lblPoPosto, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblVendorLoading, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblVendorTransport, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtPoPosto, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE)
+                            .addGroup(pnWTicketLayout.createSequentialGroup()
+                                .addComponent(rbtInward)
+                                .addGap(18, 18, 18)
+                                .addComponent(rbtOutward)
+                                .addGap(18, 18, 18)
+                                .addComponent(chkInternal))
+                            .addComponent(txtRegItem, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtDelNum, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE)
+                            .addComponent(cbxBatch, 0, 399, Short.MAX_VALUE)
+                            .addComponent(txtCementDesc, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE)
+                            .addComponent(cbxCompleted, 0, 399, Short.MAX_VALUE)
+                            .addComponent(txtMatnr, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE)
+                            .addComponent(cbxKunnr, 0, 399, Short.MAX_VALUE)
+                            .addComponent(cbxVendorLoading, javax.swing.GroupLayout.Alignment.TRAILING, 0, 399, Short.MAX_VALUE)
+                            .addComponent(cbxVendorTransport, javax.swing.GroupLayout.Alignment.TRAILING, 0, 399, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         pnWTicketLayout.setVerticalGroup(
@@ -1121,7 +1265,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     .addComponent(txtDName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblRegCat)
                     .addComponent(rbtInward)
-                    .addComponent(rbtOutward))
+                    .addComponent(rbtOutward)
+                    .addComponent(chkInternal))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnWTicketLayout.createSequentialGroup()
@@ -1175,15 +1320,31 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbKunnr)
-                    .addComponent(cbxKunnr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(cbxKunnr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbxMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblReason1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnSave)
-                    .addComponent(btnReprint)
-                    .addComponent(btnPostAgain)
+                    .addComponent(lblPoPosto)
+                    .addComponent(txtPoPosto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbxVendorLoading, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblVendorLoading))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblVendorTransport)
+                    .addComponent(cbxVendorTransport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(chkDissolved)
-                    .addComponent(jButton3))
-                .addContainerGap())
+                    .addGroup(pnWTicketLayout.createSequentialGroup()
+                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnSave)
+                            .addComponent(btnReprint)
+                            .addComponent(btnPostAgain)
+                            .addComponent(jButton3))
+                        .addContainerGap())))
         );
 
         txtMatnr.getAccessibleContext().setAccessibleName(resourceMap.getString("txtMatnr.AccessibleContext.accessibleName")); // NOI18N
@@ -1192,15 +1353,15 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnScaleData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(pnWTFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 487, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(pnWTicket, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnScaleData, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(pnWTFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 494, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(pnCurScale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(pnWTicket, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(pnCurScale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -1214,7 +1375,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 .addComponent(pnScaleData, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnWTicket, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(136, Short.MAX_VALUE))
+                .addContainerGap(51, Short.MAX_VALUE))
         );
 
         bindingGroup.bind();
@@ -1607,6 +1768,30 @@ private void txtWTNumFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnSaveActionPerformed
+
+private void cbxMaterialItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbxMaterialItemStateChanged
+// TODO add your handling code here:
+}//GEN-LAST:event_cbxMaterialItemStateChanged
+
+private void cbxVendorLoadingKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cbxVendorLoadingKeyReleased
+// TODO add your handling code here:
+}//GEN-LAST:event_cbxVendorLoadingKeyReleased
+
+private void cbxVendorTransportKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cbxVendorTransportKeyReleased
+// TODO add your handling code here:
+}//GEN-LAST:event_cbxVendorTransportKeyReleased
+
+private void txtPoPostoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPoPostoActionPerformed
+// TODO add your handling code here:
+}//GEN-LAST:event_txtPoPostoActionPerformed
+
+private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPoPostoKeyReleased
+// TODO add your handling code here:
+}//GEN-LAST:event_txtPoPostoKeyReleased
+
+private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkInternalItemStateChanged
+// TODO add your handling code here:
+}//GEN-LAST:event_chkInternalItemStateChanged
 
     @Action
     public void showMB1BOption() {
@@ -2438,6 +2623,36 @@ private void txtWTNumFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
+    private DefaultComboBoxModel getMaterialList() {
+        List<Material> materials = null;
+        
+        //get data from DB
+        TypedQuery<Material> tMaterial = entityManager.createQuery("SELECT m FROM Material m WHERE m.materialPK.wplant = :wplant", Material.class);
+        tMaterial.setParameter("wplant", config.getwPlant());
+        materials = tMaterial.getResultList();
+        //get data from sap and sync DB
+        //List<Material> mMaterials = SAP2Local.getLookUpMaterialsList(config.getwPlant());
+//        List<Material> mMaterials = SAP2Local.getMaterialsList();
+//        if (!entityManager.getTransaction().isActive()) {
+//            entityManager.getTransaction().begin();
+//        }
+//        for (Material mSap : mMaterials) {
+//            if (materials.indexOf(mSap) == -1) {
+//                entityManager.persist(mSap);
+//            } else {
+//                entityManager.merge(mSap);
+//            }
+//        }
+//        entityManager.getTransaction().commit();
+//        entityManager.clear();
+//        materials = tMaterial.getResultList();
+        DefaultComboBoxModel result = new DefaultComboBoxModel();
+        for (Material m : materials) {
+            result.addElement(m);
+            }
+        return result;
+    }
+
     private class ReadWTTask extends Task<Object, Void> {
 
         String id;
@@ -2905,6 +3120,49 @@ private void txtWTNumFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
                     } else {
                         cbxBatch.setSelectedIndex(-1);
                     }
+                }
+                
+                // cấu hình cho cầu cân hiển thị PO và vendor
+                if(sapSetting.getCheckPov() != null && sapSetting.getCheckPov() == true)
+                {
+                    txtPoPosto.setVisible(true);
+                    cbxVendorLoading.setVisible(true);
+                    cbxVendorTransport.setVisible(true);
+                    lblPoPosto.setVisible(true);
+                    lblVendorLoading.setVisible(true);
+                    lblVendorTransport.setVisible(true);
+                } else {
+                    txtPoPosto.setVisible(false);
+                    cbxVendorLoading.setVisible(false);
+                    cbxVendorTransport.setVisible(false);
+                    lblPoPosto.setVisible(false);
+                    lblVendorLoading.setVisible(false);
+                    lblVendorTransport.setVisible(false);
+                }
+                
+                // check display select for Vat tu from SAP to DB
+                Material matDB = entityManager.find(Material.class, new MaterialPK(config.getsClient(), config.getwPlant(), weightTicket.getMatnr()));
+                
+                Material matSap = SAP2Local.getMaterialDetail(weightTicket.getMatnr());
+                if(matSap != null)
+                {
+                    if(matDB != null && (!matSap.getMaktx().equalsIgnoreCase(matDB.getMaktx())))
+                    {
+                        entityManager.merge(matSap);
+                        matDB = matSap;
+                    }
+                    if(matDB == null)
+                    {
+                        entityManager.persist(matSap);
+                        matDB = matSap;
+                    }
+                }
+                if(matDB != null)
+                {
+                   cbxMaterial.setSelectedItem(matDB); 
+                } else
+                {
+                    cbxMaterial.setSelectedIndex(-1);
                 }
                 // </editor-fold>
                 // </editor-fold>
@@ -5521,6 +5779,35 @@ private void txtWTNumFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
         
         return stWT;
     }
+
+    @Action
+    public Task selectInternal() {
+        return new SelectInternalTask(org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class));
+    }
+
+    private class SelectInternalTask extends org.jdesktop.application.Task<Object, Void> {
+        SelectInternalTask(org.jdesktop.application.Application app) {
+            // Runs on the EDT.  Copy GUI state that
+            // doInBackground() depends on from parameters
+            // to SelectInternalTask fields, here.
+            super(app);
+        }
+        @Override protected Object doInBackground() {
+            if(chkInternal.isSelected()) {
+                rbtInward.setEnabled(true);
+                rbtOutward.setEnabled(true);
+            } else {
+                rbtInward.setEnabled(false);
+                rbtOutward.setEnabled(false);
+            }
+            return null;  // return your result
+        }
+        @Override protected void succeeded(Object result) {
+            // Runs on the EDT.  Update the GUI based on
+            // the result computed by doInBackground().
+        }
+    }
+
     // </editor-fold>
     //<editor-fold defaultstate="collapsed" desc="Variables declaration Area">
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -5533,9 +5820,13 @@ private void txtWTNumFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
     private javax.swing.JComboBox cbxBatch;
     private javax.swing.JComboBox cbxCompleted;
     private javax.swing.JComboBox cbxKunnr;
+    private javax.swing.JComboBox cbxMaterial;
     private javax.swing.JComboBox cbxReason;
     private javax.swing.JComboBox cbxSLoc;
+    private javax.swing.JComboBox cbxVendorLoading;
+    private javax.swing.JComboBox cbxVendorTransport;
     private javax.swing.JCheckBox chkDissolved;
+    private javax.swing.JCheckBox chkInternal;
     private javax.persistence.EntityManager entityManager;
     private javax.swing.ButtonGroup grbBridge;
     private javax.swing.ButtonGroup grbCat;
@@ -5562,11 +5853,15 @@ private void txtWTNumFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
     private javax.swing.JLabel lblOScale;
     private javax.swing.JLabel lblOTime;
     private javax.swing.JLabel lblOUnit;
+    private javax.swing.JLabel lblPoPosto;
     private javax.swing.JLabel lblReason;
+    private javax.swing.JLabel lblReason1;
     private javax.swing.JLabel lblRegCat;
     private javax.swing.JLabel lblRegItem;
     private javax.swing.JLabel lblSLoc;
     private javax.swing.JLabel lblTrailerPlate;
+    private javax.swing.JLabel lblVendorLoading;
+    private javax.swing.JLabel lblVendorTransport;
     private javax.swing.JLabel lblWTNum;
     private com.gcs.wb.jpa.entity.Material material;
     private com.gcs.wb.jpa.entity.OutbDel outbDel;
@@ -5599,6 +5894,7 @@ private void txtWTNumFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
     private javax.swing.JTextField txtMatnr;
     private javax.swing.JTextField txtOutTime;
     private javax.swing.JTextField txtPONum;
+    private javax.swing.JTextField txtPoPosto;
     private javax.swing.JTextField txtRegItem;
     private javax.swing.JFormattedTextField txtTrailerPlate;
     private javax.swing.JTextField txtWTNum;

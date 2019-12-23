@@ -11,8 +11,10 @@
 package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
+import com.gcs.wb.bapi.helper.SAP2Local;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.Vehicle;
+import com.gcs.wb.model.AppConfig;
 import java.awt.Color;
 import java.awt.Component;
 import java.util.List;
@@ -30,6 +32,8 @@ import org.jdesktop.application.Action;
  * @author vunguyent
  */
 public class VRView1 extends javax.swing.JInternalFrame {
+    
+    private AppConfig config = null;
 
     /** Creates new form VRView */
     public VRView1() {
@@ -473,14 +477,96 @@ private void btnARemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     private DefaultListModel getTAModel() {
+        config = WeighBridgeApp.getApplication().getConfig();
         TypedQuery<TransportAgent> tq = entityManager.createNamedQuery("TransportAgent.findAll", TransportAgent.class);
         List<TransportAgent> tAgents = tq.getResultList();
+
+        String wplant = config.getwPlant();
+        // get from SAP
+        List<TransportAgent> tAgentSaps = SAP2Local.getTransportAgentList(wplant);
+        //sync SAP <=> DB
+        
         DefaultListModel model = new DefaultListModel();
         for (TransportAgent tagent : tAgents) {
             model.addElement(tagent);
         }
         return model;
     }
+    
+//     private DefaultListModel getTAModel() {
+//        config = WeighBridgeApp.getApplication().getConfig();
+//        TypedQuery<TransportAgent> tq = entityManager.createNamedQuery("TransportAgent.findAll", TransportAgent.class);
+//        List<TransportAgent> tAgents = tq.getResultList();
+//        
+//        String wplant = config.getwPlant();
+//        // get from SAP
+//        List<TransportAgent> tAgentSaps = SAP2Local.getMaterialsList(wplant);
+//        //sync SAP <=> DB
+//        // delete data DB not exist SAP
+//        for (TransportAgent tAgent : tAgents) {
+//            if (tAgentSaps.indexOf(tAgent) == -1) {
+//                // xoas trong vehicle
+//                TypedQuery<Vehicle> vehTq = entityManager.createNamedQuery("Vehicle.findByTaAbbr", Vehicle.class);
+//                vehTq.setParameter("taAbbr", tAgent.getAbbr());
+//                List<Vehicle> lVeh = vehTq.getResultList();
+//                int i = 0;
+//                try {
+//                    if (!entityManager.getTransaction().isActive()) {
+//                        entityManager.getTransaction().begin();
+//                    }
+//                    for (Vehicle v : lVeh) {
+//                        entityManager.remove(v);
+//                        i++;
+//                    }
+//                    if (i >= 1) {
+//                        entityManager.getTransaction().commit();
+//                        //entityManager.clear();
+//                    }
+//
+//                } catch (Exception ex) {
+//                    JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), "Xóa phuong ti?n v?n chuy?n không thành công");
+//                    //return;
+//                }
+//                // xoa dvvc
+//                try {
+//                    
+//                    if (!entityManager.getTransaction().isActive()) {
+//                        entityManager.getTransaction().begin();
+//                    }
+//                    //entityManager.setProperty("tAgent", tAgent);
+//                    entityManager.remove(tAgent);
+//                    entityManager.getTransaction().commit();
+//                    entityManager.clear();
+//                } catch (Exception ex) {
+//                    JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), "Xóa nhà v?n chuy?n không thành công");
+//                    //return;
+//                }
+//            } 
+//        }
+//        
+//         if (!entityManager.getTransaction().isActive()) {
+//                entityManager.getTransaction().begin();
+//            }
+//        // update dara SAP -> DB
+//        for (TransportAgent tAgentSap : tAgentSaps) {
+//            
+//            if (tAgents.indexOf(tAgentSap) == -1) {
+//                    entityManager.persist(tAgentSap);
+//                } else {
+//                    entityManager.merge(tAgentSap);
+//                }
+//        }
+//        
+//        entityManager.getTransaction().commit();
+//        entityManager.clear();
+//        // get lai dvvc
+//        tAgents = tq.getResultList();
+//        DefaultListModel model = new DefaultListModel();
+//        for (TransportAgent tagent : tAgents) {
+//            model.addElement(tagent);
+//        }
+//        return model;
+//    }
 
     private DefaultListModel getVModel() {
         TypedQuery<Vehicle> tq = entityManager.createNamedQuery("Vehicle.findByTaAbbr", Vehicle.class);

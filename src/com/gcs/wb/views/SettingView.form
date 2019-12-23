@@ -41,9 +41,9 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
+          <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="103" groupAlignment="1" attributes="0">
                   <Component id="pnWholeGroup" alignment="0" max="32767" attributes="0"/>
                   <Component id="btnSave" alignment="1" min="-2" max="-2" attributes="0"/>
               </Group>
@@ -54,8 +54,8 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="1" attributes="0">
-              <Component id="pnWholeGroup" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <Component id="pnWholeGroup" min="-2" pref="182" max="-2" attributes="0"/>
+              <EmptySpace pref="9" max="32767" attributes="0"/>
               <Component id="btnSave" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -72,17 +72,7 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Component id="pnWPlant" alignment="0" max="32767" attributes="0"/>
-              <Component id="pnMaterials" alignment="1" max="32767" attributes="0"/>
-              <Component id="pnPPBaseVals" alignment="0" max="32767" attributes="0"/>
-              <Component id="pnWBTol" alignment="0" max="32767" attributes="0"/>
-              <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="chkTALP" min="-2" pref="216" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="chkPROC1" min="-2" pref="216" max="-2" attributes="0"/>
-                  <EmptySpace pref="49" max="32767" attributes="0"/>
-              </Group>
-              <Component id="pnRolesMap" alignment="1" max="32767" attributes="0"/>
+              <Component id="pnPO" alignment="1" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
@@ -90,19 +80,8 @@
               <Group type="102" attributes="0">
                   <Component id="pnWPlant" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="pnMaterials" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="pnPPBaseVals" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="pnWBTol" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="pnRolesMap" max="32767" attributes="1"/>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="chkPROC1" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="chkTALP" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="pnPO" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -151,7 +130,7 @@
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="17" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="lblWPlantRPT" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="txtWPlantRPT" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -182,8 +161,8 @@
                 <Property name="name" type="java.lang.String" value="txtWPlantRPT" noResource="true"/>
               </Properties>
               <BindingProperties>
-                <BindingProperty name="text" source="sapSetting" sourcePath="${nameRpt}" target="txtWPlantRPT" targetPath="text" updateStrategy="2" immediately="false">
-                  <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
+                <BindingProperty name="text" source="sapSetting" sourcePath="${nameRpt}" target="txtWPlantRPT" targetPath="text" updateStrategy="0" immediately="false">
+                  <Property name="name" type="java.lang.String" value=""/>
                 </BindingProperty>
               </BindingProperties>
             </Component>
@@ -198,9 +177,7 @@
                 <Property name="name" type="java.lang.String" value="txtAddress" noResource="true"/>
               </Properties>
               <BindingProperties>
-                <BindingProperty name="text" source="sapSetting" sourcePath="${address}" target="txtAddress" targetPath="text" updateStrategy="2" immediately="false">
-                  <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                </BindingProperty>
+                <BindingProperty name="text" source="sapSetting" sourcePath="${address}" target="txtAddress" targetPath="text" updateStrategy="0" immediately="false"/>
               </BindingProperties>
             </Component>
             <Component class="javax.swing.JLabel" name="lblPhone">
@@ -214,9 +191,7 @@
                 <Property name="name" type="java.lang.String" value="txtPhone" noResource="true"/>
               </Properties>
               <BindingProperties>
-                <BindingProperty name="text" source="sapSetting" sourcePath="${phone}" target="txtPhone" targetPath="text" updateStrategy="2" immediately="false">
-                  <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                </BindingProperty>
+                <BindingProperty name="text" source="sapSetting" sourcePath="${phone}" target="txtPhone" targetPath="text" updateStrategy="0" immediately="false"/>
               </BindingProperties>
             </Component>
             <Component class="javax.swing.JLabel" name="lblFax">
@@ -230,42 +205,33 @@
                 <Property name="name" type="java.lang.String" value="txtFax" noResource="true"/>
               </Properties>
               <BindingProperties>
-                <BindingProperty name="text" source="sapSetting" sourcePath="${fax}" target="txtFax" targetPath="text" updateStrategy="2" immediately="false">
-                  <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                </BindingProperty>
+                <BindingProperty name="text" source="sapSetting" sourcePath="${fax}" target="txtFax" targetPath="text" updateStrategy="0" immediately="false"/>
               </BindingProperties>
             </Component>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="pnMaterials">
+        <Container class="javax.swing.JPanel" name="pnPO">
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="Th&#xf4;ng tin v&#x1ead;t t&#x1b0;">
-                  <Property name="titleX" resourceKey="pnMaterials.border.title"/>
+                <TitledBorder title="Th&#xf4;ng tin PO">
+                  <Property name="titleX" resourceKey="pnPO.border.title"/>
                 </TitledBorder>
               </Border>
             </Property>
-            <Property name="name" type="java.lang.String" value="pnMaterials" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="pnPO" noResource="true"/>
           </Properties>
+          <AccessibilityProperties>
+            <Property name="AccessibleContext.accessibleName" type="java.lang.String" resourceKey="pnMaterials.AccessibleContext.accessibleName"/>
+          </AccessibilityProperties>
 
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="lblSubContractClinker" alignment="1" min="-2" max="-2" attributes="0"/>
-                          <Component id="lblMatnrBulk" alignment="1" min="-2" max="-2" attributes="0"/>
-                          <Component id="lblMatnrPCB40" alignment="1" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="txtMatnrBulk" pref="322" max="32767" attributes="0"/>
-                          <Component id="txtMatnrPCB40" alignment="0" pref="322" max="32767" attributes="0"/>
-                          <Component id="txtSubContractClinker" alignment="0" pref="322" max="32767" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                      <Component id="chkPOV" min="-2" pref="216" max="-2" attributes="0"/>
+                      <EmptySpace pref="241" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -273,476 +239,22 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="lblMatnrPCB40" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtMatnrPCB40" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="lblMatnrBulk" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtMatnrBulk" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="lblSubContractClinker" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtSubContractClinker" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="chkPOV" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="15" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="lblMatnrPCB40">
+            <Component class="javax.swing.JCheckBox" name="chkPOV">
               <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="lblMatnrPCB40.text"/>
-                <Property name="name" type="java.lang.String" value="lblMatnrPCB40" noResource="true"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="txtMatnrPCB40">
-              <Properties>
-                <Property name="name" type="java.lang.String" value="txtMatnrPCB40" noResource="true"/>
-              </Properties>
-              <BindingProperties>
-                <BindingProperty name="text" source="sapSetting" sourcePath="${matnrPcb40}" target="txtMatnrPCB40" targetPath="text" updateStrategy="2" immediately="false">
-                  <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                </BindingProperty>
-              </BindingProperties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="lblMatnrBulk">
-              <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="lblMatnrBulk.text"/>
-                <Property name="name" type="java.lang.String" value="lblMatnrBulk" noResource="true"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="txtMatnrBulk">
-              <Properties>
-                <Property name="name" type="java.lang.String" value="txtMatnrBulk" noResource="true"/>
-              </Properties>
-              <BindingProperties>
-                <BindingProperty name="text" source="sapSetting" sourcePath="${matnrXmxa}" target="txtMatnrBulk" targetPath="text" updateStrategy="2" immediately="false">
-                  <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                </BindingProperty>
-              </BindingProperties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="lblSubContractClinker">
-              <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="lblSubContractClinker.text"/>
-                <Property name="name" type="java.lang.String" value="lblSubContractClinker" noResource="true"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="txtSubContractClinker">
-              <Properties>
-                <Property name="name" type="java.lang.String" value="txtSubContractClinker" noResource="true"/>
-              </Properties>
-              <BindingProperties>
-                <BindingProperty name="text" source="sapSetting" sourcePath="${matnrClinker}" target="txtSubContractClinker" targetPath="text" updateStrategy="2" immediately="false">
-                  <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                </BindingProperty>
-              </BindingProperties>
-            </Component>
-          </SubComponents>
-        </Container>
-        <Container class="javax.swing.JPanel" name="pnPPBaseVals">
-          <Properties>
-            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-              <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="C&#xf4;ng &#x111;&#xf3;ng bao X.M PCB40">
-                  <Property name="titleX" resourceKey="pnPPBaseVals.border.title"/>
-                </TitledBorder>
-              </Border>
-            </Property>
-            <Property name="name" type="java.lang.String" value="pnPPBaseVals" noResource="true"/>
-          </Properties>
-
-          <Layout>
-            <DimensionLayout dim="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="jLabel5" alignment="1" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel1" alignment="1" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Component id="txfAct1Val" pref="122" max="32767" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Component id="lblAct1Unit" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
-                              <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" attributes="0">
-                              <Component id="txfAct3Val" pref="122" max="32767" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Component id="lblAct3Unit" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
-                              <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Component id="txfAct2Val" pref="120" max="32767" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Component id="lblAct2Unit" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="7" pref="7" max="7" attributes="0"/>
-                          </Group>
-                          <Group type="102" attributes="0">
-                              <Component id="txfAct4Val" pref="120" max="32767" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Component id="lblAct4Unit" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                  </Group>
-              </Group>
-            </DimensionLayout>
-            <DimensionLayout dim="1">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="txfAct1Val" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="lblAct2Unit" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="txfAct2Val" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="lblAct1Unit" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="txfAct3Val" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="lblAct3Unit" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="txfAct4Val" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="lblAct4Unit" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="32767" attributes="0"/>
-                  </Group>
-              </Group>
-            </DimensionLayout>
-          </Layout>
-          <SubComponents>
-            <Component class="javax.swing.JLabel" name="jLabel1">
-              <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="jLabel1.text"/>
-                <Property name="name" type="java.lang.String" value="jLabel1" noResource="true"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JFormattedTextField" name="txfAct1Val">
-              <Properties>
-                <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-                  <Format format="#,##0.000" subtype="-1" type="0"/>
-                </Property>
-                <Property name="text" type="java.lang.String" resourceKey="txfAct1Val.text"/>
-                <Property name="name" type="java.lang.String" value="txfAct1Val" noResource="true"/>
-              </Properties>
-              <BindingProperties>
-                <BindingProperty name="value" source="sapSetting" sourcePath="${bact1Val}" target="txfAct1Val" targetPath="value" updateStrategy="2" immediately="false"/>
-              </BindingProperties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="lblAct1Unit">
-              <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="lblAct1Unit.text"/>
-                <Property name="name" type="java.lang.String" value="lblAct1Unit" noResource="true"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="jLabel3">
-              <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="jLabel3.text"/>
-                <Property name="name" type="java.lang.String" value="jLabel3" noResource="true"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JFormattedTextField" name="txfAct2Val">
-              <Properties>
-                <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-                  <Format format="#,##0.000" subtype="-1" type="0"/>
-                </Property>
-                <Property name="text" type="java.lang.String" resourceKey="txfAct2Val.text"/>
-                <Property name="name" type="java.lang.String" value="txfAct2Val" noResource="true"/>
-              </Properties>
-              <BindingProperties>
-                <BindingProperty name="value" source="sapSetting" sourcePath="${bact2Val}" target="txfAct2Val" targetPath="value" updateStrategy="2" immediately="false"/>
-              </BindingProperties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="lblAct2Unit">
-              <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="lblAct2Unit.text"/>
-                <Property name="name" type="java.lang.String" value="lblAct2Unit" noResource="true"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="jLabel5">
-              <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="jLabel5.text"/>
-                <Property name="name" type="java.lang.String" value="jLabel5" noResource="true"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JFormattedTextField" name="txfAct3Val">
-              <Properties>
-                <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-                  <Format format="#,##0.000" subtype="-1" type="0"/>
-                </Property>
-                <Property name="text" type="java.lang.String" resourceKey="txfAct3Val.text"/>
-                <Property name="name" type="java.lang.String" value="txfAct3Val" noResource="true"/>
-              </Properties>
-              <BindingProperties>
-                <BindingProperty name="value" source="sapSetting" sourcePath="${bact3Val}" target="txfAct3Val" targetPath="value" updateStrategy="2" immediately="false"/>
-              </BindingProperties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="lblAct3Unit">
-              <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="lblAct3Unit.text"/>
-                <Property name="name" type="java.lang.String" value="lblAct3Unit" noResource="true"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="jLabel7">
-              <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="jLabel7.text"/>
-                <Property name="name" type="java.lang.String" value="jLabel7" noResource="true"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JFormattedTextField" name="txfAct4Val">
-              <Properties>
-                <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-                  <Format format="#,##0.000" subtype="-1" type="0"/>
-                </Property>
-                <Property name="text" type="java.lang.String" resourceKey="txfAct4Val.text"/>
-                <Property name="name" type="java.lang.String" value="txfAct4Val" noResource="true"/>
-              </Properties>
-              <BindingProperties>
-                <BindingProperty name="value" source="sapSetting" sourcePath="${bact4Val}" target="txfAct4Val" targetPath="value" updateStrategy="2" immediately="false"/>
-              </BindingProperties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="lblAct4Unit">
-              <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="lblAct4Unit.text"/>
-                <Property name="name" type="java.lang.String" value="lblAct4Unit" noResource="true"/>
+                <Property name="text" type="java.lang.String" resourceKey="chkPOV.text"/>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="chkPOV.toolTipText"/>
+                <Property name="name" type="java.lang.String" value="chkPOV" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="pnWBTol">
-          <Properties>
-            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-              <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="Dung sai c&#x1ea7;u c&#xe2;n">
-                  <Property name="titleX" resourceKey="pnWBTol.border.title"/>
-                </TitledBorder>
-              </Border>
-            </Property>
-            <Property name="name" type="java.lang.String" value="pnWBTol" noResource="true"/>
-          </Properties>
-
-          <Layout>
-            <DimensionLayout dim="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="txfWB1Tol" pref="160" max="32767" attributes="0"/>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
-                      <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="txfWB2Tol" pref="160" max="32767" attributes="0"/>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel12" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                  </Group>
-              </Group>
-            </DimensionLayout>
-            <DimensionLayout dim="1">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="txfWB1Tol" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel10" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="txfWB2Tol" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel12" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="32767" attributes="0"/>
-                  </Group>
-              </Group>
-            </DimensionLayout>
-          </Layout>
-          <SubComponents>
-            <Component class="javax.swing.JLabel" name="jLabel9">
-              <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="jLabel9.text"/>
-                <Property name="name" type="java.lang.String" value="jLabel9" noResource="true"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JFormattedTextField" name="txfWB1Tol">
-              <Properties>
-                <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-                  <Format format="#,##0.000" subtype="-1" type="0"/>
-                </Property>
-                <Property name="text" type="java.lang.String" resourceKey="txfWB1Tol.text"/>
-                <Property name="name" type="java.lang.String" value="txfWB1Tol" noResource="true"/>
-              </Properties>
-              <BindingProperties>
-                <BindingProperty name="value" source="sapSetting" sourcePath="${wb1Tol}" target="txfWB1Tol" targetPath="value" updateStrategy="2" immediately="false"/>
-              </BindingProperties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="jLabel10">
-              <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="jLabel10.text"/>
-                <Property name="name" type="java.lang.String" value="jLabel10" noResource="true"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="jLabel11">
-              <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="jLabel11.text"/>
-                <Property name="name" type="java.lang.String" value="jLabel11" noResource="true"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JFormattedTextField" name="txfWB2Tol">
-              <Properties>
-                <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-                  <Format format="#,##0.000" subtype="-1" type="0"/>
-                </Property>
-                <Property name="text" type="java.lang.String" resourceKey="txfWB2Tol.text"/>
-                <Property name="name" type="java.lang.String" value="txfWB2Tol" noResource="true"/>
-              </Properties>
-              <BindingProperties>
-                <BindingProperty name="value" source="sapSetting" sourcePath="${wb2Tol}" target="txfWB2Tol" targetPath="value" updateStrategy="2" immediately="false"/>
-              </BindingProperties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="jLabel12">
-              <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="jLabel12.text"/>
-                <Property name="name" type="java.lang.String" value="jLabel12" noResource="true"/>
-              </Properties>
-            </Component>
-          </SubComponents>
-        </Container>
-        <Container class="javax.swing.JPanel" name="pnRolesMap">
-          <Properties>
-            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-              <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="T&#xea;n quy&#x1ec1;n trong m&#xe1;y ch&#x1ee7; SAP">
-                  <Property name="titleX" resourceKey="pnRolesMap.border.title"/>
-                </TitledBorder>
-              </Border>
-            </Property>
-            <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[247, 84]"/>
-            </Property>
-            <Property name="name" type="java.lang.String" value="pnRolesMap" noResource="true"/>
-          </Properties>
-
-          <Layout>
-            <DimensionLayout dim="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="lblRAdministrator" alignment="1" min="-2" max="-2" attributes="0"/>
-                          <Component id="lblRWatchman" alignment="1" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="txtRAdmin" alignment="0" pref="170" max="32767" attributes="2"/>
-                          <Component id="txtRWMan" alignment="0" pref="170" max="32767" attributes="2"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="24" max="-2" attributes="1"/>
-                      <Component id="lblRStationStaff" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="txtRSStaff" pref="170" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                  </Group>
-              </Group>
-            </DimensionLayout>
-            <DimensionLayout dim="1">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="lblRWatchman" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtRWMan" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtRSStaff" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="lblRStationStaff" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="lblRAdministrator" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtRAdmin" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace pref="29" max="32767" attributes="0"/>
-                  </Group>
-              </Group>
-            </DimensionLayout>
-          </Layout>
-          <SubComponents>
-            <Component class="javax.swing.JLabel" name="lblRWatchman">
-              <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="lblRWatchman.text"/>
-                <Property name="name" type="java.lang.String" value="lblRWatchman" noResource="true"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="txtRWMan">
-              <Properties>
-                <Property name="name" type="java.lang.String" value="txtRWMan" noResource="true"/>
-              </Properties>
-              <BindingProperties>
-                <BindingProperty name="text" source="sapSetting" sourcePath="${roleWm}" target="txtRWMan" targetPath="text" updateStrategy="2" immediately="false">
-                  <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                </BindingProperty>
-              </BindingProperties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="lblRStationStaff">
-              <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="lblRStationStaff.text"/>
-                <Property name="name" type="java.lang.String" value="lblRStationStaff" noResource="true"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="txtRSStaff">
-              <Properties>
-                <Property name="name" type="java.lang.String" value="txtRSStaff" noResource="true"/>
-              </Properties>
-              <BindingProperties>
-                <BindingProperty name="text" source="sapSetting" sourcePath="${roleSs}" target="txtRSStaff" targetPath="text" updateStrategy="2" immediately="false">
-                  <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                </BindingProperty>
-              </BindingProperties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="lblRAdministrator">
-              <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="lblRAdministrator.text"/>
-                <Property name="name" type="java.lang.String" value="lblRAdministrator" noResource="true"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="txtRAdmin">
-              <Properties>
-                <Property name="name" type="java.lang.String" value="txtRAdmin" noResource="true"/>
-              </Properties>
-              <BindingProperties>
-                <BindingProperty name="text" source="sapSetting" sourcePath="${roleAd}" target="txtRAdmin" targetPath="text" updateStrategy="2" immediately="false">
-                  <BindingParameter name="javax.swing.binding.ParameterKeys.TEXT_CHANGE_STRATEGY" value="javax.swing.binding.TextChangeStrategy.ON_TYPE"/>
-                </BindingProperty>
-              </BindingProperties>
-            </Component>
-          </SubComponents>
-        </Container>
-        <Component class="javax.swing.JCheckBox" name="chkTALP">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="chkTALP.text"/>
-            <Property name="name" type="java.lang.String" value="chkTALP" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JCheckBox" name="chkPROC1">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="chkPROC.text"/>
-            <Property name="name" type="java.lang.String" value="chkPROC" noResource="true"/>
-          </Properties>
-        </Component>
       </SubComponents>
     </Container>
     <Component class="javax.swing.JButton" name="btnSave">

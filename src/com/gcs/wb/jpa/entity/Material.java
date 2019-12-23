@@ -35,8 +35,8 @@ public class Material implements Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected MaterialPK materialPK;
-    @Column(name = "WPLANT")
-    private String wplant;
+//    @Column(name = "WPLANT")
+//    private String wplant;
     @Column(name = "MAKTX")
     private String maktx;
     @Column(name = "MAKTG")
@@ -132,16 +132,16 @@ public class Material implements Serializable {
     /**
      * @return the wplant
      */
-    public String getWplant() {
-        return wplant;
-    }
+//    public String getWplant() {
+//        return wplant;
+//    }
 
     /**
      * @param wplant the wplant to set
      */
-    public void setWplant(String wplant) {
-        this.wplant = wplant;
-    }
+//    public void setWplant(String wplant) {
+//        this.wplant = wplant;
+//    }
 
     /**
      * @return the ximang
