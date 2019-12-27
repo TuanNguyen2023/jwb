@@ -16,7 +16,7 @@ import org.eclipse.persistence.config.PersistenceUnitProperties;
  */
 public class JpaProperties {
 
-    public static Map getPropertiesOld() {
+    public static Map getProperties() {
         AppConfig appConf = WeighBridgeApp.getApplication().getConfig();
         /*URL Template | jdbc:mysql://localhost:3306/jWeighBridge?useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8*/
         StringBuilder sbURL = new StringBuilder();
@@ -33,7 +33,7 @@ public class JpaProperties {
         return properties;
     }
     // conect DB customer
-    public static Map getProperties() {
+    public static Map getProperties1() {
         AppConfig appConf = WeighBridgeApp.getApplication().getConfig();
         StringBuilder sbURL = new StringBuilder();
         sbURL.append("jdbc:sqlserver://");
