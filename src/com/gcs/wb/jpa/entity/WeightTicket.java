@@ -22,7 +22,7 @@ import javax.persistence.TemporalType;
  * @author vunguyent
  */
 @Entity
-@Table(name = "WeightTicket", catalog = "jWeighBridge", schema = "")
+@Table(name = "WeightTicket")
 @NamedQueries({
     @NamedQuery(name = "WeightTicket.findAll", query = "SELECT w FROM WeightTicket w"),
     @NamedQuery(name = "WeightTicket.findByMandt", query = "SELECT w FROM WeightTicket w WHERE w.weightTicketPK.mandt = :mandt"),

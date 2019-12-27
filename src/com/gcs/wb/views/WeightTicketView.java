@@ -222,7 +222,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         
         try 
         {
-         q = (Query) entityManager.createNativeQuery("call pGetDev2 (? )" ); 
+         q = (Query) entityManager.createNativeQuery("{call pGetDev2 (?)}" );
          q.setParameter(1, WeighBridgeApp.getApplication().getConfig().getWbId());
          List sdev  = q.getResultList();
          
@@ -2046,7 +2046,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
         
         
         ///tuanna 02/10/2015 
-       String sql = "call pgetWT_Reg ( ?)" ;                                 
+       String sql = "{call pgetWT_Reg ( ?)}" ;                                 
                                Query q = (Query) entityManager.createNativeQuery(sql);
                                q.setParameter(1,txt); 
                                List wts = q.getResultList();         
@@ -2700,7 +2700,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                 // get Niem Xa 
                 String SoNiemXa =""; 
                 String Posto =""; 
-                String sql = "call pgetWT_NiemXa ( ?)" ;                                 
+                String sql = "{call pgetWT_NiemXa ( ?)}" ;                                 
                                Query q = (Query) entityManager.createNativeQuery(sql);
                                q.setParameter(1,txtWTNum.getText().toString()); 
                                List wts = q.getResultList();         
@@ -2714,7 +2714,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                         }
                          
                           try{
-                      sql = "call pvc_getTicketIndex ( ? ) " ;                                 
+                      sql = "{call pvc_getTicketIndex ( ? )}" ;                                 
                                Query qx = (Query) entityManager.createNativeQuery(sql);
                                qx.setParameter(1,txtWTNum.getText().toString()); 
                                List wtxxx = qx.getResultList();         
@@ -4276,14 +4276,14 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                          boolean block  = false ; 
                          
                         String sql ="";                         
-                              sql = "call pGetMaxL ( ?,?,?)" ;                                 
+                              sql = "{call pGetMaxL ( ?,?,?)}" ;
                               Query q = (Query) entityManager.createNativeQuery(sql);
                               q.setParameter(1,config.getwPlant().toString().trim());
                               q.setParameter(2,config.getWbId().toString());
                               q.setParameter(3,weightTicket.getSoXe().toString().trim());
                              
                          List wts = q.getResultList();          
-                         sql = "call pGetMaxLLock ( ?,?,?)" ;    
+                         sql = "{call pGetMaxLLock ( ?,?,?)}" ;
                          
                               Query q2 = (Query) entityManager.createNativeQuery(sql);
                              

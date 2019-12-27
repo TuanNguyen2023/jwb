@@ -1195,7 +1195,7 @@ private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
       try{
-        Query q = (Query) entityManager.createNativeQuery("call  pGetDangtaiV2 (?) ") ;
+        Query q = (Query) entityManager.createNativeQuery("{call  pGetDangtaiV2 (?)}") ;
          q.setParameter(1,txtDName1.getText().toString()); 
          List wts = q.getResultList(); 
           for (Object obj : wts)
@@ -2090,7 +2090,7 @@ private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                     
                     float fCount = 0; 
                     
-                    String sql = "call pCheckDOExist( ?,?) "; 
+                    String sql = "{call pCheckDOExist( ?,?)}";
                     Query q1 = (Query) entityManager.createNativeQuery(sql);
                                q1.setParameter(1,val[k]); 
                                q1.setParameter(2,WeighBridgeApp.getApplication().getConfig().getwPlant() );                                
@@ -2114,7 +2114,7 @@ private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                   
                      float klmax =0; 
                        sql ="";                         
-                              sql = "call pGetSPVar ( ?,?,?)" ;                                 
+                              sql = "{call pGetSPVar ( ?,?,?)}" ;
                                Query q = (Query) entityManager.createNativeQuery(sql);
                                q.setParameter(1,WbID); 
                                q.setParameter(2,sp ); 
@@ -2520,7 +2520,7 @@ private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                     
                     float fCount = 0; 
                     
-                    String sql = "call pCheckDOExist( ?,?) "; 
+                    String sql = "{call pCheckDOExist( ?,?)}";
                     Query q1 = (Query) entityManager.createNativeQuery(sql);
                                q1.setParameter(1,val[k]); 
                                q1.setParameter(2,WeighBridgeApp.getApplication().getConfig().getwPlant() );                                
@@ -2544,7 +2544,7 @@ private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                   
                      float klmax =0; 
                        sql ="";                         
-                              sql = "call pGetSPVar ( ?,?,?)" ;                                 
+                              sql = "{call pGetSPVar ( ?,?,?)}" ;
                                Query q = (Query) entityManager.createNativeQuery(sql);
                                q.setParameter(1,WbID); 
                                q.setParameter(2,sp ); 
@@ -2699,7 +2699,7 @@ private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
            */
             
             int iplus = 0 ; 
-            String ssql = " call jweighbridge.getTicketInCre( ?) "; 
+            String ssql = "{call jweighbridge.getTicketInCre( ?)}";
              Query qq = (Query) entityManager.createNativeQuery(ssql);  
              qq.setParameter(1, WeighBridgeApp.getApplication().getConfig().getWbId()); 
              List wwts = qq.getResultList();  
@@ -2720,7 +2720,7 @@ private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             //190615
             //Tuanna fix bug 
           int iCount  =0; 
-             String sql = "call pCheckExist ( ?)" ;                                 
+             String sql = "{call pCheckExist ( ?)}" ;
              Query q = (Query) entityManager.createNativeQuery(sql);                            
              List wts = q.getResultList();      
                         
@@ -2847,7 +2847,7 @@ private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                  try{
                     if ( cPara.G_REGID.startsWith("N") == true || cPara.G_REGID.toString().length() >0  )
                     {
-                     String sssql = "call pUpdateRegIdForTicket ( ?,?,?,?,?)" ;                 
+                     String sssql = "{call pUpdateRegIdForTicket ( ?,?,?,?,?)}" ;
                  //     CALL pUpdateRegIdForTicket('2507232226108','N418200700173' ,'POSTO','Vendor','Plant') ; 
                              
                      Query qqqq = (Query) entityManager.createNativeQuery(sssql);      
@@ -3305,9 +3305,6 @@ private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         List<WeightTicket> result = new ArrayList<WeightTicket>();
         int n1 = Integer.parseInt(timefrom);
         double n2 = Integer.parseInt(timeto) + 0.99;
-//        System.out.println(n1);
-//        System.out.println(n2);
-//        System.out.println(data.size());
         if (!data.isEmpty()) {
             for (int i = 0; i < data.size(); i++) {
                 WeightTicket item = null;

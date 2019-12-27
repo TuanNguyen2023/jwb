@@ -24,7 +24,6 @@
     <class>com.gcs.wb.jpa.entity.UserLocal</class>
     <class>com.gcs.wb.jpa.entity.TimeRange</class>
     <class>com.gcs.wb.jpa.entity.OutbDetailsV2</class>
-    <class>com.gcs.wb.jpa.entity.Regvehicle</class>
     <properties>
       <property name="eclipselink.logging.file" value="false"/>
     </properties>
