@@ -502,22 +502,31 @@ public class SAP2Local {
 //        return result;
 //    }
     
-    public static List<Material> getMaterialsList() {
+        public static List<Material> getMaterialsList() {
         List<Material> result = new ArrayList<Material>();
         AppConfig config = WeighBridgeApp.getApplication().getConfig();
-        
+
         MaterialGetListBapi bapi = new MaterialGetListBapi();
-        WeighBridgeApp.getApplication().getSAPSession().execute(bapi);
-        List<MaterialGetListStructure> mats = bapi.getEtMaterial();
-        for (MaterialGetListStructure mat : mats) {
-            Material m = null;
-            m = new Material(config.getsClient(),mat.getWerks(), mat.getMatnr());
-            m.setMaktx(mat.getMaktx());
-            m.setMaktg(mat.getMaktxLong());
-            //m.setXchpf(mat.);
-            result.add(m);
+        try {
+            WeighBridgeApp.getApplication().getSAPSession().execute(bapi);
+            List<MaterialGetListStructure> mats = bapi.getEtMaterial();
+            for (MaterialGetListStructure mat : mats) {
+                if(config.getwPlant().toString().equalsIgnoreCase(mat.getWerks()))
+                {
+                    Material m = null;
+                    m = new Material(config.getsClient(), mat.getWerks(), mat.getMatnr());
+                    m.setMaktx(mat.getMaktx());
+                    m.setMaktg(mat.getMaktxLong());
+                    //m.setXchpf(mat.);
+                    result.add(m);
+                }
+               
+            }
+        } catch (Exception ex) {
         }
+
         return result;
+
     }
     
     public static List<TransportAgent> getTransportAgentList(String wplant) {

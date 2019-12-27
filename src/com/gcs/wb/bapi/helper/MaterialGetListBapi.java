@@ -21,7 +21,7 @@ import org.hibersap.annotations.Table;
  * @author HANGTT
  */
 @Bapi(MaterialGetListConstants.BAPI_NAME)
-public class MaterialGetListBapi  implements Serializable {
+public class MaterialGetListBapi implements Serializable {
     /**Import Parameter: IV_START_DATE */
     @Import
     @Parameter(MaterialGetListConstants.IV_START_DATE)

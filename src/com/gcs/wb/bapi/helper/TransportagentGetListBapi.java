@@ -23,9 +23,9 @@ import org.hibersap.annotations.Table;
 public class TransportagentGetListBapi implements Serializable{
     
     /**Import Parameter: IV_START_DATE */
-    @Import
-    @Parameter(TransportagentGetListConstants.IV_START_DATE)
-    private Date _ivStartDate;
+//    @Import
+//    @Parameter(TransportagentGetListConstants.IV_START_DATE)
+//    private Date _ivStartDate;
     
     /**Import Parameter: IV_START_TIME */
     @Import
@@ -51,7 +51,6 @@ public class TransportagentGetListBapi implements Serializable{
     @Parameter(value = TransportagentGetListConstants.ET_VENDOR, type = ParameterType.STRUCTURE)
     private List<TransportagentGetListStructure> _etVendor;
     
-
     public TransportagentGetListBapi() {
     }
 
@@ -59,9 +58,9 @@ public class TransportagentGetListBapi implements Serializable{
      * Import Parameter: IV_START_DATE
      * @param ivStartDate the _ivStartDate to set
      */
-    public void setIvStartDate(Date ivStartDate) {
-        this._ivStartDate = ivStartDate;
-    }
+//    public void setIvStartDate(Date ivStartDate) {
+//        this._ivStartDate = ivStartDate;
+//    }
     
     /**
      * Import Parameter: IV_START_TIME

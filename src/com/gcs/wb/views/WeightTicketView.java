@@ -131,8 +131,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
    
     public WeightTicketView() {
         initComponents();
-        
-         cbxMaterial.setRenderer(new DefaultListCellRenderer() {
+        cbxMaterial.setRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(
                 JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -386,14 +385,14 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         btnSave = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         cbxMaterial = new javax.swing.JComboBox();
-        lblPoPosto = new javax.swing.JLabel();
-        lblVendorLoading = new javax.swing.JLabel();
         cbxVendorLoading = new javax.swing.JComboBox();
-        lblVendorTransport = new javax.swing.JLabel();
         cbxVendorTransport = new javax.swing.JComboBox();
-        lblReason1 = new javax.swing.JLabel();
         txtPoPosto = new javax.swing.JTextField();
         chkInternal = new javax.swing.JCheckBox();
+        lblMaterial = new javax.swing.JLabel();
+        lblPoPosto = new javax.swing.JLabel();
+        lblVendorLoading = new javax.swing.JLabel();
+        lblVendorTransport = new javax.swing.JLabel();
 
         entityManager.clear();
 
@@ -1106,12 +1105,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             }
         });
 
-        lblPoPosto.setText(resourceMap.getString("lblPoPosto.text")); // NOI18N
-        lblPoPosto.setName("lblPoPosto"); // NOI18N
-
-        lblVendorLoading.setText(resourceMap.getString("lblVendorLoading.text")); // NOI18N
-        lblVendorLoading.setName("lblVendorLoading"); // NOI18N
-
         cbxVendorLoading.setModel(SAP2Local.getVendorList(config, entityManager));
         cbxVendorLoading.setAction(actionMap.get("acceptBatch")); // NOI18N
         cbxVendorLoading.setName("cbxVendorLoading"); // NOI18N
@@ -1133,9 +1126,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 cbxVendorLoadingKeyReleased(evt);
             }
         });
-
-        lblVendorTransport.setText(resourceMap.getString("lblVendorTransport.text")); // NOI18N
-        lblVendorTransport.setName("lblVendorTransport"); // NOI18N
 
         cbxVendorTransport.setModel(SAP2Local.getVendorList(config, entityManager));
         cbxVendorTransport.setAction(actionMap.get("acceptBatch")); // NOI18N
@@ -1159,9 +1149,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             }
         });
 
-        lblReason1.setText(resourceMap.getString("lblReason1.text")); // NOI18N
-        lblReason1.setName("lblReason1"); // NOI18N
-
         txtPoPosto.setName("txtPoPosto"); // NOI18N
         txtPoPosto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1183,6 +1170,18 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             }
         });
 
+        lblMaterial.setText(resourceMap.getString("lblMaterial.text")); // NOI18N
+        lblMaterial.setName("lblMaterial"); // NOI18N
+
+        lblPoPosto.setText(resourceMap.getString("lblPoPosto.text")); // NOI18N
+        lblPoPosto.setName("lblPoPosto"); // NOI18N
+
+        lblVendorLoading.setText(resourceMap.getString("lblVendorLoading.text")); // NOI18N
+        lblVendorLoading.setName("lblVendorLoading"); // NOI18N
+
+        lblVendorTransport.setText(resourceMap.getString("lblVendorTransport.text")); // NOI18N
+        lblVendorTransport.setName("lblVendorTransport"); // NOI18N
+
         javax.swing.GroupLayout pnWTicketLayout = new javax.swing.GroupLayout(pnWTicket);
         pnWTicket.setLayout(pnWTicketLayout);
         pnWTicketLayout.setHorizontalGroup(
@@ -1196,8 +1195,10 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     .addComponent(lblCMNDBL)
                     .addComponent(lblDName)
                     .addComponent(lblGRText)
-                    .addComponent(lblReason)
-                    .addComponent(lblReason1))
+                    .addComponent(lblMaterial)
+                    .addGroup(pnWTicketLayout.createSequentialGroup()
+                        .addComponent(lblReason)
+                        .addGap(4, 4, 4)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnWTicketLayout.createSequentialGroup()
@@ -1211,8 +1212,11 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnWTicketLayout.createSequentialGroup()
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnWTicketLayout.createSequentialGroup()
+                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblVendorTransport)
+                            .addComponent(lblVendorLoading)
+                            .addComponent(lblPoPosto)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnWTicketLayout.createSequentialGroup()
                                 .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(cbxReason, 0, 206, Short.MAX_VALUE)
                                     .addComponent(txtGRText, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE)
@@ -1230,13 +1234,10 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                     .addComponent(lblBatch)
                                     .addComponent(lblCementDesc)
                                     .addComponent(lblComplete)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnWTicketLayout.createSequentialGroup()
+                            .addGroup(pnWTicketLayout.createSequentialGroup()
                                 .addComponent(cbxMaterial, 0, 206, Short.MAX_VALUE)
                                 .addGap(21, 21, 21)
-                                .addComponent(lbKunnr))
-                            .addComponent(lblPoPosto, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lblVendorLoading, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lblVendorTransport, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addComponent(lbKunnr)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtPoPosto, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE)
@@ -1322,20 +1323,20 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     .addComponent(lbKunnr)
                     .addComponent(cbxKunnr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cbxMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblReason1))
+                    .addComponent(lblMaterial))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblPoPosto)
-                    .addComponent(txtPoPosto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtPoPosto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblPoPosto))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbxVendorLoading, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblVendorLoading))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblVendorTransport)
-                    .addComponent(cbxVendorTransport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                    .addComponent(cbxVendorTransport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblVendorTransport))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                 .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(chkDissolved)
                     .addGroup(pnWTicketLayout.createSequentialGroup()
@@ -1348,20 +1349,21 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         );
 
         txtMatnr.getAccessibleContext().setAccessibleName(resourceMap.getString("txtMatnr.AccessibleContext.accessibleName")); // NOI18N
+        lblMaterial.getAccessibleContext().setAccessibleDescription(resourceMap.getString("lblMat.AccessibleContext.accessibleDescription")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(pnWTicket, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnScaleData, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pnScaleData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(pnWTFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 494, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(pnCurScale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(pnCurScale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(pnWTicket, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -1375,7 +1377,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 .addComponent(pnScaleData, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnWTicket, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(51, Short.MAX_VALUE))
+                .addContainerGap(57, Short.MAX_VALUE))
         );
 
         bindingGroup.bind();
@@ -2627,25 +2629,25 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
         List<Material> materials = null;
         
         //get data from DB
-        TypedQuery<Material> tMaterial = entityManager.createQuery("SELECT m FROM Material m WHERE m.materialPK.wplant = :wplant", Material.class);
+        TypedQuery<Material> tMaterial = entityManager.createQuery("SELECT m FROM Material m WHERE m.materialPK.wplant = :wplant order by m.materialPK.matnr asc", Material.class);
         tMaterial.setParameter("wplant", config.getwPlant());
         materials = tMaterial.getResultList();
         //get data from sap and sync DB
         //List<Material> mMaterials = SAP2Local.getLookUpMaterialsList(config.getwPlant());
-//        List<Material> mMaterials = SAP2Local.getMaterialsList();
-//        if (!entityManager.getTransaction().isActive()) {
-//            entityManager.getTransaction().begin();
-//        }
-//        for (Material mSap : mMaterials) {
-//            if (materials.indexOf(mSap) == -1) {
-//                entityManager.persist(mSap);
-//            } else {
-//                entityManager.merge(mSap);
-//            }
-//        }
-//        entityManager.getTransaction().commit();
-//        entityManager.clear();
-//        materials = tMaterial.getResultList();
+        List<Material> mMaterials = SAP2Local.getMaterialsList();
+        if (!entityManager.getTransaction().isActive()) {
+            entityManager.getTransaction().begin();
+        }
+        for (Material mSap : mMaterials) {
+            if (materials.indexOf(mSap) == -1) {
+                entityManager.persist(mSap);
+            } else {
+                entityManager.merge(mSap);
+            }
+        }
+        entityManager.getTransaction().commit();
+        entityManager.clear();
+        materials = tMaterial.getResultList();
         DefaultComboBoxModel result = new DefaultComboBoxModel();
         for (Material m : materials) {
             result.addElement(m);
@@ -3128,35 +3130,36 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                     txtPoPosto.setVisible(true);
                     cbxVendorLoading.setVisible(true);
                     cbxVendorTransport.setVisible(true);
-                    lblPoPosto.setVisible(true);
-                    lblVendorLoading.setVisible(true);
-                    lblVendorTransport.setVisible(true);
+//                    lblPoPosto.setVisible(true);
+//                    lblVendorLoading.setVisible(true);
+//                    lblVendorTransport.setVisible(true);
                 } else {
                     txtPoPosto.setVisible(false);
                     cbxVendorLoading.setVisible(false);
                     cbxVendorTransport.setVisible(false);
-                    lblPoPosto.setVisible(false);
-                    lblVendorLoading.setVisible(false);
-                    lblVendorTransport.setVisible(false);
+//                    lblPoPosto.setVisible(false);
+//                    lblVendorLoading.setVisible(false);
+//                    lblVendorTransport.setVisible(false);
                 }
                 
                 // check display select for Vat tu from SAP to DB
                 Material matDB = entityManager.find(Material.class, new MaterialPK(config.getsClient(), config.getwPlant(), weightTicket.getMatnr()));
                 
-                Material matSap = SAP2Local.getMaterialDetail(weightTicket.getMatnr());
-                if(matSap != null)
-                {
-                    if(matDB != null && (!matSap.getMaktx().equalsIgnoreCase(matDB.getMaktx())))
-                    {
-                        entityManager.merge(matSap);
-                        matDB = matSap;
-                    }
-                    if(matDB == null)
-                    {
-                        entityManager.persist(matSap);
-                        matDB = matSap;
-                    }
-                }
+                // CHECK sap
+//                Material matSap = SAP2Local.getMaterialDetail(weightTicket.getMatnr());
+//                if(matSap != null)
+//                {
+//                    if(matDB != null && (!matSap.getMaktx().equalsIgnoreCase(matDB.getMaktx())))
+//                    {
+//                        entityManager.merge(matSap);
+//                        matDB = matSap;
+//                    }
+//                    if(matDB == null)
+//                    {
+//                        entityManager.persist(matSap);
+//                        matDB = matSap;
+//                    }
+//                }
                 if(matDB != null)
                 {
                    cbxMaterial.setSelectedItem(matDB); 
@@ -5849,13 +5852,13 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
     private javax.swing.JLabel lblIUnit;
     private javax.swing.JLabel lblKG;
     private javax.swing.JLabel lblLicPlate;
+    private javax.swing.JLabel lblMaterial;
     private javax.swing.JLabel lblMatnr;
     private javax.swing.JLabel lblOScale;
     private javax.swing.JLabel lblOTime;
     private javax.swing.JLabel lblOUnit;
     private javax.swing.JLabel lblPoPosto;
     private javax.swing.JLabel lblReason;
-    private javax.swing.JLabel lblReason1;
     private javax.swing.JLabel lblRegCat;
     private javax.swing.JLabel lblRegItem;
     private javax.swing.JLabel lblSLoc;

@@ -58,16 +58,16 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="1" attributes="0">
+          <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="pnWTicket" alignment="0" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="pnScaleData" alignment="0" max="32767" attributes="2"/>
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="pnWTFilter" pref="494" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="pnCurScale" min="-2" max="-2" attributes="1"/>
                   </Group>
+                  <Component id="pnWTicket" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -85,7 +85,7 @@
               <Component id="pnScaleData" min="-2" pref="119" max="-2" attributes="1"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="pnWTicket" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="51" max="32767" attributes="0"/>
+              <EmptySpace pref="59" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -809,8 +809,11 @@
                       <Component id="lblCMNDBL" alignment="1" min="-2" max="-2" attributes="0"/>
                       <Component id="lblDName" alignment="1" min="-2" max="-2" attributes="0"/>
                       <Component id="lblGRText" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblReason" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblReason1" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblMaterial" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="lblReason" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -826,7 +829,10 @@
                           <Component id="btnSave" min="-2" pref="73" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="lblVendorTransport" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblVendorLoading" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblPoPosto" min="-2" max="-2" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="cbxReason" pref="206" max="32767" attributes="0"/>
@@ -853,9 +859,6 @@
                                   <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
                                   <Component id="lbKunnr" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="lblPoPosto" alignment="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblVendorLoading" alignment="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblVendorTransport" alignment="1" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
@@ -967,12 +970,12 @@
                       <Component id="lbKunnr" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="cbxKunnr" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="cbxMaterial" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblReason1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblMaterial" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="lblPoPosto" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="txtPoPosto" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblPoPosto" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -981,10 +984,10 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="lblVendorTransport" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="cbxVendorTransport" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblVendorTransport" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="38" max="32767" attributes="0"/>
+                  <EmptySpace pref="40" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Component id="chkDissolved" min="-2" max="-2" attributes="0"/>
                       <Group type="102" alignment="1" attributes="0">
@@ -1308,18 +1311,6 @@
             <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbxMaterialItemStateChanged"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JLabel" name="lblPoPosto">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblPoPosto.text"/>
-            <Property name="name" type="java.lang.String" value="lblPoPosto" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblVendorLoading">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblVendorLoading.text"/>
-            <Property name="name" type="java.lang.String" value="lblVendorLoading" noResource="true"/>
-          </Properties>
-        </Component>
         <Component class="javax.swing.JComboBox" name="cbxVendorLoading">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
@@ -1337,12 +1328,6 @@
             <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="cbxVendorLoadingKeyReleased"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JLabel" name="lblVendorTransport">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblVendorTransport.text"/>
-            <Property name="name" type="java.lang.String" value="lblVendorTransport" noResource="true"/>
-          </Properties>
-        </Component>
         <Component class="javax.swing.JComboBox" name="cbxVendorTransport">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
@@ -1359,12 +1344,6 @@
           <Events>
             <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="cbxVendorTransportKeyReleased"/>
           </Events>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblReason1">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblReason1.text"/>
-            <Property name="name" type="java.lang.String" value="lblReason1" noResource="true"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtPoPosto">
           <Properties>
@@ -1386,6 +1365,33 @@
           <Events>
             <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkInternalItemStateChanged"/>
           </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblMaterial">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblMaterial.text"/>
+            <Property name="name" type="java.lang.String" value="lblMaterial" noResource="true"/>
+          </Properties>
+          <AccessibilityProperties>
+            <Property name="AccessibleContext.accessibleDescription" type="java.lang.String" resourceKey="lblMat.AccessibleContext.accessibleDescription"/>
+          </AccessibilityProperties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblPoPosto">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblPoPosto.text"/>
+            <Property name="name" type="java.lang.String" value="lblPoPosto" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblVendorLoading">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblVendorLoading.text"/>
+            <Property name="name" type="java.lang.String" value="lblVendorLoading" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblVendorTransport">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblVendorTransport.text"/>
+            <Property name="name" type="java.lang.String" value="lblVendorTransport" noResource="true"/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>
