@@ -16,7 +16,7 @@ import org.eclipse.persistence.config.PersistenceUnitProperties;
  */
 public class JpaProperties {
 
-    public static Map getProperties() {
+    public static Map getPropertiesV1() {
         AppConfig appConf = WeighBridgeApp.getApplication().getConfig();
         /*URL Template | jdbc:mysql://localhost:3306/jWeighBridge?useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8*/
         StringBuilder sbURL = new StringBuilder();
@@ -33,7 +33,7 @@ public class JpaProperties {
         return properties;
     }
     // conect DB customer
-    public static Map getProperties1() {
+    public static Map getProperties() {
         AppConfig appConf = WeighBridgeApp.getApplication().getConfig();
         StringBuilder sbURL = new StringBuilder();
         sbURL.append("jdbc:sqlserver://");
@@ -42,7 +42,7 @@ public class JpaProperties {
         sbURL.append(appConf.getDbName());
         Map<String, String> properties = new HashMap<String, String>();
         properties.put(PersistenceUnitProperties.JDBC_DRIVER, "com.microsoft.sqlserver.jdbc.SQLServerDriver");
-        properties.put(PersistenceUnitProperties.JDBC_URL, "jdbc:sqlserver://172.16.20.181:1433;databaseName=jweighbridge");
+        properties.put(PersistenceUnitProperties.JDBC_URL, "jdbc:sqlserver://172.16.20.181:1433;databaseName=weighbridge");
         properties.put(PersistenceUnitProperties.JDBC_USER, appConf.getDbUsr());
         properties.put(PersistenceUnitProperties.JDBC_PASSWORD, appConf.getDbPwd());
         return properties;
