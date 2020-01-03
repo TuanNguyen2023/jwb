@@ -20,8 +20,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "Vehicle")
 @NamedQueries({
-    @NamedQuery(name = "Vehicle.findAll", query = "SELECT v FROM Vehicle v"),
-    @NamedQuery(name = "Vehicle.findBySoXe", query = "SELECT v FROM Vehicle v WHERE v.soXe = :soXe"),
     @NamedQuery(name = "Vehicle.findByTaAbbr", query = "SELECT v FROM Vehicle v WHERE v.taAbbr = :taAbbr")})
 public class Vehicle implements Serializable {
 

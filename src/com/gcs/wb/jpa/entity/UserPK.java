@@ -70,7 +70,7 @@ public class UserPK implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        
+
         if (!(object instanceof UserPK)) {
             return false;
         }

@@ -32,6 +32,7 @@ import com.gcs.wb.bapi.outbdlv.WsDeliveryUpdateBapi;
 import com.gcs.wb.bapi.outbdlv.structure.OutbDeliveryCreateStoStructure;
 import com.gcs.wb.bapi.outbdlv.structure.VbkokStructure;
 import com.gcs.wb.bapi.outbdlv.structure.VbpokStructure;
+import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.JpaProperties;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.OutbDetailsV2;
@@ -101,6 +102,14 @@ import org.jdesktop.application.Task;
 import javax.persistence.EntityManager;
 import com.gcs.wb.jpa.entity.Variant;
 import com.gcs.wb.jpa.entity.VariantPK;
+import com.gcs.wb.jpa.procedures.WeightTicketJpaRepository;
+import com.gcs.wb.jpa.procedures.WeightTicketRepository;
+import com.gcs.wb.jpa.repositorys.BatchStocksRepository;
+import com.gcs.wb.jpa.repositorys.CustomerRepository;
+import com.gcs.wb.jpa.repositorys.MovementRepository;
+import com.gcs.wb.jpa.repositorys.SignalsRepository;
+import com.gcs.wb.jpa.repositorys.ReasonRepository;
+import com.gcs.wb.jpa.repositorys.TimeRangeRepository;
 import com.gcs.wb.utils.Conversion_Exit;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -122,13 +131,20 @@ import java.util.*;
  */
 public class WeightTicketView extends javax.swing.JInternalFrame {
 
+    WeightTicketRepository weightTicketRepository = new WeightTicketRepository();
+    BatchStocksRepository batchStocksRepository = new BatchStocksRepository();
+    TimeRangeRepository timeRangeRepository = new TimeRangeRepository();
     private AppConfig config = null;
     private final SAPSetting sapSetting;
     private final User login;
     private String last_value = null;
     private String current_value = null;
     public HashMap hmMsg = new HashMap();
-   
+    CustomerRepository customerRepository = new CustomerRepository();
+    SignalsRepository noneRepository = new SignalsRepository();
+    WeightTicketJpaRepository weightTicketJpaRepository = new WeightTicketJpaRepository();
+    EntityManager entityManager = JPAConnector.getInstance();
+
     public WeightTicketView() {
         initComponents();
         cbxMaterial.setRenderer(new DefaultListCellRenderer() {
@@ -171,38 +187,25 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         cbxReason.setSelectedIndex(-1);
         rbtMvt311.setVisible(false);
         rbtMb1b.setVisible(false);
-
-
-        //>> Tuanna modified 02.02.2013  for Set manual input qty in wheighing   
-        boolean flag = true ; // tram can , true -- giao nhan  file   
-        boolean flagAdmin = true ;  // false normal , true -> SCM admin 
-        // replace by 
+        boolean flag = true; // tram can , true -- giao nhan  file   
+        boolean flagAdmin = true;  // false normal , true -> SCM admin 
         txfCurScale.setEditable(flag);
         txtInTime.setEditable(flagAdmin);
-       txtOutTime.setEditable(flagAdmin);
-
-  
+        txtOutTime.setEditable(flagAdmin);
         sapSetting = WeighBridgeApp.getApplication().getSapSetting();
         login = WeighBridgeApp.getApplication().getLogin();
-//        WeighBridgeView.txt_status.setText(sapSetting.getName1() + " - User:" + login.getFullName());
-        
         entityManager.clear();
         chkDissolved.setEnabled(false);
         chkDissolved.setVisible(false);
         lblReason.setVisible(false);
         cbxReason.setVisible(false);
-                
-        
         rbtMb1b.setVisible(false);
         rbtMvt311.setVisible(false);
         lblComplete.setVisible(false);
         cbxCompleted.setVisible(false);
-//        if (WeighBridgeApp.getApplication().isOfflineMode() || rbtMisc.isSelected()) {
         rbtMisc.setForeground(Color.red);
-        WeightTicketJpaController conWTicket = new WeightTicketJpaController(entityManager);
-        Query q = (Query) entityManager.createNativeQuery("select * from Customer where MANDT = ?"); 
-        q.setParameter(1, WeighBridgeApp.getApplication().getConfig().getsClient());
-        List kunnr = q.getResultList();
+        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
+        List kunnr = this.customerRepository.getCustomerByMaNdt(client);
         DefaultComboBoxModel result = new DefaultComboBoxModel();
         result.addElement("");
         for (Object obj : kunnr) {
@@ -218,32 +221,21 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 result.addElement(cust);
             }
         }
-        //tuanna modi 140415
-        
-        try 
-        {
-         q = (Query) entityManager.createNativeQuery("{call pGetDev2 (?)}" );
-         q.setParameter(1, WeighBridgeApp.getApplication().getConfig().getWbId());
-         List sdev  = q.getResultList();
-         
-         for ( Object obj : sdev )
-         {
-             Object[] wt = (Object[]) obj; 
-             //hld18
-             txfCurScale.setEditable((( Integer.parseInt(Base64_Utils.decodeNTimes (  wt[0].toString())) ==1 )? true:false));
-             txtInTime.setEditable((( Integer.parseInt( Base64_Utils.decodeNTimes(wt[1].toString())) ==1 )? true:false));
-             txtOutTime.setEditable((( Integer.parseInt(  Base64_Utils.decodeNTimes (wt[2].toString())) ==1 )? true:false));        
-             break; 
-             
-         }
-        }catch
-                (Exception e) {}
-        
-         // txtInTime.setEditable(flagAdmin);
-        // txtOutTime.setEditable(flagAdmin);
-        
-        
-        
+        try {
+            String pWbId = WeighBridgeApp.getApplication().getConfig().getWbId().trim();
+            List sdev = weightTicketRepository.getDev2(pWbId);
+            if (sdev != null) {
+                for (Object obj : sdev) {
+                    Object[] wt = (Object[]) obj;
+                    txfCurScale.setEditable(((Integer.parseInt(Base64_Utils.decodeNTimes(wt[0].toString())) == 1) ? true : false));
+                    txtInTime.setEditable(((Integer.parseInt(Base64_Utils.decodeNTimes(wt[1].toString())) == 1) ? true : false));
+                    txtOutTime.setEditable(((Integer.parseInt(Base64_Utils.decodeNTimes(wt[2].toString())) == 1) ? true : false));
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            logger.error(e.toString());
+        }
         cbxKunnr.setModel(result);
         cbxKunnr.setRenderer(new DefaultListCellRenderer() {
 
@@ -261,18 +253,10 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
         // tuanna 20120522_ setEnabled for "combo box Khach hang" depends on offline_mode
         cbxKunnr.setEnabled(WeighBridgeApp.getApplication().isOfflineMode());
-
-        TypedQuery tq = entityManager.createNamedQuery("TimeRange.findByMandtWBID", TimeRange.class);
-        tq.setParameter("mandt", WeighBridgeApp.getApplication().getConfig().getsClient());
-        tq.setParameter("wbId", WeighBridgeApp.getApplication().getConfig().getWbId());
-        TimeRange t = null;
-        try {
-            t = (TimeRange) tq.getSingleResult();
+        TimeRange t = timeRangeRepository.findByMandtWbId(client, WeighBridgeApp.getApplication().getConfig().getWbId());
+        if (t != null) {
             timeFrom = 0 + Integer.parseInt(t.getTimeFrom() != null ? (t.getTimeFrom().trim()) : "0");
             timeTo = Integer.parseInt(t.getTimeTo() != null ? (t.getTimeTo().trim()) : "0");
-        } catch (Exception e) {
-            timeFrom = 0;
-            timeTo = 0;
         }
         
         // cấu hình cho cầu cân hiển thị PO và vendor
@@ -308,7 +292,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         grbType = new javax.swing.ButtonGroup();
         grbBridge = new javax.swing.ButtonGroup();
         grbCat = new javax.swing.ButtonGroup();
-        entityManager = WeighBridgeApp.getApplication().getEm();
         weightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
         purOrder = new com.gcs.wb.jpa.entity.PurOrder();
         outbDel = new com.gcs.wb.jpa.entity.OutbDel();
@@ -1398,7 +1381,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
          * 
          */
        // config = WeighBridgeApp.getApplication().getConfig(); 
-         WeightTicketJpaController con  = new WeightTicketJpaController(entityManager);
+        WeightTicketJpaController con = new WeightTicketJpaController();
         try {
             config = con.getDev(WeighBridgeApp.getApplication().getConfig().getWbId());
             
@@ -1474,14 +1457,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         weightTicket.setLgort(selSloc.getSLocPK().getLgort());
         if (selSloc != null && (txtMatnr.getText() != null && !txtMatnr.getText().trim().isEmpty())) {
             lblSLoc.setForeground(Color.black);
-            TypedQuery<BatchStocks> tBatchQ = entityManager.createQuery("SELECT b FROM BatchStocks b WHERE b.batchStocksPK.mandt = :mandt AND b.batchStocksPK.werks = :werks AND b.batchStocksPK.lgort = :lgort  AND b.batchStocksPK.matnr = :matnr ", BatchStocks.class);
-            //   TypedQuery<BatchStocks> tBatchQ = entityManager.createQuery("SELECT b FROM BatchStocks b WHERE b.batchStocksPK.mandt = :mandt AND b.batchStocksPK.werks = :werks AND b.batchStocksPK.lgort = :lgort  AND b.batchStocksPK.matnr = :matnr and b.batchStocksPK.charg not like '%-%'", BatchStocks.class);
-
-            tBatchQ.setParameter("mandt", config.getsClient());
-            tBatchQ.setParameter("werks", config.getwPlant());
-            tBatchQ.setParameter("lgort", selSloc.getSLocPK().getLgort());
-            tBatchQ.setParameter("matnr", txtMatnr.getText());
-            List<BatchStocks> batchs = tBatchQ.getResultList();
+            List<BatchStocks> batchs = batchStocksRepository.getList(config.getsClient(), config.getwPlant(),
+                    selSloc.getSLocPK().getLgort(), weightTicket.getMatnrRef());
             List<BatchStocksStructure> bBatchStocks = SAP2Local.getBatchStocks(selSloc.getSLocPK().getLgort(), weightTicket.getMatnrRef());
             if (!entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().begin();
@@ -1494,7 +1471,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 } else {
                     entityManager.merge(bs);
                 }
-                //   if (batchs.indexOf(bs) == -1 && b.getLgort().equalsIgnoreCase(weightTicket.getLgort())) {
                 String sfix = "-";
                 if (batchs.indexOf(bs) == -1 && b.getLgort().equalsIgnoreCase(weightTicket.getLgort())) {
 
@@ -1506,7 +1482,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
             DefaultComboBoxModel result = new DefaultComboBoxModel();
             for (BatchStocks b : batchs) {
-                //if (b.getLvorm() == null || b.getLvorm().toString().trim().isEmpty() )
                 if (b.getLvorm() == null || b.getLvorm().toString().trim().isEmpty()) {
                     // Fillter BATCH not contain "-" by Tuanna -10.01.2013 
                     if (WeighBridgeApp.getApplication().getConfig().getwPlant().indexOf("1311") >= 0) {
@@ -1534,7 +1509,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     private void txtGRTextKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtGRTextKeyReleased
         if (weightTicket != null) {
             weightTicket.setText(txtGRText.getText().trim());
-         //    weightTicket.setText("ZQT");
         }
         setSaveNeeded(isValidated());
     }//GEN-LAST:event_txtGRTextKeyReleased
@@ -1577,12 +1551,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_chkDissolvedItemStateChanged
 
     private void rbtPOItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbtPOItemStateChanged
-//        if (rbtPO.isEnabled() && rbtMisc.isEnabled() && rbtMb1b.isEnabled() && grbType.getSelection() != null) {
-//            rbtPO.setForeground(Color.black);
-//            rbtMisc.setForeground(Color.black);
-//            rbtMb1b.setForeground(Color.black);
-//        }
-//        setSaveNeeded(isValidated());
     }//GEN-LAST:event_rbtPOItemStateChanged
 
     private void cbxBatchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cbxBatchKeyReleased
@@ -1728,12 +1696,9 @@ private void txtWTNumFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
         try {
             result = (String) contents.getTransferData(DataFlavor.stringFlavor);
         } catch (UnsupportedFlavorException ex) {
-            //highly unlikely since we are using a standard DataFlavor
-            System.out.println(ex);
-            ex.printStackTrace();
+            logger.error(ex.toString());
         } catch (IOException ex) {
-            System.out.println(ex);
-            //  ex.printStackTrace();
+            logger.error(ex.toString());
         }
     }
     if (result.length() == 13) {
@@ -1755,12 +1720,6 @@ private void txtWTNumFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-        if(txtWTNum.getText() != ""  )
-        {
-            
-        }
-       
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void txtWTNumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtWTNumActionPerformed
@@ -1980,18 +1939,11 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
             JOptionPane.showMessageDialog(rootPane, "Xin đợi cho cân ổn định");
             return null;
         }
-               
-     
-       //tuanna add 20/11/2013 check position signal 
-        boolean fCheckSignal= false ; 
-        // Tuanna 10062014 
-        boolean fOk = false ; 
-        if (fCheckSignal==true )
-        {
-        String data = "";
-         Query q = (Query) entityManager.createNativeQuery("SELECT COUNT(cvalue) AS icount FROM jweighbridge.signal WHERE cvalue LIKE '02' AND wbid LIKE '1411TC'",String.class );
-         List<String> lst =  q.getResultList();
-         JOptionPane.showMessageDialog(rootPane,lst.get(0).toString()) ;
+        boolean fCheckSignal = false;
+        boolean fOk = false;
+        if (fCheckSignal == true) {
+            int count = noneRepository.getCountSingal();
+            JOptionPane.showMessageDialog(rootPane, count);
         }
         
         if (weightTicket == null || txfCurScale.getValue() == null || ((Number) txfCurScale.getValue()).intValue() == 0) {
@@ -2005,7 +1957,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
         }
         if (rbtPO.isSelected()) {
             if (purOrder.getDocType().equals("UB")) {
-                WeightTicketJpaController con = new WeightTicketJpaController(entityManager);
+                WeightTicketJpaController con = new WeightTicketJpaController();
                 Material m = null;
                 try {
                     m = con.CheckPOSTO(purOrder.getMaterial());
@@ -2039,39 +1991,17 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
         outbDel_list.clear();
         outDetails_lits.clear();
         entityManager.clear();
-
         String txt = txtWTNum.getText().trim();
-        wt_ID = txtWTNum.getText().trim();
-        String kq = "" ; 
-        
-        
-        ///tuanna 02/10/2015 
-       String sql = "{call pgetWT_Reg ( ?)}" ;                                 
-                               Query q = (Query) entityManager.createNativeQuery(sql);
-                               q.setParameter(1,txt); 
-                               List wts = q.getResultList();         
-                        
-                         try {
-                          kq = wts.get(0).toString();                           
-                         
-                        }catch(Throwable cause ){                                  
-                              //    klmax  = -1 ;                                   
-                        }
-                         
-                      if (kq.length() >0 )
-                      {
-                          txt = kq.trim(); 
-                      }
-        
-        //end
-                      
-    
-           
+        List wts = weightTicketRepository.getWeighTicketReg(txt);
 
-        
-        // tuanna 09092015 
+        String kq = null;
+        if (wts != null) {
+            kq = wts.get(0).toString();
+        }
+        if (kq.length() > 0) {
+            txt = kq.trim();
+        }
         chkDissolved.setEnabled(false);
-        
         if (isEnteredValidWTNum()) {
             String sID = null;
             String sSeq = null;
@@ -2079,7 +2009,6 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
             sSeq = txt.substring(10);
             sID.trim();
             sSeq.trim();
-
             return new ReadWTTask(WeighBridgeApp.getApplication(), sID, sSeq);
         } else {
             clearForm();
@@ -2110,10 +2039,6 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
         if (weightTicket == null) {
             return null;
         } else {
-            //if (weightTicket.getDissolved() == null)
-            //    {
-            //      weightTicket.setDissolved(false);
-            //  }
             if ((weightTicket.getDissolved() == null) || (weightTicket.getDissolved() == false)) { //+20100112#01 Phieu bi huy khong dc in lai
                 return new ReprintWTTask(WeighBridgeApp.getApplication());
             } else { //+20100112#01 Phieu bi huy khong dc in lai
@@ -2125,16 +2050,9 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
 
     @Action(enabledProperty = "saveNeeded")
     public Task saveWT() throws Exception {
-        //{+20101203#01 Cheat code, adjust date to posting - be deleted
-        //weightTicket.setSScale(new BigDecimal(((Number) txfOutQty.getValue()).doubleValue()));
-        // Date now = Calendar.getInstance().getTime();
-        // final long ONE_DAY_MILLISCONDS = now.getTime() - (long) 25 * 60 * 60 * 1000 * 30;
-        // Date lastMonth = new Date( ONE_DAY_MILLISCONDS );
-        // weightTicket.setSTime(lastMonth);
-        //}+20101203#01
-         WeightTicketJpaController cmes  = new WeightTicketJpaController(entityManager); 
-         String msg ="";
-         
+        WeightTicketJpaController cmes = new WeightTicketJpaController();
+        String msg = "";
+
         boolean valid = isValidated();
         if (weightTicket != null) {
             if (weightTicket.getPosted() == -1 && chkDissolved.isSelected()) {
@@ -2142,7 +2060,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
             }
             //20121203 HOANGVV : check KL Dang Ky = KL Thuc te cho xi mang
             OutbDel outdel_tmp = null;
-            WeightTicketJpaController con = new WeightTicketJpaController(entityManager);
+            WeightTicketJpaController con = new WeightTicketJpaController();
             List<OutbDetailsV2> details_list = new ArrayList<OutbDetailsV2>();
             OutbDetailsV2 item = null;
             Material mat_tmp = null;
@@ -2245,7 +2163,6 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                             //+{add logic check confirm
                             Variant vari = new Variant();
                             VariantPK variPK = new VariantPK();
-                            EntityManager entityManager = java.beans.Beans.isDesignTime() ? null : WeighBridgeApp.getApplication().getEm();
                             variPK.setMandt(config.getsClient().toString());
                             variPK.setWPlant(config.getwPlant().toString());
                             variPK.setParam("PROCESS_ORDER_CF");
@@ -2697,51 +2614,25 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
 
                     rbtOutward.setSelected(true);
                 }
-                // get Niem Xa 
-                String SoNiemXa =""; 
-                String Posto =""; 
-                String sql = "{call pgetWT_NiemXa ( ?)}" ;                                 
-                               Query q = (Query) entityManager.createNativeQuery(sql);
-                               q.setParameter(1,txtWTNum.getText().toString()); 
-                               List wts = q.getResultList();         
-                        
-                         try {
-                          SoNiemXa = wts.get(0).toString();                           
-                          txtCementDesc.setText(SoNiemXa);
-                          
-                        }catch(Throwable cause ){                                  
-                              //    klmax  = -1 ;                                   
+                String pWtId = txtWTNum.getText().toString().trim();
+                String SoNiemXa = weightTicketRepository.getSoNiemXa(pWtId);
+                String Posto = "";
+                txtCementDesc.setText(SoNiemXa);
+                try {
+                    String maphieu = txtWTNum.getText().toString().trim();
+                    List wtxxx = weightTicketRepository.getTicketIndex(maphieu);
+                    if (wtxxx != null) {
+                        for (Object obj : wtxxx) {
+                            Object[] wt = (Object[]) obj;
+                            Posto = wt[2].toString().trim();
+                            txtPONum.setText(Posto);
+                            weightTicket.setAbbr(wt[3].toString().trim());
+                            rbtPO.setSelected(true);
                         }
-                         
-                          try{
-                      sql = "{call pvc_getTicketIndex ( ? )}" ;                                 
-                               Query qx = (Query) entityManager.createNativeQuery(sql);
-                               qx.setParameter(1,txtWTNum.getText().toString()); 
-                               List wtxxx = qx.getResultList();         
-                        
-                         try {
-                             for (Object obj : wtxxx)
-                                    {
-                                      // wt[0] == null; 
-                                       Object[] wt = (Object[]) obj;
-                                      //  txtDName.setText(wt[4].toString());
-                                         Posto = wt[2].toString().trim(); 
-                                         txtPONum.setText(Posto); 
-                                         weightTicket.setAbbr(wt[3].toString().trim());
-                                          rbtPO.setSelected(true);
-                                    }
-                          
-                        }catch(Throwable cause ){                                  
-                              //    klmax  = -1 ;                                   
-                        }
-                        
-                         
-                         
-                 } catch(Throwable cause ){ 
-                                        
-                 }
-                    
-                
+
+                    }
+                } catch (Throwable cause) {
+                }
                 // <editor-fold defaultstate="collapsed" desc="Determine state of Weight Ticket">
                 setStage1(false);
                 setStage2(false);
@@ -2760,7 +2651,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                 } else {
                    // OutbDel od = null; //HLD18--
                     List<OutbDetailsV2> odt = null;
-                    WeightTicketJpaController con = new WeightTicketJpaController(entityManager);
+                    WeightTicketJpaController con = new WeightTicketJpaController();
                     try {
                         od = con.findByMandtOutDel(weightTicket.getDelivNumb());
                     } catch (Exception ex) {
@@ -2820,7 +2711,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                 if (!isWithoutDO()) {
                     //xu ly nhieu DO trong WT
                     String[] do_list = weightTicket.getDelivNumb().split("-");
-                    WeightTicketJpaController con = new WeightTicketJpaController(entityManager);
+                    WeightTicketJpaController con = new WeightTicketJpaController();
                     List<OutbDetailsV2> details_list = new ArrayList<OutbDetailsV2>();
                     OutbDetailsV2 item = null;
                     outbDel_list.clear();
@@ -3083,12 +2974,8 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                         batch = entityManager.find(BatchStocks.class, new BatchStocksPK(config.getsClient(), config.getwPlant(), lgort, weightTicket.getMatnrRef(), outbDel.getCharg()));
                     }
                     if (cbxBatch.getModel().getSize() == 0) {
-                        TypedQuery<BatchStocks> tBatchQ = entityManager.createQuery("SELECT b FROM BatchStocks b WHERE b.batchStocksPK.mandt = :mandt AND b.batchStocksPK.werks = :werks AND b.batchStocksPK.lgort = :lgort  AND b.batchStocksPK.matnr = :matnr", BatchStocks.class);
-                        tBatchQ.setParameter("mandt", config.getsClient());
-                        tBatchQ.setParameter("werks", config.getwPlant());
-                        tBatchQ.setParameter("lgort", lgort);
-                        tBatchQ.setParameter("matnr", weightTicket.getMatnrRef());
-                        List<BatchStocks> batchs = tBatchQ.getResultList();
+                        List<BatchStocks> batchs = batchStocksRepository.getList(config.getsClient(), config.getwPlant(),
+                                lgort, weightTicket.getMatnrRef());
                         List<BatchStocksStructure> bBatchStocks = SAP2Local.getBatchStocks(lgort, weightTicket.getMatnrRef());
                         if (!entityManager.getTransaction().isActive()) {
                             entityManager.getTransaction().begin();
@@ -3207,10 +3094,6 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                 } else {
                     chkDissolved.setEnabled(false);
                 }
-//                if (weightTicket.getPosted() == -1 && weightTicket.getDissolved() == null) {
-//                    setDissolved(chkDissolved.isSelected());
-//                    setSaveNeeded(true);
-//                }
                 if (weightTicket.getDissolved() != null) {
                     if (weightTicket.getDissolved() == true) {
                         setSaveNeeded(false);
@@ -3342,15 +3225,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                     setValidPONum(true);
                     setSubContract(true);
                 } else {
-                    //{+20101206#01
                     setValidPONum(true);
-                    //}+20101206#01
-                    //{-20101206#01
-                    //setValidPONum(false);
-                    //String mode = rbtInward.isSelected() ? "nhập" : "xuất";
-                    //String msg = "PO \" " + this.poNum + " \" không được phép sử dụng để " + mode + " hàng tại Plant \" " + config.getwPlant() + "\"";
-                    //failed(new Exception(msg));
-                    //}-20101206#01
                 }
             }
             return null;  // return your result
@@ -3389,7 +3264,6 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                 weightTicket.setItem(purOrder.getPoItem());
                 weightTicket.setRegItemText(purOrder.getShortText());
                 weightTicket.setMatnrRef(purOrder.getMaterial());
-//                weightTicket.setUnit(purOrder.getPoUnit());
                 weightTicket.setUnit("TON");
             } else {
                 txtRegItem.setText(null);
@@ -3424,9 +3298,6 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
 
         SaveWTTask(org.jdesktop.application.Application app) {
             super(app);
-
-
-            // End add   
             btnSave.setEnabled(false);
             if (((isStage2() || (!isStage1() && !isStage2())) && (weightTicket.getDissolved() == null || weightTicket.getDissolved() == false))
                     || (!isStage1() && !isStage2() && (weightTicket.getDissolved() == null || weightTicket.getDissolved() == false)
@@ -3472,8 +3343,6 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                                 objBapi = getPgmVl02nBapi(weightTicket, outbDel);
 
                             } else {
-                                // tuanna 16.06.13
-                                //cbxKunnr.setSelectedIndex(-1);
                                 objBapi = getDoCreate2PGI(weightTicket, outbDel);
                             }
                         }
@@ -3938,35 +3807,11 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
             if (completed) {
                 if (weightTicket.getDissolved() == null || weightTicket.getDissolved() == false || weightTicket.getPosted() == 1 || weightTicket.getPosted() == 2) { //+20100111#01 khong in neu huy phieu
                     setMessage("Đang in phiếu cân...");
-                    // tuanna >>17.06.2013                 
-                    //      Query qUpdate = (Query) entityManager.createNativeQuery("call pSet_KhachHang1311() ");
-
-                    // << end 
                     printWT(weightTicket, false);
-                    
-                    //Tuanna >> 
-                    /*
-                    if (weightTicket.getRegCategory() == 'O' )
-                    {
-                        if(weightTicket.getSTime() == null && weightTicket.getFTime() != null )
-                        {
-                            if (weightTicket.getMoveType().toString() == "601" || weightTicket.getMoveType().toString() == "921"  ) 
-                                // updating somthing for report . 
-                                
-                                 true = true ; 
-                            
-                            }
-                            
-                    }
-                    */
                 }
             }
             btnSave.setEnabled(false);
-            //       cbxKunnr.setSelectedIndex(-1); 
-
-            // >> tuanna fix 140613 
-            //  cbxKunnr.setEnabled(true);
-            return null;  // return your result
+            return null;
         }
 
         protected void revertCompletedDO(List<String> completedDOs, List<OutbDetailsV2> OutbDetailsV2, List<OutbDel> outbDels) {
@@ -4109,12 +3954,10 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
         protected Object doInBackground() throws Exception {
             WeighBridgeApp.getApplication().disconnectWB();
             formatter.applyPattern(WeighBridgeApp.DATE_TIME_DISPLAY_FORMAT);
-//            Date now = Calendar.getInstance().getTime();
-            //get server time
             Date now = null;
             
             formatter.applyPattern(WeighBridgeApp.DATE_TIME_DISPLAY_FORMAT);//      
-            WeightTicketJpaController con = new WeightTicketJpaController(entityManager);
+            WeightTicketJpaController con = new WeightTicketJpaController();
             try {
                 Object rs = con.get_server_time();
                 
@@ -4128,8 +3971,6 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                  } catch (Exception ex) {
                 java.util.logging.Logger.getLogger(WeightTicketView.class.getName()).log(Level.SEVERE, null, ex);
             }
-                     
-// Move up 11/09/2012
             grbBridge.clearSelection();
             btnAccept.setEnabled(false);
             if (isStage1()) {
@@ -4193,8 +4034,6 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                         free_qty = outbDel.getFreeQty() != null ? outbDel.getFreeQty().doubleValue() : 0;
                     } catch (Exception e) {
                     }
-//                    qty = main_qty + free_qty;
-//                    qty = Double.parseDouble(total_qty_goods.add(total_qty_free).toString());
                     qty = total_qty_goods.doubleValue() + total_qty_free.doubleValue();
                 }
 
@@ -4232,12 +4071,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                     //
                 }
                 if (bCompare) // end add
-                /*
-                if (outbDel != null && (outbDel.getLfart().equalsIgnoreCase("LF") || outbDel.getLfart().equalsIgnoreCase("ZTLF"))
-                // Tuanna add 05/03/2013 for checking cement bag  
-                || outbDel.getArktx().toUpperCase().indexOf("BAO")>=0         ) 
-                 * 
-                 */ {
+                {
                     Variant vari = new Variant();
                     VariantPK variPK = new VariantPK();
                     EntityManager entityManager = java.beans.Beans.isDesignTime() ? null : WeighBridgeApp.getApplication().getEm();
@@ -4251,10 +4085,9 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                     }
                     vari.setVariantPK(variPK);
                     vari = entityManager.find(Variant.class, vari.getVariantPK());
-//                    if (!vari.getValue().equals("") || !vari.getValue1().equals("")) {
-                      double valu = 0;
-                        double valu1 = 0;
-                        
+                    double valu = 0;
+                    double valu1 = 0;
+
                     if (vari != null) {
                       
                         if (!vari.getValue().equals("")) {
@@ -4263,35 +4096,16 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                         if (!vari.getValue1().equals("")) {
                             valu1 = Double.parseDouble(vari.getValue1());
                         }
-//                    double upper = qty + (qty * (config.getB1Port() != null ? WeighBridgeApp.getApplication().getSapSetting().getWb1Tol().doubleValue() : config.getB2Port() != null ? WeighBridgeApp.getApplication().getSapSetting().getWb2Tol().doubleValue() : 0d));
-//                    double lower = qty - (qty * (config.getB1Port() != null ? WeighBridgeApp.getApplication().getSapSetting().getWb1Tol().doubleValue() : config.getB2Port() != null ? WeighBridgeApp.getApplication().getSapSetting().getWb2Tol().doubleValue() : 0d));
                         double upper = qty + (qty * valu1) / 100;
                         double lower = qty - (qty * valu) / 100;
-                                                
-                        //   Query qLoading = (Query) entityManager.createNativeQuery("SELECT COUNT(cvalue) AS icount FROM jweighbridge.signal WHERE cvalue LIKE '02' AND wbid LIKE '1411TC'",String.class );
-                        // Modified by Tuanna at TAFICO JSC 
-                        // Purposed : Warning Maximum overloading qty. ( 30/10/2014 ) 
-                         float klmax = 0 ;  
-                         float ilock ; 
-                         boolean block  = false ; 
-                         
-                        String sql ="";                         
-                              sql = "{call pGetMaxL ( ?,?,?)}" ;
-                              Query q = (Query) entityManager.createNativeQuery(sql);
-                              q.setParameter(1,config.getwPlant().toString().trim());
-                              q.setParameter(2,config.getWbId().toString());
-                              q.setParameter(3,weightTicket.getSoXe().toString().trim());
-                             
-                         List wts = q.getResultList();          
-                         sql = "{call pGetMaxLLock ( ?,?,?)}" ;
-                         
-                              Query q2 = (Query) entityManager.createNativeQuery(sql);
-                             
-                              q2.setParameter(1,config.getwPlant().toString().trim());
-                              q2.setParameter(2,config.getWbId().toString());
-                              q2.setParameter(3,weightTicket.getSoXe().toString().trim());
-                        List wts2 = q2.getResultList();      
-                        // JOptionPane.showMessageDialog(rootPane, wts.get(0).toString()) ; 
+                        float klmax = 0;
+                        float ilock;
+                        boolean block = false;
+                        String pPlant = config.getwPlant().toString().trim();
+                        String pWbid = config.getWbId().toString().trim();
+                        String pBs = weightTicket.getSoXe().toString().trim();
+                        List wts = weightTicketRepository.getMaxL(pPlant, pWbid, pBs);
+                        List wts2 = weightTicketRepository.getMaxLLock(pPlant, pWbid, pBs);
                         try {
                           klmax = Float.parseFloat(wts.get(0).toString()); 
                           ilock  = Float.parseFloat(wts2.get(0).toString()); 
@@ -4304,12 +4118,10 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                          int ask  ;
                          boolean isKTC = true ; 
                          
-                        if (block ==  false &&  klmax  == -1 && isKTC == false  ) 
-                        {
-                          //check weight 
-                            String msg  = ""; 
-                            msg = con.getMsg("6"); 
-                        //    JOptionPane.showMessageDialog(rootPane,  msg ); //variant mesage --> Tuanna 
+                        if (block == false && klmax == -1 && isKTC == false) {
+
+                            String msg = weightTicketJpaRepository.getMsg("6");
+
                             
                             ask = JOptionPane.showConfirmDialog(rootPane,msg
                                 , "Thông báo ", JOptionPane.YES_NO_OPTION); 
@@ -4353,11 +4165,11 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                             txfGoodsQty.setValue(result);
                             weightTicket.setGQty(new BigDecimal(result));
                         } else {
-                            String msg  = ""; 
-                            try{
-                            msg = con.getMsg("5"); 
-                            }catch(Exception ex){
-                            msg = "Khối lượng ngoài giới hạn cho phép";
+                            String msg = null;
+                            try {
+                                msg = weightTicketJpaRepository.getMsg("6");
+                            } catch (Exception ex) {
+                                msg = "Khối lượng ngoài giới hạn cho phép";
                             }
                             JOptionPane.showMessageDialog(rootPane,  msg ); //variant mesage --> Tuanna 
                             txfOutQty.setValue(null);
@@ -4373,15 +4185,6 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                         txfGoodsQty.setValue(result);
                         weightTicket.setGQty(new BigDecimal(result));
                     }
-//                } else if (outbDel != null && ( outbDel.getLfart().equalsIgnoreCase("LF") || outbDel.getLfart().equalsIgnoreCase("ZTLF") ) && outbDel.getMatnr().equalsIgnoreCase(setting.getMatnrXmxa())) {
-//                    if (result <= qty) {
-//                        txfGoodsQty.setValue(result);
-//                        weightTicket.setGQty(new BigDecimal(result));
-//                    } else {
-//                        JOptionPane.showMessageDialog(rootPane, "Khối lượng vượt quá mức cho phép lấy!!!");
-//                        txfGoodsQty.setValue(null);
-//                        weightTicket.setGQty(null);
-//                    }
                 } else if (isSubContract() && weightTicket.getLgort() != null && weightTicket.getCharg() != null) {
                     setMessage("Đang kiểm tra tồn kho trong SAP..."); // checking stock --tuanna
                     Double remaining = CheckMatStock(weightTicket.getMatnrRef(), config.getwPlant(), weightTicket.getLgort(), weightTicket.getCharg());
@@ -4400,7 +4203,6 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                     weightTicket.setGQty(new BigDecimal(result));
                 }
             }
-// End             
             if (isStage1()) {
                 txfInQty.setValue(txfCurScale.getValue());
                 txtInTime.setText(formatter.format(now));
@@ -4412,9 +4214,6 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                 weightTicket.setFScale(new BigDecimal(((Number) txfInQty.getValue()).doubleValue()));
                 weightTicket.setFTime(now);
                 lblIScale.setForeground(Color.black);
-
-                //xu ly dua fscale vao details
-                // 20120522_ fix logic_code in for_loop
                 OutbDetailsV2 item = null;
                 if (outDetails_lits.size() > 0) {
                     for (int i = 0; i < outDetails_lits.size(); i++) {
@@ -4438,8 +4237,6 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                 weightTicket.setSScale(new BigDecimal(((Number) txfOutQty.getValue()).doubleValue()));
                 weightTicket.setSTime(now);
                 lblOScale.setForeground(Color.black);
-
-                //xu ly dua sscale vao details
                 OutbDetailsV2 item = null;
                 double remain = ((Number) txfCurScale.getValue()).doubleValue() - ((Number) txfInQty.getValue()).doubleValue();
                 if (remain < 0) {
@@ -4450,20 +4247,6 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                 if (outDetails_lits.size() > 1) {
                     for (int i = 0; i < outDetails_lits.size(); i++) {
                         item = outDetails_lits.get(i);
-                        // 20120522_ fix logic_code in dividing weight for promote_or_not_promote
-                        /*if (item.getFreeItem() == null || item.getFreeItem().equals("")) {
-                        if (item.getLfimg().compareTo(remain_qty_goods) == -1) {
-                        item.setGoodsQty(item.getLfimg());
-                        item.setOutScale(BigDecimal.valueOf(item.getInScale().doubleValue()+ item.getLfimg().doubleValue()));
-                        remain_qty_goods = remain_qty_goods.subtract(item.getLfimg());
-                        } else {
-                        item.setGoodsQty(remain_qty_goods);
-                        item.setOutScale(BigDecimal.valueOf(item.getInScale().doubleValue()+ item.getLfimg().doubleValue()));
-                        }
-                        } else {
-                        item.setGoodsQty(item.getLfimg());
-                        item.setOutScale(BigDecimal.valueOf(item.getInScale().doubleValue()+ item.getLfimg().doubleValue()));
-                        }*/
                         if (i < outDetails_lits.size() - 1) {
                             item.setGoodsQty(item.getLfimg());
                             item.setOutScale(BigDecimal.valueOf(item.getInScale().doubleValue() + item.getLfimg().doubleValue()));
@@ -4490,9 +4273,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                     entityManager.getTransaction().commit();
                 }
             }
-
-// Move up 11/09/2012
-            return null;  // return your result
+            return null;
         }
 
         @Override
@@ -5286,17 +5067,13 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
 
     private DefaultComboBoxModel getReasonModel() {
         config = WeighBridgeApp.getApplication().getConfig();
-        Movement mvt = null;
-
+        Movement mvt = new Movement();
         try {
-            TypedQuery<Movement> tMvtQ = entityManager.createNamedQuery("Movement.findByMandtBwartSpras", Movement.class);
-            tMvtQ.setParameter(
-                    "mandt", config.getsClient());
-            tMvtQ.setParameter(
-                    "bwart", "101");
-            tMvtQ.setParameter(
-                    "spras", WeighBridgeApp.getApplication().getLogin().getLanguP().toString());
-            mvt = tMvtQ.getSingleResult();
+            MovementRepository movementRepository = new MovementRepository();
+            String client = config.getsClient();
+            String language = WeighBridgeApp.getApplication().getLogin().getLanguP().toString();
+            mvt = movementRepository.findByMandtBwartSpras(client, language);
+
         } catch (NoResultException ex) {
             MvtGetDetailBapi bMvt = new MvtGetDetailBapi(config.getsClient(), "101");
             WeighBridgeApp.getApplication().getSAPSession().execute(bMvt);
@@ -5308,17 +5085,12 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
             entityManager.persist(mvt);
             entityManager.getTransaction().commit();
             entityManager.clear();
-
-
         }
-
-        TypedQuery<Reason> tReasonQ = entityManager.createNamedQuery("Reason.findByMandtBwart", Reason.class);
-        tReasonQ.setParameter(
-                "mandt", config.getsClient());
-        tReasonQ.setParameter(
-                "bwart", mvt.getMovementPK().getBwart());
-        List<Reason> reasons = tReasonQ.getResultList();
-
+        String client = config.getsClient();
+        String bwart = mvt.getMovementPK().getBwart().trim();
+        ReasonRepository reasonRepository = new ReasonRepository();
+        
+        List<Reason> reasons = reasonRepository.findByMandtBwart(client, bwart);
 
         if (reasons.isEmpty()) {
             MvtReasonsGetListBapi bReason = new MvtReasonsGetListBapi(config.getsClient(), "101");
@@ -5343,13 +5115,10 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
 
     private void printWT(WeightTicket wt, boolean reprint) {
         config = WeighBridgeApp.getApplication().getConfig();
-//      JasperReport jasperReport;
         OutbDel item = null;
-        OutbDel outbDel = null;
         ximang = null;
         Boolean bag_tmp = false;
-        AppConfig config = WeighBridgeApp.getApplication().getConfig();
-        WeightTicketJpaController con = new WeightTicketJpaController(entityManager);
+        WeightTicketJpaController con = new WeightTicketJpaController();
         Material m = null;
         try {
             m = con.CheckPOSTO(wt.getMatnrRef());
@@ -5692,11 +5461,6 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
             }
         }
         bBatch = true;
-//        if(cbxSLoc.getSelectedIndex() >= -1){
-//        if(weightTicket.getLgort() == null){
-//        cbxSLoc.setEnabled(true);
-//        }
-//        }
         txtGRText.setEnabled(true);
         if (outbDel != null) {
             if (isStage2() && outbDel.getMatnr() != null
@@ -5755,7 +5519,6 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
         stWT.setGQTY(wt.getGQty());
         stWT.setKUNNR(wt.getKunnr());
         stWT.setLIFNR(wt.getAbbr());
-//        stWT.setMATDOC(title);
         stWT.setMATID(wt.getMatnrRef());
         stWT.setMATNAME(wt.getRegItemText());
         stWT.setMVT_TYPE(wt.getMoveType());
@@ -5830,7 +5593,6 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
     private javax.swing.JComboBox cbxVendorTransport;
     private javax.swing.JCheckBox chkDissolved;
     private javax.swing.JCheckBox chkInternal;
-    private javax.persistence.EntityManager entityManager;
     private javax.swing.ButtonGroup grbBridge;
     private javax.swing.ButtonGroup grbCat;
     private javax.swing.ButtonGroup grbType;
@@ -5913,8 +5675,8 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
     private List<OutbDetailsV2> outDetails_lits = new ArrayList<OutbDetailsV2>();
     private String wt_ID = null;
     private boolean flag_fail = false;
-    private int timeFrom;
-    private int timeTo;
+    private int timeFrom = 0;
+    private int timeTo = 0;
     private String ximang = null;
     // </editor-fold>
 }

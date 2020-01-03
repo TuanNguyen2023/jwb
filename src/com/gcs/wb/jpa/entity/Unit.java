@@ -10,8 +10,6 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -20,22 +18,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "Unit")
-@NamedQueries({
-    @NamedQuery(name = "Unit.findAll", query = "SELECT u FROM Unit u"),
-    @NamedQuery(name = "Unit.findByMandt", query = "SELECT u FROM Unit u WHERE u.unitPK.mandt = :mandt"),
-    @NamedQuery(name = "Unit.findByMsehi", query = "SELECT u FROM Unit u WHERE u.unitPK.msehi = :msehi"),
-    @NamedQuery(name = "Unit.findBySpras", query = "SELECT u FROM Unit u WHERE u.spras = :spras"),
-    @NamedQuery(name = "Unit.findByAndec", query = "SELECT u FROM Unit u WHERE u.andec = :andec"),
-    @NamedQuery(name = "Unit.findByDimid", query = "SELECT u FROM Unit u WHERE u.dimid = :dimid"),
-    @NamedQuery(name = "Unit.findByZaehl", query = "SELECT u FROM Unit u WHERE u.zaehl = :zaehl"),
-    @NamedQuery(name = "Unit.findByNennr", query = "SELECT u FROM Unit u WHERE u.nennr = :nennr"),
-    @NamedQuery(name = "Unit.findByExp10", query = "SELECT u FROM Unit u WHERE u.exp10 = :exp10"),
-    @NamedQuery(name = "Unit.findByAddko", query = "SELECT u FROM Unit u WHERE u.addko = :addko"),
-    @NamedQuery(name = "Unit.findByDecan", query = "SELECT u FROM Unit u WHERE u.decan = :decan"),
-    @NamedQuery(name = "Unit.findByIsocode", query = "SELECT u FROM Unit u WHERE u.isocode = :isocode"),
-    @NamedQuery(name = "Unit.findByPrimaryUnit", query = "SELECT u FROM Unit u WHERE u.primaryUnit = :primaryUnit"),
-    @NamedQuery(name = "Unit.findByMseh3", query = "SELECT u FROM Unit u WHERE u.mseh3 = :mseh3"),
-    @NamedQuery(name = "Unit.findByMseht", query = "SELECT u FROM Unit u WHERE u.mseht = :mseht")})
 public class Unit implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -196,7 +178,7 @@ public class Unit implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        
+
         if (!(object instanceof Unit)) {
             return false;
         }

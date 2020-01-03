@@ -21,24 +21,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "time_range")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "TimeRange.findAll", query = "SELECT t FROM TimeRange t"),
-    @NamedQuery(name = "TimeRange.findByMandt", query = "SELECT t FROM TimeRange t WHERE t.timeRangePK.mandt = :mandt"),
-    @NamedQuery(name = "TimeRange.findByWbId", query = "SELECT t FROM TimeRange t WHERE t.timeRangePK.wbId = :wbId"),
-    @NamedQuery(name = "TimeRange.findByTimeFrom", query = "SELECT t FROM TimeRange t WHERE t.timeFrom = :timeFrom"),
-    @NamedQuery(name = "TimeRange.findByTimeTo", query = "SELECT t FROM TimeRange t WHERE t.timeTo = :timeTo"),
-//    @NamedQuery(name = "TimeRange.findByUser", query = "SELECT t FROM TimeRange t WHERE t.user = :user"),
-    @NamedQuery(name = "TimeRange.findByIp", query = "SELECT t FROM TimeRange t WHERE t.ip = :ip"),
-    @NamedQuery(name = "TimeRange.findByPCName", query = "SELECT t FROM TimeRange t WHERE t.pCName = :pCName"),
-    @NamedQuery(name = "TimeRange.findByModDate", query = "SELECT t FROM TimeRange t WHERE t.modDate = :modDate"),
-    @NamedQuery(name = "TimeRange.findByModBy", query = "SELECT t FROM TimeRange t WHERE t.modBy = :modBy"),
-    @NamedQuery(name = "TimeRange.findByOldTimeFrom", query = "SELECT t FROM TimeRange t WHERE t.oldTimeFrom = :oldTimeFrom"),
-    @NamedQuery(name = "TimeRange.findByOldTimeTo", query = "SELECT t FROM TimeRange t WHERE t.oldTimeTo = :oldTimeTo"),
-    @NamedQuery(name = "TimeRange.findBySegment1", query = "SELECT t FROM TimeRange t WHERE t.segment1 = :segment1"),
-    @NamedQuery(name = "TimeRange.findBySegment2", query = "SELECT t FROM TimeRange t WHERE t.segment2 = :segment2"),
-    @NamedQuery(name = "TimeRange.findBySegment3", query = "SELECT t FROM TimeRange t WHERE t.segment3 = :segment3"),
     @NamedQuery(name = "TimeRange.findByMandtWBID", query = "SELECT t FROM TimeRange t WHERE t.timeRangePK.mandt = :mandt AND t.timeRangePK.wbId = :wbId")
 })
 public class TimeRange implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected TimeRangePK timeRangePK;
@@ -99,7 +85,6 @@ public class TimeRange implements Serializable {
     public void setTimeTo(String timeTo) {
         this.timeTo = timeTo;
     }
-
 
     public String getIp() {
         return ip;
@@ -197,5 +182,4 @@ public class TimeRange implements Serializable {
     public String toString() {
         return "com.gcs.wb.jpa.entity.TimeRange[ timeRangePK=" + timeRangePK + " ]";
     }
-    
 }

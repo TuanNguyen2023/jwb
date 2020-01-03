@@ -19,12 +19,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "Reason")
 @NamedQueries({
-    @NamedQuery(name = "Reason.findAll", query = "SELECT r FROM Reason r"),
-    @NamedQuery(name = "Reason.findByMandt", query = "SELECT r FROM Reason r WHERE r.reasonPK.mandt = :mandt"),
-    @NamedQuery(name = "Reason.findByBwart", query = "SELECT r FROM Reason r WHERE r.reasonPK.bwart = :bwart"),
-    @NamedQuery(name = "Reason.findByMandtBwart", query = "SELECT r FROM Reason r WHERE r.reasonPK.mandt = :mandt AND r.reasonPK.bwart = :bwart"),
-    @NamedQuery(name = "Reason.findByGrund", query = "SELECT r FROM Reason r WHERE r.reasonPK.grund = :grund"),
-    @NamedQuery(name = "Reason.findByGrtxt", query = "SELECT r FROM Reason r WHERE r.grtxt = :grtxt")})
+    @NamedQuery(name = "Reason.findByMandtBwart", query = "SELECT r FROM Reason r WHERE r.reasonPK.mandt = :mandt AND r.reasonPK.bwart = :bwart")})
 public class Reason implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -69,7 +64,7 @@ public class Reason implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        
+
         if (!(object instanceof Reason)) {
             return false;
         }

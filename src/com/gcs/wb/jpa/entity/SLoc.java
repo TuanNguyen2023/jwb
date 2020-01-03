@@ -19,12 +19,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "SLoc")
 @NamedQueries({
-    @NamedQuery(name = "SLoc.findAll", query = "SELECT s FROM SLoc s"),
-    @NamedQuery(name = "SLoc.findByMandt", query = "SELECT s FROM SLoc s WHERE s.sLocPK.mandt = :mandt"),
-    @NamedQuery(name = "SLoc.findByWPlant", query = "SELECT s FROM SLoc s WHERE s.sLocPK.wPlant = :wPlant"),
-    @NamedQuery(name = "SLoc.findByMandtWPlant", query = "SELECT s FROM SLoc s WHERE s.sLocPK.mandt = :mandt AND s.sLocPK.wPlant = :wPlant"),
-    @NamedQuery(name = "SLoc.findByLgort", query = "SELECT s FROM SLoc s WHERE s.sLocPK.lgort = :lgort"),
-    @NamedQuery(name = "SLoc.findByLgobe", query = "SELECT s FROM SLoc s WHERE s.lgobe = :lgobe")})
+    @NamedQuery(name = "SLoc.findByMandtWPlant", query = "SELECT s FROM SLoc s WHERE s.sLocPK.mandt = :mandt AND s.sLocPK.wPlant = :wPlant")})
 public class SLoc implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -69,7 +64,7 @@ public class SLoc implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        
+
         if (!(object instanceof SLoc)) {
             return false;
         }

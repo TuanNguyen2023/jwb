@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.gcs.wb.jpa.entity;
 
 import java.io.Serializable;
@@ -10,8 +9,6 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -20,12 +17,8 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "vehicle_valid")
-@NamedQueries({
-    @NamedQuery(name = "VehicleValid.findAll", query = "SELECT v FROM VehicleValid v"),
-    @NamedQuery(name = "VehicleValid.findBySoXe", query = "SELECT v FROM VehicleValid v WHERE v.vehicleValidPK.soXe = :soXe"),
-    @NamedQuery(name = "VehicleValid.findByWPlant", query = "SELECT v FROM VehicleValid v WHERE v.vehicleValidPK.wPlant = :wPlant"),
-    @NamedQuery(name = "VehicleValid.findByNotValid", query = "SELECT v FROM VehicleValid v WHERE v.notValid = :notValid")})
 public class VehicleValid implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected VehicleValidPK vehicleValidPK;
@@ -89,5 +82,4 @@ public class VehicleValid implements Serializable {
     public String toString() {
         return "com.gcs.wb.jpa.entity.VehicleValid[vehicleValidPK=" + vehicleValidPK + "]";
     }
-
 }

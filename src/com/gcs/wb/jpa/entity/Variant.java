@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.gcs.wb.jpa.entity;
 
 import java.io.Serializable;
@@ -21,22 +20,18 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "variant")
 @NamedQueries({
-    @NamedQuery(name = "Variant.findAll", query = "SELECT v FROM Variant v"),
-    @NamedQuery(name = "Variant.findByMandt", query = "SELECT v FROM Variant v WHERE v.variantPK.mandt = :mandt"),
-    @NamedQuery(name = "Variant.findByWPlant", query = "SELECT v FROM Variant v WHERE v.variantPK.wPlant = :wPlant"),
-    @NamedQuery(name = "Variant.findByParam", query = "SELECT v FROM Variant v WHERE v.variantPK.param = :param"),
-    @NamedQuery(name = "Variant.findByFullParam", query="SELECT v FROM Variant v WHERE v.variantPK.param = :param AND v.variantPK.mandt = :mandt AND v.variantPK.wPlant = :wPlant")})
+    @NamedQuery(name = "Variant.findByFullParam", query = "SELECT v FROM Variant v WHERE v.variantPK.param = :param AND v.variantPK.mandt = :mandt AND v.variantPK.wPlant = :wPlant")})
 public class Variant implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected VariantPK variantPK;
     @Lob
     @Column(name = "VALUE")
     private String value;
-
     @Column(name = "VALUE1")
     private String value1;
-    
+
     public Variant() {
     }
 
@@ -102,5 +97,4 @@ public class Variant implements Serializable {
     public void setValue1(String value1) {
         this.value1 = value1;
     }
-
 }

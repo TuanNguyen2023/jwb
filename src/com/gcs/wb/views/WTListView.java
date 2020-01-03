@@ -22,6 +22,8 @@ import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.MaterialPK;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.WeightTicket;
+import com.gcs.wb.jpa.repositorys.TransportAgentRepository;
+import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import java.awt.Color;
 import java.awt.Component;
 import java.util.ArrayList;
@@ -45,6 +47,9 @@ import org.apache.log4j.Logger;
  * @author vunguyent
  */
 public class WTListView extends javax.swing.JInternalFrame {
+
+    WeightTicketRepository weightTicketRepository = new WeightTicketRepository();
+    TransportAgentRepository trransportAgentRepository = new TransportAgentRepository();
 
     /** Creates new form WTListView */
     public WTListView() {
@@ -83,7 +88,6 @@ public class WTListView extends javax.swing.JInternalFrame {
 
         rbtModeGroup = new javax.swing.ButtonGroup();
         rbtStateGroup = new javax.swing.ButtonGroup();
-        entityManager = java.beans.Beans.isDesignTime() ? null : WeighBridgeApp.getApplication().getEm();
         pnFilter = new javax.swing.JPanel();
         pnMY = new javax.swing.JPanel();
         lblMonth = new javax.swing.JLabel();
@@ -166,7 +170,7 @@ public class WTListView extends javax.swing.JInternalFrame {
         lblTAgent.setText(resourceMap.getString("lblTAgent.text")); // NOI18N
         lblTAgent.setName("lblTAgent"); // NOI18N
 
-        cbxTAgent.setModel(getTAgentsModel());
+        cbxTAgent.setModel(trransportAgentRepository.getTAgentsModel());
         cbxTAgent.setName("cbxTAgent"); // NOI18N
         cbxTAgent.setRenderer(new DefaultListCellRenderer() {
             @Override
@@ -444,35 +448,28 @@ public class WTListView extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_rbtStateAllItemStateChanged
 
-    private DefaultComboBoxModel getTAgentsModel() {
-        DefaultComboBoxModel result = new DefaultComboBoxModel();
-        TypedQuery<TransportAgent> tq = entityManager.createNamedQuery("TransportAgent.findAll", TransportAgent.class);
-        List<TransportAgent> listTAs = tq.getResultList();
-        result = new DefaultComboBoxModel(listTAs.toArray());
-        return result;
-    }
-
     private DefaultComboBoxModel getMatsModel() {
         DefaultComboBoxModel result = new DefaultComboBoxModel();
-        Query q = entityManager.createNativeQuery("select distinct MATNR_REF, REG_ITEM_TEXT from WeightTicket where MANDT = ? and WPlant = ?");
-        q.setParameter(1, WeighBridgeApp.getApplication().getConfig().getsClient());
-        q.setParameter(2, WeighBridgeApp.getApplication().getConfig().getwPlant());
-        List wts = q.getResultList();
-        for (Object obj : wts) {
-            Object[] wt = (Object[]) obj;
-            MaterialPK matPK = new MaterialPK();
-            Material mat = new Material();
-            matPK.setMandt(WeighBridgeApp.getApplication().getConfig().getsClient());
-            if (wt[0] == null) {
-                matPK.setMatnr("-1");
-                mat.setMaktx("Linh tinh");
-            } else {
-                matPK.setMatnr(wt[0].toString());
-                mat.setMaktx(wt[1].toString());
-            }
-            mat.setMaterialPK(matPK);
-            if (result.getIndexOf(mat) < 0) {
-                result.addElement(mat);
+        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
+        String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
+        List<Object[]> wts = weightTicketRepository.getMatsModel(client, plant);
+        if (wts != null) {
+            for (Object obj : wts) {
+                Object[] wt = (Object[]) obj;
+                MaterialPK matPK = new MaterialPK();
+                Material mat = new Material();
+                matPK.setMandt(WeighBridgeApp.getApplication().getConfig().getsClient());
+                if (wt[0] == null) {
+                    matPK.setMatnr("-1");
+                    mat.setMaktx("Linh tinh");
+                } else {
+                    matPK.setMatnr(wt[0].toString());
+                    mat.setMaktx(wt[1].toString());
+                }
+                mat.setMaterialPK(matPK);
+                if (result.getIndexOf(mat) < 0) {
+                    result.addElement(mat);
+                }
             }
         }
         return result;
@@ -516,7 +513,7 @@ public class WTListView extends javax.swing.JInternalFrame {
             String tagent = ((TransportAgent) cbxTAgent.getSelectedItem()).getAbbr();
             String matnr = ((Material) cbxType.getSelectedItem()).getMaterialPK().getMatnr();
             try {
-                WeightTicketJpaController wCon = new WeightTicketJpaController(entityManager);
+                WeightTicketJpaController wCon = new WeightTicketJpaController();
                 List<WeightTicket> wts = wCon.findListWTs(month, year, tagent, matnr, modes, rbtDissolved.isSelected(), rbtPosted.isSelected());
                 wtData = new Object[wts.size()][wtCols.length];
                 for (int i = 0; i < wts.size(); i++) {
@@ -634,7 +631,6 @@ public class WTListView extends javax.swing.JInternalFrame {
     private javax.swing.JComboBox cbxTAgent;
     private javax.swing.JComboBox cbxType;
     private javax.swing.JComboBox cbxYear;
-    private javax.persistence.EntityManager entityManager;
     private javax.swing.JLabel lblMode;
     private javax.swing.JLabel lblMonth;
     private javax.swing.JLabel lblState;

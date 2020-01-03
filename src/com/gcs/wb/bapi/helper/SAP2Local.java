@@ -65,7 +65,7 @@ public class SAP2Local {
             // <editor-fold defaultstate="collapsed" desc="Fill D.O Data">
             //check do detail exist
             EntityManager em_check = WeighBridgeApp.getApplication().getEm();
-            WeightTicketJpaController con_check = new WeightTicketJpaController(em_check);
+            WeightTicketJpaController con_check = new WeightTicketJpaController();
             List<OutbDetailsV2> outb_detail_check;
             if (refresh == true) {
                 try {
@@ -142,10 +142,10 @@ public class SAP2Local {
                     // outb_details.setDelivItem(doItem.getPosnr().substring(4, 5));
                     outb_details.setLfimg(doItem.getLfimg());
 
-                    if ((outb_details.getPosted() == null) ||
-                            (!outb_details.getPosted().trim().equals("1")) ||
-                            (outb_details.getLfimgOri() == null) ||
-                            (outb_details.getLfimgOri().equals(BigDecimal.ZERO))) {
+                    if ((outb_details.getPosted() == null)
+                            || (!outb_details.getPosted().trim().equals("1"))
+                            || (outb_details.getLfimgOri() == null)
+                            || (outb_details.getLfimgOri().equals(BigDecimal.ZERO))) {
                         outb_details.setLfimgOri(doItem.getLfimg());
                     }
                     outb_details.setMeins(doItem.getMeins());

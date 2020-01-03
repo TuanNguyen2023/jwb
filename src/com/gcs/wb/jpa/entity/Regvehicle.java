@@ -23,20 +23,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "regvehicle")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Regvehicle.findAll", query = "SELECT r FROM Regvehicle r"),
-    @NamedQuery(name = "Regvehicle.findBySoXe", query = "SELECT r FROM Regvehicle r WHERE r.regvehiclePK.soXe = :soXe"),
-    @NamedQuery(name = "Regvehicle.findByTaAbbr", query = "SELECT r FROM Regvehicle r WHERE r.taAbbr = :taAbbr"),
-    @NamedQuery(name = "Regvehicle.findByWplant", query = "SELECT r FROM Regvehicle r WHERE r.regvehiclePK.wplant = :wplant"),
-    @NamedQuery(name = "Regvehicle.findByExpdate", query = "SELECT r FROM Regvehicle r WHERE r.expdate = :expdate"),
-    @NamedQuery(name = "Regvehicle.findByItem", query = "SELECT r FROM Regvehicle r WHERE r.regvehiclePK.item = :item"),
-    @NamedQuery(name = "Regvehicle.findByRegcategory", query = "SELECT r FROM Regvehicle r WHERE r.regvehiclePK.regcategory = :regcategory"),
-    @NamedQuery(name = "Regvehicle.findByActive", query = "SELECT r FROM Regvehicle r WHERE r.active = :active"),
-    @NamedQuery(name = "Regvehicle.findByNote", query = "SELECT r FROM Regvehicle r WHERE r.note = :note"),
-    @NamedQuery(name = "Regvehicle.findByChangeby", query = "SELECT r FROM Regvehicle r WHERE r.changeby = :changeby"),
-    @NamedQuery(name = "Regvehicle.findByModifieddate", query = "SELECT r FROM Regvehicle r WHERE r.modifieddate = :modifieddate"),
-    @NamedQuery(name = "Regvehicle.newSQL", query = "SELECT r FROM Regvehicle r WHERE r.regvehiclePK.soXe = :soXe AND r.taAbbr = :taAbbr")})
 public class Regvehicle implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected RegvehiclePK regvehiclePK;
@@ -147,5 +135,4 @@ public class Regvehicle implements Serializable {
     public String toString() {
         return "com.gcs.wb.jpa.entity.Regvehicle[ regvehiclePK=" + regvehiclePK + " ]";
     }
-    
 }

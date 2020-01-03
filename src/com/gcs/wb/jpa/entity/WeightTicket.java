@@ -24,51 +24,9 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "WeightTicket")
 @NamedQueries({
-    @NamedQuery(name = "WeightTicket.findAll", query = "SELECT w FROM WeightTicket w"),
-    @NamedQuery(name = "WeightTicket.findByMandt", query = "SELECT w FROM WeightTicket w WHERE w.weightTicketPK.mandt = :mandt"),
-    @NamedQuery(name = "WeightTicket.findByWPlant", query = "SELECT w FROM WeightTicket w WHERE w.weightTicketPK.wPlant = :wPlant"),
-    @NamedQuery(name = "WeightTicket.findById", query = "SELECT w FROM WeightTicket w WHERE w.weightTicketPK.id = :id"),
-    @NamedQuery(name = "WeightTicket.findBySeqByDay", query = "SELECT w FROM WeightTicket w WHERE w.weightTicketPK.seqByDay = :seqByDay"),
-    @NamedQuery(name = "WeightTicket.findBySeqByMonth", query = "SELECT w FROM WeightTicket w WHERE w.seqByMonth = :seqByMonth"),
-    @NamedQuery(name = "WeightTicket.findByTenTaiXe", query = "SELECT w FROM WeightTicket w WHERE w.tenTaiXe = :tenTaiXe"),
-    @NamedQuery(name = "WeightTicket.findByCmndBl", query = "SELECT w FROM WeightTicket w WHERE w.cmndBl = :cmndBl"),
-    @NamedQuery(name = "WeightTicket.findBySoXe", query = "SELECT w FROM WeightTicket w WHERE w.soXe = :soXe"),
-    @NamedQuery(name = "WeightTicket.findBySoRomooc", query = "SELECT w FROM WeightTicket w WHERE w.soRomooc = :soRomooc"),
-    @NamedQuery(name = "WeightTicket.findByRegCategory", query = "SELECT w FROM WeightTicket w WHERE w.regCategory = :regCategory"),
-    @NamedQuery(name = "WeightTicket.findByRegItemText", query = "SELECT w FROM WeightTicket w WHERE w.regItemText = :regItemText"),
-    @NamedQuery(name = "WeightTicket.findByRegItemQty", query = "SELECT w FROM WeightTicket w WHERE w.regItemQty = :regItemQty"),
-    @NamedQuery(name = "WeightTicket.findByCreateDate", query = "SELECT w FROM WeightTicket w WHERE w.createDate = :createDate"),
     @NamedQuery(name = "WeightTicket.findByCreateDateRange", query = "SELECT w FROM WeightTicket w WHERE w.weightTicketPK.mandt = :mandt AND w.weightTicketPK.wPlant = :wPlant AND w.createDate BETWEEN :from AND :to"),
-    @NamedQuery(name = "WeightTicket.findByCreateTime", query = "SELECT w FROM WeightTicket w WHERE w.createTime = :createTime"),
-    @NamedQuery(name = "WeightTicket.findByCreator", query = "SELECT w FROM WeightTicket w WHERE w.creator = :creator"),
-    @NamedQuery(name = "WeightTicket.findByLgort", query = "SELECT w FROM WeightTicket w WHERE w.lgort = :lgort"),
-    @NamedQuery(name = "WeightTicket.findByCharg", query = "SELECT w FROM WeightTicket w WHERE w.charg = :charg"),
-    @NamedQuery(name = "WeightTicket.findByDelivNumb", query = "SELECT w FROM WeightTicket w WHERE w.delivNumb = :delivNumb"),
     @NamedQuery(name = "WeightTicket.findByMandtWPlantDelivNumb", query = "SELECT w FROM WeightTicket w WHERE w.weightTicketPK.mandt = :mandt AND w.weightTicketPK.wPlant = :wPlant AND w.delivNumb = :delivNumb"),
-    @NamedQuery(name = "WeightTicket.findByEbeln", query = "SELECT w FROM WeightTicket w WHERE w.ebeln = :ebeln"),
-    @NamedQuery(name = "WeightTicket.findByItem", query = "SELECT w FROM WeightTicket w WHERE w.item = :item"),
-    @NamedQuery(name = "WeightTicket.findByMatnrRef", query = "SELECT w FROM WeightTicket w WHERE w.matnrRef = :matnrRef"),
-    @NamedQuery(name = "WeightTicket.findByNoMoreGr", query = "SELECT w FROM WeightTicket w WHERE w.noMoreGr = :noMoreGr"),
-    @NamedQuery(name = "WeightTicket.findByMoveType", query = "SELECT w FROM WeightTicket w WHERE w.moveType = :moveType"),
-    @NamedQuery(name = "WeightTicket.findByMoveReas", query = "SELECT w FROM WeightTicket w WHERE w.moveReas = :moveReas"),
-    @NamedQuery(name = "WeightTicket.findByText", query = "SELECT w FROM WeightTicket w WHERE w.text = :text"),
-    @NamedQuery(name = "WeightTicket.findByMvtInd", query = "SELECT w FROM WeightTicket w WHERE w.mvtInd = :mvtInd"),
-    @NamedQuery(name = "WeightTicket.findByLichn", query = "SELECT w FROM WeightTicket w WHERE w.lichn = :lichn"),
     @NamedQuery(name = "WeightTicket.findBySoNiemXa", query = "SELECT w FROM WeightTicket w WHERE w.soNiemXa = :soNiemXa"),
-    @NamedQuery(name = "WeightTicket.findByFScale", query = "SELECT w FROM WeightTicket w WHERE w.fScale = :fScale"),
-    @NamedQuery(name = "WeightTicket.findByFTime", query = "SELECT w FROM WeightTicket w WHERE w.fTime = :fTime"),
-    @NamedQuery(name = "WeightTicket.findByFCreator", query = "SELECT w FROM WeightTicket w WHERE w.fCreator = :fCreator"),
-    @NamedQuery(name = "WeightTicket.findBySScale", query = "SELECT w FROM WeightTicket w WHERE w.sScale = :sScale"),
-    @NamedQuery(name = "WeightTicket.findBySTime", query = "SELECT w FROM WeightTicket w WHERE w.sTime = :sTime"),
-    @NamedQuery(name = "WeightTicket.findBySCreator", query = "SELECT w FROM WeightTicket w WHERE w.sCreator = :sCreator"),
-    @NamedQuery(name = "WeightTicket.findByGQty", query = "SELECT w FROM WeightTicket w WHERE w.gQty = :gQty"),
-    @NamedQuery(name = "WeightTicket.findByUnit", query = "SELECT w FROM WeightTicket w WHERE w.unit = :unit"),
-    @NamedQuery(name = "WeightTicket.findByOfflineMode", query = "SELECT w FROM WeightTicket w WHERE w.offlineMode = :offlineMode"),
-    @NamedQuery(name = "WeightTicket.findByTransferedPosting", query = "SELECT w FROM WeightTicket w WHERE w.transferedPosting = :transferedPosting"),
-    @NamedQuery(name = "WeightTicket.findByDissolved", query = "SELECT w FROM WeightTicket w WHERE w.dissolved = :dissolved"),
-    @NamedQuery(name = "WeightTicket.findByPosted", query = "SELECT w FROM WeightTicket w WHERE w.posted = :posted"),
-    @NamedQuery(name = "WeightTicket.findByMatDoc", query = "SELECT w FROM WeightTicket w WHERE w.matDoc = :matDoc"),
-    @NamedQuery(name = "WeightTicket.findByDocYear", query = "SELECT w FROM WeightTicket w WHERE w.docYear = :docYear"),
     @NamedQuery(name = "WeightTicket.findByMandtWPlantIdSoxeMatnrRegcat",
     query = "SELECT w FROM WeightTicket w "
     + "WHERE w.weightTicketPK.mandt = :mandt "
@@ -121,7 +79,6 @@ import javax.persistence.TemporalType;
     + "  AND w.matnrRef IS NULL "
     + "  AND w.regCategory IN :regCategory "
     + "  AND w.posted = 1"),
-    //hoangvv modify
     @NamedQuery(name = "WeightTicket.findByMandtWPlantDateFull",
     query = "SELECT w FROM WeightTicket w "
     + "WHERE w.weightTicketPK.mandt = :mandt "
@@ -130,7 +87,6 @@ import javax.persistence.TemporalType;
     + "  AND w.creator LIKE :creator"
     + "  AND w.tenTaiXe LIKE :tenTaiXe"
     + "  AND w.soXe LIKE :soXe"
-//    + "  AND w.createTime BETWEEN :timefrom AND :timeto"
     + "  AND w.matnrRef = :loaihang"),
     @NamedQuery(name = "WeightTicket.findByMandtWPlantDateNull",
     query = "SELECT w FROM WeightTicket w "
@@ -140,7 +96,6 @@ import javax.persistence.TemporalType;
     + "  AND w.creator LIKE :creator"
     + "  AND w.tenTaiXe LIKE :tenTaiXe"
     + "  AND w.soXe LIKE :soXe"
-//    + "  AND w.createTime BETWEEN :timefrom AND :timeto"
     + "  AND w.matnrRef IS NULL"),
     @NamedQuery(name = "WeightTicket.findByMandtWPlantDateNullAll",
     query = "SELECT w FROM WeightTicket w "
@@ -149,7 +104,6 @@ import javax.persistence.TemporalType;
     + "  AND w.createDate BETWEEN :from AND :to"
     + "  AND w.creator LIKE :creator"
     + "  AND w.soXe LIKE :soXe"
-//    + "  AND w.createTime BETWEEN :timefrom AND :timeto"
     + "  AND w.tenTaiXe LIKE :tenTaiXe"),
     @NamedQuery(name = "WeightTicket.findByMandtWPlantDateDissolved",
     query = "SELECT w FROM WeightTicket w "
@@ -159,7 +113,6 @@ import javax.persistence.TemporalType;
     + "  AND w.creator LIKE :creator"
     + "  AND w.tenTaiXe LIKE :tenTaiXe"
     + "  AND w.soXe LIKE :soXe"
-//    + "  AND w.createTime BETWEEN :timefrom AND :timeto"
     + "  AND w.matnrRef = :loaihang"
     + "  AND w.dissolved = 1"),
     @NamedQuery(name = "WeightTicket.findByMandtWPlantDateDissolvedNull",
@@ -170,7 +123,6 @@ import javax.persistence.TemporalType;
     + "  AND w.creator LIKE :creator"
     + "  AND w.tenTaiXe LIKE :tenTaiXe"
     + "  AND w.soXe LIKE :soXe"
-//    + "  AND w.createTime BETWEEN :timefrom AND :timeto"
     + "  AND w.matnrRef IS NULL"
     + "  AND w.dissolved = 1"),
     @NamedQuery(name = "WeightTicket.findByMandtWPlantDateDissolvedNullAll",
@@ -181,7 +133,6 @@ import javax.persistence.TemporalType;
     + "  AND w.creator LIKE :creator"
     + "  AND w.tenTaiXe LIKE :tenTaiXe"
     + "  AND w.soXe LIKE :soXe"
-//    + "  AND w.createTime BETWEEN :timefrom AND :timeto"
     + "  AND w.dissolved = 1"),
     @NamedQuery(name = "WeightTicket.findByMandtWPlantDatePosted",
     query = "SELECT w FROM WeightTicket w "
@@ -192,8 +143,6 @@ import javax.persistence.TemporalType;
     + "  AND w.tenTaiXe LIKE :tenTaiXe"
     + "  AND w.matnrRef = :loaihang"
     + "  AND w.soXe LIKE :soXe"
-//    + "  AND w.createTime BETWEEN :timefrom AND :timeto"
-    //    + "  AND w.dissolved = 1")
     + "  AND w.posted = 1"),
     @NamedQuery(name = "WeightTicket.findByMandtWPlantDatePostedNull",
     query = "SELECT w FROM WeightTicket w "
@@ -203,9 +152,7 @@ import javax.persistence.TemporalType;
     + "  AND w.creator LIKE :creator"
     + "  AND w.tenTaiXe LIKE :tenTaiXe"
     + "  AND w.soXe LIKE :soXe"
-//    + "  AND w.createTime BETWEEN :timefrom AND :timeto"
     + "  AND w.matnrRef IS NULL"
-    //    + "  AND w.dissolved = 1")
     + "  AND w.posted = 1"),
     @NamedQuery(name = "WeightTicket.findByMandtWPlantDatePostedNullAll",
     query = "SELECT w FROM WeightTicket w "
@@ -215,8 +162,6 @@ import javax.persistence.TemporalType;
     + "  AND w.creator LIKE :creator"
     + "  AND w.tenTaiXe LIKE :tenTaiXe"
     + "  AND w.soXe LIKE :soXe"
-//    + "  AND w.createTime BETWEEN :timefrom AND :timeto"
-    //    + "  AND w.dissolved = 1")
     + "  AND w.posted = 1"),
     @NamedQuery(name = "WeightTicket.findByMandtWPlantDateAll",
     query = "SELECT w FROM WeightTicket w "
@@ -226,10 +171,7 @@ import javax.persistence.TemporalType;
     + "  AND w.creator LIKE :creator"
     + "  AND w.tenTaiXe LIKE :tenTaiXe"
     + "  AND w.soXe LIKE :soXe"
-//    + "  AND w.createTime BETWEEN :timefrom AND :timeto"
     + "  AND w.matnrRef = :loaihang"),
-//    + "  AND w.dissolved = 1"),
-//    + "  AND w.posted = 1"    ),
     @NamedQuery(name = "WeightTicket.findByMandtWPlantDateAllNull",
     query = "SELECT w FROM WeightTicket w "
     + "WHERE w.weightTicketPK.mandt = :mandt "
@@ -238,7 +180,6 @@ import javax.persistence.TemporalType;
     + "  AND w.creator LIKE :creator"
     + "  AND w.tenTaiXe LIKE :tenTaiXe"
     + "  AND w.soXe LIKE :soXe"
-//    + "  AND w.createTime BETWEEN :timefrom AND :timeto"
     + "  AND w.matnrRef IS NULL"),
     @NamedQuery(name = "WeightTicket.findByMandtWPlantDateAllNullAll",
     query = "SELECT w FROM WeightTicket w "
@@ -247,9 +188,7 @@ import javax.persistence.TemporalType;
     + "  AND w.createDate BETWEEN :from AND :to"
     + "  AND w.creator LIKE :creator"
     + "  AND w.soXe LIKE :soXe"
-//    + "  AND w.createTime BETWEEN :timefrom AND :timeto"
-    + "  AND w.tenTaiXe LIKE :tenTaiXe") //    + "  AND w.dissolved = 1")
-//    + "  AND w.posted = 1"    ),
+    + "  AND w.tenTaiXe LIKE :tenTaiXe")
 })
 public class WeightTicket implements Serializable {
 

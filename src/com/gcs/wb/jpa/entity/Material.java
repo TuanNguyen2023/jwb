@@ -21,14 +21,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "material")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Material.findAll", query = "SELECT m FROM Material m"),
-    @NamedQuery(name = "Material.findByMandt", query = "SELECT m FROM Material m WHERE m.materialPK.mandt = :mandt"),
-    @NamedQuery(name = "Material.findByWplant", query = "SELECT m FROM Material m WHERE m.materialPK.wplant = :wplant"),
-    @NamedQuery(name = "Material.findByMatnr", query = "SELECT m FROM Material m WHERE m.materialPK.matnr = :matnr"),
-    @NamedQuery(name = "Material.findByMaktx", query = "SELECT m FROM Material m WHERE m.maktx = :maktx"),
-    @NamedQuery(name = "Material.findByMaktg", query = "SELECT m FROM Material m WHERE m.maktg = :maktg"),
-    @NamedQuery(name = "Material.findByXchpf", query = "SELECT m FROM Material m WHERE m.xchpf = :xchpf"),
-    @NamedQuery(name = "Material.findByCheckPosto", query = "SELECT m FROM Material m WHERE m.checkPosto = :checkPosto"),
     @NamedQuery(name = "Material.CheckPOSTO", query = "SELECT m FROM Material m WHERE m.materialPK.mandt = :mandt AND m.materialPK.wplant = :wplant AND m.materialPK.matnr LIKE :matnr")
 })
 public class Material implements Serializable {

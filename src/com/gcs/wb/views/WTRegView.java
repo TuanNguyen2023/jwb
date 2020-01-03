@@ -12,6 +12,7 @@ package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.helper.SAP2Local;
+import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.JpaProperties;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.Customer;
@@ -60,6 +61,9 @@ import javax.swing.JList;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.MaterialPK;
 import com.gcs.wb.jpa.entity.OutbDetailsV2;
+import com.gcs.wb.jpa.procedures.WTRegRepository;
+import com.gcs.wb.jpa.repositorys.MaterialRepository;
+import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -67,6 +71,7 @@ import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import javax.persistence.EntityManager;
 import javax.swing.DefaultComboBoxModel;
 
 /**
@@ -76,10 +81,14 @@ import javax.swing.DefaultComboBoxModel;
 public class WTRegView extends javax.swing.JInternalFrame {
 
     /** Creates new form WTRegView */
-    public String sVendor = ""; 
-    public String sPO = ""; 
-    public double dKldk = 0 ;
-    
+    public String sVendor = "";
+    public String sPO = "";
+    public double dKldk = 0;
+    WTRegRepository wTRegRepository = new WTRegRepository();
+    EntityManager entityManager = JPAConnector.getInstance();
+    MaterialRepository materialRepository = new MaterialRepository();
+    WeightTicketRepository weightTicketRepository = new WeightTicketRepository();
+
     public WTRegView(String _mode) {
         this.mode = _mode;
         initComponents();
@@ -92,11 +101,9 @@ public class WTRegView extends javax.swing.JInternalFrame {
         }
         cbxTimeTo.setSelectedIndex(23);
         txtRegItem.setVisible(false);
-        WeightTicketJpaController conWTicket = new WeightTicketJpaController(entityManager);
-        Query q = (Query) entityManager.createNativeQuery("select * from Material where MANDT = ? and WPLANT = ?");
-        q.setParameter(1, WeighBridgeApp.getApplication().getConfig().getsClient());
-        q.setParameter(2, WeighBridgeApp.getApplication().getConfig().getwPlant());
-        List matnr = q.getResultList();
+        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
+        String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
+        List matnr = materialRepository.getListMaterial(client, plant);
         DefaultComboBoxModel result = new DefaultComboBoxModel();
         for (Object obj : matnr) {
             Object[] wt = (Object[]) obj;
@@ -127,7 +134,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
         rbtRegCatGroup = new javax.swing.ButtonGroup();
         newWeightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
         selectedRow = new com.gcs.wb.jpa.entity.WeightTicket();
-        entityManager = WeighBridgeApp.getApplication().getEm();
         outbDel = new com.gcs.wb.jpa.entity.OutbDel();
         jTextField1 = new javax.swing.JTextField();
         buttonGroup1 = new javax.swing.ButtonGroup();
@@ -1109,7 +1115,7 @@ private boolean CheckTaiTrong( )
  String fTrongtai = ""; 
  int answer = 1 ; 
          
-  WeightTicketJpaController con  = new WeightTicketJpaController(entityManager);
+        WeightTicketJpaController con = new WeightTicketJpaController();
   
     txtLicPlate.setText(txtLicPlate.getText().trim().toUpperCase());
     
@@ -1193,54 +1199,47 @@ private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
     }//GEN-LAST:event_txtDName1KeyReleased
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-      try{
-        Query q = (Query) entityManager.createNativeQuery("{call  pGetDangtaiV2 (?)}") ;
-         q.setParameter(1,txtDName1.getText().toString()); 
-         List wts = q.getResultList(); 
-          for (Object obj : wts)
-          {
-              // wt[0] == null; 
-               Object[] wt = (Object[]) obj;
-               txtDName.setText(wt[4].toString());
-               txtCMNDBL.setText(wt[5].toString()); 
-               txtLicPlate.setText(wt[2].toString()); 
-               txtSoRomooc.setText(wt[3].toString()); 
-               txtDelNum.setText(wt[30].toString());
-              
-               sPO = wt[33].toString();
-               txfRegQty.setText(wt[32].toString()); 
-               dKldk = Double.parseDouble( wt[32].toString());
-               
-               if (txtDName1.getText().startsWith("N")) 
-               {
-                   rbtOutward.setSelected(true); 
-                   txtRegItem.setText(wt[35].toString()); 
-               }
-               cPara.G_POSTO = sPO;
-               cPara.G_REGID = txtDName1.getText().trim();
-               cPara.G_PLANT_TRANS = wt[34].toString();
-               cPara.G_VENDOR = sVendor ; 
-               
-                sVendor = wt[31].toString();
-               
-               
-               
-          }
-      
-      } catch (Exception ex) {
-           // logger.error(null, ex);
-          //  throw ex;
+        try {
+            String pRegId = txtDName1.getText().toString().trim();
+            if (pRegId == null) {
+                pRegId = "";
+            }
+            List wts = this.wTRegRepository.getDangtaiV2(pRegId);
+            if (wts != null) {
+                for (Object obj : wts) {
+                    Object[] wt = (Object[]) obj;
+                    txtDName.setText(wt[4].toString());
+                    txtCMNDBL.setText(wt[5].toString());
+                    txtLicPlate.setText(wt[2].toString());
+                    txtSoRomooc.setText(wt[3].toString());
+                    txtDelNum.setText(wt[30].toString());
+                    sPO = wt[33].toString();
+                    txfRegQty.setText(wt[32].toString());
+                    dKldk = Double.parseDouble(wt[32].toString());
+                    if (txtDName1.getText().startsWith("N")) {
+                        rbtOutward.setSelected(true);
+                        txtRegItem.setText(wt[35].toString());
+                    }
+                    cPara.G_POSTO = sPO;
+                    cPara.G_REGID = txtDName1.getText().trim();
+                    cPara.G_PLANT_TRANS = wt[34].toString();
+                    cPara.G_VENDOR = sVendor;
+                    sVendor = wt[31].toString();
+                }
+            }
+
+        } catch (Exception ex) {
+            logger.error(ex.toString());
+
         }
          
         
     }//GEN-LAST:event_jButton1ActionPerformed
     private DefaultComboBoxModel getMatsModel() {
         DefaultComboBoxModel result = new DefaultComboBoxModel();
-        Query q = (Query) entityManager.createNativeQuery("select distinct MATNR_REF, REG_ITEM_TEXT from WeightTicket where MANDT = ? and WPlant = ?");
-        q.setParameter(1, WeighBridgeApp.getApplication().getConfig().getsClient());
-        q.setParameter(2, WeighBridgeApp.getApplication().getConfig().getwPlant());
-        List wts = q.getResultList();
+        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
+        String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
+        List wts = weightTicketRepository.getMatsModel(client, plant);
         MaterialPK matPK1 = new MaterialPK();
         Material mat1 = new Material();
         matPK1.setMandt(WeighBridgeApp.getApplication().getConfig().getsClient());
@@ -1450,49 +1449,53 @@ private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
 //                }                    
                //End add 
               
-             
-                WeightTicketJpaController conWTicket = new WeightTicketJpaController(entityManager);
+                WeightTicketJpaController conWTicket = new WeightTicketJpaController();
                 //filter modified by hoangvv
                 Object[] select = cbxType.getSelectedObjects();
                 com.gcs.wb.jpa.entity.Material selecttext = (com.gcs.wb.jpa.entity.Material) select[0];
-                List<WeightTicket> result = conWTicket.findByMandtWPlantDateFull(dpFrom.getDate(), dpTo.getDate(), txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMaterialPK().getMatnr(), txtBienSo.getText().trim());;
-                List<WeightTicket> data = conWTicket.findByMandtWPlantDateFull(dpFrom.getDate(), dpTo.getDate(), txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMaterialPK().getMatnr(), txtBienSo.getText().trim());
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                String fFrom = format.format(dpFrom.getDate());
+                String fTo = format.format(dpTo.getDate());
+                System.out.println("dpFrom : " + fFrom + " to " + fTo);
+
+                List<WeightTicket> result = conWTicket.findByMandtWPlantDateFull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMaterialPK().getMatnr(), txtBienSo.getText().trim());;
+                List<WeightTicket> data = conWTicket.findByMandtWPlantDateFull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMaterialPK().getMatnr(), txtBienSo.getText().trim());
                 result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
                 if (selecttext.getMaktx().equals("Linh tinh")) {
-                    data = conWTicket.findByMandtWPlantDateNull(dpFrom.getDate(), dpTo.getDate(), txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
+                    data = conWTicket.findByMandtWPlantDateNull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
                     result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
                     if (rbtDissolved.isSelected()) {
-                        data = conWTicket.findByMandtWPlantDateDissolvedNull(dpFrom.getDate(), dpTo.getDate(), txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
+                        data = conWTicket.findByMandtWPlantDateDissolvedNull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
                         result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
                     } else if (rbtPosted.isSelected()) {
-                        data = conWTicket.findByMandtWPlantDatePostedNull(dpFrom.getDate(), dpTo.getDate(), txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
+                        data = conWTicket.findByMandtWPlantDatePostedNull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
                         result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
                     } else if (rbtStateAll.isSelected()) {
-                        data = conWTicket.findByMandtWPlantDateAllNull(dpFrom.getDate(), dpTo.getDate(), txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
+                        data = conWTicket.findByMandtWPlantDateAllNull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
                         result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
                     }
                 } else if (selecttext.getMaktx().equals("Tất cả")) {
-                    data = conWTicket.findByMandtWPlantDateNullAll(dpFrom.getDate(), dpTo.getDate(), txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
+                    data = conWTicket.findByMandtWPlantDateNullAll(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
                     result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
                     if (rbtDissolved.isSelected()) {
-                        data = conWTicket.findByMandtWPlantDateDissolvedNullAll(dpFrom.getDate(), dpTo.getDate(), txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
+                        data = conWTicket.findByMandtWPlantDateDissolvedNullAll(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
                         result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
                     } else if (rbtPosted.isSelected()) {
-                        data = conWTicket.findByMandtWPlantDatePostedNullAll(dpFrom.getDate(), dpTo.getDate(), txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
+                        data = conWTicket.findByMandtWPlantDatePostedNullAll(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
                         result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
                     } else if (rbtStateAll.isSelected()) {
-                        data = conWTicket.findByMandtWPlantDateAllNullAll(dpFrom.getDate(), dpTo.getDate(), txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
+                        data = conWTicket.findByMandtWPlantDateAllNullAll(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
                         result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
                     }
                 } else {
                     if (rbtDissolved.isSelected()) {
-                        data = conWTicket.findByMandtWPlantDateDissolved(dpFrom.getDate(), dpTo.getDate(), txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMaterialPK().getMatnr(), txtBienSo.getText().trim());
+                        data = conWTicket.findByMandtWPlantDateDissolved(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMaterialPK().getMatnr(), txtBienSo.getText().trim());
                         result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
                     } else if (rbtPosted.isSelected()) {
-                        data = conWTicket.findByMandtWPlantDatePosted(dpFrom.getDate(), dpTo.getDate(), txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMaterialPK().getMatnr(), txtBienSo.getText().trim());
+                        data = conWTicket.findByMandtWPlantDatePosted(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMaterialPK().getMatnr(), txtBienSo.getText().trim());
                         result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
                     } else if (rbtStateAll.isSelected()) {
-                        data = conWTicket.findByMandtWPlantDateAll(dpFrom.getDate(), dpTo.getDate(), txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMaterialPK().getMatnr(), txtBienSo.getText().trim());
+                        data = conWTicket.findByMandtWPlantDateAll(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMaterialPK().getMatnr(), txtBienSo.getText().trim());
                         result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
                     }
                 }
@@ -1538,29 +1541,7 @@ private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                         } else {
                             wtData[i][14] = false;
                         }
-                        
-                        // tuanna 20180722 
-                  //       wtData[i][17] = sPO;
 
-/*
-						//tuanna add 24.12.2012 to show ID Ticket on grid ;
-                        int seq = item.getWeightTicketPK().getSeqByDay() ; 
-                        String sseq = "" ;   
-                        /*
-                        if (seq <10 )
-                            dseq = "00" + Integer.toString(seq);
-                        else if (seq >= 10 && seq <100 )
-                             dseq = "0" + Integer.toString(seq); 
-                        else 
-                            dseq =  Integer.toString(seq);
-                         * 
-                       /  *?
-                                               
-                        sseq =(seq <10 )?"00":((seq >= 10 && seq <100)?"0":"");
-                        sseq += Integer.toString(seq); 
-                        
-                        wtData[i][15]= item.getWeightTicketPK().getId()+ sseq;
-*/ 
                     } else if (getMode().equalsIgnoreCase(WTRegView.MODE_RPT)) {
                         WeightTicketPK pk = item.getWeightTicketPK();
                         if (!pk.getMandt().equalsIgnoreCase(config.getsClient()) && !pk.getWPlant().equalsIgnoreCase(config.getwPlant().toString())) {
@@ -1587,9 +1568,6 @@ private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                         wtRptData[i][5] = item.getSoRomooc();
                         wtRptData[i][6] = item.getCreator();
                         wtRptData[i][7] = ct;
-//                        wtRptData[i][7] = create_date.getTime();
-//                        wtRptData[i][7] = item.getCreateDate();
-//                        wtRptData[i][8] = hh + ":" + mm + ":" + ss;
                         wtRptData[i][8] = item.getRegCategory();
                         wtRptData[i][9] = item.getRegItemText();
                         if (item.getFTime() != null) {
@@ -1768,13 +1746,17 @@ private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         @Override
         protected Object doInBackground() {
             try {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                String kFrom = format.format(dpFrom.getDate());
+                String kTo = format.format(dpTo.getDate());
+                System.out.println("dpFrom : " + kFrom + " to " + kTo);
                 Map<String, Object> params = new HashMap<String, Object>();
                 params.put("P_PNAME_RPT", WeighBridgeApp.getApplication().getSapSetting().getNameRpt());
                 params.put("P_PADDRESS", WeighBridgeApp.getApplication().getSapSetting().getAddress());
                 params.put("P_PPHONE", WeighBridgeApp.getApplication().getSapSetting().getPhone());
                 params.put("P_PFAX", WeighBridgeApp.getApplication().getSapSetting().getFax());
-                params.put("P_FROM", dpFrom.getDate());
-                params.put("P_TO", dpTo.getDate());
+                params.put("P_FROM", kFrom);
+                params.put("P_TO", kTo);
                 String reportName = null;
                 if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
                     reportName = "./rpt/rptBT/WTList.jasper";
@@ -1969,42 +1951,22 @@ private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                 //Check if D.O was used already or not???
                 if (validDO && outb != null) {
                     WeightTicket wt = null;
+                    String client = WeighBridgeApp.getApplication().getConfig().getsClient();
+                    String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
+                    String delivNumb = outb.getOutbDelPK().getDelivNumb();
+                    wt = weightTicketRepository.findByMandtWPlantDelivNumb(client, plant, delivNumb);
+                    String wplant = "";
+                    wplant = WeighBridgeApp.getApplication().getConfig().getwPlant().toString();
+                    String sDoType = "LF,LR,NL,ZTLF,ZTLR";
+                    String Lfart = "";
                     try {
-                        TypedQuery<WeightTicket> tqWt = entityManager.createNamedQuery("WeightTicket.findByMandtWPlantDelivNumb", WeightTicket.class);
-                        tqWt.setParameter("mandt", WeighBridgeApp.getApplication().getConfig().getsClient());
-                        tqWt.setParameter("wPlant", WeighBridgeApp.getApplication().getConfig().getwPlant());
-                        tqWt.setParameter("delivNumb", outb.getOutbDelPK().getDelivNumb());
-                        wt = tqWt.getSingleResult();
+                        Lfart = outb.getLfart();
+
                     } catch (Exception ex) {
-                        wt = null;
                     }
-                        // Modified by Tuanna at Tafico JSC   
-                    // 13/03/2013 for reason checking DO 
-                    String wplant ="" ; 
-                    wplant = WeighBridgeApp.getApplication().getConfig().getwPlant().toString(); 
-                //    boolean isGrCement  = false ; 
-                //    isGrCement = ( outb.getLfart().equalsIgnoreCase("NL")) && (!outb.getWerks().toString().equalsIgnoreCase(wplant)) ; 
-                    String sDoType ="LF,LR,NL,ZTLF,ZTLR"; 
-                     String Lfart = "" ; 
-                    try 
-                    {
-                        Lfart =outb.getLfart(); 
-                        
-                     }catch(Exception ex ) {
-                      }
-                    
-                    if ((sDoType.indexOf(Lfart) >=0 && outb.getWbstk() == 'X'  && outb.getWerks().toString().equalsIgnoreCase(wplant) )
-                        ||( wt != null && (wt.getDissolved() == null || wt.getDissolved() == false)))
-                    {                    
-                    // End add
-                   /* 
-                    if (((outb.getLfart().equalsIgnoreCase("LF") 
-                            || outb.getLfart().equalsIgnoreCase("LR")
-                            || ( outb.getLfart().equalsIgnoreCase("NL") &&                                                                                               
-                            || outb.getLfart().equalsIgnoreCase("ZTLF") || outb.getLfart().equalsIgnoreCase("ZTLR")) && outb.getWbstk() == 'X')                            
+
+                    if ((sDoType.indexOf(Lfart) >= 0 && outb.getWbstk() == 'X' && outb.getWerks().toString().equalsIgnoreCase(wplant))
                             || (wt != null && (wt.getDissolved() == null || wt.getDissolved() == false))) {
-                     * 
-                     */
                         validDO = false;
                         outb = null;
                         String msg = "D.O \" " + val[k] + " \" đã được dùng để " + mode + " hàng, vui lòng tự  kiểm tra trước khi liên hệ đường dây nóng Dịch vụ khách hàng 0919 49 59 69 ";
@@ -2089,61 +2051,34 @@ private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                   //Modified by Tuan Nguyen at Tafico Jsc 23/12/2014
                     
                     float fCount = 0; 
-                    
-                    String sql = "{call pCheckDOExist( ?,?)}";
-                    Query q1 = (Query) entityManager.createNativeQuery(sql);
-                               q1.setParameter(1,val[k]); 
-                               q1.setParameter(2,WeighBridgeApp.getApplication().getConfig().getwPlant() );                                
-                         List wts1 = q1.getResultList();   
-                         
-                          try {
-                          fCount = Float.parseFloat(wts1.get(0).toString());                           
-                         
-                        }catch(Throwable cause ){                                  
-                                     fCount  = 2               ;               
-                        }
-                         
-                       if( fCount >0 )
-                       {
-                            validDO = false;
-                            outb = null;
-                            String msg = "D.O \" " + val[k] + " \" đã được sử dụng , vui lòng liên hệ NPP hoặc DVKH đổi mã khác. Giao dịch lỗi này của người dùng đã được hệ thống lưu nhật ký";
-                            setMessage(msg);
-                            JOptionPane.showMessageDialog(rootPane, msg);
-                       }
-                  
-                     float klmax =0; 
-                       sql ="";                         
-                              sql = "{call pGetSPVar ( ?,?,?)}" ;
-                               Query q = (Query) entityManager.createNativeQuery(sql);
-                               q.setParameter(1,WbID); 
-                               q.setParameter(2,sp ); 
-                               q.setParameter(3,outb.getMatnr().toString()   );   
-                         List wts = q.getResultList();         
-                        
-                         try {
-                          klmax = Float.parseFloat(wts.get(0).toString());                           
-                         
-                        }catch(Throwable cause ){                                  
-                                  klmax  = -1 ;                                   
-                        }
-                    
-                    ship = (klmax <= 0) ? false :true ; 
-                         
-                    if (ship == false)
-                        {
-                            validDO = false;
-                            outb = null;
-                            String msg = "D.O \" " + val[k] + " \" không được " + mymode + " hàng ở điểm nhận hàng này!, vui lòng liên hệ dịch vụ khách hàng Hotline 0919 49 59 69 để được hỗ trợ. ";
-                            setMessage(msg);
-                            JOptionPane.showMessageDialog(rootPane, msg);
-                            
-                        }
+                    String pDoNumber = val[k];
+                    String pWplant = WeighBridgeApp.getApplication().getConfig().getwPlant();
+
+                    List wts1 = wTRegRepository.checkDoExist(pDoNumber, pWplant);
+
+                    if (wts1 != null) {
+                        fCount = Float.parseFloat(wts1.get(0).toString());
+                    } else {
+                        fCount = 2;
                     }
-                //end fix
-                
-                
-                //  -------------------------------------------->> 
+                    if (fCount > 0) {
+                        validDO = false;
+                        outb = null;
+                        String msg = "D.O \" " + val[k] + " \" đã được sử dụng , vui lòng liên hệ NPP hoặc DVKH đổi mã khác. Giao dịch lỗi này của người dùng đã được hệ thống lưu nhật ký";
+                        setMessage(msg);
+                        JOptionPane.showMessageDialog(rootPane, msg);
+                    }
+                    int klmax = wTRegRepository.getSPVar(WbID, sp, outb.getMatnr().toString().trim());
+
+                    ship = (klmax <= 0) ? false : true;
+                    if (ship == false) {
+                        validDO = false;
+                        outb = null;
+                        String msg = "D.O \" " + val[k] + " \" không được " + mymode + " hàng ở điểm nhận hàng này!, vui lòng liên hệ dịch vụ khách hàng Hotline 0919 49 59 69 để được hỗ trợ. ";
+                        setMessage(msg);
+                        JOptionPane.showMessageDialog(rootPane, msg);
+                    }
+                }
                 //20121217
                 if (validDO && outb != null) {
                     mat_numb = outb.getMatnr().trim();
@@ -2163,7 +2098,7 @@ private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                     String[] do_list = txtDelNum.getText().trim().split("-");
                     for (int i = 0; i < do_list.length; i++) {
                         String doNum = do_list[i];
-                        WeightTicketJpaController conWTicket = new WeightTicketJpaController(entityManager);
+                        WeightTicketJpaController conWTicket = new WeightTicketJpaController();
                         try {
                             detail = conWTicket.findByMandtDelivNumb(doNum);
                         } catch (Exception ex) {
@@ -2174,17 +2109,11 @@ private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                             regqty = regqty.add(item.getLfimg());
                         }
                     }
-//                if (outb.getFreeQty() != null) {
-//                    regqty = outb.getLfimg().add(outb.getFreeQty());
-//                } else {
-//                    regqty = outb.getLfimg();
-//                }
                     txfRegQty.setValue(regqty.doubleValue());
                     outbDel = outb;
                 }
                 setProgress(4, 1, 4);
                 continue;
-//                return null;  // return your result
             }
             return null;
         }
@@ -2201,13 +2130,6 @@ private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
 
         @Override
         protected void finished() {
-//            if (validDO) {
-//                lblDelNum.setForeground(Color.black);
-//            } else {
-//                lblDelNum.setForeground(Color.red);
-//            }
-////            setRbtEnabled(!validDO);
-//            setSaveNeeded(isValidated() && validDO);
         }
     }
 
@@ -2396,45 +2318,18 @@ private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                 //Check if D.O was used already or not???
                 if (validDO && outb != null) {
                     WeightTicket wt = null;
+                    String client = WeighBridgeApp.getApplication().getConfig().getsClient();
+                    String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
+                    String delivNumb = outb.getOutbDelPK().getDelivNumb();
+                    wt = weightTicketRepository.findByMandtWPlantDelivNumb(client, plant, delivNumb);
+                    String Lfart;
                     try {
-                        TypedQuery<WeightTicket> tqWt = entityManager.createNamedQuery("WeightTicket.findByMandtWPlantDelivNumb", WeightTicket.class);
-                        tqWt.setParameter("mandt", WeighBridgeApp.getApplication().getConfig().getsClient());
-                        tqWt.setParameter("wPlant", WeighBridgeApp.getApplication().getConfig().getwPlant());
-                        tqWt.setParameter("delivNumb", outb.getOutbDelPK().getDelivNumb());
-                        wt = tqWt.getSingleResult();
+                        Lfart = outb.getLfart();
+
                     } catch (Exception ex) {
-                        wt = null;
                     }
-                        // Modified by Tuanna at Tafico JSC   
-                    // 13/03/2013 for reason checking DO 
-                    String wplant ="" ; 
-                    wplant = WeighBridgeApp.getApplication().getConfig().getwPlant().toString(); 
-                //    boolean isGrCement  = false ; 
-                //    isGrCement = ( outb.getLfart().equalsIgnoreCase("NL")) && (!outb.getWerks().toString().equalsIgnoreCase(wplant)) ; 
-                    String sDoType ="LF,LR,NL,ZTLF,ZTLR"; 
-                     String Lfart = "" ; 
-                    try 
-                    {
-                        Lfart =outb.getLfart(); 
-                        
-                     }catch(Exception ex ) {
-                      }
-                    
-                    if // ((sDoType.indexOf(Lfart) >=0  )
-                           // && outb.getWbstk() == 'X'  
-                           // && outb.getWerks().toString().equalsIgnoreCase(wplant) )
-                        //||
-                           ( ( wt != null && (wt.getDissolved() == null || wt.getDissolved() == false)))
-                    {                    
-                    // End add
-                   /* 
-                    if (((outb.getLfart().equalsIgnoreCase("LF") 
-                            || outb.getLfart().equalsIgnoreCase("LR")
-                            || ( outb.getLfart().equalsIgnoreCase("NL") &&                                                                                               
-                            || outb.getLfart().equalsIgnoreCase("ZTLF") || outb.getLfart().equalsIgnoreCase("ZTLR")) && outb.getWbstk() == 'X')                            
-                            || (wt != null && (wt.getDissolved() == null || wt.getDissolved() == false))) {
-                     * 
-                     */
+
+                    if ((wt != null && (wt.getDissolved() == null || wt.getDissolved() == false))) {
                         validDO = false;
                         outb = null;
                         String msg = "D.O \" " + val[k] + " \" đã được dùng để " + mode + " hàng, vui lòng tự  kiểm tra trước khi liên hệ đường dây nóng Dịch vụ khách hàng 0919 49 59 69 ";
@@ -2518,60 +2413,37 @@ private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                      */     
                   //Modified by Tuan Nguyen at Tafico Jsc 23/12/2014
                     
-                    float fCount = 0; 
-                    
-                    String sql = "{call pCheckDOExist( ?,?)}";
-                    Query q1 = (Query) entityManager.createNativeQuery(sql);
-                               q1.setParameter(1,val[k]); 
-                               q1.setParameter(2,WeighBridgeApp.getApplication().getConfig().getwPlant() );                                
-                         List wts1 = q1.getResultList();   
-                         
-                          try {
-                          fCount = Float.parseFloat(wts1.get(0).toString());                           
-                         
-                        }catch(Throwable cause ){                                  
-                                     fCount  = 2               ;               
-                        }
-                         
-                       if( fCount >0 )
-                       {
-                            validDO = false;
-                            outb = null;
-                            String msg = "D.O \" " + val[k] + " \" đã được sử dụng , vui lòng liên hệ NPP hoặc DVKH đổi mã khác. Giao dịch lỗi này của người dùng đã được hệ thống lưu nhật ký";
-                            setMessage(msg);
-                            JOptionPane.showMessageDialog(rootPane, msg);
-                       }
-                  
-                     float klmax =0; 
-                       sql ="";                         
-                              sql = "{call pGetSPVar ( ?,?,?)}" ;
-                               Query q = (Query) entityManager.createNativeQuery(sql);
-                               q.setParameter(1,WbID); 
-                               q.setParameter(2,sp ); 
-                               q.setParameter(3,outb.getMatnr().toString()   );   
-                         List wts = q.getResultList();         
-                        
-                         try {
-                          klmax = Float.parseFloat(wts.get(0).toString());                           
-                         
-                        }catch(Throwable cause ){                                  
-                                  klmax  = -1 ;                                   
-                        }
-                    
-                    ship = (klmax <= 0) ? false :true ; 
-                         
-                    if (ship == false)
-                        {
-                            validDO = false;
-                            outb = null;
-                            String msg = "D.O \" " + val[k] + " \" không được " + mymode + " hàng ở điểm nhận hàng này!, vui lòng liên hệ dịch vụ khách hàng Hotline 0919 49 59 69 để được hỗ trợ. ";
-                            setMessage(msg);
-                            JOptionPane.showMessageDialog(rootPane, msg);
-                            
-                        }
+                    float fCount = 0;
+                    String pDoNumber = val[k];
+                    String pWplant = WeighBridgeApp.getApplication().getConfig().getwPlant();
+                    List wts1 = wTRegRepository.checkDoExist(pDoNumber, pWplant);
+                    try {
+                        fCount = Float.parseFloat(wts1.get(0).toString());
+                    } catch (Throwable cause) {
+                        fCount = 2;
                     }
-                //end fix
-                
+
+                    if (fCount > 0) {
+                        validDO = false;
+                        outb = null;
+                        String msg = "D.O \" " + val[k] + " \" đã được sử dụng , vui lòng liên hệ NPP hoặc DVKH đổi mã khác. Giao dịch lỗi này của người dùng đã được hệ thống lưu nhật ký";
+                        setMessage(msg);
+                        JOptionPane.showMessageDialog(rootPane, msg);
+                    }
+                    int klmax = -1;
+                    int temp = wTRegRepository.getSPVar(WbID, sp, outb.getMatnr().toString().trim());
+                    if (temp > 0) {
+                        klmax = temp;
+                    }
+                    ship = (klmax <= 0) ? false : true;
+                    if (ship == false) {
+                        validDO = false;
+                        outb = null;
+                        String msg = "D.O \" " + val[k] + " \" không được " + mymode + " hàng ở điểm nhận hàng này!, vui lòng liên hệ dịch vụ khách hàng Hotline 0919 49 59 69 để được hỗ trợ. ";
+                        setMessage(msg);
+                        JOptionPane.showMessageDialog(rootPane, msg);
+                    }
+                }
                 
                 //  -------------------------------------------->> 
                 //20121217
@@ -2593,7 +2465,7 @@ private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                     String[] do_list = txtDelNum.getText().trim().split("-");
                     for (int i = 0; i < do_list.length; i++) {
                         String doNum = do_list[i];
-                        WeightTicketJpaController conWTicket = new WeightTicketJpaController(entityManager);
+                        WeightTicketJpaController conWTicket = new WeightTicketJpaController();
                         try {
                             detail = conWTicket.findByMandtDelivNumb(doNum);
                         } catch (Exception ex) {
@@ -2656,9 +2528,8 @@ private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
 
         @Override
         protected Object doInBackground() {
-           
-            WeightTicketJpaController wCon = new WeightTicketJpaController(entityManager);
-//            Date now = Calendar.getInstance().getTime();
+
+            WeightTicketJpaController wCon = new WeightTicketJpaController();
             Date now = wCon.getServerDate();
            
             if (now == null) {
@@ -2680,73 +2551,21 @@ private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             sPlant =  WeighBridgeApp.getApplication().getConfig().getwPlant().toString();
             Calendar currdate = Calendar.getInstance();
             String yearplus = "";
-            int y = 0; 
-            String nam = "";
-            nam = id.substring(0,2); 
-        /*    
-           if( sPlant.indexOf("1311") >=0 )
-           
-             y = Integer.parseInt(nam)+3 ;
-           
-           else if ( sPlant.indexOf("1411") >=0  )
-                y = Integer.parseInt(nam)+4 ;
-           
-           else if (  sPlant.indexOf("1111")>=0  )
-               y = Integer.parseInt(nam)+1 ;
-           else 
-               y = Integer.parseInt(nam)+5 ;
-           
-           */
-            
-            int iplus = 0 ; 
-            String ssql = "{call jweighbridge.getTicketInCre( ?)}";
-             Query qq = (Query) entityManager.createNativeQuery(ssql);  
-             qq.setParameter(1, WeighBridgeApp.getApplication().getConfig().getWbId()); 
-             List wwts = qq.getResultList();  
-             
-              try {
-                          iplus = Integer.parseInt (wwts.get(0).toString());                           
-                         
-                        }catch(Throwable cause ){                                  
-                                  iplus  = 0 ;                                   
-                        }
-            
-            y =Integer.parseInt(nam) + iplus;             
-              
-            id = Integer.toString(y) +id.substring(2,id.length());   
-            int year = Integer.parseInt(formatter.format(now));    
-            String sId  =  id+ String.format("%03d", seqBDay); 
-            
-            //190615
-            //Tuanna fix bug 
-          int iCount  =0; 
-             String sql = "{call pCheckExist ( ?)}" ;
-             Query q = (Query) entityManager.createNativeQuery(sql);                            
-             List wts = q.getResultList();      
-                        
-                        try {
-                          iCount = Integer.parseInt (wts.get(0).toString());                           
-                         
-                        }catch(Throwable cause ){                                  
-                                  iCount  = -1 ;                                   
-                        }
-                    
-                         if (iCount >0 )
-                             seqBDay = seqBDay + iCount ; 
-                         
-              
-                          
-                         
-           newWeightTicket.setWeightTicketPK(new WeightTicketPK(sap.getsClient(), sap.getwPlant().toString(), id, seqBDay));
-        //    newWeightTicket.setWeightTicketPK(new WeightTiay = seqBDay + iCount ; 
-        //                 cketPK(sap.getsClient(), sap.getwPlant().toString(), id, seqBDay)); 
-            
-     //      String sId = newWeightTicket.getWeightTicketPK().getId().toString()
-       //            + String.format("%03d", newWeightTicket.getWeightTicketPK().getSeqByDay()); 
-            
-            
-             
+            int y = 0;
+            String nam = id.substring(0, 2);
+            String pWbId = WeighBridgeApp.getApplication().getConfig().getWbId().trim();
 
+            int iplus = wTRegRepository.getTicketInCre(pWbId);
+
+            y = Integer.parseInt(nam) + iplus;
+            id = Integer.toString(y) + id.substring(2, id.length());
+            int year = Integer.parseInt(formatter.format(now));
+            String sId = id + String.format("%03d", seqBDay);
+            int iCount = wTRegRepository.checkExist(sId);
+            if (iCount > 0) {
+                seqBDay = seqBDay + iCount;
+            }
+            newWeightTicket.setWeightTicketPK(new WeightTicketPK(sap.getsClient(), sap.getwPlant().toString(), id, seqBDay));
             newWeightTicket.setSeqByMonth(seqBMonth);
             newWeightTicket.setCreateDate(now);
             formatter.applyPattern("HHmmss");
@@ -2791,7 +2610,7 @@ private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                     String[] do_list = txtDelNum.getText().trim().split("-");
                     for (int i = 0; i < do_list.length; i++) {
                         String doNum = do_list[i];
-                        WeightTicketJpaController conWTicket = new WeightTicketJpaController(entityManager);
+                        WeightTicketJpaController conWTicket = new WeightTicketJpaController();
                         try {
                             detail = conWTicket.findByMandtDelivNumb(doNum);
                         } catch (Exception ex) {
@@ -2843,41 +2662,6 @@ private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                 StringSelection stringSelection = new StringSelection(txtSodangtai.getText());
                 Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                 clipboard.setContents(stringSelection, null);
-                
-                 try{
-                    if ( cPara.G_REGID.startsWith("N") == true || cPara.G_REGID.toString().length() >0  )
-                    {
-                     String sssql = "{call pUpdateRegIdForTicket ( ?,?,?,?,?)}" ;
-                 //     CALL pUpdateRegIdForTicket('2507232226108','N418200700173' ,'POSTO','Vendor','Plant') ; 
-                             
-                     Query qqqq = (Query) entityManager.createNativeQuery(sssql);      
-                     qqqq.setParameter(1, txtSodangtai.getText() ); 
-                     qqqq.setParameter(2, cPara.G_REGID);                  
-                     qqqq.setParameter(3, cPara.G_POSTO ); 
-                     qqqq.setParameter(4, cPara.G_VENDOR);   
-                     qqqq.setParameter(5, cPara.G_PLANT_TRANS );
-                       
-               
-                                        
-                     List wwwts = qqqq.getResultList();   
-                    }
-                }catch (Exception ex)
-                {
-                    
-                }
-             
-                
-             //   WeightTicketJpaController con  = new WeightTicketJpaController(entityManager); 
-               // String usql = " ";
-               // usql = " Call pUpdateWT_Reg ( '" + txtDName1.getText() + "','"+txtSodangtai.getText().toString()+ "')";
-               // con.SqlDML(usql);
-              // con = null;
-               
-                            // End add. 
-                
-                
-
-
             } catch (Exception ex) {
                  btnSave.setEnabled(true); 
             }
@@ -2903,12 +2687,9 @@ private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             setClearable(false);
             setSaveNeeded(false);
             if (flag_revert) {
-                List<WeightTicket> wt = new ArrayList<WeightTicket>();
-                TypedQuery<WeightTicket> tqWt = entityManager.createNamedQuery("WeightTicket.findByMandtWPlantDelivNumb", WeightTicket.class);
-                tqWt.setParameter("mandt", WeighBridgeApp.getApplication().getConfig().getsClient());
-                tqWt.setParameter("wPlant", WeighBridgeApp.getApplication().getConfig().getwPlant());
-                tqWt.setParameter("delivNumb", outb_number);
-                wt = tqWt.getResultList();
+                String client = WeighBridgeApp.getApplication().getConfig().getsClient();
+                String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
+                List<WeightTicket> wt = weightTicketRepository.getListByMandtWPlantDelivNumb(client, plant, outb_number);
                 WeightTicket item = null;
                 for (int i = 0; i < wt.size() - 1; i++) {
                     item = wt.get(i);
@@ -2919,10 +2700,6 @@ private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                     entityManager.persist(item);
                     entityManager.getTransaction().commit();
                 }
-                
-                // 2018 07021 tuanna
-               
-             
             }
         }
     }
@@ -2961,47 +2738,6 @@ private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         this.saveNeeded = b;
         firePropertyChange("saveNeeded", old, isSaveNeeded());
     }
-    // </editor-fold>
-    // <editor-fold defaultstate="collapsed" desc="Util methods">
-    // Check vehicle  -> Vehicle _ REG 
-    // Tuanna 30/08/12
-    /*
-    private int CheckVehicle (string Xe, string plant , string mat_id,string catType,datetime fromDate,datetime toDate ) 
-    {
-    
-    EntityManager em = getEntityManager();
-    em.clear();
-    Query q = em.createNativeQuery("select distinct  SO_XE FROM VEHICLE_REG  WHERE "
-    + "CLIENT = ?  "
-    + "AND PLANT = ? "
-    + "AND MATERIAL_ID LIKE ? "
-    + "and  Active =1 "
-    + "and Vendor = ? ";
-    
-    //SimpleDateFormat formatter = new SimpleDateFormat("yyMMdd");
-    //String qSeq = formatter.format(Calendar.getInstance().getTime()) + "%";
-    
-    q.setParameter(1, WeighBridgeApp.getApplication().getConfig().getsClient());
-    q.setParameter(2, WeighBridgeApp.getApplication().getConfig().getwPlant());
-    q.setParameter(3, qSeq);
-    
-    Integer lNumber = 0;
-    try {
-    Object obj = q.getSingleResult();
-    if (obj != null) {
-    lNumber = ((Long) obj).intValue();
-    }
-    } catch (NoResultException ex) {
-    lNumber = 0;
-    } finally {
-    lNumber++;
-    }
-    return lNumber;
-    }
-    }
-     * 
-     * 
-     */
 
     public boolean isValidated() {
         boolean bDriName = false, bCMNDBL = false, bLicPlate = false,
@@ -3133,7 +2869,7 @@ private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         //20121217
         Material mat_tmp = null;
         Boolean ximang_tmp = false;
-        WeightTicketJpaController con = new WeightTicketJpaController(entityManager);
+        WeightTicketJpaController con = new WeightTicketJpaController();
         try {
             
             mat_tmp = con.CheckPOSTO(mat_numb);            
@@ -3209,13 +2945,7 @@ private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             //Do local check for entered Truck's License Plate
             SAPSetting sapSetting = WeighBridgeApp.getApplication().getSapSetting();
             Vehicle v = entityManager.find(Vehicle.class, newWeightTicket.getSoXe());
-            //DEMO
-            /*
-            Regvehicle r = null;
-            List<Regvehicle> r_list = new ArrayList<Regvehicle>();
-            r_list = con.findRegVehicle(mode, abbr, mode);
-            */
-            
+
             if (v == null && !ximang_tmp
                     && (sapSetting.getCheckTalp() != null && sapSetting.getCheckTalp().booleanValue() == true)) {
                 result = false;
@@ -3358,7 +3088,6 @@ private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
     private javax.swing.JComboBox cbxType;
     private org.jdesktop.swingx.JXDatePicker dpFrom;
     private org.jdesktop.swingx.JXDatePicker dpTo;
-    private javax.persistence.EntityManager entityManager;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;

@@ -19,11 +19,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "Customer")
 @NamedQueries({
-    @NamedQuery(name = "Customer.findAll", query = "SELECT c FROM Customer c"),
-    @NamedQuery(name = "Customer.findByMandt", query = "SELECT c FROM Customer c WHERE c.customerPK.mandt = :mandt"),
-    @NamedQuery(name = "Customer.findByKunnr", query = "SELECT c FROM Customer c WHERE c.customerPK.kunnr = :kunnr"),
-    @NamedQuery(name = "Customer.findByName1", query = "SELECT c FROM Customer c WHERE c.name1 = :name1"),
-    @NamedQuery(name = "Customer.findByName2", query = "SELECT c FROM Customer c WHERE c.name2 = :name2")})
+    @NamedQuery(name = "Customer.findByMandt", query = "SELECT c FROM Customer c WHERE c.customerPK.mandt = :mandt")})
 public class Customer implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -78,7 +74,7 @@ public class Customer implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        
+
         if (!(object instanceof Customer)) {
             return false;
         }
