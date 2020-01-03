@@ -9,8 +9,6 @@ import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -19,34 +17,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "SAPSetting")
-@NamedQueries({
-    @NamedQuery(name = "SAPSetting.findAll", query = "SELECT s FROM SAPSetting s"),
-    @NamedQuery(name = "SAPSetting.findByMandt", query = "SELECT s FROM SAPSetting s WHERE s.sAPSettingPK.mandt = :mandt"),
-    @NamedQuery(name = "SAPSetting.findByWPlant", query = "SELECT s FROM SAPSetting s WHERE s.sAPSettingPK.wPlant = :wPlant"),
-    @NamedQuery(name = "SAPSetting.findByName1", query = "SELECT s FROM SAPSetting s WHERE s.name1 = :name1"),
-    @NamedQuery(name = "SAPSetting.findByName2", query = "SELECT s FROM SAPSetting s WHERE s.name2 = :name2"),
-    @NamedQuery(name = "SAPSetting.findByNameRpt", query = "SELECT s FROM SAPSetting s WHERE s.nameRpt = :nameRpt"),
-    @NamedQuery(name = "SAPSetting.findByAddress", query = "SELECT s FROM SAPSetting s WHERE s.address = :address"),
-    @NamedQuery(name = "SAPSetting.findByPhone", query = "SELECT s FROM SAPSetting s WHERE s.phone = :phone"),
-    @NamedQuery(name = "SAPSetting.findByFax", query = "SELECT s FROM SAPSetting s WHERE s.fax = :fax"),
-    @NamedQuery(name = "SAPSetting.findByMatnrPcb40", query = "SELECT s FROM SAPSetting s WHERE s.matnrPcb40 = :matnrPcb40"),
-    @NamedQuery(name = "SAPSetting.findByMatnrXmxa", query = "SELECT s FROM SAPSetting s WHERE s.matnrXmxa = :matnrXmxa"),
-    @NamedQuery(name = "SAPSetting.findByMatnrClinker", query = "SELECT s FROM SAPSetting s WHERE s.matnrClinker = :matnrClinker"),
-    @NamedQuery(name = "SAPSetting.findByCheckTalp", query = "SELECT s FROM SAPSetting s WHERE s.checkTalp = :checkTalp"),
-    @NamedQuery(name = "SAPSetting.findByBact1Val", query = "SELECT s FROM SAPSetting s WHERE s.bact1Val = :bact1Val"),
-    @NamedQuery(name = "SAPSetting.findByBact1Unit", query = "SELECT s FROM SAPSetting s WHERE s.bact1Unit = :bact1Unit"),
-    @NamedQuery(name = "SAPSetting.findByBact2Val", query = "SELECT s FROM SAPSetting s WHERE s.bact2Val = :bact2Val"),
-    @NamedQuery(name = "SAPSetting.findByBact2Unit", query = "SELECT s FROM SAPSetting s WHERE s.bact2Unit = :bact2Unit"),
-    @NamedQuery(name = "SAPSetting.findByBact3Val", query = "SELECT s FROM SAPSetting s WHERE s.bact3Val = :bact3Val"),
-    @NamedQuery(name = "SAPSetting.findByBact3Unit", query = "SELECT s FROM SAPSetting s WHERE s.bact3Unit = :bact3Unit"),
-    @NamedQuery(name = "SAPSetting.findByBact4Val", query = "SELECT s FROM SAPSetting s WHERE s.bact4Val = :bact4Val"),
-    @NamedQuery(name = "SAPSetting.findByBact4Unit", query = "SELECT s FROM SAPSetting s WHERE s.bact4Unit = :bact4Unit"),
-    @NamedQuery(name = "SAPSetting.findByRoleWm", query = "SELECT s FROM SAPSetting s WHERE s.roleWm = :roleWm"),
-    @NamedQuery(name = "SAPSetting.findByRoleSs", query = "SELECT s FROM SAPSetting s WHERE s.roleSs = :roleSs"),
-    @NamedQuery(name = "SAPSetting.findByRoleAd", query = "SELECT s FROM SAPSetting s WHERE s.roleAd = :roleAd"),
-    @NamedQuery(name = "SAPSetting.findByRoleSp", query = "SELECT s FROM SAPSetting s WHERE s.roleSp = :roleSp"),
-    @NamedQuery(name = "SAPSetting.findByWb1Tol", query = "SELECT s FROM SAPSetting s WHERE s.wb1Tol = :wb1Tol"),
-    @NamedQuery(name = "SAPSetting.findByWb2Tol", query = "SELECT s FROM SAPSetting s WHERE s.wb2Tol = :wb2Tol")})
 public class SAPSetting implements Serializable {
 
     private static final long serialVersionUID = 1L;

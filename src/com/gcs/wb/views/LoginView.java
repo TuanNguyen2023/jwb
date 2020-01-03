@@ -657,7 +657,7 @@ private void btnOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             String local_password = null;
             local_user = txtUsr.getText().trim();
             local_password = new String(txtPwd.getPassword()).trim();
-            WeightTicketJpaController con = new WeightTicketJpaController(em);
+            WeightTicketJpaController con = new WeightTicketJpaController();
             try {
                 userLocal = con.login(local_user, local_password);
                 if (!userLocal.getActive()) {

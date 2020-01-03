@@ -8,8 +8,6 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -18,12 +16,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "Vendor")
-@NamedQueries({
-    @NamedQuery(name = "Vendor.findAll", query = "SELECT v FROM Vendor v"),
-    @NamedQuery(name = "Vendor.findByMandt", query = "SELECT v FROM Vendor v WHERE v.vendorPK.mandt = :mandt"),
-    @NamedQuery(name = "Vendor.findByLifnr", query = "SELECT v FROM Vendor v WHERE v.vendorPK.lifnr = :lifnr"),
-    @NamedQuery(name = "Vendor.findByName1", query = "SELECT v FROM Vendor v WHERE v.name1 = :name1"),
-    @NamedQuery(name = "Vendor.findByName2", query = "SELECT v FROM Vendor v WHERE v.name2 = :name2")})
 public class Vendor implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -78,7 +70,7 @@ public class Vendor implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        
+
         if (!(object instanceof Vendor)) {
             return false;
         }

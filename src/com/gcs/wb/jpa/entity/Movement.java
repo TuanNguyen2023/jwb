@@ -20,12 +20,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "Movement")
 @NamedQueries({
-    @NamedQuery(name = "Movement.findAll", query = "SELECT m FROM Movement m"),
-    @NamedQuery(name = "Movement.findByMandt", query = "SELECT m FROM Movement m WHERE m.movementPK.mandt = :mandt"),
-    @NamedQuery(name = "Movement.findByBwart", query = "SELECT m FROM Movement m WHERE m.movementPK.bwart = :bwart"),
-    @NamedQuery(name = "Movement.findBySpras", query = "SELECT m FROM Movement m WHERE m.spras = :spras"),
-    @NamedQuery(name = "Movement.findByMandtBwartSpras", query = "SELECT m FROM Movement m WHERE m.movementPK.mandt = :mandt AND m.movementPK.bwart = :bwart AND m.spras = :spras"),
-    @NamedQuery(name = "Movement.findByBtext", query = "SELECT m FROM Movement m WHERE m.btext = :btext")})
+    @NamedQuery(name = "Movement.findByMandtBwartSpras", query = "SELECT m FROM Movement m WHERE m.movementPK.mandt = :mandt AND m.movementPK.bwart = :bwart AND m.spras = :spras")})
 public class Movement implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -86,7 +81,7 @@ public class Movement implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        
+
         if (!(object instanceof Movement)) {
             return false;
         }

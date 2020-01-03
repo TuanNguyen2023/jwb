@@ -21,17 +21,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "user_local")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "UserLocal.findAll", query = "SELECT u FROM UserLocal u"),
-    @NamedQuery(name = "UserLocal.findByMandt", query = "SELECT u FROM UserLocal u WHERE u.userLocalPK.mandt = :mandt"),
-    @NamedQuery(name = "UserLocal.findByWplant", query = "SELECT u FROM UserLocal u WHERE u.userLocalPK.wplant = :wplant"),
-    @NamedQuery(name = "UserLocal.findById", query = "SELECT u FROM UserLocal u WHERE u.userLocalPK.id = :id"),
-    @NamedQuery(name = "UserLocal.findByPwd", query = "SELECT u FROM UserLocal u WHERE u.pwd = :pwd"),
-    @NamedQuery(name = "UserLocal.findByTitle", query = "SELECT u FROM UserLocal u WHERE u.title = :title"),
-    @NamedQuery(name = "UserLocal.findByFullName", query = "SELECT u FROM UserLocal u WHERE u.fullName = :fullName"),
-    @NamedQuery(name = "UserLocal.findBySloc", query = "SELECT u FROM UserLocal u WHERE u.sloc = :sloc"),
     @NamedQuery(name = "UserLocal.login", query = "SELECT u FROM UserLocal u WHERE u.userLocalPK.mandt = :mandt AND u.userLocalPK.wplant = :wplant AND u.userLocalPK.id = :id AND u.pwd = :pwd")
 })
 public class UserLocal implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected UserLocalPK userLocalPK;
@@ -129,5 +122,4 @@ public class UserLocal implements Serializable {
     public String toString() {
         return "com.gcs.wb.jpa.entity.UserLocal[ userLocalPK=" + userLocalPK + " ]";
     }
-    
 }

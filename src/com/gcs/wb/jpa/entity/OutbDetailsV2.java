@@ -22,38 +22,19 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "outb_details_v2")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "OutbDetailsV2.findAll", query = "SELECT o FROM OutbDetailsV2 o"),
-    @NamedQuery(name = "OutbDetailsV2.findByMandt", query = "SELECT o FROM OutbDetailsV2 o WHERE o.outbDetailsV2PK.mandt = :mandt"),
-    @NamedQuery(name = "OutbDetailsV2.findByDelivNumb", query = "SELECT o FROM OutbDetailsV2 o WHERE o.outbDetailsV2PK.delivNumb = :delivNumb"),
-    //@NamedQuery(name = "OutbDetailsV2.findByMandtDelivNum", query = "SELECT o FROM OutbDetailsV2 o WHERE o.outbDetailsV2PK.mandt = :mandt AND o.outbDetailsV2PK.delivNumb = :delivNumb"),
-    @NamedQuery(name = "OutbDetailsV2.findByDelivItem", query = "SELECT o FROM OutbDetailsV2 o WHERE o.outbDetailsV2PK.delivItem = :delivItem"),
-    @NamedQuery(name = "OutbDetailsV2.findByMatnr", query = "SELECT o FROM OutbDetailsV2 o WHERE o.matnr = :matnr"),
-    @NamedQuery(name = "OutbDetailsV2.findByArktx", query = "SELECT o FROM OutbDetailsV2 o WHERE o.arktx = :arktx"),
-    @NamedQuery(name = "OutbDetailsV2.findByLfimg", query = "SELECT o FROM OutbDetailsV2 o WHERE o.lfimg = :lfimg"),
-    @NamedQuery(name = "OutbDetailsV2.findByMeins", query = "SELECT o FROM OutbDetailsV2 o WHERE o.meins = :meins"),
-    @NamedQuery(name = "OutbDetailsV2.findByVgbel", query = "SELECT o FROM OutbDetailsV2 o WHERE o.vgbel = :vgbel"),
-    @NamedQuery(name = "OutbDetailsV2.findByFreeItem", query = "SELECT o FROM OutbDetailsV2 o WHERE o.freeItem = :freeItem"),
-    @NamedQuery(name = "OutbDetailsV2.findByWtId", query = "SELECT o FROM OutbDetailsV2 o WHERE o.wtId = :wtId"),
-    @NamedQuery(name = "OutbDetailsV2.findByPosted", query = "SELECT o FROM OutbDetailsV2 o WHERE o.posted = :posted"),
-    @NamedQuery(name = "OutbDetailsV2.findByMatDoc", query = "SELECT o FROM OutbDetailsV2 o WHERE o.matDoc = :matDoc"),
-    @NamedQuery(name = "OutbDetailsV2.findByDocYear", query = "SELECT o FROM OutbDetailsV2 o WHERE o.docYear = :docYear"),
-    @NamedQuery(name = "OutbDetailsV2.findByInScale", query = "SELECT o FROM OutbDetailsV2 o WHERE o.inScale = :inScale"),
-    @NamedQuery(name = "OutbDetailsV2.findByOutScale", query = "SELECT o FROM OutbDetailsV2 o WHERE o.outScale = :outScale"),
-    @NamedQuery(name = "OutbDetailsV2.findByGoodsQty", query = "SELECT o FROM OutbDetailsV2 o WHERE o.goodsQty = :goodsQty"),
-    @NamedQuery(name = "OutbDetailsV2.findByBzirk", query = "SELECT o FROM OutbDetailsV2 o WHERE o.bzirk = :bzirk"),
-    @NamedQuery(name = "OutbDetailsV2.findByBztxt", query = "SELECT o FROM OutbDetailsV2 o WHERE o.bztxt = :bztxt"),
-    @NamedQuery(name = "OutbDetailsV2.findByMandtDelivNumbItem", 
-    query = "SELECT o FROM OutbDetailsV2 o WHERE o.outbDetailsV2PK.mandt = :mandt"+
-            " AND o.outbDetailsV2PK.delivNumb LIKE :delivNumb"+
-            " AND o.outbDetailsV2PK.delivItem = :delivItem order by o.freeItem desc"),
-    @NamedQuery(name = "OutbDetailsV2.findByMandtDelivNumb", 
-    query = "SELECT o FROM OutbDetailsV2 o WHERE o.outbDetailsV2PK.mandt = :mandt"+
-            " AND o.outbDetailsV2PK.delivNumb LIKE :delivNumb order by o.freeItem desc"),
-    @NamedQuery(name = "OutbDetailsV2.findByMandtWTID", 
-    query = "SELECT o FROM OutbDetailsV2 o WHERE o.outbDetailsV2PK.mandt = :mandt"+
-            " AND o.wtId LIKE :wtId order by o.freeItem desc")
+    @NamedQuery(name = "OutbDetailsV2.findByMandtDelivNumbItem",
+    query = "SELECT o FROM OutbDetailsV2 o WHERE o.outbDetailsV2PK.mandt = :mandt"
+    + " AND o.outbDetailsV2PK.delivNumb LIKE :delivNumb"
+    + " AND o.outbDetailsV2PK.delivItem = :delivItem order by o.freeItem desc"),
+    @NamedQuery(name = "OutbDetailsV2.findByMandtDelivNumb",
+    query = "SELECT o FROM OutbDetailsV2 o WHERE o.outbDetailsV2PK.mandt = :mandt"
+    + " AND o.outbDetailsV2PK.delivNumb LIKE :delivNumb order by o.freeItem desc"),
+    @NamedQuery(name = "OutbDetailsV2.findByMandtWTID",
+    query = "SELECT o FROM OutbDetailsV2 o WHERE o.outbDetailsV2PK.mandt = :mandt"
+    + " AND o.wtId LIKE :wtId order by o.freeItem desc")
 })
 public class OutbDetailsV2 implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected OutbDetailsV2PK outbDetailsV2PK;
@@ -61,11 +42,10 @@ public class OutbDetailsV2 implements Serializable {
     private String matnr;
     @Column(name = "ARKTX")
     private String arktx;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "LFIMG")
     private BigDecimal lfimg;
     @Column(name = "LFIMG_ORI")
-    private BigDecimal lfimgOri;    
+    private BigDecimal lfimgOri;
     @Column(name = "MEINS")
     private String meins;
     @Column(name = "VGBEL")
@@ -262,5 +242,4 @@ public class OutbDetailsV2 implements Serializable {
     public String toString() {
         return "com.gcs.wb.jpa.entity.OutbDetailsV2[ outbDetailsV2PK=" + outbDetailsV2PK + " ]";
     }
-    
 }

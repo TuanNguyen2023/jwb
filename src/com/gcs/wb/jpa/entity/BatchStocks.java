@@ -18,14 +18,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "BatchStocks")
-@NamedQueries({
-    @NamedQuery(name = "BatchStocks.findAll", query = "SELECT b FROM BatchStocks b"),
-    @NamedQuery(name = "BatchStocks.findByMandt", query = "SELECT b FROM BatchStocks b WHERE b.batchStocksPK.mandt = :mandt"),
-    @NamedQuery(name = "BatchStocks.findByWerks", query = "SELECT b FROM BatchStocks b WHERE b.batchStocksPK.werks = :werks"),
-    @NamedQuery(name = "BatchStocks.findByLgort", query = "SELECT b FROM BatchStocks b WHERE b.batchStocksPK.lgort = :lgort"),
-    @NamedQuery(name = "BatchStocks.findByMatnr", query = "SELECT b FROM BatchStocks b WHERE b.batchStocksPK.matnr = :matnr"),
-    @NamedQuery(name = "BatchStocks.findByCharg", query = "SELECT b FROM BatchStocks b WHERE b.batchStocksPK.charg = :charg"),
-    @NamedQuery(name = "BatchStocks.findByLvorm", query = "SELECT b FROM BatchStocks b WHERE b.lvorm = :lvorm")})
 public class BatchStocks implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -70,7 +62,7 @@ public class BatchStocks implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        
+
         if (!(object instanceof BatchStocks)) {
             return false;
         }

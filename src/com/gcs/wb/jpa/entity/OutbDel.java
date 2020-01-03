@@ -24,44 +24,6 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "OutbDel")
 @NamedQueries({
-    @NamedQuery(name = "OutbDel.findAll", query = "SELECT o FROM OutbDel o"),
-    @NamedQuery(name = "OutbDel.findByMandt", query = "SELECT o FROM OutbDel o WHERE o.outbDelPK.mandt = :mandt"),
-    @NamedQuery(name = "OutbDel.findByDelivNumb", query = "SELECT o FROM OutbDel o WHERE o.outbDelPK.delivNumb = :delivNumb"),
-    @NamedQuery(name = "OutbDel.findByDelivItem", query = "SELECT o FROM OutbDel o WHERE o.delivItem = :delivItem"),
-    @NamedQuery(name = "OutbDel.findByDelivItemFree", query = "SELECT o FROM OutbDel o WHERE o.delivItemFree = :delivItemFree"),
-    @NamedQuery(name = "OutbDel.findByMatnr", query = "SELECT o FROM OutbDel o WHERE o.matnr = :matnr"),
-    @NamedQuery(name = "OutbDel.findByArktx", query = "SELECT o FROM OutbDel o WHERE o.arktx = :arktx"),
-    @NamedQuery(name = "OutbDel.findByErdat", query = "SELECT o FROM OutbDel o WHERE o.erdat = :erdat"),
-    @NamedQuery(name = "OutbDel.findByLfart", query = "SELECT o FROM OutbDel o WHERE o.lfart = :lfart"),
-    @NamedQuery(name = "OutbDel.findByLddat", query = "SELECT o FROM OutbDel o WHERE o.lddat = :lddat"),
-    @NamedQuery(name = "OutbDel.findByWadat", query = "SELECT o FROM OutbDel o WHERE o.wadat = :wadat"),
-    @NamedQuery(name = "OutbDel.findByKodat", query = "SELECT o FROM OutbDel o WHERE o.kodat = :kodat"),
-    @NamedQuery(name = "OutbDel.findByShipPoint", query = "SELECT o FROM OutbDel o WHERE o.shipPoint = :shipPoint"),
-    @NamedQuery(name = "OutbDel.findByLifnr", query = "SELECT o FROM OutbDel o WHERE o.lifnr = :lifnr"),
-    @NamedQuery(name = "OutbDel.findByKunnr", query = "SELECT o FROM OutbDel o WHERE o.kunnr = :kunnr"),
-    @NamedQuery(name = "OutbDel.findByKunag", query = "SELECT o FROM OutbDel o WHERE o.kunag = :kunag"),
-    @NamedQuery(name = "OutbDel.findByTraty", query = "SELECT o FROM OutbDel o WHERE o.traty = :traty"),
-    @NamedQuery(name = "OutbDel.findByTraid", query = "SELECT o FROM OutbDel o WHERE o.traid = :traid"),
-    @NamedQuery(name = "OutbDel.findByBldat", query = "SELECT o FROM OutbDel o WHERE o.bldat = :bldat"),
-    @NamedQuery(name = "OutbDel.findByWerks", query = "SELECT o FROM OutbDel o WHERE o.werks = :werks"),
-    @NamedQuery(name = "OutbDel.findByRecvPlant", query = "SELECT o FROM OutbDel o WHERE o.recvPlant = :recvPlant"),
-    @NamedQuery(name = "OutbDel.findByLgort", query = "SELECT o FROM OutbDel o WHERE o.lgort = :lgort"),
-    @NamedQuery(name = "OutbDel.findByCharg", query = "SELECT o FROM OutbDel o WHERE o.charg = :charg"),
-    @NamedQuery(name = "OutbDel.findByLichn", query = "SELECT o FROM OutbDel o WHERE o.lichn = :lichn"),
-    @NamedQuery(name = "OutbDel.findByLfimg", query = "SELECT o FROM OutbDel o WHERE o.lfimg = :lfimg"),
-    @NamedQuery(name = "OutbDel.findByFreeQty", query = "SELECT o FROM OutbDel o WHERE o.freeQty = :freeQty"),
-    @NamedQuery(name = "OutbDel.findByMeins", query = "SELECT o FROM OutbDel o WHERE o.meins = :meins"),
-    @NamedQuery(name = "OutbDel.findByVrkme", query = "SELECT o FROM OutbDel o WHERE o.vrkme = :vrkme"),
-    @NamedQuery(name = "OutbDel.findByUntto", query = "SELECT o FROM OutbDel o WHERE o.untto = :untto"),
-    @NamedQuery(name = "OutbDel.findByUebto", query = "SELECT o FROM OutbDel o WHERE o.uebto = :uebto"),
-    @NamedQuery(name = "OutbDel.findByUebtk", query = "SELECT o FROM OutbDel o WHERE o.uebtk = :uebtk"),
-    @NamedQuery(name = "OutbDel.findByVgbel", query = "SELECT o FROM OutbDel o WHERE o.vgbel = :vgbel"),
-    @NamedQuery(name = "OutbDel.findByVgpos", query = "SELECT o FROM OutbDel o WHERE o.vgpos = :vgpos"),
-    @NamedQuery(name = "OutbDel.findByBwtar", query = "SELECT o FROM OutbDel o WHERE o.bwtar = :bwtar"),
-    @NamedQuery(name = "OutbDel.findByBwart", query = "SELECT o FROM OutbDel o WHERE o.bwart = :bwart"),
-    @NamedQuery(name = "OutbDel.findByKostk", query = "SELECT o FROM OutbDel o WHERE o.kostk = :kostk"),
-    @NamedQuery(name = "OutbDel.findByKoquk", query = "SELECT o FROM OutbDel o WHERE o.koquk = :koquk"),
-    @NamedQuery(name = "OutbDel.findByWbstk", query = "SELECT o FROM OutbDel o WHERE o.wbstk = :wbstk"),
     @NamedQuery(name = "OutbDel.findByMandtOutDel", query = "SELECT o FROM OutbDel o WHERE o.outbDelPK.mandt = :mandt AND o.outbDelPK.delivNumb LIKE :delivNumb")
 })
 public class OutbDel implements Serializable {
@@ -199,7 +161,7 @@ public class OutbDel implements Serializable {
     public void setMatnr(String matnr) {
         this.matnr = matnr;
     }
-    
+
     public String getMatnrFree() {
         return matnrFree;
     }
@@ -473,7 +435,7 @@ public class OutbDel implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        
+
         if (!(object instanceof OutbDel)) {
             return false;
         }

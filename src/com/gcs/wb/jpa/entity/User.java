@@ -9,8 +9,6 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -19,17 +17,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "Users")
-@NamedQueries({
-    @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u"),
-    @NamedQuery(name = "User.findByMandt", query = "SELECT u FROM User u WHERE u.userPK.mandt = :mandt"),
-    @NamedQuery(name = "User.findByWPlant", query = "SELECT u FROM User u WHERE u.userPK.wPlant = :wPlant"),
-    @NamedQuery(name = "User.findById", query = "SELECT u FROM User u WHERE u.userPK.id = :id"),
-    @NamedQuery(name = "User.findByPwd", query = "SELECT u FROM User u WHERE u.pwd = :pwd"),
-    @NamedQuery(name = "User.findByTitle", query = "SELECT u FROM User u WHERE u.title = :title"),
-    @NamedQuery(name = "User.findByFullName", query = "SELECT u FROM User u WHERE u.fullName = :fullName"),
-    @NamedQuery(name = "User.findByRoles", query = "SELECT u FROM User u WHERE u.roles = :roles"),
-    @NamedQuery(name = "User.findByLanguP", query = "SELECT u FROM User u WHERE u.languP = :languP"),
-    @NamedQuery(name = "User.findByLangupIso", query = "SELECT u FROM User u WHERE u.langupIso = :langupIso")})
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -130,7 +117,7 @@ public class User implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        
+
         if (!(object instanceof User)) {
             return false;
         }

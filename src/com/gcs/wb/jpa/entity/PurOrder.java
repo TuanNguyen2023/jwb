@@ -11,8 +11,6 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -23,46 +21,6 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "PurOrder")
-@NamedQueries({
-    @NamedQuery(name = "PurOrder.findAll", query = "SELECT p FROM PurOrder p"),
-    @NamedQuery(name = "PurOrder.findByMandt", query = "SELECT p FROM PurOrder p WHERE p.purOrderPK.mandt = :mandt"),
-    @NamedQuery(name = "PurOrder.findByPoNumber", query = "SELECT p FROM PurOrder p WHERE p.purOrderPK.poNumber = :poNumber"),
-    @NamedQuery(name = "PurOrder.findByDocType", query = "SELECT p FROM PurOrder p WHERE p.docType = :docType"),
-    @NamedQuery(name = "PurOrder.findByDeleteInd", query = "SELECT p FROM PurOrder p WHERE p.deleteInd = :deleteInd"),
-    @NamedQuery(name = "PurOrder.findByStatus", query = "SELECT p FROM PurOrder p WHERE p.status = :status"),
-    @NamedQuery(name = "PurOrder.findByCreatDate", query = "SELECT p FROM PurOrder p WHERE p.creatDate = :creatDate"),
-    @NamedQuery(name = "PurOrder.findByVendor", query = "SELECT p FROM PurOrder p WHERE p.vendor = :vendor"),
-    @NamedQuery(name = "PurOrder.findBySupplVend", query = "SELECT p FROM PurOrder p WHERE p.supplVend = :supplVend"),
-    @NamedQuery(name = "PurOrder.findByCustomer", query = "SELECT p FROM PurOrder p WHERE p.customer = :customer"),
-    @NamedQuery(name = "PurOrder.findBySupplPlnt", query = "SELECT p FROM PurOrder p WHERE p.supplPlnt = :supplPlnt"),
-    @NamedQuery(name = "PurOrder.findByPoRelInd", query = "SELECT p FROM PurOrder p WHERE p.poRelInd = :poRelInd"),
-    @NamedQuery(name = "PurOrder.findByPoItem", query = "SELECT p FROM PurOrder p WHERE p.poItem = :poItem"),
-    @NamedQuery(name = "PurOrder.findByPoItemFree", query = "SELECT p FROM PurOrder p WHERE p.poItemFree = :poItemFree"),
-    @NamedQuery(name = "PurOrder.findByIDeleteInd", query = "SELECT p FROM PurOrder p WHERE p.iDeleteInd = :iDeleteInd"),
-    @NamedQuery(name = "PurOrder.findByIfDeleteInd", query = "SELECT p FROM PurOrder p WHERE p.ifDeleteInd = :ifDeleteInd"),
-    @NamedQuery(name = "PurOrder.findByShortText", query = "SELECT p FROM PurOrder p WHERE p.shortText = :shortText"),
-    @NamedQuery(name = "PurOrder.findByMaterial", query = "SELECT p FROM PurOrder p WHERE p.material = :material"),
-    @NamedQuery(name = "PurOrder.findByPlant", query = "SELECT p FROM PurOrder p WHERE p.plant = :plant"),
-    @NamedQuery(name = "PurOrder.findByStgeLoc", query = "SELECT p FROM PurOrder p WHERE p.stgeLoc = :stgeLoc"),
-    @NamedQuery(name = "PurOrder.findByVendMat", query = "SELECT p FROM PurOrder p WHERE p.vendMat = :vendMat"),
-    @NamedQuery(name = "PurOrder.findByQuantity", query = "SELECT p FROM PurOrder p WHERE p.quantity = :quantity"),
-    @NamedQuery(name = "PurOrder.findByQuantityFree", query = "SELECT p FROM PurOrder p WHERE p.quantityFree = :quantityFree"),
-    @NamedQuery(name = "PurOrder.findByPoUnit", query = "SELECT p FROM PurOrder p WHERE p.poUnit = :poUnit"),
-    @NamedQuery(name = "PurOrder.findByPoUnitIso", query = "SELECT p FROM PurOrder p WHERE p.poUnitIso = :poUnitIso"),
-    @NamedQuery(name = "PurOrder.findByQualInsp", query = "SELECT p FROM PurOrder p WHERE p.qualInsp = :qualInsp"),
-    @NamedQuery(name = "PurOrder.findByOverDlvTol", query = "SELECT p FROM PurOrder p WHERE p.overDlvTol = :overDlvTol"),
-    @NamedQuery(name = "PurOrder.findByUnlimitedDlv", query = "SELECT p FROM PurOrder p WHERE p.unlimitedDlv = :unlimitedDlv"),
-    @NamedQuery(name = "PurOrder.findByUnderDlvTol", query = "SELECT p FROM PurOrder p WHERE p.underDlvTol = :underDlvTol"),
-    @NamedQuery(name = "PurOrder.findByValType", query = "SELECT p FROM PurOrder p WHERE p.valType = :valType"),
-    @NamedQuery(name = "PurOrder.findByNoMoreGr", query = "SELECT p FROM PurOrder p WHERE p.noMoreGr = :noMoreGr"),
-    @NamedQuery(name = "PurOrder.findByFinalInv", query = "SELECT p FROM PurOrder p WHERE p.finalInv = :finalInv"),
-    @NamedQuery(name = "PurOrder.findByItemCat", query = "SELECT p FROM PurOrder p WHERE p.itemCat = :itemCat"),
-    @NamedQuery(name = "PurOrder.findByItemFreeCat", query = "SELECT p FROM PurOrder p WHERE p.itemFreeCat = :itemFreeCat"),
-    @NamedQuery(name = "PurOrder.findByGrInd", query = "SELECT p FROM PurOrder p WHERE p.grInd = :grInd"),
-    @NamedQuery(name = "PurOrder.findByGrNonVal", query = "SELECT p FROM PurOrder p WHERE p.grNonVal = :grNonVal"),
-    @NamedQuery(name = "PurOrder.findByDelivCompl", query = "SELECT p FROM PurOrder p WHERE p.delivCompl = :delivCompl"),
-    @NamedQuery(name = "PurOrder.findByPartDeliv", query = "SELECT p FROM PurOrder p WHERE p.partDeliv = :partDeliv"),
-    @NamedQuery(name = "PurOrder.findByRelStatus", query = "SELECT p FROM PurOrder p WHERE p.relStatus = :relStatus")})
 public class PurOrder implements Serializable {
 
     private static final long serialVersionUID = 1L;

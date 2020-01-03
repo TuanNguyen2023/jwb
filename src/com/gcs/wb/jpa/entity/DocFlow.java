@@ -10,8 +10,6 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -22,21 +20,6 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "DocFlow")
-@NamedQueries({
-    @NamedQuery(name = "DocFlow.findAll", query = "SELECT d FROM DocFlow d"),
-    @NamedQuery(name = "DocFlow.findByMandt", query = "SELECT d FROM DocFlow d WHERE d.docFlowPK.mandt = :mandt"),
-    @NamedQuery(name = "DocFlow.findByVbelv", query = "SELECT d FROM DocFlow d WHERE d.docFlowPK.vbelv = :vbelv"),
-    @NamedQuery(name = "DocFlow.findByVbeln", query = "SELECT d FROM DocFlow d WHERE d.docFlowPK.vbeln = :vbeln"),
-    @NamedQuery(name = "DocFlow.findByVbtypV", query = "SELECT d FROM DocFlow d WHERE d.vbtypV = :vbtypV"),
-    @NamedQuery(name = "DocFlow.findByVbtypN", query = "SELECT d FROM DocFlow d WHERE d.vbtypN = :vbtypN"),
-    @NamedQuery(name = "DocFlow.findByMjahr", query = "SELECT d FROM DocFlow d WHERE d.mjahr = :mjahr"),
-    @NamedQuery(name = "DocFlow.findByRfmng", query = "SELECT d FROM DocFlow d WHERE d.rfmng = :rfmng"),
-    @NamedQuery(name = "DocFlow.findByMeins", query = "SELECT d FROM DocFlow d WHERE d.meins = :meins"),
-    @NamedQuery(name = "DocFlow.findByPlmin", query = "SELECT d FROM DocFlow d WHERE d.plmin = :plmin"),
-    @NamedQuery(name = "DocFlow.findByErdat", query = "SELECT d FROM DocFlow d WHERE d.erdat = :erdat"),
-    @NamedQuery(name = "DocFlow.findByErzet", query = "SELECT d FROM DocFlow d WHERE d.erzet = :erzet"),
-    @NamedQuery(name = "DocFlow.findByMatnr", query = "SELECT d FROM DocFlow d WHERE d.matnr = :matnr"),
-    @NamedQuery(name = "DocFlow.findByBwart", query = "SELECT d FROM DocFlow d WHERE d.bwart = :bwart")})
 public class DocFlow implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -174,7 +157,7 @@ public class DocFlow implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        
+
         if (!(object instanceof DocFlow)) {
             return false;
         }

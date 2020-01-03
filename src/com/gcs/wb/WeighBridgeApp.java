@@ -3,6 +3,7 @@
  */
 package com.gcs.wb;
 
+import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.JpaProperties;
 import com.gcs.wb.jpa.entity.SAPSetting;
 import com.gcs.wb.jpa.entity.User;
@@ -50,7 +51,7 @@ public class WeighBridgeApp extends SingleFrameApplication {
     private boolean offlineMode = false;
     private boolean authenticated = false;
     private EntityManagerFactory emf = null;
-    private EntityManager em = null;
+    private EntityManager em = JPAConnector.getInstance();
     private Session _SAPSession = null;
     /**HiberSAP credential object*/
     private Credentials credentials = null;

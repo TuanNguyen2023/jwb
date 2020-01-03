@@ -15,6 +15,7 @@ import javax.persistence.Embeddable;
  */
 @Embeddable
 public class UserLocalPK implements Serializable {
+
     @Basic(optional = false)
     @Column(name = "MANDT")
     private String mandt;
@@ -90,5 +91,4 @@ public class UserLocalPK implements Serializable {
     public String toString() {
         return "com.gcs.wb.jpa.entity.UserLocalPK[ mandt=" + mandt + ", wplant=" + wplant + ", id=" + id + " ]";
     }
-    
 }

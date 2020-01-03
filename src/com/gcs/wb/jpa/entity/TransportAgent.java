@@ -20,9 +20,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "TransportAgent")
 @NamedQueries({
-    @NamedQuery(name = "TransportAgent.findAll", query = "SELECT t FROM TransportAgent t"),
-    @NamedQuery(name = "TransportAgent.findByAbbr", query = "SELECT t FROM TransportAgent t WHERE t.abbr = :abbr"),
-    @NamedQuery(name = "TransportAgent.findByName", query = "SELECT t FROM TransportAgent t WHERE t.name = :name")})
+    @NamedQuery(name = "TransportAgent.findAll", query = "SELECT t FROM TransportAgent t")})
 public class TransportAgent implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -10,8 +10,6 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -22,26 +20,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "outb_details")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "OutbDetails.findAll", query = "SELECT o FROM OutbDetails o"),
-    @NamedQuery(name = "OutbDetails.findByMandt", query = "SELECT o FROM OutbDetails o WHERE o.outbDetailsPK.mandt = :mandt"),
-    @NamedQuery(name = "OutbDetails.findById", query = "SELECT o FROM OutbDetails o WHERE o.outbDetailsPK.id = :id"),
-    @NamedQuery(name = "OutbDetails.findByDelivNumb", query = "SELECT o FROM OutbDetails o WHERE o.delivNumb = :delivNumb"),
-    @NamedQuery(name = "OutbDetails.findByDelivItem", query = "SELECT o FROM OutbDetails o WHERE o.delivItem = :delivItem"),
-    @NamedQuery(name = "OutbDetails.findByMatnr", query = "SELECT o FROM OutbDetails o WHERE o.matnr = :matnr"),
-    @NamedQuery(name = "OutbDetails.findByArktx", query = "SELECT o FROM OutbDetails o WHERE o.arktx = :arktx"),
-    @NamedQuery(name = "OutbDetails.findByLfimg", query = "SELECT o FROM OutbDetails o WHERE o.lfimg = :lfimg"),
-    @NamedQuery(name = "OutbDetails.findByMeins", query = "SELECT o FROM OutbDetails o WHERE o.meins = :meins"),
-    @NamedQuery(name = "OutbDetails.findByVgbel", query = "SELECT o FROM OutbDetails o WHERE o.vgbel = :vgbel"),
-    @NamedQuery(name = "OutbDetails.findByFreeItem", query = "SELECT o FROM OutbDetails o WHERE o.freeItem = :freeItem"),
-    @NamedQuery(name = "OutbDetails.findByMandtDelivNumb", 
-    query = "SELECT o FROM OutbDetails o WHERE o.outbDetailsPK.mandt = :mandt"+
-            " AND o.delivNumb LIKE :delivNumb order by o.freeItem desc"),
-    @NamedQuery(name = "OutbDetails.findByMandtWTID", 
-    query = "SELECT o FROM OutbDetails o WHERE o.outbDetailsPK.mandt = :mandt"+
-            " AND o.wtID LIKE :wtID order by o.freeItem desc")
-})
 public class OutbDetails implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected OutbDetailsPK outbDetailsPK;
@@ -322,5 +302,4 @@ public class OutbDetails implements Serializable {
     public void setBztxt(String bztxt) {
         this.bztxt = bztxt;
     }
-    
 }
