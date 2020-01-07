@@ -7,7 +7,6 @@ package com.gcs.wb.jpa.repositorys;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.Customer;
-import com.sun.javafx.scene.control.skin.VirtualFlow.ArrayLinkedList;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -33,7 +32,7 @@ public class CustomerRepository {
     }
 
     public List<Customer> findCustByMandt(String mandt) {
-        List<Customer> result = new ArrayLinkedList<Customer>();
+        List<Customer> result = new ArrayList<Customer>();
         try {
             TypedQuery<Customer> query = entityManager.createNamedQuery("Customer.findByMandt", Customer.class);
             query.setParameter("mandt", WeighBridgeApp.getApplication().getConfig().getsClient());

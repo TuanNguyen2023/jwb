@@ -377,8 +377,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         lblVendorLoading = new javax.swing.JLabel();
         lblVendorTransport = new javax.swing.JLabel();
 
-        entityManager.clear();
-
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(WeightTicketView.class);
         setBackground(resourceMap.getColor("Form.background")); // NOI18N
         setClosable(true);
@@ -535,7 +533,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnWTFilterLayout.createSequentialGroup()
                         .addComponent(lblWTNum)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtWTNum, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
+                        .addComponent(txtWTNum, javax.swing.GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -547,7 +545,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                 .addComponent(rbtPO)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(txtPONum, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(rbtMvt311, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE))
+                            .addComponent(rbtMvt311, javax.swing.GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
                         .addGroup(pnWTFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(rbtMb1b, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -575,7 +573,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 .addGroup(pnWTFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(rbtMvt311)
                     .addComponent(rbtMb1b))
-                .addContainerGap(10, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pnCurScale.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("pnCurScale.border.title"))); // NOI18N
@@ -1995,10 +1993,10 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
         List wts = weightTicketRepository.getWeighTicketReg(txt);
 
         String kq = null;
-        if (wts != null) {
+        if (wts != null && wts.size() > 0) {
             kq = wts.get(0).toString();
         }
-        if (kq.length() > 0) {
+        if (kq != null && kq.length() > 0) {
             txt = kq.trim();
         }
         chkDissolved.setEnabled(false);

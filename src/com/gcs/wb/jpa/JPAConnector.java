@@ -36,7 +36,7 @@ public class JPAConnector {
 
         Map<String, String> properties = new HashMap<String, String>();
         properties.put("javax.persistence.jdbc.driver", "com.microsoft.sqlserver.jdbc.SQLServerDriver");
-        properties.put("javax.persistence.jdbc.url", "jdbc:sqlserver://172.16.20.181:1433;databaseName=jweighbridge");
+        properties.put("javax.persistence.jdbc.url", "jdbc:sqlserver://172.16.20.181:1433;databaseName=weighbridge");
         properties.put("javax.persistence.jdbc.user", "sa");
         properties.put("javax.persistence.jdbc.password", "1qaZ2wsX");
         return properties;

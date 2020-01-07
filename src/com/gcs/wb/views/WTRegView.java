@@ -225,6 +225,11 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         dpFrom.setDate(Calendar.getInstance().getTime());
         dpFrom.setName("dpFrom"); // NOI18N
+        dpFrom.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dpFromActionPerformed(evt);
+            }
+        });
 
         lblTo.setText(resourceMap.getString("lblTo.text")); // NOI18N
         lblTo.setName("lblTo"); // NOI18N
@@ -1235,6 +1240,10 @@ private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
          
         
     }//GEN-LAST:event_jButton1ActionPerformed
+
+private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dpFromActionPerformed
+// TODO add your handling code here:
+}//GEN-LAST:event_dpFromActionPerformed
     private DefaultComboBoxModel getMatsModel() {
         DefaultComboBoxModel result = new DefaultComboBoxModel();
         String client = WeighBridgeApp.getApplication().getConfig().getsClient();

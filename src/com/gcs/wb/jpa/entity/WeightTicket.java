@@ -40,9 +40,11 @@ import javax.persistence.TemporalType;
     + "WHERE w.weightTicketPK.mandt = :mandt "
     + "  AND w.weightTicketPK.wPlant = :wPlant "
     + "  AND w.weightTicketPK.id LIKE :id "
-    + "  AND w.soXe IN ( SELECT v.soXe FROM Vehicle v WHERE v.taAbbr = :taAbbr ) "
-    + "  AND w.matnrRef IS NULL "
-    + "  AND w.regCategory IN :regCategory"),
+     // TODO uncomment and fix for filter in report
+    //+ "  AND w.soXe IN ( SELECT v.soXe FROM Vehicle v WHERE v.taAbbr = :taAbbr ) "
+    //+ "  AND w.matnrRef IS NULL "
+    //+ "  AND w.regCategory IN :regCategory"
+        ),
     @NamedQuery(name = "WeightTicket.findByMandtWPlantIdSoxeMatnrRegcatDissovled",
     query = "SELECT w FROM WeightTicket w "
     + "WHERE w.weightTicketPK.mandt = :mandt "

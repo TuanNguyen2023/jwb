@@ -35,6 +35,7 @@ import javax.swing.JList;
 import com.gcs.wb.utils.FormatRenderer;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -74,6 +75,10 @@ public class WTListView extends javax.swing.JInternalFrame {
         cbxYear.setModel(yearModel);
         // </editor-fold>
         btnFind.setEnabled(true); 
+    }
+
+    private DefaultComboBoxModel getTAgentsModel() {
+        return trransportAgentRepository.getTAgentsModel();
     }
 
     /** This method is called from within the constructor to
@@ -170,7 +175,7 @@ public class WTListView extends javax.swing.JInternalFrame {
         lblTAgent.setText(resourceMap.getString("lblTAgent.text")); // NOI18N
         lblTAgent.setName("lblTAgent"); // NOI18N
 
-        cbxTAgent.setModel(trransportAgentRepository.getTAgentsModel());
+        cbxTAgent.setModel(getTAgentsModel());
         cbxTAgent.setName("cbxTAgent"); // NOI18N
         cbxTAgent.setRenderer(new DefaultListCellRenderer() {
             @Override
@@ -395,7 +400,7 @@ public class WTListView extends javax.swing.JInternalFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(pnResult, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 624, Short.MAX_VALUE)
+                    .addComponent(pnResult, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 705, Short.MAX_VALUE)
                     .addComponent(pnFilter, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -405,7 +410,7 @@ public class WTListView extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(pnFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE)
+                .addComponent(pnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 409, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
