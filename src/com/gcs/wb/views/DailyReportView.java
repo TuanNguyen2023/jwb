@@ -196,7 +196,7 @@ public class DailyReportView extends javax.swing.JInternalFrame {
                 setProgress(1, 0, 4);
                 setMessage("Đang lấy dữ liệu...");
                 AppConfig appConfig = WeighBridgeApp.getApplication().getConfig();
-                WeightTicketJpaController weightTicketJpaController = new WeightTicketJpaController(entityManager);
+                WeightTicketJpaController weightTicketJpaController = new WeightTicketJpaController();
                 List<WeightTicket> weightTickets = weightTicketJpaController.findByCreateDateRange(dpDateFrom.getDate(), dpDateTo.getDate());
 
                 setProgress(2, 0, 4);

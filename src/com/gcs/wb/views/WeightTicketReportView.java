@@ -419,7 +419,7 @@ private void cbxModeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:
             String tAgent = ((TransportAgent) cbxTransportAgent.getSelectedItem()).getAbbr();
             String matnr = ((Material) cbxMaterial.getSelectedItem()).getMaterialPK().getMatnr();
             try {
-                WeightTicketJpaController weightTicketJpaController = new WeightTicketJpaController(entityManager);
+                WeightTicketJpaController weightTicketJpaController = new WeightTicketJpaController();
                 List<WeightTicket> weightTickets = weightTicketJpaController.findListWTs(month, year, tAgent, matnr, modes, cbxStatus.getSelectedIndex() == 1, cbxStatus.getSelectedIndex() == 2);
                 wtDatas = new Object[weightTickets.size()][wtColNames.length];
                 for (int i = 0; i < weightTickets.size(); i++) {
