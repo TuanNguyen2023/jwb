@@ -10,7 +10,6 @@
  */
 package com.gcs.wb.views;
 
-
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.BAPIConfiguration;
 import com.gcs.wb.bapi.helper.CheckVersionWBBapi;
@@ -19,6 +18,7 @@ import com.gcs.wb.bapi.helper.PlantGetDetailBapi;
 import com.gcs.wb.bapi.helper.structure.UserGetDetailAGRStructure;
 import com.gcs.wb.bapi.helper.structure.UserGetDetailAddrStructure;
 import com.gcs.wb.bapi.helper.UserGetDetailBapi;
+import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.SAPSetting;
 import com.gcs.wb.jpa.entity.SAPSettingPK;
@@ -30,11 +30,6 @@ import com.sap.conn.jco.JCoException;
 import java.awt.Color;
 import java.util.HashMap;
 import java.util.List;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.net.UnknownHostException;
-import java.io.*;
 import javax.persistence.EntityManager;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -61,43 +56,8 @@ public class LoginView extends javax.swing.JDialog {
     public LoginView(java.awt.Frame parent) {
         super(parent);
         initComponents();
-        lblIcon.setVisible(false);
-        jCheckBox1.setVisible(false);
-        txtUsr.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                validateUsr(e);
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                validateUsr(e);
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                validateUsr(e);
-            }
-        });
-        txtPwd.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                validatePwd(e);
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                validatePwd(e);
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                validatePwd(e);
-            }
-        });
-        validateForm();
+        initForm();
+        iconLoading.setVisible(false);
     }
 
     /** This method is called from within the constructor to
@@ -110,20 +70,14 @@ public class LoginView extends javax.swing.JDialog {
     private void initComponents() {
         bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
-        jPanel2 = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
-        lblUsr = new javax.swing.JLabel();
-        txtUsr = new javax.swing.JTextField();
-        txtPwd = new javax.swing.JPasswordField();
-        lblUsr1 = new javax.swing.JLabel();
-        lblPwd1 = new javax.swing.JLabel();
-        jPanel4 = new javax.swing.JPanel();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jPanel3 = new javax.swing.JPanel();
-        lblIcon = new org.jdesktop.swingx.JXBusyLabel();
-        btnOK = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        lblPwd = new javax.swing.JLabel();
+        pnForm = new javax.swing.JPanel();
+        btnLogin = new javax.swing.JButton();
+        lblUsername = new javax.swing.JLabel();
+        txtUsername = new javax.swing.JTextField();
+        lblPassword = new javax.swing.JLabel();
+        txtPassword = new javax.swing.JPasswordField();
+        iconLoading = new org.jdesktop.swingx.JXBusyLabel();
+        lblVersion = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(LoginView.class);
@@ -133,138 +87,115 @@ public class LoginView extends javax.swing.JDialog {
         setName("Form"); // NOI18N
         setResizable(false);
 
-        jPanel2.setName("jPanel2"); // NOI18N
-        jPanel2.setPreferredSize(new java.awt.Dimension(332, 139));
+        pnForm.setName("pnForm"); // NOI18N
+        pnForm.setPreferredSize(new java.awt.Dimension(332, 139));
 
-        jPanel1.setName("jPanel1"); // NOI18N
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getActionMap(LoginView.class, this);
+        btnLogin.setAction(actionMap.get("login")); // NOI18N
+        btnLogin.setText(resourceMap.getString("btnLogin.text")); // NOI18N
+        btnLogin.setName("btnLogin"); // NOI18N
 
-        lblUsr.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblUsr.setText(resourceMap.getString("lblUsr.text")); // NOI18N
-        lblUsr.setName("lblUsr"); // NOI18N
-        jPanel1.add(lblUsr, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 14, -1, -1));
+        lblUsername.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblUsername.setText(resourceMap.getString("lblUsername.text")); // NOI18N
+        lblUsername.setName("lblUsername"); // NOI18N
 
-        txtUsr.setForeground(resourceMap.getColor("txtUsr.foreground")); // NOI18N
-        txtUsr.setText(resourceMap.getString("txtUsr.text")); // NOI18N
-        txtUsr.setName("txtUsr"); // NOI18N
-        txtUsr.addFocusListener(new java.awt.event.FocusAdapter() {
+        txtUsername.setForeground(resourceMap.getColor("txtUsername.foreground")); // NOI18N
+        txtUsername.setText(resourceMap.getString("txtUsername.text")); // NOI18N
+        txtUsername.setName("txtUsername"); // NOI18N
+        txtUsername.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                txtUsrFocusGained(evt);
+                txtUsernameFocusGained(evt);
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
-                txtUsrFocusLost(evt);
+                txtUsernameFocusLost(evt);
             }
         });
-        jPanel1.add(txtUsr, new org.netbeans.lib.awtextra.AbsoluteConstraints(89, 11, 220, -1));
 
-        txtPwd.setText(resourceMap.getString("txtPwd.text")); // NOI18N
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getActionMap(LoginView.class, this);
-        txtPwd.setAction(actionMap.get("login")); // NOI18N
-        txtPwd.setName("txtPwd"); // NOI18N
+        lblPassword.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblPassword.setText(resourceMap.getString("lblPassword.text")); // NOI18N
+        lblPassword.setName("lblPassword"); // NOI18N
 
-        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, txtUsr, org.jdesktop.beansbinding.ELProperty.create("${enabled}"), txtPwd, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        txtPassword.setText(resourceMap.getString("txtPassword.text")); // NOI18N
+        txtPassword.setAction(actionMap.get("login")); // NOI18N
+        txtPassword.setName("txtPassword"); // NOI18N
+
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, txtUsername, org.jdesktop.beansbinding.ELProperty.create("${enabled}"), txtPassword, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
 
-        txtPwd.addFocusListener(new java.awt.event.FocusAdapter() {
+        txtPassword.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                txtPwdFocusGained(evt);
+                txtPasswordFocusGained(evt);
             }
         });
-        jPanel1.add(txtPwd, new org.netbeans.lib.awtextra.AbsoluteConstraints(89, 37, 220, -1));
 
-        lblUsr1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblUsr1.setText(resourceMap.getString("lblUsr1.text")); // NOI18N
-        lblUsr1.setName("lblUsr1"); // NOI18N
-        jPanel1.add(lblUsr1, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 14, -1, -1));
+        iconLoading.setBusy(true);
+        iconLoading.setLabelFor(btnLogin);
+        iconLoading.setDirection(org.jdesktop.swingx.JXBusyLabel.Direction.RIGHT);
+        iconLoading.setName("iconLoading"); // NOI18N
 
-        lblPwd1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblPwd1.setText(resourceMap.getString("lblPwd1.text")); // NOI18N
-        lblPwd1.setName("lblPwd1"); // NOI18N
-        jPanel1.add(lblPwd1, new org.netbeans.lib.awtextra.AbsoluteConstraints(2, 40, 72, -1));
-
-        jPanel2.add(jPanel1);
-
-        jPanel4.setName("jPanel4"); // NOI18N
-        jPanel4.setPreferredSize(new java.awt.Dimension(100, 30));
-
-        jCheckBox1.setSelected(true);
-        jCheckBox1.setText(resourceMap.getString("jCheckBox1.text")); // NOI18N
-        jCheckBox1.setName("jCheckBox1"); // NOI18N
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jCheckBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+        javax.swing.GroupLayout pnFormLayout = new javax.swing.GroupLayout(pnForm);
+        pnForm.setLayout(pnFormLayout);
+        pnFormLayout.setHorizontalGroup(
+            pnFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnFormLayout.createSequentialGroup()
+                .addGroup(pnFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnFormLayout.createSequentialGroup()
+                        .addGap(117, 117, 117)
+                        .addGroup(pnFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtPassword)
+                            .addComponent(txtUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
+                            .addGroup(pnFormLayout.createSequentialGroup()
+                                .addComponent(btnLogin)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(iconLoading, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(pnFormLayout.createSequentialGroup()
+                        .addGap(27, 27, 27)
+                        .addGroup(pnFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblUsername))))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addComponent(jCheckBox1)
+        pnFormLayout.setVerticalGroup(
+            pnFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnFormLayout.createSequentialGroup()
+                .addGap(27, 27, 27)
+                .addGroup(pnFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblUsername)
+                    .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblPassword)
+                    .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(btnLogin)
+                    .addComponent(iconLoading, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel2.add(jPanel4);
-
-        jPanel3.setName("jPanel3"); // NOI18N
-
-        lblIcon.setBusy(true);
-        lblIcon.setLabelFor(btnOK);
-        lblIcon.setText(resourceMap.getString("lblIcon.text")); // NOI18N
-        lblIcon.setDirection(org.jdesktop.swingx.JXBusyLabel.Direction.RIGHT);
-        lblIcon.setName("lblIcon"); // NOI18N
-        jPanel3.add(lblIcon);
-
-        jPanel2.add(jPanel3);
-
-        btnOK.setAction(actionMap.get("login")); // NOI18N
-        btnOK.setText(resourceMap.getString("btnOK.text")); // NOI18N
-        btnOK.setName("btnOK"); // NOI18N
-        btnOK.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnOKActionPerformed(evt);
-            }
-        });
-        jPanel2.add(btnOK);
-
-        jLabel1.setFont(resourceMap.getFont("jLabel1.font")); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
-        jLabel1.setName("jLabel1"); // NOI18N
-
-        lblPwd.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblPwd.setText(resourceMap.getString("lblPwd.text")); // NOI18N
-        lblPwd.setName("lblPwd"); // NOI18N
+        lblVersion.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblVersion.setText(resourceMap.getString("lblVersion.text")); // NOI18N
+        lblVersion.setName("lblVersion"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(42, 42, 42)
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(308, Short.MAX_VALUE)
-                        .addComponent(lblPwd, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(pnForm, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
+                    .addComponent(lblVersion, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(pnForm, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel1)
-                .addGap(20, 20, 20)
-                .addComponent(lblPwd))
+                .addComponent(lblVersion)
+                .addContainerGap())
         );
 
         bindingGroup.bind();
@@ -272,240 +203,151 @@ public class LoginView extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtUsrFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtUsrFocusGained
-        txtUsr.selectAll();
-    }//GEN-LAST:event_txtUsrFocusGained
+    private void txtUsernameFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtUsernameFocusGained
+        txtUsername.selectAll();
+    }//GEN-LAST:event_txtUsernameFocusGained
 
-    private void txtPwdFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPwdFocusGained
-        txtPwd.selectAll();
-    }//GEN-LAST:event_txtPwdFocusGained
+    private void txtPasswordFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPasswordFocusGained
+        txtPassword.selectAll();
+    }//GEN-LAST:event_txtPasswordFocusGained
 
-    private void txtUsrFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtUsrFocusLost
-        txtUsr.setText(txtUsr.getText().toUpperCase());
-    }//GEN-LAST:event_txtUsrFocusLost
-
-private void btnOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOKActionPerformed
-// TODO add your handling code here:
-    //login local
-//    EntityManager em = WeighBridgeApp.getApplication().getEm();
-//    UserLocal userLocal = null;
-//    String local_user = null;
-//    String local_password = null;
-//    local_user = txtUsr.getText().trim();
-//    local_password = new String(txtPwd.getPassword()).trim();
-//    WeightTicketJpaController con = new WeightTicketJpaController(em);
-//    try {
-//        userLocal = con.login(local_user, local_password);
-//        if (userLocal != null) {
-//            WeighBridgeApp.getApplication().setCurrent_user_name(userLocal.getFullName());
-//            WeighBridgeApp.getApplication().setSloc(userLocal.getSloc());
-//
-//        }
-//    } catch (Exception e) {
-//    }
-}//GEN-LAST:event_btnOKActionPerformed
+    private void txtUsernameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtUsernameFocusLost
+        txtUsername.setText(txtUsername.getText().toUpperCase());
+    }//GEN-LAST:event_txtUsernameFocusLost
     // <editor-fold defaultstate="expanded" desc="Variables Getter/Setter">
 
-    /**
-     * @return the authenticated
-     */
-    public boolean isAuthenticated() {
-        return authenticated;
-    }
     // </editor-fold>
     // <editor-fold defaultstate="expanded" desc="Event Handlers area">
+    private void initForm() {
+        txtUsername.getDocument().addDocumentListener(new DocumentListener() {
 
-    @Action
-    public void clearForm() {
-        txtUsr.setText(null);
-        txtPwd.setText(null);
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                validateUsername(e);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                validateUsername(e);
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                validateUsername(e);
+            }
+        });
+
+        txtPassword.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                validatePassword(e);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                validatePassword(e);
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                validatePassword(e);
+            }
+        });
+
+        validateForm();
+    }
+
+    private void validateUsername(DocumentEvent e) {
+        try {
+            String text = e.getDocument().getText(0, e.getDocument().getLength()).trim();
+            validUsername = text.length() > 0 && text.length() <= 12;
+            lblUsername.setForeground(validUsername ? Color.BLACK : Color.RED);
+        } catch (BadLocationException ex) {
+            Logger.getLogger(LoginView.class.getName()).log(Level.ERROR, null, ex);
+        } finally {
+            validateForm();
+        }
+    }
+
+    private void validatePassword(DocumentEvent e) {
+        try {
+            String text = e.getDocument().getText(0, e.getDocument().getLength()).trim();
+            validPassword = text.length() > 0;
+            lblPassword.setForeground(validPassword ? Color.BLACK : Color.RED);
+        } catch (BadLocationException ex) {
+            Logger.getLogger(LoginView.class.getName()).log(Level.ERROR, null, ex);
+        } finally {
+            validateForm();
+        }
+    }
+
+    public void validateForm() {
+        btnLogin.setEnabled(validUsername && validPassword);
+    }
+
+    public boolean isAuthenticated() {
+        return this.authenticated;
+    }
+
+    public void setAuthenticated(boolean authenticated) {
+        this.authenticated = authenticated;
     }
 
     @Action()
     public Task login() {
-        if (!isValidatedForm()) {
-            return null;
-        } else {
-            return new LoginTask(WeighBridgeApp.getApplication(), this);
-        }
+        return new LoginTask(WeighBridgeApp.getApplication(), this);
     }
-    
-     public static String getHardDiskSerialNumber(String drive) {
-        String result = "";
-        try {
-            File file = File.createTempFile("realhowto", ".vbs");
-            file.deleteOnExit();
-            FileWriter fw = new java.io.FileWriter(file);
-
-            String vbs = "Set objFSO = CreateObject(\"Scripting.FileSystemObject\")\n"
-                    + "Set colDrives = objFSO.Drives\n"
-                    + "Set objDrive = colDrives.item(\"" + drive + "\")\n"
-                    + "Wscript.Echo objDrive.SerialNumber";  // see note
-            fw.write(vbs);
-            fw.close();
-            Process p = Runtime.getRuntime().exec("cscript //NoLogo " + file.getPath());
-            BufferedReader input =
-                    new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String line;
-            while ((line = input.readLine()) != null) {
-                result += line;
-            }
-            input.close();
-        } catch (Exception e) {
-           // e.printStackTrace();
-        }
-        return result.trim();
-    }
-     
-     
-     public static String getIPAddress() {
-        String strIP = "127.0.0.1";
-        try {
-            InetAddress ip = InetAddress.getLocalHost();
-            strIP = ip.getHostAddress();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return strIP;
-    }
-     
-      
-      
-       public static String getIpAddress()
-      {
-          String ip = "";
-        try {
-             ip = InetAddress.getLocalHost().getHostAddress().toString();
-         // ip.toString(); 
-           
-        } catch (Exception e) {
-          //   e.printStackTrace();
-        }
-        return ip;
-      }
-     
-     public static String getMACAddress() {
-        String strMAC = "127.0.0.1";
-        try {
-            InetAddress ip = InetAddress.getLocalHost();
-            NetworkInterface network = NetworkInterface.getByInetAddress(ip);
-            byte[] mac = network.getHardwareAddress();
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < mac.length; i++) {
-                sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
-            }
-            strMAC = sb.toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return strMAC;
-    }
-    
-     public static String getMotherBoardSerialNumber() {
-        String result = "";
-        try {
-            File file = File.createTempFile("realhowto", ".vbs");
-            file.deleteOnExit();
-            FileWriter fw = new java.io.FileWriter(file);
-            String vbs =
-                    "Set objWMIService = GetObject(\"winmgmts:\\\\.\\root\\cimv2\")\n"
-                    + "Set colItems = objWMIService.ExecQuery _ \n"
-                    + "   (\"Select * from Win32_BaseBoard\") \n"
-                    + "For Each objItem in colItems \n"
-                    + "    Wscript.Echo objItem.SerialNumber \n"
-                    + "    exit for  ' do the first cpu only! \n"
-                    + "Next \n";
-
-            fw.write(vbs);
-            fw.close();
-            Process p = Runtime.getRuntime().exec("cscript //NoLogo " + file.getPath());
-            BufferedReader input =
-                    new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String line;
-            while ((line = input.readLine()) != null) {
-                result += line;
-            }
-            input.close();
-        } catch (Exception e) {
-          //   e.printStackTrace();
-        }
-        return result.trim();
-    }
-     
 
     private class LoginTask extends org.jdesktop.application.Task<Object, Void> {
 
-        Credentials cre = null;
-        AppConfig lconfig = null;
-        SAPSetting sSetting = null;
-        User usr = null;
+        Credentials credentials = null;
+        AppConfig appConfig = null;
+        SAPSetting sapSetting = null;
+        User user = null;
         String lclient = null;
         String lplant = null;
-        String lusr = null;//"JWBSALE";
-        String lpwd = null;//"tfc@sale";
-//        boolean lOfflineMode = true;
+        String username = null;
+        String password = null;
         boolean lOfflineMode = false;
         boolean flag_login = true;
-        JCoException jcoEx = null;
+        JCoException jcoException = null;
 
         LoginTask(Application app, JDialog view) {
             super(app);
-            lconfig = WeighBridgeApp.getApplication().getConfig();
-            if ( jCheckBox1.isSelected()){
-                lconfig.setsRoute("");
-            }
-            lclient = lconfig.getsClient();
-            lplant = lconfig.getwPlant().toString();
-            if (lconfig.getModeNormal()) {
-                lusr = txtUsr.getText().trim();
-                lpwd = new String(txtPwd.getPassword()).trim();
+            appConfig = WeighBridgeApp.getApplication().getConfig();
+            lclient = appConfig.getsClient();
+            lplant = appConfig.getwPlant().toString();
+            if (appConfig.getModeNormal()) {
+                username = txtUsername.getText().trim();
+                password = new String(txtPassword.getPassword()).trim();
             } else {
-                lusr = lconfig.getUsrName();
-                lpwd = lconfig.getPsswrd();
+                username = appConfig.getUsrName();
+                password = appConfig.getPsswrd();
             }
-            lblIcon.setVisible(true);
-            btnOK.setVisible(false);
-            txtUsr.setEditable(false);
-            txtPwd.setEditable(false);
-            InetAddress ip;
-            NetworkInterface network; 
-            String MotherBoard = "" ;
-            
-            MotherBoard = getMotherBoardSerialNumber();
-            String sMac = getMACAddress(); 
-            String sDiskId = getHardDiskSerialNumber("C");
-            String sipaddress = ""; 
-            String hostname  ="";
-            String Osname =""; 
-            
-            try {
-                  sipaddress=     InetAddress.getLocalHost().getHostAddress().toString();
-                  hostname =  InetAddress.getLocalHost().getHostName(); 
-                  Osname =  System.getProperty("user.name"); 
-           
-            } catch (UnknownHostException ex) {
-                java.util.logging.Logger.getLogger(LoginView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-            }
-           
+
+            txtUsername.setEnabled(false);
+            txtPassword.setEnabled(false);
+            iconLoading.setVisible(true);
+            btnLogin.setEnabled(false);
         }
 
         @Override
         protected Object doInBackground() throws Exception {
-            if (lconfig.getModeNormal()) {
-                return doInBackgroundBT();
+            if (appConfig.getModeNormal()) {
+                return loginInModeNormal();
             } else {
-                return doInBackgroundPQ();
+                return loginNotInModeNormal();
             }
         }
 
         @Override
         protected void succeeded(Object result) {
-            authenticated = true;
-            WeighBridgeApp.getApplication().setCredentials(cre);
-            WeighBridgeApp.getApplication().setLogin(usr);
+            setAuthenticated(true);
+            WeighBridgeApp.getApplication().setCredentials(credentials);
+            WeighBridgeApp.getApplication().setLogin(user);
             WeighBridgeApp.getApplication().setOfflineMode(lOfflineMode);
-//            System.out.println(lOfflineMode);
-            WeighBridgeApp.getApplication().setSapSetting(sSetting);
+            WeighBridgeApp.getApplication().setSapSetting(sapSetting);
             setVisible(false);
         }
 
@@ -513,49 +355,49 @@ private void btnOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         protected void failed(Throwable cause) {
             if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
                 cause = cause.getCause();
-                Session ses = WeighBridgeApp.getApplication().getSAPSession();
-                if (ses != null) {
-                    ses.close();
-                    ses = null;
+                Session session = WeighBridgeApp.getApplication().getSAPSession();
+                if (session != null) {
+                    session.close();
+                    session = null;
                 }
-                WeighBridgeApp.getApplication().setSAPSession(ses);
+                WeighBridgeApp.getApplication().setSAPSession(session);
             }
 
-            lblIcon.setVisible(false);
-            btnOK.setVisible(true);
-            txtUsr.setEditable(true);
-            txtPwd.setEditable(true);
+            txtUsername.setEnabled(true);
+            txtPassword.setEnabled(true);
+            iconLoading.setVisible(false);
+            btnLogin.setEnabled(true);
+
             Logger.getLogger(LoginView.class.getName()).log(Level.ERROR, null, cause);
             JOptionPane.showMessageDialog(rootPane, cause.getMessage());
             done();
         }
-        protected Object doInBackgroundBT() throws Exception {
-            EntityManager em = WeighBridgeApp.getApplication().getEm();
-            cre = new Credentials();
-            cre.setClient(lclient);
-            cre.setUser(lusr);
-            cre.setPassword(lpwd);
 
-            UserGetDetailBapi bUsr = new UserGetDetailBapi();
-            bUsr.setUserName(lusr);
+        protected Object loginInModeNormal() throws Exception {
+            credentials = new Credentials();
+            credentials.setClient(lclient);
+            credentials.setUser(username);
+            credentials.setPassword(password);
+
+            UserGetDetailBapi userGetDetailBapi = new UserGetDetailBapi();
+            userGetDetailBapi.setUserName(username);
 
             try {
-                boolean updateUsr = true;
-
-                usr = em.find(User.class, new UserPK(lclient, lplant, lusr));
-                sSetting = em.find(SAPSetting.class, new SAPSettingPK(lclient, lplant));
+                user = entityManager.find(User.class, new UserPK(lclient, lplant, username));
+                sapSetting = entityManager.find(SAPSetting.class, new SAPSettingPK(lclient, lplant));
 
                 Session session = WeighBridgeApp.getApplication().getSAPSession();
                 if (session != null) {
                     session.close();
                     session = null;
                 }
-                SessionManager sesMan = BAPIConfiguration.getSessionManager(lconfig, cre);
-                session = sesMan.openSession(cre);
+                SessionManager sessionManager = BAPIConfiguration.getSessionManager(appConfig, credentials);
+                session = sessionManager.openSession(credentials);
                 WeighBridgeApp.getApplication().setSAPSession(session);
+
                 boolean sap_flag = true;
-                try{
-//                    Checking version of WB application
+                try {
+                    // Checking version of WB application
                     CheckVersionWBBapi version = new CheckVersionWBBapi("2.40"); //09/07/2013
                     try {
                         session.execute(version);
@@ -569,103 +411,106 @@ private void btnOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                     } finally {
                         // do nothing
                     }
-                    session.execute(bUsr);  //Login
-                }
-                catch (Exception ex) {
+                    session.execute(userGetDetailBapi);  //Login
+                } catch (Exception ex) {
                     sap_flag = false;
-                    if (usr != null && !usr.getPwd().equals(lpwd)) {
-                         failed(new Exception("Authenticated Failed!!!"));
+                    if (user != null && !user.getPwd().equals(password)) {
+                        failed(new Exception("Authenticated Failed!!!"));
                     } else if (ex.getCause() instanceof JCoException) {
-                        jcoEx = (JCoException) ex.getCause();    
-                        if (jcoEx.getGroup() == JCoException.JCO_ERROR_LOGON_FAILURE) {
+                        jcoException = (JCoException) ex.getCause();
+                        if (jcoException.getGroup() == JCoException.JCO_ERROR_LOGON_FAILURE) {
                             failed(new Exception("Login Failed!!!"));
-                        }  
+                        }
                     }
                 }
+
                 //set offline mode
                 lOfflineMode = !sap_flag;
-                if (sap_flag ==  true){
-                UserGetDetailAddrStructure add = bUsr.getAddress();
-                List<UserGetDetailAGRStructure> roles = bUsr.getActgrps();
-                StringBuilder sbRoles = new StringBuilder();
-                try{
-                
-                for (int i = 0; i < roles.size(); i++) {
-                    UserGetDetailAGRStructure role = roles.get(i);
-                    sbRoles.append(role.getAgr_name());
-                    if (i < roles.size() - 1) {
-                        sbRoles.append(",");
-                    }
-                }
-                } catch (Exception ex){
+                if (sap_flag == true) {
+                    UserGetDetailAddrStructure userGetDetailAddrStructure = userGetDetailBapi.getAddress();
+                    List<UserGetDetailAGRStructure> roles = userGetDetailBapi.getActgrps();
+                    StringBuilder sbRoles = new StringBuilder();
+                    try {
 
-                }
-                em.getTransaction().begin();
-                if (usr == null) {
-                    updateUsr = false;
-                    if (sSetting == null) {
-                        PlantGetDetailBapi bPlant = new PlantGetDetailBapi(lclient, lplant);
-                        session.execute(bPlant);
-                        HashMap vals = bPlant.getEsPlant();
-
-                        sSetting = new SAPSetting(new SAPSettingPK(lclient, lplant));
-                        sSetting.setName1((String) vals.get(PlantGeDetailConstants.NAME1));
-                        sSetting.setName2((String) vals.get(PlantGeDetailConstants.NAME2));
-                        em.persist(sSetting);
+                        for (int i = 0; i < roles.size(); i++) {
+                            UserGetDetailAGRStructure role = roles.get(i);
+                            sbRoles.append(role.getAgr_name());
+                            if (i < roles.size() - 1) {
+                                sbRoles.append(",");
+                            }
+                        }
+                    } catch (Exception ex) {
                     }
-                    usr = new User(new UserPK(lclient, lplant, lusr), lpwd);
-                }else{
-                    updateUsr = true;
+                    entityManager.getTransaction().begin();
+
+                    boolean updateUser = true;
+                    if (user == null) {
+                        updateUser = false;
+                        if (sapSetting == null) {
+                            PlantGetDetailBapi plantGetDetailBapi = new PlantGetDetailBapi(lclient, lplant);
+                            session.execute(plantGetDetailBapi);
+                            HashMap vals = plantGetDetailBapi.getEsPlant();
+
+                            sapSetting = new SAPSetting(new SAPSettingPK(lclient, lplant));
+                            sapSetting.setName1((String) vals.get(PlantGeDetailConstants.NAME1));
+                            sapSetting.setName2((String) vals.get(PlantGeDetailConstants.NAME2));
+                            entityManager.persist(sapSetting);
+                        }
+                        user = new User(new UserPK(lclient, lplant, username), password);
+                    } else {
+                        updateUser = true;
+                    }
+
+                    user.setFullName(userGetDetailAddrStructure.getFullName());
+                    user.setLanguP(userGetDetailAddrStructure.getLang().length() == 0 ? ' ' : userGetDetailAddrStructure.getLang().charAt(0));
+                    user.setLangupIso(userGetDetailAddrStructure.getLangISO());
+                    user.setPwd(password);
+                    if (sbRoles != null) {
+                        user.setRoles(sbRoles.toString());
+                    }
+                    user.setTitle(userGetDetailAddrStructure.getTitle());
+
+                    if (updateUser) {
+                        entityManager.merge(user);
+                    } else {
+                        entityManager.persist(user);
+                    }
+                    entityManager.getTransaction().commit();
+                    entityManager.clear();
                 }
-                usr.setFullName(add.getFullName());
-                usr.setLanguP(add.getLang().length() == 0 ? ' ' : add.getLang().charAt(0));
-                usr.setLangupIso(add.getLangISO());
-                usr.setPwd(lpwd);
-                if (sbRoles != null){
-                    usr.setRoles(sbRoles.toString());
-                }
-                usr.setTitle(add.getTitle());
-                if (updateUsr) {
-                    em.merge(usr);
-                } else {
-                    em.persist(usr);
-                }
-                em.getTransaction().commit();
-                em.clear();
-            }
                 succeeded(true);
             } catch (Exception ex) {
-                if (em.getTransaction().isActive()) {
-                    em.getTransaction().rollback();
+                if (entityManager.getTransaction().isActive()) {
+                    entityManager.getTransaction().rollback();
                 }
+
                 if (ex.getCause() instanceof JCoException) {
-                    jcoEx = (JCoException) ex.getCause();
-//                    if (jcoEx.getGroup() != JCoException.JCO_ERROR_COMMUNICATION) {
-                    failed(jcoEx);
-//                    }
+                    jcoException = (JCoException) ex.getCause();
+                    failed(jcoException);
                 } else {
                     failed(ex);
                 }
             }
+
             return null;
         }
-        protected Object doInBackgroundPQ() throws Exception {
-            EntityManager em = WeighBridgeApp.getApplication().getEm();
+
+        protected Object loginNotInModeNormal() throws Exception {
+            // TODO: fix when migrate database
             //login local
-            UserLocal userLocal = null;
-            String local_user = null;
-            String local_password = null;
-            local_user = txtUsr.getText().trim();
-            local_password = new String(txtPwd.getPassword()).trim();
-            WeightTicketJpaController con = new WeightTicketJpaController();
+            String local_username = txtUsername.getText().trim();
+            String local_password = new String(txtPassword.getPassword()).trim();
+            WeightTicketJpaController weightTicketJpaController = new WeightTicketJpaController();
+
             try {
-                userLocal = con.login(local_user, local_password);
+                UserLocal userLocal = weightTicketJpaController.login(local_username, local_password);
                 if (!userLocal.getActive()) {
                     throw new Exception("User is not actived!");
                 }
                 WeighBridgeApp.getApplication().setCurrent_user_name(userLocal.getFullName());
                 WeighBridgeApp.getApplication().setCurrent_user(userLocal.getUserLocalPK().getId());
                 WeighBridgeApp.getApplication().setSloc(userLocal.getSloc());
+
                 if (userLocal == null) {
                     succeeded(false);
                     flag_login = false;
@@ -677,43 +522,42 @@ private void btnOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             }
 
             if (flag_login) {
-                cre = new Credentials();
-                cre.setClient(lclient);
-                cre.setUser(lusr);
-                cre.setPassword(lpwd);
+                credentials = new Credentials();
+                credentials.setClient(lclient);
+                credentials.setUser(username);
+                credentials.setPassword(password);
 
-                UserGetDetailBapi bUsr = new UserGetDetailBapi();
-                bUsr.setUserName(lusr);
+                UserGetDetailBapi userGetDetailBapi = new UserGetDetailBapi();
+                userGetDetailBapi.setUserName(username);
 
                 try {
-                    boolean updateUsr = true;
-
-                    usr = em.find(User.class, new UserPK(lclient, lplant, lusr));
-                    sSetting = em.find(SAPSetting.class, new SAPSettingPK(lclient, lplant));
+                    user = entityManager.find(User.class, new UserPK(lclient, lplant, username));
+                    sapSetting = entityManager.find(SAPSetting.class, new SAPSettingPK(lclient, lplant));
 
                     Session session = WeighBridgeApp.getApplication().getSAPSession();
                     if (session != null) {
                         session.close();
                         session = null;
                     }
-                    SessionManager sesMan = BAPIConfiguration.getSessionManager(lconfig, cre);
-                    session = sesMan.openSession(cre);
+                    SessionManager sessionManager = BAPIConfiguration.getSessionManager(appConfig, credentials);
+                    session = sessionManager.openSession(credentials);
                     WeighBridgeApp.getApplication().setSAPSession(session);
                     boolean sap_flag = true;
                     try {
-                        session.execute(bUsr);  //Login
+                        session.execute(userGetDetailBapi);  //Login
                     } catch (Exception ex) {
                         System.out.println(ex.getMessage());
                         sap_flag = false;
-                        if (usr != null && !usr.getPwd().equals(lpwd)) {
+                        if (user != null && !user.getPwd().equals(password)) {
                             failed(new Exception("Authenticated Failed!!!"));
                         }
                     }
+
                     //set offline mode
                     lOfflineMode = !sap_flag;
                     if (sap_flag == true) {
-                        UserGetDetailAddrStructure add = bUsr.getAddress();
-                        List<UserGetDetailAGRStructure> roles = bUsr.getActgrps();
+                        UserGetDetailAddrStructure userGetDetailAddrStructure = userGetDetailBapi.getAddress();
+                        List<UserGetDetailAGRStructure> roles = userGetDetailBapi.getActgrps();
                         StringBuilder sbRoles = new StringBuilder();
                         try {
 
@@ -726,49 +570,52 @@ private void btnOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
                             }
                         } catch (Exception ex) {
                         }
-                        em.getTransaction().begin();
-                        if (usr == null) {
-                            updateUsr = false;
-                            if (sSetting == null) {
-                                PlantGetDetailBapi bPlant = new PlantGetDetailBapi(lclient, lplant);
-                                session.execute(bPlant);
-                                HashMap vals = bPlant.getEsPlant();
 
-                                sSetting = new SAPSetting(new SAPSettingPK(lclient, lplant));
-                                sSetting.setName1((String) vals.get(PlantGeDetailConstants.NAME1));
-                                sSetting.setName2((String) vals.get(PlantGeDetailConstants.NAME2));
-                                em.persist(sSetting);
+                        entityManager.getTransaction().begin();
+                        boolean updateUser = true;
+                        if (user == null) {
+                            updateUser = false;
+                            if (sapSetting == null) {
+                                PlantGetDetailBapi plantGetDetailBapi = new PlantGetDetailBapi(lclient, lplant);
+                                session.execute(plantGetDetailBapi);
+                                HashMap vals = plantGetDetailBapi.getEsPlant();
+
+                                sapSetting = new SAPSetting(new SAPSettingPK(lclient, lplant));
+                                sapSetting.setName1((String) vals.get(PlantGeDetailConstants.NAME1));
+                                sapSetting.setName2((String) vals.get(PlantGeDetailConstants.NAME2));
+                                entityManager.persist(sapSetting);
                             }
-                            usr = new User(new UserPK(lclient, lplant, lusr), lpwd);
+                            user = new User(new UserPK(lclient, lplant, username), password);
                         } else {
-                            updateUsr = true;
+                            updateUser = true;
                         }
-                        usr.setFullName(add.getFullName());
-                        usr.setLanguP(add.getLang().length() == 0 ? ' ' : add.getLang().charAt(0));
-                        usr.setLangupIso(add.getLangISO());
-                        usr.setPwd(lpwd);
+
+                        user.setFullName(userGetDetailAddrStructure.getFullName());
+                        user.setLanguP(userGetDetailAddrStructure.getLang().length() == 0 ? ' ' : userGetDetailAddrStructure.getLang().charAt(0));
+                        user.setLangupIso(userGetDetailAddrStructure.getLangISO());
+                        user.setPwd(password);
                         if (sbRoles != null) {
-                            usr.setRoles(sbRoles.toString());
+                            user.setRoles(sbRoles.toString());
                         }
-                        usr.setTitle(add.getTitle());
-                        if (updateUsr) {
-                            em.merge(usr);
+                        user.setTitle(userGetDetailAddrStructure.getTitle());
+
+                        if (updateUser) {
+                            entityManager.merge(user);
                         } else {
-                            em.persist(usr);
+                            entityManager.persist(user);
                         }
-                        em.getTransaction().commit();
-                        em.clear();
+
+                        entityManager.getTransaction().commit();
+                        entityManager.clear();
                     }
                     succeeded(true);
                 } catch (Exception ex) {
-                    if (em.getTransaction().isActive()) {
-                        em.getTransaction().rollback();
+                    if (entityManager.getTransaction().isActive()) {
+                        entityManager.getTransaction().rollback();
                     }
                     if (ex.getCause() instanceof JCoException) {
-                        jcoEx = (JCoException) ex.getCause();
-//                    if (jcoEx.getGroup() != JCoException.JCO_ERROR_COMMUNICATION) {
-                        failed(jcoEx);
-//                    }
+                        jcoException = (JCoException) ex.getCause();
+                        failed(jcoException);
                     } else {
                         failed(ex);
                     }
@@ -778,93 +625,22 @@ private void btnOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
             return null;
         }
     }
-
-    public boolean isValidatedForm() {
-        return validatedForm;
-    }
-
-    private void setValidatedForm(boolean b) {
-        boolean old = isValidatedForm();
-        this.validatedForm = b;
-        firePropertyChange("validatedForm", old, isValidatedForm());
-    }
-
-    private void validateUsr(DocumentEvent e) {
-        try {
-            String text = e.getDocument().getText(0, e.getDocument().getLength()).trim();
-            validUsr = text.length() > 0 && text.length() <= 12;
-            if (validUsr) {
-                lblUsr.setForeground(Color.BLACK);
-            } else {
-                lblUsr.setForeground(Color.RED);
-            }
-        } catch (BadLocationException ex) {
-            Logger.getLogger(LoginView.class.getName()).log(Level.ERROR, null, ex);
-        } finally {
-            validateForm();
-        }
-    }
-
-    private void validatePwd(DocumentEvent e) {
-        try {
-            String text = e.getDocument().getText(0, e.getDocument().getLength()).trim();
-            validPwd = text.length() > 0;
-            if (validUsr) {
-                lblPwd.setForeground(Color.BLACK);
-            } else {
-                lblPwd.setForeground(Color.RED);
-            }
-        } catch (BadLocationException ex) {
-            Logger.getLogger(LoginView.class.getName()).log(Level.ERROR, null, ex);
-        } finally {
-            validateForm();
-        }
-    }
-
-    public void validateForm() {
-        boolean result = false;
-        if (validUsr) {
-            lblUsr.setForeground(Color.BLACK);
-        } else {
-            lblUsr.setForeground(Color.RED);
-        }
-        if (validPwd) {
-            lblPwd.setForeground(Color.BLACK);
-        } else {
-            lblPwd.setForeground(Color.RED);
-        }
-        result = validUsr && validPwd;
-        setValidatedForm(result);
-        if (result) {
-            btnOK.setEnabled(true);
-        } else {
-            btnOK.setEnabled(false);
-        }
-//        return result;
-    }
-    
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Variables declaration area">
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnOK;
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private org.jdesktop.swingx.JXBusyLabel lblIcon;
-    private javax.swing.JLabel lblPwd;
-    private javax.swing.JLabel lblPwd1;
-    private javax.swing.JLabel lblUsr;
-    private javax.swing.JLabel lblUsr1;
-    private javax.swing.JPasswordField txtPwd;
-    private javax.swing.JTextField txtUsr;
+    private javax.swing.JButton btnLogin;
+    private org.jdesktop.swingx.JXBusyLabel iconLoading;
+    private javax.swing.JLabel lblPassword;
+    private javax.swing.JLabel lblUsername;
+    private javax.swing.JLabel lblVersion;
+    private javax.swing.JPanel pnForm;
+    private javax.swing.JPasswordField txtPassword;
+    private javax.swing.JTextField txtUsername;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
+    private EntityManager entityManager = JPAConnector.getInstance();
     private boolean authenticated = false;
-    private boolean validUsr = false;
-    private boolean validPwd = false;
-    private boolean validatedForm = false;
+    private boolean validUsername = false;
+    private boolean validPassword = false;
     // </editor-fold >
 }
