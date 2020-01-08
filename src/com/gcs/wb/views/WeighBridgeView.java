@@ -567,7 +567,7 @@ public class WeighBridgeView extends FrameView {
         }
         if (tabPane.getSelectedComponent().getName().equalsIgnoreCase(dpWTList.getName())) {
             if (ifWTList == null) {
-                ifWTList = new WTListView();
+                ifWTList = new WeightTicketReportView();
                 dpWTList.add(ifWTList);
                 ifWTList.show();
             }
