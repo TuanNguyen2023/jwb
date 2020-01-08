@@ -4,6 +4,8 @@
  */
 package com.gcs.wb.base.converter;
 
+import java.util.List;
+
 public class AddressConverter extends AbstractThrowableConverter<Object, Object, Exception>{
 
     @Override
@@ -11,5 +13,15 @@ public class AddressConverter extends AbstractThrowableConverter<Object, Object,
         Object to = new Object();
 
         return to;
+    }
+
+    @Override
+    public Object convertHasParameter(Object from, String val) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Object convertsHasParameter(Object from, String val, boolean refresh) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
