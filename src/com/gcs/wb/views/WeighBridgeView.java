@@ -560,7 +560,7 @@ public class WeighBridgeView extends FrameView {
         }
         if (tabPane.getSelectedComponent().getName().equalsIgnoreCase(dpTA.getName())) {
             if (ifTA == null) {
-                ifTA = new VRView1();
+                ifTA = new TransportAgentView();
                 dpTA.add(ifTA);
                 ifTA.show();
             }

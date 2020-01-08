@@ -30,6 +30,8 @@ public class Vehicle implements Serializable {
     private String soXe;
     @Column(name = "TA_ABBR")
     private String taAbbr;
+    @Column(name = "PROHIBIT")
+    private Boolean prohibit;
 
     public Vehicle() {
     }
@@ -58,6 +60,14 @@ public class Vehicle implements Serializable {
      */
     public void setTaAbbr(String taAbbr) {
         this.taAbbr = taAbbr;
+    }
+    
+    public boolean isProhibit() {
+        return prohibit != null && prohibit;
+    }
+
+    public void setProhibit(Boolean prohibit) {
+        this.prohibit = prohibit;
     }
 
     @Override
