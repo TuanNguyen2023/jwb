@@ -493,9 +493,9 @@ public class WeighBridgeView extends FrameView {
     }//GEN-LAST:event_dpWTListMouseClicked
 
     private void dpWTDListComponentRemoved(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_dpWTDListComponentRemoved
-        if (ifWTDList.isClosed()) {
-            ifWTDList.dispose();
-            ifWTDList = null;
+        if (dailyReportView.isClosed()) {
+            dailyReportView.dispose();
+            dailyReportView = null;
         }
     }//GEN-LAST:event_dpWTDListComponentRemoved
 
@@ -573,10 +573,10 @@ public class WeighBridgeView extends FrameView {
             }
         }
         if (tabPane.getSelectedComponent().getName().equalsIgnoreCase(dpWTDList.getName())) {
-            if (ifWTDList == null) {
-                ifWTDList = new WTRegView(WTRegView.MODE_RPT);
-                dpWTDList.add(ifWTDList);
-                ifWTDList.show();
+            if (dailyReportView == null) {
+                dailyReportView = new DailyReportView();
+                dpWTDList.add(dailyReportView);
+                dailyReportView.show();
             }
         }        
     }
@@ -673,7 +673,7 @@ public class WeighBridgeView extends FrameView {
     private JInternalFrame ifWT;
     private JInternalFrame ifTA;
     private JInternalFrame ifWTList;
-    private JInternalFrame ifWTDList;
+    private JInternalFrame dailyReportView;
     private JDialog aboutBox;
     private JDialog dgConf;
     private JDialog dpSetting;
