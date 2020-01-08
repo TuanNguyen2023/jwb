@@ -91,8 +91,8 @@ public class WeightTicketJpaController {
         WeightTicketRepository repository = new WeightTicketRepository();
         String client = WeighBridgeApp.getApplication().getConfig().getsClient();
         String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
-        java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
-        java.sql.Date to = java.sql.Date.valueOf(sto.toString());
+        java.sql.Date from = new java.sql.Date(sfrom.getTime());
+        java.sql.Date to = new java.sql.Date(sto.getTime());
         return repository.findByCreateDateRange(client, plant, from, to);
 
     }
