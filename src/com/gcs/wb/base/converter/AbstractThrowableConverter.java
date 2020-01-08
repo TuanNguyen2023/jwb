@@ -7,8 +7,6 @@ package com.gcs.wb.base.converter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Optional.ofNullable;
-
 public abstract class AbstractThrowableConverter<FROM, TO, EXCEPTION extends Exception>
         implements IConverter<FROM, TO, EXCEPTION> {
     @Override
@@ -17,7 +15,7 @@ public abstract class AbstractThrowableConverter<FROM, TO, EXCEPTION extends Exc
     @Override
     public List<TO> convert(List<FROM> fromList) throws EXCEPTION {
         List<TO> toList = null;
-        if (ofNullable(fromList).isPresent()) {
+        if (fromList != null) {
             toList = new ArrayList<TO>();
             for (FROM from : fromList) {
                 toList.add(convert(from));
