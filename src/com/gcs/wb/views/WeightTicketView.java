@@ -223,7 +223,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         }
         try {
             String pWbId = WeighBridgeApp.getApplication().getConfig().getWbId().trim();
-            List sdev = weightTicketRepository.getDev2(pWbId);
+            List sdev = null;// weightTicketRepository.getDev2(pWbId);
             if (sdev != null) {
                 for (Object obj : sdev) {
                     Object[] wt = (Object[]) obj;

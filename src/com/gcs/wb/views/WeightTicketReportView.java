@@ -22,10 +22,10 @@ import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.MaterialPK;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.WeightTicket;
+import com.gcs.wb.jpa.repositorys.TransportAgentRepository;
+import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import java.awt.Component;
 import java.util.List;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import com.gcs.wb.utils.FormatRenderer;
@@ -45,6 +45,9 @@ import org.jdesktop.application.Application;
  * @author thanghl
  */
 public class WeightTicketReportView extends javax.swing.JInternalFrame {
+
+    private TransportAgentRepository transportAgentRepository = new TransportAgentRepository();
+    private WeightTicketRepository weightTicketRepository = new WeightTicketRepository();
 
     /** Creates new form WeightTicketReportView */
     public WeightTicketReportView() {
@@ -78,6 +81,9 @@ public class WeightTicketReportView extends javax.swing.JInternalFrame {
 
         // Init state combobox
         cbxStatus.setModel(new DefaultComboBoxModel(statusModel));
+
+        FindWeightTicketsTask findWeightTicketsTask = new FindWeightTicketsTask(WeighBridgeApp.getApplication());
+        findWeightTicketsTask.execute();
     }
 
     /** This method is called from within the constructor to
@@ -90,7 +96,6 @@ public class WeightTicketReportView extends javax.swing.JInternalFrame {
     private void initComponents() {
         bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
-        entityManager = java.beans.Beans.isDesignTime() ? null : WeighBridgeApp.getApplication().getEm();
         pnFilter = new javax.swing.JPanel();
         pnMY = new javax.swing.JPanel();
         lblMonth = new javax.swing.JLabel();
@@ -334,7 +339,7 @@ public class WeightTicketReportView extends javax.swing.JInternalFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(pnResult, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 621, Short.MAX_VALUE)
+                    .addComponent(pnResult, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 653, Short.MAX_VALUE)
                     .addComponent(pnFilter, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -344,7 +349,7 @@ public class WeightTicketReportView extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(pnFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+                .addComponent(pnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -370,17 +375,15 @@ private void cbxModeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:
 }//GEN-LAST:event_cbxModeItemStateChanged
 
     private DefaultComboBoxModel getTransportAgentsModel() {
-        TypedQuery<TransportAgent> typedQuery = entityManager.createNamedQuery("TransportAgent.findAll", TransportAgent.class);
-        List<TransportAgent> listTransportAgents = typedQuery.getResultList();
-        return new DefaultComboBoxModel(listTransportAgents.toArray());
+        List<TransportAgent> transportAgents = transportAgentRepository.getListTransportAgent();
+        return new DefaultComboBoxModel(transportAgents.toArray());
     }
 
     private DefaultComboBoxModel getMaterialsModel() {
         DefaultComboBoxModel result = new DefaultComboBoxModel();
-        Query query = entityManager.createNativeQuery("select distinct MATNR_REF, REG_ITEM_TEXT from WeightTicket where MANDT = ? and WPlant = ?");
-        query.setParameter(1, WeighBridgeApp.getApplication().getConfig().getsClient());
-        query.setParameter(2, WeighBridgeApp.getApplication().getConfig().getwPlant());
-        List weightTickets = query.getResultList();
+        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
+        String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
+        List weightTickets = weightTicketRepository.getMatsModel(client, plant);
         for (Object obj : weightTickets) {
             Object[] weightTicket = (Object[]) obj;
             MaterialPK materialPK = new MaterialPK();
@@ -533,7 +536,6 @@ private void cbxModeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:
     private javax.swing.JComboBox cbxStatus;
     private javax.swing.JComboBox cbxTransportAgent;
     private javax.swing.JComboBox cbxYear;
-    private javax.persistence.EntityManager entityManager;
     private javax.swing.JLabel lblMode;
     private javax.swing.JLabel lblMonth;
     private javax.swing.JLabel lblState;

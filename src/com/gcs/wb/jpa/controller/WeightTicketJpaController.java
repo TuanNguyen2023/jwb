@@ -13,11 +13,8 @@ import com.gcs.wb.jpa.entity.Variant;
 import com.gcs.wb.jpa.entity.WeightTicket;
 import com.gcs.wb.jpa.entity.WeightTicketPK;
 import com.gcs.wb.jpa.entity.OutbDetailsV2;
-import com.gcs.wb.jpa.entity.OutbDetailsV2PK;
-import com.gcs.wb.jpa.entity.Regvehicle;
 import com.gcs.wb.jpa.entity.UserLocal;
 
-import java.util.List;
 
 import com.gcs.wb.jpa.procedures.WeightTicketJpaRepository;
 
@@ -29,19 +26,13 @@ import com.gcs.wb.jpa.repositorys.UserLocalRepository;
 import com.gcs.wb.jpa.repositorys.VariantRepository;
 import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
 import java.text.SimpleDateFormat;
- import java.util.Calendar;
-import java.util.Date;
-import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import org.apache.log4j.Logger;
-import java.sql.Timestamp;
  import com.gcs.wb.utils.Base64_Utils; 
 import com.gcs.wb.model.AppConfig; 
-import  java.util.*; 
-import java.sql.*;
+import  java.util.*;
 /**
  *
  * Tuanna modified 30/06/2013
@@ -91,8 +82,8 @@ public class WeightTicketJpaController {
         WeightTicketRepository repository = new WeightTicketRepository();
         String client = WeighBridgeApp.getApplication().getConfig().getsClient();
         String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
-        java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
-        java.sql.Date to = java.sql.Date.valueOf(sto.toString());
+        java.sql.Date from = new java.sql.Date(sfrom.getTime());
+        java.sql.Date to = new java.sql.Date(sto.getTime());
         return repository.findByCreateDateRange(client, plant, from, to);
 
     }
@@ -252,12 +243,11 @@ public class WeightTicketJpaController {
             nq.setParameter("mandt", WeighBridgeApp.getApplication().getConfig().getsClient());
             nq.setParameter("wPlant", WeighBridgeApp.getApplication().getConfig().getwPlant());
             nq.setParameter("id", id);
-            // TODO uncomment and fix for filter report
-            //nq.setParameter("taAbbr", tagent);
-//            if (!matnr.equalsIgnoreCase("-1")) {
-//                nq.setParameter("matnrRef", matnr);
-//            }
-//            nq.setParameter("regCategory", modes);
+            nq.setParameter("taAbbr", tagent);
+            if (!matnr.equalsIgnoreCase("-1")) {
+                nq.setParameter("matnrRef", matnr);
+            }
+            nq.setParameter("regCategory", modes);
             return nq.getResultList();
         } catch (Exception ex) {
             logger.error(null, ex);
