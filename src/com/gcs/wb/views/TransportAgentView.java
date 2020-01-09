@@ -12,15 +12,21 @@ package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.helper.SAP2Local;
+import com.gcs.wb.jpa.JpaProperties;
 import com.gcs.wb.jpa.entity.TransportAgent;
+import com.gcs.wb.jpa.entity.TransportAgentVehicle;
 import com.gcs.wb.jpa.entity.Vehicle;
+import com.gcs.wb.jpa.repositorys.TransportAgentRepository;
+import com.gcs.wb.jpa.repositorys.TransportAgentVehicleRepository;
+import com.gcs.wb.jpa.repositorys.VehicleRepository;
 import com.gcs.wb.model.AppConfig;
 import java.awt.Color;
 import java.awt.Component;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.persistence.TypedQuery;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
@@ -34,6 +40,10 @@ import org.jdesktop.application.Action;
 public class TransportAgentView extends javax.swing.JInternalFrame {
 
     private AppConfig config = null;
+    private EntityManager entityManager = JpaProperties.getEntityManager();
+    private TransportAgentRepository transportAgentRepository = new TransportAgentRepository();
+    private VehicleRepository vehicleRepository = new VehicleRepository();
+    private TransportAgentVehicleRepository transportAgentVehicleRepository = new TransportAgentVehicleRepository();
 
     /** Creates new form TransportAgentView */
     public TransportAgentView() {
@@ -52,7 +62,6 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
 
         transportAgentSelected = new com.gcs.wb.jpa.entity.TransportAgent();
         vehicleSelected = new com.gcs.wb.jpa.entity.Vehicle();
-        entityManager = WeighBridgeApp.getApplication().getEm();
         pnTransportAgent = new javax.swing.JPanel();
         spnTransportAgent = new javax.swing.JScrollPane();
         lstTransportAgent = new javax.swing.JList();
@@ -112,7 +121,7 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
         pnTransportAgentLayout.setVerticalGroup(
             pnTransportAgentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnTransportAgentLayout.createSequentialGroup()
-                .addComponent(spnTransportAgent, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
+                .addComponent(spnTransportAgent, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)
                 .addGap(147, 147, 147))
         );
 
@@ -128,7 +137,7 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 if (value instanceof Vehicle) {
                     Vehicle ta = (Vehicle)value;
-                    setText(ta.getSoXe());
+                    setText(ta.getPlateNo());
                 }
                 return this;
             }
@@ -221,7 +230,7 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
         pnVehicleLayout.setVerticalGroup(
             pnVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnVehicleLayout.createSequentialGroup()
-                .addComponent(spnVehicle, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
+                .addComponent(spnVehicle, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(pnVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblLicensePlate)
@@ -331,31 +340,34 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
 
     private DefaultListModel getTransportAgentsModel() {
         config = WeighBridgeApp.getApplication().getConfig();
-        TypedQuery<TransportAgent> typedQuery = entityManager.createNamedQuery("TransportAgent.findAll", TransportAgent.class);
-        List<TransportAgent> transportAgents = typedQuery.getResultList();
+        EntityTransaction entityTransaction = entityManager.getTransaction();
+        List<TransportAgent> transportAgents = transportAgentRepository.getListTransportAgent();
 
         // get from SAP
         List<TransportAgent> transportAgentsSAP = SAP2Local.getTransportAgentList(config.getwPlant());
         //sync SAP <=> DB
         // delete data DB not exist SAP
+        TransportAgentVehicle transportAgentVehicle = null;
         for (TransportAgent transportAgent : transportAgents) {
             if (transportAgentsSAP.indexOf(transportAgent) == -1) {
                 // delete in table Vehicle
-                TypedQuery<Vehicle> vehicleTypedQuery = entityManager.createNamedQuery("Vehicle.findByTaAbbr", Vehicle.class);
-                vehicleTypedQuery.setParameter("taAbbr", transportAgent.getAbbr());
-                List<Vehicle> vehicles = vehicleTypedQuery.getResultList();
+                List<Vehicle> vehicles = vehicleRepository.getListVehicle(transportAgent.getAbbr());
 
-                if (!entityManager.getTransaction().isActive()) {
-                    entityManager.getTransaction().begin();
+                if (!entityTransaction.isActive()) {
+                    entityTransaction.begin();
                 }
 
                 try {
                     for (Vehicle vehicle : vehicles) {
+                        transportAgentVehicle = transportAgentVehicleRepository.findByTransportAgentIdAndVehicleId(transportAgent.getId(), vehicle.getId());
+                        entityManager.remove(transportAgentVehicle);
+
                         entityManager.remove(vehicle);
                     }
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), "Xóa phương tiện vận chuyển không thành công");
-                    entityManager.getTransaction().rollback();
+                    JOptionPane.showMessageDialog(rootPane, "Xóa phương tiện vận chuyển không thành công");
+                    entityTransaction.rollback();
+                    return null;
                 }
 
                 // delete dvvc
@@ -365,18 +377,19 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
                     }
                     entityManager.remove(transportAgent);
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), "Xóa nhà vận chuyển không thành công");
-                    entityManager.getTransaction().rollback();
+                    JOptionPane.showMessageDialog(rootPane, "Xóa nhà vận chuyển không thành công");
+                    entityTransaction.rollback();
+                    return null;
                 }
 
-                entityManager.getTransaction().commit();
+                entityTransaction.commit();
                 entityManager.clear();
             }
         }
 
         try {
-            if (!entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().begin();
+            if (!entityTransaction.isActive()) {
+                entityTransaction.begin();
             }
             // update dara SAP -> DB
             for (TransportAgent transportAgentSAP : transportAgentsSAP) {
@@ -388,15 +401,17 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
                 }
             }
 
-            entityManager.getTransaction().commit();
+            entityTransaction.commit();
             entityManager.clear();
 
         } catch (Exception ex) {
-            entityManager.getTransaction().rollback();
+            JOptionPane.showMessageDialog(rootPane, "Đồng bộ đơn vị vận chuyển không thành công!");
+            entityTransaction.rollback();
+            return null;
         }
 
         // get dvvc
-        transportAgents = typedQuery.getResultList();
+        transportAgents = transportAgentRepository.getListTransportAgent();
         DefaultListModel model = new DefaultListModel();
         for (TransportAgent transportAgent : transportAgents) {
             model.addElement(transportAgent);
@@ -405,9 +420,7 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
     }
 
     private DefaultListModel getVehiclesModel() {
-        TypedQuery<Vehicle> typedQuery = entityManager.createNamedQuery("Vehicle.findByTaAbbr", Vehicle.class);
-        typedQuery.setParameter("taAbbr", transportAgentSelected.getAbbr());
-        List<Vehicle> vehicles = typedQuery.getResultList();
+        List<Vehicle> vehicles = vehicleRepository.getListVehicle(transportAgentSelected.getAbbr());
         DefaultListModel model = new DefaultListModel();
         for (Vehicle vehicle : vehicles) {
             model.addElement(vehicle);
@@ -417,30 +430,55 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
 
     @Action(enabledProperty = "vehicleCreatable")
     public void saveVehicle() {
+        TransportAgentVehicle transportAgentVehicle = new TransportAgentVehicle();
         Vehicle vehicle = entityManager.find(Vehicle.class, txtLicensePlate.getText().trim());
-        if (vehicle == null) {
-            vehicle = new Vehicle();
-            vehicle.setSoXe(txtLicensePlate.getText().trim());
-            vehicle.setTaAbbr(transportAgentSelected.getAbbr());
-            if (!entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().begin();
+
+        EntityTransaction entityTransaction = entityManager.getTransaction();
+        try {
+            if (!entityTransaction.isActive()) {
+                entityTransaction.begin();
             }
-            entityManager.persist(vehicle);
-            entityManager.getTransaction().commit();
+
+            if (vehicle == null) {
+                // insert new vehicle 
+                vehicle = new Vehicle();
+                vehicle.setPlateNo(txtLicensePlate.getText().trim());
+                entityManager.persist(vehicle);
+
+                // insert vehicle relationship
+                transportAgentVehicle.setTransportAgent(transportAgentSelected);
+                transportAgentVehicle.setVehicle(vehicle);
+                entityManager.persist(transportAgentVehicle);
+            } else {
+                // check vehicle has exit in transport agent
+                transportAgentVehicle = transportAgentVehicleRepository.findByTransportAgentIdAndVehicleId(transportAgentSelected.getId(), vehicle.getId());
+                if (transportAgentVehicle != null) {
+                    JOptionPane.showMessageDialog(rootPane, "Số xe "
+                            + txtLicensePlate.getText().trim()
+                            + " đã được đăng ký cho đơn vị vận chuyển "
+                            + transportAgentSelected.getName());
+                    return;
+                } else {
+                    // insert vehicle relationship
+                    transportAgentVehicle.setTransportAgent(transportAgentSelected);
+                    transportAgentVehicle.setVehicle(vehicle);
+                    entityManager.persist(transportAgentVehicle);
+                }
+            }
+
+            entityTransaction.commit();
             entityManager.clear();
+
             setVehicleCreatable(false);
             vehicleSelected = null;
             txtLicensePlate.setText("");
             lstVehicle.clearSelection();
             lstVehicle.setModel(getVehiclesModel());
-        } else {
-            TransportAgent transportAgent = entityManager.find(TransportAgent.class, vehicle.getTaAbbr());
-            if (transportAgent != null) {
-                JOptionPane.showMessageDialog(rootPane, "Số xe "
-                        + txtLicensePlate.getText().trim()
-                        + " đã được đăng ký cho đơn vị vận chuyển "
-                        + transportAgent.getName());
-            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(rootPane, "Có lỗi khi thêm mới biển số xe!");
+
+            entityTransaction.rollback();
+            entityManager.clear();
         }
     }
 
@@ -460,7 +498,6 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
     private javax.swing.JButton btnVehicleRemove;
     private javax.swing.JButton btnVehicleSave;
     private javax.swing.JCheckBox chkProhibitVehicle;
-    private javax.persistence.EntityManager entityManager;
     private javax.swing.JLabel lblLicensePlate;
     private javax.swing.JList lstTransportAgent;
     private javax.swing.JList lstVehicle;

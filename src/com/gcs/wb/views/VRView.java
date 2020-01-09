@@ -203,7 +203,7 @@ public class VRView extends javax.swing.JInternalFrame {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 if (value instanceof Vehicle) {
                     Vehicle ta = (Vehicle)value;
-                    setText(ta.getSoXe());
+                    setText(ta.getPlateNo());
                 }
                 return this;
             }
@@ -349,7 +349,7 @@ public class VRView extends javax.swing.JInternalFrame {
     private void lstVehicleValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstVehicleValueChanged
         vehicle = (Vehicle) lstVehicle.getSelectedValue();
         // on selected
-        if (vehicle.getSoXe() != null) {
+        if (vehicle.getPlateNo() != null) {
 
             VehicleValid vh = new VehicleValid();
             VehicleValidPK vhPK = new VehicleValidPK();
@@ -358,7 +358,7 @@ public class VRView extends javax.swing.JInternalFrame {
 
             //vhPK.setMandt(lconfig.getsClient().toString());
             vhPK.setWPlant(lconfig.getwPlant().toString());
-            vhPK.setSoXe(vehicle.getSoXe());
+            vhPK.setSoXe(vehicle.getPlateNo());
             vh.setVehicleValidPK(vhPK);
             vh = entityManager.find(VehicleValid.class, vh.getVehicleValidPK());
             if (vh != null) {
@@ -554,8 +554,9 @@ public class VRView extends javax.swing.JInternalFrame {
         Vehicle v = entityManager.find(Vehicle.class, txtLicPlate.getText().trim());
         if (v == null) {
             v = new Vehicle();
-            v.setSoXe(txtLicPlate.getText().trim());
-            v.setTaAbbr(tAgent.getAbbr());
+            // TODO: comment to test new database
+            v.setPlateNo(txtLicPlate.getText().trim());
+//            v.setTaAbbr(tAgent.getAbbr());
             if (!entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().begin();
             }
@@ -568,13 +569,14 @@ public class VRView extends javax.swing.JInternalFrame {
             lstVehicle.clearSelection();
             lstVehicle.setModel(getVModel());
         } else {
-            TransportAgent ta = entityManager.find(TransportAgent.class, v.getTaAbbr());
-            if (ta != null) {
-                JOptionPane.showMessageDialog(rootPane, "Số xe "
-                        + txtLicPlate.getText().trim()
-                        + " đã được đăng ký cho đơn vị vận chuyển "
-                        + ta.getName());
-            }
+            // TODO: comment to test new database
+//            TransportAgent ta = entityManager.find(TransportAgent.class, v.getTaAbbr());
+//            if (ta != null) {
+//                JOptionPane.showMessageDialog(rootPane, "Số xe "
+//                        + txtLicPlate.getText().trim()
+//                        + " đã được đăng ký cho đơn vị vận chuyển "
+//                        + ta.getName());
+//            }
         }
     }
 
@@ -688,7 +690,7 @@ public class VRView extends javax.swing.JInternalFrame {
 
     @Action
     public void apply() {
-        if (vehicle.getSoXe() != null) {
+        if (vehicle.getPlateNo() != null) {
 
             VehicleValid vh = new VehicleValid();
             VehicleValidPK vhPK = new VehicleValidPK();
@@ -697,7 +699,7 @@ public class VRView extends javax.swing.JInternalFrame {
             try {
                 //vhPK.setMandt(lconfig.getsClient().toString());
                 vhPK.setWPlant(lconfig.getwPlant().toString());
-                vhPK.setSoXe(vehicle.getSoXe());
+                vhPK.setSoXe(vehicle.getPlateNo());
                 vh.setVehicleValidPK(vhPK);
                 boolean l_valid = false;
                 if (chk_not_valid.isSelected()) {

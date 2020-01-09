@@ -212,7 +212,7 @@ public class VRView1 extends javax.swing.JInternalFrame {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 if (value instanceof Vehicle) {
                     Vehicle ta = (Vehicle)value;
-                    setText(ta.getSoXe());
+                    setText(ta.getPlateNo());
                 }
                 return this;
             }
@@ -571,8 +571,9 @@ private void btnARemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         Vehicle v = entityManager.find(Vehicle.class, txtLicPlate.getText().trim());
         if (v == null) {
             v = new Vehicle();
-            v.setSoXe(txtLicPlate.getText().trim());
-            v.setTaAbbr(tAgent.getAbbr());
+            // TODO: comment to test new database
+            v.setPlateNo(txtLicPlate.getText().trim());
+//            v.setTaAbbr(tAgent.getAbbr());
             if (!entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().begin();
             }
@@ -585,13 +586,14 @@ private void btnARemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             lstVehicle.clearSelection();
             lstVehicle.setModel(getVModel());
         } else {
-            TransportAgent ta = entityManager.find(TransportAgent.class, v.getTaAbbr());
-            if (ta != null) {
-                JOptionPane.showMessageDialog(rootPane, "Số xe "
-                        + txtLicPlate.getText().trim()
-                        + " đã được đăng ký cho đơn vị vận chuyển "
-                        + ta.getName());
-            }
+            // TODO: comment to test new database
+//            TransportAgent ta = entityManager.find(TransportAgent.class, v.getTaAbbr());
+//            if (ta != null) {
+//                JOptionPane.showMessageDialog(rootPane, "Số xe "
+//                        + txtLicPlate.getText().trim()
+//                        + " đã được đăng ký cho đơn vị vận chuyển "
+//                        + ta.getName());
+//            }
         }
     }
 

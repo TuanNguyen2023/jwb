@@ -5,6 +5,7 @@
 package com.gcs.wb.jpa.repositorys;
 
 import com.gcs.wb.jpa.JPAConnector;
+import com.gcs.wb.jpa.JpaProperties;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -18,12 +19,11 @@ import javax.swing.DefaultListModel;
  */
 public class TransportAgentRepository {
 
-    EntityManager entityManager = JPAConnector.getInstance();
+    EntityManager entityManager = JpaProperties.getEntityManager();
 
     public List<TransportAgent> getListTransportAgent() {
-        TypedQuery<TransportAgent> tq = entityManager.createNamedQuery("TransportAgent.findAll", TransportAgent.class);
-        List<TransportAgent> list = tq.getResultList();
-        return list;
+        TypedQuery<TransportAgent> typedQuery = entityManager.createNamedQuery("TransportAgent.findAll", TransportAgent.class);
+        return typedQuery.getResultList();
     }
 
     public DefaultListModel getTAModel() {

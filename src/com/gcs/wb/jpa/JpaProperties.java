@@ -8,13 +8,18 @@ import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.model.AppConfig;
 import java.util.HashMap;
 import java.util.Map;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import org.eclipse.persistence.config.PersistenceUnitProperties;
+import javax.persistence.Persistence;
 
 /**
  *
  * @author Tran-Vu
  */
 public class JpaProperties {
+
+    private static EntityManager instance = null;
 
     public static Map getPropertiesV1() {
         AppConfig appConf = WeighBridgeApp.getApplication().getConfig();
@@ -32,7 +37,19 @@ public class JpaProperties {
         properties.put(PersistenceUnitProperties.JDBC_PASSWORD, appConf.getDbPwd());
         return properties;
     }
+
+    public static EntityManager getEntityManager() {
+        if (instance != null) {
+            return instance;
+        } else {
+            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("JWeighBridgePU",
+                    getProperties());
+            instance = entityManagerFactory.createEntityManager();
+            return instance;
+        }
+    }
     // conect DB customer
+
     public static Map getProperties() {
         AppConfig appConf = WeighBridgeApp.getApplication().getConfig();
         StringBuilder sbURL = new StringBuilder();
@@ -42,7 +59,7 @@ public class JpaProperties {
         sbURL.append(appConf.getDbName());
         Map<String, String> properties = new HashMap<String, String>();
         properties.put(PersistenceUnitProperties.JDBC_DRIVER, "com.microsoft.sqlserver.jdbc.SQLServerDriver");
-        properties.put(PersistenceUnitProperties.JDBC_URL, "jdbc:sqlserver://172.16.20.181:1433;databaseName=weighbridge");
+        properties.put(PersistenceUnitProperties.JDBC_URL, "jdbc:sqlserver://172.16.20.181:1433;databaseName=plant");
         properties.put(PersistenceUnitProperties.JDBC_USER, appConf.getDbUsr());
         properties.put(PersistenceUnitProperties.JDBC_PASSWORD, appConf.getDbPwd());
         return properties;

@@ -5,6 +5,7 @@
 package com.gcs.wb.jpa.repositorys;
 
 import com.gcs.wb.jpa.JPAConnector;
+import com.gcs.wb.jpa.JpaProperties;
 import com.gcs.wb.jpa.entity.Vehicle;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -17,7 +18,7 @@ import javax.swing.DefaultListModel;
  */
 public class VehicleRepository {
 
-    EntityManager entityManager = JPAConnector.getInstance();
+    EntityManager entityManager = JpaProperties.getEntityManager();
 
     public DefaultListModel getVModel(String abbr) {
         List<Vehicle> vehicles = getListVehicle(abbr);
@@ -29,9 +30,8 @@ public class VehicleRepository {
     }
 
     public List<Vehicle> getListVehicle(String abbr) {
-        TypedQuery<Vehicle> vehTq = entityManager.createNamedQuery("Vehicle.findByTaAbbr", Vehicle.class);
-        vehTq.setParameter("taAbbr", abbr);
-        List<Vehicle> result = vehTq.getResultList();
-        return result;
+        TypedQuery<Vehicle> typedQuery = entityManager.createNamedQuery("Vehicle.findByAbbr", Vehicle.class);
+        typedQuery.setParameter("abbr", abbr);
+        return typedQuery.getResultList();
     }
 }
