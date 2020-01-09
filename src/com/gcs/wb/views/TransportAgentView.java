@@ -12,6 +12,7 @@ package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.helper.SAP2Local;
+import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.Vehicle;
 import com.gcs.wb.model.AppConfig;
@@ -19,7 +20,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.util.List;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.persistence.TypedQuery;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
@@ -322,7 +322,7 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
         boolean isLicensePlate = false;
         String licensePlateStr = txtLicensePlate.getText().trim();
 
-        Matcher matcher = LICENSE_PLATE_PATTERN.matcher(licensePlateStr);
+        Matcher matcher = Constants.TransportAgent.LICENSE_PLATE_PATTERN.matcher(licensePlateStr);
         isLicensePlate = !licensePlateStr.isEmpty() && matcher.matches();
         lblLicensePlate.setForeground(isLicensePlate ? Color.black : Color.red);
 
@@ -354,7 +354,7 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
                         entityManager.remove(vehicle);
                     }
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), "Xóa phương tiện vận chuyển không thành công");
+                    JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), resourceMapMsg.getString("msg.deleteVehicleFalse"));
                     entityManager.getTransaction().rollback();
                 }
 
@@ -365,7 +365,7 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
                     }
                     entityManager.remove(transportAgent);
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), "Xóa nhà vận chuyển không thành công");
+                    JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), resourceMapMsg.getString("msg.deleteProviderFalse"));
                     entityManager.getTransaction().rollback();
                 }
 
@@ -474,5 +474,5 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
     private boolean vehicleCreatable = false;
-    private static final Pattern LICENSE_PLATE_PATTERN = Pattern.compile("^(\\d{2}[A-Z]-\\d{4})|(\\d{2}[A-Z]-\\d{3}.\\d{2})$");
+    public org.jdesktop.application.ResourceMap resourceMapMsg = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(TransportAgentView.class);
 }

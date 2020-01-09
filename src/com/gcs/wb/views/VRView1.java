@@ -11,19 +11,17 @@
 package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
+import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.Vehicle;
 import com.gcs.wb.jpa.repositorys.TransportAgentRepository;
 import com.gcs.wb.jpa.repositorys.VehicleRepository;
-import com.gcs.wb.model.AppConfig;
 import javax.persistence.EntityManager;
 import java.awt.Color;
 import java.awt.Component;
 import java.util.List;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.persistence.TypedQuery;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
@@ -407,7 +405,7 @@ private void btnARemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             }
 
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), "Xóa phương tiện vận chuyển không thành công");
+            JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), resourceMapMsg.getString("msg.deleteVehicleFalse"));
             return;
         }
         try {
@@ -422,7 +420,7 @@ private void btnARemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 //                entityManager.clear();
             }
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), "Xóa nhà vận chuyển không thành công");
+            JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), resourceMapMsg.getString("msg.deleteProviderFalse"));
 //            System.out.println(ex);
             return;
         }
@@ -439,8 +437,8 @@ private void btnARemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private boolean validateLicPlate() {
         boolean bLicPlate = false;
 
-        Matcher m = patLicPlate.matcher(txtLicPlate.getText().trim());
-        Matcher m_new = patLicPlatenew.matcher(txtLicPlate.getText().trim());
+        Matcher m = Constants.VRView1.patLicPlate.matcher(txtLicPlate.getText().trim());
+        Matcher m_new = Constants.VRView1.patLicPlatenew.matcher(txtLicPlate.getText().trim());
         bLicPlate = !(txtLicPlate.getText().trim().isEmpty());// || !(m.matches() || m_new.matches()));
         if (bLicPlate) {
             lblLicPlate.setForeground(Color.black);
@@ -460,7 +458,7 @@ private void btnARemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             lblAName.setForeground(Color.red);
         }
 
-        Matcher m = patAAbbr.matcher(txtAAbbr.getText().trim());
+        Matcher m = Constants.VRView1.patAAbbr.matcher(txtAAbbr.getText().trim());
 
         bTAAbbr = !(txtAAbbr.getText().trim().isEmpty() || txtAAbbr.getText().trim().length() > 10 || !m.matches());
         if (bTAAbbr) {
@@ -539,7 +537,7 @@ private void btnARemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 }
 
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), "Xóa phương tiện vận chuyển không thành công");
+                JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), resourceMapMsg.getString("msg.deleteVehicleFalse"));
                 return;
             }
             try {
@@ -553,7 +551,7 @@ private void btnARemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     entityManager.clear();
                 }
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), "Xóa nhà vận chuyển không thành công");
+                JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), resourceMapMsg.getString("msg.deleteProviderFalse"));
                 return;
             }
             entityManager.clear();
@@ -653,7 +651,5 @@ private void btnARemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     // End of variables declaration//GEN-END:variables
     private boolean aCreatable = false;
     private boolean vCreatable = false;
-    private static final Pattern patLicPlate = Pattern.compile("\\d{2}[A-Z]-\\d{4}");
-    private static final Pattern patLicPlatenew = Pattern.compile("\\d{2}[A-Z]-\\S+"); //+20110309#01
-    private static final Pattern patAAbbr = Pattern.compile("[0-9A-Z]{1,10}");
+    public org.jdesktop.application.ResourceMap resourceMapMsg = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(VRView1.class);
 }

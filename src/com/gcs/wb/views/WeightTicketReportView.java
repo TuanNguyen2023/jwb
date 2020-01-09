@@ -28,7 +28,7 @@ import java.awt.Component;
 import java.util.List;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
-import com.gcs.wb.utils.FormatRenderer;
+import com.gcs.wb.base.util.FormatRenderer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -478,7 +478,7 @@ private void cbxModeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:
 
         @Override
         protected void finished() {
-            setMessage("Hoàn tất...");
+            setMessage(resourceMapMsg.getString("msg.finished"));
             WeighBridgeApp.getApplication().bindJTableModel(tabWeightTicket, wtDatas, wtColNames, wtColTypes, editable);
         }
     }
@@ -601,4 +601,5 @@ private void cbxModeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:
         Boolean.class,
         String.class,
         String.class};
+    public org.jdesktop.application.ResourceMap resourceMapMsg = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(WeightTicketReportView.class);
 }

@@ -11,6 +11,7 @@
 package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
+import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.Vehicle;
 import com.gcs.wb.jpa.entity.VehicleValid;
@@ -19,7 +20,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.util.List;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.persistence.TypedQuery;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
@@ -407,8 +407,8 @@ public class VRView extends javax.swing.JInternalFrame {
     private boolean validateLicPlate() {
         boolean bLicPlate = false;
 
-        Matcher m = patLicPlate.matcher(txtLicPlate.getText().trim());
-        Matcher m_new = patLicPlatenew.matcher(txtLicPlate.getText().trim());
+        Matcher m = Constants.VRView.patLicPlate.matcher(txtLicPlate.getText().trim());
+        Matcher m_new = Constants.VRView.patLicPlatenew.matcher(txtLicPlate.getText().trim());
         bLicPlate = !(txtLicPlate.getText().trim().isEmpty());// || !(m.matches() || m_new.matches()));
         if (bLicPlate) {
             lblLicPlate.setForeground(Color.black);
@@ -428,7 +428,7 @@ public class VRView extends javax.swing.JInternalFrame {
             lblAName.setForeground(Color.red);
         }
 
-        Matcher m = patAAbbr.matcher(txtAAbbr.getText().trim());
+        Matcher m = Constants.VRView.patAAbbr.matcher(txtAAbbr.getText().trim());
 
         bTAAbbr = !(txtAAbbr.getText().trim().isEmpty() || txtAAbbr.getText().trim().length() > 10 || !m.matches());
         if (bTAAbbr) {
@@ -741,7 +741,7 @@ public class VRView extends javax.swing.JInternalFrame {
     // End of variables declaration//GEN-END:variables
     private boolean aCreatable = false;
     private boolean vCreatable = false;
-    private static final Pattern patLicPlate = Pattern.compile("\\d{2}[A-Z]-\\d{4}");
-    private static final Pattern patLicPlatenew = Pattern.compile("\\d{2}[A-Z]-\\S+"); //+20110309#01
-    private static final Pattern patAAbbr = Pattern.compile("[0-9A-Z]{1,10}");
+//    private static final Pattern patLicPlate = Pattern.compile("\\d{2}[A-Z]-\\d{4}");
+//    private static final Pattern patLicPlatenew = Pattern.compile("\\d{2}[A-Z]-\\S+"); //+20110309#01
+//    private static final Pattern patAAbbr = Pattern.compile("[0-9A-Z]{1,10}");
 }

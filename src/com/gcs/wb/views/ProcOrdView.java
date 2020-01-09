@@ -10,12 +10,13 @@
  */
 package com.gcs.wb.views;
 
-import com.gcs.wb.utils.RegexFormatter;
+import com.gcs.wb.base.util.RegexFormatter;
 import org.jdesktop.application.Action;
 import com.gcs.wb.jpa.entity.Variant;
 import com.gcs.wb.jpa.entity.VariantPK;
 import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.WeighBridgeApp;
+import com.gcs.wb.base.constant.Constants;
 import javax.persistence.EntityManager;
 
 /**
@@ -112,7 +113,7 @@ public class ProcOrdView extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     private String procOrd = null;
-    public static final String PROP_PROCORD = "procOrd";
+    
 
     /**
      * Get the value of procOrd
@@ -131,7 +132,7 @@ public class ProcOrdView extends javax.swing.JDialog {
     private void setProcOrd(String procOrd) {
         String oldProcOrd = this.procOrd;
         this.procOrd = procOrd;
-        firePropertyChange(PROP_PROCORD, oldProcOrd, procOrd);
+        firePropertyChange(Constants.ProcOrdView.PROP_PROCORD, oldProcOrd, procOrd);
         //Save production order
         Variant vari = new Variant();
         VariantPK variPK = new VariantPK();

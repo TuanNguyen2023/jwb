@@ -4,11 +4,6 @@
  */
 package com.gcs.wb.base.converter;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static java.util.Optional.ofNullable;
-
 public abstract class AbstractThrowableConverter<FROM, TO, EXCEPTION extends Exception>
         implements IConverter<FROM, TO, EXCEPTION> {
     @Override

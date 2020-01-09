@@ -14,7 +14,7 @@ import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.rs232.enums.ParityEnum;
 import com.gcs.wb.rs232.SerialHelper;
-import com.gcs.wb.utils.Base64_Utils;
+import com.gcs.wb.base.util.Base64_Utils;
 import gnu.io.CommPortIdentifier;
 import java.awt.Color;
 import java.util.HashSet;
@@ -984,9 +984,9 @@ public class ConfigView extends javax.swing.JDialog {
         txtHost.setText(Base64_Utils.encodeNTimes(config.getsHost()));
         txfSNo.setValue(Base64_Utils.encodeNTimes(config.getsNumber()));
         txtRString.setText(Base64_Utils.encodeNTimes(config.getsRoute()));
-        txfDClient.setValue(Base64_Utils.encodeNTimes(config.getsClient()));      
+        txfDClient.setValue(Base64_Utils.encodeNTimes(config.getsClient()));
         txtPlant.setText(Base64_Utils.encodeNTimes(config.getwPlant()));
-        
+
         DefaultComboBoxModel port1Model = getPortModel();
         String port1 = config.getB1Port();
         if (port1Model.getIndexOf(port1) < 0) {

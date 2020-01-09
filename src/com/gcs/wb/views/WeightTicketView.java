@@ -9,7 +9,7 @@
  * Created on 26-11-2009, 14:22:57
  */
 package com.gcs.wb.views;
- import com.gcs.wb.utils.Base64_Utils; 
+ import com.gcs.wb.base.util.Base64_Utils; 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.SAPErrorTransform;
 import com.gcs.wb.bapi.goodsmvt.GoodsMvtDoCreateBapi;
@@ -32,6 +32,7 @@ import com.gcs.wb.bapi.outbdlv.WsDeliveryUpdateBapi;
 import com.gcs.wb.bapi.outbdlv.structure.OutbDeliveryCreateStoStructure;
 import com.gcs.wb.bapi.outbdlv.structure.VbkokStructure;
 import com.gcs.wb.bapi.outbdlv.structure.VbpokStructure;
+import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.JpaProperties;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
@@ -60,7 +61,7 @@ import com.gcs.wb.jpa.entity.Vendor;
 import com.gcs.wb.jpa.entity.VendorPK;
 import com.gcs.wb.jpa.entity.WeightTicket;
 import com.gcs.wb.jpa.entity.WeightTicketPK;
-import com.gcs.wb.utils.RegexFormatter;
+import com.gcs.wb.base.util.RegexFormatter;
 import com.gcs.wb.model.AppConfig;
 import com.sap.conn.jco.JCoException;
 import java.awt.Color;
@@ -69,16 +70,9 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
-import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
@@ -110,7 +104,7 @@ import com.gcs.wb.jpa.repositorys.MovementRepository;
 import com.gcs.wb.jpa.repositorys.SignalsRepository;
 import com.gcs.wb.jpa.repositorys.ReasonRepository;
 import com.gcs.wb.jpa.repositorys.TimeRangeRepository;
-import com.gcs.wb.utils.Conversion_Exit;
+import com.gcs.wb.base.util.Conversion_Exit;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -119,7 +113,6 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 import java.math.BigInteger;
 // import java.util.Locale;
-import javax.persistence.Query;
 import java.sql.Timestamp;
 // import java.util.Set;
 import java.awt.datatransfer.StringSelection; 
@@ -1934,7 +1927,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
         String last = WeighBridgeApp.getApplication().getLast().toString();
         String now = WeighBridgeApp.getApplication().getNow().toString();
         if (!last.equals(now)) {
-            JOptionPane.showMessageDialog(rootPane, "Xin đợi cho cân ổn định");
+            JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.weighStability"));
             return null;
         }
         boolean fCheckSignal = false;
@@ -1967,7 +1960,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                         return new AcceptScaleTask(WeighBridgeApp.getApplication());
                     } else if (m.getCheckPosto() != null || !m.getCheckPosto().equals("")) {
                         if (!purOrder.getValType().equals("TRANSIT")) {
-                            JOptionPane.showMessageDialog(rootPane, "Valuation Type khác 'TRANSIT', vui lòng kiểm tra lại!!");
+                            JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.valuationTypeDifferent"));
                             return null;
                         }
                     }
@@ -2040,7 +2033,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
             if ((weightTicket.getDissolved() == null) || (weightTicket.getDissolved() == false)) { //+20100112#01 Phieu bi huy khong dc in lai
                 return new ReprintWTTask(WeighBridgeApp.getApplication());
             } else { //+20100112#01 Phieu bi huy khong dc in lai
-                JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), "Phiếu cân đã bị hủy!");
+                JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), resourceMapMsg.getString("msg.ticketDestroy"));
                 return null;
             } //+20100112#01 Phieu bi huy khong dc in lai
         }
@@ -2095,7 +2088,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
             }
             if (!flag_tmp) {
             //    JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(),cmes.getMsg("3") ); 
-                String Mes ="Điểm nhận hàng trên phiếu không hợp lệ, vui lòng kiểm tra, hoặc liên hệ DVKH để được hỗ trợ. " ; 
+                String Mes =resourceMapMsg.getString("msg.errorPointReceive"); 
             //    Mes = cmes.getMsg("3") ; 
                  JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(),Mes.toString()  ); 
             }
@@ -2109,7 +2102,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
             String wplant = WeighBridgeApp.getApplication().getConfig().getwPlant().toString();
             try {
               //  msg = cmes.getMsg("2");
-                msg = "Lỗi thiếu thông tin ghi chú ! Vui lòng nhập thông tin ghi chú "; 
+                msg = resourceMapMsg.getString("msg.errorNote"); 
             } catch (Exception ex) {
                 java.util.logging.Logger.getLogger(WeightTicketView.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -2190,7 +2183,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                                     procoView.dispose();
                                     procoView = null;
                                     if (weightTicket.getPpProcord() == null) {
-                                        JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), "Cần nhập Process Order để thực hiện thao tác xuất XM PCB40 !!!");
+                                        JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), resourceMapMsg.getString("msg.needProcessOrder"));
                                         return null;
                                     }
                                 }
@@ -2242,37 +2235,21 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Form's properties">
     private boolean stage1 = false;
-    public static final String PROP_STAGE1 = "stage1";
     private boolean stage2 = false;
-    public static final String PROP_STAGE2 = "stage2";
     private boolean saveNeeded = false;
-    public static final String PROP_SAVENEEDED = "saveNeeded";
     private boolean bridge1 = false;
-    public static final String PROP_BRIDGE1 = "bridge1";
     private boolean bridge2 = false;
-    public static final String PROP_BRIDGE2 = "bridge2";
     private boolean validPONum = false;
-    public static final String PROP_VALIDPONUM = "validPONum";
     private boolean dissolved = false;
-    public static final String PROP_DISSOLVED = "dissolved";
     private boolean reprintable = false;
-    public static final String PROP_REPRINTABLE = "reprintable";
     private boolean enteredValidPONum = false;
-    public static final String PROP_ENTEREDVALIDPONUM = "enteredValidPONum";
     private boolean enteredValidWTNum = false;
-    public static final String PROP_ENTEREDVALIDWTNUM = "enteredValidWTNum";
     private boolean withoutDO = false;
-    public static final String PROP_WITHOUTDO = "withoutDO";
     private boolean formEnable = false;
-    public static final String PROP_FORMENABLE = "formEnable";
     private boolean subContract = false;
-    public static final String PROP_SUBCONTRACT = "subContract";
     private boolean materialAvailable = false;
-    public static final String PROP_MATERIALAVAILABLE = "materialAvailable";
     private Double matAvailStocks = null;
-    public static final String PROP_MATAVAILSTOCKS = "matAvailStocks";
     private boolean mvt311 = false;
-    public static final String PROP_MVT311 = "mvt311";
 
     /**
      * Get the value of stage2
@@ -2396,7 +2373,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
     public void setStage1(boolean stage1) {
         boolean oldStage1 = this.stage1;
         this.stage1 = stage1;
-        firePropertyChange(PROP_STAGE1, oldStage1, stage1);
+        firePropertyChange(Constants.WeightTicketView.PROP_STAGE1, oldStage1, stage1);
     }
 
     /**
@@ -2407,13 +2384,13 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
     public void setStage2(boolean stage2) {
         boolean oldStage2 = this.stage2;
         this.stage2 = stage2;
-        firePropertyChange(PROP_STAGE2, oldStage2, stage2);
+        firePropertyChange(Constants.WeightTicketView.PROP_STAGE2, oldStage2, stage2);
     }
 
     public void setSaveNeeded(boolean b) {
         boolean old = isSaveNeeded();
         this.saveNeeded = b;
-        firePropertyChange(PROP_SAVENEEDED, old, isSaveNeeded());
+        firePropertyChange(Constants.WeightTicketView.PROP_SAVENEEDED, old, isSaveNeeded());
     }
 
     /**
@@ -2424,7 +2401,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
     private void setBridge1(boolean bridge1) {
         boolean oldBridge1 = this.bridge1;
         this.bridge1 = bridge1;
-        firePropertyChange(PROP_BRIDGE1, oldBridge1, bridge1);
+        firePropertyChange(Constants.WeightTicketView.PROP_BRIDGE1, oldBridge1, bridge1);
     }
 
     /**
@@ -2435,7 +2412,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
     private void setBridge2(boolean bridge2) {
         boolean oldBridge2 = this.bridge2;
         this.bridge2 = bridge2;
-        firePropertyChange(PROP_BRIDGE2, oldBridge2, bridge2);
+        firePropertyChange(Constants.WeightTicketView.PROP_BRIDGE2, oldBridge2, bridge2);
     }
 
     /**
@@ -2446,7 +2423,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
     public void setEnteredValidWTNum(boolean enteredValidWTNum) {
         boolean oldEnteredValidWTNum = this.enteredValidWTNum;
         this.enteredValidWTNum = enteredValidWTNum;
-        firePropertyChange(PROP_ENTEREDVALIDWTNUM, oldEnteredValidWTNum, enteredValidWTNum);
+        firePropertyChange(Constants.WeightTicketView.PROP_ENTEREDVALIDWTNUM, oldEnteredValidWTNum, enteredValidWTNum);
     }
 
     /**
@@ -2457,7 +2434,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
     public void setValidPONum(boolean validPONum) {
         boolean oldValidPONum = this.validPONum;
         this.validPONum = validPONum;
-        firePropertyChange(PROP_VALIDPONUM, oldValidPONum, validPONum);
+        firePropertyChange(Constants.WeightTicketView.PROP_VALIDPONUM, oldValidPONum, validPONum);
     }
 
     /**
@@ -2468,7 +2445,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
     public void setEnteredValidPONum(boolean enteredValidPONum) {
         boolean oldEnteredValidPONum = this.enteredValidPONum;
         this.enteredValidPONum = enteredValidPONum;
-        firePropertyChange(PROP_ENTEREDVALIDPONUM, oldEnteredValidPONum, enteredValidPONum);
+        firePropertyChange(Constants.WeightTicketView.PROP_ENTEREDVALIDPONUM, oldEnteredValidPONum, enteredValidPONum);
     }
 
     /**
@@ -2479,7 +2456,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
     public void setWithoutDO(boolean withoutDO) {
         boolean oldWithoutDO = this.withoutDO;
         this.withoutDO = withoutDO;
-        firePropertyChange(PROP_WITHOUTDO, oldWithoutDO, withoutDO);
+        firePropertyChange(Constants.WeightTicketView.PROP_WITHOUTDO, oldWithoutDO, withoutDO);
     }
 
     /**
@@ -2490,37 +2467,37 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
     public void setDissolved(boolean dissolved) {
         boolean oldDissolved = this.dissolved;
         this.dissolved = dissolved;
-        firePropertyChange(PROP_DISSOLVED, oldDissolved, dissolved);
+        firePropertyChange(Constants.WeightTicketView.PROP_DISSOLVED, oldDissolved, dissolved);
     }
 
     public void setReprintable(boolean b) {
         boolean old = isReprintable();
         this.reprintable = b;
-        firePropertyChange(PROP_REPRINTABLE, old, isReprintable());
+        firePropertyChange(Constants.WeightTicketView.PROP_REPRINTABLE, old, isReprintable());
     }
 
     public void setFormEnable(boolean formEnable) {
         boolean oldFormEnable = this.formEnable;
         this.formEnable = formEnable;
-        firePropertyChange(PROP_FORMENABLE, oldFormEnable, formEnable);
+        firePropertyChange(Constants.WeightTicketView.PROP_FORMENABLE, oldFormEnable, formEnable);
     }
 
     public void setSubContract(boolean subContract) {
         boolean oldSubContract = this.subContract;
         this.subContract = subContract;
-        firePropertyChange(PROP_SUBCONTRACT, oldSubContract, subContract);
+        firePropertyChange(Constants.WeightTicketView.PROP_SUBCONTRACT, oldSubContract, subContract);
     }
 
     public void setMaterialAvailable(boolean materialAvailable) {
         boolean oldMaterialAvailable = this.materialAvailable;
         this.materialAvailable = materialAvailable;
-        firePropertyChange(PROP_MATERIALAVAILABLE, oldMaterialAvailable, materialAvailable);
+        firePropertyChange(Constants.WeightTicketView.PROP_MATERIALAVAILABLE, oldMaterialAvailable, materialAvailable);
     }
 
     public void setMatAvailStocks(Double matAvailStocks) {
         Double oldMatAvailStocks = this.matAvailStocks;
         this.matAvailStocks = matAvailStocks;
-        firePropertyChange(PROP_MATAVAILSTOCKS, oldMatAvailStocks, matAvailStocks);
+        firePropertyChange(Constants.WeightTicketView.PROP_MATAVAILSTOCKS, oldMatAvailStocks, matAvailStocks);
     }
 
     /**
@@ -2531,7 +2508,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
     public void setMvt311(boolean mvt311) {
         boolean oldMvt311 = this.mvt311;
         this.mvt311 = mvt311;
-        firePropertyChange(PROP_MVT311, oldMvt311, mvt311);
+        firePropertyChange(Constants.WeightTicketView.PROP_MVT311, oldMvt311, mvt311);
     }
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Util. Classes/Methods">
@@ -3125,7 +3102,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
 
         @Override
         protected Object doInBackground() {
-            setMessage("Đang đọc P.O từ CSDL ...");
+            setMessage(resourceMapMsg.getString("msg.getDataPO"));
             setProgress(0, 0, 3);
             // Tuanna >> 14.06.13 
             cbxKunnr.setSelectedIndex(-1);
@@ -3134,7 +3111,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
             // << end comment.
 
             purOrder = entityManager.find(PurOrder.class, new PurOrderPK(config.getsClient(), poNum));
-            setMessage("Tìm dữ liệu của P.O trong SAP ...");
+            setMessage(resourceMapMsg.getString("msg.searchDataPo"));
             setProgress(1, 0, 3);
 
             try {
@@ -3164,7 +3141,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
             }
             
             
-            setMessage("Lưu dữ liệu P.O vào CSDL ...");
+            setMessage(resourceMapMsg.getString("msg.saveData"));
             setProgress(2, 0, 3);
             if (!entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().begin();
@@ -3397,7 +3374,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                                     revertCompletedDO(completedDO, null, null);
                                     weightTicket.setPosted(-1);
                                     if (bapi_message == "") {
-                                        bapi_message = "Error in BAPI function";
+                                        bapi_message = resourceMapMsg.getString("msg.errorBapi");
                                     }
                                     JOptionPane.showMessageDialog(rootPane, bapi_message);
                                     completed = false;
@@ -3689,7 +3666,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                                         revertCompletedDO(completedDO, outDetails_lits, outbDel_list);
                                         weightTicket.setPosted(-1);
                                         if (bapi_message == "") {
-                                            bapi_message = "Error in BAPI function";
+                                            bapi_message = resourceMapMsg.getString("msg.errorBapi");
                                         }
                                         JOptionPane.showMessageDialog(rootPane, bapi_message);
                                         completed = false;
@@ -3804,7 +3781,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
             entityManager.clear();
             if (completed) {
                 if (weightTicket.getDissolved() == null || weightTicket.getDissolved() == false || weightTicket.getPosted() == 1 || weightTicket.getPosted() == 2) { //+20100111#01 khong in neu huy phieu
-                    setMessage("Đang in phiếu cân...");
+                    setMessage(resourceMapMsg.getString("msg.printing"));
                     printWT(weightTicket, false);
                 }
             }
@@ -3923,10 +3900,10 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
             }
             lblBatch.setForeground(Color.black);
             if (isSubContract() && txfGoodsQty.getValue() != null) {
-                setMessage("Đang kiểm tra tồn kho trong SAP...");
+                setMessage(resourceMapMsg.getString("msg.checkIssetWarehouse"));
                 Double remaining = CheckMatStock(weightTicket.getMatnrRef(), config.getwPlant(), weightTicket.getLgort(), weightTicket.getCharg());
                 if (weightTicket.getGQty().doubleValue() > remaining) {
-                    JOptionPane.showMessageDialog(rootPane, "K.L xuất lớn hơn K.L tồn kho!!!");
+                    JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.oBiggerWarehouse"));
                     txfOutQty.setValue(null);
                     txfGoodsQty.setValue(null);
                     weightTicket.setGQty(null);
@@ -3985,7 +3962,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                 if (dIn > dOut) {
                     result = dIn - dOut;
                     if (weightTicket.getRegCategory() == 'O') {
-                        JOptionPane.showMessageDialog(rootPane, "K.L nhập lớn hơn K.L xuất!");
+                        JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.iBiggerO"));
                         txfOutQty.setValue(null);
                         txfGoodsQty.setValue(null);
                         weightTicket.setGQty(null);
@@ -3994,7 +3971,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                 } else {
                     result = dOut - dIn;
                     if (weightTicket.getRegCategory() == 'I') {
-                        JOptionPane.showMessageDialog(rootPane, "K.L xuất lớn hơn K.L nhập!");
+                        JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.oBiggerI"));
                         txfOutQty.setValue(null);
                         txtOutTime.setText(null);
                         txfGoodsQty.setValue(null);
@@ -4004,7 +3981,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                 }
                 result = result / 1000d;
                 if (result == 0) {
-                    JOptionPane.showMessageDialog(rootPane, "Khối lượng hàng không hợp lệ!");
+                    JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.massOrderInvalid"));
                     txfOutQty.setValue(null);
                     txfGoodsQty.setValue(null);
                     weightTicket.setGQty(null);
@@ -4167,7 +4144,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                             try {
                                 msg = weightTicketJpaRepository.getMsg("6");
                             } catch (Exception ex) {
-                                msg = "Khối lượng ngoài giới hạn cho phép";
+                                msg = resourceMapMsg.getString("msg.massOrderOutLimit");
                             }
                             JOptionPane.showMessageDialog(rootPane,  msg ); //variant mesage --> Tuanna 
                             txfOutQty.setValue(null);
@@ -4184,13 +4161,13 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                         weightTicket.setGQty(new BigDecimal(result));
                     }
                 } else if (isSubContract() && weightTicket.getLgort() != null && weightTicket.getCharg() != null) {
-                    setMessage("Đang kiểm tra tồn kho trong SAP..."); // checking stock --tuanna
+                    setMessage(resourceMapMsg.getString("msg.checkIssetWarehouse")); // checking stock --tuanna
                     Double remaining = CheckMatStock(weightTicket.getMatnrRef(), config.getwPlant(), weightTicket.getLgort(), weightTicket.getCharg());
                     if (result <= remaining) {
                         txfGoodsQty.setValue(result);
                         weightTicket.setGQty(new BigDecimal(result));
                     } else {
-                        JOptionPane.showMessageDialog(rootPane, "K.L xuất lớn hơn K.L tồn kho!!!");
+                        JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.oBiggerWarehouse"));
                         txfOutQty.setValue(null);
                         txfGoodsQty.setValue(null);
                         weightTicket.setGQty(null);
@@ -5676,5 +5653,6 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
     private int timeFrom = 0;
     private int timeTo = 0;
     private String ximang = null;
+    public org.jdesktop.application.ResourceMap resourceMapMsg = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(WeightTicketView.class);
     // </editor-fold>
 }
