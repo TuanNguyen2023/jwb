@@ -77,7 +77,6 @@ public class LoginView extends javax.swing.JDialog {
         lblPassword = new javax.swing.JLabel();
         txtPassword = new javax.swing.JPasswordField();
         iconLoading = new org.jdesktop.swingx.JXBusyLabel();
-        lblVersion = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(LoginView.class);
@@ -100,7 +99,6 @@ public class LoginView extends javax.swing.JDialog {
         lblUsername.setName("lblUsername"); // NOI18N
 
         txtUsername.setForeground(resourceMap.getColor("txtUsername.foreground")); // NOI18N
-        txtUsername.setText(resourceMap.getString("txtUsername.text")); // NOI18N
         txtUsername.setName("txtUsername"); // NOI18N
         txtUsername.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -115,7 +113,6 @@ public class LoginView extends javax.swing.JDialog {
         lblPassword.setText(resourceMap.getString("lblPassword.text")); // NOI18N
         lblPassword.setName("lblPassword"); // NOI18N
 
-        txtPassword.setText(resourceMap.getString("txtPassword.text")); // NOI18N
         txtPassword.setAction(actionMap.get("login")); // NOI18N
         txtPassword.setName("txtPassword"); // NOI18N
 
@@ -170,12 +167,8 @@ public class LoginView extends javax.swing.JDialog {
                 .addGroup(pnFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(btnLogin)
                     .addComponent(iconLoading, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
-
-        lblVersion.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblVersion.setText(resourceMap.getString("lblVersion.text")); // NOI18N
-        lblVersion.setName("lblVersion"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -183,18 +176,14 @@ public class LoginView extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnForm, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
-                    .addComponent(lblVersion, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(pnForm, javax.swing.GroupLayout.DEFAULT_SIZE, 364, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(pnForm, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblVersion)
+                .addComponent(pnForm, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -632,7 +621,6 @@ public class LoginView extends javax.swing.JDialog {
     private org.jdesktop.swingx.JXBusyLabel iconLoading;
     private javax.swing.JLabel lblPassword;
     private javax.swing.JLabel lblUsername;
-    private javax.swing.JLabel lblVersion;
     private javax.swing.JPanel pnForm;
     private javax.swing.JPasswordField txtPassword;
     private javax.swing.JTextField txtUsername;
