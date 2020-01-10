@@ -9,7 +9,7 @@
  * Created on 26-11-2009, 14:22:57
  */
 package com.gcs.wb.views;
- import com.gcs.wb.base.util.Base64_Utils; 
+ import com.gcs.wb.base.util.Base64_Utils;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.SAPErrorTransform;
 import com.gcs.wb.bapi.goodsmvt.GoodsMvtDoCreateBapi;
@@ -34,7 +34,7 @@ import com.gcs.wb.bapi.outbdlv.structure.VbkokStructure;
 import com.gcs.wb.bapi.outbdlv.structure.VbpokStructure;
 import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.jpa.JPAConnector;
-import com.gcs.wb.jpa.JpaProperties;
+import com.gcs.wb.jpa.JReportConnector;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.OutbDetailsV2;
 import com.gcs.wb.jpa.entity.BatchStocks;
@@ -68,7 +68,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import javax.persistence.NoResultException;
@@ -84,7 +83,6 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
 import org.apache.log4j.Logger;
-import org.eclipse.persistence.config.PersistenceUnitProperties;
 import org.hibersap.HibersapException;
 import org.hibersap.SapException;
 import org.hibersap.session.Session;
@@ -115,8 +113,10 @@ import java.math.BigInteger;
 // import java.util.Locale;
 import java.sql.Timestamp;
 // import java.util.Set;
-import java.awt.datatransfer.StringSelection; 
-import java.util.*; 
+import java.awt.datatransfer.StringSelection;
+import java.util.*;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperReport;
 
 /*
  *
@@ -1927,7 +1927,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
         String last = WeighBridgeApp.getApplication().getLast().toString();
         String now = WeighBridgeApp.getApplication().getNow().toString();
         if (!last.equals(now)) {
-            JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.weighStability"));
+            JOptionPane.showMessageDialog(rootPane, "Xin đợi cho cân ổn định");
             return null;
         }
         boolean fCheckSignal = false;
@@ -1960,7 +1960,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                         return new AcceptScaleTask(WeighBridgeApp.getApplication());
                     } else if (m.getCheckPosto() != null || !m.getCheckPosto().equals("")) {
                         if (!purOrder.getValType().equals("TRANSIT")) {
-                            JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.valuationTypeDifferent"));
+                            JOptionPane.showMessageDialog(rootPane, "Valuation Type khác 'TRANSIT', vui lòng kiểm tra lại!!");
                             return null;
                         }
                     }
@@ -2033,7 +2033,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
             if ((weightTicket.getDissolved() == null) || (weightTicket.getDissolved() == false)) { //+20100112#01 Phieu bi huy khong dc in lai
                 return new ReprintWTTask(WeighBridgeApp.getApplication());
             } else { //+20100112#01 Phieu bi huy khong dc in lai
-                JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), resourceMapMsg.getString("msg.ticketDestroy"));
+                JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), "Phiếu cân đã bị hủy!");
                 return null;
             } //+20100112#01 Phieu bi huy khong dc in lai
         }
@@ -2088,7 +2088,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
             }
             if (!flag_tmp) {
             //    JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(),cmes.getMsg("3") ); 
-                String Mes =resourceMapMsg.getString("msg.errorPointReceive"); 
+                String Mes ="Điểm nhận hàng trên phiếu không hợp lệ, vui lòng kiểm tra, hoặc liên hệ DVKH để được hỗ trợ. " ; 
             //    Mes = cmes.getMsg("3") ; 
                  JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(),Mes.toString()  ); 
             }
@@ -2102,7 +2102,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
             String wplant = WeighBridgeApp.getApplication().getConfig().getwPlant().toString();
             try {
               //  msg = cmes.getMsg("2");
-                msg = resourceMapMsg.getString("msg.errorNote"); 
+                msg = "Lỗi thiếu thông tin ghi chú ! Vui lòng nhập thông tin ghi chú "; 
             } catch (Exception ex) {
                 java.util.logging.Logger.getLogger(WeightTicketView.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -2183,7 +2183,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                                     procoView.dispose();
                                     procoView = null;
                                     if (weightTicket.getPpProcord() == null) {
-                                        JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), resourceMapMsg.getString("msg.needProcessOrder"));
+                                        JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), "Cần nhập Process Order để thực hiện thao tác xuất XM PCB40 !!!");
                                         return null;
                                     }
                                 }
@@ -2235,21 +2235,37 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Form's properties">
     private boolean stage1 = false;
+    public static final String PROP_STAGE1 = "stage1";
     private boolean stage2 = false;
+    public static final String PROP_STAGE2 = "stage2";
     private boolean saveNeeded = false;
+    public static final String PROP_SAVENEEDED = "saveNeeded";
     private boolean bridge1 = false;
+    public static final String PROP_BRIDGE1 = "bridge1";
     private boolean bridge2 = false;
+    public static final String PROP_BRIDGE2 = "bridge2";
     private boolean validPONum = false;
+    public static final String PROP_VALIDPONUM = "validPONum";
     private boolean dissolved = false;
+    public static final String PROP_DISSOLVED = "dissolved";
     private boolean reprintable = false;
+    public static final String PROP_REPRINTABLE = "reprintable";
     private boolean enteredValidPONum = false;
+    public static final String PROP_ENTEREDVALIDPONUM = "enteredValidPONum";
     private boolean enteredValidWTNum = false;
+    public static final String PROP_ENTEREDVALIDWTNUM = "enteredValidWTNum";
     private boolean withoutDO = false;
+    public static final String PROP_WITHOUTDO = "withoutDO";
     private boolean formEnable = false;
+    public static final String PROP_FORMENABLE = "formEnable";
     private boolean subContract = false;
+    public static final String PROP_SUBCONTRACT = "subContract";
     private boolean materialAvailable = false;
+    public static final String PROP_MATERIALAVAILABLE = "materialAvailable";
     private Double matAvailStocks = null;
+    public static final String PROP_MATAVAILSTOCKS = "matAvailStocks";
     private boolean mvt311 = false;
+    public static final String PROP_MVT311 = "mvt311";
 
     /**
      * Get the value of stage2
@@ -2373,7 +2389,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
     public void setStage1(boolean stage1) {
         boolean oldStage1 = this.stage1;
         this.stage1 = stage1;
-        firePropertyChange(Constants.WeightTicketView.PROP_STAGE1, oldStage1, stage1);
+        firePropertyChange(PROP_STAGE1, oldStage1, stage1);
     }
 
     /**
@@ -2384,13 +2400,13 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
     public void setStage2(boolean stage2) {
         boolean oldStage2 = this.stage2;
         this.stage2 = stage2;
-        firePropertyChange(Constants.WeightTicketView.PROP_STAGE2, oldStage2, stage2);
+        firePropertyChange(PROP_STAGE2, oldStage2, stage2);
     }
 
     public void setSaveNeeded(boolean b) {
         boolean old = isSaveNeeded();
         this.saveNeeded = b;
-        firePropertyChange(Constants.WeightTicketView.PROP_SAVENEEDED, old, isSaveNeeded());
+        firePropertyChange(PROP_SAVENEEDED, old, isSaveNeeded());
     }
 
     /**
@@ -2401,7 +2417,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
     private void setBridge1(boolean bridge1) {
         boolean oldBridge1 = this.bridge1;
         this.bridge1 = bridge1;
-        firePropertyChange(Constants.WeightTicketView.PROP_BRIDGE1, oldBridge1, bridge1);
+        firePropertyChange(PROP_BRIDGE1, oldBridge1, bridge1);
     }
 
     /**
@@ -2412,7 +2428,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
     private void setBridge2(boolean bridge2) {
         boolean oldBridge2 = this.bridge2;
         this.bridge2 = bridge2;
-        firePropertyChange(Constants.WeightTicketView.PROP_BRIDGE2, oldBridge2, bridge2);
+        firePropertyChange(PROP_BRIDGE2, oldBridge2, bridge2);
     }
 
     /**
@@ -2423,7 +2439,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
     public void setEnteredValidWTNum(boolean enteredValidWTNum) {
         boolean oldEnteredValidWTNum = this.enteredValidWTNum;
         this.enteredValidWTNum = enteredValidWTNum;
-        firePropertyChange(Constants.WeightTicketView.PROP_ENTEREDVALIDWTNUM, oldEnteredValidWTNum, enteredValidWTNum);
+        firePropertyChange(PROP_ENTEREDVALIDWTNUM, oldEnteredValidWTNum, enteredValidWTNum);
     }
 
     /**
@@ -2434,7 +2450,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
     public void setValidPONum(boolean validPONum) {
         boolean oldValidPONum = this.validPONum;
         this.validPONum = validPONum;
-        firePropertyChange(Constants.WeightTicketView.PROP_VALIDPONUM, oldValidPONum, validPONum);
+        firePropertyChange(PROP_VALIDPONUM, oldValidPONum, validPONum);
     }
 
     /**
@@ -2445,7 +2461,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
     public void setEnteredValidPONum(boolean enteredValidPONum) {
         boolean oldEnteredValidPONum = this.enteredValidPONum;
         this.enteredValidPONum = enteredValidPONum;
-        firePropertyChange(Constants.WeightTicketView.PROP_ENTEREDVALIDPONUM, oldEnteredValidPONum, enteredValidPONum);
+        firePropertyChange(PROP_ENTEREDVALIDPONUM, oldEnteredValidPONum, enteredValidPONum);
     }
 
     /**
@@ -2456,7 +2472,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
     public void setWithoutDO(boolean withoutDO) {
         boolean oldWithoutDO = this.withoutDO;
         this.withoutDO = withoutDO;
-        firePropertyChange(Constants.WeightTicketView.PROP_WITHOUTDO, oldWithoutDO, withoutDO);
+        firePropertyChange(PROP_WITHOUTDO, oldWithoutDO, withoutDO);
     }
 
     /**
@@ -2467,37 +2483,37 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
     public void setDissolved(boolean dissolved) {
         boolean oldDissolved = this.dissolved;
         this.dissolved = dissolved;
-        firePropertyChange(Constants.WeightTicketView.PROP_DISSOLVED, oldDissolved, dissolved);
+        firePropertyChange(PROP_DISSOLVED, oldDissolved, dissolved);
     }
 
     public void setReprintable(boolean b) {
         boolean old = isReprintable();
         this.reprintable = b;
-        firePropertyChange(Constants.WeightTicketView.PROP_REPRINTABLE, old, isReprintable());
+        firePropertyChange(PROP_REPRINTABLE, old, isReprintable());
     }
 
     public void setFormEnable(boolean formEnable) {
         boolean oldFormEnable = this.formEnable;
         this.formEnable = formEnable;
-        firePropertyChange(Constants.WeightTicketView.PROP_FORMENABLE, oldFormEnable, formEnable);
+        firePropertyChange(PROP_FORMENABLE, oldFormEnable, formEnable);
     }
 
     public void setSubContract(boolean subContract) {
         boolean oldSubContract = this.subContract;
         this.subContract = subContract;
-        firePropertyChange(Constants.WeightTicketView.PROP_SUBCONTRACT, oldSubContract, subContract);
+        firePropertyChange(PROP_SUBCONTRACT, oldSubContract, subContract);
     }
 
     public void setMaterialAvailable(boolean materialAvailable) {
         boolean oldMaterialAvailable = this.materialAvailable;
         this.materialAvailable = materialAvailable;
-        firePropertyChange(Constants.WeightTicketView.PROP_MATERIALAVAILABLE, oldMaterialAvailable, materialAvailable);
+        firePropertyChange(PROP_MATERIALAVAILABLE, oldMaterialAvailable, materialAvailable);
     }
 
     public void setMatAvailStocks(Double matAvailStocks) {
         Double oldMatAvailStocks = this.matAvailStocks;
         this.matAvailStocks = matAvailStocks;
-        firePropertyChange(Constants.WeightTicketView.PROP_MATAVAILSTOCKS, oldMatAvailStocks, matAvailStocks);
+        firePropertyChange(PROP_MATAVAILSTOCKS, oldMatAvailStocks, matAvailStocks);
     }
 
     /**
@@ -2508,7 +2524,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
     public void setMvt311(boolean mvt311) {
         boolean oldMvt311 = this.mvt311;
         this.mvt311 = mvt311;
-        firePropertyChange(Constants.WeightTicketView.PROP_MVT311, oldMvt311, mvt311);
+        firePropertyChange(PROP_MVT311, oldMvt311, mvt311);
     }
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Util. Classes/Methods">
@@ -3102,7 +3118,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
 
         @Override
         protected Object doInBackground() {
-            setMessage(resourceMapMsg.getString("msg.getDataPO"));
+            setMessage("Đang đọc P.O từ CSDL ...");
             setProgress(0, 0, 3);
             // Tuanna >> 14.06.13 
             cbxKunnr.setSelectedIndex(-1);
@@ -3111,7 +3127,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
             // << end comment.
 
             purOrder = entityManager.find(PurOrder.class, new PurOrderPK(config.getsClient(), poNum));
-            setMessage(resourceMapMsg.getString("msg.searchDataPo"));
+            setMessage("Tìm dữ liệu của P.O trong SAP ...");
             setProgress(1, 0, 3);
 
             try {
@@ -3141,7 +3157,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
             }
             
             
-            setMessage(resourceMapMsg.getString("msg.saveData"));
+            setMessage("Lưu dữ liệu P.O vào CSDL ...");
             setProgress(2, 0, 3);
             if (!entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().begin();
@@ -3374,7 +3390,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                                     revertCompletedDO(completedDO, null, null);
                                     weightTicket.setPosted(-1);
                                     if (bapi_message == "") {
-                                        bapi_message = resourceMapMsg.getString("msg.errorBapi");
+                                        bapi_message = "Error in BAPI function";
                                     }
                                     JOptionPane.showMessageDialog(rootPane, bapi_message);
                                     completed = false;
@@ -3666,7 +3682,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                                         revertCompletedDO(completedDO, outDetails_lits, outbDel_list);
                                         weightTicket.setPosted(-1);
                                         if (bapi_message == "") {
-                                            bapi_message = resourceMapMsg.getString("msg.errorBapi");
+                                            bapi_message = "Error in BAPI function";
                                         }
                                         JOptionPane.showMessageDialog(rootPane, bapi_message);
                                         completed = false;
@@ -3781,7 +3797,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
             entityManager.clear();
             if (completed) {
                 if (weightTicket.getDissolved() == null || weightTicket.getDissolved() == false || weightTicket.getPosted() == 1 || weightTicket.getPosted() == 2) { //+20100111#01 khong in neu huy phieu
-                    setMessage(resourceMapMsg.getString("msg.printing"));
+                    setMessage("Đang in phiếu cân...");
                     printWT(weightTicket, false);
                 }
             }
@@ -3900,10 +3916,10 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
             }
             lblBatch.setForeground(Color.black);
             if (isSubContract() && txfGoodsQty.getValue() != null) {
-                setMessage(resourceMapMsg.getString("msg.checkIssetWarehouse"));
+                setMessage("Đang kiểm tra tồn kho trong SAP...");
                 Double remaining = CheckMatStock(weightTicket.getMatnrRef(), config.getwPlant(), weightTicket.getLgort(), weightTicket.getCharg());
                 if (weightTicket.getGQty().doubleValue() > remaining) {
-                    JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.oBiggerWarehouse"));
+                    JOptionPane.showMessageDialog(rootPane, "K.L xuất lớn hơn K.L tồn kho!!!");
                     txfOutQty.setValue(null);
                     txfGoodsQty.setValue(null);
                     weightTicket.setGQty(null);
@@ -3962,7 +3978,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                 if (dIn > dOut) {
                     result = dIn - dOut;
                     if (weightTicket.getRegCategory() == 'O') {
-                        JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.iBiggerO"));
+                        JOptionPane.showMessageDialog(rootPane, "K.L nhập lớn hơn K.L xuất!");
                         txfOutQty.setValue(null);
                         txfGoodsQty.setValue(null);
                         weightTicket.setGQty(null);
@@ -3971,7 +3987,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                 } else {
                     result = dOut - dIn;
                     if (weightTicket.getRegCategory() == 'I') {
-                        JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.oBiggerI"));
+                        JOptionPane.showMessageDialog(rootPane, "K.L xuất lớn hơn K.L nhập!");
                         txfOutQty.setValue(null);
                         txtOutTime.setText(null);
                         txfGoodsQty.setValue(null);
@@ -3981,7 +3997,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                 }
                 result = result / 1000d;
                 if (result == 0) {
-                    JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.massOrderInvalid"));
+                    JOptionPane.showMessageDialog(rootPane, "Khối lượng hàng không hợp lệ!");
                     txfOutQty.setValue(null);
                     txfGoodsQty.setValue(null);
                     weightTicket.setGQty(null);
@@ -4144,7 +4160,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                             try {
                                 msg = weightTicketJpaRepository.getMsg("6");
                             } catch (Exception ex) {
-                                msg = resourceMapMsg.getString("msg.massOrderOutLimit");
+                                msg = "Khối lượng ngoài giới hạn cho phép";
                             }
                             JOptionPane.showMessageDialog(rootPane,  msg ); //variant mesage --> Tuanna 
                             txfOutQty.setValue(null);
@@ -4161,13 +4177,13 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                         weightTicket.setGQty(new BigDecimal(result));
                     }
                 } else if (isSubContract() && weightTicket.getLgort() != null && weightTicket.getCharg() != null) {
-                    setMessage(resourceMapMsg.getString("msg.checkIssetWarehouse")); // checking stock --tuanna
+                    setMessage("Đang kiểm tra tồn kho trong SAP..."); // checking stock --tuanna
                     Double remaining = CheckMatStock(weightTicket.getMatnrRef(), config.getwPlant(), weightTicket.getLgort(), weightTicket.getCharg());
                     if (result <= remaining) {
                         txfGoodsQty.setValue(result);
                         weightTicket.setGQty(new BigDecimal(result));
                     } else {
-                        JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.oBiggerWarehouse"));
+                        JOptionPane.showMessageDialog(rootPane, "K.L xuất lớn hơn K.L tồn kho!!!");
                         txfOutQty.setValue(null);
                         txfGoodsQty.setValue(null);
                         weightTicket.setGQty(null);
@@ -5163,16 +5179,15 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
 //                map.put("P_DEL_NUM", outbDel.getOutbDelPK().getDelivNumb());
                 String reportName1 = "";
                 if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
-                    reportName1 = "./rpt/rptBT/WeightTicket.jasper";
+                    //reportName1 = "./rpt/rptBT/WeightTicket.jasper";
+                    reportName1 = "./rpt/rptBT/WeightTicket.jrxml";
                 } else {
-                    reportName1 = "./rpt/rptPQ/WeightTicket.jasper";
+                    // reportName1 = "./rpt/rptPQ/WeightTicket.jasper";
+                    reportName1 = "./rpt/rptPQ/WeightTicket.jrxml";
                 }
-                Class.forName((String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_DRIVER));
-                Connection jdbcCon = DriverManager.getConnection(
-                        (String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_URL),
-                        (String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_USER),
-                        (String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_PASSWORD));
-                JasperPrint jasperPrint = JasperFillManager.fillReport(reportName1, map, jdbcCon);
+                JasperReport jasperReport = JasperCompileManager.compileReport(reportName1);
+                Connection connect = JReportConnector.getInstance();
+                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, connect);
                 JasperViewer jv = new JasperViewer(jasperPrint, false);
                 jv.setVisible(true);
 
@@ -5285,16 +5300,15 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                         path = "./rpt/rptPQ/";
                     }
                     if (rbtMisc.isSelected() || rbtPO.isSelected()) {
-                        reportName = path.concat("WeightTicket.jasper");
+                        reportName = path.concat("WeightTicket.jrxml");
+                        //reportName = path.concat("WeightTicket.jasper");
                     } else {
-                        reportName = path.concat("WeightTicket_NEW.jasper");
+                        reportName = path.concat("WeightTicket_NEW.jrxml");
+                        //reportName = path.concat("WeightTicket.jasper");
                     }
-                    Class.forName((String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_DRIVER));
-                    Connection jdbcCon = DriverManager.getConnection(
-                            (String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_URL),
-                            (String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_USER),
-                            (String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_PASSWORD));
-                    JasperPrint jasperPrint = JasperFillManager.fillReport(reportName, map, jdbcCon);
+                    Connection connect = JReportConnector.getInstance();
+                    JasperReport jasperReport = JasperCompileManager.compileReport(reportName);
+                    JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, connect);
                     JasperViewer jv = new JasperViewer(jasperPrint, false);
                     jv.setVisible(true);
                 }
@@ -5451,6 +5465,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
         result = (bMisc || bPO || bMB1B || bMvt311) && bScale && bSLoc && bBatch && bNiemXa && (isStage1() || isStage2() || (!isStage1() && !isStage2() && weightTicket != null && (weightTicket.getPosted() == 0)));
         return result;
     }
+
     public GoodsMvtWeightTicketStructure fillWTStructure(WeightTicket wt,
             OutbDel od, List<OutbDetailsV2> od_v2_list) {
         GoodsMvtWeightTicketStructure stWT = null;
@@ -5533,8 +5548,10 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
             // to SelectInternalTask fields, here.
             super(app);
         }
-        @Override protected Object doInBackground() {
-            if(chkInternal.isSelected()) {
+
+        @Override
+        protected Object doInBackground() {
+            if (chkInternal.isSelected()) {
                 rbtInward.setEnabled(true);
                 rbtOutward.setEnabled(true);
             } else {
@@ -5543,7 +5560,9 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
             }
             return null;  // return your result
         }
-        @Override protected void succeeded(Object result) {
+
+        @Override
+        protected void succeeded(Object result) {
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
         }

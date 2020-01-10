@@ -4,9 +4,9 @@
 package com.gcs.wb.views;
 
 import com.gcs.wb.*;
+import com.gcs.wb.jpa.JReportConnector;
 import com.gcs.wb.jpa.entity.SAPSetting;
 import com.gcs.wb.jpa.entity.User;
-import java.awt.BorderLayout;
 import java.awt.event.WindowEvent;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
@@ -17,7 +17,7 @@ import org.jdesktop.application.TaskMonitor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
-import java.sql.DriverManager;
+import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.Timer;
@@ -26,7 +26,6 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -41,18 +40,19 @@ import org.jdesktop.application.Application;
  * The application's main frame.
  */
 public class WeighBridgeView extends FrameView {
+
     private final SAPSetting sapSetting;
     private final User login;
 
     public WeighBridgeView(SingleFrameApplication app) {
         super(app);
         initComponents();
-                //txfCurScale.setEditable(true); //Set manual input qty in wheighing
+        //txfCurScale.setEditable(true); //Set manual input qty in wheighing
         sapSetting = WeighBridgeApp.getApplication().getSapSetting();
         login = WeighBridgeApp.getApplication().getLogin();
 //        WeighBridgeView.txt_status.setText(sapSetting.getName1()+" - User:"+login.getFullName());
-        if(WeighBridgeApp.getApplication().isOfflineMode()){
-	    if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
+        if (WeighBridgeApp.getApplication().isOfflineMode()) {
+            if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
                 WeighBridgeView.txt_status.setText(sapSetting.getName1() + " - User:" + login.getFullName() + " - Offline Mode");
             } else {
                 WeighBridgeView.txt_status.setText(sapSetting.getName1() + " - User:" + WeighBridgeApp.getApplication().getCurrent_user_name() + " - Offline Mode");
@@ -73,7 +73,7 @@ public class WeighBridgeView extends FrameView {
                 weighBridgeViewWindowClosing();
             }
         });
-        
+
         // <editor-fold defaultstate="collapsed" desc="status bar initialization - message timeout, idle icon and busy animation, etc">
         ResourceMap resourceMap = getResourceMap();
         int messageTimeout = resourceMap.getInteger("StatusBar.messageTimeout");
@@ -136,10 +136,11 @@ public class WeighBridgeView extends FrameView {
         // </editor-fold>
 
     }
-        public void setStatus(String message)
-        {
-            txt_status.setText(message);
-        }
+
+    public void setStatus(String message) {
+        txt_status.setText(message);
+    }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -435,7 +436,7 @@ public class WeighBridgeView extends FrameView {
         if (evt.getClickCount() == 2) {
             reinitTabContain();
         }
-        if(WeighBridgeApp.getApplication().isOfflineMode()){
+        if (WeighBridgeApp.getApplication().isOfflineMode()) {
             if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
                 WeighBridgeView.txt_status.setText(sapSetting.getName1() + " - User:" + login.getFullName() + " - Offline Mode");
             } else {
@@ -606,11 +607,8 @@ public class WeighBridgeView extends FrameView {
                 }
                 JasperDesign jasperDesign = JRXmlLoader.load(reportName);
                 JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
-                Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
-                java.sql.Connection conn = DriverManager.getConnection("jdbc:derby:./JWeighBridge");
-                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, conn);
-
-
+                Connection connect = JReportConnector.getInstance();
+                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, connect);
                 jv = new JasperViewer(jasperPrint, false);
             } catch (Exception ex) {
                 failed = true;

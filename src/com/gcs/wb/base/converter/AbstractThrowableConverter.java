@@ -6,6 +6,7 @@ package com.gcs.wb.base.converter;
 
 public abstract class AbstractThrowableConverter<FROM, TO, EXCEPTION extends Exception>
         implements IConverter<FROM, TO, EXCEPTION> {
+
     @Override
     public abstract TO convert(FROM from) throws EXCEPTION;
 
@@ -23,7 +24,7 @@ public abstract class AbstractThrowableConverter<FROM, TO, EXCEPTION extends Exc
 //    }
     @Override
     public abstract TO convertHasParameter(FROM from, String val) throws EXCEPTION;
-    
+
     @Override
     public abstract TO convertsHasParameter(FROM from, String val, boolean refresh) throws EXCEPTION;
 }
