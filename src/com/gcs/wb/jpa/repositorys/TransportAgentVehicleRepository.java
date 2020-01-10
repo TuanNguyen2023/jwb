@@ -19,6 +19,13 @@ public class TransportAgentVehicleRepository {
 
     EntityManager entityManager = JpaProperties.getEntityManager();
 
+    public List<TransportAgentVehicle> findByTransportAgentId(int transportAgentId) {
+        TypedQuery<TransportAgentVehicle> typedQuery = entityManager.createNamedQuery("TransportAgentVehicle.findByTransportAgentId", TransportAgentVehicle.class);
+        typedQuery.setParameter("transportAgentId", transportAgentId);
+
+        return typedQuery.getResultList();
+    }
+
     public TransportAgentVehicle findByTransportAgentIdAndVehicleId(int transportAgentId, int vehicleId) {
         TypedQuery<TransportAgentVehicle> typedQuery = entityManager.createNamedQuery("TransportAgentVehicle.findByTransportAgentIdAndVehicleId", TransportAgentVehicle.class);
         typedQuery.setParameter("transportAgentId", transportAgentId);

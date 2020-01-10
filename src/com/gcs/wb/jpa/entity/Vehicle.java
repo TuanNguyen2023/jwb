@@ -6,9 +6,10 @@ package com.gcs.wb.jpa.entity;
 
 import java.io.Serializable;
 import java.sql.Date;
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -21,18 +22,14 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tbl_vehicle")
 @NamedQueries({
-    @NamedQuery(name = "Vehicle.findByAbbr",
-    query = "SELECT v FROM Vehicle v"
-    + " LEFT JOIN TransportAgentVehicle tv ON tv.vehicleId = v.id"
-    + " LEFT JOIN TransportAgent t ON t.id = tv.transportAgentId WHERE t.abbr = :abbr")
-})
+    @NamedQuery(name = "Vehicle.findByPlateNo", query = "SELECT v FROM Vehicle v WHERE v.plateNo = :plateNo")})
 public class Vehicle implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private static final String STATUS_ACTIVED = "ACTIVED";
     private static final String STATUS_INACTIVED = "INACTIVED";
     @Id
-    @Basic(optional = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
     @Column(name = "plate_no", unique = true)
@@ -122,7 +119,7 @@ public class Vehicle implements Serializable {
     }
 
     public boolean isProhibit() {
-        return STATUS_ACTIVED.equals(this.status);
+        return STATUS_INACTIVED.equals(this.status);
     }
 
     public void setProhibit(boolean isProhibit) {

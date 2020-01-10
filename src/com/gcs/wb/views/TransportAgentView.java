@@ -298,28 +298,46 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtLicensePlateFocusGained
 
 private void btnVehicleRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVehicleRemoveActionPerformed
-    if (!entityManager.getTransaction().isActive()) {
-        entityManager.getTransaction().begin();
-    }
-    entityManager.remove(vehicleSelected);
-    entityManager.getTransaction().commit();
+    EntityTransaction entityTransaction = entityManager.getTransaction();
+    try {
+        if (!entityTransaction.isActive()) {
+            entityTransaction.begin();
+        }
 
-    entityManager.clear();
+        TransportAgentVehicle transportAgentVehicle =
+                transportAgentVehicleRepository.findByTransportAgentIdAndVehicleId(
+                transportAgentSelected.getId(), vehicleSelected.getId());
+        entityManager.remove(transportAgentVehicle);
+
+        entityTransaction.commit();
+        entityManager.clear();
+    } catch (Exception ex) {
+        JOptionPane.showMessageDialog(rootPane, "Xóa phương tiện vận chuyển không thành công");
+        entityTransaction.rollback();
+        entityManager.clear();
+    }
+
     lstVehicle.clearSelection();
     lstVehicle.setModel(getVehiclesModel());
     vehicleSelected = null;
 }//GEN-LAST:event_btnVehicleRemoveActionPerformed
 
 private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProhibitApplyActionPerformed
-    vehicleSelected.setProhibit(chkProhibitVehicle.isSelected());
+    EntityTransaction entityTransaction = entityManager.getTransaction();
+    try {
+        if (!entityTransaction.isActive()) {
+            entityTransaction.begin();
+        }
 
-    if (!entityManager.getTransaction().isActive()) {
-        entityManager.getTransaction().begin();
+        vehicleSelected.setProhibit(chkProhibitVehicle.isSelected());
+        entityManager.merge(vehicleSelected);
+        entityTransaction.commit();
+        entityManager.clear();
+    } catch (Exception ex) {
+        JOptionPane.showMessageDialog(rootPane, "Thực hiện cấm xe không thành công");
+        entityTransaction.rollback();
+        entityManager.clear();
     }
-
-    entityManager.merge(vehicleSelected);
-    entityManager.getTransaction().commit();
-    entityManager.clear();
 
     chkProhibitVehicle.setSelected(false);
     vehicleSelected = null;
@@ -347,22 +365,20 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
         List<TransportAgent> transportAgentsSAP = SAP2Local.getTransportAgentList(config.getwPlant());
         //sync SAP <=> DB
         // delete data DB not exist SAP
-        TransportAgentVehicle transportAgentVehicle = null;
         for (TransportAgent transportAgent : transportAgents) {
             if (transportAgentsSAP.indexOf(transportAgent) == -1) {
                 // delete in table Vehicle
-                List<Vehicle> vehicles = vehicleRepository.getListVehicle(transportAgent.getAbbr());
+                List<TransportAgentVehicle> transportAgentVehicles = transportAgentVehicleRepository.findByTransportAgentId(transportAgent.getId());
 
                 if (!entityTransaction.isActive()) {
                     entityTransaction.begin();
                 }
 
                 try {
-                    for (Vehicle vehicle : vehicles) {
-                        transportAgentVehicle = transportAgentVehicleRepository.findByTransportAgentIdAndVehicleId(transportAgent.getId(), vehicle.getId());
+                    for (TransportAgentVehicle transportAgentVehicle : transportAgentVehicles) {
                         entityManager.remove(transportAgentVehicle);
 
-                        entityManager.remove(vehicle);
+                        entityManager.remove(transportAgentVehicle.getVehicle());
                     }
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(rootPane, "Xóa phương tiện vận chuyển không thành công");
@@ -393,10 +409,11 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
             }
             // update dara SAP -> DB
             for (TransportAgent transportAgentSAP : transportAgentsSAP) {
-
-                if (transportAgents.indexOf(transportAgentSAP) == -1) {
+                int index = transportAgents.indexOf(transportAgentSAP);
+                if (index == -1) {
                     entityManager.persist(transportAgentSAP);
                 } else {
+                    transportAgentSAP.setId(transportAgents.get(index).getId());
                     entityManager.merge(transportAgentSAP);
                 }
             }
@@ -420,10 +437,10 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
     }
 
     private DefaultListModel getVehiclesModel() {
-        List<Vehicle> vehicles = vehicleRepository.getListVehicle(transportAgentSelected.getAbbr());
+        List<TransportAgentVehicle> transportAgentVehicles = transportAgentVehicleRepository.findByTransportAgentId(transportAgentSelected.getId());
         DefaultListModel model = new DefaultListModel();
-        for (Vehicle vehicle : vehicles) {
-            model.addElement(vehicle);
+        for (TransportAgentVehicle transportAgentVehicle : transportAgentVehicles) {
+            model.addElement(transportAgentVehicle.getVehicle());
         }
         return model;
     }
@@ -431,7 +448,7 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
     @Action(enabledProperty = "vehicleCreatable")
     public void saveVehicle() {
         TransportAgentVehicle transportAgentVehicle = new TransportAgentVehicle();
-        Vehicle vehicle = entityManager.find(Vehicle.class, txtLicensePlate.getText().trim());
+        Vehicle vehicle = vehicleRepository.findByPlateNo(txtLicensePlate.getText().trim());
 
         EntityTransaction entityTransaction = entityManager.getTransaction();
         try {
@@ -443,6 +460,7 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
                 // insert new vehicle 
                 vehicle = new Vehicle();
                 vehicle.setPlateNo(txtLicensePlate.getText().trim());
+                vehicle.setProhibit(false);
                 entityManager.persist(vehicle);
 
                 // insert vehicle relationship
@@ -460,6 +478,7 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
                     return;
                 } else {
                     // insert vehicle relationship
+                    transportAgentVehicle = new TransportAgentVehicle();
                     transportAgentVehicle.setTransportAgent(transportAgentSelected);
                     transportAgentVehicle.setVehicle(vehicle);
                     entityManager.persist(transportAgentVehicle);

@@ -34,4 +34,16 @@ public class VehicleRepository {
         typedQuery.setParameter("abbr", abbr);
         return typedQuery.getResultList();
     }
+
+    public Vehicle findByPlateNo(String plateNo) {
+        TypedQuery<Vehicle> typedQuery = entityManager.createNamedQuery("Vehicle.findByPlateNo", Vehicle.class);
+        typedQuery.setParameter("plateNo", plateNo);
+
+        List<Vehicle> vehicles = typedQuery.getResultList();
+        if (vehicles != null && vehicles.size() == 1) {
+            return vehicles.get(0);
+        }
+
+        return null;
+    }
 }

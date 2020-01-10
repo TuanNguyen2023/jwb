@@ -243,7 +243,8 @@ public class WeightTicketJpaController {
             nq.setParameter("mandt", WeighBridgeApp.getApplication().getConfig().getsClient());
             nq.setParameter("wPlant", WeighBridgeApp.getApplication().getConfig().getwPlant());
             nq.setParameter("id", id);
-            nq.setParameter("taAbbr", tagent);
+            // TODO: comment to test new database
+//            nq.setParameter("taAbbr", tagent);
             if (!matnr.equalsIgnoreCase("-1")) {
                 nq.setParameter("matnrRef", matnr);
             }
