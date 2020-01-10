@@ -13,14 +13,13 @@ package com.gcs.wb.views;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.helper.SAP2Local;
 import com.gcs.wb.jpa.JPAConnector;
-import com.gcs.wb.jpa.JpaProperties;
+import com.gcs.wb.jpa.JReportConnector;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.CustomerPK;
 import com.gcs.wb.jpa.entity.OutbDel;
 import com.gcs.wb.jpa.entity.OutbDelPK;
 import com.gcs.wb.jpa.entity.SAPSetting;
-import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.Vehicle;
 import com.gcs.wb.jpa.entity.Vendor;
 import com.gcs.wb.jpa.entity.VendorPK;
@@ -34,7 +33,6 @@ import com.sap.conn.jco.JCoException;
 import java.awt.Color;
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -52,7 +50,6 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRTableModelDataSource;
 import net.sf.jasperreports.view.JasperViewer;
 import org.apache.log4j.Logger;
-import org.eclipse.persistence.config.PersistenceUnitProperties;
 import org.hibersap.HibersapException;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
@@ -67,12 +64,10 @@ import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
-import java.util.HashSet;
-import java.util.Set;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import javax.persistence.EntityManager;
 import javax.swing.DefaultComboBoxModel;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperReport;
 
 /**
  *
@@ -2142,7 +2137,6 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
         }
     }
 
-   
     private class CheckDOOFFTask extends org.jdesktop.application.Task<Object, Void> {
 
         private OutbDel outb = null;
@@ -2849,22 +2843,16 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
             map.put("P_REPRINT", reprint);
             map.put("P_ADDRESS", config.getRptId());
             String reportName = null;
-//            reportName = "./rpt/RegWT.jrxml";
             if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
-                reportName = "./rpt/rptBT/RegWT_HP.jasper";
+                //reportName = "./rpt/rptBT/RegWT_HP.jasper";
+                reportName = "./rpt/rptBT/RegWT_HP.jrxml";
             } else {
-                reportName = "./rpt/rptPQ/RegWT.jasper";
+                //reportName = "./rpt/rptPQ/RegWT.jasper";
+                reportName = "./rpt/rptPQ/RegWT.jrxml";
             }
-//            JasperDesign jasperDesign = JRXmlLoader.load(reportName);
-//            JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
-            Class.forName((String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_DRIVER));
-            Connection jdbcCon = DriverManager.getConnection(
-                    (String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_URL),
-                    (String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_USER),
-                    (String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_PASSWORD));
-
-//            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, jdbcCon);
-            JasperPrint jasperPrint = JasperFillManager.fillReport(reportName, map, jdbcCon);
+            Connection connect = JReportConnector.getInstance();
+            JasperReport jasperReport = JasperCompileManager.compileReport(reportName);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, connect);
             JasperViewer jv = new JasperViewer(jasperPrint, false);
             jv.setVisible(true);
         } catch (Exception ex) {
