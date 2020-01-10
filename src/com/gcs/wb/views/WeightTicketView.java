@@ -9,7 +9,7 @@
  * Created on 26-11-2009, 14:22:57
  */
 package com.gcs.wb.views;
- import com.gcs.wb.utils.Base64_Utils; 
+ import com.gcs.wb.base.util.Base64_Utils;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.SAPErrorTransform;
 import com.gcs.wb.bapi.goodsmvt.GoodsMvtDoCreateBapi;
@@ -32,8 +32,9 @@ import com.gcs.wb.bapi.outbdlv.WsDeliveryUpdateBapi;
 import com.gcs.wb.bapi.outbdlv.structure.OutbDeliveryCreateStoStructure;
 import com.gcs.wb.bapi.outbdlv.structure.VbkokStructure;
 import com.gcs.wb.bapi.outbdlv.structure.VbpokStructure;
+import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.jpa.JPAConnector;
-import com.gcs.wb.jpa.JpaProperties;
+import com.gcs.wb.jpa.JReportConnector;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.OutbDetailsV2;
 import com.gcs.wb.jpa.entity.BatchStocks;
@@ -60,25 +61,17 @@ import com.gcs.wb.jpa.entity.Vendor;
 import com.gcs.wb.jpa.entity.VendorPK;
 import com.gcs.wb.jpa.entity.WeightTicket;
 import com.gcs.wb.jpa.entity.WeightTicketPK;
-import com.gcs.wb.utils.RegexFormatter;
+import com.gcs.wb.base.util.RegexFormatter;
 import com.gcs.wb.model.AppConfig;
 import com.sap.conn.jco.JCoException;
 import java.awt.Color;
 import java.awt.Component;
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
-import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
@@ -90,7 +83,6 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
 import org.apache.log4j.Logger;
-import org.eclipse.persistence.config.PersistenceUnitProperties;
 import org.hibersap.HibersapException;
 import org.hibersap.SapException;
 import org.hibersap.session.Session;
@@ -110,7 +102,7 @@ import com.gcs.wb.jpa.repositorys.MovementRepository;
 import com.gcs.wb.jpa.repositorys.SignalsRepository;
 import com.gcs.wb.jpa.repositorys.ReasonRepository;
 import com.gcs.wb.jpa.repositorys.TimeRangeRepository;
-import com.gcs.wb.utils.Conversion_Exit;
+import com.gcs.wb.base.util.Conversion_Exit;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -119,11 +111,12 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 import java.math.BigInteger;
 // import java.util.Locale;
-import javax.persistence.Query;
 import java.sql.Timestamp;
 // import java.util.Set;
-import java.awt.datatransfer.StringSelection; 
-import java.util.*; 
+import java.awt.datatransfer.StringSelection;
+import java.util.*;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperReport;
 
 /*
  *
@@ -5189,16 +5182,15 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
 //                map.put("P_DEL_NUM", outbDel.getOutbDelPK().getDelivNumb());
                 String reportName1 = "";
                 if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
-                    reportName1 = "./rpt/rptBT/WeightTicket.jasper";
+                    //reportName1 = "./rpt/rptBT/WeightTicket.jasper";
+                    reportName1 = "./rpt/rptBT/WeightTicket.jrxml";
                 } else {
-                    reportName1 = "./rpt/rptPQ/WeightTicket.jasper";
+                    // reportName1 = "./rpt/rptPQ/WeightTicket.jasper";
+                    reportName1 = "./rpt/rptPQ/WeightTicket.jrxml";
                 }
-                Class.forName((String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_DRIVER));
-                Connection jdbcCon = DriverManager.getConnection(
-                        (String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_URL),
-                        (String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_USER),
-                        (String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_PASSWORD));
-                JasperPrint jasperPrint = JasperFillManager.fillReport(reportName1, map, jdbcCon);
+                JasperReport jasperReport = JasperCompileManager.compileReport(reportName1);
+                Connection connect = JReportConnector.getInstance();
+                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, connect);
                 JasperViewer jv = new JasperViewer(jasperPrint, false);
                 jv.setVisible(true);
 
@@ -5311,16 +5303,15 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                         path = "./rpt/rptPQ/";
                     }
                     if (rbtMisc.isSelected() || rbtPO.isSelected()) {
-                        reportName = path.concat("WeightTicket.jasper");
+                        reportName = path.concat("WeightTicket.jrxml");
+                        //reportName = path.concat("WeightTicket.jasper");
                     } else {
-                        reportName = path.concat("WeightTicket_NEW.jasper");
+                        reportName = path.concat("WeightTicket_NEW.jrxml");
+                        //reportName = path.concat("WeightTicket.jasper");
                     }
-                    Class.forName((String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_DRIVER));
-                    Connection jdbcCon = DriverManager.getConnection(
-                            (String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_URL),
-                            (String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_USER),
-                            (String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_PASSWORD));
-                    JasperPrint jasperPrint = JasperFillManager.fillReport(reportName, map, jdbcCon);
+                    Connection connect = JReportConnector.getInstance();
+                    JasperReport jasperReport = JasperCompileManager.compileReport(reportName);
+                    JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, connect);
                     JasperViewer jv = new JasperViewer(jasperPrint, false);
                     jv.setVisible(true);
                 }
@@ -5477,6 +5468,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
         result = (bMisc || bPO || bMB1B || bMvt311) && bScale && bSLoc && bBatch && bNiemXa && (isStage1() || isStage2() || (!isStage1() && !isStage2() && weightTicket != null && (weightTicket.getPosted() == 0)));
         return result;
     }
+
     public GoodsMvtWeightTicketStructure fillWTStructure(WeightTicket wt,
             OutbDel od, List<OutbDetailsV2> od_v2_list) {
         GoodsMvtWeightTicketStructure stWT = null;
@@ -5559,8 +5551,10 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
             // to SelectInternalTask fields, here.
             super(app);
         }
-        @Override protected Object doInBackground() {
-            if(chkInternal.isSelected()) {
+
+        @Override
+        protected Object doInBackground() {
+            if (chkInternal.isSelected()) {
                 rbtInward.setEnabled(true);
                 rbtOutward.setEnabled(true);
             } else {
@@ -5569,7 +5563,9 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
             }
             return null;  // return your result
         }
-        @Override protected void succeeded(Object result) {
+
+        @Override
+        protected void succeeded(Object result) {
             // Runs on the EDT.  Update the GUI based on
             // the result computed by doInBackground().
         }
@@ -5679,5 +5675,6 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
     private int timeFrom = 0;
     private int timeTo = 0;
     private String ximang = null;
+    public org.jdesktop.application.ResourceMap resourceMapMsg = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(WeightTicketView.class);
     // </editor-fold>
 }

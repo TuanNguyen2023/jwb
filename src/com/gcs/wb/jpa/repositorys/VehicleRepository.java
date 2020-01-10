@@ -4,8 +4,7 @@
  */
 package com.gcs.wb.jpa.repositorys;
 
-import com.gcs.wb.jpa.JPAConnector;
-import com.gcs.wb.jpa.JpaProperties;
+import com.gcs.wb.jpa.JPANewConnector;
 import com.gcs.wb.jpa.entity.Vehicle;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -18,7 +17,7 @@ import javax.swing.DefaultListModel;
  */
 public class VehicleRepository {
 
-    EntityManager entityManager = JpaProperties.getEntityManager();
+    EntityManager entityManager = JPANewConnector.getInstance();
 
     public DefaultListModel getVModel(String abbr) {
         List<Vehicle> vehicles = getListVehicle(abbr);

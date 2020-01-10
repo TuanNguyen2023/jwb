@@ -10,13 +10,14 @@ import javax.persistence.Persistence;
 
 /**
  *
- * @author dinhhn.vr
+ * @author thanghl
  */
-public class JPAConnector {
+// TODO: for new database
+public class JPANewConnector {
 
     private static EntityManager instance = null;
 
-    private JPAConnector() {
+    private JPANewConnector() {
     }
 
     public static EntityManager getInstance() {
@@ -24,7 +25,7 @@ public class JPAConnector {
             return instance;
         } else {
             EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("JWeighBridgePU",
-                    DataSources.getJweighbridgeProperties());
+                    DataSources.getJweighbridgePropertiesNew());
             instance = entityManagerFactory.createEntityManager();
             return instance;
         }

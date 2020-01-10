@@ -30,7 +30,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import java.text.SimpleDateFormat;
 import javax.persistence.TypedQuery;
 import org.apache.log4j.Logger;
- import com.gcs.wb.utils.Base64_Utils; 
+ import com.gcs.wb.base.util.Base64_Utils; 
 import com.gcs.wb.model.AppConfig; 
 import  java.util.*;
 /**

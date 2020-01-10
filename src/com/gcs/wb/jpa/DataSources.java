@@ -8,49 +8,46 @@ import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.model.AppConfig;
 import java.util.HashMap;
 import java.util.Map;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import org.eclipse.persistence.config.PersistenceUnitProperties;
-import javax.persistence.Persistence;
 
 /**
  *
- * @author Tran-Vu
+ * @author Dinh Nguyen
  */
-public class JpaProperties {
+public class DataSources {
 
-    private static EntityManager instance = null;
-
-    public static Map getPropertiesV1() {
+    public static Map getOrProperties() {
         AppConfig appConf = WeighBridgeApp.getApplication().getConfig();
-        /*URL Template | jdbc:mysql://localhost:3306/jWeighBridge?useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8*/
         StringBuilder sbURL = new StringBuilder();
-        sbURL.append("jdbc:mysql://");
+        sbURL.append("jdbc:sqlserver://");
         sbURL.append(appConf.getDbHost());
         sbURL.append("/");
         sbURL.append(appConf.getDbName());
-        sbURL.append("?useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8");
         Map<String, String> properties = new HashMap<String, String>();
-        properties.put(PersistenceUnitProperties.JDBC_DRIVER, "com.mysql.jdbc.Driver");
-        properties.put(PersistenceUnitProperties.JDBC_URL, sbURL.toString());
+        properties.put(PersistenceUnitProperties.JDBC_DRIVER, "com.microsoft.sqlserver.jdbc.SQLServerDriver");
+        properties.put(PersistenceUnitProperties.JDBC_URL, "jdbc:sqlserver://172.16.20.181:1433;databaseName=ors");
         properties.put(PersistenceUnitProperties.JDBC_USER, appConf.getDbUsr());
         properties.put(PersistenceUnitProperties.JDBC_PASSWORD, appConf.getDbPwd());
         return properties;
     }
 
-    public static EntityManager getEntityManager() {
-        if (instance != null) {
-            return instance;
-        } else {
-            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("JWeighBridgePU",
-                    getProperties());
-            instance = entityManagerFactory.createEntityManager();
-            return instance;
-        }
+    public static Map getJweighbridgeProperties() {
+        AppConfig appConf = WeighBridgeApp.getApplication().getConfig();
+        StringBuilder sbURL = new StringBuilder();
+        sbURL.append("jdbc:sqlserver://");
+        sbURL.append(appConf.getDbHost());
+        sbURL.append("/");
+        sbURL.append(appConf.getDbName());
+        Map<String, String> properties = new HashMap<String, String>();
+        properties.put(PersistenceUnitProperties.JDBC_DRIVER, "com.microsoft.sqlserver.jdbc.SQLServerDriver");
+        properties.put(PersistenceUnitProperties.JDBC_URL, "jdbc:sqlserver://172.16.20.181:1433;databaseName=weighbridge");
+        properties.put(PersistenceUnitProperties.JDBC_USER, appConf.getDbUsr());
+        properties.put(PersistenceUnitProperties.JDBC_PASSWORD, appConf.getDbPwd());
+        return properties;
     }
-    // conect DB customer
-
-    public static Map getProperties() {
+    
+    // TODO: for new database
+    public static Map getJweighbridgePropertiesNew() {
         AppConfig appConf = WeighBridgeApp.getApplication().getConfig();
         StringBuilder sbURL = new StringBuilder();
         sbURL.append("jdbc:sqlserver://");

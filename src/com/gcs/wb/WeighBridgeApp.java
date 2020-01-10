@@ -3,8 +3,8 @@
  */
 package com.gcs.wb;
 
+import com.gcs.wb.jpa.DataSources;
 import com.gcs.wb.jpa.JPAConnector;
-import com.gcs.wb.jpa.JpaProperties;
 import com.gcs.wb.jpa.entity.SAPSetting;
 import com.gcs.wb.jpa.entity.User;
 import com.gcs.wb.model.AppConfig;
@@ -51,7 +51,7 @@ public class WeighBridgeApp extends SingleFrameApplication {
     private boolean offlineMode = false;
     private boolean authenticated = false;
     private EntityManagerFactory emf = null;
-    private EntityManager em = JPAConnector.getInstance();
+    private EntityManager em = null;
     private Session _SAPSession = null;
     /**HiberSAP credential object*/
     private Credentials credentials = null;
@@ -93,7 +93,7 @@ public class WeighBridgeApp extends SingleFrameApplication {
         }
         try {
             if (emf == null || !emf.isOpen()) {
-                emf = Persistence.createEntityManagerFactory("JWeighBridgePU", JpaProperties.getProperties());
+                emf = Persistence.createEntityManagerFactory("JWeighBridgePU", DataSources.getJweighbridgeProperties());
             }
             if (em == null || !em.isOpen()) {
                 em = getEmf().createEntityManager();

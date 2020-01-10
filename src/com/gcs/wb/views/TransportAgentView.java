@@ -12,7 +12,8 @@ package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.helper.SAP2Local;
-import com.gcs.wb.jpa.JpaProperties;
+import com.gcs.wb.jpa.JPANewConnector;
+import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.TransportAgentVehicle;
 import com.gcs.wb.jpa.entity.Vehicle;
@@ -24,7 +25,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.util.List;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.swing.DefaultListCellRenderer;
@@ -40,7 +40,7 @@ import org.jdesktop.application.Action;
 public class TransportAgentView extends javax.swing.JInternalFrame {
 
     private AppConfig config = null;
-    private EntityManager entityManager = JpaProperties.getEntityManager();
+    private EntityManager entityManager = JPANewConnector.getInstance();
     private TransportAgentRepository transportAgentRepository = new TransportAgentRepository();
     private VehicleRepository vehicleRepository = new VehicleRepository();
     private TransportAgentVehicleRepository transportAgentVehicleRepository = new TransportAgentVehicleRepository();
@@ -349,7 +349,7 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
         boolean isLicensePlate = false;
         String licensePlateStr = txtLicensePlate.getText().trim();
 
-        Matcher matcher = LICENSE_PLATE_PATTERN.matcher(licensePlateStr);
+        Matcher matcher = Constants.TransportAgent.LICENSE_PLATE_PATTERN.matcher(licensePlateStr);
         isLicensePlate = !licensePlateStr.isEmpty() && matcher.matches();
         lblLicensePlate.setForeground(isLicensePlate ? Color.black : Color.red);
 
@@ -377,11 +377,9 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
                 try {
                     for (TransportAgentVehicle transportAgentVehicle : transportAgentVehicles) {
                         entityManager.remove(transportAgentVehicle);
-
-                        entityManager.remove(transportAgentVehicle.getVehicle());
                     }
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(rootPane, "Xóa phương tiện vận chuyển không thành công");
+                    JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), resourceMapMsg.getString("msg.deleteVehicleFalse"));
                     entityTransaction.rollback();
                     return null;
                 }
@@ -393,7 +391,7 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
                     }
                     entityManager.remove(transportAgent);
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(rootPane, "Xóa nhà vận chuyển không thành công");
+                    JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), resourceMapMsg.getString("msg.deleteProviderFalse"));
                     entityTransaction.rollback();
                     return null;
                 }
@@ -530,5 +528,5 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
     private boolean vehicleCreatable = false;
-    private static final Pattern LICENSE_PLATE_PATTERN = Pattern.compile("^(\\d{2}[A-Z]-\\d{4})|(\\d{2}[A-Z]-\\d{3}.\\d{2})$");
+    public org.jdesktop.application.ResourceMap resourceMapMsg = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(TransportAgentView.class);
 }

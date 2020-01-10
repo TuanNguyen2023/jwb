@@ -12,15 +12,15 @@ package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.helper.SAP2Local;
+import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.jpa.JPAConnector;
-import com.gcs.wb.jpa.JpaProperties;
+import com.gcs.wb.jpa.JReportConnector;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.CustomerPK;
 import com.gcs.wb.jpa.entity.OutbDel;
 import com.gcs.wb.jpa.entity.OutbDelPK;
 import com.gcs.wb.jpa.entity.SAPSetting;
-import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.Vehicle;
 import com.gcs.wb.jpa.entity.Vendor;
 import com.gcs.wb.jpa.entity.VendorPK;
@@ -29,12 +29,11 @@ import com.gcs.wb.jpa.entity.WeightTicketPK;
 import com.gcs.wb.jpa.entity.VehicleValid;
 import com.gcs.wb.jpa.entity.VehicleValidPK;
 import com.gcs.wb.model.AppConfig;
-import com.gcs.wb.utils.Conversion_Exit;
+import com.gcs.wb.base.util.Conversion_Exit;
 import com.sap.conn.jco.JCoException;
 import java.awt.Color;
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -44,7 +43,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JOptionPane;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -52,7 +50,6 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRTableModelDataSource;
 import net.sf.jasperreports.view.JasperViewer;
 import org.apache.log4j.Logger;
-import org.eclipse.persistence.config.PersistenceUnitProperties;
 import org.hibersap.HibersapException;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
@@ -67,12 +64,10 @@ import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
-import java.util.HashSet;
-import java.util.Set;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import javax.persistence.EntityManager;
 import javax.swing.DefaultComboBoxModel;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperReport;
 
 /**
  *
@@ -96,7 +91,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         ListWeightTicketsTask t = new ListWeightTicketsTask(WeighBridgeApp.getApplication());
         t.execute();
         
-        if (getMode().equalsIgnoreCase(WTRegView.MODE_RPT)) {
+        if (getMode().equalsIgnoreCase(Constants.WTRegView.MODE_RPT)) {
             this.setTitle("Báo cáo ngày");
         }
         cbxTimeTo.setSelectedIndex(23);
@@ -1103,11 +1098,11 @@ private void btnManyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
                 if (txtDelNum.getText().indexOf(inputDO) == -1 ) {
                     txtDelNum.setText(txtDelNum.getText() + "-" + inputDO);
                 } else {
-                    JOptionPane.showMessageDialog(this.getRootPane(), "Vui lòng kiểm tra số DO nhập bị trùng !");
+                    JOptionPane.showMessageDialog(this.getRootPane(), resourceMapMsg.getString("msg.duplicateDo"));
                 }
             }
         } else {
-            JOptionPane.showMessageDialog(this.getRootPane(), "Vui lòng kiểm tra, số DO nhập không đúng !");
+            JOptionPane.showMessageDialog(this.getRootPane(), resourceMapMsg.getString("msg.falseDo"));
             txtDelNum.setText(""); 
         }
         
@@ -1445,7 +1440,7 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                 weightTicketList.clear();
 
                 setProgress(1, 0, 4);
-                setMessage("Đang lấy dữ liệu...");                
+                setMessage(resourceMapMsg.getString("msg.getData"));                
                 AppConfig config = WeighBridgeApp.getApplication().getConfig();
                 //Tuanna add to protected data as folowing IT security policy -- 20/05/2013         
                 int days = (int)((dpTo.getDate().getTime() - dpFrom.getDate().getTime()) / (1000 * 60 * 60 * 24));               
@@ -1510,17 +1505,17 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                 }
 
                 setProgress(2, 0, 4);
-                setMessage("Đang xử lý dữ liệu...");
+                setMessage(resourceMapMsg.getString("msg.handleDate"));
                 weightTicketList.addAll(result);
-                if (getMode().equalsIgnoreCase(WTRegView.MODE_REG)) {
+                if (getMode().equalsIgnoreCase(Constants.WTRegView.MODE_REG)) {
                     wtData = new Object[weightTicketList.size()][wtCols.length];
-                } else if (getMode().equalsIgnoreCase(WTRegView.MODE_RPT)) {
+                } else if (getMode().equalsIgnoreCase(Constants.WTRegView.MODE_RPT)) {
                     wtRptData = new Object[weightTicketList.size()][wtRptCols.length];
 
                 }
                 for (int i = 0; i < weightTicketList.size(); i++) {
                     WeightTicket item = weightTicketList.get(i);
-                    if (getMode().equalsIgnoreCase(WTRegView.MODE_REG)) {
+                    if (getMode().equalsIgnoreCase(Constants.WTRegView.MODE_REG)) {
                         WeightTicketPK pk = item.getWeightTicketPK();
                         if (!pk.getMandt().equalsIgnoreCase(config.getsClient()) && !pk.getWPlant().equalsIgnoreCase(config.getwPlant().toString())) {
                             continue;
@@ -1551,7 +1546,7 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                             wtData[i][14] = false;
                         }
 
-                    } else if (getMode().equalsIgnoreCase(WTRegView.MODE_RPT)) {
+                    } else if (getMode().equalsIgnoreCase(Constants.WTRegView.MODE_RPT)) {
                         WeightTicketPK pk = item.getWeightTicketPK();
                         if (!pk.getMandt().equalsIgnoreCase(config.getsClient()) && !pk.getWPlant().equalsIgnoreCase(config.getwPlant().toString())) {
                             continue;
@@ -1644,7 +1639,7 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                     }
                 }
                 setProgress(3, 0, 4);
-                editable = new boolean[getMode().equalsIgnoreCase(WTRegView.MODE_REG) ? wtCols.length : wtRptCols.length];
+                editable = new boolean[getMode().equalsIgnoreCase(Constants.WTRegView.MODE_REG) ? wtCols.length : wtRptCols.length];
                 for (int i = 0; i < editable.length; i++) {
                     editable[i] = false;
                 }
@@ -1663,10 +1658,10 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
 
         @Override
         protected void finished() {
-            setMessage("Hoàn tất...");
-            if (getMode().equalsIgnoreCase(WTRegView.MODE_REG)) {
+            setMessage(resourceMapMsg.getString("msg.finished"));
+            if (getMode().equalsIgnoreCase(Constants.WTRegView.MODE_REG)) {
                 WeighBridgeApp.getApplication().bindJTableModel(tabWTs, wtData, wtCols, wtTypes, editable);
-            } else if (getMode().equalsIgnoreCase(WTRegView.MODE_RPT)) {
+            } else if (getMode().equalsIgnoreCase(Constants.WTRegView.MODE_RPT)) {
                 WeighBridgeApp.getApplication().bindJTableModel(tabWTs, wtRptData, wtRptCols, wtRptTypes, editable);
             }
             setCreatable(true);
@@ -1703,7 +1698,7 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                     //      selectedRow.setDissolved(false);
                     // }
                     if ((selectedRow.getDissolved() == null) || (selectedRow.getDissolved() == false)) { //+20100112#01 Không cho in khi phiếu đăng tài bị hủy
-                        setMessage("Đang in lại phiếu đăng tài...");
+                        setMessage(resourceMapMsg.getString("msg.rePrinting"));
                         txtSodangtai.setText(selectedRow.getWeightTicketPK().getId().toString()
                                 + String.format("%03d", selectedRow.getWeightTicketPK().getSeqByDay())); //+20100303
 
@@ -1717,7 +1712,7 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                         // End add. 
                         printWT(selectedRow, true); 
                     } else { //+20100112#01  Không cho in khi phiếu đăng tài bị hủy
-                        setMessage("Phiếu đăng tài đã bị hủy...");
+                        setMessage(resourceMapMsg.getString("msg.ticketDestroy"));
                     } //+20100112#01  Không cho in khi phiếu đăng tài bị hủy
                 } catch (Exception ex) {
                     failed(ex);
@@ -1739,7 +1734,7 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
 
         @Override
         protected void finished() {
-            setMessage("Hoàn tất...");
+            setMessage(resourceMapMsg.getString("msg.finished"));
         }
     }
 
@@ -1815,7 +1810,7 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
             String oldSoxe = "";
             String[] val = txtDelNum.getText().trim().split("-");
             for (int k = 0; k < val.length; k++) {
-                setMessage("Kiểm tra D.O trong CSDL ...");
+                setMessage(resourceMapMsg.getString("msg.checkDOInDB"));
                 setProgress(1, 1, 4);
                 //+20100106 convert DO number to SAP format
 //            System.out.println(val);
@@ -1827,7 +1822,7 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
 //            System.out.println(val.length());
                 outbPK = new OutbDelPK(WeighBridgeApp.getApplication().getConfig().getsClient(), val[k]);
                 outb = entityManager.find(OutbDel.class, outbPK);
-                setMessage("Kiểm tra D.O trong SAP ...");
+                setMessage(resourceMapMsg.getString("checkDOInSap"));
                 setProgress(2, 1, 4);
                 OutbDel sapOutb = SAP2Local.getOutboundDelivery(val[k], true);
                 if (sapOutb != null) {
@@ -1852,7 +1847,7 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                     }
 
                 }
-                setMessage("Lưu dữ liệu D.O xuống CSDL ...");
+                setMessage(resourceMapMsg.getString("msg.saveDataToDb"));
                 setProgress(3, 1, 4);
                 if (!entityManager.getTransaction().isActive()) {
                     entityManager.getTransaction().begin();
@@ -1906,7 +1901,7 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                         !oldKunnr.equals("") &&
                         !oldKunnr.equals(outb.getKunnr())) {
                     validDO = false;
-                    String msg = "Không trùng mã số khách hàng";
+                    String msg = resourceMapMsg.getString("msg.notDuplicateCode");
                     setMessage(msg);
                     JOptionPane.showMessageDialog(rootPane, msg);
                 } else if (outb != null) {
@@ -1917,7 +1912,7 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                         !oldSoxe.equals("") &&
                         !oldSoxe.equals(outb.getTraid())) {
                     validDO = false;
-                    String msg = "Không trùng bien so xe";
+                    String msg = resourceMapMsg.getString("msg.notDuplicateLicensePlate");
                     setMessage(msg);
                     JOptionPane.showMessageDialog(rootPane, msg);
                 } else if (outb != null) {
@@ -2018,7 +2013,7 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                     
                     if (mymode.indexOf("...")>=0)
                     {
-                         String msg = " Vui lòng chọn loại chức năng nhập hoặc xuất .";
+                         String msg = resourceMapMsg.getString("msg.plzChooseIO");
                             setMessage(msg);
                             JOptionPane.showMessageDialog(rootPane, msg);
                     }
@@ -2142,7 +2137,6 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
         }
     }
 
-   
     private class CheckDOOFFTask extends org.jdesktop.application.Task<Object, Void> {
 
         private OutbDel outb = null;
@@ -2170,7 +2164,7 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
             String oldSoxe = "";
             String[] val = txtDelNum.getText().trim().split("-");
             for (int k = 0; k < val.length; k++) {
-                setMessage("Kiểm tra D.O trong CSDL ...");
+                setMessage(resourceMapMsg.getString("msg.checkDOInDb"));
                 setProgress(1, 1, 4);
                 //+20100106 convert DO number to SAP format
 //            System.out.println(val);
@@ -2273,7 +2267,7 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                         !oldKunnr.equals("") &&
                         !oldKunnr.equals(outb.getKunnr())) {
                     validDO = false;
-                    String msg = "Không trùng mã số khách hàng";
+                    String msg = resourceMapMsg.getString("msg.notDuplicateCode");
                     setMessage(msg);
                     JOptionPane.showMessageDialog(rootPane, msg);
                 } else if (outb != null) {
@@ -2284,7 +2278,7 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                         !oldSoxe.equals("") &&
                         !oldSoxe.equals(outb.getTraid())) {
                     validDO = false;
-                    String msg = "Không trùng bien so xe";
+                    String msg = resourceMapMsg.getString("msg.notDuplicateLicensePlate");
                     setMessage(msg);
                     JOptionPane.showMessageDialog(rootPane, msg);
                 } else if (outb != null) {
@@ -2381,7 +2375,7 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                     
                     if (mymode.indexOf("...")>=0)
                     {
-                         String msg = " Vui lòng chọn loại chức năng nhập hoặc xuất .";
+                         String msg = resourceMapMsg.getString("msg.plzChooseIO");
                             setMessage(msg);
                             JOptionPane.showMessageDialog(rootPane, msg);
                     }
@@ -2645,7 +2639,7 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
             if (!WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
                 newWeightTicket.setCreator(WeighBridgeApp.getApplication().getCurrent_user());
             }
-            setMessage("Đang lưu dữ liệu...");
+            setMessage(resourceMapMsg.getString("msg.saveData"));
             if (!entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().begin();
             }
@@ -2655,7 +2649,7 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
             
              
             try {
-                setMessage("Đang in phiếu đăng tài...");
+                setMessage(resourceMapMsg.getString("msg.printing"));
                 txtSodangtai.setText(newWeightTicket.getWeightTicketPK().getId().toString()
                         + String.format("%03d", newWeightTicket.getWeightTicketPK().getSeqByDay())); //+20100303
                 
@@ -2687,7 +2681,7 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
 
         @Override
         protected void finished() {
-            setMessage("Hoàn tất...");
+            setMessage(resourceMapMsg.getString("msg.finished"));
             entityManager.clear();
             cleanData();
             setCreatable(true);
@@ -2764,8 +2758,8 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
         } else {
             lblCMNDBL.setForeground(Color.red);
         }
-        Matcher m = patLicPlate.matcher(txtLicPlate.getText().trim());
-        Matcher m_new = patLicPlatenew.matcher(txtLicPlate.getText().trim());
+        Matcher m = Constants.WTRegView.patLicPlate.matcher(txtLicPlate.getText().trim());
+        Matcher m_new = Constants.WTRegView.patLicPlatenew.matcher(txtLicPlate.getText().trim());
 
         bLicPlate = !(txtLicPlate.getText().trim().isEmpty());// || !(m.matches() || m_new.matches()));
         // 
@@ -2793,10 +2787,10 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                             && indexRomooc != (outbDel.getTraid().trim().length() -1)
                             && txtSoRomooc.getText().trim().equals("")) {
                         JOptionPane.showMessageDialog(rootPane, 
-                            "Vui lòng nhập số Rơmooc!");
+                            resourceMapMsg.getString("msg.plzInputRomoc"));
                     } else {
                     JOptionPane.showMessageDialog(rootPane, 
-                            "Biển số xe không khớp, vui lòng kiểm tra lại!");
+                            resourceMapMsg.getString("msg.errorLicensePlate"));
                     }
                 }
                
@@ -2849,22 +2843,16 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
             map.put("P_REPRINT", reprint);
             map.put("P_ADDRESS", config.getRptId());
             String reportName = null;
-//            reportName = "./rpt/RegWT.jrxml";
             if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
-                reportName = "./rpt/rptBT/RegWT_HP.jasper";
+                //reportName = "./rpt/rptBT/RegWT_HP.jasper";
+                reportName = "./rpt/rptBT/RegWT_HP.jrxml";
             } else {
-                reportName = "./rpt/rptPQ/RegWT.jasper";
+                //reportName = "./rpt/rptPQ/RegWT.jasper";
+                reportName = "./rpt/rptPQ/RegWT.jrxml";
             }
-//            JasperDesign jasperDesign = JRXmlLoader.load(reportName);
-//            JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
-            Class.forName((String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_DRIVER));
-            Connection jdbcCon = DriverManager.getConnection(
-                    (String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_URL),
-                    (String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_USER),
-                    (String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_PASSWORD));
-
-//            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, jdbcCon);
-            JasperPrint jasperPrint = JasperFillManager.fillReport(reportName, map, jdbcCon);
+            Connection connect = JReportConnector.getInstance();
+            JasperReport jasperReport = JasperCompileManager.compileReport(reportName);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, connect);
             JasperViewer jv = new JasperViewer(jasperPrint, false);
             jv.setVisible(true);
         } catch (Exception ex) {
@@ -3158,10 +3146,7 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
     private static Logger logger = Logger.getLogger(WTRegView.class);
     private java.util.List<WeightTicket> weightTicketList;
     private boolean validDO = true;
-    private static final Pattern patLicPlate = Pattern.compile("\\d{2}[A-Z]-\\d{4}");
-    private static final Pattern patLicPlatenew = Pattern.compile("\\d{2}[A-Z]-\\S+");
     private boolean formValid;
-    public static final String PROP_FORMVALID = "formValid";
     public static final String MODE_REG = "MODE_REG";
     public static final String MODE_RPT = "MODE_RPT";
     private String mode = null;
@@ -3206,10 +3191,9 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
     public void setFormValid(boolean formValid) {
         boolean oldFormValid = this.formValid;
         this.formValid = formValid;
-        firePropertyChange(PROP_FORMVALID, oldFormValid, formValid);
+        firePropertyChange(Constants.WTRegView.PROP_FORMVALID, oldFormValid, formValid);
     }
     private boolean formEditable;
-    public static final String PROP_FORMEDITABLE = "formEditable";
 
     /**
      * Get the value of formEditable
@@ -3228,10 +3212,9 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
     public void setFormEditable(boolean formEditable) {
         boolean oldFormEditable = this.formEditable;
         this.formEditable = formEditable;
-        firePropertyChange(PROP_FORMEDITABLE, oldFormEditable, formEditable);
+        firePropertyChange(Constants.WTRegView.PROP_FORMEDITABLE, oldFormEditable, formEditable);
     }
     private boolean rbtEnabled;
-    public static final String PROP_RBTENABLED = "rbtEnabled";
 
     /**
      * Get the value of rbtEnabled
@@ -3250,7 +3233,7 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
     public void setRbtEnabled(boolean rbtEnabled) {
         boolean oldRbtEnabled = this.rbtEnabled;
         this.rbtEnabled = rbtEnabled;
-        firePropertyChange(PROP_RBTENABLED, oldRbtEnabled, rbtEnabled);
+        firePropertyChange(Constants.WTRegView.PROP_RBTENABLED, oldRbtEnabled, rbtEnabled);
     }
     
     private boolean[] editable = null;
@@ -3332,4 +3315,5 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
         Boolean.class,
         String.class,
         String.class};
+    public org.jdesktop.application.ResourceMap resourceMapMsg = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(WTRegView.class);
 }

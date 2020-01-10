@@ -194,13 +194,13 @@ public class DailyReportView extends javax.swing.JInternalFrame {
                 weightTicketList.clear();
 
                 setProgress(1, 0, 4);
-                setMessage("Đang lấy dữ liệu...");
+                setMessage(resourceMapMsg.getString("msg.getData"));
                 AppConfig appConfig = WeighBridgeApp.getApplication().getConfig();
                 WeightTicketJpaController weightTicketJpaController = new WeightTicketJpaController();
                 List<WeightTicket> weightTickets = weightTicketJpaController.findByCreateDateRange(dpDateFrom.getDate(), dpDateTo.getDate());
 
                 setProgress(2, 0, 4);
-                setMessage("Đang xử lý dữ liệu...");
+                setMessage(resourceMapMsg.getString("msg.handleData"));
                 weightTicketList.addAll(weightTickets);
                 wtDatas = new Object[weightTicketList.size()][wtColNames.length];
 
@@ -274,7 +274,7 @@ public class DailyReportView extends javax.swing.JInternalFrame {
 
         @Override
         protected void finished() {
-            setMessage("Hoàn tất...");
+            setMessage(resourceMapMsg.getString("msg.finished"));
             WeighBridgeApp.getApplication().bindJTableModel(tabResults, wtDatas, wtColNames, wtColTypes, editable);
         }
 
@@ -391,4 +391,5 @@ public class DailyReportView extends javax.swing.JInternalFrame {
         Boolean.class,
         String.class,
         String.class};
+    org.jdesktop.application.ResourceMap resourceMapMsg = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(DailyReportView.class);
 }

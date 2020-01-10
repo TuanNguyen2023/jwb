@@ -32,7 +32,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
-import com.gcs.wb.utils.FormatRenderer;
+import com.gcs.wb.base.util.FormatRenderer;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.DefaultListModel;
@@ -577,7 +577,7 @@ public class WTListView extends javax.swing.JInternalFrame {
 
         @Override
         protected void finished() {
-            setMessage("Hoàn tất...");
+            setMessage(resourceMapMsg.getString("msg.finished"));
             WeighBridgeApp.getApplication().bindJTableModel(tabWTList, wtData, wtCols, wtTypes, editable);
         }
     }
@@ -707,4 +707,5 @@ public class WTListView extends javax.swing.JInternalFrame {
         Boolean.class,
         String.class,
         String.class};
+    private org.jdesktop.application.ResourceMap resourceMapMsg = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(WTListView.class);
 }
