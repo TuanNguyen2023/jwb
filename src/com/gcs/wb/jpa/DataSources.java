@@ -40,7 +40,7 @@ public class DataSources {
         sbURL.append(appConf.getDbName());
         Map<String, String> properties = new HashMap<String, String>();
         properties.put(PersistenceUnitProperties.JDBC_DRIVER, "com.microsoft.sqlserver.jdbc.SQLServerDriver");
-        properties.put(PersistenceUnitProperties.JDBC_URL, "jdbc:sqlserver://172.16.20.181:1433;databaseName=jweighbridge");
+        properties.put(PersistenceUnitProperties.JDBC_URL, "jdbc:sqlserver://172.16.20.181:1433;databaseName=weighbridge");
         properties.put(PersistenceUnitProperties.JDBC_USER, appConf.getDbUsr());
         properties.put(PersistenceUnitProperties.JDBC_PASSWORD, appConf.getDbPwd());
         return properties;
