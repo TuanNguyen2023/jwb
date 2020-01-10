@@ -51,7 +51,7 @@ public class WeighBridgeApp extends SingleFrameApplication {
     private boolean offlineMode = false;
     private boolean authenticated = false;
     private EntityManagerFactory emf = null;
-    private EntityManager em = JPAConnector.getInstance();
+    private EntityManager em = null;
     private Session _SAPSession = null;
     /**HiberSAP credential object*/
     private Credentials credentials = null;
