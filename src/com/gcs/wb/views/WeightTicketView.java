@@ -4647,7 +4647,8 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
         }
         if (setting.getCheckTalp().booleanValue()) {
             Vehicle vehicle = entityManager.find(Vehicle.class, wt.getSoXe());
-            vendorNo = vehicle.getTaAbbr();
+            // vendorNo = vehicle.getTaAbbr();
+            vendorNo = "";
 
 
             if (vendorNo.startsWith(
@@ -4729,8 +4730,8 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
             Vehicle vehicle = entityManager.find(Vehicle.class, wt.getSoXe());
 
             if (vehicle != null) {
-                
-                bapi.setIdParnr(vehicle.getTaAbbr());
+                // bapi.setIdParnr(vehicle.getTaAbbr());
+                bapi.setIdParnr("");
                 
             }
         }

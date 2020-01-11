@@ -29,9 +29,20 @@ public class VehicleRepository {
     }
 
     public List<Vehicle> getListVehicle(String abbr) {
-        TypedQuery<Vehicle> vehTq = entityManager.createNamedQuery("Vehicle.findByTaAbbr", Vehicle.class);
-        vehTq.setParameter("taAbbr", abbr);
-        List<Vehicle> result = vehTq.getResultList();
-        return result;
+        TypedQuery<Vehicle> typedQuery = entityManager.createNamedQuery("Vehicle.findByAbbr", Vehicle.class);
+        typedQuery.setParameter("abbr", abbr);
+        return typedQuery.getResultList();
+    }
+
+    public Vehicle findByPlateNo(String plateNo) {
+        TypedQuery<Vehicle> typedQuery = entityManager.createNamedQuery("Vehicle.findByPlateNo", Vehicle.class);
+        typedQuery.setParameter("plateNo", plateNo);
+
+        List<Vehicle> vehicles = typedQuery.getResultList();
+        if (vehicles != null && vehicles.size() == 1) {
+            return vehicles.get(0);
+        }
+
+        return null;
     }
 }

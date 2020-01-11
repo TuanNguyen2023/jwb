@@ -21,9 +21,8 @@ public class TransportAgentRepository {
     EntityManager entityManager = JPAConnector.getInstance();
 
     public List<TransportAgent> getListTransportAgent() {
-        TypedQuery<TransportAgent> tq = entityManager.createNamedQuery("TransportAgent.findAll", TransportAgent.class);
-        List<TransportAgent> list = tq.getResultList();
-        return list;
+        TypedQuery<TransportAgent> typedQuery = entityManager.createNamedQuery("TransportAgent.findAll", TransportAgent.class);
+        return typedQuery.getResultList();
     }
 
     public DefaultListModel getTAModel() {

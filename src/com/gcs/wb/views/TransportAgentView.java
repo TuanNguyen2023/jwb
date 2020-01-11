@@ -12,28 +12,40 @@ package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.helper.SAP2Local;
+import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.jpa.entity.TransportAgent;
+import com.gcs.wb.jpa.entity.TransportAgentVehicle;
 import com.gcs.wb.jpa.entity.Vehicle;
+import com.gcs.wb.jpa.repositorys.TransportAgentRepository;
+import com.gcs.wb.jpa.repositorys.TransportAgentVehicleRepository;
+import com.gcs.wb.jpa.repositorys.VehicleRepository;
 import com.gcs.wb.model.AppConfig;
 import java.awt.Color;
 import java.awt.Component;
 import java.util.List;
 import java.util.regex.Matcher;
-import javax.persistence.TypedQuery;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
+import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import org.jdesktop.application.Action;
+import org.jdesktop.application.Application;
 
 /**
  *
- * @author thang
+ * @author thanghl
  */
 public class TransportAgentView extends javax.swing.JInternalFrame {
 
     private AppConfig config = null;
+    private EntityManager entityManager = JPAConnector.getInstance();
+    private TransportAgentRepository transportAgentRepository = new TransportAgentRepository();
+    private VehicleRepository vehicleRepository = new VehicleRepository();
+    private TransportAgentVehicleRepository transportAgentVehicleRepository = new TransportAgentVehicleRepository();
 
     /** Creates new form TransportAgentView */
     public TransportAgentView() {
@@ -52,7 +64,6 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
 
         transportAgentSelected = new com.gcs.wb.jpa.entity.TransportAgent();
         vehicleSelected = new com.gcs.wb.jpa.entity.Vehicle();
-        entityManager = WeighBridgeApp.getApplication().getEm();
         pnTransportAgent = new javax.swing.JPanel();
         spnTransportAgent = new javax.swing.JScrollPane();
         lstTransportAgent = new javax.swing.JList();
@@ -112,7 +123,7 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
         pnTransportAgentLayout.setVerticalGroup(
             pnTransportAgentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnTransportAgentLayout.createSequentialGroup()
-                .addComponent(spnTransportAgent, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
+                .addComponent(spnTransportAgent, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)
                 .addGap(147, 147, 147))
         );
 
@@ -128,7 +139,7 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 if (value instanceof Vehicle) {
                     Vehicle ta = (Vehicle)value;
-                    setText(ta.getSoXe());
+                    setText(ta.getPlateNo());
                 }
                 return this;
             }
@@ -221,7 +232,7 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
         pnVehicleLayout.setVerticalGroup(
             pnVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnVehicleLayout.createSequentialGroup()
-                .addComponent(spnVehicle, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
+                .addComponent(spnVehicle, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(pnVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblLicensePlate)
@@ -289,28 +300,46 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtLicensePlateFocusGained
 
 private void btnVehicleRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVehicleRemoveActionPerformed
-    if (!entityManager.getTransaction().isActive()) {
-        entityManager.getTransaction().begin();
-    }
-    entityManager.remove(vehicleSelected);
-    entityManager.getTransaction().commit();
+    EntityTransaction entityTransaction = entityManager.getTransaction();
+    try {
+        if (!entityTransaction.isActive()) {
+            entityTransaction.begin();
+        }
 
-    entityManager.clear();
+        TransportAgentVehicle transportAgentVehicle =
+                transportAgentVehicleRepository.findByTransportAgentIdAndVehicleId(
+                transportAgentSelected.getId(), vehicleSelected.getId());
+        entityManager.remove(transportAgentVehicle);
+
+        entityTransaction.commit();
+        entityManager.clear();
+    } catch (Exception ex) {
+        JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.deleteVehicleFalse"));
+        entityTransaction.rollback();
+        entityManager.clear();
+    }
+
     lstVehicle.clearSelection();
     lstVehicle.setModel(getVehiclesModel());
     vehicleSelected = null;
 }//GEN-LAST:event_btnVehicleRemoveActionPerformed
 
 private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProhibitApplyActionPerformed
-    vehicleSelected.setProhibit(chkProhibitVehicle.isSelected());
+    EntityTransaction entityTransaction = entityManager.getTransaction();
+    try {
+        if (!entityTransaction.isActive()) {
+            entityTransaction.begin();
+        }
 
-    if (!entityManager.getTransaction().isActive()) {
-        entityManager.getTransaction().begin();
+        vehicleSelected.setProhibit(chkProhibitVehicle.isSelected());
+        entityManager.merge(vehicleSelected);
+        entityTransaction.commit();
+        entityManager.clear();
+    } catch (Exception ex) {
+        JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.prohibitFalse"));
+        entityTransaction.rollback();
+        entityManager.clear();
     }
-
-    entityManager.merge(vehicleSelected);
-    entityManager.getTransaction().commit();
-    entityManager.clear();
 
     chkProhibitVehicle.setSelected(false);
     vehicleSelected = null;
@@ -331,8 +360,8 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
 
     private DefaultListModel getTransportAgentsModel() {
         config = WeighBridgeApp.getApplication().getConfig();
-        TypedQuery<TransportAgent> typedQuery = entityManager.createNamedQuery("TransportAgent.findAll", TransportAgent.class);
-        List<TransportAgent> transportAgents = typedQuery.getResultList();
+        EntityTransaction entityTransaction = entityManager.getTransaction();
+        List<TransportAgent> transportAgents = transportAgentRepository.getListTransportAgent();
 
         // get from SAP
         List<TransportAgent> transportAgentsSAP = SAP2Local.getTransportAgentList(config.getwPlant());
@@ -341,21 +370,20 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
         for (TransportAgent transportAgent : transportAgents) {
             if (transportAgentsSAP.indexOf(transportAgent) == -1) {
                 // delete in table Vehicle
-                TypedQuery<Vehicle> vehicleTypedQuery = entityManager.createNamedQuery("Vehicle.findByTaAbbr", Vehicle.class);
-                vehicleTypedQuery.setParameter("taAbbr", transportAgent.getAbbr());
-                List<Vehicle> vehicles = vehicleTypedQuery.getResultList();
+                List<TransportAgentVehicle> transportAgentVehicles = transportAgentVehicleRepository.findByTransportAgentId(transportAgent.getId());
 
-                if (!entityManager.getTransaction().isActive()) {
-                    entityManager.getTransaction().begin();
+                if (!entityTransaction.isActive()) {
+                    entityTransaction.begin();
                 }
 
                 try {
-                    for (Vehicle vehicle : vehicles) {
-                        entityManager.remove(vehicle);
+                    for (TransportAgentVehicle transportAgentVehicle : transportAgentVehicles) {
+                        entityManager.remove(transportAgentVehicle);
                     }
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), resourceMapMsg.getString("msg.deleteVehicleFalse"));
-                    entityManager.getTransaction().rollback();
+                    JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.deleteVehicleFalse"));
+                    entityTransaction.rollback();
+                    return null;
                 }
 
                 // delete dvvc
@@ -365,38 +393,42 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
                     }
                     entityManager.remove(transportAgent);
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), resourceMapMsg.getString("msg.deleteProviderFalse"));
-                    entityManager.getTransaction().rollback();
+                    JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.deleteProviderFalse"));
+                    entityTransaction.rollback();
+                    return null;
                 }
 
-                entityManager.getTransaction().commit();
+                entityTransaction.commit();
                 entityManager.clear();
             }
         }
 
         try {
-            if (!entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().begin();
+            if (!entityTransaction.isActive()) {
+                entityTransaction.begin();
             }
             // update dara SAP -> DB
             for (TransportAgent transportAgentSAP : transportAgentsSAP) {
-
-                if (transportAgents.indexOf(transportAgentSAP) == -1) {
+                int index = transportAgents.indexOf(transportAgentSAP);
+                if (index == -1) {
                     entityManager.persist(transportAgentSAP);
                 } else {
+                    transportAgentSAP.setId(transportAgents.get(index).getId());
                     entityManager.merge(transportAgentSAP);
                 }
             }
 
-            entityManager.getTransaction().commit();
+            entityTransaction.commit();
             entityManager.clear();
 
         } catch (Exception ex) {
-            entityManager.getTransaction().rollback();
+            JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.syncProviderFalse"));
+            entityTransaction.rollback();
+            return null;
         }
 
         // get dvvc
-        transportAgents = typedQuery.getResultList();
+        transportAgents = transportAgentRepository.getListTransportAgent();
         DefaultListModel model = new DefaultListModel();
         for (TransportAgent transportAgent : transportAgents) {
             model.addElement(transportAgent);
@@ -405,42 +437,67 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
     }
 
     private DefaultListModel getVehiclesModel() {
-        TypedQuery<Vehicle> typedQuery = entityManager.createNamedQuery("Vehicle.findByTaAbbr", Vehicle.class);
-        typedQuery.setParameter("taAbbr", transportAgentSelected.getAbbr());
-        List<Vehicle> vehicles = typedQuery.getResultList();
+        List<TransportAgentVehicle> transportAgentVehicles = transportAgentVehicleRepository.findByTransportAgentId(transportAgentSelected.getId());
         DefaultListModel model = new DefaultListModel();
-        for (Vehicle vehicle : vehicles) {
-            model.addElement(vehicle);
+        for (TransportAgentVehicle transportAgentVehicle : transportAgentVehicles) {
+            model.addElement(transportAgentVehicle.getVehicle());
         }
         return model;
     }
 
     @Action(enabledProperty = "vehicleCreatable")
     public void saveVehicle() {
-        Vehicle vehicle = entityManager.find(Vehicle.class, txtLicensePlate.getText().trim());
-        if (vehicle == null) {
-            vehicle = new Vehicle();
-            vehicle.setSoXe(txtLicensePlate.getText().trim());
-            vehicle.setTaAbbr(transportAgentSelected.getAbbr());
-            if (!entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().begin();
+        TransportAgentVehicle transportAgentVehicle = new TransportAgentVehicle();
+        Vehicle vehicle = vehicleRepository.findByPlateNo(txtLicensePlate.getText().trim());
+
+        EntityTransaction entityTransaction = entityManager.getTransaction();
+        try {
+            if (!entityTransaction.isActive()) {
+                entityTransaction.begin();
             }
-            entityManager.persist(vehicle);
-            entityManager.getTransaction().commit();
+
+            if (vehicle == null) {
+                // insert new vehicle 
+                vehicle = new Vehicle();
+                vehicle.setPlateNo(txtLicensePlate.getText().trim());
+                vehicle.setProhibit(false);
+                entityManager.persist(vehicle);
+
+                // insert vehicle relationship
+                transportAgentVehicle.setTransportAgent(transportAgentSelected);
+                transportAgentVehicle.setVehicle(vehicle);
+                entityManager.persist(transportAgentVehicle);
+            } else {
+                // check vehicle has exit in transport agent
+                transportAgentVehicle = transportAgentVehicleRepository.findByTransportAgentIdAndVehicleId(transportAgentSelected.getId(), vehicle.getId());
+                if (transportAgentVehicle != null) {
+                    JOptionPane.showMessageDialog(mainFrame,
+                            resourceMapMsg.getString("msg.duplicationPlateNo",
+                            txtLicensePlate.getText().trim(),
+                            transportAgentSelected.getName()));
+                    return;
+                } else {
+                    // insert vehicle relationship
+                    transportAgentVehicle = new TransportAgentVehicle();
+                    transportAgentVehicle.setTransportAgent(transportAgentSelected);
+                    transportAgentVehicle.setVehicle(vehicle);
+                    entityManager.persist(transportAgentVehicle);
+                }
+            }
+
+            entityTransaction.commit();
             entityManager.clear();
+
             setVehicleCreatable(false);
             vehicleSelected = null;
             txtLicensePlate.setText("");
             lstVehicle.clearSelection();
             lstVehicle.setModel(getVehiclesModel());
-        } else {
-            TransportAgent transportAgent = entityManager.find(TransportAgent.class, vehicle.getTaAbbr());
-            if (transportAgent != null) {
-                JOptionPane.showMessageDialog(rootPane, "Số xe "
-                        + txtLicensePlate.getText().trim()
-                        + " đã được đăng ký cho đơn vị vận chuyển "
-                        + transportAgent.getName());
-            }
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.addPlateNoFalse"));
+
+            entityTransaction.rollback();
+            entityManager.clear();
         }
     }
 
@@ -460,7 +517,6 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
     private javax.swing.JButton btnVehicleRemove;
     private javax.swing.JButton btnVehicleSave;
     private javax.swing.JCheckBox chkProhibitVehicle;
-    private javax.persistence.EntityManager entityManager;
     private javax.swing.JLabel lblLicensePlate;
     private javax.swing.JList lstTransportAgent;
     private javax.swing.JList lstVehicle;
@@ -474,5 +530,6 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
     private boolean vehicleCreatable = false;
-    public org.jdesktop.application.ResourceMap resourceMapMsg = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(TransportAgentView.class);
+    private JFrame mainFrame = WeighBridgeApp.getApplication().getMainFrame();
+    public org.jdesktop.application.ResourceMap resourceMapMsg = Application.getInstance(WeighBridgeApp.class).getContext().getResourceMap(TransportAgentView.class);
 }
