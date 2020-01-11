@@ -598,25 +598,25 @@ public class SAPService {
         entityManager.clear();
         // set data
         slocDBs = jpaService.getSlocList();
-//        if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
-//            return new DefaultComboBoxModel(slocDBs.toArray());
-//        } else {
-//
-//            //filter sloc theo user
-//            String[] sloc1 = WeighBridgeApp.getApplication().getSloc().split("-");
-//            List<SLoc> result = new ArrayList<SLoc>();
-//            if (sloc1.length > 0) {
-//                SLoc item = null;
-//
-//                for (int i = 0; i < slocDBs.size(); i++) {
-//                    item = slocDBs.get(i);
-//                    for (int j = 0; j < sloc1.length; j++) {
-//                        if (item.getSLocPK().getLgort().equals(sloc1[j])) {
-//                            result.add(item);
-//                        }
-//                    }
-//                }
-//            }
+        if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
+            return new DefaultComboBoxModel(slocDBs.toArray());
+        } else {
+
+            //filter sloc theo user
+            String[] sloc1 = WeighBridgeApp.getApplication().getSloc().split("-");
+            List<SLoc> result = new ArrayList<SLoc>();
+            if (sloc1.length > 0) {
+                SLoc item = null;
+
+                for (int i = 0; i < slocDBs.size(); i++) {
+                    item = slocDBs.get(i);
+                    for (int j = 0; j < sloc1.length; j++) {
+                        if (item.getSLocPK().getLgort().equals(sloc1[j])) {
+                            result.add(item);
+                        }
+                    }
+                }
+            }
 
             return new DefaultComboBoxModel(result.toArray());
         }
