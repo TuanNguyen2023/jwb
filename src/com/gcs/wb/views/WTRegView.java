@@ -2962,8 +2962,7 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                     if ( txtDName1.getText().startsWith("N") )
                          abbr = sVendor; 
                     else 
-                   // TODO: comment to test new database
-//                            abbr = (v != null ? v.getTaAbbr() : ""); //"vendor"
+                        //abbr = (v != null ? v.getTaAbbr() : ""); //"vendor"
                         abbr = "";
                     
                    //End --Tuanna 201800904 

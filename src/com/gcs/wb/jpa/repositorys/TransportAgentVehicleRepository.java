@@ -4,7 +4,7 @@
  */
 package com.gcs.wb.jpa.repositorys;
 
-import com.gcs.wb.jpa.JPANewConnector;
+import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.TransportAgentVehicle;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -16,7 +16,7 @@ import javax.persistence.TypedQuery;
  */
 public class TransportAgentVehicleRepository {
 
-    EntityManager entityManager = JPANewConnector.getInstance();
+    EntityManager entityManager = JPAConnector.getInstance();
 
     public List<TransportAgentVehicle> findByTransportAgentId(int transportAgentId) {
         TypedQuery<TransportAgentVehicle> typedQuery = entityManager.createNamedQuery("TransportAgentVehicle.findByTransportAgentId", TransportAgentVehicle.class);

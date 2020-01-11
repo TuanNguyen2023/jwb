@@ -12,7 +12,7 @@ package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.helper.SAP2Local;
-import com.gcs.wb.jpa.JPANewConnector;
+import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.TransportAgentVehicle;
@@ -29,18 +29,20 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
+import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import org.jdesktop.application.Action;
+import org.jdesktop.application.Application;
 
 /**
  *
- * @author thang
+ * @author thanghl
  */
 public class TransportAgentView extends javax.swing.JInternalFrame {
 
     private AppConfig config = null;
-    private EntityManager entityManager = JPANewConnector.getInstance();
+    private EntityManager entityManager = JPAConnector.getInstance();
     private TransportAgentRepository transportAgentRepository = new TransportAgentRepository();
     private VehicleRepository vehicleRepository = new VehicleRepository();
     private TransportAgentVehicleRepository transportAgentVehicleRepository = new TransportAgentVehicleRepository();
@@ -312,7 +314,7 @@ private void btnVehicleRemoveActionPerformed(java.awt.event.ActionEvent evt) {//
         entityTransaction.commit();
         entityManager.clear();
     } catch (Exception ex) {
-        JOptionPane.showMessageDialog(rootPane, "Xóa phương tiện vận chuyển không thành công");
+        JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.deleteVehicleFalse"));
         entityTransaction.rollback();
         entityManager.clear();
     }
@@ -334,7 +336,7 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
         entityTransaction.commit();
         entityManager.clear();
     } catch (Exception ex) {
-        JOptionPane.showMessageDialog(rootPane, "Thực hiện cấm xe không thành công");
+        JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.prohibitFalse"));
         entityTransaction.rollback();
         entityManager.clear();
     }
@@ -379,7 +381,7 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
                         entityManager.remove(transportAgentVehicle);
                     }
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), resourceMapMsg.getString("msg.deleteVehicleFalse"));
+                    JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.deleteVehicleFalse"));
                     entityTransaction.rollback();
                     return null;
                 }
@@ -391,7 +393,7 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
                     }
                     entityManager.remove(transportAgent);
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), resourceMapMsg.getString("msg.deleteProviderFalse"));
+                    JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.deleteProviderFalse"));
                     entityTransaction.rollback();
                     return null;
                 }
@@ -420,7 +422,7 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
             entityManager.clear();
 
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(rootPane, "Đồng bộ đơn vị vận chuyển không thành công!");
+            JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.syncProviderFalse"));
             entityTransaction.rollback();
             return null;
         }
@@ -469,10 +471,10 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
                 // check vehicle has exit in transport agent
                 transportAgentVehicle = transportAgentVehicleRepository.findByTransportAgentIdAndVehicleId(transportAgentSelected.getId(), vehicle.getId());
                 if (transportAgentVehicle != null) {
-                    JOptionPane.showMessageDialog(rootPane, "Số xe "
-                            + txtLicensePlate.getText().trim()
-                            + " đã được đăng ký cho đơn vị vận chuyển "
-                            + transportAgentSelected.getName());
+                    JOptionPane.showMessageDialog(mainFrame,
+                            resourceMapMsg.getString("msg.duplicationPlateNo",
+                            txtLicensePlate.getText().trim(),
+                            transportAgentSelected.getName()));
                     return;
                 } else {
                     // insert vehicle relationship
@@ -492,7 +494,7 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
             lstVehicle.clearSelection();
             lstVehicle.setModel(getVehiclesModel());
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(rootPane, "Có lỗi khi thêm mới biển số xe!");
+            JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.addPlateNoFalse"));
 
             entityTransaction.rollback();
             entityManager.clear();
@@ -528,5 +530,6 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
     private boolean vehicleCreatable = false;
-    public org.jdesktop.application.ResourceMap resourceMapMsg = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(TransportAgentView.class);
+    private JFrame mainFrame = WeighBridgeApp.getApplication().getMainFrame();
+    public org.jdesktop.application.ResourceMap resourceMapMsg = Application.getInstance(WeighBridgeApp.class).getContext().getResourceMap(TransportAgentView.class);
 }
