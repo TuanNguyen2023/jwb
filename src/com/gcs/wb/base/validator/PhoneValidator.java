@@ -16,21 +16,13 @@ import java.util.regex.Pattern;
  */
 public class PhoneValidator extends AbstractThrowableValidator<String, IllegalArgumentException> {
 
-	public static final String PHONE_REGEX_DASH = "^[0-9]{3}-[0-9]{4}-[0-9]{4}$";
-	public static final String PHONE_REGEX = "^\\d{11}$";
+    public static final String PHONE_REGEX = "^[0-9+. -]{0,20}$";
 
-	@Override
-	public void validate(String input) throws IllegalArgumentException {
-		if (StringUtils.hasText(input)) {
-			String phoneRegex = "";
-			if(input.contains("-")){
-				phoneRegex = PHONE_REGEX_DASH;
-			} else {
-				phoneRegex = PHONE_REGEX;
-			}
-			
-			Matcher matcher = Pattern.compile(phoneRegex).matcher(input);
-			Assert.isTrue(matcher.find(), "invalid phone number@" + input);
-		}
-	}
+    @Override
+    public void validate(String input) throws IllegalArgumentException {
+        if (StringUtils.hasText(input)) {
+            Matcher matcher = Pattern.compile(PHONE_REGEX).matcher(input);
+            Assert.isTrue(matcher.find(), "invalid phone number@" + input);
+        }
+    }
 }
