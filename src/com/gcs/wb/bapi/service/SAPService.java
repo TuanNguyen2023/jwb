@@ -25,6 +25,7 @@ import com.gcs.wb.bapi.helper.structure.PoGetDetailItemStructure;
 import com.gcs.wb.bapi.helper.structure.SLocsGetListStructure;
 import com.gcs.wb.bapi.helper.structure.TransportagentGetListStructure;
 import com.gcs.wb.bapi.helper.structure.VendorGetDetailStructure;
+import com.gcs.wb.base.util.Conversion_Exit;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.BatchStocks;
 import com.gcs.wb.jpa.entity.BatchStocksPK;
@@ -44,7 +45,6 @@ import com.gcs.wb.jpa.entity.VendorPK;
 import com.gcs.wb.jpa.repositorys.BatchStocksRepository;
 import com.gcs.wb.jpa.service.JPAService;
 import com.gcs.wb.model.AppConfig;
-import com.gcs.wb.utils.Conversion_Exit;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -479,33 +479,40 @@ public class SAPService {
         List<BatchStocks> batchs = jpaService.getBatchStocks(config.getsClient(), config.getwPlant(), lgortSloc, matnr);
         // get data SAP
         BatchStocksGetListBapi bBatch = new BatchStocksGetListBapi();
-        List<BatchStocksStructure> bBatchStocks = new ArrayList<BatchStocksStructure>();
+        List<BatchStocks> batchStockSaps = new ArrayList<BatchStocks>();
         bBatch.setIdMandt(config.getsClient());
         bBatch.setIdWerks(config.getwPlant());
         bBatch.setIdLgort(lgortSloc);
         bBatch.setIdMatnr(matnr);
         try {
             session.execute(bBatch);
-            bBatchStocks = bBatch.getBatchStocks();
+            List<BatchStocksStructure> bBatchStocks = bBatch.getBatchStocks();
+            for (BatchStocksStructure b : bBatchStocks) {
+                BatchStocks bs = new BatchStocks(new BatchStocksPK(config.getsClient(), config.getwPlant(), b.getLgort(), b.getMatnr(), b.getCharg()));
+                bs.setLvorm(b.getLvorm() == null || b.getLvorm().trim().isEmpty() ? ' ' : b.getLvorm().charAt(0));
+                batchStockSaps.add(bs);
+            }
         } catch (Exception ex) {
         }
         //sync data
         if (!entityManager.getTransaction().isActive()) {
             entityManager.getTransaction().begin();
         }
-        for (BatchStocksStructure b : bBatchStocks) {
-            BatchStocks bs = new BatchStocks(new BatchStocksPK(config.getsClient(), config.getwPlant(), b.getLgort(), b.getMatnr(), b.getCharg()));
-            bs.setLvorm(b.getLvorm() == null || b.getLvorm().trim().isEmpty() ? ' ' : b.getLvorm().charAt(0));
+        //case delete
+        for(BatchStocks b: batchs) {
+            if(batchStockSaps.indexOf(b) == -1) {
+                entityManager.remove(b);
+            }
+        }
+        //case persit/merge
+        for (BatchStocks bs : batchStockSaps) {
             if (batchs.indexOf(bs) == -1) {
                 entityManager.persist(bs);
             } else {
                 entityManager.merge(bs);
             }
-            String sfix = "-";
-            if (batchs.indexOf(bs) == -1 && b.getLgort().equalsIgnoreCase(lgortWT)) {
-                batchs.add(bs);
-            }
         }
+
         entityManager.getTransaction().commit();
         entityManager.clear();
     }
@@ -551,54 +558,65 @@ public class SAPService {
     }
     
     public DefaultComboBoxModel getSlocModel() {
-        List<SLoc> slocs = new ArrayList<SLoc>();
+        List<SLoc> slocDBs = new ArrayList<SLoc>();
         // get data DB
-        slocs = jpaService.getSlocList();
+        slocDBs = jpaService.getSlocList();
 
         // get data SAP
         SLocsGetListBapi bSloc = new SLocsGetListBapi(config.getsClient(), config.getwPlant());
-        List<SLocsGetListStructure> bSlocs = new ArrayList<SLocsGetListStructure>();
+        List<SLoc> slocSaps = new ArrayList<SLoc>();
         try {
             session.execute(bSloc);
-            bSlocs = bSloc.getTdSLocs();
+            List<SLocsGetListStructure> tdSLocs = bSloc.getTdSLocs();
+            for (SLocsGetListStructure s : tdSLocs) {
+            SLoc sloc = new SLoc(s.getMandt(), s.getWerks(), s.getLgort());
+            sloc.setLgobe(s.getLgobe());
+            slocSaps.add(sloc);
+        }
         } catch (Exception ex) {
         }
         // sync data
         if (!entityManager.getTransaction().isActive()) {
             entityManager.getTransaction().begin();
         }
-        for (SLocsGetListStructure s : bSlocs) {
-            SLoc sloc = new SLoc(s.getMandt(), s.getWerks(), s.getLgort());
-            sloc.setLgobe(s.getLgobe());
-            if (slocs.indexOf(sloc) == -1) {
+        // update case delete
+        for(SLoc slocD: slocDBs) {
+            if(slocSaps.indexOf(slocD) == -1) {
+                entityManager.remove(slocD);
+            }
+        }
+        // update case persit/merge
+        for(SLoc sloc: slocSaps) {
+            if (slocDBs.indexOf(sloc) == -1) {
                 entityManager.persist(sloc);
             } else {
                 entityManager.merge(sloc);
             }
         }
+        
         entityManager.getTransaction().commit();
         entityManager.clear();
         // set data
-        slocs = jpaService.getSlocList();
-        if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
-            return new DefaultComboBoxModel(slocs.toArray());
-        } else {
-
-            //filter sloc theo user
-            String[] sloc1 = WeighBridgeApp.getApplication().getSloc().split("-");
-            List<SLoc> result = new ArrayList<SLoc>();
-            if (sloc1.length > 0) {
-                SLoc item = null;
-
-                for (int i = 0; i < slocs.size(); i++) {
-                    item = slocs.get(i);
-                    for (int j = 0; j < sloc1.length; j++) {
-                        if (item.getSLocPK().getLgort().equals(sloc1[j])) {
-                            result.add(item);
-                        }
-                    }
-                }
-            }
+        slocDBs = jpaService.getSlocList();
+//        if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
+//            return new DefaultComboBoxModel(slocDBs.toArray());
+//        } else {
+//
+//            //filter sloc theo user
+//            String[] sloc1 = WeighBridgeApp.getApplication().getSloc().split("-");
+//            List<SLoc> result = new ArrayList<SLoc>();
+//            if (sloc1.length > 0) {
+//                SLoc item = null;
+//
+//                for (int i = 0; i < slocDBs.size(); i++) {
+//                    item = slocDBs.get(i);
+//                    for (int j = 0; j < sloc1.length; j++) {
+//                        if (item.getSLocPK().getLgort().equals(sloc1[j])) {
+//                            result.add(item);
+//                        }
+//                    }
+//                }
+//            }
 
             return new DefaultComboBoxModel(result.toArray());
         }

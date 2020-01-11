@@ -105,7 +105,6 @@ import com.gcs.wb.jpa.repositorys.ReasonRepository;
 import com.gcs.wb.jpa.repositorys.TimeRangeRepository;
 import com.gcs.wb.base.util.Conversion_Exit;
 import com.gcs.wb.jpa.service.JPAService;
-import com.gcs.wb.utils.Conversion_Exit;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -5061,12 +5060,9 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                 } else {
                     reportName1 = "./rpt/rptPQ/WeightTicket.jasper";
                 }
-                Class.forName((String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_DRIVER));
-                Connection jdbcCon = DriverManager.getConnection(
-                        (String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_URL),
-                        (String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_USER),
-                        (String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_PASSWORD));
-                JasperPrint jasperPrint = JasperFillManager.fillReport(reportName1, map, jdbcCon);
+                JasperReport jasperReport = JasperCompileManager.compileReport(reportName1);
+                Connection connect = JReportConnector.getInstance();
+                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, connect);
                 JasperViewer jv = new JasperViewer(jasperPrint, false);
                 jv.setVisible(true);
 
@@ -5183,12 +5179,9 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                     } else {
                         reportName = path.concat("WeightTicket_NEW.jasper");
                     }
-                    Class.forName((String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_DRIVER));
-                    Connection jdbcCon = DriverManager.getConnection(
-                            (String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_URL),
-                            (String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_USER),
-                            (String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_PASSWORD));
-                    JasperPrint jasperPrint = JasperFillManager.fillReport(reportName, map, jdbcCon);
+                    JasperReport jasperReport = JasperCompileManager.compileReport(reportName);
+                    Connection connect = JReportConnector.getInstance();
+                    JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, connect);
                     JasperViewer jv = new JasperViewer(jasperPrint, false);
                     jv.setVisible(true);
                 }
