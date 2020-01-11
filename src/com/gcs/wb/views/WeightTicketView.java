@@ -1463,10 +1463,10 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
     private void chkDissolvedItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkDissolvedItemStateChanged
         if (weightTicket != null) {
-            //     chkDissolved
+       //     chkDissolved
             weightTicket.setDissolved(chkDissolved.isSelected());
             if (chkDissolved.isSelected() == true) {
-                //  setSaveNeeded(true);
+              //  setSaveNeeded(true);
                 // Tuanna 0909 2015 
                 setSaveNeeded(false);
             } else {
@@ -1863,7 +1863,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             int count = noneRepository.getCountSingal();
             JOptionPane.showMessageDialog(rootPane, count);
         }
-
+        
         if (weightTicket == null || txfCurScale.getValue() == null || ((Number) txfCurScale.getValue()).intValue() == 0) {
             return null;
         }
@@ -1984,12 +1984,12 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             Material mat_tmp = null;
             Boolean ximang_tmp = false;
             Boolean flag_tmp = true;
-
+            
             // Nhận dạng phiếu cân gỏ tay Hiệp Phước
-            //   weightTicket.setText("ZBD");
-
+         //   weightTicket.setText("ZBD"); 
+            
             weightTicket.setText(txtGRText.getText().trim());
-
+                  
             for (int i = 0; i < outbDel_list.size(); i++) {
                 outdel_tmp = outbDel_list.get(i);
                 try {
@@ -3698,7 +3698,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
                 OutbDel od_temp = new OutbDel(new OutbDelPK(weightTicket.getWeightTicketPK().getMandt(), item));
                 GoodsMvtWeightTicketStructure stWT = fillWTStructure(weightTicket, od_temp, outDetails_lits);
-
+                
                 bapi.setWeightticket(stWT);
 //      }[M001-DungDang-28/06/2013] - Fixing bug post double GoodsMovement - end of insert                
                 try {
@@ -3830,7 +3830,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             WeighBridgeApp.getApplication().disconnectWB();
             formatter.applyPattern(WeighBridgeApp.DATE_TIME_DISPLAY_FORMAT);
             Date now = null;
-
+            
             formatter.applyPattern(WeighBridgeApp.DATE_TIME_DISPLAY_FORMAT);//      
             WeightTicketJpaController con = new WeightTicketJpaController();
             try {
@@ -4524,7 +4524,8 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         }
         if (setting.getCheckTalp().booleanValue()) {
             Vehicle vehicle = entityManager.find(Vehicle.class, wt.getSoXe());
-            vendorNo = vehicle.getTaAbbr();
+            // vendorNo = vehicle.getTaAbbr();
+            vendorNo = "";
 
 
             if (vendorNo.startsWith(
@@ -4606,9 +4607,9 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             Vehicle vehicle = entityManager.find(Vehicle.class, wt.getSoXe());
 
             if (vehicle != null) {
-
-                bapi.setIdParnr(vehicle.getTaAbbr());
-
+                // bapi.setIdParnr(vehicle.getTaAbbr());
+                bapi.setIdParnr("");
+                
             }
         }
         VbkokStructure wa = new VbkokStructure();
@@ -5175,12 +5176,14 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                         path = "./rpt/rptPQ/";
                     }
                     if (rbtMisc.isSelected() || rbtPO.isSelected()) {
-                        reportName = path.concat("WeightTicket.jasper");
+                        reportName = path.concat("WeightTicket.jrxml");
+                        //reportName = path.concat("WeightTicket.jasper");
                     } else {
-                        reportName = path.concat("WeightTicket_NEW.jasper");
+                        reportName = path.concat("WeightTicket_NEW.jrxml");
+                        //reportName = path.concat("WeightTicket.jasper");
                     }
-                    JasperReport jasperReport = JasperCompileManager.compileReport(reportName);
                     Connection connect = JReportConnector.getInstance();
+                    JasperReport jasperReport = JasperCompileManager.compileReport(reportName);
                     JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, connect);
                     JasperViewer jv = new JasperViewer(jasperPrint, false);
                     jv.setVisible(true);

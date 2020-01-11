@@ -11,6 +11,10 @@ import java.util.regex.Pattern;
  * @author THANGPT
  */
 public class Constants {
+    public static class LengthValidator {
+        public static final int MAX_LENGTH_NAMEPRT = 255;
+        public static final int MAX_LENGTH_ADDRESS = 255;
+    }
 
     public static final class ProcOrdView {
         private ProcOrdView() {

@@ -32,7 +32,7 @@ import javax.persistence.TemporalType;
     + "WHERE w.weightTicketPK.mandt = :mandt "
     + "  AND w.weightTicketPK.wPlant = :wPlant "
     + "  AND w.weightTicketPK.id LIKE :id "
-    + "  AND w.soXe IN ( SELECT v.soXe FROM Vehicle v WHERE v.taAbbr = :taAbbr ) "
+    + "  AND w.soXe IN ( SELECT tv.vehicle.plateNo FROM TransportAgentVehicle tv WHERE tv.transportAgent.abbr = :taAbbr ) "
     + "  AND w.matnrRef = :matnrRef "
     + "  AND w.regCategory IN :regCategory"),
     @NamedQuery(name = "WeightTicket.findByMandtWPlantIdSoxeRegcat",
@@ -40,7 +40,7 @@ import javax.persistence.TemporalType;
     + "WHERE w.weightTicketPK.mandt = :mandt "
     + "  AND w.weightTicketPK.wPlant = :wPlant "
     + "  AND w.weightTicketPK.id LIKE :id "
-    + "  AND w.soXe IN ( SELECT v.soXe FROM Vehicle v WHERE v.taAbbr = :taAbbr ) "
+    + "  AND w.soXe IN ( SELECT tv.vehicle.plateNo FROM TransportAgentVehicle tv WHERE tv.transportAgent.abbr = :taAbbr ) "
     + "  AND w.matnrRef IS NULL "
     + "  AND w.regCategory IN :regCategory"
         ),
@@ -49,7 +49,7 @@ import javax.persistence.TemporalType;
     + "WHERE w.weightTicketPK.mandt = :mandt "
     + "  AND w.weightTicketPK.wPlant = :wPlant "
     + "  AND w.weightTicketPK.id LIKE :id "
-    + "  AND w.soXe IN ( SELECT v.soXe FROM Vehicle v WHERE v.taAbbr = :taAbbr ) "
+    + "  AND w.soXe IN ( SELECT tv.vehicle.plateNo FROM TransportAgentVehicle tv WHERE tv.transportAgent.abbr = :taAbbr ) "
     + "  AND w.matnrRef = :matnrRef "
     + "  AND w.regCategory IN :regCategory "
     + "  AND w.dissolved = 1"),
@@ -58,7 +58,7 @@ import javax.persistence.TemporalType;
     + "WHERE w.weightTicketPK.mandt = :mandt "
     + "  AND w.weightTicketPK.wPlant = :wPlant "
     + "  AND w.weightTicketPK.id LIKE :id "
-    + "  AND w.soXe IN ( SELECT v.soXe FROM Vehicle v WHERE v.taAbbr = :taAbbr ) "
+    + "  AND w.soXe IN ( SELECT tv.vehicle.plateNo FROM TransportAgentVehicle tv WHERE tv.transportAgent.abbr = :taAbbr ) "
     + "  AND w.matnrRef IS NULL "
     + "  AND w.regCategory IN :regCategory "
     + "  AND w.dissolved = 1"),
@@ -67,7 +67,7 @@ import javax.persistence.TemporalType;
     + "WHERE w.weightTicketPK.mandt = :mandt "
     + "  AND w.weightTicketPK.wPlant = :wPlant "
     + "  AND w.weightTicketPK.id LIKE :id "
-    + "  AND w.soXe IN ( SELECT v.soXe FROM Vehicle v WHERE v.taAbbr = :taAbbr ) "
+    + "  AND w.soXe IN ( SELECT tv.vehicle.plateNo FROM TransportAgentVehicle tv WHERE tv.transportAgent.abbr = :taAbbr ) "
     + "  AND w.matnrRef = :matnrRef "
     + "  AND w.regCategory IN :regCategory "
     + "  AND w.posted = 1"),
@@ -76,7 +76,7 @@ import javax.persistence.TemporalType;
     + "WHERE w.weightTicketPK.mandt = :mandt "
     + "  AND w.weightTicketPK.wPlant = :wPlant "
     + "  AND w.weightTicketPK.id LIKE :id "
-    + "  AND w.soXe IN ( SELECT v.soXe FROM Vehicle v WHERE v.taAbbr = :taAbbr ) "
+    + "  AND w.soXe IN ( SELECT tv.vehicle.plateNo FROM TransportAgentVehicle tv WHERE tv.transportAgent.abbr = :taAbbr ) "
     + "  AND w.matnrRef IS NULL "
     + "  AND w.regCategory IN :regCategory "
     + "  AND w.posted = 1"),

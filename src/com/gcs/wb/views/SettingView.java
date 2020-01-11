@@ -11,16 +11,19 @@
 package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
+import com.gcs.wb.base.constant.Constants;
+import com.gcs.wb.base.validator.LengthValidator;
+import com.gcs.wb.base.validator.PhoneValidator;
+import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.SAPSetting;
-import java.math.BigDecimal;
+import java.awt.Color;
+import javax.persistence.EntityManager;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
-import com.gcs.wb.jpa.entity.Variant;
-import com.gcs.wb.jpa.entity.VariantPK;
-import com.gcs.wb.model.AppConfig;
 
 /**
  *
@@ -28,45 +31,19 @@ import com.gcs.wb.model.AppConfig;
  */
 public class SettingView extends javax.swing.JDialog {
 
+    private EntityManager entityManager = JPAConnector.getInstance();
+    private boolean isNamePRTValid = true;
+    private boolean isAddressValid = true;
+    private boolean isPhoneValid = true;
+    private boolean isFaxValid = true;
+
     /** Creates new form SettingView */
     public SettingView(java.awt.Frame parent) {
         super(parent);
         initComponents();
-//        if (sapSetting.getCheckTalp() == null || sapSetting.getCheckTalp() == false) {
-//            chkTALP.setSelected(false);
-//        } else {
-//            chkTALP.setSelected(true);
-//        }
 
         // set select for checkbox chkPOV
-        if (sapSetting.getCheckPov() == null || sapSetting.getCheckPov() == false) {
-            chkPOV.setSelected(false);
-        } else {
-            chkPOV.setSelected(true);
-        }
-        //----------------------------------
-        //+20110119#01
-        Variant vari = new Variant();
-        VariantPK variPK = new VariantPK();
-        AppConfig lconfig = WeighBridgeApp.getApplication().getConfig();
-        variPK.setMandt(lconfig.getsClient().toString());
-        variPK.setWPlant(lconfig.getwPlant().toString());
-        variPK.setParam("PROCESS_ORDER_CF");
-        vari.setVariantPK(variPK);
-        vari = entityManager.find(Variant.class, vari.getVariantPK());
-        String chkPROC = "";
-        if (vari != null) {
-            try {
-                chkPROC = vari.getValue().toString();
-            } catch (Exception e) {
-            }
-        }
-//        if (chkPROC.equals("X")) {
-//            chkPROC1.setSelected(true);
-//        }
-        entityManager.clear();
-        //+20110119#01
-        //----------------------------------
+        chkPOV.setSelected(sapSetting.getCheckPov() != null && sapSetting.getCheckPov());
     }
 
     /** This method is called from within the constructor to
@@ -80,11 +57,10 @@ public class SettingView extends javax.swing.JDialog {
         bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         sapSetting = java.beans.Beans.isDesignTime() ? null : WeighBridgeApp.getApplication().getSapSetting();
-        entityManager = java.beans.Beans.isDesignTime() ? null : WeighBridgeApp.getApplication().getEm();
         pnWholeGroup = new javax.swing.JPanel();
         pnWPlant = new javax.swing.JPanel();
-        lblWPlantRPT = new javax.swing.JLabel();
-        txtWPlantRPT = new javax.swing.JTextField();
+        lblNameRPT = new javax.swing.JLabel();
+        txtNameRPT = new javax.swing.JTextField();
         lblAddress = new javax.swing.JLabel();
         txtAddress = new javax.swing.JTextField();
         lblPhone = new javax.swing.JLabel();
@@ -107,13 +83,19 @@ public class SettingView extends javax.swing.JDialog {
         pnWPlant.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("pnWPlant.border.title"))); // NOI18N
         pnWPlant.setName("pnWPlant"); // NOI18N
 
-        lblWPlantRPT.setText(resourceMap.getString("lblWPlantRPT.text")); // NOI18N
-        lblWPlantRPT.setName("lblWPlantRPT"); // NOI18N
+        lblNameRPT.setText(resourceMap.getString("lblNameRPT.text")); // NOI18N
+        lblNameRPT.setName("lblNameRPT"); // NOI18N
 
-        txtWPlantRPT.setName("txtWPlantRPT"); // NOI18N
+        txtNameRPT.setName("txtNameRPT"); // NOI18N
 
-        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${nameRpt}"), txtWPlantRPT, org.jdesktop.beansbinding.BeanProperty.create("text"), "");
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${nameRpt}"), txtNameRPT, org.jdesktop.beansbinding.BeanProperty.create("text"), "");
         bindingGroup.addBinding(binding);
+
+        txtNameRPT.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtNameRPTKeyReleased(evt);
+            }
+        });
 
         lblAddress.setText(resourceMap.getString("lblAddress.text")); // NOI18N
         lblAddress.setName("lblAddress"); // NOI18N
@@ -123,6 +105,12 @@ public class SettingView extends javax.swing.JDialog {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${address}"), txtAddress, org.jdesktop.beansbinding.BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
 
+        txtAddress.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtAddressKeyReleased(evt);
+            }
+        });
+
         lblPhone.setText(resourceMap.getString("lblPhone.text")); // NOI18N
         lblPhone.setName("lblPhone"); // NOI18N
 
@@ -130,6 +118,12 @@ public class SettingView extends javax.swing.JDialog {
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${phone}"), txtPhone, org.jdesktop.beansbinding.BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
+
+        txtPhone.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtPhoneKeyReleased(evt);
+            }
+        });
 
         lblFax.setText(resourceMap.getString("lblFax.text")); // NOI18N
         lblFax.setName("lblFax"); // NOI18N
@@ -139,6 +133,12 @@ public class SettingView extends javax.swing.JDialog {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${fax}"), txtFax, org.jdesktop.beansbinding.BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
 
+        txtFax.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtFaxKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnWPlantLayout = new javax.swing.GroupLayout(pnWPlant);
         pnWPlant.setLayout(pnWPlantLayout);
         pnWPlantLayout.setHorizontalGroup(
@@ -147,11 +147,11 @@ public class SettingView extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(pnWPlantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lblAddress)
-                    .addComponent(lblWPlantRPT))
+                    .addComponent(lblNameRPT))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWPlantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtAddress, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
-                    .addComponent(txtWPlantRPT, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE))
+                    .addComponent(txtNameRPT, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE))
                 .addGap(10, 10, 10)
                 .addGroup(pnWPlantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lblPhone)
@@ -167,8 +167,8 @@ public class SettingView extends javax.swing.JDialog {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnWPlantLayout.createSequentialGroup()
                 .addContainerGap(17, Short.MAX_VALUE)
                 .addGroup(pnWPlantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblWPlantRPT)
-                    .addComponent(txtWPlantRPT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblNameRPT)
+                    .addComponent(txtNameRPT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblPhone)
                     .addComponent(txtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -192,17 +192,22 @@ public class SettingView extends javax.swing.JDialog {
         pnPOLayout.setHorizontalGroup(
             pnPOLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnPOLayout.createSequentialGroup()
-                .addGap(18, 18, 18)
+                .addContainerGap()
                 .addComponent(chkPOV, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(241, Short.MAX_VALUE))
+                .addContainerGap(261, Short.MAX_VALUE))
         );
         pnPOLayout.setVerticalGroup(
             pnPOLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnPOLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(chkPOV)
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
+
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getActionMap(SettingView.class, this);
+        btnSave.setAction(actionMap.get("save")); // NOI18N
+        btnSave.setText(resourceMap.getString("btnSave.text")); // NOI18N
+        btnSave.setName("btnSave"); // NOI18N
 
         javax.swing.GroupLayout pnWholeGroupLayout = new javax.swing.GroupLayout(pnWholeGroup);
         pnWholeGroup.setLayout(pnWholeGroupLayout);
@@ -210,6 +215,9 @@ public class SettingView extends javax.swing.JDialog {
             pnWholeGroupLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(pnWPlant, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(pnPO, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnWholeGroupLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnSave))
         );
         pnWholeGroupLayout.setVerticalGroup(
             pnWholeGroupLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -217,40 +225,83 @@ public class SettingView extends javax.swing.JDialog {
                 .addComponent(pnWPlant, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnPO, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnSave, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pnPO.getAccessibleContext().setAccessibleName(resourceMap.getString("pnMaterials.AccessibleContext.accessibleName")); // NOI18N
-
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getActionMap(SettingView.class, this);
-        btnSave.setAction(actionMap.get("save")); // NOI18N
-        btnSave.setText(resourceMap.getString("btnSave.text")); // NOI18N
-        btnSave.setName("btnSave"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(pnWholeGroup, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnSave))
+                .addComponent(pnWholeGroup, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(pnWholeGroup, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
-                .addComponent(btnSave)
-                .addContainerGap())
+            .addComponent(pnWholeGroup, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         bindingGroup.bind();
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+private void txtFaxKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFaxKeyReleased
+    this.isFaxValid = validatePhoneOrFax(this.txtFax.getText(), this.lblFax);
+    validateForm();
+}//GEN-LAST:event_txtFaxKeyReleased
+
+private void txtNameRPTKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNameRPTKeyReleased
+    this.isNamePRTValid = validateLength(
+            Constants.LengthValidator.MAX_LENGTH_NAMEPRT,
+            this.txtNameRPT.getText(), this.lblNameRPT);
+    validateForm();
+}//GEN-LAST:event_txtNameRPTKeyReleased
+
+private void txtAddressKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtAddressKeyReleased
+    this.isAddressValid = validateLength(
+            Constants.LengthValidator.MAX_LENGTH_ADDRESS,
+            this.txtAddress.getText(), this.lblAddress);
+    validateForm();
+}//GEN-LAST:event_txtAddressKeyReleased
+
+private void txtPhoneKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPhoneKeyReleased
+    this.isPhoneValid = validatePhoneOrFax(this.txtPhone.getText(), this.lblPhone);
+    validateForm();
+}//GEN-LAST:event_txtPhoneKeyReleased
+
+    void validateForm() {
+        this.btnSave.setEnabled(isNamePRTValid && isAddressValid && isPhoneValid && isFaxValid);
+    }
+
+    boolean validateLength(int max, String input, JLabel label) {
+        try {
+            LengthValidator lengthValidator = new LengthValidator(0, max);
+            lengthValidator.validate(input);
+            label.setForeground(Color.black);
+            return true;
+        } catch (Exception ex) {
+            label.setForeground(Color.red);
+            return false;
+        }
+    }
+
+    boolean validatePhoneOrFax(String input, JLabel label) {
+        try {
+            PhoneValidator phoneValidator = new PhoneValidator();
+            phoneValidator.validate(input);
+            label.setForeground(Color.black);
+            return true;
+        } catch (Exception ex) {
+            label.setForeground(Color.red);
+            return false;
+        }
+    }
 
     @Action
     public Task save() {
@@ -268,8 +319,7 @@ public class SettingView extends javax.swing.JDialog {
 
         @Override
         protected Object doInBackground() {
-            String tmp = txtWPlantRPT.getText().trim();
-            Number tmpNum = null;
+            String tmp = txtNameRPT.getText().trim();
             sapSetting.setNameRpt(tmp.isEmpty() ? null : tmp);
             tmp = txtAddress.getText().trim();
             sapSetting.setAddress(tmp.isEmpty() ? null : tmp);
@@ -277,66 +327,20 @@ public class SettingView extends javax.swing.JDialog {
             sapSetting.setPhone(tmp.isEmpty() ? null : tmp);
             tmp = txtFax.getText().trim();
             sapSetting.setFax(tmp.isEmpty() ? null : tmp);
-            sapSetting.setCheckPov(chkPOV.isSelected() ? true: false);
-//            tmp = txtSubContractClinker.getText().trim();
-//            sapSetting.setMatnrClinker(tmp.isEmpty() ? null : tmp);
-//            tmp = txtMatnrPCB40.getText().trim();
-//            sapSetting.setMatnrPcb40(tmp.isEmpty() ? null : tmp);
-//            tmp = txtMatnrBulk.getText().trim();
-//            sapSetting.setMatnrXmxa(tmp.isEmpty() ? null : tmp);
-//            tmpNum = (Number) txfAct1Val.getValue();
-//            sapSetting.setBact1Val(tmpNum == null ? null : new BigDecimal(tmpNum.doubleValue()));
-//            tmpNum = (Number) txfAct2Val.getValue();
-//            sapSetting.setBact2Val(tmpNum == null ? null : new BigDecimal(tmpNum.doubleValue()));
-//            tmpNum = (Number) txfAct3Val.getValue();
-//            sapSetting.setBact3Val(tmpNum == null ? null : new BigDecimal(tmpNum.doubleValue()));
-//            tmpNum = (Number) txfAct4Val.getValue();
-//            sapSetting.setBact4Val(tmpNum == null ? null : new BigDecimal(tmpNum.doubleValue()));
-//            tmpNum = (Number) txfWB1Tol.getValue();
-//            sapSetting.setWb1Tol(tmpNum == null ? null : new BigDecimal(tmpNum.doubleValue()));
-//            tmpNum = (Number) txfWB2Tol.getValue();
-//            sapSetting.setWb2Tol(tmpNum == null ? null : new BigDecimal(tmpNum.doubleValue()));
-//            tmp = txtRAdmin.getText().trim();
-//            sapSetting.setRoleAd(tmp.isEmpty() ? null : tmp);
-//            tmp = txtRSStaff.getText().trim();
-//            sapSetting.setRoleSs(tmp.isEmpty() ? null : tmp);
-//            tmp = txtRWMan.getText().trim();
-            sapSetting.setRoleWm(tmp.isEmpty() ? null : tmp);
-            sapSetting.setCheckTalp(chkPOV.isSelected());
+            sapSetting.setCheckPov(chkPOV.isSelected() ? true : false);
 
             if (!entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().begin();
             }
+
+            // save sap setting
             entityManager.merge(sapSetting);
             entityManager.getTransaction().commit();
             entityManager.clear();
+
             sapSetting = entityManager.find(SAPSetting.class, sapSetting.getSAPSettingPK());
             entityManager.clear();
 
-            //{+20110119#01
-            //Save process order checking
-            Variant vari = new Variant();
-            VariantPK variPK = new VariantPK();
-            try {
-                AppConfig lconfig = WeighBridgeApp.getApplication().getConfig();
-                variPK.setMandt(lconfig.getsClient().toString());
-                variPK.setWPlant(lconfig.getwPlant().toString());
-                variPK.setParam("PROCESS_ORDER_CF");
-                vari.setVariantPK(variPK);
-//                String checkP = "";
-//                if (chkPROC1.isSelected()) {
-//                    checkP = "X";
-//                }
-//                vari.setValue(checkP);
-                if (!entityManager.getTransaction().isActive()) {
-                    entityManager.getTransaction().begin();
-                }
-                entityManager.merge(vari);
-                entityManager.getTransaction().commit();
-                entityManager.clear();
-            } catch (Exception e) {
-            }
-            //}+20110119#01
             return null;  // return your result
         }
 
@@ -356,19 +360,18 @@ public class SettingView extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSave;
     private javax.swing.JCheckBox chkPOV;
-    private javax.persistence.EntityManager entityManager;
     private javax.swing.JLabel lblAddress;
     private javax.swing.JLabel lblFax;
+    private javax.swing.JLabel lblNameRPT;
     private javax.swing.JLabel lblPhone;
-    private javax.swing.JLabel lblWPlantRPT;
     private javax.swing.JPanel pnPO;
     private javax.swing.JPanel pnWPlant;
     private javax.swing.JPanel pnWholeGroup;
     private com.gcs.wb.jpa.entity.SAPSetting sapSetting;
     private javax.swing.JTextField txtAddress;
     private javax.swing.JTextField txtFax;
+    private javax.swing.JTextField txtNameRPT;
     private javax.swing.JTextField txtPhone;
-    private javax.swing.JTextField txtWPlantRPT;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }
