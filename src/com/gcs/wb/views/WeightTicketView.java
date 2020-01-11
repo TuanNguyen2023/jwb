@@ -33,6 +33,7 @@ import com.gcs.wb.bapi.outbdlv.structure.OutbDeliveryCreateStoStructure;
 import com.gcs.wb.bapi.outbdlv.structure.VbkokStructure;
 import com.gcs.wb.bapi.outbdlv.structure.VbpokStructure;
 import com.gcs.wb.base.constant.Constants;
+import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.JReportConnector;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
@@ -103,6 +104,8 @@ import com.gcs.wb.jpa.repositorys.SignalsRepository;
 import com.gcs.wb.jpa.repositorys.ReasonRepository;
 import com.gcs.wb.jpa.repositorys.TimeRangeRepository;
 import com.gcs.wb.base.util.Conversion_Exit;
+import com.gcs.wb.jpa.service.JPAService;
+import com.gcs.wb.utils.Conversion_Exit;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -137,23 +140,12 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     SignalsRepository noneRepository = new SignalsRepository();
     WeightTicketJpaRepository weightTicketJpaRepository = new WeightTicketJpaRepository();
     EntityManager entityManager = JPAConnector.getInstance();
+    SAPService sapService = new SAPService();
+    JPAService jpaService = new JPAService();
 
     public WeightTicketView() {
         initComponents();
-        cbxMaterial.setRenderer(new DefaultListCellRenderer() {
-            @Override
-            public Component getListCellRendererComponent(
-                JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if (value instanceof Material) {
-                    Material material = (Material)value;
-                    setText(material.getMaktx());
-                    //                    setText(sloc.getLgobe().concat(" - ").concat(sloc.getSLocPK().getLgort()));
-                }
-                return this;
-            }
-        });
-        
+
         txtMatnr.getDocument().addDocumentListener(new DocumentListener() {
 
             @Override
@@ -171,14 +163,14 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 getSAPMatData(e);
             }
         });
-        
+
         setBridge1(config.getB1Port() != null);
         setBridge2(config.getB2Port() != null);
 
         formatter = new SimpleDateFormat();
         cbxSLoc.setSelectedIndex(-1);
         cbxReason.setSelectedIndex(-1);
-        rbtMvt311.setVisible(false);
+        rbtMvt311.setVisible(true);
         rbtMb1b.setVisible(false);
         boolean flag = true; // tram can , true -- giao nhan  file   
         boolean flagAdmin = true;  // false normal , true -> SCM admin 
@@ -192,8 +184,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         chkDissolved.setVisible(false);
         lblReason.setVisible(false);
         cbxReason.setVisible(false);
-        rbtMb1b.setVisible(false);
-        rbtMvt311.setVisible(false);
         lblComplete.setVisible(false);
         cbxCompleted.setVisible(false);
         rbtMisc.setForeground(Color.red);
@@ -251,10 +241,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             timeFrom = 0 + Integer.parseInt(t.getTimeFrom() != null ? (t.getTimeFrom().trim()) : "0");
             timeTo = Integer.parseInt(t.getTimeTo() != null ? (t.getTimeTo().trim()) : "0");
         }
-        
+
         // cấu hình cho cầu cân hiển thị PO và vendor
-        if((sapSetting.getCheckPov()) != null && (sapSetting.getCheckPov()) == true)
-        {
+        if ((sapSetting.getCheckPov()) != null && (sapSetting.getCheckPov()) == true) {
             txtPoPosto.setVisible(true);
             cbxVendorLoading.setVisible(true);
             cbxVendorTransport.setVisible(true);
@@ -269,7 +258,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             lblVendorLoading.setVisible(false);
             lblVendorTransport.setVisible(false);
         }
-        
+
     }
 
     /** This method is called from within the constructor to
@@ -360,12 +349,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         btnReprint = new javax.swing.JButton();
         btnSave = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
-        cbxMaterial = new javax.swing.JComboBox();
         cbxVendorLoading = new javax.swing.JComboBox();
         cbxVendorTransport = new javax.swing.JComboBox();
         txtPoPosto = new javax.swing.JTextField();
-        chkInternal = new javax.swing.JCheckBox();
-        lblMaterial = new javax.swing.JLabel();
         lblPoPosto = new javax.swing.JLabel();
         lblVendorLoading = new javax.swing.JLabel();
         lblVendorTransport = new javax.swing.JLabel();
@@ -526,7 +512,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnWTFilterLayout.createSequentialGroup()
                         .addComponent(lblWTNum)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtWTNum, javax.swing.GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE)
+                        .addComponent(txtWTNum, javax.swing.GroupLayout.DEFAULT_SIZE, 336, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -538,7 +524,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                 .addComponent(rbtPO)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(txtPONum, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(rbtMvt311, javax.swing.GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE))
+                            .addComponent(rbtMvt311, javax.swing.GroupLayout.DEFAULT_SIZE, 427, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
                         .addGroup(pnWTFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(rbtMb1b, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -662,7 +648,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                 .addComponent(txfCurScale, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(4, 4, 4)
                                 .addComponent(lblKG)))))
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnCurScaleDataLayout.setVerticalGroup(
             pnCurScaleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -812,9 +798,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     .addComponent(lblIScale, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnScaleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txfGoodsQty, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
-                    .addComponent(txfOutQty, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
-                    .addComponent(txfInQty, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE))
+                    .addComponent(txfGoodsQty, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
+                    .addComponent(txfOutQty, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
+                    .addComponent(txfInQty, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnScaleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnScaleDataLayout.createSequentialGroup()
@@ -827,8 +813,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                             .addComponent(lblOTime))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(pnScaleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtOutTime, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
-                            .addComponent(txtInTime, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE))
+                            .addComponent(txtOutTime, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE)
+                            .addComponent(txtInTime, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(pnScaleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(btnIScaleReset, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -920,7 +906,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         lblSLoc.setText(resourceMap.getString("lblSLoc.text")); // NOI18N
         lblSLoc.setName("lblSLoc"); // NOI18N
 
-        cbxSLoc.setModel(SAP2Local.getSlocModel(config, entityManager));
+        cbxSLoc.setModel(sapService.getSlocModel());
         cbxSLoc.setRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(
@@ -1071,15 +1057,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             }
         });
 
-        cbxMaterial.setModel(getMaterialList());
-        cbxMaterial.setName("cbxMaterial"); // NOI18N
-        cbxMaterial.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cbxMaterialItemStateChanged(evt);
-            }
-        });
-
-        cbxVendorLoading.setModel(SAP2Local.getVendorList(config, entityManager));
+        cbxVendorLoading.setModel(sapService.getVendorList());
         cbxVendorLoading.setAction(actionMap.get("acceptBatch")); // NOI18N
         cbxVendorLoading.setName("cbxVendorLoading"); // NOI18N
         cbxVendorLoading.setRenderer(new DefaultListCellRenderer() {
@@ -1101,7 +1079,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             }
         });
 
-        cbxVendorTransport.setModel(SAP2Local.getVendorList(config, entityManager));
+        cbxVendorTransport.setModel(sapService.getVendorList());
         cbxVendorTransport.setAction(actionMap.get("acceptBatch")); // NOI18N
         cbxVendorTransport.setName("cbxVendorTransport"); // NOI18N
         cbxVendorTransport.setRenderer(new DefaultListCellRenderer() {
@@ -1135,18 +1113,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             }
         });
 
-        chkInternal.setAction(actionMap.get("selectInternal")); // NOI18N
-        chkInternal.setHideActionText(true);
-        chkInternal.setName("chkInternal"); // NOI18N
-        chkInternal.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                chkInternalItemStateChanged(evt);
-            }
-        });
-
-        lblMaterial.setText(resourceMap.getString("lblMaterial.text")); // NOI18N
-        lblMaterial.setName("lblMaterial"); // NOI18N
-
         lblPoPosto.setText(resourceMap.getString("lblPoPosto.text")); // NOI18N
         lblPoPosto.setName("lblPoPosto"); // NOI18N
 
@@ -1169,7 +1135,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     .addComponent(lblCMNDBL)
                     .addComponent(lblDName)
                     .addComponent(lblGRText)
-                    .addComponent(lblMaterial)
                     .addGroup(pnWTicketLayout.createSequentialGroup()
                         .addComponent(lblReason)
                         .addGap(4, 4, 4)))
@@ -1177,7 +1142,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnWTicketLayout.createSequentialGroup()
                         .addComponent(chkDissolved)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 285, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 347, Short.MAX_VALUE)
                         .addComponent(jButton3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnPostAgain)
@@ -1192,12 +1157,12 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                             .addComponent(lblPoPosto)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnWTicketLayout.createSequentialGroup()
                                 .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(cbxReason, 0, 206, Short.MAX_VALUE)
-                                    .addComponent(txtGRText, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE)
-                                    .addComponent(cbxSLoc, javax.swing.GroupLayout.Alignment.TRAILING, 0, 206, Short.MAX_VALUE)
-                                    .addComponent(txtLicPlate, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE)
-                                    .addComponent(txtDName, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE)
-                                    .addComponent(txtTrailerPlate, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE)
+                                    .addComponent(cbxReason, 0, 240, Short.MAX_VALUE)
+                                    .addComponent(txtGRText, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
+                                    .addComponent(cbxSLoc, javax.swing.GroupLayout.Alignment.TRAILING, 0, 240, Short.MAX_VALUE)
+                                    .addComponent(txtLicPlate, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
+                                    .addComponent(txtDName, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
+                                    .addComponent(txtTrailerPlate, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
                                     .addComponent(txtCMNDBL, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(25, 25, 25)
                                 .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -1208,28 +1173,23 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                     .addComponent(lblBatch)
                                     .addComponent(lblCementDesc)
                                     .addComponent(lblComplete)))
-                            .addGroup(pnWTicketLayout.createSequentialGroup()
-                                .addComponent(cbxMaterial, 0, 206, Short.MAX_VALUE)
-                                .addGap(21, 21, 21)
-                                .addComponent(lbKunnr)))
+                            .addComponent(lbKunnr))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtPoPosto, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE)
+                            .addComponent(txtPoPosto, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE)
                             .addGroup(pnWTicketLayout.createSequentialGroup()
                                 .addComponent(rbtInward)
                                 .addGap(18, 18, 18)
-                                .addComponent(rbtOutward)
-                                .addGap(18, 18, 18)
-                                .addComponent(chkInternal))
+                                .addComponent(rbtOutward))
                             .addComponent(txtRegItem, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtDelNum, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE)
-                            .addComponent(cbxBatch, 0, 399, Short.MAX_VALUE)
-                            .addComponent(txtCementDesc, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE)
-                            .addComponent(cbxCompleted, 0, 399, Short.MAX_VALUE)
-                            .addComponent(txtMatnr, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE)
-                            .addComponent(cbxKunnr, 0, 399, Short.MAX_VALUE)
-                            .addComponent(cbxVendorLoading, javax.swing.GroupLayout.Alignment.TRAILING, 0, 399, Short.MAX_VALUE)
-                            .addComponent(cbxVendorTransport, javax.swing.GroupLayout.Alignment.TRAILING, 0, 399, Short.MAX_VALUE))))
+                            .addComponent(txtDelNum, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE)
+                            .addComponent(cbxBatch, 0, 429, Short.MAX_VALUE)
+                            .addComponent(txtCementDesc, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE)
+                            .addComponent(cbxCompleted, 0, 429, Short.MAX_VALUE)
+                            .addComponent(txtMatnr, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE)
+                            .addComponent(cbxKunnr, 0, 429, Short.MAX_VALUE)
+                            .addComponent(cbxVendorLoading, javax.swing.GroupLayout.Alignment.TRAILING, 0, 429, Short.MAX_VALUE)
+                            .addComponent(cbxVendorTransport, javax.swing.GroupLayout.Alignment.TRAILING, 0, 429, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         pnWTicketLayout.setVerticalGroup(
@@ -1240,8 +1200,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     .addComponent(txtDName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblRegCat)
                     .addComponent(rbtInward)
-                    .addComponent(rbtOutward)
-                    .addComponent(chkInternal))
+                    .addComponent(rbtOutward))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnWTicketLayout.createSequentialGroup()
@@ -1295,9 +1254,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbKunnr)
-                    .addComponent(cbxKunnr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbxMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblMaterial))
+                    .addComponent(cbxKunnr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtPoPosto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1323,7 +1280,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         );
 
         txtMatnr.getAccessibleContext().setAccessibleName(resourceMap.getString("txtMatnr.AccessibleContext.accessibleName")); // NOI18N
-        lblMaterial.getAccessibleContext().setAccessibleDescription(resourceMap.getString("lblMat.AccessibleContext.accessibleDescription")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -1334,7 +1290,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(pnScaleData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(pnWTFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 494, Short.MAX_VALUE)
+                        .addComponent(pnWTFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 563, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(pnCurScale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(pnWTicket, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -1351,7 +1307,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 .addComponent(pnScaleData, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnWTicket, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(57, Short.MAX_VALUE))
+                .addContainerGap(66, Short.MAX_VALUE))
         );
 
         bindingGroup.bind();
@@ -1361,9 +1317,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
     // <editor-fold defaultstate="expanded" desc="Event Handlers Area">
     private void rbtBridge1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtBridge1ActionPerformed
-      /*
+        /*
         String sport = ""; 
-    //    Integer speed = 0 ; 
+        //    Integer speed = 0 ;
         Short  databit = 0 ; 
         Integer  brate = 0 ;           
         Short stopbit = 0 ; 
@@ -1371,52 +1327,51 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         Boolean  Mettler = false;     
          * 
          */
-       // config = WeighBridgeApp.getApplication().getConfig(); 
+        // config = WeighBridgeApp.getApplication().getConfig();
         WeightTicketJpaController con = new WeightTicketJpaController();
         try {
             config = con.getDev(WeighBridgeApp.getApplication().getConfig().getWbId());
-            
-            
-         btnAccept.setEnabled(WeighBridgeApp.getApplication().connectWB(
-                    config.getB1Port(),  //string
+
+
+            btnAccept.setEnabled(WeighBridgeApp.getApplication().connectWB(
+                    config.getB1Port(), //string
                     config.getB1Speed(), //int 
                     config.getB1DBits(), //short 
                     config.getB1SBits().shortValue(), //short 
-                    config.getB1PC(),   //short 
+                    config.getB1PC(), //short
                     config.getB1Mettler(),
-                    txfCurScale)); 
-         
-          setSaveNeeded(isValidated());
-            
-        } catch (Exception ex) {           
-            
+                    txfCurScale));
+
+            setSaveNeeded(isValidated());
+
+        } catch (Exception ex) {
+
             java.util.logging.Logger.getLogger(WeightTicketView.class.getName()).log(Level.SEVERE, null, ex);
         }
-       
-       
-                  
-            
-     
+
+
+
+
+
 
     }//GEN-LAST:event_rbtBridge1ActionPerformed
 
     private void rbtBridge2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtBridge2ActionPerformed
-    
         /*config = WeighBridgeApp.getApplication().getConfig();
         try {
-            btnAccept.setEnabled(WeighBridgeApp.getApplication().connectWB(
-                    config.getB2Port(),
-                    config.getB2Speed(),
-                    config.getB2DBits(),
-                    config.getB2SBits().shortValue(),
-                    config.getB2PC(),
-                    config.getB2Mettler(),
-                    txfCurScale));
-            setSaveNeeded(isValidated());           
-            
+        btnAccept.setEnabled(WeighBridgeApp.getApplication().connectWB(
+        config.getB2Port(),
+        config.getB2Speed(),
+        config.getB2DBits(),
+        config.getB2SBits().shortValue(),
+        config.getB2PC(),
+        config.getB2Mettler(),
+        txfCurScale));
+        setSaveNeeded(isValidated());
+
         } catch (Exception ex) {
         }
-                  */
+         */
     }//GEN-LAST:event_rbtBridge2ActionPerformed
 
     private void btnIScaleResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIScaleResetActionPerformed
@@ -1448,29 +1403,11 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         weightTicket.setLgort(selSloc.getSLocPK().getLgort());
         if (selSloc != null && (txtMatnr.getText() != null && !txtMatnr.getText().trim().isEmpty())) {
             lblSLoc.setForeground(Color.black);
-            List<BatchStocks> batchs = batchStocksRepository.getList(config.getsClient(), config.getwPlant(),
+            // sync data
+            sapService.syncBatchStocks(selSloc.getSLocPK().getLgort(), weightTicket.getMatnrRef(), weightTicket.getLgort());
+            // get data DB
+            List<BatchStocks> batchs = jpaService.getBatchStocks(config.getsClient(), config.getwPlant(),
                     selSloc.getSLocPK().getLgort(), weightTicket.getMatnrRef());
-            List<BatchStocksStructure> bBatchStocks = SAP2Local.getBatchStocks(selSloc.getSLocPK().getLgort(), weightTicket.getMatnrRef());
-            if (!entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().begin();
-            }
-            for (BatchStocksStructure b : bBatchStocks) {
-                BatchStocks bs = new BatchStocks(new BatchStocksPK(config.getsClient(), config.getwPlant(), b.getLgort(), b.getMatnr(), b.getCharg()));
-                bs.setLvorm(b.getLvorm() == null || b.getLvorm().trim().isEmpty() ? ' ' : b.getLvorm().charAt(0));
-                if (batchs.indexOf(bs) == -1) {
-                    entityManager.persist(bs);
-                } else {
-                    entityManager.merge(bs);
-                }
-                String sfix = "-";
-                if (batchs.indexOf(bs) == -1 && b.getLgort().equalsIgnoreCase(weightTicket.getLgort())) {
-
-                    batchs.add(bs);
-                }
-            }
-            entityManager.getTransaction().commit();
-            entityManager.clear();
-
             DefaultComboBoxModel result = new DefaultComboBoxModel();
             for (BatchStocks b : batchs) {
                 if (b.getLvorm() == null || b.getLvorm().toString().trim().isEmpty()) {
@@ -1527,17 +1464,17 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
     private void chkDissolvedItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkDissolvedItemStateChanged
         if (weightTicket != null) {
-       //     chkDissolved
+            //     chkDissolved
             weightTicket.setDissolved(chkDissolved.isSelected());
             if (chkDissolved.isSelected() == true) {
-              //  setSaveNeeded(true);
+                //  setSaveNeeded(true);
                 // Tuanna 0909 2015 
                 setSaveNeeded(false);
             } else {
                 setSaveNeeded(false);
             }
         }
-     //   chkDissolved.
+        //   chkDissolved.
 //        setSaveNeeded(isValidated());
     }//GEN-LAST:event_chkDissolvedItemStateChanged
 
@@ -1551,7 +1488,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     private void rbtMb1bItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbtMb1bItemStateChanged
         if (!rbtMb1b.isSelected()) {
             grbType.clearSelection();
-            if (weightTicket == null) { 
+            if (weightTicket == null) {
                 return;
             }
             weightTicket.setRecvLgort(null);
@@ -1701,13 +1638,13 @@ private void txtWTNumFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
 }//GEN-LAST:event_txtWTNumFocusGained
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-    //tuanna 
-    StringSelection stringSelection = new StringSelection("");
-    Toolkit.getDefaultToolkit().getSystemClipboard().setContents( stringSelection, null);    
+        //tuanna
+        StringSelection stringSelection = new StringSelection("");
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
         txtWTNum.selectAll();
         txtWTNum.setText("");
         txtWTNum.requestFocusInWindow();
-  
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -1720,10 +1657,6 @@ private void txtWTNumFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnSaveActionPerformed
-
-private void cbxMaterialItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbxMaterialItemStateChanged
-// TODO add your handling code here:
-}//GEN-LAST:event_cbxMaterialItemStateChanged
 
 private void cbxVendorLoadingKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cbxVendorLoadingKeyReleased
 // TODO add your handling code here:
@@ -1740,10 +1673,6 @@ private void txtPoPostoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPoPostoKeyReleased
 // TODO add your handling code here:
 }//GEN-LAST:event_txtPoPostoKeyReleased
-
-private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkInternalItemStateChanged
-// TODO add your handling code here:
-}//GEN-LAST:event_chkInternalItemStateChanged
 
     @Action
     public void showMB1BOption() {
@@ -1829,7 +1758,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                 }
                 weightTicket.setRecvPlant(config.getwPlant());
                 weightTicket.setRecvCharg(weightTicket.getCharg());
-                weightTicket.setUnit("TO");
+                weightTicket.setUnit("TON");
                 weightTicket.setMoveType("311");
                 weightTicket.setMoveReas(null);
                 mvt311View.dispose();
@@ -1862,33 +1791,32 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
             }
             rbtMb1b.setForeground(Color.black);
             rbtMvt311.setForeground(Color.black);
-            
-            
+
+
         }
-        
-        if ( rbtPO.isEnabled())
-        {
-           /* try{
-                     String sql = "call pvc_getTicketIndex ( ? ) " ;                                 
-                               Query qx = (Query) entityManager.createNativeQuery(sql);
-                               qx.setParameter(1,txtWTNum.getText().toString()); 
-                               List wtx = qx.getResultList();         
-                        
-                         try {
-                        //  SoNiemXa = wts.get(0).toString();                           
-                      //   txtCementDesc.setText(SoNiemXa);
-                         txtPONum.setText(wtx.get(2).toString()); 
-                         weightTicket.setAbbr(wtx.get(3).toString());
-                          
-                        }catch(Throwable cause ){                                  
-                              //    klmax  = -1 ;                                   
-                        }
-                        
-                         
-                         
-                 } catch(Throwable cause ){ 
-                                        
-                 }
+
+        if (rbtPO.isEnabled()) {
+            /* try{
+            String sql = "call pvc_getTicketIndex ( ? ) " ;
+            Query qx = (Query) entityManager.createNativeQuery(sql);
+            qx.setParameter(1,txtWTNum.getText().toString());
+            List wtx = qx.getResultList();
+
+            try {
+            //  SoNiemXa = wts.get(0).toString();
+            //   txtCementDesc.setText(SoNiemXa);
+            txtPONum.setText(wtx.get(2).toString());
+            weightTicket.setAbbr(wtx.get(3).toString());
+
+            }catch(Throwable cause ){
+            //    klmax  = -1 ;
+            }
+
+
+
+            } catch(Throwable cause ){
+
+            }
              * 
              */
         }
@@ -1936,7 +1864,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
             int count = noneRepository.getCountSingal();
             JOptionPane.showMessageDialog(rootPane, count);
         }
-        
+
         if (weightTicket == null || txfCurScale.getValue() == null || ((Number) txfCurScale.getValue()).intValue() == 0) {
             return null;
         }
@@ -2057,12 +1985,12 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
             Material mat_tmp = null;
             Boolean ximang_tmp = false;
             Boolean flag_tmp = true;
-            
+
             // Nhận dạng phiếu cân gỏ tay Hiệp Phước
-         //   weightTicket.setText("ZBD"); 
-            
+            //   weightTicket.setText("ZBD");
+
             weightTicket.setText(txtGRText.getText().trim());
-                  
+
             for (int i = 0; i < outbDel_list.size(); i++) {
                 outdel_tmp = outbDel_list.get(i);
                 try {
@@ -2087,10 +2015,10 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                 }
             }
             if (!flag_tmp) {
-            //    JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(),cmes.getMsg("3") ); 
-                String Mes ="Điểm nhận hàng trên phiếu không hợp lệ, vui lòng kiểm tra, hoặc liên hệ DVKH để được hỗ trợ. " ; 
-            //    Mes = cmes.getMsg("3") ; 
-                 JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(),Mes.toString()  ); 
+                //    JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(),cmes.getMsg("3") );
+                String Mes = "Điểm nhận hàng trên phiếu không hợp lệ, vui lòng kiểm tra, hoặc liên hệ DVKH để được hỗ trợ. ";
+                //    Mes = cmes.getMsg("3") ;
+                JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), Mes.toString());
             }
             //end 20121203
         }
@@ -2101,14 +2029,14 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
             //        boolean bGhichu = true  ; 
             String wplant = WeighBridgeApp.getApplication().getConfig().getwPlant().toString();
             try {
-              //  msg = cmes.getMsg("2");
-                msg = "Lỗi thiếu thông tin ghi chú ! Vui lòng nhập thông tin ghi chú "; 
+                //  msg = cmes.getMsg("2");
+                msg = "Lỗi thiếu thông tin ghi chú ! Vui lòng nhập thông tin ghi chú ";
             } catch (Exception ex) {
                 java.util.logging.Logger.getLogger(WeightTicketView.class.getName()).log(Level.SEVERE, null, ex);
             }
             if (outbDel != null) {
 
-                try { 
+                try {
 
                     String sMvt = "";
                     sMvt = outbDel.getBwart();
@@ -2116,8 +2044,8 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                             && wplant.indexOf("1311") >= 0
                             && outbDel.getMatnr() != null && outbDel.getMatnr().indexOf("1011304") >= 0) {
                         if (txtGRText.getText().length() <= 1 || txtGRText.getText() == null) {
-                            
-                         //   String msgz = " Lỗi thiếu thông tin ghi chú !  ";
+
+                            //   String msgz = " Lỗi thiếu thông tin ghi chú !  ";
                             // setMessage(msg);
                             JOptionPane.showMessageDialog(rootPane, msg);
                             return null;
@@ -2127,15 +2055,15 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                 }
 
             }
-                                     
+
             try {
-               // msg = cmes.getMsg("1"); 
-                msg  = " Có muốn lưu phiếu cân không ? "; 
+                // msg = cmes.getMsg("1");
+                msg = " Có muốn lưu phiếu cân không ? ";
             } catch (Exception ex) {
                 java.util.logging.Logger.getLogger(WeightTicketView.class.getName()).log(Level.SEVERE, null, ex);
             }
-            Integer lv_return = JOptionPane.showConfirmDialog(WeighBridgeApp.getApplication().getMainFrame(),msg , "Question", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-            
+            Integer lv_return = JOptionPane.showConfirmDialog(WeighBridgeApp.getApplication().getMainFrame(), msg, "Question", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
             if (lv_return == JOptionPane.YES_OPTION) {
                 //
                 if (outbDel != null && outbDel.getMatnr() != null
@@ -2535,31 +2463,31 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
 
     private DefaultComboBoxModel getMaterialList() {
         List<Material> materials = null;
-        
+
         //get data from DB
         TypedQuery<Material> tMaterial = entityManager.createQuery("SELECT m FROM Material m WHERE m.materialPK.wplant = :wplant order by m.materialPK.matnr asc", Material.class);
         tMaterial.setParameter("wplant", config.getwPlant());
         materials = tMaterial.getResultList();
         //get data from sap and sync DB
         //List<Material> mMaterials = SAP2Local.getLookUpMaterialsList(config.getwPlant());
-        List<Material> mMaterials = SAP2Local.getMaterialsList();
-        if (!entityManager.getTransaction().isActive()) {
-            entityManager.getTransaction().begin();
-        }
-        for (Material mSap : mMaterials) {
-            if (materials.indexOf(mSap) == -1) {
-                entityManager.persist(mSap);
-            } else {
-                entityManager.merge(mSap);
-            }
-        }
-        entityManager.getTransaction().commit();
-        entityManager.clear();
-        materials = tMaterial.getResultList();
+//        List<Material> mMaterials = SAP2Local.getMaterialsList();
+//        if (!entityManager.getTransaction().isActive()) {
+//            entityManager.getTransaction().begin();
+//        }
+//        for (Material mSap : mMaterials) {
+//            if (materials.indexOf(mSap) == -1) {
+//                entityManager.persist(mSap);
+//            } else {
+//                entityManager.merge(mSap);
+//            }
+//        }
+//        entityManager.getTransaction().commit();
+//        entityManager.clear();
+//        materials = tMaterial.getResultList();
         DefaultComboBoxModel result = new DefaultComboBoxModel();
         for (Material m : materials) {
             result.addElement(m);
-            }
+        }
         return result;
     }
 
@@ -2567,17 +2495,17 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
 
         String id;
         Integer seq;
-       /* 
+        /*
         ReadWTTask(Application app, String id, String seq, String RegId ) {
-            super(app);
-            this.id = id;
-            this.seq = Integer.valueOf(seq);
-            setReprintable(false);
-            grbType.clearSelection();
-            grbCat.clearSelection();
-            config = WeighBridgeApp.getApplication().getConfig();
+        super(app);
+        this.id = id;
+        this.seq = Integer.valueOf(seq);
+        setReprintable(false);
+        grbType.clearSelection();
+        grbCat.clearSelection();
+        config = WeighBridgeApp.getApplication().getConfig();
         }
-        */
+         */
 
         ReadWTTask(Application app, String id, String seq) {
             super(app);
@@ -2587,8 +2515,8 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
             grbType.clearSelection();
             grbCat.clearSelection();
             config = WeighBridgeApp.getApplication().getConfig();
-            
-            
+
+
         }
 
         @Override
@@ -2640,7 +2568,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                         || (weightTicket.getDelivNumb() == null && weightTicket.getEbeln() == null)) {
                     setWithoutDO(true);
                 } else {
-                   // OutbDel od = null; //HLD18--
+                    // OutbDel od = null; //HLD18--
                     List<OutbDetailsV2> odt = null;
                     WeightTicketJpaController con = new WeightTicketJpaController();
                     try {
@@ -2649,7 +2577,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
 //                        java.util.logging.Logger.getLogger(WeightTicketView.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     if (od == null && weightTicket.getEbeln() != null) {
-                        od = SAP2Local.getOutboundDelivery(weightTicket.getDelivNumb(), false);
+                        od = sapService.getOutboundDelivery(weightTicket.getDelivNumb(), false);
                         if (od != null) {
                             if (!entityManager.getTransaction().isActive()) {
                                 entityManager.getTransaction().begin();
@@ -2682,7 +2610,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                     setWithoutDO(false);
                 }
                 if (WeighBridgeApp.getApplication().isOfflineMode()
-                   && od == null     //HLD18
+                        && od == null //HLD18
                         ) {
                     setWithoutDO(true);
                 }
@@ -2714,26 +2642,26 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                         } catch (Exception ex) {
                             java.util.logging.Logger.getLogger(WeightTicketView.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        if (!WeighBridgeApp.getApplication().isOfflineMode()){ //HLD18++offline
-                        OutbDel sapOutbDel = SAP2Local.getOutboundDelivery(do_list[i], false);
-                        if (sapOutbDel != null && outbDel == null) {
-                            if (!entityManager.getTransaction().isActive()) {
-                                entityManager.getTransaction().begin();
+                        if (!WeighBridgeApp.getApplication().isOfflineMode()) { //HLD18++offline
+                            OutbDel sapOutbDel = sapService.getOutboundDelivery(do_list[i], false);
+                            if (sapOutbDel != null && outbDel == null) {
+                                if (!entityManager.getTransaction().isActive()) {
+                                    entityManager.getTransaction().begin();
+                                }
+                                entityManager.persist(sapOutbDel);
+                                entityManager.getTransaction().commit();
+                                entityManager.clear();
+                            } else if (sapOutbDel != null && outbDel != null) {
+                                sapOutbDel.setPosted(outbDel.getPosted());
+                                sapOutbDel.setMatDoc(outbDel.getMatDoc());
+                                if (!entityManager.getTransaction().isActive()) {
+                                    entityManager.getTransaction().begin();
+                                }
+                                entityManager.merge(sapOutbDel);
+                                outbDel = sapOutbDel;
+                                entityManager.getTransaction().commit();
+                                entityManager.clear();
                             }
-                            entityManager.persist(sapOutbDel);
-                            entityManager.getTransaction().commit();
-                            entityManager.clear();
-                        } else if (sapOutbDel != null && outbDel != null) {
-                            sapOutbDel.setPosted(outbDel.getPosted());
-                            sapOutbDel.setMatDoc(outbDel.getMatDoc());
-                            if (!entityManager.getTransaction().isActive()) {
-                                entityManager.getTransaction().begin();
-                            }
-                            entityManager.merge(sapOutbDel);
-                            outbDel = sapOutbDel;
-                            entityManager.getTransaction().commit();
-                            entityManager.clear();
-                        }
                         }//HLD18++
                         if (outbDel != null) {
                             outbDel_list.add(outbDel);
@@ -2778,7 +2706,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                     remain_qty_goods = total_qty_goods;
                 }
                 if (weightTicket.getEbeln() != null && !weightTicket.getEbeln().trim().isEmpty()) {
-             
+
                     purOrder = entityManager.find(PurOrder.class, new PurOrderPK(config.getsClient(), weightTicket.getEbeln()));
                     txtPONum.setText(weightTicket.getEbeln());
                     setValidPONum(true);
@@ -2788,15 +2716,13 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                         setSubContract(true);
                     }
                 } else {
-                    if ( Posto.equals("")){  
+                    if (Posto.equals("")) {
                         // Tuanna 2018 08015
                         txtPONum.setText(null);
-                        rbtPO.setSelected(false);                        
-                    }
-                    else
-                    {
-                         rbtPO.setSelected(true);  
-                         rbtMisc.setSelected (false ) ; 
+                        rbtPO.setSelected(false);
+                    } else {
+                        rbtPO.setSelected(true);
+                        rbtMisc.setSelected(false);
                     }
                 }
                 if (weightTicket.getMoveType() != null && weightTicket.getMoveReas() != null
@@ -2812,7 +2738,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                 } else if (!isWithoutDO() && WeighBridgeApp.getApplication().isOfflineMode()) //HLD18++
                 {
                     rbtMisc.setSelected(true);
-                }    
+                }
                 if (weightTicket.getRegCategory() == 'I'
                         && ((!isWithoutDO() && outbDel != null && !outbDel.getLfart().equalsIgnoreCase("LF")
                         && !outbDel.getLfart().equalsIgnoreCase("LR")
@@ -2965,26 +2891,11 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                         batch = entityManager.find(BatchStocks.class, new BatchStocksPK(config.getsClient(), config.getwPlant(), lgort, weightTicket.getMatnrRef(), outbDel.getCharg()));
                     }
                     if (cbxBatch.getModel().getSize() == 0) {
+                        // sync data
+                        sapService.syncBatchStocks(lgort, weightTicket.getMatnrRef(), weightTicket.getLgort());
+                        // get data DB
                         List<BatchStocks> batchs = batchStocksRepository.getList(config.getsClient(), config.getwPlant(),
                                 lgort, weightTicket.getMatnrRef());
-                        List<BatchStocksStructure> bBatchStocks = SAP2Local.getBatchStocks(lgort, weightTicket.getMatnrRef());
-                        if (!entityManager.getTransaction().isActive()) {
-                            entityManager.getTransaction().begin();
-                        }
-                        for (BatchStocksStructure b : bBatchStocks) {
-                            BatchStocks bs = new BatchStocks(new BatchStocksPK(config.getsClient(), config.getwPlant(), b.getLgort(), b.getMatnr(), b.getCharg()));
-                            bs.setLvorm(b.getLvorm() == null || b.getLvorm().trim().isEmpty() ? ' ' : b.getLvorm().charAt(0));
-                            if (batchs.indexOf(bs) == -1) {
-                                entityManager.persist(bs);
-                            } else {
-                                entityManager.merge(bs);
-                            }
-                            if (batchs.indexOf(bs) == -1 && b.getLgort().equalsIgnoreCase(weightTicket.getLgort())) {
-                                batchs.add(bs);
-                            }
-                        }
-                        entityManager.getTransaction().commit();
-                        entityManager.clear();
                         DefaultComboBoxModel result = new DefaultComboBoxModel();
                         for (BatchStocks b : batchs) {
                             if (b.getLvorm() == null || b.getLvorm().toString().trim().isEmpty()) {
@@ -3001,10 +2912,9 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                         cbxBatch.setSelectedIndex(-1);
                     }
                 }
-                
+
                 // cấu hình cho cầu cân hiển thị PO và vendor
-                if(sapSetting.getCheckPov() != null && sapSetting.getCheckPov() == true)
-                {
+                if (sapSetting.getCheckPov() != null && sapSetting.getCheckPov() == true) {
                     txtPoPosto.setVisible(true);
                     cbxVendorLoading.setVisible(true);
                     cbxVendorTransport.setVisible(true);
@@ -3019,32 +2929,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
 //                    lblVendorLoading.setVisible(false);
 //                    lblVendorTransport.setVisible(false);
                 }
-                
-                // check display select for Vat tu from SAP to DB
-                Material matDB = entityManager.find(Material.class, new MaterialPK(config.getsClient(), config.getwPlant(), weightTicket.getMatnr()));
-                
-                // CHECK sap
-//                Material matSap = SAP2Local.getMaterialDetail(weightTicket.getMatnr());
-//                if(matSap != null)
-//                {
-//                    if(matDB != null && (!matSap.getMaktx().equalsIgnoreCase(matDB.getMaktx())))
-//                    {
-//                        entityManager.merge(matSap);
-//                        matDB = matSap;
-//                    }
-//                    if(matDB == null)
-//                    {
-//                        entityManager.persist(matSap);
-//                        matDB = matSap;
-//                    }
-//                }
-                if(matDB != null)
-                {
-                   cbxMaterial.setSelectedItem(matDB); 
-                } else
-                {
-                    cbxMaterial.setSelectedIndex(-1);
-                }
+
                 // </editor-fold>
                 // </editor-fold>
 
@@ -3131,7 +3016,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
             setProgress(1, 0, 3);
 
             try {
-                sapPurOrder = SAP2Local.getPurchaseOrder(poNum);
+                sapPurOrder = sapService.getPurchaseOrder(poNum);
             } catch (Exception ex) {
                 failed(ex);
             }
@@ -3140,23 +3025,23 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                     vendor = entityManager.find(
                             Vendor.class,
                             new VendorPK(config.getsClient(), sapPurOrder.getVendor()));
-                    sapVendor = SAP2Local.getVendor(sapPurOrder.getVendor());
+                    sapVendor = sapService.getVendor(sapPurOrder.getVendor());
                 }
                 if (sapPurOrder.getSupplVend() != null && !sapPurOrder.getSupplVend().trim().isEmpty()) {
                     supVendor = entityManager.find(
                             Vendor.class,
                             new VendorPK(config.getsClient(), sapPurOrder.getSupplVend()));
-                    sapSupVendor = SAP2Local.getVendor(sapPurOrder.getSupplVend());
+                    sapSupVendor = sapService.getVendor(sapPurOrder.getSupplVend());
                 }
                 if (sapPurOrder.getCustomer() != null && !sapPurOrder.getCustomer().trim().isEmpty()) {
                     customer = entityManager.find(
                             Customer.class,
                             new CustomerPK(config.getsClient(), sapPurOrder.getCustomer()));
-                    sapCustomer = SAP2Local.getCustomer(sapPurOrder.getCustomer());
+                    sapCustomer = sapService.getCustomer(sapPurOrder.getCustomer());
                 }
             }
-            
-            
+
+
             setMessage("Lưu dữ liệu P.O vào CSDL ...");
             setProgress(2, 0, 3);
             if (!entityManager.getTransaction().isActive()) {
@@ -3402,7 +3287,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
 
                                 // <editor-fold defaultstate="collapsed" desc="Update D.O from SAP to DB">
                                 if (outbDel != null) {
-                                    OutbDel sapOutb = SAP2Local.getOutboundDelivery(outbDel.getOutbDelPK().getDelivNumb(), false);
+                                    OutbDel sapOutb = sapService.getOutboundDelivery(outbDel.getOutbDelPK().getDelivNumb(), false);
                                     Customer kunnr = null, sapKunnr = null, kunag = null, sapKunag = null;
                                     Vendor lifnr = null, sapLifnr = null;
                                     if (sapOutb != null) {
@@ -3410,19 +3295,19 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                                             kunnr = entityManager.find(
                                                     Customer.class,
                                                     new CustomerPK(WeighBridgeApp.getApplication().getConfig().getsClient(), sapOutb.getKunnr()));
-                                            sapKunnr = SAP2Local.getCustomer(sapOutb.getKunnr());
+                                            sapKunnr = sapService.getCustomer(sapOutb.getKunnr());
                                         }
                                         if (sapOutb.getKunag() != null && !sapOutb.getKunag().trim().isEmpty()) {
                                             kunag = entityManager.find(
                                                     Customer.class,
                                                     new CustomerPK(WeighBridgeApp.getApplication().getConfig().getsClient(), sapOutb.getKunag()));
-                                            sapKunag = SAP2Local.getCustomer(sapOutb.getKunag());
+                                            sapKunag = sapService.getCustomer(sapOutb.getKunag());
                                         }
                                         if (sapOutb.getLifnr() != null && !sapOutb.getLifnr().trim().isEmpty()) {
                                             lifnr = entityManager.find(
                                                     Vendor.class,
                                                     new VendorPK(WeighBridgeApp.getApplication().getConfig().getsClient(), sapOutb.getLifnr()));
-                                            sapLifnr = SAP2Local.getVendor(sapOutb.getLifnr());
+                                            sapLifnr = sapService.getVendor(sapOutb.getLifnr());
                                         }
                                     }
                                     //Store Ship to party Info
@@ -3694,7 +3579,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
 
                                     // <editor-fold defaultstate="collapsed" desc="Update D.O from SAP to DB">
                                     if (outbDel != null) {
-                                        OutbDel sapOutb = SAP2Local.getOutboundDelivery(outbDel.getOutbDelPK().getDelivNumb(), false);
+                                        OutbDel sapOutb = sapService.getOutboundDelivery(outbDel.getOutbDelPK().getDelivNumb(), false);
                                         Customer kunnr = null, sapKunnr = null, kunag = null, sapKunag = null;
                                         Vendor lifnr = null, sapLifnr = null;
                                         if (sapOutb != null) {
@@ -3702,19 +3587,19 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                                                 kunnr = entityManager.find(
                                                         Customer.class,
                                                         new CustomerPK(WeighBridgeApp.getApplication().getConfig().getsClient(), sapOutb.getKunnr()));
-                                                sapKunnr = SAP2Local.getCustomer(sapOutb.getKunnr());
+                                                sapKunnr = sapService.getCustomer(sapOutb.getKunnr());
                                             }
                                             if (sapOutb.getKunag() != null && !sapOutb.getKunag().trim().isEmpty()) {
                                                 kunag = entityManager.find(
                                                         Customer.class,
                                                         new CustomerPK(WeighBridgeApp.getApplication().getConfig().getsClient(), sapOutb.getKunag()));
-                                                sapKunag = SAP2Local.getCustomer(sapOutb.getKunag());
+                                                sapKunag = sapService.getCustomer(sapOutb.getKunag());
                                             }
                                             if (sapOutb.getLifnr() != null && !sapOutb.getLifnr().trim().isEmpty()) {
                                                 lifnr = entityManager.find(
                                                         Vendor.class,
                                                         new VendorPK(WeighBridgeApp.getApplication().getConfig().getsClient(), sapOutb.getLifnr()));
-                                                sapLifnr = SAP2Local.getVendor(sapOutb.getLifnr());
+                                                sapLifnr = sapService.getVendor(sapOutb.getLifnr());
                                             }
                                         }
                                         //Store Ship to party Info
@@ -3814,7 +3699,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
 
                 OutbDel od_temp = new OutbDel(new OutbDelPK(weightTicket.getWeightTicketPK().getMandt(), item));
                 GoodsMvtWeightTicketStructure stWT = fillWTStructure(weightTicket, od_temp, outDetails_lits);
-                
+
                 bapi.setWeightticket(stWT);
 //      }[M001-DungDang-28/06/2013] - Fixing bug post double GoodsMovement - end of insert                
                 try {
@@ -3946,20 +3831,20 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
             WeighBridgeApp.getApplication().disconnectWB();
             formatter.applyPattern(WeighBridgeApp.DATE_TIME_DISPLAY_FORMAT);
             Date now = null;
-            
+
             formatter.applyPattern(WeighBridgeApp.DATE_TIME_DISPLAY_FORMAT);//      
             WeightTicketJpaController con = new WeightTicketJpaController();
             try {
                 Object rs = con.get_server_time();
-                
-                    if (rs instanceof Timestamp){
-                     Timestamp time1 = (Timestamp)rs;
-                          now = new Date(time1.getTime());
-                     }else{
-                       now = (Date)rs;
-                      }
-                    
-                 } catch (Exception ex) {
+
+                if (rs instanceof Timestamp) {
+                    Timestamp time1 = (Timestamp) rs;
+                    now = new Date(time1.getTime());
+                } else {
+                    now = (Date) rs;
+                }
+
+            } catch (Exception ex) {
                 java.util.logging.Logger.getLogger(WeightTicketView.class.getName()).log(Level.SEVERE, null, ex);
             }
             grbBridge.clearSelection();
@@ -4080,7 +3965,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                     double valu1 = 0;
 
                     if (vari != null) {
-                      
+
                         if (!vari.getValue().equals("")) {
                             valu = Double.parseDouble(vari.getValue());
                         }
@@ -4098,61 +3983,55 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                         List wts = weightTicketRepository.getMaxL(pPlant, pWbid, pBs);
                         List wts2 = weightTicketRepository.getMaxLLock(pPlant, pWbid, pBs);
                         try {
-                          klmax = Float.parseFloat(wts.get(0).toString()); 
-                          ilock  = Float.parseFloat(wts2.get(0).toString()); 
-                        }catch(Throwable cause ){ 
-    
-                                  block  = false ;  
-                                  klmax  = -1 ; 
-                                  
+                            klmax = Float.parseFloat(wts.get(0).toString());
+                            ilock = Float.parseFloat(wts2.get(0).toString());
+                        } catch (Throwable cause) {
+
+                            block = false;
+                            klmax = -1;
+
                         }
-                         int ask  ;
-                         boolean isKTC = true ; 
-                         
+                        int ask;
+                        boolean isKTC = true;
+
                         if (block == false && klmax == -1 && isKTC == false) {
 
                             String msg = weightTicketJpaRepository.getMsg("6");
 
-                            
-                            ask = JOptionPane.showConfirmDialog(rootPane,msg
-                                , "Thông báo ", JOptionPane.YES_NO_OPTION); 
-                              if (ask  == JOptionPane.NO_OPTION)
-                              {
-                                 txfOutQty.setValue(null);
-                                 txtOutTime.setText(null);
-                                 txfGoodsQty.setValue(null);
-                                 weightTicket.setGQty(null);
-                                 btnAccept.setEnabled(false);
-                                 // Tuanna add 14.01.2013 - Check logic when input value not match require condition  
-                                 btnOScaleReset.setEnabled(true);
-                                 return null;
-                              }
-                    
-                        }
-                        else 
-                        {
-                         if(result > klmax  &&  klmax >0   )  
-                         {
-                              JOptionPane.showMessageDialog(rootPane, "IF 111114:  Lưu ý ! Trọng lượng hàng = "  + result + "   vượt quá trọng tải cho phép  ( Max = " + klmax +" )") ; 
-                           if(block )
-                              {
-                               txfOutQty.setValue(null);
+
+                            ask = JOptionPane.showConfirmDialog(rootPane, msg, "Thông báo ", JOptionPane.YES_NO_OPTION);
+                            if (ask == JOptionPane.NO_OPTION) {
+                                txfOutQty.setValue(null);
                                 txtOutTime.setText(null);
                                 txfGoodsQty.setValue(null);
-                                 weightTicket.setGQty(null);
-                                 btnAccept.setEnabled(false);
-                            // Tuanna add 14.01.2013 - Check logic when input value not match require condition  
+                                weightTicket.setGQty(null);
+                                btnAccept.setEnabled(false);
+                                // Tuanna add 14.01.2013 - Check logic when input value not match require condition
                                 btnOScaleReset.setEnabled(true);
-                                 return null;
-                              }
-                                  
-                          }  
+                                return null;
+                            }
+
+                        } else {
+                            if (result > klmax && klmax > 0) {
+                                JOptionPane.showMessageDialog(rootPane, "IF 111114:  Lưu ý ! Trọng lượng hàng = " + result + "   vượt quá trọng tải cho phép  ( Max = " + klmax + " )");
+                                if (block) {
+                                    txfOutQty.setValue(null);
+                                    txtOutTime.setText(null);
+                                    txfGoodsQty.setValue(null);
+                                    weightTicket.setGQty(null);
+                                    btnAccept.setEnabled(false);
+                                    // Tuanna add 14.01.2013 - Check logic when input value not match require condition
+                                    btnOScaleReset.setEnabled(true);
+                                    return null;
+                                }
+
+                            }
                         }
-                                                
-                        boolean a , b ; 
-                        a = b = true ;
-                        
-                        if ((lower <= result && result <= upper ) ) {
+
+                        boolean a, b;
+                        a = b = true;
+
+                        if ((lower <= result && result <= upper)) {
                             txfGoodsQty.setValue(result);
                             weightTicket.setGQty(new BigDecimal(result));
                         } else {
@@ -4162,7 +4041,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                             } catch (Exception ex) {
                                 msg = "Khối lượng ngoài giới hạn cho phép";
                             }
-                            JOptionPane.showMessageDialog(rootPane,  msg ); //variant mesage --> Tuanna 
+                            JOptionPane.showMessageDialog(rootPane, msg); //variant mesage --> Tuanna
                             txfOutQty.setValue(null);
                             txtOutTime.setText(null);
                             txfGoodsQty.setValue(null);
@@ -4389,18 +4268,18 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
         if (wt.getSoRomooc() != null && !wt.getSoRomooc().trim().isEmpty()) {
             plateCombine += wt.getSoRomooc();
         }
-        
+
         GoodsMvtDoCreateBapi bapi = new GoodsMvtDoCreateBapi();
         GoodsMvtHeaderStructure header = new GoodsMvtHeaderStructure();
         String tempWTID = weightTicket.getWeightTicketPK().getId();
 //      {[M001-DungDang-28/06/2013] - Fixing bug post double GoodsMovement - begin of insert
-        
-        GoodsMvtWeightTicketStructure stWT = fillWTStructure(weightTicket, 
+
+        GoodsMvtWeightTicketStructure stWT = fillWTStructure(weightTicket,
                 (outbDel != null && outbDel.getOutbDelPK() != null
-                && outbDel.getOutbDelPK().getDelivNumb() != null 
+                && outbDel.getOutbDelPK().getDelivNumb() != null
                 && !outbDel.getOutbDelPK().getDelivNumb().isEmpty() ? outbDel : null),
                 outDetails_lits);
-        bapi.setWeightticket(stWT); 
+        bapi.setWeightticket(stWT);
 //      }[M001-DungDang-28/06/2013] - Fixing bug post double GoodsMovement - end of insert
         header.setDocDate(DateUtil.stripTime(wt.getSTime()));
 
@@ -4548,7 +4427,6 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
         tab.add(tab_wa);
 
         if (purOrder != null && purOrder.getPoItemFree() != null) {
-            
 //            tab_wa.setPo_number(wt.getEbeln());
 //            tab_wa.setPo_item(purOrder.getPoItemFree());
 //            tab_wa.setMove_type("101");
@@ -4729,9 +4607,9 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
             Vehicle vehicle = entityManager.find(Vehicle.class, wt.getSoXe());
 
             if (vehicle != null) {
-                
+
                 bapi.setIdParnr(vehicle.getTaAbbr());
-                
+
             }
         }
         VbkokStructure wa = new VbkokStructure();
@@ -4745,7 +4623,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
 
         wa.setKomue("X");
         wa.setWabuc("X");
-    
+
 
         //modify lui ngay
         Calendar cal = Calendar.getInstance();
@@ -4937,7 +4815,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
         Calendar cal = Calendar.getInstance();
         cal.setTime(wt.getSTime());
         Date stime = null;
-        
+
         /*
         if (timeFrom <= cal.get(Calendar.HOUR_OF_DAY) && cal.get(Calendar.HOUR_OF_DAY) <= (timeTo - 1) && rbtOutward.isSelected()) {
         cal.add(Calendar.DATE, -1);
@@ -5142,19 +5020,19 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                     /*
                     if (wt.getMatnrRef() != null && wt.getMatnrRef().equalsIgnoreCase("000000101130400008")) // Tuanna - for bag 40K 27.04.2013                           
                     {
-                        tmp =  wt.getGQty() != null ? (((wt.getGQty().doubleValue()) * 1000d) / 40d) : 0;
+                    tmp =  wt.getGQty() != null ? (((wt.getGQty().doubleValue()) * 1000d) / 40d) : 0;
                     } else {
-                        tmp = wt.getGQty() != null ?(((wt.getGQty().doubleValue()) * 1000d) / 50d) : 0;
+                    tmp = wt.getGQty() != null ?(((wt.getGQty().doubleValue()) * 1000d) / 50d) : 0;
                     }
                      * */
-                     
-                     if (wt.getMatnrRef() != null && wt.getMatnrRef().equalsIgnoreCase("000000101130400008")) // Tuanna - for bag 40K 27.04.2013                           
-                        {
-                            tmp = ((wt.getRegItemQty().doubleValue()) * 1000d) / 40d;
-                        } else {
-                            tmp = ((wt.getRegItemQty().doubleValue()) * 1000d) / 50d;
-                        }
-                     
+
+                    if (wt.getMatnrRef() != null && wt.getMatnrRef().equalsIgnoreCase("000000101130400008")) // Tuanna - for bag 40K 27.04.2013
+                    {
+                        tmp = ((wt.getRegItemQty().doubleValue()) * 1000d) / 40d;
+                    } else {
+                        tmp = ((wt.getRegItemQty().doubleValue()) * 1000d) / 50d;
+                    }
+
 //                    if ((tmp == null || tmp == 0) && wt.getFScale() != null) {
 //                        if (wt.getMatnrRef() != null && wt.getMatnrRef().equalsIgnoreCase("000000101130400008")) // Tuanna - for bag 40K 27.04.2013                           
 //                        {
@@ -5179,15 +5057,16 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
 //                map.put("P_DEL_NUM", outbDel.getOutbDelPK().getDelivNumb());
                 String reportName1 = "";
                 if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
-                    //reportName1 = "./rpt/rptBT/WeightTicket.jasper";
-                    reportName1 = "./rpt/rptBT/WeightTicket.jrxml";
+                    reportName1 = "./rpt/rptBT/WeightTicket.jasper";
                 } else {
-                    // reportName1 = "./rpt/rptPQ/WeightTicket.jasper";
-                    reportName1 = "./rpt/rptPQ/WeightTicket.jrxml";
+                    reportName1 = "./rpt/rptPQ/WeightTicket.jasper";
                 }
-                JasperReport jasperReport = JasperCompileManager.compileReport(reportName1);
-                Connection connect = JReportConnector.getInstance();
-                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, connect);
+                Class.forName((String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_DRIVER));
+                Connection jdbcCon = DriverManager.getConnection(
+                        (String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_URL),
+                        (String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_USER),
+                        (String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_PASSWORD));
+                JasperPrint jasperPrint = JasperFillManager.fillReport(reportName1, map, jdbcCon);
                 JasperViewer jv = new JasperViewer(jasperPrint, false);
                 jv.setVisible(true);
 
@@ -5300,15 +5179,16 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                         path = "./rpt/rptPQ/";
                     }
                     if (rbtMisc.isSelected() || rbtPO.isSelected()) {
-                        reportName = path.concat("WeightTicket.jrxml");
-                        //reportName = path.concat("WeightTicket.jasper");
+                        reportName = path.concat("WeightTicket.jasper");
                     } else {
-                        reportName = path.concat("WeightTicket_NEW.jrxml");
-                        //reportName = path.concat("WeightTicket.jasper");
+                        reportName = path.concat("WeightTicket_NEW.jasper");
                     }
-                    Connection connect = JReportConnector.getInstance();
-                    JasperReport jasperReport = JasperCompileManager.compileReport(reportName);
-                    JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, connect);
+                    Class.forName((String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_DRIVER));
+                    Connection jdbcCon = DriverManager.getConnection(
+                            (String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_URL),
+                            (String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_USER),
+                            (String) JpaProperties.getProperties().get(PersistenceUnitProperties.JDBC_PASSWORD));
+                    JasperPrint jasperPrint = JasperFillManager.fillReport(reportName, map, jdbcCon);
                     JasperViewer jv = new JasperViewer(jasperPrint, false);
                     jv.setVisible(true);
                 }
@@ -5327,7 +5207,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
         try {
             String val = e.getDocument().getText(0, e.getDocument().getLength()).trim();
             if (!val.isEmpty()) {
-                material = SAP2Local.getMaterialDetail(val);
+                material = sapService.getMaterialDetail(val);
             }
         } catch (Exception ex) {
             logger.error(null, ex);
@@ -5472,34 +5352,34 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
         if (wt == null || wt.getWeightTicketPK() == null) {
             return stWT;
         }
-        String tempWTID = wt.getWeightTicketPK().getId().trim();        
-        tempWTID = tempWTID.concat(Conversion_Exit.Conv_output_num(String.valueOf(weightTicket.getWeightTicketPK().getSeqByDay()),3));
+        String tempWTID = wt.getWeightTicketPK().getId().trim();
+        tempWTID = tempWTID.concat(Conversion_Exit.Conv_output_num(String.valueOf(weightTicket.getWeightTicketPK().getSeqByDay()), 3));
         stWT = new GoodsMvtWeightTicketStructure(weightTicket.getWeightTicketPK().getWPlant(),
-                        weightTicket.getWbId(),
-                        tempWTID);
-                
+                weightTicket.getWbId(),
+                tempWTID);
+
 //          outb_details_v2
         OutbDetailsV2 od_v2 = null;
         if (od != null && od_v2_list != null) {
-            for (OutbDetailsV2 od_v2_tmp: od_v2_list) {
-                if (od_v2_tmp.getOutbDetailsV2PK().getDelivNumb() != null 
+            for (OutbDetailsV2 od_v2_tmp : od_v2_list) {
+                if (od_v2_tmp.getOutbDetailsV2PK().getDelivNumb() != null
                         && od_v2_tmp.getOutbDetailsV2PK().getDelivNumb().equals(od.getOutbDelPK().getDelivNumb())) {
                     od_v2 = od_v2_tmp;
                     break;
                 }
             }
 //            od_v2 = od_v2_list.get(0);                    
-        }                
-        
+        }
+
         stWT.setCAT_TYPE(String.valueOf(wt.getRegCategory()));
 //        stWT.setCREATE_DATE(new Date());
 //        stWT.setCREATE_TIME(null);
 //        stWT.setClient(title);
 //        stWT.setDOC_YEAR(wt_ID);
         stWT.setDO_WT(wt.getDelivNumb());
-        stWT.setDO_NUMBER(od != null && od.getOutbDelPK() != null 
-                && od.getOutbDelPK().getDelivNumb() != null ? 
-                od.getOutbDelPK().getDelivNumb() : "");
+        stWT.setDO_NUMBER(od != null && od.getOutbDelPK() != null
+                && od.getOutbDelPK().getDelivNumb() != null
+                ? od.getOutbDelPK().getDelivNumb() : "");
         stWT.setDRIVERID(wt.getCmndBl());
         stWT.setDRIVERN(wt.getTenTaiXe());
         stWT.setFDATE(wt.getFTime());
@@ -5512,9 +5392,9 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
         stWT.setMATID(wt.getMatnrRef());
         stWT.setMATNAME(wt.getRegItemText());
         stWT.setMVT_TYPE(wt.getMoveType());
-        if ((stWT.getMVT_TYPE() == null || stWT.getMVT_TYPE().isEmpty()) 
-            && od != null && od.getBwart() != null) {
-            stWT.setMVT_TYPE(od.getBwart());                    
+        if ((stWT.getMVT_TYPE() == null || stWT.getMVT_TYPE().isEmpty())
+                && od != null && od.getBwart() != null) {
+            stWT.setMVT_TYPE(od.getBwart());
         }
         stWT.setNTEXT(wt.getText());
         stWT.setPO_NUMBER(wt.getEbeln());
@@ -5530,44 +5410,11 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
         stWT.setUNIT(wt.getUnit());
         stWT.setUSERNAME(wt.getSCreator());
         stWT.setVTYPE(od != null ? od.getBwtar() : "");
-        stWT.setBatch(od != null ? od.getCharg(): "");
+        stWT.setBatch(od != null ? od.getCharg() : "");
         stWT.setLfart(od != null ? od.getLfart() : "");
-        
+
         return stWT;
     }
-
-    @Action
-    public Task selectInternal() {
-        return new SelectInternalTask(org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class));
-    }
-
-    private class SelectInternalTask extends org.jdesktop.application.Task<Object, Void> {
-        SelectInternalTask(org.jdesktop.application.Application app) {
-            // Runs on the EDT.  Copy GUI state that
-            // doInBackground() depends on from parameters
-            // to SelectInternalTask fields, here.
-            super(app);
-        }
-
-        @Override
-        protected Object doInBackground() {
-            if (chkInternal.isSelected()) {
-                rbtInward.setEnabled(true);
-                rbtOutward.setEnabled(true);
-            } else {
-                rbtInward.setEnabled(false);
-                rbtOutward.setEnabled(false);
-            }
-            return null;  // return your result
-        }
-
-        @Override
-        protected void succeeded(Object result) {
-            // Runs on the EDT.  Update the GUI based on
-            // the result computed by doInBackground().
-        }
-    }
-
     // </editor-fold>
     //<editor-fold defaultstate="collapsed" desc="Variables declaration Area">
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -5580,13 +5427,11 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
     private javax.swing.JComboBox cbxBatch;
     private javax.swing.JComboBox cbxCompleted;
     private javax.swing.JComboBox cbxKunnr;
-    private javax.swing.JComboBox cbxMaterial;
     private javax.swing.JComboBox cbxReason;
     private javax.swing.JComboBox cbxSLoc;
     private javax.swing.JComboBox cbxVendorLoading;
     private javax.swing.JComboBox cbxVendorTransport;
     private javax.swing.JCheckBox chkDissolved;
-    private javax.swing.JCheckBox chkInternal;
     private javax.swing.ButtonGroup grbBridge;
     private javax.swing.ButtonGroup grbCat;
     private javax.swing.ButtonGroup grbType;
@@ -5608,7 +5453,6 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
     private javax.swing.JLabel lblIUnit;
     private javax.swing.JLabel lblKG;
     private javax.swing.JLabel lblLicPlate;
-    private javax.swing.JLabel lblMaterial;
     private javax.swing.JLabel lblMatnr;
     private javax.swing.JLabel lblOScale;
     private javax.swing.JLabel lblOTime;

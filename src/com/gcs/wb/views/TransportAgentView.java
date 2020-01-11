@@ -12,9 +12,11 @@ package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.helper.SAP2Local;
+import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.Vehicle;
+import com.gcs.wb.jpa.service.JPAService;
 import com.gcs.wb.model.AppConfig;
 import java.awt.Color;
 import java.awt.Component;
@@ -33,7 +35,8 @@ import org.jdesktop.application.Action;
  */
 public class TransportAgentView extends javax.swing.JInternalFrame {
 
-    private AppConfig config = null;
+    SAPService sapService = new SAPService();
+    JPAService jpaService = new JPAService();
 
     /** Creates new form TransportAgentView */
     public TransportAgentView() {
@@ -330,73 +333,9 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
     }
 
     private DefaultListModel getTransportAgentsModel() {
-        config = WeighBridgeApp.getApplication().getConfig();
-        TypedQuery<TransportAgent> typedQuery = entityManager.createNamedQuery("TransportAgent.findAll", TransportAgent.class);
-        List<TransportAgent> transportAgents = typedQuery.getResultList();
-
-        // get from SAP
-        List<TransportAgent> transportAgentsSAP = SAP2Local.getTransportAgentList(config.getwPlant());
-        //sync SAP <=> DB
-        // delete data DB not exist SAP
-        for (TransportAgent transportAgent : transportAgents) {
-            if (transportAgentsSAP.indexOf(transportAgent) == -1) {
-                // delete in table Vehicle
-                TypedQuery<Vehicle> vehicleTypedQuery = entityManager.createNamedQuery("Vehicle.findByTaAbbr", Vehicle.class);
-                vehicleTypedQuery.setParameter("taAbbr", transportAgent.getAbbr());
-                List<Vehicle> vehicles = vehicleTypedQuery.getResultList();
-
-                if (!entityManager.getTransaction().isActive()) {
-                    entityManager.getTransaction().begin();
-                }
-
-                try {
-                    for (Vehicle vehicle : vehicles) {
-                        entityManager.remove(vehicle);
-                    }
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), resourceMapMsg.getString("msg.deleteVehicleFalse"));
-                    entityManager.getTransaction().rollback();
-                }
-
-                // delete dvvc
-                try {
-                    if (!entityManager.contains(transportAgent)) {
-                        transportAgent = entityManager.merge(transportAgent);
-                    }
-                    entityManager.remove(transportAgent);
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), resourceMapMsg.getString("msg.deleteProviderFalse"));
-                    entityManager.getTransaction().rollback();
-                }
-
-                entityManager.getTransaction().commit();
-                entityManager.clear();
-            }
-        }
-
-        try {
-            if (!entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().begin();
-            }
-            // update dara SAP -> DB
-            for (TransportAgent transportAgentSAP : transportAgentsSAP) {
-
-                if (transportAgents.indexOf(transportAgentSAP) == -1) {
-                    entityManager.persist(transportAgentSAP);
-                } else {
-                    entityManager.merge(transportAgentSAP);
-                }
-            }
-
-            entityManager.getTransaction().commit();
-            entityManager.clear();
-
-        } catch (Exception ex) {
-            entityManager.getTransaction().rollback();
-        }
-
         // get dvvc
-        transportAgents = typedQuery.getResultList();
+        List<TransportAgent> transportAgents = sapService.getTransportAgentList();
+
         DefaultListModel model = new DefaultListModel();
         for (TransportAgent transportAgent : transportAgents) {
             model.addElement(transportAgent);
@@ -405,9 +344,7 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
     }
 
     private DefaultListModel getVehiclesModel() {
-        TypedQuery<Vehicle> typedQuery = entityManager.createNamedQuery("Vehicle.findByTaAbbr", Vehicle.class);
-        typedQuery.setParameter("taAbbr", transportAgentSelected.getAbbr());
-        List<Vehicle> vehicles = typedQuery.getResultList();
+        List<Vehicle> vehicles = jpaService.getVehicle(transportAgentSelected.getAbbr());
         DefaultListModel model = new DefaultListModel();
         for (Vehicle vehicle : vehicles) {
             model.addElement(vehicle);

@@ -12,6 +12,7 @@ package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.helper.SAP2Local;
+import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.JReportConnector;
@@ -83,6 +84,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
     EntityManager entityManager = JPAConnector.getInstance();
     MaterialRepository materialRepository = new MaterialRepository();
     WeightTicketRepository weightTicketRepository = new WeightTicketRepository();
+    SAPService sapService = new SAPService();
 
     public WTRegView(String _mode) {
         this.mode = _mode;
@@ -1440,7 +1442,7 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                 weightTicketList.clear();
 
                 setProgress(1, 0, 4);
-                setMessage(resourceMapMsg.getString("msg.getData"));                
+                setMessage(resourceMapMsg.getString("msg.getData"));
                 AppConfig config = WeighBridgeApp.getApplication().getConfig();
                 //Tuanna add to protected data as folowing IT security policy -- 20/05/2013         
                 int days = (int)((dpTo.getDate().getTime() - dpFrom.getDate().getTime()) / (1000 * 60 * 60 * 24));               
@@ -1824,25 +1826,25 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                 outb = entityManager.find(OutbDel.class, outbPK);
                 setMessage(resourceMapMsg.getString("checkDOInSap"));
                 setProgress(2, 1, 4);
-                OutbDel sapOutb = SAP2Local.getOutboundDelivery(val[k], true);
+                OutbDel sapOutb = sapService.getOutboundDelivery(val[k], true);
                 if (sapOutb != null) {
                     if (sapOutb.getKunnr() != null && !sapOutb.getKunnr().trim().isEmpty()) {
                         kunnr = entityManager.find(
                                 Customer.class,
                                 new CustomerPK(WeighBridgeApp.getApplication().getConfig().getsClient(), sapOutb.getKunnr()));
-                        sapKunnr = SAP2Local.getCustomer(sapOutb.getKunnr());
+                        sapKunnr = sapService.getCustomer(sapOutb.getKunnr());
                     }
                     if (sapOutb.getKunag() != null && !sapOutb.getKunag().trim().isEmpty()) {
                         kunag = entityManager.find(
                                 Customer.class,
                                 new CustomerPK(WeighBridgeApp.getApplication().getConfig().getsClient(), sapOutb.getKunag()));
-                        sapKunag = SAP2Local.getCustomer(sapOutb.getKunag());
+                        sapKunag = sapService.getCustomer(sapOutb.getKunag());
                     }
                     if (sapOutb.getLifnr() != null && !sapOutb.getLifnr().trim().isEmpty()) {
                         lifnr = entityManager.find(
                                 Vendor.class,
                                 new VendorPK(WeighBridgeApp.getApplication().getConfig().getsClient(), sapOutb.getLifnr()));
-                        sapLifnr = SAP2Local.getVendor(sapOutb.getLifnr());
+                        sapLifnr = sapService.getVendor(sapOutb.getLifnr());
                         // abbr = sapLifnr.getVendorPK().getLifnr();
                     }
 

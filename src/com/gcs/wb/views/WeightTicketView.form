@@ -54,7 +54,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="pnScaleData" alignment="0" max="32767" attributes="2"/>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="pnWTFilter" pref="549" max="32767" attributes="0"/>
+                      <Component id="pnWTFilter" pref="563" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="pnCurScale" min="-2" max="-2" attributes="1"/>
                   </Group>
@@ -76,7 +76,7 @@
               <Component id="pnScaleData" min="-2" pref="119" max="-2" attributes="1"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="pnWTicket" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="64" max="32767" attributes="0"/>
+              <EmptySpace pref="66" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -109,7 +109,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="lblWTNum" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="txtWTNum" pref="338" max="32767" attributes="0"/>
+                          <Component id="txtWTNum" pref="336" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jButton1" min="-2" pref="58" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -123,7 +123,7 @@
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="txtPONum" min="-2" pref="131" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="rbtMvt311" pref="421" max="32767" attributes="0"/>
+                              <Component id="rbtMvt311" pref="427" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
@@ -162,7 +162,7 @@
                       <Component id="rbtMvt311" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="rbtMb1b" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="15" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -384,7 +384,7 @@
                               </Group>
                           </Group>
                       </Group>
-                      <EmptySpace pref="18" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -800,7 +800,6 @@
                       <Component id="lblCMNDBL" alignment="1" min="-2" max="-2" attributes="0"/>
                       <Component id="lblDName" alignment="1" min="-2" max="-2" attributes="0"/>
                       <Component id="lblGRText" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblMaterial" min="-2" max="-2" attributes="0"/>
                       <Group type="102" alignment="1" attributes="0">
                           <Component id="lblReason" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
@@ -826,12 +825,12 @@
                               <Component id="lblPoPosto" min="-2" max="-2" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="cbxReason" pref="238" max="32767" attributes="0"/>
-                                      <Component id="txtGRText" pref="238" max="32767" attributes="0"/>
-                                      <Component id="cbxSLoc" alignment="1" pref="238" max="32767" attributes="0"/>
-                                      <Component id="txtLicPlate" alignment="0" pref="238" max="32767" attributes="0"/>
-                                      <Component id="txtDName" alignment="0" pref="238" max="32767" attributes="2"/>
-                                      <Component id="txtTrailerPlate" alignment="0" pref="238" max="32767" attributes="0"/>
+                                      <Component id="cbxReason" pref="240" max="32767" attributes="0"/>
+                                      <Component id="txtGRText" pref="240" max="32767" attributes="0"/>
+                                      <Component id="cbxSLoc" alignment="1" pref="240" max="32767" attributes="0"/>
+                                      <Component id="txtLicPlate" alignment="0" pref="240" max="32767" attributes="0"/>
+                                      <Component id="txtDName" alignment="0" pref="240" max="32767" attributes="2"/>
+                                      <Component id="txtTrailerPlate" alignment="0" pref="240" max="32767" attributes="0"/>
                                       <Component id="txtCMNDBL" alignment="0" min="-2" pref="173" max="-2" attributes="2"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
@@ -845,31 +844,25 @@
                                       <Component id="lblComplete" alignment="1" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Component id="cbxMaterial" pref="238" max="32767" attributes="0"/>
-                                  <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
-                                  <Component id="lbKunnr" min="-2" max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="lbKunnr" alignment="1" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="txtPoPosto" pref="427" max="32767" attributes="0"/>
+                              <Component id="txtPoPosto" pref="429" max="32767" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="rbtInward" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Component id="rbtOutward" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="chkInternal" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Component id="txtRegItem" alignment="0" min="-2" pref="250" max="-2" attributes="0"/>
-                              <Component id="txtDelNum" alignment="0" pref="427" max="32767" attributes="0"/>
-                              <Component id="cbxBatch" alignment="0" pref="427" max="32767" attributes="0"/>
-                              <Component id="txtCementDesc" alignment="0" pref="427" max="32767" attributes="0"/>
-                              <Component id="cbxCompleted" alignment="0" pref="427" max="32767" attributes="0"/>
-                              <Component id="txtMatnr" alignment="0" pref="427" max="32767" attributes="0"/>
-                              <Component id="cbxKunnr" alignment="0" pref="427" max="32767" attributes="0"/>
-                              <Component id="cbxVendorLoading" alignment="1" pref="427" max="32767" attributes="0"/>
-                              <Component id="cbxVendorTransport" alignment="1" pref="427" max="32767" attributes="0"/>
+                              <Component id="txtDelNum" alignment="0" pref="429" max="32767" attributes="0"/>
+                              <Component id="cbxBatch" alignment="0" pref="429" max="32767" attributes="0"/>
+                              <Component id="txtCementDesc" alignment="0" pref="429" max="32767" attributes="0"/>
+                              <Component id="cbxCompleted" alignment="0" pref="429" max="32767" attributes="0"/>
+                              <Component id="txtMatnr" alignment="0" pref="429" max="32767" attributes="0"/>
+                              <Component id="cbxKunnr" alignment="0" pref="429" max="32767" attributes="0"/>
+                              <Component id="cbxVendorLoading" alignment="1" pref="429" max="32767" attributes="0"/>
+                              <Component id="cbxVendorTransport" alignment="1" pref="429" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -886,7 +879,6 @@
                       <Component id="lblRegCat" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="rbtInward" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="rbtOutward" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="chkInternal" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -960,8 +952,6 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="lbKunnr" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="cbxKunnr" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="cbxMaterial" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblMaterial" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -1115,7 +1105,7 @@
         <Component class="javax.swing.JComboBox" name="cbxSLoc">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor" postCode="cbxSLoc.setRenderer(new DefaultListCellRenderer() {&#xa;           @Override&#xa;           public Component getListCellRendererComponent(&#xa;                   JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {&#xa;               super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);&#xa;               if (value instanceof SLoc) {&#xa;                   SLoc sloc = (SLoc)value;&#xa;                   setText(sloc.getSLocPK().getLgort().concat(&quot; - &quot;).concat(sloc.getLgobe()));&#xa;//                    setText(sloc.getLgobe().concat(&quot; - &quot;).concat(sloc.getSLocPK().getLgort()));&#xa;               }&#xa;               return this;&#xa;           }&#xa;       });">
-              <Connection code="SAP2Local.getSlocModel(config, entityManager)" type="code"/>
+              <Connection code="sapService.getSlocModel()" type="code"/>
             </Property>
             <Property name="name" type="java.lang.String" value="cbxSLoc" noResource="true"/>
           </Properties>
@@ -1291,21 +1281,10 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton3ActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JComboBox" name="cbxMaterial">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="getMaterialList()" type="code"/>
-            </Property>
-            <Property name="name" type="java.lang.String" value="cbxMaterial" noResource="true"/>
-          </Properties>
-          <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbxMaterialItemStateChanged"/>
-          </Events>
-        </Component>
         <Component class="javax.swing.JComboBox" name="cbxVendorLoading">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="SAP2Local.getVendorList(config, entityManager)" type="code"/>
+              <Connection code="sapService.getVendorList()" type="code"/>
             </Property>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
               <action class="com.gcs.wb.views.WeightTicketView" id="acceptBatch" methodName="acceptBatch"/>
@@ -1322,7 +1301,7 @@
         <Component class="javax.swing.JComboBox" name="cbxVendorTransport">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="SAP2Local.getVendorList(config, entityManager)" type="code"/>
+              <Connection code="sapService.getVendorList()" type="code"/>
             </Property>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
               <action class="com.gcs.wb.views.WeightTicketView" id="acceptBatch" methodName="acceptBatch"/>
@@ -1344,27 +1323,6 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtPoPostoActionPerformed"/>
             <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtPoPostoKeyReleased"/>
           </Events>
-        </Component>
-        <Component class="javax.swing.JCheckBox" name="chkInternal">
-          <Properties>
-            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="com.gcs.wb.views.WeightTicketView" id="selectInternal" methodName="selectInternal"/>
-            </Property>
-            <Property name="hideActionText" type="boolean" value="true"/>
-            <Property name="name" type="java.lang.String" value="chkInternal" noResource="true"/>
-          </Properties>
-          <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkInternalItemStateChanged"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblMaterial">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblMaterial.text"/>
-            <Property name="name" type="java.lang.String" value="lblMaterial" noResource="true"/>
-          </Properties>
-          <AccessibilityProperties>
-            <Property name="AccessibleContext.accessibleDescription" type="java.lang.String" resourceKey="lblMat.AccessibleContext.accessibleDescription"/>
-          </AccessibilityProperties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblPoPosto">
           <Properties>

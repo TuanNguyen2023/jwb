@@ -12,6 +12,7 @@ package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.helper.SAP2Local;
+import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.SLoc;
 import com.gcs.wb.jpa.entity.SLocPK;
@@ -26,6 +27,9 @@ import org.jdesktop.application.Action;
  */
 public class Mvt311View extends javax.swing.JDialog {
 
+    private com.gcs.wb.model.AppConfig config;
+    SAPService sapService = new SAPService();
+    
     /** Creates new form Mvt311View */
     public Mvt311View(java.awt.Frame parent, String recv_lgort, Material mat) {
         super(parent);
@@ -56,7 +60,6 @@ public class Mvt311View extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        config = WeighBridgeApp.getApplication().getConfig();
         entityManager = java.beans.Beans.isDesignTime() ? null : WeighBridgeApp.getApplication().getEm();
         if(entityManager != null ) entityManager.clear();
         pnContent = new javax.swing.JPanel();
@@ -79,7 +82,7 @@ public class Mvt311View extends javax.swing.JDialog {
         lblRecvSloc.setText(resourceMap.getString("lblRecvSloc.text")); // NOI18N
         lblRecvSloc.setName("lblRecvSloc"); // NOI18N
 
-        cbxRecvSloc.setModel(SAP2Local.getSlocModel(config, entityManager));
+        cbxRecvSloc.setModel(sapService.getSlocModel());
         cbxRecvSloc.setRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(
@@ -147,7 +150,7 @@ public class Mvt311View extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnContent, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE)
+            .addComponent(pnContent, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(253, Short.MAX_VALUE)
                 .addComponent(btnSelect)
@@ -221,7 +224,6 @@ public class Mvt311View extends javax.swing.JDialog {
     private javax.swing.JButton btnLookup;
     private javax.swing.JButton btnSelect;
     private javax.swing.JComboBox cbxRecvSloc;
-    private com.gcs.wb.model.AppConfig config;
     private javax.persistence.EntityManager entityManager;
     private javax.swing.JLabel lblMatnr;
     private javax.swing.JLabel lblRecvSloc;

@@ -12,18 +12,24 @@ package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.helper.SAP2Local;
+import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.jpa.entity.Material;
 import java.util.ArrayList;
 import org.hibersap.session.Session;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
+import javax.persistence.EntityManager;
+import com.gcs.wb.jpa.JPAConnector;
+import com.gcs.wb.jpa.service.JPAService;
 
 /**
  *
  * @author vunguyent
  */
 public class LookupMatView extends javax.swing.JDialog {
-
+    EntityManager entityManager = JPAConnector.getInstance();
+    JPAService jpaService = new JPAService();
+    SAPService sapService = new SAPService();
     /** Creates new form LookupMatView */
     public LookupMatView(java.awt.Frame parent) {
         super(parent);
@@ -192,7 +198,10 @@ public class LookupMatView extends javax.swing.JDialog {
         @Override
         protected Object doInBackground() {
             materials.clear();
-            materials.addAll(SAP2Local.lookupMaterialsByDesc(txtMatDesc.getText().trim()));
+            // sync SAP-DB material
+            sapService.syncMaterialMaster();
+            // get data Vat tu
+            materials.addAll(jpaService.getListMaterialByDesc(txtMatDesc.getText().trim()));
             wtData = new Object[materials.size()][wtCols.length];
             for (int i = 0; i < materials.size(); i++) {
                 Material mat = materials.get(i);
