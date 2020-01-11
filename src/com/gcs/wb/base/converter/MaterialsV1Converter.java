@@ -35,15 +35,5 @@ public class MaterialsV1Converter extends AbstractThrowableConverter<List<MatLoo
         }
         return toList;
     }
-
-    @Override
-    public List<Material> convertHasParameter(List<MatLookupStructure> from, String val) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public List<Material> convertsHasParameter(List<MatLookupStructure> from, String val, boolean refresh) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 }
 

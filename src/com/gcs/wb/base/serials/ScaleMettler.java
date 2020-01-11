@@ -6,10 +6,10 @@
  *
  *
  */
-package com.gcs.wb.rs232;
+package com.gcs.wb.base.serials;
 
 import com.gcs.wb.WeighBridgeApp;
-import com.gcs.wb.rs232.exceptions.IllegalPortException;
+import com.gcs.wb.base.exceptions.IllegalPortException;
 import gnu.io.CommPort;
 import java.io.IOException;
 import java.io.InputStream;

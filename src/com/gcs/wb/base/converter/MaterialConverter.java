@@ -30,14 +30,4 @@ public class MaterialConverter extends AbstractThrowableConverter<MatGetDetailSt
         to.setXchpf(from.getXchpf() != null && from.getXchpf().equalsIgnoreCase("X") ? 'X' : ' ');
         return to;
     }
-
-    @Override
-    public Material convertHasParameter(MatGetDetailStructure from, String val) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Material convertsHasParameter(MatGetDetailStructure from, String val, boolean refresh) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 }

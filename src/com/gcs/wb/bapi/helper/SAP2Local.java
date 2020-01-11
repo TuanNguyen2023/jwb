@@ -238,7 +238,7 @@ public class SAP2Local {
             WeighBridgeApp.getApplication().getSAPSession().execute(bapi);
             List<TransportagentGetListStructure> vendors = bapi.getEtVendor();
             VendorsConverter vendorsConverter = new VendorsConverter();
-            vendorsConverter.convert(vendors);
+            vendorsConverter.convertHasParameter(vendors, wplant);
         } catch (Exception ex) {
             Logger.getLogger(SAP2Local.class.getName()).log(Level.SEVERE, null, ex);
         }

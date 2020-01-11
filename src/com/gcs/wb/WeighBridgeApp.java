@@ -3,14 +3,13 @@
  */
 package com.gcs.wb;
 
+import com.gcs.wb.base.exceptions.IllegalPortException;
+import com.gcs.wb.base.serials.ScaleMettler;
+import com.gcs.wb.base.serials.SerialComm;
 import com.gcs.wb.jpa.DataSources;
-import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.SAPSetting;
 import com.gcs.wb.jpa.entity.User;
 import com.gcs.wb.model.AppConfig;
-import com.gcs.wb.rs232.ScaleMettler;
-import com.gcs.wb.rs232.SerialComm;
-import com.gcs.wb.rs232.exceptions.IllegalPortException;
 import com.gcs.wb.views.ConfigView;
 import com.gcs.wb.views.LoginView;
 import com.gcs.wb.views.SettingView;
