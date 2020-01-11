@@ -117,8 +117,9 @@ public class TransportAgentController {
         Vehicle vehicle = entityManager.find(Vehicle.class, txtLicensePlate.getText().trim());
         if (vehicle == null) {
             vehicle = new Vehicle();
-            vehicle.setSoXe(txtLicensePlate.getText().trim());
-            vehicle.setTaAbbr(transportAgentSelected.getAbbr());
+            // TODO uncomment
+            //vehicle.setSoXe(txtLicensePlate.getText().trim());
+            //vehicle.setTaAbbr(transportAgentSelected.getAbbr());
             if (!entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().begin();
             }
@@ -130,8 +131,8 @@ public class TransportAgentController {
             txtLicensePlate.setText("");
             lstVehicle.clearSelection();
             lstVehicle.setModel(getVehiclesModel);
-        } else {
-            TransportAgent transportAgent = entityManager.find(TransportAgent.class, vehicle.getTaAbbr());
+        } else { // TODO uncomment
+            TransportAgent transportAgent = null;//entityManager.find(TransportAgent.class, vehicle.getTaAbbr());
             if (transportAgent != null) {
                 JOptionPane.showMessageDialog(rootPane, "Số xe "
                         + txtLicensePlate.getText().trim()
