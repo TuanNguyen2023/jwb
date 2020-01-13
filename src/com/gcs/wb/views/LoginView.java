@@ -17,7 +17,7 @@ import org.jdesktop.application.Application;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.Task;
 
-public class LoginView extends javax.swing.JDialog implements IWeighBridge {
+public class LoginView extends javax.swing.JDialog {
     private javax.swing.JButton btnLogin;
     private org.jdesktop.swingx.JXBusyLabel iconLoading;
     private javax.swing.JLabel lblPassword;
