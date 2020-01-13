@@ -24,7 +24,7 @@ public class SettingController {
         entityManager.merge(sapSetting);
         entityManager.getTransaction().commit();
         entityManager.clear();
-        sapSetting = entityManager.find(SAPSetting.class, sapSetting.getSAPSettingPK());
+        sapSetting = entityManager.find(SAPSetting.class, sapSetting.getId());
         entityManager.clear();
 
         //{+20110119#01

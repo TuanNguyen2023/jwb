@@ -107,17 +107,13 @@ public class WeighBridgeApp extends SingleFrameApplication {
             authenticated = vLogin.isAuthenticated();
             if (authenticated) {
                 vLogin.dispose();
-                if ((sapSetting.getMatnrXmxa() == null || sapSetting.getMatnrPcb40() == null || sapSetting.getMatnrClinker() == null
-                        || sapSetting.getBact1Val() == null || sapSetting.getBact2Val() == null || sapSetting.getBact3Val() == null || sapSetting.getBact4Val() == null
-                        || sapSetting.getWb1Tol() == null || sapSetting.getWb2Tol() == null
-                        || sapSetting.getRoleAd() == null || sapSetting.getRoleSs() == null || sapSetting.getRoleWm() == null)) {
+                if (sapSetting.getNameRpt() == null || sapSetting.getAddress() == null
+                        || sapSetting.getPhone() == null || sapSetting.getFax() == null) {
                     vSetting = new SettingView(this.getMainFrame());
                     show(vSetting);
                     if (!vSetting.isShowing()
-                            && ((sapSetting.getMatnrXmxa() == null || sapSetting.getMatnrPcb40() == null || sapSetting.getMatnrClinker() == null
-                            || sapSetting.getBact1Val() == null || sapSetting.getBact2Val() == null || sapSetting.getBact3Val() == null || sapSetting.getBact4Val() == null
-                            || sapSetting.getWb1Tol() == null || sapSetting.getWb2Tol() == null
-                            || sapSetting.getRoleAd() == null || sapSetting.getRoleSs() == null || sapSetting.getRoleWm() == null))) {
+                            && (sapSetting.getNameRpt() == null || sapSetting.getAddress() == null
+                            || sapSetting.getPhone() == null || sapSetting.getFax() == null)) {
                         exit();
                     } else {
                         vSetting.dispose();

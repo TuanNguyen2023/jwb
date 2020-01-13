@@ -18,18 +18,6 @@ import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.Task;
 
 public class LoginView extends javax.swing.JDialog {
-    private javax.swing.JButton btnLogin;
-    private org.jdesktop.swingx.JXBusyLabel iconLoading;
-    private javax.swing.JLabel lblPassword;
-    private javax.swing.JLabel lblUsername;
-    private javax.swing.JPanel pnForm;
-    private javax.swing.JPasswordField txtPassword;
-    private javax.swing.JTextField txtUsername;
-    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
-    private boolean authenticated = false;
-    private boolean validUsername = false;
-    private boolean validPassword = false;
-
     public LoginView(java.awt.Frame parent) {
         super(parent);
         initLoginComponent();
@@ -136,6 +124,7 @@ public class LoginView extends javax.swing.JDialog {
         txtPassword.setAction(actionMap.get("login"));
         txtPassword.setName("txtPassword");
         txtPassword.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtPasswordFocusGained(evt);
             }
@@ -154,9 +143,11 @@ public class LoginView extends javax.swing.JDialog {
         txtUsername.setForeground(resourceMap.getColor("txtUsername.foreground"));
         txtUsername.setName("txtUsername");
         txtUsername.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtUsernameFocusGained(evt);
             }
+            @Override
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtUsernameFocusLost(evt);
             }
@@ -339,4 +330,20 @@ public class LoginView extends javax.swing.JDialog {
             JOptionPane.showMessageDialog(rootPane, cause.getMessage());
         }
     }
+    // </editor-fold>
+    // <editor-fold defaultstate="collapsed" desc="Variables declaration area">
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnLogin;
+    private org.jdesktop.swingx.JXBusyLabel iconLoading;
+    private javax.swing.JLabel lblPassword;
+    private javax.swing.JLabel lblUsername;
+    private javax.swing.JPanel pnForm;
+    private javax.swing.JPasswordField txtPassword;
+    private javax.swing.JTextField txtUsername;
+    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
+    // End of variables declaration//GEN-END:variables
+    private boolean authenticated = false;
+    private boolean validUsername = false;
+    private boolean validPassword = false;
+    // </editor-fold >
 }

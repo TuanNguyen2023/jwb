@@ -13,7 +13,6 @@ import com.gcs.wb.jpa.entity.Variant;
 import com.gcs.wb.jpa.entity.WeightTicket;
 import com.gcs.wb.jpa.entity.WeightTicketPK;
 import com.gcs.wb.jpa.entity.OutbDetailsV2;
-import com.gcs.wb.jpa.entity.UserLocal;
 
 
 import com.gcs.wb.jpa.procedures.WeightTicketJpaRepository;
@@ -22,7 +21,6 @@ import com.gcs.wb.jpa.repositorys.CustomerRepository;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
 import com.gcs.wb.jpa.repositorys.OutbDelRepository;
 import com.gcs.wb.jpa.repositorys.OutbDetailsV2Repository;
-import com.gcs.wb.jpa.repositorys.UserLocalRepository;
 import com.gcs.wb.jpa.repositorys.VariantRepository;
 import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import javax.persistence.EntityManager;
@@ -30,9 +28,10 @@ import javax.persistence.criteria.CriteriaQuery;
 import java.text.SimpleDateFormat;
 import javax.persistence.TypedQuery;
 import org.apache.log4j.Logger;
- import com.gcs.wb.base.util.Base64_Utils; 
-import com.gcs.wb.model.AppConfig; 
-import  java.util.*;
+import com.gcs.wb.base.util.Base64_Utils;
+import com.gcs.wb.model.AppConfig;
+import java.util.*;
+
 /**
  *
  * Tuanna modified 30/06/2013
@@ -108,7 +107,7 @@ public class WeightTicketJpaController {
 
     }
 
-    public List<WeightTicket> findByMandtWPlantDateNullAll(String  sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
+    public List<WeightTicket> findByMandtWPlantDateNullAll(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
         String client = WeighBridgeApp.getApplication().getConfig().getsClient();
         String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
         WeightTicketRepository repository = new WeightTicketRepository();
@@ -117,7 +116,7 @@ public class WeightTicketJpaController {
         return repository.findByMandtWPlantDateNullAll(client, plant, from, to, creator, taixe, bienso);
     }
 
-    public List<WeightTicket> findByMandtWPlantDateDissolved(String  sfrom, String sto,
+    public List<WeightTicket> findByMandtWPlantDateDissolved(String sfrom, String sto,
             String creator, String taixe,
             String loaihang, String bienso) throws Exception {
         String client = WeighBridgeApp.getApplication().getConfig().getsClient();
@@ -140,7 +139,7 @@ public class WeightTicketJpaController {
         return repository.findByMandtWPlantDateDissolvedNull(client, plant, from, to, creator, taixe, bienso);
     }
 
-    public List<WeightTicket> findByMandtWPlantDateDissolvedNullAll(String  sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
+    public List<WeightTicket> findByMandtWPlantDateDissolvedNullAll(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
 
         String client = WeighBridgeApp.getApplication().getConfig().getsClient();
         String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
@@ -207,7 +206,7 @@ public class WeightTicketJpaController {
         return repository.findByMandtWPlantDateAllNull(client, plant, from, to, creator, taixe, bienso);
     }
 
-    public List<WeightTicket> findByMandtWPlantDateAllNullAll(String sfrom,String sto, String creator, String taixe, String bienso) throws Exception {
+    public List<WeightTicket> findByMandtWPlantDateAllNullAll(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
         String client = WeighBridgeApp.getApplication().getConfig().getsClient();
         String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
         WeightTicketRepository repository = new WeightTicketRepository();
@@ -273,7 +272,7 @@ public class WeightTicketJpaController {
         VariantRepository variantRepository = new VariantRepository();
         return variantRepository.findVariant(param, client, plant);
     }
-    
+
     public List<OutbDetailsV2> findByMandtDelivNumb(String deliv_numb) throws Exception {
         String client = WeighBridgeApp.getApplication().getConfig().getsClient();
         String devNumber = "%" + deliv_numb + "%";
@@ -288,13 +287,13 @@ public class WeightTicketJpaController {
         List<OutbDetailsV2> result = repository.findByMandtDelivNumbItem(client, deliv_numb, item);
         return result;
     }
-    
+
     public List<OutbDetailsV2> findByMandtWTID(String wt_id) throws Exception {
         String client = WeighBridgeApp.getApplication().getConfig().getsClient();
         OutbDetailsV2Repository repository = new OutbDetailsV2Repository();
         return repository.findByMandtWTID(client, wt_id);
     }
-    
+
     public OutbDel findByMandtOutDel(String delnum) throws Exception {
 
         String client = WeighBridgeApp.getApplication().getConfig().getsClient();
@@ -302,20 +301,10 @@ public class WeightTicketJpaController {
         return repository.findByMandtOutDel(client, delnum);
 
     }
-    
+
     public List<Customer> findCustByMandt(String mandt) throws Exception {
         CustomerRepository customerRepository = new CustomerRepository();
         return customerRepository.findCustByMandt(mandt);
-
-
-    }
-
-    public UserLocal login(String username, String password) {
-        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-        String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
-        UserLocalRepository repository = new UserLocalRepository();
-        UserLocal user = repository.login(client, plant, username, password);
-        return user;
     }
 
     public Material CheckPOSTO(String matnr) throws Exception {
@@ -329,7 +318,7 @@ public class WeightTicketJpaController {
 
     public Object get_server_time() throws Exception {
         return new Date();
-   
+
     }
 
     public String get_server_stime() throws Exception {

@@ -338,7 +338,7 @@ private void txtPhoneKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             entityManager.getTransaction().commit();
             entityManager.clear();
 
-            sapSetting = entityManager.find(SAPSetting.class, sapSetting.getSAPSettingPK());
+            sapSetting = entityManager.find(SAPSetting.class, sapSetting.getId());
             entityManager.clear();
 
             return null;  // return your result

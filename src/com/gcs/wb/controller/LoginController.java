@@ -14,8 +14,8 @@ import com.gcs.wb.bapi.helper.structure.UserGetDetailAGRStructure;
 import com.gcs.wb.bapi.helper.structure.UserGetDetailAddrStructure;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.SAPSetting;
-import com.gcs.wb.jpa.entity.SAPSettingPK;
 import com.gcs.wb.jpa.entity.User;
+import com.gcs.wb.jpa.repositorys.SAPSettingRepository;
 import com.gcs.wb.jpa.repositorys.UserRepository;
 import com.gcs.wb.model.AppConfig;
 import com.sap.conn.jco.JCoException;
@@ -34,6 +34,7 @@ import org.hibersap.session.SessionManager;
 public class LoginController {
 
     private UserRepository userRepository;
+    private SAPSettingRepository sapSettingRepository;
     private AppConfig appConfig;
     private EntityManager entityManager;
     private EntityTransaction entityTransaction;
@@ -49,6 +50,7 @@ public class LoginController {
 
     public LoginController(String username, String password) {
         userRepository = new UserRepository();
+        sapSettingRepository = new SAPSettingRepository();
         entityManager = JPAConnector.getInstance();
         entityTransaction = entityManager.getTransaction();
 
@@ -91,7 +93,7 @@ public class LoginController {
 
         try {
             user = userRepository.findByUid(username);
-            sapSetting = entityManager.find(SAPSetting.class, new SAPSettingPK(lclient, lplant));
+            sapSetting = sapSettingRepository.getSAPSetting();
 
             Session session = getSapSession();
             boolean sap_flag = true;
@@ -186,7 +188,7 @@ public class LoginController {
                     session.execute(plantGetDetailBapi);
                     HashMap vals = plantGetDetailBapi.getEsPlant();
 
-                    sapSetting = new SAPSetting(new SAPSettingPK(lclient, lplant));
+                    sapSetting = new SAPSetting();
                     sapSetting.setName1((String) vals.get(PlantGeDetailConstants.NAME1));
                     sapSetting.setName2((String) vals.get(PlantGeDetailConstants.NAME2));
                     entityManager.persist(sapSetting);

@@ -21,7 +21,6 @@
     <class>com.gcs.wb.jpa.entity.Variant</class>
     <class>com.gcs.wb.jpa.entity.VehicleValid</class>
     <class>com.gcs.wb.jpa.entity.OutbDetails</class>
-    <class>com.gcs.wb.jpa.entity.UserLocal</class>
     <class>com.gcs.wb.jpa.entity.TimeRange</class>
     <class>com.gcs.wb.jpa.entity.OutbDetailsV2</class>
     <class>com.gcs.wb.jpa.entity.TransportAgentVehicle</class>

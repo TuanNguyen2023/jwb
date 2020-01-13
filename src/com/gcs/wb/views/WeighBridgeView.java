@@ -197,7 +197,7 @@ public class WeighBridgeView extends FrameView {
             }
         });
 
-        if(WeighBridgeApp.getApplication().getLogin().getRoles().toUpperCase().indexOf(WeighBridgeApp.getApplication().getSapSetting().getRoleWm().toUpperCase()) >= 0 ){
+        if(WeighBridgeApp.getApplication().getLogin().getRoles().toUpperCase().indexOf("Z_JWB_BAOVE") >= 0 ){
             dpVR.setBackground(resourceMap.getColor("dpVR.background")); // NOI18N
             dpVR.setAutoscrolls(true);
             dpVR.setName("dpVR"); // NOI18N
@@ -220,7 +220,7 @@ public class WeighBridgeView extends FrameView {
             tabPane.addTab(resourceMap.getString("dpVR.TabConstraints.tabTitle"), null, dpVR, resourceMap.getString("dpVR.TabConstraints.tabToolTip")); // NOI18N
         }
 
-        if(WeighBridgeApp.getApplication().getLogin().getRoles().toUpperCase().indexOf(WeighBridgeApp.getApplication().getSapSetting().getRoleSs().toUpperCase()) >= 0){
+        if(WeighBridgeApp.getApplication().getLogin().getRoles().toUpperCase().indexOf("Z_JWB_CAUCAN") >= 0){
             dpWT.setBackground(resourceMap.getColor("dpWT.background")); // NOI18N
             dpWT.setAutoscrolls(true);
             dpWT.setName("dpWT"); // NOI18N
@@ -237,7 +237,7 @@ public class WeighBridgeView extends FrameView {
             tabPane.addTab(resourceMap.getString("dpWT.TabConstraints.tabTitle"), null, dpWT, resourceMap.getString("dpWT.TabConstraints.tabToolTip")); // NOI18N
         }
 
-        if(WeighBridgeApp.getApplication().getLogin().getRoles().toUpperCase().indexOf(WeighBridgeApp.getApplication().getSapSetting().getRoleAd().toUpperCase()) >= 0){
+        if(WeighBridgeApp.getApplication().getLogin().getRoles().toUpperCase().indexOf("Z_JWB_ADMIN") >= 0){
             dpTA.setBackground(resourceMap.getColor("dpTA.background")); // NOI18N
             dpTA.setName("dpTA"); // NOI18N
             dpTA.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -293,7 +293,7 @@ public class WeighBridgeView extends FrameView {
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE)
+            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 405, Short.MAX_VALUE)
         );
 
         menuBar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -306,19 +306,19 @@ public class WeighBridgeView extends FrameView {
         miConfig.setAction(actionMap.get("showConfigView")); // NOI18N
         miConfig.setText(resourceMap.getString("miConfig.text")); // NOI18N
         miConfig.setName("miConfig"); // NOI18N
-        if(WeighBridgeApp.getApplication().getLogin().getRoles().toUpperCase().indexOf(WeighBridgeApp.getApplication().getSapSetting().getRoleAd().toUpperCase()) >= 0 ){
+        if(WeighBridgeApp.getApplication().getLogin().getRoles().toUpperCase().indexOf("Z_JWB_ADMIN") >= 0 ){
             mFile.add(miConfig);
         }
 
         miSetting.setAction(actionMap.get("showSettingView")); // NOI18N
         miSetting.setText(resourceMap.getString("miSetting.text")); // NOI18N
         miSetting.setName("miSetting"); // NOI18N
-        if(WeighBridgeApp.getApplication().getLogin().getRoles().toUpperCase().indexOf(WeighBridgeApp.getApplication().getSapSetting().getRoleAd().toUpperCase()) >= 0 ){
+        if(WeighBridgeApp.getApplication().getLogin().getRoles().toUpperCase().indexOf("Z_JWB_ADMIN") >= 0 ){
             mFile.add(miSetting);
         }
 
         jSeparator1.setName("jSeparator1"); // NOI18N
-        if(WeighBridgeApp.getApplication().getLogin().getRoles().toUpperCase().indexOf(WeighBridgeApp.getApplication().getSapSetting().getRoleAd().toUpperCase()) >= 0 ){
+        if(WeighBridgeApp.getApplication().getLogin().getRoles().toUpperCase().indexOf("Z_JWB_ADMIN") >= 0 ){
             mFile.add(jSeparator1);
         }
 
@@ -373,7 +373,7 @@ public class WeighBridgeView extends FrameView {
                 .addComponent(txt_status, javax.swing.GroupLayout.PREFERRED_SIZE, 463, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusMessageLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 146, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 141, Short.MAX_VALUE)
                 .addComponent(statusAnimationLabel)
                 .addContainerGap())
         );

@@ -5,91 +5,61 @@
 package com.gcs.wb.jpa.entity;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
+import java.sql.Date;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
  *
- * @author vunguyent
+ * @author thanghl
  */
 @Entity
-@Table(name = "SAPSetting")
+@Table(name = "tbl_sap_setting")
+@NamedQueries({
+    @NamedQuery(name = "SAPSetting.findAll", query = "SELECT ss FROM SAPSetting ss")})
 public class SAPSetting implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected SAPSettingPK sAPSettingPK;
-    @Column(name = "Name1")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int id;
+    @Column(name = "name1")
     private String name1;
-    @Column(name = "Name2")
+    @Column(name = "name2")
     private String name2;
-    @Column(name = "NAME_RPT")
+    @Column(name = "name_rpt")
     private String nameRpt;
-    @Column(name = "ADDRESS")
+    @Column(name = "address")
     private String address;
-    @Column(name = "PHONE")
+    @Column(name = "phone")
     private String phone;
-    @Column(name = "FAX")
+    @Column(name = "fax")
     private String fax;
-    @Column(name = "MATNR_PCB40")
-    private String matnrPcb40;
-    @Column(name = "MATNR_XMXA")
-    private String matnrXmxa;
-    @Column(name = "MATNR_CLINKER")
-    private String matnrClinker;
-    @Column(name = "CHECK_TALP")
-    private Boolean checkTalp;
-    @Column(name = "BACT1_VAL")
-    private BigDecimal bact1Val;
-    @Column(name = "BACT1_UNIT")
-    private String bact1Unit;
-    @Column(name = "BACT2_VAL")
-    private BigDecimal bact2Val;
-    @Column(name = "BACT2_UNIT")
-    private String bact2Unit;
-    @Column(name = "BACT3_VAL")
-    private BigDecimal bact3Val;
-    @Column(name = "BACT3_UNIT")
-    private String bact3Unit;
-    @Column(name = "BACT4_VAL")
-    private BigDecimal bact4Val;
-    @Column(name = "BACT4_UNIT")
-    private String bact4Unit;
-    @Column(name = "ROLE_WM")
-    private String roleWm;
-    @Column(name = "ROLE_SS")
-    private String roleSs;
-    @Column(name = "ROLE_AD")
-    private String roleAd;
-    @Column(name = "ROLE_SP")
-    private String roleSp;
-    @Column(name = "WB1_TOL")
-    private BigDecimal wb1Tol;
-    @Column(name = "WB2_TOL")
-    private BigDecimal wb2Tol;
-    @Column(name = "CHECK_POV")
+    @Column(name = "check_pov")
     private Boolean checkPov;
+    @Column(name = "created_date")
+    private Date createdDate;
+    @Column(name = "updated_date")
+    private Date updatedDate;
+    @Column(name = "deleted_date")
+    private Date deletedDate;
 
     public SAPSetting() {
     }
 
-    public SAPSetting(SAPSettingPK sAPSettingPK) {
-        this.sAPSettingPK = sAPSettingPK;
+    public int getId() {
+        return id;
     }
 
-    public SAPSetting(String mandt, String wPlant) {
-        this.sAPSettingPK = new SAPSettingPK(mandt, wPlant);
-    }
-
-    public SAPSettingPK getSAPSettingPK() {
-        return sAPSettingPK;
-    }
-
-    public void setSAPSettingPK(SAPSettingPK sAPSettingPK) {
-        this.sAPSettingPK = sAPSettingPK;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName1() {
@@ -140,150 +110,6 @@ public class SAPSetting implements Serializable {
         this.fax = fax;
     }
 
-    public String getMatnrPcb40() {
-        return matnrPcb40;
-    }
-
-    public void setMatnrPcb40(String matnrPcb40) {
-        this.matnrPcb40 = matnrPcb40;
-    }
-
-    public String getMatnrXmxa() {
-        return matnrXmxa;
-    }
-
-    public void setMatnrXmxa(String matnrXmxa) {
-        this.matnrXmxa = matnrXmxa;
-    }
-
-    public String getMatnrClinker() {
-        return matnrClinker;
-    }
-
-    public void setMatnrClinker(String matnrClinker) {
-        this.matnrClinker = matnrClinker;
-    }
-
-    public Boolean getCheckTalp() {
-        return checkTalp;
-    }
-
-    public void setCheckTalp(Boolean checkTalp) {
-        this.checkTalp = checkTalp;
-    }
-
-    public BigDecimal getBact1Val() {
-        return bact1Val;
-    }
-
-    public void setBact1Val(BigDecimal bact1Val) {
-        this.bact1Val = bact1Val;
-    }
-
-    public String getBact1Unit() {
-        return bact1Unit;
-    }
-
-    public void setBact1Unit(String bact1Unit) {
-        this.bact1Unit = bact1Unit;
-    }
-
-    public BigDecimal getBact2Val() {
-        return bact2Val;
-    }
-
-    public void setBact2Val(BigDecimal bact2Val) {
-        this.bact2Val = bact2Val;
-    }
-
-    public String getBact2Unit() {
-        return bact2Unit;
-    }
-
-    public void setBact2Unit(String bact2Unit) {
-        this.bact2Unit = bact2Unit;
-    }
-
-    public BigDecimal getBact3Val() {
-        return bact3Val;
-    }
-
-    public void setBact3Val(BigDecimal bact3Val) {
-        this.bact3Val = bact3Val;
-    }
-
-    public String getBact3Unit() {
-        return bact3Unit;
-    }
-
-    public void setBact3Unit(String bact3Unit) {
-        this.bact3Unit = bact3Unit;
-    }
-
-    public BigDecimal getBact4Val() {
-        return bact4Val;
-    }
-
-    public void setBact4Val(BigDecimal bact4Val) {
-        this.bact4Val = bact4Val;
-    }
-
-    public String getBact4Unit() {
-        return bact4Unit;
-    }
-
-    public void setBact4Unit(String bact4Unit) {
-        this.bact4Unit = bact4Unit;
-    }
-
-    public String getRoleWm() {
-        return roleWm;
-    }
-
-    public void setRoleWm(String roleWm) {
-        this.roleWm = roleWm;
-    }
-
-    public String getRoleSs() {
-        return roleSs;
-    }
-
-    public void setRoleSs(String roleSs) {
-        this.roleSs = roleSs;
-    }
-
-    public String getRoleAd() {
-        return roleAd;
-    }
-
-    public void setRoleAd(String roleAd) {
-        this.roleAd = roleAd;
-    }
-
-    public String getRoleSp() {
-        return roleSp;
-    }
-
-    public void setRoleSp(String roleSp) {
-        this.roleSp = roleSp;
-    }
-
-    public BigDecimal getWb1Tol() {
-        return wb1Tol;
-    }
-
-    public void setWb1Tol(BigDecimal wb1Tol) {
-        this.wb1Tol = wb1Tol;
-    }
-
-    public BigDecimal getWb2Tol() {
-        return wb2Tol;
-    }
-
-    public void setWb2Tol(BigDecimal wb2Tol) {
-        this.wb2Tol = wb2Tol;
-    }
-    
     public Boolean getCheckPov() {
         return checkPov;
     }
@@ -292,28 +118,66 @@ public class SAPSetting implements Serializable {
         this.checkPov = checkPov;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (sAPSettingPK != null ? sAPSettingPK.hashCode() : 0);
-        return hash;
+    public Date getCreatedDate() {
+        return createdDate;
     }
 
-    @Override
-    public boolean equals(Object object) {
+    public void setCreatedDate(Date created_date) {
+        this.createdDate = created_date;
+    }
 
-        if (!(object instanceof SAPSetting)) {
-            return false;
-        }
-        SAPSetting other = (SAPSetting) object;
-        if ((this.sAPSettingPK == null && other.sAPSettingPK != null) || (this.sAPSettingPK != null && !this.sAPSettingPK.equals(other.sAPSettingPK))) {
-            return false;
-        }
+    public Date getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(Date updated_date) {
+        this.updatedDate = updated_date;
+    }
+
+    public Date getDeletedDate() {
+        return deletedDate;
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SAPSetting that = (SAPSetting) o;
+
+        if (id != that.id) return false;
+        if (name1 != null ? !name1.equals(that.name1) : that.name1 != null) return false;
+        if (name2 != null ? !name2.equals(that.name2) : that.name2 != null) return false;
+        if (nameRpt != null ? !nameRpt.equals(that.nameRpt) : that.nameRpt != null) return false;
+        if (address != null ? !address.equals(that.address) : that.address != null) return false;
+        if (phone != null ? !phone.equals(that.phone) : that.phone != null) return false;
+        if (fax != null ? !fax.equals(that.fax) : that.fax != null) return false;
+        if (checkPov != null ? !checkPov.equals(that.checkPov) : that.checkPov != null) return false;
+        if (createdDate != null ? !createdDate.equals(that.createdDate) : that.createdDate != null) return false;
+        if (updatedDate != null ? !updatedDate.equals(that.updatedDate) : that.updatedDate != null) return false;
+        if (deletedDate != null ? !deletedDate.equals(that.deletedDate) : that.deletedDate != null) return false;
+
         return true;
     }
 
     @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 31));
+        result = 31 * result + (name1 != null ? name1.hashCode() : 0);
+        result = 31 * result + (name2 != null ? name2.hashCode() : 0);
+        result = 31 * result + (nameRpt != null ? nameRpt.hashCode() : 0);
+        result = 31 * result + (address != null ? address.hashCode() : 0);
+        result = 31 * result + (phone != null ? phone.hashCode() : 0);
+        result = 31 * result + (fax != null ? fax.hashCode() : 0);
+        result = 31 * result + (checkPov != null ? checkPov.hashCode() : 0);
+        result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
+        result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
+        result = 31 * result + (deletedDate != null ? deletedDate.hashCode() : 0);
+        return result;
+    }
+
+    @Override
     public String toString() {
-        return "com.gcs.wb.jpa.entity.SAPSetting[sAPSettingPK=" + sAPSettingPK + "]";
+        return "com.gcs.wb.jpa.entity.SAPSetting[id=" + id + "]";
     }
 }

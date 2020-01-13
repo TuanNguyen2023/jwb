@@ -1699,8 +1699,8 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                 }
                 weightTicket.setRecvPlant(config.getwPlant());
                 weightTicket.setRecvCharg(weightTicket.getCharg());
-                weightTicket.setRecvMatnr(setting.getMatnrClinker());
-                weightTicket.setMatnrRef(setting.getMatnrClinker());
+//                weightTicket.setRecvMatnr(setting.getMatnrClinker());
+//                weightTicket.setMatnrRef(setting.getMatnrClinker());
                 weightTicket.setRegItemText("Clinker gia công");
                 weightTicket.setUnit("TO");
                 weightTicket.setMoveType("313");
@@ -2066,7 +2066,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             if (lv_return == JOptionPane.YES_OPTION) {
                 //
                 if (outbDel != null && outbDel.getMatnr() != null
-                        && outbDel.getMatnr().equalsIgnoreCase(setting.getMatnrPcb40())
+//                        && outbDel.getMatnr().equalsIgnoreCase(setting.getMatnrPcb40())
                         && rbtOutward.isSelected() && isStage2()) {
                     //{+20101202#02 check material availability
                     //setMessage("Đang kiểm tra tồn kho trong SAP...");
@@ -2711,7 +2711,9 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                     setValidPONum(true);
                     rbtPO.setSelected(true);
                     setSubContract(false);
-                    if (rbtOutward.isSelected() && purOrder.getItemCat() == '3' && purOrder.getMaterial().equalsIgnoreCase(setting.getMatnrPcb40())) {
+                    if (rbtOutward.isSelected() && purOrder.getItemCat() == '3' 
+//                            && purOrder.getMaterial().equalsIgnoreCase(setting.getMatnrPcb40())
+                            ) {
                         setSubContract(true);
                     }
                 } else {
@@ -3093,8 +3095,10 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                 if ((rbtInward.isSelected() && purOrder.getPlant().equalsIgnoreCase(config.getwPlant()))
                         || (rbtOutward.isSelected() && purOrder.getSupplPlnt().equalsIgnoreCase(config.getwPlant()))) {
                     setValidPONum(true);
-                } else if (rbtOutward.isSelected() && purOrder.getItemCat() == '3' && purOrder.getMaterial().equalsIgnoreCase(setting.getMatnrPcb40())) {
-                    purOrder.setMaterial(setting.getMatnrClinker());
+                } else if (rbtOutward.isSelected() && purOrder.getItemCat() == '3' 
+//                        && purOrder.getMaterial().equalsIgnoreCase(setting.getMatnrPcb40())
+                        ) {
+//                    purOrder.setMaterial(setting.getMatnrClinker());
                     purOrder.setShortText("Clinker gia công");
                     purOrder.setPoUnit("TO");
                     setValidPONum(true);
@@ -4522,17 +4526,17 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
 
         }
-        if (setting.getCheckTalp().booleanValue()) {
-            Vehicle vehicle = entityManager.find(Vehicle.class, wt.getSoXe());
-            // vendorNo = vehicle.getTaAbbr();
-            vendorNo = "";
-
-
-            if (vendorNo.startsWith(
-                    "00") && vendorNo.length() == 10) {
-                vendorNo = vendorNo.substring(2);
-            }
-        }
+//        if (setting.getCheckTalp().booleanValue()) {
+//            Vehicle vehicle = entityManager.find(Vehicle.class, wt.getSoXe());
+//            // vendorNo = vehicle.getTaAbbr();
+//            vendorNo = "";
+//
+//
+//            if (vendorNo.startsWith(
+//                    "00") && vendorNo.length() == 10) {
+//                vendorNo = vendorNo.substring(2);
+//            }
+//        }
         GoodsMvtPoCreateBapi bapi = new GoodsMvtPoCreateBapi(new GoodsMvtCodeStructure("04"));
         GoodsMvtHeaderStructure header = new GoodsMvtHeaderStructure();
 //      {[M001-DungDang-28/06/2013] - Fixing bug post double GoodsMovement - begin of insert
@@ -4603,15 +4607,15 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         if (wt.getSoRomooc() != null && !wt.getSoRomooc().trim().isEmpty()) {
             plateCombine += "|" + wt.getSoRomooc();
         }
-        if (setting.getCheckTalp().booleanValue()) {
-            Vehicle vehicle = entityManager.find(Vehicle.class, wt.getSoXe());
-
-            if (vehicle != null) {
-                // bapi.setIdParnr(vehicle.getTaAbbr());
-                bapi.setIdParnr("");
-                
-            }
-        }
+//        if (setting.getCheckTalp().booleanValue()) {
+//            Vehicle vehicle = entityManager.find(Vehicle.class, wt.getSoXe());
+//
+//            if (vehicle != null) {
+//                // bapi.setIdParnr(vehicle.getTaAbbr());
+//                bapi.setIdParnr("");
+//                
+//            }
+//        }
         VbkokStructure wa = new VbkokStructure();
         if (outbDel == null) {
             wa.setVbeln_vl(wt.getDelivNumb());
@@ -4785,16 +4789,16 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             bapi.setProc_ord_id(wt.getPpProcord());
             if (outbDel == null) {
                 bapi.setYield(wt.getGQty());
-                bapi.setAct1(setting.getBact1Val().multiply(wt.getGQty()));
-                bapi.setAct2(setting.getBact2Val().multiply(wt.getGQty()));
-                bapi.setAct3(setting.getBact3Val().multiply(wt.getGQty()));
-                bapi.setAct4(setting.getBact4Val().multiply(wt.getGQty()));
+//                bapi.setAct1(setting.getBact1Val().multiply(wt.getGQty()));
+//                bapi.setAct2(setting.getBact2Val().multiply(wt.getGQty()));
+//                bapi.setAct3(setting.getBact3Val().multiply(wt.getGQty()));
+//                bapi.setAct4(setting.getBact4Val().multiply(wt.getGQty()));
             } else {
                 bapi.setYield(kl_total);
-                bapi.setAct1(setting.getBact1Val().multiply(kl_total));
-                bapi.setAct2(setting.getBact2Val().multiply(kl_total));
-                bapi.setAct3(setting.getBact3Val().multiply(kl_total));
-                bapi.setAct4(setting.getBact4Val().multiply(kl_total));
+//                bapi.setAct1(setting.getBact1Val().multiply(kl_total));
+//                bapi.setAct2(setting.getBact2Val().multiply(kl_total));
+//                bapi.setAct3(setting.getBact3Val().multiply(kl_total));
+//                bapi.setAct4(setting.getBact4Val().multiply(kl_total));
             }
         }
         //{+20101203#01 set confirm quantity = goods qty on scale
@@ -4864,7 +4868,9 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         tab_wa.setLgort(wt.getLgort());
         tab_wa.setCharg(wt.getCharg());
         tab_wa.setLianp("X");
-        if (outbDel != null && (outbDel.getLfart().equalsIgnoreCase("LF") || outbDel.getLfart().equalsIgnoreCase("ZTLF")) && wt.getMatnrRef().equalsIgnoreCase(setting.getMatnrPcb40())) {
+        if (outbDel != null && (outbDel.getLfart().equalsIgnoreCase("LF") || outbDel.getLfart().equalsIgnoreCase("ZTLF")) 
+//                && wt.getMatnrRef().equalsIgnoreCase(setting.getMatnrPcb40())
+                ) {
             tab_wa.setPikmg(outbDel.getLfimg());
             tab_wa.setLfimg(outbDel.getLfimg());
         } else {
@@ -5091,11 +5097,11 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                     if (wt.getFScale() != null) {
                         outbDel = item;
                     }
-                    if (outbDel != null && (outbDel.getLfart().equalsIgnoreCase("LF") || outbDel.getLfart().equalsIgnoreCase("ZTLF")) && wt.getMatnrRef().equalsIgnoreCase(setting.getMatnrPcb40())) {
+//                    if (outbDel != null && (outbDel.getLfart().equalsIgnoreCase("LF") || outbDel.getLfart().equalsIgnoreCase("ZTLF")) && wt.getMatnrRef().equalsIgnoreCase(setting.getMatnrPcb40())) {
                         //Double tmp = (outbDel.getLfimg().doubleValue() * 1000d) / 50d;
 //                    Double tmp = (outbDel.getLfimg().doubleValue() * 1000d) / 50d;
 //                    bags = tmp.longValue();
-                    }
+//                    }
                     map.put("P_MANDT", WeighBridgeApp.getApplication().getConfig().getsClient());
                     map.put("P_WPlant", WeighBridgeApp.getApplication().getConfig().getwPlant());
                     map.put("P_ID", wt.getWeightTicketPK().getId());
@@ -5328,10 +5334,10 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         bBatch = true;
         txtGRText.setEnabled(true);
         if (outbDel != null) {
-            if (isStage2() && outbDel.getMatnr() != null
-                    && outbDel.getMatnr().equalsIgnoreCase(setting.getMatnrXmxa()) && (txtCementDesc.getText().trim() == null || txtCementDesc.getText().trim().equals(""))) {
-                bNiemXa = false;
-            }
+//            if (isStage2() && outbDel.getMatnr() != null
+//                    && outbDel.getMatnr().equalsIgnoreCase(setting.getMatnrXmxa()) && (txtCementDesc.getText().trim() == null || txtCementDesc.getText().trim().equals(""))) {
+//                bNiemXa = false;
+//            }
             if (bNiemXa) {
                 lblCementDesc.setForeground(Color.black);
             } else {

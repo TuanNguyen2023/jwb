@@ -2946,7 +2946,8 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
             Vehicle v = entityManager.find(Vehicle.class, newWeightTicket.getSoXe());
 
             if (v == null && !ximang_tmp
-                    && (sapSetting.getCheckTalp() != null && sapSetting.getCheckTalp().booleanValue() == true)) {
+//                    && (sapSetting.getCheckTalp() != null && sapSetting.getCheckTalp().booleanValue() == true)
+                    ) {
                 result = false;
                 JOptionPane.showMessageDialog(rootPane, "Số xe \" " + newWeightTicket.getSoXe()
                         + " \" chưa được đăng ký để xuất/nhập hàng!");
@@ -2954,42 +2955,42 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
 
                 result = true;
                 //-----------------
-                if (sapSetting.getCheckTalp() != null && sapSetting.getCheckTalp().booleanValue() == true) {
-                    boolean l_not_valid = false;
-                    VehicleValid vh = new VehicleValid();
-                    VehicleValidPK vhPK = new VehicleValidPK();
-                    //EntityManager entityManager = java.beans.Beans.isDesignTime() ? null : WeighBridgeApp.getApplication().getEm();
-                    AppConfig lconfig = WeighBridgeApp.getApplication().getConfig();
-                    //Tuanna 201800904
-                    if ( txtDName1.getText().startsWith("N") )
-                         abbr = sVendor; 
-                    else 
-                        //abbr = (v != null ? v.getTaAbbr() : ""); //"vendor"
-                        abbr = "";
-                    
-                   //End --Tuanna 201800904 
-                    //vhPK.setMandt(lconfig.getsClient().toString());
-                    vhPK.setWPlant(lconfig.getwPlant().toString());
-                    vhPK.setSoXe(newWeightTicket.getSoXe());
-                    vh.setVehicleValidPK(vhPK);
-                    vh = entityManager.find(VehicleValid.class, vh.getVehicleValidPK());
-                    if (vh != null) {
-                        try {
-                            l_not_valid = vh.getNotValid();
-                            //if (l_valid == true){
-                            //chk_not_valid.setSelected(l_valid);
-                            //                }
-                        } catch (Exception e) {
-                        }
-                    }
-
-                    entityManager.clear();
-                    if (l_not_valid == true) {
-                        result = false;
-                        JOptionPane.showMessageDialog(rootPane, "Số xe \" " + newWeightTicket.getSoXe()
-                                + " \" đang bị cấm xuất/nhập hàng!");
-                    }
-                }
+//                if (sapSetting.getCheckTalp() != null && sapSetting.getCheckTalp().booleanValue() == true) {
+//                    boolean l_not_valid = false;
+//                    VehicleValid vh = new VehicleValid();
+//                    VehicleValidPK vhPK = new VehicleValidPK();
+//                    //EntityManager entityManager = java.beans.Beans.isDesignTime() ? null : WeighBridgeApp.getApplication().getEm();
+//                    AppConfig lconfig = WeighBridgeApp.getApplication().getConfig();
+//                    //Tuanna 201800904
+//                    if ( txtDName1.getText().startsWith("N") )
+//                         abbr = sVendor; 
+//                    else 
+//                        //abbr = (v != null ? v.getTaAbbr() : ""); //"vendor"
+//                        abbr = "";
+//                    
+//                   //End --Tuanna 201800904 
+//                    //vhPK.setMandt(lconfig.getsClient().toString());
+//                    vhPK.setWPlant(lconfig.getwPlant().toString());
+//                    vhPK.setSoXe(newWeightTicket.getSoXe());
+//                    vh.setVehicleValidPK(vhPK);
+//                    vh = entityManager.find(VehicleValid.class, vh.getVehicleValidPK());
+//                    if (vh != null) {
+//                        try {
+//                            l_not_valid = vh.getNotValid();
+//                            //if (l_valid == true){
+//                            //chk_not_valid.setSelected(l_valid);
+//                            //                }
+//                        } catch (Exception e) {
+//                        }
+//                    }
+//
+//                    entityManager.clear();
+//                    if (l_not_valid == true) {
+//                        result = false;
+//                        JOptionPane.showMessageDialog(rootPane, "Số xe \" " + newWeightTicket.getSoXe()
+//                                + " \" đang bị cấm xuất/nhập hàng!");
+//                    }
+//                }
                 //-----------------
             }
 
