@@ -5,67 +5,82 @@
 package com.gcs.wb.jpa.entity;
 
 import java.io.Serializable;
-import javax.persistence.Basic;
+import java.sql.Date;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
  *
- * @author vunguyent
+ * @author thanghl
  */
 @Entity
-@Table(name = "Users")
+@Table(name = "tbl_user")
+@NamedQueries({
+    @NamedQuery(name = "User.findByUid", query = "SELECT u FROM User u WHERE u.uid = :uid")})
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected UserPK userPK;
-    @Basic(optional = false)
-    @Column(name = "PWD")
-    private String pwd;
-    @Column(name = "TITLE")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int id;
+    @Column(name = "uid", unique = true)
+    private String uid;
+    @Column(name = "password")
+    private String password;
+    @Column(name = "title")
     private String title;
-    @Column(name = "FULL_NAME")
-    private String fullName;
-    @Column(name = "ROLES")
+    @Column(name = "fullname")
+    private String fullname;
+    @Column(name = "roles")
     private String roles;
-    @Column(name = "LANGU_P")
-    private Character languP;
-    @Column(name = "LANGUP_ISO")
-    private String langupIso;
+    @Column(name = "lang")
+    private Character lang;
+    @Column(name = "lang_iso")
+    private String langIso;
+    @Column(name = "created_date")
+    private Date createdDate;
+    @Column(name = "updated_date")
+    private Date updatedDate;
+    @Column(name = "deleted_date")
+    private Date deletedDate;
 
     public User() {
     }
 
-    public User(UserPK userPK) {
-        this.userPK = userPK;
+    public User(String uid, String password) {
+        this.uid = uid;
+        this.password = password;
     }
 
-    public User(UserPK userPK, String pwd) {
-        this.userPK = userPK;
-        this.pwd = pwd;
+    public int getId() {
+        return id;
     }
 
-    public User(String mandt, String wPlant, String id) {
-        this.userPK = new UserPK(mandt, wPlant, id);
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public UserPK getUserPK() {
-        return userPK;
+    public String getUid() {
+        return uid;
     }
 
-    public void setUserPK(UserPK userPK) {
-        this.userPK = userPK;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
-    public String getPwd() {
-        return pwd;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPwd(String pwd) {
-        this.pwd = pwd;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getTitle() {
@@ -76,12 +91,12 @@ public class User implements Serializable {
         this.title = title;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getFullname() {
+        return fullname;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
     }
 
     public String getRoles() {
@@ -92,44 +107,86 @@ public class User implements Serializable {
         this.roles = roles;
     }
 
-    public Character getLanguP() {
-        return languP;
+    public Character getLang() {
+        return lang;
     }
 
-    public void setLanguP(Character languP) {
-        this.languP = languP;
+    public void setLang(Character lang) {
+        this.lang = lang;
     }
 
-    public String getLangupIso() {
-        return langupIso;
+    public String getLangIso() {
+        return langIso;
     }
 
-    public void setLangupIso(String langupIso) {
-        this.langupIso = langupIso;
+    public void setLangIso(String langIso) {
+        this.langIso = langIso;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date created_date) {
+        this.createdDate = created_date;
+    }
+
+    public Date getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(Date updated_date) {
+        this.updatedDate = updated_date;
+    }
+
+    public Date getDeletedDate() {
+        return deletedDate;
+    }
+
+    public void setDeletedDate(Date deleted_date) {
+        this.deletedDate = deleted_date;
     }
 
     @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (userPK != null ? userPK.hashCode() : 0);
-        return hash;
-    }
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-    @Override
-    public boolean equals(Object object) {
+        User user = (User) o;
 
-        if (!(object instanceof User)) {
-            return false;
-        }
-        User other = (User) object;
-        if ((this.userPK == null && other.userPK != null) || (this.userPK != null && !this.userPK.equals(other.userPK))) {
-            return false;
-        }
+        if (id != user.id) return false;
+        if (uid != null ? !uid.equals(user.uid) : user.uid != null) return false;
+        if (password != null ? !password.equals(user.password) : user.password != null) return false;
+        if (title != null ? !title.equals(user.title) : user.title != null) return false;
+        if (fullname != null ? !fullname.equals(user.fullname) : user.fullname != null) return false;
+        if (roles != null ? !roles.equals(user.roles) : user.roles != null) return false;
+        if (lang != null ? !lang.equals(user.lang) : user.lang != null) return false;
+        if (langIso != null ? !langIso.equals(user.langIso) : user.langIso != null) return false;
+        if (createdDate != null ? !createdDate.equals(user.createdDate) : user.createdDate != null) return false;
+        if (updatedDate != null ? !updatedDate.equals(user.updatedDate) : user.updatedDate != null) return false;
+        if (deletedDate != null ? !deletedDate.equals(user.deletedDate) : user.deletedDate != null) return false;
+
         return true;
     }
 
     @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 31));
+        result = 31 * result + (uid != null ? uid.hashCode() : 0);
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (fullname != null ? fullname.hashCode() : 0);
+        result = 31 * result + (roles != null ? roles.hashCode() : 0);
+        result = 31 * result + (lang != null ? lang.hashCode() : 0);
+        result = 31 * result + (langIso != null ? langIso.hashCode() : 0);
+        result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
+        result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
+        result = 31 * result + (deletedDate != null ? deletedDate.hashCode() : 0);
+        return result;
+    }
+
+    @Override
     public String toString() {
-        return "com.gcs.wb.jpa.entity.User[userPK=" + userPK + "]";
+        return "com.gcs.wb.jpa.entity.User[uid=" + uid + "]";
     }
 }

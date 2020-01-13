@@ -22,9 +22,5 @@ public abstract class AbstractThrowableConverter<FROM, TO, EXCEPTION extends Exc
 //
 //        return toList;
 //    }
-    @Override
-    public abstract TO convertHasParameter(FROM from, String val) throws EXCEPTION;
 
-    @Override
-    public abstract TO convertsHasParameter(FROM from, String val, boolean refresh) throws EXCEPTION;
 }

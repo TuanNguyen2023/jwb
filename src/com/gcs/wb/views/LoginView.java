@@ -11,25 +11,10 @@
 package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
-import com.gcs.wb.bapi.BAPIConfiguration;
-import com.gcs.wb.bapi.helper.CheckVersionWBBapi;
-import com.gcs.wb.bapi.helper.constants.PlantGeDetailConstants;
-import com.gcs.wb.bapi.helper.PlantGetDetailBapi;
-import com.gcs.wb.bapi.helper.structure.UserGetDetailAGRStructure;
-import com.gcs.wb.bapi.helper.structure.UserGetDetailAddrStructure;
-import com.gcs.wb.bapi.helper.UserGetDetailBapi;
+import com.gcs.wb.controller.LoginController;
 import com.gcs.wb.jpa.JPAConnector;
-import com.gcs.wb.jpa.controller.WeightTicketJpaController;
-import com.gcs.wb.jpa.entity.SAPSetting;
-import com.gcs.wb.jpa.entity.SAPSettingPK;
-import com.gcs.wb.jpa.entity.User;
-import com.gcs.wb.jpa.entity.UserLocal;
-import com.gcs.wb.jpa.entity.UserPK;
-import com.gcs.wb.model.AppConfig;
 import com.sap.conn.jco.JCoException;
 import java.awt.Color;
-import java.util.HashMap;
-import java.util.List;
 import javax.persistence.EntityManager;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
@@ -39,9 +24,7 @@ import javax.swing.text.BadLocationException;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.hibersap.HibersapException;
-import org.hibersap.session.Credentials;
 import org.hibersap.session.Session;
-import org.hibersap.session.SessionManager;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.Task;
@@ -290,30 +273,13 @@ public class LoginView extends javax.swing.JDialog {
 
     private class LoginTask extends org.jdesktop.application.Task<Object, Void> {
 
-        Credentials credentials = null;
-        AppConfig appConfig = null;
-        SAPSetting sapSetting = null;
-        User user = null;
-        String lclient = null;
-        String lplant = null;
-        String username = null;
-        String password = null;
-        boolean lOfflineMode = false;
-        boolean flag_login = true;
-        JCoException jcoException = null;
+        private LoginController loginController;
 
         LoginTask(Application app, JDialog view) {
             super(app);
-            appConfig = WeighBridgeApp.getApplication().getConfig();
-            lclient = appConfig.getsClient();
-            lplant = appConfig.getwPlant().toString();
-            if (appConfig.getModeNormal()) {
-                username = txtUsername.getText().trim();
-                password = new String(txtPassword.getPassword()).trim();
-            } else {
-                username = appConfig.getUsrName();
-                password = appConfig.getPsswrd();
-            }
+            String username = txtUsername.getText().trim();
+            String password = new String(txtPassword.getPassword()).trim();
+            loginController = new LoginController(username, password);
 
             txtUsername.setEnabled(false);
             txtPassword.setEnabled(false);
@@ -323,20 +289,21 @@ public class LoginView extends javax.swing.JDialog {
 
         @Override
         protected Object doInBackground() throws Exception {
-            if (appConfig.getModeNormal()) {
-                return loginInModeNormal();
-            } else {
-                return loginNotInModeNormal();
+            try {
+                return loginController.doLogin();
+            } catch (Exception ex) {
+                throw ex;
             }
         }
 
         @Override
         protected void succeeded(Object result) {
             setAuthenticated(true);
-            WeighBridgeApp.getApplication().setCredentials(credentials);
-            WeighBridgeApp.getApplication().setLogin(user);
-            WeighBridgeApp.getApplication().setOfflineMode(lOfflineMode);
-            WeighBridgeApp.getApplication().setSapSetting(sapSetting);
+            WeighBridgeApp.getApplication().setCredentials(loginController.getCredentials());
+            WeighBridgeApp.getApplication().setLogin(loginController.getUser());
+            WeighBridgeApp.getApplication().setOfflineMode(loginController.isOfflineMode());
+            WeighBridgeApp.getApplication().setSapSetting(loginController.getSapSetting());
+            WeighBridgeApp.getApplication().getConfig().setModeNormal(loginController.isOfflineMode());
             setVisible(false);
         }
 
@@ -359,259 +326,6 @@ public class LoginView extends javax.swing.JDialog {
 
             Logger.getLogger(LoginView.class.getName()).log(Level.ERROR, null, cause);
             JOptionPane.showMessageDialog(rootPane, cause.getMessage());
-            done();
-        }
-
-        protected Object loginInModeNormal() throws Exception {
-            credentials = new Credentials();
-            credentials.setClient(lclient);
-            credentials.setUser(username);
-            credentials.setPassword(password);
-
-            UserGetDetailBapi userGetDetailBapi = new UserGetDetailBapi();
-            userGetDetailBapi.setUserName(username);
-
-            try {
-                user = entityManager.find(User.class, new UserPK(lclient, lplant, username));
-                sapSetting = entityManager.find(SAPSetting.class, new SAPSettingPK(lclient, lplant));
-
-                Session session = WeighBridgeApp.getApplication().getSAPSession();
-                if (session != null) {
-                    session.close();
-                    session = null;
-                }
-                SessionManager sessionManager = BAPIConfiguration.getSessionManager(appConfig, credentials);
-                session = sessionManager.openSession(credentials);
-                WeighBridgeApp.getApplication().setSAPSession(session);
-
-                boolean sap_flag = true;
-                try {
-                    // Checking version of WB application
-                    CheckVersionWBBapi version = new CheckVersionWBBapi("2.40"); //09/07/2013
-                    try {
-                        session.execute(version);
-                        if (version.getResult() != null
-                                && version.getResult().getId() != null
-                                && version.getResult().getId().equals("UPDATEVERSION")) {
-                            failed(new Exception(version.getResult().getMessage()));
-                        }
-                    } catch (Exception e1) {
-                        // do nothing
-                    } finally {
-                        // do nothing
-                    }
-                    session.execute(userGetDetailBapi);  //Login
-                } catch (Exception ex) {
-                    sap_flag = false;
-                    if (user != null && !user.getPwd().equals(password)) {
-                        failed(new Exception("Authenticated Failed!!!"));
-                    } else if (ex.getCause() instanceof JCoException) {
-                        jcoException = (JCoException) ex.getCause();
-                        if (jcoException.getGroup() == JCoException.JCO_ERROR_LOGON_FAILURE) {
-                            failed(new Exception("Login Failed!!!"));
-                        }
-                    }
-                }
-
-                //set offline mode
-                lOfflineMode = !sap_flag;
-                if (sap_flag == true) {
-                    UserGetDetailAddrStructure userGetDetailAddrStructure = userGetDetailBapi.getAddress();
-                    List<UserGetDetailAGRStructure> roles = userGetDetailBapi.getActgrps();
-                    StringBuilder sbRoles = new StringBuilder();
-                    try {
-
-                        for (int i = 0; i < roles.size(); i++) {
-                            UserGetDetailAGRStructure role = roles.get(i);
-                            sbRoles.append(role.getAgr_name());
-                            if (i < roles.size() - 1) {
-                                sbRoles.append(",");
-                            }
-                        }
-                    } catch (Exception ex) {
-                    }
-                    entityManager.getTransaction().begin();
-
-                    boolean updateUser = true;
-                    if (user == null) {
-                        updateUser = false;
-                        if (sapSetting == null) {
-                            PlantGetDetailBapi plantGetDetailBapi = new PlantGetDetailBapi(lclient, lplant);
-                            session.execute(plantGetDetailBapi);
-                            HashMap vals = plantGetDetailBapi.getEsPlant();
-
-                            sapSetting = new SAPSetting(new SAPSettingPK(lclient, lplant));
-                            sapSetting.setName1((String) vals.get(PlantGeDetailConstants.NAME1));
-                            sapSetting.setName2((String) vals.get(PlantGeDetailConstants.NAME2));
-                            entityManager.persist(sapSetting);
-                        }
-                        user = new User(new UserPK(lclient, lplant, username), password);
-                    } else {
-                        updateUser = true;
-                    }
-
-                    user.setFullName(userGetDetailAddrStructure.getFullName());
-                    user.setLanguP(userGetDetailAddrStructure.getLang().length() == 0 ? ' ' : userGetDetailAddrStructure.getLang().charAt(0));
-                    user.setLangupIso(userGetDetailAddrStructure.getLangISO());
-                    user.setPwd(password);
-                    if (sbRoles != null) {
-                        user.setRoles(sbRoles.toString());
-                    }
-                    user.setTitle(userGetDetailAddrStructure.getTitle());
-
-                    if (updateUser) {
-                        entityManager.merge(user);
-                    } else {
-                        entityManager.persist(user);
-                    }
-                    entityManager.getTransaction().commit();
-                    entityManager.clear();
-                }
-                succeeded(true);
-            } catch (Exception ex) {
-                if (entityManager.getTransaction().isActive()) {
-                    entityManager.getTransaction().rollback();
-                }
-
-                if (ex.getCause() instanceof JCoException) {
-                    jcoException = (JCoException) ex.getCause();
-                    failed(jcoException);
-                } else {
-                    failed(ex);
-                }
-            }
-
-            return null;
-        }
-
-        protected Object loginNotInModeNormal() throws Exception {
-            // TODO: fix when migrate database
-            //login local
-            String local_username = txtUsername.getText().trim();
-            String local_password = new String(txtPassword.getPassword()).trim();
-            WeightTicketJpaController weightTicketJpaController = new WeightTicketJpaController();
-
-            try {
-                UserLocal userLocal = weightTicketJpaController.login(local_username, local_password);
-                if (!userLocal.getActive()) {
-                    throw new Exception("User is not actived!");
-                }
-                WeighBridgeApp.getApplication().setCurrent_user_name(userLocal.getFullName());
-                WeighBridgeApp.getApplication().setCurrent_user(userLocal.getUserLocalPK().getId());
-                WeighBridgeApp.getApplication().setSloc(userLocal.getSloc());
-
-                if (userLocal == null) {
-                    succeeded(false);
-                    flag_login = false;
-                }
-            } catch (Exception e) {
-                flag_login = false;
-                succeeded(false);
-                failed(new Exception("Login Failed!!"));
-            }
-
-            if (flag_login) {
-                credentials = new Credentials();
-                credentials.setClient(lclient);
-                credentials.setUser(username);
-                credentials.setPassword(password);
-
-                UserGetDetailBapi userGetDetailBapi = new UserGetDetailBapi();
-                userGetDetailBapi.setUserName(username);
-
-                try {
-                    user = entityManager.find(User.class, new UserPK(lclient, lplant, username));
-                    sapSetting = entityManager.find(SAPSetting.class, new SAPSettingPK(lclient, lplant));
-
-                    Session session = WeighBridgeApp.getApplication().getSAPSession();
-                    if (session != null) {
-                        session.close();
-                        session = null;
-                    }
-                    SessionManager sessionManager = BAPIConfiguration.getSessionManager(appConfig, credentials);
-                    session = sessionManager.openSession(credentials);
-                    WeighBridgeApp.getApplication().setSAPSession(session);
-                    boolean sap_flag = true;
-                    try {
-                        session.execute(userGetDetailBapi);  //Login
-                    } catch (Exception ex) {
-                        System.out.println(ex.getMessage());
-                        sap_flag = false;
-                        if (user != null && !user.getPwd().equals(password)) {
-                            failed(new Exception("Authenticated Failed!!!"));
-                        }
-                    }
-
-                    //set offline mode
-                    lOfflineMode = !sap_flag;
-                    if (sap_flag == true) {
-                        UserGetDetailAddrStructure userGetDetailAddrStructure = userGetDetailBapi.getAddress();
-                        List<UserGetDetailAGRStructure> roles = userGetDetailBapi.getActgrps();
-                        StringBuilder sbRoles = new StringBuilder();
-                        try {
-
-                            for (int i = 0; i < roles.size(); i++) {
-                                UserGetDetailAGRStructure role = roles.get(i);
-                                sbRoles.append(role.getAgr_name());
-                                if (i < roles.size() - 1) {
-                                    sbRoles.append(",");
-                                }
-                            }
-                        } catch (Exception ex) {
-                        }
-
-                        entityManager.getTransaction().begin();
-                        boolean updateUser = true;
-                        if (user == null) {
-                            updateUser = false;
-                            if (sapSetting == null) {
-                                PlantGetDetailBapi plantGetDetailBapi = new PlantGetDetailBapi(lclient, lplant);
-                                session.execute(plantGetDetailBapi);
-                                HashMap vals = plantGetDetailBapi.getEsPlant();
-
-                                sapSetting = new SAPSetting(new SAPSettingPK(lclient, lplant));
-                                sapSetting.setName1((String) vals.get(PlantGeDetailConstants.NAME1));
-                                sapSetting.setName2((String) vals.get(PlantGeDetailConstants.NAME2));
-                                entityManager.persist(sapSetting);
-                            }
-                            user = new User(new UserPK(lclient, lplant, username), password);
-                        } else {
-                            updateUser = true;
-                        }
-
-                        user.setFullName(userGetDetailAddrStructure.getFullName());
-                        user.setLanguP(userGetDetailAddrStructure.getLang().length() == 0 ? ' ' : userGetDetailAddrStructure.getLang().charAt(0));
-                        user.setLangupIso(userGetDetailAddrStructure.getLangISO());
-                        user.setPwd(password);
-                        if (sbRoles != null) {
-                            user.setRoles(sbRoles.toString());
-                        }
-                        user.setTitle(userGetDetailAddrStructure.getTitle());
-
-                        if (updateUser) {
-                            entityManager.merge(user);
-                        } else {
-                            entityManager.persist(user);
-                        }
-
-                        entityManager.getTransaction().commit();
-                        entityManager.clear();
-                    }
-                    succeeded(true);
-                } catch (Exception ex) {
-                    if (entityManager.getTransaction().isActive()) {
-                        entityManager.getTransaction().rollback();
-                    }
-                    if (ex.getCause() instanceof JCoException) {
-                        jcoException = (JCoException) ex.getCause();
-                        failed(jcoException);
-                    } else {
-                        failed(ex);
-                    }
-                }
-            }
-
-            return null;
         }
     }
     // </editor-fold>

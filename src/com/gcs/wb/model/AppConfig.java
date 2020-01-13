@@ -9,7 +9,6 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 
-
 /**
  *
  * @author vunguyent
@@ -27,7 +26,7 @@ public class AppConfig {
         config.setFileName(FILE_NAME);
         try {
             config.load();
-            
+
             getEndeTimes();
             getModeNormal();
             getWbId();
@@ -63,21 +62,19 @@ public class AppConfig {
         } catch (ConfigurationException ex) {
             try {
                 config.save();
-                
-                
-                 
+
+
+
             } catch (ConfigurationException ex1) {
                 Logger.getLogger(this.getClass()).error(null, ex1);
             }
         }
     }
     // <editor-fold defaultstate="collapsed" desc="Keys">
-    
     /**
      * Configuration Key: ENDE_TIMES
      */
     public static final String ENDE_TIMES = "ENDE_TIMES";
-    
     /**
      * Configuration Key: MODE_NORMAL
      */
@@ -86,10 +83,8 @@ public class AppConfig {
      * Configuration Key: DB_HOST
      */
     public static final String WB_ID = "WB_ID";
-    
     public static final String SHIP_POINT = "SHIP_POINT";
-        
-     public static final String RPT_ID = "RPT_ID";
+    public static final String RPT_ID = "RPT_ID";
     /**
      * Configuration Key: DB_HOST
      */
@@ -188,23 +183,24 @@ public class AppConfig {
     public static final String AD_PWD = "AD_PWD";
     public static final String USER = "USER";
     public static final String PASS = "PASS";
-
     /**
      * Config param key for limit weight when output
      */
     public static final String W_LIMIT = "W_LIMIT";
+    /**
+     * Configuration Key: CHECK_VERSION_WB
+     */
+    public static final String CHECK_VERSION_WB = "CHECK_VERSION_WB";
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Configuration Attributes">
-    
     /**
      * number of times (encode - decode)
      */
-    private int endeTimes = 1;  
-    
+    private int endeTimes = 1;
     /**
      * normal or right
      */
-    private boolean modeNormal = true;  
+    private boolean modeNormal = true;
     /**
      * DB Host String
      */
@@ -313,6 +309,10 @@ public class AppConfig {
      * Limited weight
      */
     private int limitWeight = 0;
+    /**
+     * Check Version WB
+     */
+    private boolean checkVersionWB = false;
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Attribute's Getter Setter">
 
@@ -323,7 +323,7 @@ public class AppConfig {
         boolean b1Configured = !(b1Port == null || b1Speed == null || b1DBits == null || b1SBits == null || b1PC == null || b1Mettler == null);
         boolean b2Configured = !(b2Port == null || b2Speed == null || b2DBits == null || b2SBits == null || b2PC == null || b1Mettler == null);
         fullyConfigured = !(dbHost == null || dbName == null || dbUsr == null || dbPwd == null
-                || sHost == null || sNumber == null || sClient == null 
+                || sHost == null || sNumber == null || sClient == null
                 || wPlant == null) && (b1Configured || b2Configured);
         return fullyConfigured;
     }
@@ -344,7 +344,7 @@ public class AppConfig {
     public void setEndeTimes(int endeTimes) {
         this.endeTimes = endeTimes;
     }
-    
+
     /**
      * application mode (normal or have right)
      * @return the mode 
@@ -358,16 +358,15 @@ public class AppConfig {
         }
         return modeNormal;
     }
-    
+
     /**
      * Mode normal or have right
      * @param mode to set
      */
     public void setModeNormal(boolean modeNormal) {
-        config.setProperty(MODE_NORMAL, modeNormal);
         this.modeNormal = modeNormal;
     }
-    
+
     /**
      * DB Host String
      * @return the dbHost
@@ -376,7 +375,7 @@ public class AppConfig {
         wbId = Base64_Utils.decodeNTimes(config.getString(WB_ID, ""));
         return wbId;
     }
-    
+
     /**
      * DB Host String
      * @param dbHost the dbHost to set
@@ -385,6 +384,7 @@ public class AppConfig {
         config.setProperty(WB_ID, Base64_Utils.encodeNTimes(wbId));
         this.wbId = wbId;
     }
+
     /**
      * DB Host String
      * @return the dbHost
@@ -393,7 +393,7 @@ public class AppConfig {
         shId = Base64_Utils.decodeNTimes(config.getString(SHIP_POINT, ""));
         return shId;
     }
-    
+
     /**
      * DB Host String
      * @param dbHost the dbHost to set
@@ -402,6 +402,7 @@ public class AppConfig {
         config.setProperty(SHIP_POINT, Base64_Utils.encodeNTimes(shId));
         this.shId = shId;
     }
+
     /**
      * DB Host String
      * @return the dbHost
@@ -492,6 +493,7 @@ public class AppConfig {
         config.setProperty(SAP_HOST, Base64_Utils.encodeNTimes(sHost));
         this.sHost = sHost;
     }
+
     /**
      * SAP Gateway Host String
      * @return the gwHost
@@ -510,6 +512,7 @@ public class AppConfig {
         config.setProperty(SAP_GWHOST, gwHost);
         this.gwHost = gwHost;
     }
+
     /**
      * SAP System Number
      * @return the sNumber
@@ -592,7 +595,7 @@ public class AppConfig {
         } else {
             String b1Speed_str = Base64_Utils.decodeNTimes(config.getString(WB1_BR, ""));
             try {
-                 b1Speed = Integer.parseInt(b1Speed_str);
+                b1Speed = Integer.parseInt(b1Speed_str);
             } catch (Exception e) {
                 b1Speed = null;
             }
@@ -608,8 +611,8 @@ public class AppConfig {
         if (b1Port == null) {
             b1Speed = null;
         }
-        config.setProperty(WB1_BR, Base64_Utils.encodeNTimes(b1Speed != null ?
-                b1Speed.toString() : ""));
+        config.setProperty(WB1_BR, Base64_Utils.encodeNTimes(b1Speed != null
+                ? b1Speed.toString() : ""));
         this.b1Speed = b1Speed;
     }
 
@@ -623,10 +626,10 @@ public class AppConfig {
         } else {
             String b1DBits_str = Base64_Utils.decodeNTimes(config.getString(WB1_DB, ""));
             try {
-                 b1DBits = Short.parseShort(b1DBits_str);
+                b1DBits = Short.parseShort(b1DBits_str);
             } catch (Exception e) {
                 b1DBits = (short) 5;
-            }            
+            }
         }
         return b1DBits;
     }
@@ -639,7 +642,7 @@ public class AppConfig {
         if (b1Port == null) {
             b1DBits = (short) 5;
         }
-        
+
         config.setProperty(WB1_DB, Base64_Utils.encodeNTimes(b1DBits.toString()));
         this.b1DBits = b1DBits;
     }
@@ -654,7 +657,7 @@ public class AppConfig {
         } else {
             String b1SBits_str = Base64_Utils.decodeNTimes(config.getString(WB1_SB, ""));
             try {
-                 b1SBits = Float.parseFloat(b1SBits_str);
+                b1SBits = Float.parseFloat(b1SBits_str);
             } catch (Exception e) {
                 b1SBits = 1f;
             }
@@ -670,7 +673,7 @@ public class AppConfig {
         if (b1Port == null) {
             b1SBits = 1f;
         }
-        
+
         config.setProperty(WB1_SB, Base64_Utils.encodeNTimes(b1SBits.toString()));
         this.b1SBits = b1SBits;
     }
@@ -685,7 +688,7 @@ public class AppConfig {
         } else {
             String b1PC_str = Base64_Utils.decodeNTimes(config.getString(WB1_PC, ""));
             try {
-                 b1PC = Short.parseShort(b1PC_str);
+                b1PC = Short.parseShort(b1PC_str);
             } catch (Exception e) {
                 b1PC = (short) 0;
             }
@@ -714,13 +717,13 @@ public class AppConfig {
         } else {
             String b1Mettler_str = Base64_Utils.decodeNTimes(config.getString(WB1_METTLER, ""));
             try {
-                 b1Mettler = Boolean.parseBoolean(b1Mettler_str);
+                b1Mettler = Boolean.parseBoolean(b1Mettler_str);
             } catch (Exception e) {
                 b1Mettler = null;
             }
         }
-       return b1Mettler;
-       //  return true; 
+        return b1Mettler;
+        //  return true; 
     }
 
     /**
@@ -730,12 +733,12 @@ public class AppConfig {
         if (b1Port == null) {
             b1Mettler = null;
         }
-        String b1Mettler_str = Base64_Utils.decodeNTimes(config.getString(WB1_METTLER, "")); 
-        
-       config.setProperty(WB1_METTLER, Base64_Utils.encodeNTimes(b1Mettler!=null ? b1Mettler.toString() : "false"));
+        String b1Mettler_str = Base64_Utils.decodeNTimes(config.getString(WB1_METTLER, ""));
+
+        config.setProperty(WB1_METTLER, Base64_Utils.encodeNTimes(b1Mettler != null ? b1Mettler.toString() : "false"));
         // config.setProperty(WB1_METTLER,b1Mettler);
-          this.b1Mettler = b1Mettler;
-         //  this.b1Mettler = true ;
+        this.b1Mettler = b1Mettler;
+        //  this.b1Mettler = true ;
     }
 
     /**
@@ -766,7 +769,7 @@ public class AppConfig {
         } else {
             String b2Speed_str = Base64_Utils.decodeNTimes(config.getString(WB2_BR, ""));
             try {
-                 b2Speed = Integer.parseInt(b2Speed_str);
+                b2Speed = Integer.parseInt(b2Speed_str);
             } catch (Exception e) {
                 b2Speed = null;
             }
@@ -782,8 +785,8 @@ public class AppConfig {
         if (b2Port == null) {
             b2Speed = null;
         }
-        config.setProperty(WB2_BR, Base64_Utils.encodeNTimes(b2Speed != null ?
-                b2Speed.toString() : ""));
+        config.setProperty(WB2_BR, Base64_Utils.encodeNTimes(b2Speed != null
+                ? b2Speed.toString() : ""));
         this.b2Speed = b2Speed;
     }
 
@@ -797,7 +800,7 @@ public class AppConfig {
         } else {
             String b2DBits_str = Base64_Utils.decodeNTimes(config.getString(WB2_DB, ""));
             try {
-                 b2DBits = Short.parseShort(b2DBits_str);
+                b2DBits = Short.parseShort(b2DBits_str);
             } catch (Exception e) {
                 b2DBits = (short) 5;
             }
@@ -827,7 +830,7 @@ public class AppConfig {
         } else {
             String b2SBits_str = Base64_Utils.decodeNTimes(config.getString(WB2_SB, ""));
             try {
-                 b2SBits = Float.parseFloat(b2SBits_str);
+                b2SBits = Float.parseFloat(b2SBits_str);
             } catch (Exception e) {
                 b2SBits = 1f;
             }
@@ -857,7 +860,7 @@ public class AppConfig {
         } else {
             String b2PC_str = Base64_Utils.decodeNTimes(config.getString(WB2_PC, ""));
             try {
-                 b2PC = Short.parseShort(b2PC_str);
+                b2PC = Short.parseShort(b2PC_str);
             } catch (Exception e) {
                 b2PC = (short) 0;
             }
@@ -886,7 +889,7 @@ public class AppConfig {
         } else {
             String b2Mettler_str = Base64_Utils.decodeNTimes(config.getString(WB2_METTLER, ""));
             try {
-                 b2Mettler = Boolean.parseBoolean(b2Mettler_str);
+                b2Mettler = Boolean.parseBoolean(b2Mettler_str);
             } catch (Exception e) {
                 b2Mettler = null;
             }
@@ -901,8 +904,8 @@ public class AppConfig {
         if (b1Port == null) {
             b2Mettler = null;
         }
-        config.setProperty(WB2_METTLER, Base64_Utils.encodeNTimes(b2Mettler!=null ? 
-                b2PC.toString() : ""));
+        config.setProperty(WB2_METTLER, Base64_Utils.encodeNTimes(b2Mettler != null
+                ? b2PC.toString() : ""));
         this.b2Mettler = b2Mettler;
     }
 
@@ -963,7 +966,8 @@ public class AppConfig {
         config.setProperty(AD_PWD, adminPwd);
         this.adminPwd = adminPwd;
     }
-        /**
+
+    /**
      * @return the usrName
      */
     public String getUsrName() {
@@ -998,7 +1002,7 @@ public class AppConfig {
     public int getLimitWeight() {
         String limitW_str = Base64_Utils.decodeNTimes(config.getString(W_LIMIT, ""));
         try {
-             limitWeight = Integer.parseInt(limitW_str);
+            limitWeight = Integer.parseInt(limitW_str);
         } catch (Exception e) {
             limitWeight = 0;
         }
@@ -1008,9 +1012,23 @@ public class AppConfig {
     public void setLimitWeight(int limitWeight) {
         this.limitWeight = limitWeight;
     }
-    
-    // </editor-fold>
 
+    public boolean isCheckVersionWB() {
+        String str_checkVersionWB = Base64_Utils.decodeNTimes(config.getString(CHECK_VERSION_WB, "false"));
+        try {
+            this.checkVersionWB = Boolean.parseBoolean(str_checkVersionWB);
+        } catch (Exception e) {
+            this.checkVersionWB = false;
+        }
+        return this.checkVersionWB;
+    }
+
+    public void setCheckVersionWB(boolean checkVersionWB) {
+        config.setProperty(MODE_NORMAL, checkVersionWB);
+        this.checkVersionWB = checkVersionWB;
+    }
+
+    // </editor-fold>
     public void save() throws ConfigurationException {
         try {
             if (b1Port == null) {
@@ -1046,7 +1064,7 @@ public class AppConfig {
      * @param rptId the rptId to set
      */
     public void setRptId(String rptId) {
-       config.setProperty(RPT_ID, Base64_Utils.encodeNTimes(rptId));
-       this.rptId = rptId;
+        config.setProperty(RPT_ID, Base64_Utils.encodeNTimes(rptId));
+        this.rptId = rptId;
     }
 }

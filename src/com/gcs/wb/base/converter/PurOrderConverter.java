@@ -16,7 +16,7 @@ import java.util.List;
  *
  * @author THANGPT
  */
-public class PurOrderConverter extends AbstractThrowableConverter<PoGetDetailBapi, PurOrder, Exception> {
+public class PurOrderConverter extends AbstractThrowableParamConverter<PoGetDetailBapi, PurOrder, Exception> {
 
     @Override
     public PurOrder convertHasParameter(PoGetDetailBapi from, String val) throws Exception {
@@ -113,12 +113,6 @@ public class PurOrderConverter extends AbstractThrowableConverter<PoGetDetailBap
         }
         return result;
     }
-
-    @Override
-    public PurOrder convert(PoGetDetailBapi from) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
     @Override
     public PurOrder convertsHasParameter(PoGetDetailBapi from, String val, boolean refresh) throws Exception {
         throw new UnsupportedOperationException("Not supported yet.");

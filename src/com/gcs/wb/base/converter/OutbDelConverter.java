@@ -23,7 +23,7 @@ import javax.persistence.EntityManager;
  *
  * @author THANGPT
  */
-public class OutbDelConverter extends AbstractThrowableConverter<DoGetDetailBapi, OutbDel, Exception> {
+public class OutbDelConverter extends AbstractThrowableParamConverter<DoGetDetailBapi, OutbDel, Exception> {
 
     @Override
     public OutbDel convertHasParameter(DoGetDetailBapi from, String val) throws Exception {
@@ -203,10 +203,5 @@ public class OutbDelConverter extends AbstractThrowableConverter<DoGetDetailBapi
             }
         }
         return outb;
-    }
-
-    @Override
-    public OutbDel convert(DoGetDetailBapi from) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

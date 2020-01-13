@@ -14,12 +14,7 @@ import java.util.List;
  *
  * @author THANGPT
  */
-public class VendorsConverter extends AbstractThrowableConverter<List<TransportagentGetListStructure>, List<Vendor>, Exception> {
-
-    @Override
-    public List<Vendor> convert(List<TransportagentGetListStructure> from) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+public class VendorsConverter extends AbstractThrowableParamConverter<List<TransportagentGetListStructure>, List<Vendor>, Exception> {
 
     @Override
     public List<Vendor> convertHasParameter(List<TransportagentGetListStructure> fromList, String val) throws Exception {

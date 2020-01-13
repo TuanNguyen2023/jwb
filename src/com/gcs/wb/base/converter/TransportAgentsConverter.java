@@ -30,14 +30,4 @@ public class TransportAgentsConverter extends AbstractThrowableConverter<List<Tr
         }
         return toList;
     }
-
-    @Override
-    public List<TransportAgent> convertHasParameter(List<TransportagentGetListStructure> from, String val) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public List<TransportAgent> convertsHasParameter(List<TransportagentGetListStructure> from, String val, boolean refresh) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 }

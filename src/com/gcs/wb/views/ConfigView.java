@@ -12,8 +12,8 @@ package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.model.AppConfig;
-import com.gcs.wb.rs232.enums.ParityEnum;
-import com.gcs.wb.rs232.SerialHelper;
+import com.gcs.wb.base.enums.ParityEnum;
+import com.gcs.wb.base.serials.SerialHelper;
 import com.gcs.wb.base.util.Base64_Utils;
 import gnu.io.CommPortIdentifier;
 import java.awt.Color;

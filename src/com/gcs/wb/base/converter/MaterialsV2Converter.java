@@ -32,14 +32,4 @@ public class MaterialsV2Converter extends AbstractThrowableConverter<List<Materi
         }
         return toList;
     }
-
-    @Override
-    public List<Material> convertHasParameter(List<MaterialGetListStructure> from, String val) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public List<Material> convertsHasParameter(List<MaterialGetListStructure> from, String val, boolean refresh) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 }

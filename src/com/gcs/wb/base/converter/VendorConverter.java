@@ -25,14 +25,4 @@ public class VendorConverter extends AbstractThrowableConverter<VendorGetDetailS
         }
         return to;
     }
-
-    @Override
-    public Vendor convertHasParameter(VendorGetDetailStructure from, String val) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Vendor convertsHasParameter(VendorGetDetailStructure from, String val, boolean refresh) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 }

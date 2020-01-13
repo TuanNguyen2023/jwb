@@ -2,9 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.gcs.wb.rs232;
+package com.gcs.wb.base.serials;
 
-import com.gcs.wb.rs232.exceptions.IllegalPortException;
+import com.gcs.wb.base.exceptions.IllegalPortException;
 import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;
 import gnu.io.NoSuchPortException;
