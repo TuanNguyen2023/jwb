@@ -2573,7 +2573,7 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
             newWeightTicket.setCreateDate(now);
             formatter.applyPattern("HHmmss");
             newWeightTicket.setCreateTime(formatter.format(now));
-            newWeightTicket.setCreator(WeighBridgeApp.getApplication().getLogin().getUserPK().getId());
+            newWeightTicket.setCreator(WeighBridgeApp.getApplication().getLogin().getUid());
             newWeightTicket.setOfflineMode(WeighBridgeApp.getApplication().isOfflineMode());
             newWeightTicket.setRegCategory(rbtInward.isSelected() ? 'I' : 'O');
             newWeightTicket.setRegItemQty(new BigDecimal(((Number) txfRegQty.getValue()).doubleValue()));

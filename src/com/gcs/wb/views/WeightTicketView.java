@@ -4198,7 +4198,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                 txfInQty.setValue(txfCurScale.getValue());
                 txtInTime.setText(formatter.format(now));
                 if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
-                    weightTicket.setFCreator(WeighBridgeApp.getApplication().getLogin().getUserPK().getId());
+                    weightTicket.setFCreator(WeighBridgeApp.getApplication().getLogin().getUid());
                 } else {
                     weightTicket.setFCreator(WeighBridgeApp.getApplication().getCurrent_user());
                 }
@@ -4221,7 +4221,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
                 txfOutQty.setValue(txfCurScale.getValue());
                 txtOutTime.setText(formatter.format(now));
                 if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
-                    weightTicket.setSCreator(WeighBridgeApp.getApplication().getLogin().getUserPK().getId());
+                    weightTicket.setSCreator(WeighBridgeApp.getApplication().getLogin().getUid());
                 } else {
                     weightTicket.setSCreator(WeighBridgeApp.getApplication().getCurrent_user());
                 }
@@ -5063,7 +5063,7 @@ private void chkInternalItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
         try {
             MovementRepository movementRepository = new MovementRepository();
             String client = config.getsClient();
-            String language = WeighBridgeApp.getApplication().getLogin().getLanguP().toString();
+            String language = WeighBridgeApp.getApplication().getLogin().getLang().toString();
             mvt = movementRepository.findByMandtBwartSpras(client, language);
 
         } catch (NoResultException ex) {

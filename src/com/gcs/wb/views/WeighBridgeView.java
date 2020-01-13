@@ -53,13 +53,13 @@ public class WeighBridgeView extends FrameView {
 //        WeighBridgeView.txt_status.setText(sapSetting.getName1()+" - User:"+login.getFullName());
         if (WeighBridgeApp.getApplication().isOfflineMode()) {
             if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
-                WeighBridgeView.txt_status.setText(sapSetting.getName1() + " - User:" + login.getFullName() + " - Offline Mode");
+                WeighBridgeView.txt_status.setText(sapSetting.getName1() + " - User:" + login.getFullname() + " - Offline Mode");
             } else {
                 WeighBridgeView.txt_status.setText(sapSetting.getName1() + " - User:" + WeighBridgeApp.getApplication().getCurrent_user_name() + " - Offline Mode");
             }
         } else {
             if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
-                WeighBridgeView.txt_status.setText(sapSetting.getName1() + " - User:" + login.getFullName());
+                WeighBridgeView.txt_status.setText(sapSetting.getName1() + " - User:" + login.getFullname());
             } else {
                 WeighBridgeView.txt_status.setText(sapSetting.getName1() + " - User:" + WeighBridgeApp.getApplication().getCurrent_user_name());
             }
@@ -438,13 +438,13 @@ public class WeighBridgeView extends FrameView {
         }
         if (WeighBridgeApp.getApplication().isOfflineMode()) {
             if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
-                WeighBridgeView.txt_status.setText(sapSetting.getName1() + " - User:" + login.getFullName() + " - Offline Mode");
+                WeighBridgeView.txt_status.setText(sapSetting.getName1() + " - User:" + login.getFullname() + " - Offline Mode");
             } else {
                 WeighBridgeView.txt_status.setText(sapSetting.getName1() + " - User:" + WeighBridgeApp.getApplication().getCurrent_user_name() + " - Offline Mode");
             }
         } else {
             if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
-                WeighBridgeView.txt_status.setText(sapSetting.getName1() + " - User:" + login.getFullName());
+                WeighBridgeView.txt_status.setText(sapSetting.getName1() + " - User:" + login.getFullname());
             } else {
                 WeighBridgeView.txt_status.setText(sapSetting.getName1() + " - User:" + WeighBridgeApp.getApplication().getCurrent_user_name());
             }
