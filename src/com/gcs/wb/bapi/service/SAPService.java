@@ -25,6 +25,7 @@ import com.gcs.wb.bapi.helper.structure.PoGetDetailItemStructure;
 import com.gcs.wb.bapi.helper.structure.SLocsGetListStructure;
 import com.gcs.wb.bapi.helper.structure.TransportagentGetListStructure;
 import com.gcs.wb.bapi.helper.structure.VendorGetDetailStructure;
+import com.gcs.wb.base.converter.TransportAgentsConverter;
 import com.gcs.wb.base.util.Conversion_Exit;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.BatchStocks;
@@ -633,82 +634,15 @@ public class SAPService {
         List<TransportAgent> transportSaps = new ArrayList<TransportAgent>();
         try {
             session.execute(bapi);
-             List<TransportagentGetListStructure> transports = bapi.getEtVendor();
-            for (TransportagentGetListStructure transport : transports) {
-                 TransportAgent tAgent = null;
-                tAgent = new TransportAgent(transport.getLifnr());
-                if (transport.getName1() != null || transport.getName1().length() <= 35) 
-                {
-                tAgent.setName(transport.getName1());
-            } else
-                {
-                    tAgent.setName(transport.getName2());
-                }
-                transportSaps.add(tAgent);
-            }
+            List<TransportagentGetListStructure> transports = bapi.getEtVendor();
+            TransportAgentsConverter transportAgentsConverter = new TransportAgentsConverter();
+            transportSaps = transportAgentsConverter.convert(transports);
         } catch (Exception ex) {
             // to do
         }
         // end get data SAP
         //sync SAP <=> DB
-        // delete data DB not exist SAP
-        for (TransportAgent transportAgent : transportDBs) {
-            if (transportSaps.indexOf(transportAgent) == -1) {
-                // delete in table Vehicle
-                TypedQuery<Vehicle> vehicleTypedQuery = entityManager.createNamedQuery("Vehicle.findByTaAbbr", Vehicle.class);
-                vehicleTypedQuery.setParameter("taAbbr", transportAgent.getAbbr());
-                List<Vehicle> vehicles = vehicleTypedQuery.getResultList();
-
-                if (!entityManager.getTransaction().isActive()) {
-                    entityManager.getTransaction().begin();
-                }
-
-                // delete vehicle
-                try {
-                    for (Vehicle vehicle : vehicles) {
-                        entityManager.remove(vehicle);
-                    }
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), "Xóa phương tiện vận chuyển không thành công");
-                    entityManager.getTransaction().rollback();
-                }
-
-                // delete dvvc
-                try {
-                    if (!entityManager.contains(transportAgent)) {
-                        transportAgent = entityManager.merge(transportAgent);
-                    }
-                    entityManager.remove(transportAgent);
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), "Xóa nhà vận chuyển không thành công");
-                    entityManager.getTransaction().rollback();
-                }
-
-                entityManager.getTransaction().commit();
-                entityManager.clear();
-            }
-        }
-
-        // update data SAP -> DB
-        try {
-            if (!entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().begin();
-            }
-            for (TransportAgent transportAgentSAP : transportSaps) {
-
-                if (transportDBs.indexOf(transportAgentSAP) == -1) {
-                    entityManager.persist(transportAgentSAP);
-                } else {
-                    entityManager.merge(transportAgentSAP);
-                }
-            }
-
-            entityManager.getTransaction().commit();
-            entityManager.clear();
-
-        } catch (Exception ex) {
-            entityManager.getTransaction().rollback();
-        }
+        jpaService.syncTransportAgent(transportDBs, transportSaps);
 
         // return data
         result = jpaService.getTransportAgent();

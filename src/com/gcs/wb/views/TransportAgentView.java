@@ -11,18 +11,14 @@
 package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
-import com.gcs.wb.bapi.helper.SAP2Local;
-import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.base.constant.Constants;
+import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.TransportAgentVehicle;
 import com.gcs.wb.jpa.entity.Vehicle;
 import com.gcs.wb.jpa.service.JPAService;
-import com.gcs.wb.jpa.repositorys.TransportAgentRepository;
-import com.gcs.wb.jpa.repositorys.TransportAgentVehicleRepository;
 import com.gcs.wb.jpa.repositorys.VehicleRepository;
-import com.gcs.wb.model.AppConfig;
 import java.awt.Color;
 import java.awt.Component;
 import java.util.List;
@@ -43,11 +39,8 @@ import org.jdesktop.application.Application;
  */
 public class TransportAgentView extends javax.swing.JInternalFrame {
 
-    private AppConfig config = null;
     private EntityManager entityManager = JPAConnector.getInstance();
-    private TransportAgentRepository transportAgentRepository = new TransportAgentRepository();
     private VehicleRepository vehicleRepository = new VehicleRepository();
-    private TransportAgentVehicleRepository transportAgentVehicleRepository = new TransportAgentVehicleRepository();
     SAPService sapService = new SAPService();
     JPAService jpaService = new JPAService();
 
@@ -304,46 +297,16 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtLicensePlateFocusGained
 
 private void btnVehicleRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVehicleRemoveActionPerformed
-    EntityTransaction entityTransaction = entityManager.getTransaction();
-    try {
-        if (!entityTransaction.isActive()) {
-            entityTransaction.begin();
-        }
-
-        TransportAgentVehicle transportAgentVehicle =
-                transportAgentVehicleRepository.findByTransportAgentIdAndVehicleId(
-                transportAgentSelected.getId(), vehicleSelected.getId());
-        entityManager.remove(transportAgentVehicle);
-
-        entityTransaction.commit();
-        entityManager.clear();
-    } catch (Exception ex) {
-        JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.deleteVehicleFalse"));
-        entityTransaction.rollback();
-        entityManager.clear();
-    }
-
+    // remove vehicle
+    jpaService.removeVehicle(transportAgentSelected.getId(), vehicleSelected.getId());
     lstVehicle.clearSelection();
     lstVehicle.setModel(getVehiclesModel());
     vehicleSelected = null;
 }//GEN-LAST:event_btnVehicleRemoveActionPerformed
 
 private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProhibitApplyActionPerformed
-    EntityTransaction entityTransaction = entityManager.getTransaction();
-    try {
-        if (!entityTransaction.isActive()) {
-            entityTransaction.begin();
-        }
-
-        vehicleSelected.setProhibit(chkProhibitVehicle.isSelected());
-        entityManager.merge(vehicleSelected);
-        entityTransaction.commit();
-        entityManager.clear();
-    } catch (Exception ex) {
-        JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.prohibitFalse"));
-        entityTransaction.rollback();
-        entityManager.clear();
-    }
+    // action prohibit vehicle
+    jpaService.prohibitApplyVehicle(vehicleSelected, chkProhibitVehicle.isSelected());
 
     chkProhibitVehicle.setSelected(false);
     vehicleSelected = null;
@@ -363,76 +326,8 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
     }
 
     private DefaultListModel getTransportAgentsModel() {
-        config = WeighBridgeApp.getApplication().getConfig();
-        EntityTransaction entityTransaction = entityManager.getTransaction();
-        List<TransportAgent> transportAgents = transportAgentRepository.getListTransportAgent();
-
-        // get from SAP
-        List<TransportAgent> transportAgentsSAP = SAP2Local.getTransportAgentList(config.getwPlant());
-        //sync SAP <=> DB
-        // delete data DB not exist SAP
-        for (TransportAgent transportAgent : transportAgents) {
-            if (transportAgentsSAP.indexOf(transportAgent) == -1) {
-                // delete in table Vehicle
-                List<TransportAgentVehicle> transportAgentVehicles = transportAgentVehicleRepository.findByTransportAgentId(transportAgent.getId());
-
-                if (!entityTransaction.isActive()) {
-                    entityTransaction.begin();
-                }
-
-                try {
-                    for (TransportAgentVehicle transportAgentVehicle : transportAgentVehicles) {
-                        entityManager.remove(transportAgentVehicle);
-                    }
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.deleteVehicleFalse"));
-                    entityTransaction.rollback();
-                    return null;
-                }
-
-                // delete dvvc
-                try {
-                    if (!entityManager.contains(transportAgent)) {
-                        transportAgent = entityManager.merge(transportAgent);
-                    }
-                    entityManager.remove(transportAgent);
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.deleteProviderFalse"));
-                    entityTransaction.rollback();
-                    return null;
-                }
-
-                entityTransaction.commit();
-                entityManager.clear();
-            }
-        }
-
-        try {
-            if (!entityTransaction.isActive()) {
-                entityTransaction.begin();
-            }
-            // update dara SAP -> DB
-            for (TransportAgent transportAgentSAP : transportAgentsSAP) {
-                int index = transportAgents.indexOf(transportAgentSAP);
-                if (index == -1) {
-                    entityManager.persist(transportAgentSAP);
-                } else {
-                    transportAgentSAP.setId(transportAgents.get(index).getId());
-                    entityManager.merge(transportAgentSAP);
-                }
-            }
-
-            entityTransaction.commit();
-            entityManager.clear();
-
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.syncProviderFalse"));
-            entityTransaction.rollback();
-            return null;
-        }
-
         // get dvvc
-        transportAgents = transportAgentRepository.getListTransportAgent();
+        List<TransportAgent> transportAgents = sapService.getTransportAgentList();
         DefaultListModel model = new DefaultListModel();
         for (TransportAgent transportAgent : transportAgents) {
             model.addElement(transportAgent);
@@ -441,7 +336,7 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
     }
 
     private DefaultListModel getVehiclesModel() {
-        List<TransportAgentVehicle> transportAgentVehicles = transportAgentVehicleRepository.findByTransportAgentId(transportAgentSelected.getId());
+        List<TransportAgentVehicle> transportAgentVehicles = jpaService.getVehicle(transportAgentSelected.getId());
         DefaultListModel model = new DefaultListModel();
         for (TransportAgentVehicle transportAgentVehicle : transportAgentVehicles) {
             model.addElement(transportAgentVehicle.getVehicle());
@@ -451,46 +346,12 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
 
     @Action(enabledProperty = "vehicleCreatable")
     public void saveVehicle() {
-        TransportAgentVehicle transportAgentVehicle = new TransportAgentVehicle();
         Vehicle vehicle = vehicleRepository.findByPlateNo(txtLicensePlate.getText().trim());
 
         EntityTransaction entityTransaction = entityManager.getTransaction();
         try {
-            if (!entityTransaction.isActive()) {
-                entityTransaction.begin();
-            }
-
-            if (vehicle == null) {
-                // insert new vehicle
-                vehicle = new Vehicle();
-                vehicle.setPlateNo(txtLicensePlate.getText().trim());
-                vehicle.setProhibit(false);
-                entityManager.persist(vehicle);
-
-                // insert vehicle relationship
-                transportAgentVehicle.setTransportAgent(transportAgentSelected);
-                transportAgentVehicle.setVehicle(vehicle);
-                entityManager.persist(transportAgentVehicle);
-            } else {
-                // check vehicle has exit in transport agent
-                transportAgentVehicle = transportAgentVehicleRepository.findByTransportAgentIdAndVehicleId(transportAgentSelected.getId(), vehicle.getId());
-                if (transportAgentVehicle != null) {
-                    JOptionPane.showMessageDialog(mainFrame,
-                            resourceMapMsg.getString("msg.duplicationPlateNo",
-                            txtLicensePlate.getText().trim(),
-                            transportAgentSelected.getName()));
-                    return;
-                } else {
-                    // insert vehicle relationship
-                    transportAgentVehicle = new TransportAgentVehicle();
-                    transportAgentVehicle.setTransportAgent(transportAgentSelected);
-                    transportAgentVehicle.setVehicle(vehicle);
-                    entityManager.persist(transportAgentVehicle);
-                }
-            }
-
-            entityTransaction.commit();
-            entityManager.clear();
+            //save vehicle
+            jpaService.saveVehicle(txtLicensePlate.getText().trim(), vehicle, transportAgentSelected);
 
             setVehicleCreatable(false);
             vehicleSelected = null;
