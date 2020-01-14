@@ -20,39 +20,7 @@
 	</parameter>
 	<parameter name="P_ADDRESS" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[SELECT
-     WeightTicket.`MANDT` AS MANDT,
-     WeightTicket.`WPlant` AS WPlant,
-     WeightTicket.`ID` AS ID,
-     WeightTicket.`SEQ_BY_DAY` AS SEQ_BY_DAY,
-     WeightTicket.`SEQ_BY_MONTH` AS SEQ_BY_MONTH,
-     WeightTicket.`TEN_TAI_XE` AS TEN_TAI_XE,
-     WeightTicket.`CMND_BL` AS CMND_BL,
-     WeightTicket.`SO_XE` AS SO_XE,
-     WeightTicket.`SO_ROMOOC` AS SO_ROMOOC,
-     WeightTicket.`REG_CATEGORY` AS REG_CATEGORY,
-     WeightTicket.`REG_ITEM_TEXT` AS REG_ITEM_TEXT,
-     WeightTicket.`CREATE_DATE` AS CREATE_DATE,
-     WeightTicket.`CREATOR` AS CREATOR,
-     User.`FULL_NAME` AS FULL_NAME,
-     WeightTicket.`DELIV_NUMB` AS DELIV_NUMB,
-     WeightTicket.`DISSOLVED` AS DISSOLVED,
-     WeightTicket.`POSTED` AS POSTED,
-     WeightTicket.`REG_ITEM_QTY` AS REG_ITEM_QTY,
-     WeightTicket.`CREATE_TIME` AS CREATE_TIME,
-     (SELECT Name_RPT from rpt_address where rpt_address.`rpt_id` = $P{P_ADDRESS}) AS PName_RPT,
-     (SELECT ADDRESS from rpt_address where rpt_address.`rpt_id` = $P{P_ADDRESS}) AS PAddress,
-     (SELECT Phone from rpt_address where rpt_address.`rpt_id` = $P{P_ADDRESS}) AS PPhone,
-     (SELECT FAX from rpt_address where rpt_address.`rpt_id` = $P{P_ADDRESS}) AS PFAX
-FROM
-     `User` User INNER JOIN `WeightTicket` WeightTicket ON User.`MANDT` = WeightTicket.`MANDT`
-     AND User.`ID` = WeightTicket.`CREATOR`
-     AND User.`WPlant` = WeightTicket.`WPlant`
-WHERE
-     WeightTicket.`MANDT` = $P{P_CLIENT}
- AND WeightTicket.`WPlant` = $P{P_WPLANT}
- AND WeightTicket.`ID` = $P{P_ID}
- AND WeightTicket.`SEQ_BY_DAY` = $P{P_DAYSEQ}]]>
+		<![CDATA[store_bt_regwt $P{P_CLIENT},$P{P_WPLANT},$P{P_ID},$P{P_DAYSEQ},$P{P_ADDRESS}]]>
 	</queryString>
 	<field name="MANDT" class="java.lang.String"/>
 	<field name="WPlant" class="java.lang.String"/>

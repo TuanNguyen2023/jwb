@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Reg. Weight Ticket" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="59903c44-933c-4ddf-adfe-50a94e18831e">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Reg. Weight Ticket" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" >
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -20,45 +20,7 @@
 	</parameter>
 	<parameter name="P_ADDRESS" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[SELECT
-     WeightTicket.`MANDT` AS MANDT,
-     WeightTicket.`WPlant` AS WPlant,
-     WeightTicket.`ID` AS ID,
-     WeightTicket.`SEQ_BY_DAY` AS SEQ_BY_DAY,
-     WeightTicket.`SEQ_BY_MONTH` AS SEQ_BY_MONTH,
-     WeightTicket.`TEN_TAI_XE` AS TEN_TAI_XE,
-     WeightTicket.`CMND_BL` AS CMND_BL,
-     WeightTicket.`SO_XE` AS SO_XE,
-     WeightTicket.`SO_ROMOOC` AS SO_ROMOOC,
-     WeightTicket.`REG_CATEGORY` AS REG_CATEGORY,
-     WeightTicket.`REG_ITEM_TEXT` AS REG_ITEM_TEXT,
-     WeightTicket.`CREATE_DATE` AS CREATE_DATE,
-     WeightTicket.`CREATOR` AS CREATOR,
-     User.`FULL_NAME` AS FULL_NAME,
-     WeightTicket.`DELIV_NUMB` AS DELIV_NUMB,
-     WeightTicket.`DISSOLVED` AS DISSOLVED,
-     WeightTicket.`POSTED` AS POSTED,
-     WeightTicket.`REG_ITEM_QTY` AS REG_ITEM_QTY,
-     WeightTicket.`CREATE_TIME` AS CREATE_TIME,
-     (SELECT Name_RPT from rpt_address where rpt_address.`rpt_id` = $P{P_ADDRESS}) AS PName_RPT,
-     (SELECT ADDRESS from rpt_address where rpt_address.`rpt_id` = $P{P_ADDRESS}) AS PAddress,
-     (SELECT Phone from rpt_address where rpt_address.`rpt_id` = $P{P_ADDRESS}) AS PPhone,
-     (SELECT FAX from rpt_address where rpt_address.`rpt_id` = $P{P_ADDRESS}) AS PFAX,     
-     vcustomer.`Customer_name`,
-     outb_details_v2.`BZTXT` as saledistrict
-    
-FROM
-    `WeightTicket` WeightTicket   INNER JOIN  `User` User   ON User.`MANDT` = WeightTicket.`MANDT`
-         AND User.`ID` = WeightTicket.`CREATOR`
-     AND User.`WPlant` = WeightTicket.`WPlant`     
-   left join  `vcustomer` vcustomer  on WeightTicket.KUNNR = vcustomer.customer_id
-   left join  `outb_details_v2` outb_details_v2 on   CONCAT(WeightTicket.ID,WeightTicket.SEQ_BY_DAY) = outb_details_v2.WT_ID
-     
-WHERE
-     WeightTicket.`MANDT` = $P{P_CLIENT}
- AND WeightTicket.`WPlant` = $P{P_WPLANT}
- AND WeightTicket.`ID` = $P{P_ID}
- AND WeightTicket.`SEQ_BY_DAY` = $P{P_DAYSEQ} limit 10]]>
+		<![CDATA[store_bt_regwthp $P{P_ADDRESS},$P{P_CLIENT},$P{P_WPLANT},$P{P_ID},$P{P_DAYSEQ}]]>
 	</queryString>
 	<field name="MANDT" class="java.lang.String"/>
 	<field name="WPlant" class="java.lang.String"/>
@@ -91,59 +53,59 @@ WHERE
 	<title>
 		<band height="129" splitType="Stretch">
 			<image onErrorType="Blank">
-				<reportElement uuid="17250388-f251-44b7-97e4-4e9cc11114b7" x="470" y="0" width="85" height="65"/>
+				<reportElement  x="470" y="0" width="85" height="65"/>
 				<imageExpression><![CDATA["./rpt/TaFiCo_TM2.jpg"]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement uuid="dfa42cb7-bd12-41b2-840a-4e271b02ea4a" x="0" y="83" width="275" height="26"/>
+				<reportElement  x="0" y="83" width="275" height="26"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="16" isBold="true" isUnderline="true" pdfEncoding="Identity-H"/>
 				</textElement>
 				<text><![CDATA[PHIẾU YÊU CẦU XUẤT HÀNG]]></text>
 			</staticText>
 			<componentElement>
-				<reportElement uuid="c22abb34-d225-4e5d-a00a-41e7d2821946" stretchType="RelativeToBandHeight" x="275" y="77" width="121" height="32"/>
+				<reportElement  stretchType="RelativeToBandHeight" x="275" y="77" width="121" height="32"/>
 				<jr:Code128 xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" textPosition="none">
 					<jr:codeExpression><![CDATA[$F{ID}+$F{SEQ_BY_DAY}]]></jr:codeExpression>
 				</jr:Code128>
 			</componentElement>
 			<textField>
-				<reportElement uuid="ba62a2e2-d2b5-40f7-acd7-aef303f12f70" x="0" y="109" width="275" height="20"/>
+				<reportElement  x="0" y="109" width="275" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{P_REPRINT} == true ? "(In lại)" : ""]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="86aa9889-6b70-4807-9c05-6c263e31c5ae" x="0" y="57" width="314" height="20"/>
+				<reportElement  x="0" y="57" width="314" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" size="8" isBold="true" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[($F{PPhone} != null ? "Tel: "+$F{PPhone} : "") + ( $F{PFAX} != null ? "- Fax: " + $F{PFAX} : "")]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="c67b972e-9f1c-4079-8c13-8492cc7fa7bd" x="0" y="19" width="314" height="20" isRemoveLineWhenBlank="true"/>
+				<reportElement  x="0" y="19" width="314" height="20" isRemoveLineWhenBlank="true"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" size="8" isBold="true" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{PName_RPT}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="f16b80b1-ebda-4cbc-ab08-3e0821e6799b" x="0" y="38" width="314" height="20" isRemoveLineWhenBlank="true"/>
+				<reportElement  x="0" y="38" width="314" height="20" isRemoveLineWhenBlank="true"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" size="8" isBold="true" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{PAddress}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="97806865-77ea-4f00-b613-582b7917e9d9" x="0" y="0" width="314" height="20"/>
+				<reportElement  x="0" y="0" width="314" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="8" isBold="true" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
 				<text><![CDATA[CÔNG TY CỔ PHẦN XI MĂNG FICO TÂY NINH]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="06382f12-1b27-48f0-a728-113465a83bab" x="275" y="109" width="280" height="20"/>
+				<reportElement  x="275" y="109" width="280" height="20"/>
 				<box leftPadding="5"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="10" isBold="true" pdfEncoding="Identity-H"/>
@@ -155,7 +117,7 @@ WHERE
 	<pageHeader>
 		<band height="22" splitType="Stretch">
 			<staticText>
-				<reportElement uuid="d683c4fa-d5e0-4b3f-bdc4-daf2258af1bc" x="0" y="0" width="65" height="20"/>
+				<reportElement  x="0" y="0" width="65" height="20"/>
 				<box rightPadding="5"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="10" isBold="true" pdfEncoding="Identity-H"/>
@@ -163,7 +125,7 @@ WHERE
 				<text><![CDATA[SĐT:]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="2657bd8c-9386-40d9-9ce6-906a8dc85d1d" x="65" y="0" width="176" height="20"/>
+				<reportElement x="65" y="0" width="176" height="20"/>
 				<box leftPadding="5"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="10" isBold="true" pdfEncoding="Identity-H"/>
@@ -171,7 +133,7 @@ WHERE
 				<textFieldExpression><![CDATA[$F{SEQ_BY_DAY}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="a58b14d2-4cbb-4d23-8587-60178b2e5277" x="248" y="0" width="149" height="20"/>
+				<reportElement  x="248" y="0" width="149" height="20"/>
 				<box rightPadding="5"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="10" isBold="true" pdfEncoding="Identity-H"/>
@@ -179,7 +141,7 @@ WHERE
 				<text><![CDATA[Số phiếu trong tháng:]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="c3e4ae18-6c0a-418f-9b0b-e7294f19fc5a" x="397" y="0" width="121" height="20"/>
+				<reportElement  x="397" y="0" width="121" height="20"/>
 				<box leftPadding="5"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="10" isBold="true" pdfEncoding="Identity-H"/>
@@ -191,7 +153,7 @@ WHERE
 	<detail>
 		<band height="174" splitType="Stretch">
 			<staticText>
-				<reportElement uuid="c6445222-681c-46cd-9275-f5383c9fe77a" x="0" y="0" width="65" height="20"/>
+				<reportElement  x="0" y="0" width="65" height="20"/>
 				<box rightPadding="5"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
@@ -199,7 +161,7 @@ WHERE
 				<text><![CDATA[Tên tài xế:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="b4e55d5e-605b-4dc6-8177-aad51f9396f8" x="65" y="0" width="176" height="20"/>
+				<reportElement  x="65" y="0" width="176" height="20"/>
 				<box leftPadding="5"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
@@ -207,7 +169,7 @@ WHERE
 				<textFieldExpression><![CDATA[$F{TEN_TAI_XE}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="cda954f4-b3ec-403d-b6de-c26d54a80880" x="0" y="20" width="65" height="20"/>
+				<reportElement  x="0" y="20" width="65" height="20"/>
 				<box leftPadding="0" rightPadding="5"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
@@ -215,7 +177,7 @@ WHERE
 				<text><![CDATA[CMND/BL:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="d9092167-c88d-4827-a2bb-db1a1095f134" x="65" y="20" width="176" height="20"/>
+				<reportElement  x="65" y="20" width="176" height="20"/>
 				<box leftPadding="5"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
@@ -223,7 +185,7 @@ WHERE
 				<textFieldExpression><![CDATA[$F{CMND_BL}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="8f7c39fc-1aa4-474f-9560-8b549d850668" x="0" y="40" width="65" height="20"/>
+				<reportElement  x="0" y="40" width="65" height="20"/>
 				<box rightPadding="5"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
@@ -231,7 +193,7 @@ WHERE
 				<text><![CDATA[Số xe:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="1f9fc317-4770-4add-8141-c090b7fe3e8a" x="65" y="40" width="176" height="20"/>
+				<reportElement  x="65" y="40" width="176" height="20"/>
 				<box leftPadding="5"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
@@ -239,7 +201,7 @@ WHERE
 				<textFieldExpression><![CDATA[$F{SO_XE}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="e423748f-2953-4d15-a600-f6a2d1c024e3" x="0" y="60" width="65" height="20"/>
+				<reportElement  x="0" y="60" width="65" height="20"/>
 				<box rightPadding="5"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
@@ -247,7 +209,7 @@ WHERE
 				<text><![CDATA[Số Rơmoóc:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="195df373-0d5c-462b-8fd9-6763bcee2685" x="65" y="60" width="176" height="20"/>
+				<reportElement  x="65" y="60" width="176" height="20"/>
 				<box leftPadding="5"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
@@ -255,7 +217,7 @@ WHERE
 				<textFieldExpression><![CDATA[$F{SO_ROMOOC}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="3fa758a3-2c38-41fa-9b6b-310001b8628c" x="248" y="0" width="77" height="20"/>
+				<reportElement  x="248" y="0" width="77" height="20"/>
 				<box rightPadding="5"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
@@ -263,7 +225,7 @@ WHERE
 				<text><![CDATA[Đăng ký:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="d5d69325-08e7-40d5-98e5-e72b67baf3b5" x="335" y="1" width="220" height="20"/>
+				<reportElement x="335" y="1" width="220" height="20"/>
 				<box leftPadding="5"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
@@ -271,7 +233,7 @@ WHERE
 				<textFieldExpression><![CDATA[$F{REG_CATEGORY}.equalsIgnoreCase("I") ? "Nhập" : "Xuất"]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="395b688e-2e3e-4648-a348-63e7ede55144" x="248" y="20" width="77" height="20"/>
+				<reportElement  x="248" y="20" width="77" height="20"/>
 				<box rightPadding="5"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
@@ -279,7 +241,7 @@ WHERE
 				<text><![CDATA[Loại hàng:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="1d8781fa-171e-4237-a488-f7fa494c0ce0" x="335" y="21" width="220" height="20"/>
+				<reportElement  x="335" y="21" width="220" height="20"/>
 				<box leftPadding="5"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="8" pdfEncoding="Identity-H"/>
@@ -287,7 +249,7 @@ WHERE
 				<textFieldExpression><![CDATA[$F{REG_ITEM_TEXT}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="ed1cbba4-73f0-4023-9def-324da50743ed" x="248" y="40" width="77" height="20"/>
+				<reportElement  x="248" y="40" width="77" height="20"/>
 				<box rightPadding="5"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
@@ -295,7 +257,7 @@ WHERE
 				<text><![CDATA[Trọng lượng Đk:]]></text>
 			</staticText>
 			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
-				<reportElement uuid="4759db84-9a9a-4ad6-a422-c5dd6ff85993" x="335" y="41" width="162" height="20"/>
+				<reportElement  x="335" y="41" width="162" height="20"/>
 				<box leftPadding="5"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
@@ -303,7 +265,7 @@ WHERE
 				<textFieldExpression><![CDATA[$F{REG_ITEM_QTY}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="4be16944-7333-4c6b-9bef-a944e35a279e" x="248" y="60" width="77" height="20"/>
+				<reportElement  x="248" y="60" width="77" height="20"/>
 				<box rightPadding="5"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
@@ -311,7 +273,7 @@ WHERE
 				<text><![CDATA[Số D.O:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="85a84acf-599f-4250-976e-272e99b457bb" x="335" y="61" width="220" height="20"/>
+				<reportElement  x="335" y="61" width="220" height="20"/>
 				<box leftPadding="5"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
@@ -319,14 +281,14 @@ WHERE
 				<textFieldExpression><![CDATA[$F{DELIV_NUMB}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="e011a95a-5117-4cc4-ba50-f96bd5e63bd9" x="437" y="41" width="33" height="20"/>
+				<reportElement  x="437" y="41" width="33" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
 				</textElement>
 				<text><![CDATA[(Tấn)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="effca05c-50ae-4b66-b53e-2800a3345029" x="0" y="80" width="65" height="20"/>
+				<reportElement  x="0" y="80" width="65" height="20"/>
 				<box rightPadding="5"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
@@ -334,7 +296,7 @@ WHERE
 				<text><![CDATA[Người tạo:]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="c78304d3-6be1-41f7-8b67-0e1bbff6bf1c" x="65" y="80" width="176" height="20"/>
+				<reportElement  x="65" y="80" width="176" height="20"/>
 				<box leftPadding="5"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
@@ -342,7 +304,7 @@ WHERE
 				<textFieldExpression><![CDATA[$F{FULL_NAME}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="a12bbaff-1d72-4435-a8b2-35804b35d83e" x="248" y="80" width="77" height="20"/>
+				<reportElement  x="248" y="80" width="77" height="20"/>
 				<box rightPadding="5"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
@@ -350,7 +312,7 @@ WHERE
 				<text><![CDATA[Ngày:]]></text>
 			</staticText>
 			<textField pattern="dd/MM/yyyy">
-				<reportElement uuid="efd805fe-66e0-4aa8-9902-9a24e845dda7" x="335" y="81" width="220" height="20"/>
+				<reportElement  x="335" y="81" width="220" height="20"/>
 				<box leftPadding="5"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
@@ -358,7 +320,7 @@ WHERE
 				<textFieldExpression><![CDATA[$F{CREATE_DATE}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="9d15bdc0-5088-4987-9ece-8e6b83fafd67" x="223" y="149" width="91" height="20"/>
+				<reportElement  x="223" y="149" width="91" height="20"/>
 				<box rightPadding="5"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="10" isBold="true" pdfEncoding="Identity-H"/>
@@ -366,7 +328,7 @@ WHERE
 				<text><![CDATA[PXSX]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="9d15bdc0-5088-4987-9ece-8e6b83fafd67" x="0" y="149" width="142" height="20"/>
+				<reportElement  x="0" y="149" width="142" height="20"/>
 				<box rightPadding="5"/>
 				<textElement textAlignment="Justified" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="10" isBold="true" pdfEncoding="Identity-H"/>
@@ -374,7 +336,7 @@ WHERE
 				<text><![CDATA[NV Trạm cân/Giao nhận]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="9d15bdc0-5088-4987-9ece-8e6b83fafd67" x="448" y="149" width="91" height="20"/>
+				<reportElement  x="448" y="149" width="91" height="20"/>
 				<box rightPadding="5"/>
 				<textElement textAlignment="Justified" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="10" isBold="true" pdfEncoding="Identity-H"/>
@@ -382,7 +344,7 @@ WHERE
 				<text><![CDATA[Khách hàng]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="a12bbaff-1d72-4435-a8b2-35804b35d83e" x="248" y="101" width="77" height="20"/>
+				<reportElement  x="248" y="101" width="77" height="20"/>
 				<box rightPadding="5"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
@@ -390,7 +352,7 @@ WHERE
 				<text><![CDATA[Khách hàng :]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="1d8781fa-171e-4237-a488-f7fa494c0ce0" x="335" y="101" width="220" height="20"/>
+				<reportElement  x="335" y="101" width="220" height="20"/>
 				<box leftPadding="5"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="8" isBold="true" pdfEncoding="Identity-H"/>
@@ -398,7 +360,7 @@ WHERE
 				<textFieldExpression><![CDATA[$F{Customer_name}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="a12bbaff-1d72-4435-a8b2-35804b35d83e" x="260" y="121" width="65" height="20"/>
+				<reportElement  x="260" y="121" width="65" height="20"/>
 				<box rightPadding="5"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
@@ -406,7 +368,7 @@ WHERE
 				<text><![CDATA[Thị trường :]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="1d8781fa-171e-4237-a488-f7fa494c0ce0" x="335" y="123" width="218" height="20"/>
+				<reportElement  x="335" y="123" width="218" height="20"/>
 				<box leftPadding="5"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="9" isBold="true" pdfEncoding="Identity-H"/>

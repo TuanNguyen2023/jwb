@@ -44,9 +44,10 @@
 					<font fontName="DejaVu Sans" size="10" isBold="true" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["CÔNG TY CỔ PHẦN XI MĂNG FICO TÂY NINH" + "\n" +  "\n" +
-$P{P_PNAME_RPT} + "\n" + "\n" +
-$P{P_PADDRESS} + "\n" + "\n" +
-($P{P_PPHONE} != null ? "Tel: "+ $P{P_PPHONE} : "") + ( $P{P_PFAX} != null ? "- Fax: " + $P{P_PFAX} : "")]]></textFieldExpression>
+					$P{P_PNAME_RPT} + "\n" + "\n" +
+					$P{P_PADDRESS} + "\n" + "\n" +
+					($P{P_PPHONE} != null ? "Tel: "+ $P{P_PPHONE} : "") + ( $P{P_PFAX} != null ? "- Fax: " + $P{P_PFAX} : "")]]>
+				</textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="730" y="56" width="348" height="20"/>

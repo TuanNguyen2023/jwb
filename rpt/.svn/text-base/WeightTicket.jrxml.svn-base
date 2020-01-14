@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Weight Ticket" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true">
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="0.9982500000000003"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="42"/>
 	<parameter name="P_MANDT" class="java.lang.String"/>
 	<parameter name="P_WPlant" class="java.lang.String"/>
 	<parameter name="P_ID" class="java.lang.String"/>
@@ -39,9 +39,9 @@
      OutbDel.LIFNR,
      (SELECT NAME1 FROM Vendor WHERE Vendor.MANDT = OutbDel.MANDT and Vendor.LIFNR = OutbDel.LIFNR) AS DOSPName1,
      (SELECT NAME2 FROM Vendor WHERE Vendor.MANDT = OutbDel.MANDT and Vendor.LIFNR = OutbDel.LIFNR) AS DOSPName2,
-     WeightTicket.KUNNR,
-     (SELECT NAME1 FROM Customer WHERE Customer.MANDT = WeightTicket.MANDT AND Customer.KUNNR = WeightTicket.KUNNR) AS SHPName1,
-     (SELECT NAME2 FROM Customer WHERE Customer.MANDT = WeightTicket.MANDT AND Customer.KUNNR = WeightTicket.KUNNR) AS SHPName2,
+     OutbDel.KUNNR,
+     (SELECT NAME1 FROM Customer WHERE Customer.MANDT = OutbDel.MANDT AND Customer.KUNNR = OutbDel.KUNNR) AS SHPName1,
+     (SELECT NAME2 FROM Customer WHERE Customer.MANDT = OutbDel.MANDT AND Customer.KUNNR = OutbDel.KUNNR) AS SHPName2,
      OutbDel.KUNAG,
      (SELECT NAME1 FROM Customer WHERE Customer.MANDT = OutbDel.MANDT AND Customer.KUNNR = OutbDel.KUNAG) AS SOPName1,
      (SELECT NAME2 FROM Customer WHERE Customer.MANDT = OutbDel.MANDT AND Customer.KUNNR = OutbDel.KUNAG) AS SOPName2,
@@ -182,59 +182,59 @@ WHERE WeightTicket.`MANDT` = $P{P_MANDT}
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="53" splitType="Stretch">
+		<band height="78" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="-19" width="304" height="15"/>
+				<reportElement x="0" y="0" width="314" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="8" isBold="true" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
 				<text><![CDATA[CÔNG TY CỔ PHẦN XI MĂNG FICO TÂY NINH]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="0" y="-4" width="304" height="15" isRemoveLineWhenBlank="true"/>
+				<reportElement x="0" y="19" width="314" height="20" isRemoveLineWhenBlank="true"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" size="8" isBold="true" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{PName_RPT}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{PName_RPT}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="0" y="11" width="304" height="15" isRemoveLineWhenBlank="true"/>
+				<reportElement x="0" y="38" width="314" height="20" isRemoveLineWhenBlank="true"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" size="8" isBold="true" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{PAddress}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{PAddress}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="0" y="25" width="304" height="21"/>
+				<reportElement x="0" y="57" width="314" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" size="8" isBold="true" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[($F{PPhone} != null ? "Tel: "+$F{PPhone} : "") + ( $F{PFAX} != null ? "- Fax: " + $F{PFAX} : "")]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[($F{PPhone} != null ? "Tel: "+$F{PPhone} : "") + ( $F{PFAX} != null ? "- Fax: " + $F{PFAX} : "")]]></textFieldExpression>
 			</textField>
 			<image hAlign="Left" vAlign="Middle" onErrorType="Blank">
-				<reportElement x="459" y="-19" width="85" height="65"/>
-				<imageExpression><![CDATA["./rpt/TaFiCo_TM2.jpg"]]></imageExpression>
+				<reportElement x="470" y="0" width="85" height="65"/>
+				<imageExpression class="java.lang.String"><![CDATA["./rpt/TaFiCo_TM2.jpg"]]></imageExpression>
 			</image>
 		</band>
 	</title>
 	<pageHeader>
-		<band height="46" splitType="Stretch">
+		<band height="50" splitType="Stretch">
 			<textField>
-				<reportElement x="10" y="0" width="545" height="18" forecolor="#FF0000"/>
+				<reportElement x="0" y="0" width="555" height="18" forecolor="#FF0000"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" size="14" isBold="true" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{TITLE}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{TITLE}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="10" y="18" width="545" height="10"/>
+				<reportElement x="0" y="18" width="555" height="10"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{P_REPRINT} == true ? "(In lại)" : ""]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{P_REPRINT} == true ? "(In lại)" : ""]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="36" y="26" width="59" height="19"/>
+				<reportElement x="0" y="28" width="63" height="19"/>
 				<box leftPadding="2" rightPadding="0"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
@@ -248,7 +248,7 @@ WHERE WeightTicket.`MANDT` = $P{P_MANDT}
 				</jr:Code128>
 			</componentElement>
 			<staticText>
-				<reportElement x="201" y="28" width="28" height="18"/>
+				<reportElement x="201" y="28" width="28" height="19"/>
 				<box leftPadding="2" rightPadding="0"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
@@ -256,14 +256,14 @@ WHERE WeightTicket.`MANDT` = $P{P_MANDT}
 				<text><![CDATA[SĐT:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="229" y="26" width="62" height="20"/>
+				<reportElement x="229" y="27" width="62" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{SEQ_BY_DAY}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{SEQ_BY_DAY}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="360" y="28" width="95" height="18"/>
+				<reportElement x="385" y="28" width="90" height="19"/>
 				<box leftPadding="2" rightPadding="0"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
@@ -271,18 +271,18 @@ WHERE WeightTicket.`MANDT` = $P{P_MANDT}
 				<text><![CDATA[Số phiếu trong tháng:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="455" y="26" width="80" height="20"/>
+				<reportElement x="475" y="27" width="80" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{SEQ_BY_MONTH}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{SEQ_BY_MONTH}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="95" y="28" width="91" height="17"/>
+				<reportElement x="63" y="27" width="86" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="9" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{ID}+$F{SEQ_BY_DAY}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ID}+$F{SEQ_BY_DAY}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -291,20 +291,20 @@ WHERE WeightTicket.`MANDT` = $P{P_MANDT}
 			<frame>
 				<reportElement x="0" y="0" width="555" height="120"/>
 				<rectangle>
-					<reportElement x="385" y="0" width="159" height="40"/>
+					<reportElement x="385" y="0" width="170" height="40"/>
 				</rectangle>
 				<textField pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="true">
-					<reportElement x="385" y="20" width="159" height="20"/>
+					<reportElement x="385" y="20" width="170" height="20"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="9" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[($F{MAT_DOC} != null && !$F{MAT_DOC}.trim().isEmpty()) ? $F{MAT_DOC} : ""]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA[($F{MAT_DOC} != null && !$F{MAT_DOC}.trim().isEmpty()) ? $F{MAT_DOC} : ""]]></textFieldExpression>
 				</textField>
 				<rectangle>
-					<reportElement x="36" y="80" width="59" height="20"/>
+					<reportElement x="0" y="80" width="84" height="20"/>
 				</rectangle>
 				<staticText>
-					<reportElement x="36" y="80" width="59" height="20"/>
+					<reportElement x="0" y="80" width="84" height="20"/>
 					<box leftPadding="2" rightPadding="0"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
@@ -312,10 +312,10 @@ WHERE WeightTicket.`MANDT` = $P{P_MANDT}
 					<text><![CDATA[Số CMND/BL]]></text>
 				</staticText>
 				<rectangle>
-					<reportElement x="36" y="40" width="59" height="20"/>
+					<reportElement x="0" y="40" width="84" height="20"/>
 				</rectangle>
 				<staticText>
-					<reportElement x="36" y="40" width="59" height="20"/>
+					<reportElement x="0" y="40" width="84" height="20"/>
 					<box leftPadding="2" rightPadding="0"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
@@ -323,10 +323,10 @@ WHERE WeightTicket.`MANDT` = $P{P_MANDT}
 					<text><![CDATA[B.Số phương tiện]]></text>
 				</staticText>
 				<rectangle>
-					<reportElement x="36" y="0" width="59" height="20"/>
+					<reportElement x="0" y="0" width="84" height="20"/>
 				</rectangle>
 				<staticText>
-					<reportElement x="36" y="0" width="59" height="20"/>
+					<reportElement x="0" y="0" width="84" height="20"/>
 					<box leftPadding="2" rightPadding="0"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
@@ -334,10 +334,10 @@ WHERE WeightTicket.`MANDT` = $P{P_MANDT}
 					<text><![CDATA[Mã số khách hàng]]></text>
 				</staticText>
 				<rectangle>
-					<reportElement x="36" y="20" width="59" height="20"/>
+					<reportElement x="0" y="20" width="84" height="20"/>
 				</rectangle>
 				<staticText>
-					<reportElement x="36" y="20" width="59" height="20"/>
+					<reportElement x="0" y="20" width="84" height="20"/>
 					<box leftPadding="2" rightPadding="0"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
@@ -345,67 +345,67 @@ WHERE WeightTicket.`MANDT` = $P{P_MANDT}
 					<text><![CDATA[Tên khách hàng]]></text>
 				</staticText>
 				<rectangle>
-					<reportElement x="95" y="0" width="196" height="20"/>
+					<reportElement x="84" y="0" width="207" height="20"/>
 				</rectangle>
 				<textField isBlankWhenNull="true">
-					<reportElement x="95" y="0" width="196" height="20"/>
+					<reportElement x="84" y="0" width="207" height="20"/>
 					<box leftPadding="2"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{KUNNR} != null ? $F{KUNNR} :
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{KUNNR} != null ? $F{KUNNR} :
 $F{KUNAG} != null ? $F{KUNAG} :
 $F{RECV_PLANT} != null ?$F{RECV_PLANT}:
 $F{PORPlant} != null ? $F{PORPlant} :
 $F{RECV_LGORT} != null ? $F{RECV_LGORT} : null]]></textFieldExpression>
 				</textField>
 				<rectangle>
-					<reportElement x="95" y="20" width="196" height="20"/>
+					<reportElement x="84" y="20" width="207" height="20"/>
 				</rectangle>
 				<textField isBlankWhenNull="true">
-					<reportElement x="95" y="20" width="196" height="20"/>
+					<reportElement x="84" y="20" width="207" height="20"/>
 					<box leftPadding="2"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{KUNNR} != null ? $F{SHPName1} != null ? $F{SHPName1} : "" + " "+ $F{SHPName2} != null ? $F{SHPName2} : "" :
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{KUNNR} != null ? $F{SHPName1} != null ? $F{SHPName1} : "" + " "+ $F{SHPName2} != null ? $F{SHPName2} : "" :
 $F{KUNAG} != null ? $F{SOPName1} != null ? $F{SOPName1} : "" + " "+ $F{SOPName2} != null ? $F{SOPName2} : "" :
 $F{RECV_PLANT} != null ? $F{RPName1} != null ? $F{RPName1} : "" + " "+ $F{RPName2} != null ? $F{RPName2} : "" :
 $F{PORPlant} != null ? $F{PORPName_RPT} != null ? $F{PORPName_RPT} : $F{PORPName1} != null ? $F{PORPName1} : "" + " " + $F{PORPName2} != null ? $F{PORPName2} : "" :
 $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null]]></textFieldExpression>
 				</textField>
 				<rectangle>
-					<reportElement x="95" y="40" width="196" height="20"/>
+					<reportElement x="84" y="40" width="207" height="20"/>
 				</rectangle>
 				<textField isBlankWhenNull="true">
-					<reportElement x="95" y="40" width="196" height="20"/>
+					<reportElement x="84" y="40" width="207" height="20"/>
 					<box leftPadding="2"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{SO_XE} + ($F{SO_ROMOOC} != null ? " | " + $F{SO_ROMOOC} : "")]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{SO_XE} + ($F{SO_ROMOOC} != null ? " | " + $F{SO_ROMOOC} : "")]]></textFieldExpression>
 				</textField>
 				<rectangle>
-					<reportElement x="95" y="60" width="196" height="20"/>
+					<reportElement x="84" y="60" width="207" height="20"/>
 				</rectangle>
 				<textField isBlankWhenNull="true">
-					<reportElement x="95" y="60" width="196" height="20"/>
+					<reportElement x="84" y="60" width="207" height="20"/>
 					<box leftPadding="2"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{TEN_TAI_XE}]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{TEN_TAI_XE}]]></textFieldExpression>
 				</textField>
 				<rectangle>
-					<reportElement x="95" y="80" width="196" height="20"/>
+					<reportElement x="84" y="80" width="207" height="20"/>
 				</rectangle>
 				<textField isBlankWhenNull="true">
-					<reportElement x="95" y="80" width="196" height="20"/>
+					<reportElement x="84" y="80" width="207" height="20"/>
 					<box leftPadding="2"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{CMND_BL}]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{CMND_BL}]]></textFieldExpression>
 				</textField>
 				<rectangle>
 					<reportElement x="291" y="0" width="94" height="40"/>
@@ -416,7 +416,7 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 					<textElement verticalAlignment="Middle" markup="none">
 						<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA[($F{DELIV_NUMB} != null && !$F{DELIV_NUMB}.trim().isEmpty()) ? "Số D.O" :
+					<textFieldExpression class="java.lang.String"><![CDATA[($F{DELIV_NUMB} != null && !$F{DELIV_NUMB}.trim().isEmpty()) ? "Số D.O" :
 ($F{EBELN} != null && !$F{EBELN}.trim().isEmpty()) ? "Số P.O" : null]]></textFieldExpression>
 				</textField>
 				<textField>
@@ -425,7 +425,7 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 					<textElement verticalAlignment="Middle" markup="none">
 						<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA[($F{MAT_DOC} != null && !$F{MAT_DOC}.trim().isEmpty()) ? "Chứng từ SAP: " : ""]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA[($F{MAT_DOC} != null && !$F{MAT_DOC}.trim().isEmpty()) ? "Chứng từ SAP: " : ""]]></textFieldExpression>
 				</textField>
 				<componentElement>
 					<reportElement positionType="FixRelativeToBottom" mode="Transparent" x="320" y="0" width="65" height="20"/>
@@ -445,21 +445,21 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 					<text><![CDATA[Cân vào]]></text>
 				</staticText>
 				<rectangle>
-					<reportElement x="385" y="40" width="42" height="20"/>
+					<reportElement x="385" y="40" width="56" height="20"/>
 				</rectangle>
 				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
-					<reportElement x="385" y="40" width="42" height="20"/>
+					<reportElement x="385" y="40" width="56" height="20"/>
 					<box rightPadding="2"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{F_SCALE}]]></textFieldExpression>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{F_SCALE}]]></textFieldExpression>
 				</textField>
 				<rectangle>
-					<reportElement x="427" y="40" width="33" height="20"/>
+					<reportElement x="441" y="40" width="34" height="20"/>
 				</rectangle>
 				<staticText>
-					<reportElement x="427" y="40" width="33" height="20"/>
+					<reportElement x="441" y="40" width="34" height="20"/>
 					<box leftPadding="2"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
@@ -467,14 +467,14 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 					<text><![CDATA[Tấn (T)]]></text>
 				</staticText>
 				<rectangle>
-					<reportElement x="460" y="40" width="84" height="20"/>
+					<reportElement x="475" y="40" width="80" height="20"/>
 				</rectangle>
 				<textField pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="true">
-					<reportElement x="460" y="40" width="84" height="20"/>
+					<reportElement x="475" y="40" width="80" height="20"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{F_TIME}]]></textFieldExpression>
+					<textFieldExpression class="java.util.Date"><![CDATA[$F{F_TIME}]]></textFieldExpression>
 				</textField>
 				<rectangle>
 					<reportElement x="291" y="60" width="94" height="20"/>
@@ -488,21 +488,21 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 					<text><![CDATA[Cân ra]]></text>
 				</staticText>
 				<rectangle>
-					<reportElement x="385" y="60" width="42" height="20"/>
+					<reportElement x="385" y="60" width="56" height="20"/>
 				</rectangle>
 				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
-					<reportElement x="385" y="60" width="42" height="20"/>
+					<reportElement x="385" y="60" width="56" height="20"/>
 					<box rightPadding="2"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{S_SCALE}]]></textFieldExpression>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{S_SCALE}]]></textFieldExpression>
 				</textField>
 				<rectangle>
-					<reportElement x="427" y="60" width="33" height="20"/>
+					<reportElement x="441" y="60" width="34" height="20"/>
 				</rectangle>
 				<staticText>
-					<reportElement x="427" y="60" width="33" height="20"/>
+					<reportElement x="441" y="60" width="34" height="20"/>
 					<box leftPadding="2"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
@@ -510,14 +510,14 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 					<text><![CDATA[Tấn (T)]]></text>
 				</staticText>
 				<rectangle>
-					<reportElement x="460" y="60" width="84" height="20"/>
+					<reportElement x="475" y="60" width="80" height="20"/>
 				</rectangle>
 				<textField pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="true">
-					<reportElement x="460" y="60" width="84" height="20"/>
+					<reportElement x="475" y="60" width="80" height="20"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{S_TIME}]]></textFieldExpression>
+					<textFieldExpression class="java.util.Date"><![CDATA[$F{S_TIME}]]></textFieldExpression>
 				</textField>
 				<rectangle>
 					<reportElement x="291" y="80" width="94" height="20"/>
@@ -531,26 +531,26 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 					<text><![CDATA[Trọng lượng hàng]]></text>
 				</staticText>
 				<rectangle>
-					<reportElement x="385" y="80" width="42" height="20"/>
+					<reportElement x="385" y="80" width="56" height="20"/>
 				</rectangle>
 				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
-					<reportElement x="385" y="80" width="42" height="20"/>
+					<reportElement x="385" y="80" width="56" height="20"/>
 					<box rightPadding="2"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression><![CDATA[($F{DISSOLVED} == null || $F{DISSOLVED} == false ) ? $F{G_QTY} : null]]></textFieldExpression>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[($F{DISSOLVED} == null || $F{DISSOLVED} == false ) ? $F{G_QTY} : null]]></textFieldExpression>
 				</textField>
 				<rectangle>
-					<reportElement x="427" y="80" width="117" height="20"/>
+					<reportElement x="441" y="80" width="114" height="20"/>
 				</rectangle>
 				<textField>
-					<reportElement x="427" y="80" width="117" height="20"/>
+					<reportElement x="441" y="80" width="114" height="20"/>
 					<box leftPadding="2"/>
 					<textElement verticalAlignment="Middle" markup="none">
 						<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA[($F{DISSOLVED} == null || $F{DISSOLVED} == false ) ? "Tấn (T)" : $F{REG_CATEGORY} == "I" ? "Không NHẬN hàng" : "Không GIAO hàng"]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA[($F{DISSOLVED} == null || $F{DISSOLVED} == false ) ? "Tấn (T)" : $F{REG_CATEGORY} == "I" ? "Không NHẬN hàng" : "Không GIAO hàng"]]></textFieldExpression>
 				</textField>
 				<rectangle>
 					<reportElement x="291" y="100" width="94" height="20"/>
@@ -564,21 +564,21 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 					<text><![CDATA[Số niêm chì/in phun]]></text>
 				</staticText>
 				<rectangle>
-					<reportElement x="385" y="100" width="159" height="20"/>
+					<reportElement x="385" y="100" width="170" height="20"/>
 				</rectangle>
 				<textField isBlankWhenNull="true">
-					<reportElement x="385" y="100" width="159" height="20"/>
+					<reportElement x="385" y="100" width="170" height="20"/>
 					<box leftPadding="2"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{SO_NIEM_XA}]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{SO_NIEM_XA}]]></textFieldExpression>
 				</textField>
 				<rectangle>
-					<reportElement x="36" y="100" width="59" height="20"/>
+					<reportElement x="0" y="100" width="84" height="20"/>
 				</rectangle>
 				<staticText>
-					<reportElement x="36" y="100" width="59" height="20"/>
+					<reportElement x="0" y="100" width="84" height="20"/>
 					<box leftPadding="2" rightPadding="0"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
@@ -586,15 +586,15 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 					<text><![CDATA[Kho]]></text>
 				</staticText>
 				<rectangle>
-					<reportElement x="95" y="100" width="113" height="20"/>
+					<reportElement x="84" y="100" width="124" height="20"/>
 				</rectangle>
 				<textField isBlankWhenNull="true">
-					<reportElement x="95" y="100" width="113" height="20"/>
+					<reportElement x="84" y="100" width="124" height="20"/>
 					<box leftPadding="2"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{SLocName}]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{SLocName}]]></textFieldExpression>
 				</textField>
 				<rectangle>
 					<reportElement x="207" y="100" width="22" height="20"/>
@@ -611,7 +611,7 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 					<reportElement x="229" y="100" width="62" height="20"/>
 				</rectangle>
 				<rectangle>
-					<reportElement x="36" y="60" width="59" height="20"/>
+					<reportElement x="0" y="60" width="84" height="20"/>
 				</rectangle>
 				<textField isBlankWhenNull="true">
 					<reportElement x="229" y="100" width="62" height="20"/>
@@ -619,10 +619,10 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{CHARG}]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{CHARG}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="36" y="60" width="59" height="20"/>
+					<reportElement x="0" y="60" width="84" height="20"/>
 					<box leftPadding="2" rightPadding="0"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
@@ -635,7 +635,7 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="9" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[($F{DELIV_NUMB} != null && !$F{DELIV_NUMB}.trim().isEmpty()) ? $F{DELIV_NUMB} :
+					<textFieldExpression class="java.lang.String"><![CDATA[($F{DELIV_NUMB} != null && !$F{DELIV_NUMB}.trim().isEmpty()) ? $F{DELIV_NUMB} :
 ($F{EBELN} != null && !$F{EBELN}.trim().isEmpty()) ? $F{EBELN} :
 ($F{RECV_LGORT} != null && !$F{RECV_LGORT}.trim().isEmpty()) ? $F{MVT} : null]]></textFieldExpression>
 				</textField>
@@ -643,13 +643,21 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 			<frame>
 				<reportElement x="0" y="120" width="555" height="60"/>
 				<rectangle>
-					<reportElement x="36" y="0" width="24" height="40"/>
-				</rectangle>
-				<rectangle>
-					<reportElement x="60" y="0" width="147" height="40"/>
+					<reportElement x="0" y="0" width="24" height="40"/>
 				</rectangle>
 				<staticText>
-					<reportElement x="60" y="0" width="147" height="40"/>
+					<reportElement x="0" y="0" width="24" height="40"/>
+					<box leftPadding="2" rightPadding="2"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					</textElement>
+					<text><![CDATA[STT]]></text>
+				</staticText>
+				<rectangle>
+					<reportElement x="149" y="0" width="142" height="40"/>
+				</rectangle>
+				<staticText>
+					<reportElement x="149" y="0" width="142" height="40"/>
 					<box leftPadding="2" rightPadding="2"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
@@ -657,10 +665,21 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 					<text><![CDATA[Tên vật tư]]></text>
 				</staticText>
 				<rectangle>
-					<reportElement x="207" y="0" width="108" height="20"/>
+					<reportElement x="24" y="0" width="125" height="40"/>
 				</rectangle>
 				<staticText>
-					<reportElement x="208" y="0" width="107" height="20"/>
+					<reportElement x="24" y="0" width="125" height="40"/>
+					<box leftPadding="2" rightPadding="2"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					</textElement>
+					<text><![CDATA[Mã vật tư]]></text>
+				</staticText>
+				<rectangle>
+					<reportElement x="291" y="0" width="108" height="20"/>
+				</rectangle>
+				<staticText>
+					<reportElement x="291" y="0" width="108" height="20"/>
 					<box leftPadding="2" rightPadding="2"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
@@ -668,10 +687,10 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 					<text><![CDATA[Trọng lượng]]></text>
 				</staticText>
 				<rectangle>
-					<reportElement x="315" y="0" width="28" height="40"/>
+					<reportElement x="399" y="0" width="28" height="40"/>
 				</rectangle>
 				<staticText>
-					<reportElement x="315" y="0" width="28" height="40"/>
+					<reportElement x="399" y="0" width="28" height="40"/>
 					<box leftPadding="2" rightPadding="2"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
@@ -679,10 +698,10 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 					<text><![CDATA[ĐVT]]></text>
 				</staticText>
 				<rectangle>
-					<reportElement x="261" y="20" width="54" height="20"/>
+					<reportElement x="345" y="20" width="54" height="20"/>
 				</rectangle>
 				<staticText>
-					<reportElement x="261" y="20" width="54" height="20"/>
+					<reportElement x="345" y="20" width="54" height="20"/>
 					<box leftPadding="2" rightPadding="2"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
@@ -690,10 +709,10 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 					<text><![CDATA[Thực tế]]></text>
 				</staticText>
 				<rectangle>
-					<reportElement x="207" y="20" width="54" height="20"/>
+					<reportElement x="291" y="20" width="54" height="20"/>
 				</rectangle>
 				<staticText>
-					<reportElement x="207" y="20" width="54" height="20"/>
+					<reportElement x="291" y="20" width="54" height="20"/>
 					<box leftPadding="2" rightPadding="2"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
@@ -701,10 +720,10 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 					<text><![CDATA[Đăng ký]]></text>
 				</staticText>
 				<rectangle>
-					<reportElement x="343" y="0" width="117" height="40"/>
+					<reportElement x="427" y="0" width="128" height="40"/>
 				</rectangle>
 				<staticText>
-					<reportElement x="343" y="0" width="117" height="40"/>
+					<reportElement x="427" y="0" width="128" height="40"/>
 					<box leftPadding="2" rightPadding="2"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
@@ -712,46 +731,65 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 					<text><![CDATA[Nhận từ]]></text>
 				</staticText>
 				<rectangle>
-					<reportElement x="36" y="40" width="24" height="20"/>
+					<reportElement x="0" y="40" width="24" height="20"/>
 				</rectangle>
+				<staticText>
+					<reportElement x="0" y="40" width="24" height="20"/>
+					<box rightPadding="2"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+					</textElement>
+					<text><![CDATA[1]]></text>
+				</staticText>
 				<rectangle>
-					<reportElement x="60" y="40" width="147" height="20"/>
+					<reportElement x="24" y="40" width="125" height="20"/>
 				</rectangle>
 				<textField isBlankWhenNull="true">
-					<reportElement x="60" y="40" width="147" height="20"/>
+					<reportElement x="24" y="40" width="125" height="20"/>
 					<box leftPadding="2"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{REG_ITEM_TEXT}]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{MATNR_REF}]]></textFieldExpression>
 				</textField>
 				<rectangle>
-					<reportElement x="207" y="40" width="54" height="20"/>
+					<reportElement x="149" y="40" width="142" height="20"/>
+				</rectangle>
+				<textField isBlankWhenNull="true">
+					<reportElement x="149" y="40" width="142" height="20"/>
+					<box leftPadding="2"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="8"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{REG_ITEM_TEXT}]]></textFieldExpression>
+				</textField>
+				<rectangle>
+					<reportElement x="291" y="40" width="54" height="20"/>
 				</rectangle>
 				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
-					<reportElement x="207" y="40" width="54" height="20"/>
+					<reportElement x="291" y="40" width="54" height="20"/>
 					<box rightPadding="2"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{REG_ITEM_QTY}]]></textFieldExpression>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{REG_ITEM_QTY}]]></textFieldExpression>
 				</textField>
 				<rectangle>
-					<reportElement x="261" y="40" width="54" height="20"/>
+					<reportElement x="345" y="40" width="54" height="20"/>
 				</rectangle>
 				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
-					<reportElement x="261" y="40" width="54" height="20"/>
+					<reportElement x="345" y="40" width="54" height="20"/>
 					<box rightPadding="2"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression><![CDATA[($F{DISSOLVED} == null || $F{DISSOLVED} == false ) ? $F{G_QTY} : null]]></textFieldExpression>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[($F{DISSOLVED} == null || $F{DISSOLVED} == false ) ? $F{G_QTY} : null]]></textFieldExpression>
 				</textField>
 				<rectangle>
-					<reportElement x="315" y="40" width="28" height="20"/>
+					<reportElement x="399" y="40" width="28" height="20"/>
 				</rectangle>
 				<staticText>
-					<reportElement x="315" y="40" width="28" height="20"/>
+					<reportElement x="399" y="40" width="28" height="20"/>
 					<box leftPadding="2"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
@@ -759,89 +797,54 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 					<text><![CDATA[Tấn]]></text>
 				</staticText>
 				<rectangle>
-					<reportElement x="343" y="40" width="117" height="20"/>
+					<reportElement x="427" y="40" width="128" height="20"/>
 				</rectangle>
 				<textField isBlankWhenNull="true">
-					<reportElement x="343" y="40" width="117" height="20"/>
+					<reportElement x="427" y="40" width="128" height="20"/>
 					<box leftPadding="2"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{IPName} != null && !$F{IPName}.isEmpty() ? $F{IPName} : $F{PName1}]]></textFieldExpression>
-				</textField>
-				<rectangle>
-					<reportElement x="460" y="0" width="84" height="40"/>
-				</rectangle>
-				<staticText>
-					<reportElement x="460" y="0" width="84" height="40"/>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="DejaVu Sans" size="8"/>
-					</textElement>
-					<text><![CDATA[Ghi chú]]></text>
-				</staticText>
-				<rectangle>
-					<reportElement x="460" y="40" width="84" height="20"/>
-				</rectangle>
-				<textField isBlankWhenNull="true">
-					<reportElement x="460" y="40" width="84" height="20"/>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font fontName="DejaVu Sans" size="8"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{TEXT}]]></textFieldExpression>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{IPName} != null && !$F{IPName}.isEmpty() ? $F{IPName} : $F{PName1}]]></textFieldExpression>
 				</textField>
 			</frame>
 			<staticText>
-				<reportElement x="10" y="194" width="139" height="20"/>
+				<reportElement x="0" y="194" width="149" height="20"/>
 				<box leftPadding="2" rightPadding="0"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
 				<text><![CDATA[Giao/Nhận (Trạm Cân)]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="149" y="194" width="278" height="20"/>
+				<box leftPadding="2" rightPadding="0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[Bảo vệ]]></text>
+			</staticText>
 			<textField>
-				<reportElement x="416" y="194" width="128" height="20"/>
+				<reportElement x="427" y="194" width="128" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[($F{S_SCALE} == null) ? "Khách hàng" : $F{SIGN3}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{SIGN3}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="416" y="180" width="72" height="20"/>
+				<reportElement x="427" y="180" width="72" height="20"/>
 				<textElement verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{P_PCB40BAG} != null ?"Tổng số bao:" : ""]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{P_PCB40BAG} != null ?"Tổng số bao:" : ""]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="#,##0;-#,##0" isBlankWhenNull="true">
-				<reportElement x="488" y="180" width="56" height="20"/>
+				<reportElement x="499" y="180" width="56" height="20"/>
 				<box rightPadding="2"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{P_PCB40BAG}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="35" y="120" width="24" height="40"/>
-				<box leftPadding="2" rightPadding="2"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
-				</textElement>
-				<text><![CDATA[STT]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="36" y="160" width="24" height="20"/>
-				<box rightPadding="2"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
-				</textElement>
-				<text><![CDATA[1]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="149" y="194" width="267" height="20"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="DejaVu Sans" size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[($F{S_SCALE} == null) ? $F{SIGN3} : "Bảo vệ"]]></textFieldExpression>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$P{P_PCB40BAG}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
