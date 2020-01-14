@@ -5,11 +5,14 @@
 package com.gcs.wb.controller;
 
 import com.gcs.wb.WeighBridgeApp;
+import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.SAPSetting;
 import com.gcs.wb.jpa.entity.Variant;
 import com.gcs.wb.jpa.entity.VariantPK;
 import com.gcs.wb.model.AppConfig;
 import javax.persistence.EntityManager;
+import javax.swing.JCheckBox;
+import javax.swing.JTextField;
 
 /**
  *
@@ -17,6 +20,8 @@ import javax.persistence.EntityManager;
  */
 public class SettingController {
 
+    private EntityManager entityManager = JPAConnector.getInstance();
+    
     public void handleDoInBackground(EntityManager entityManager, SAPSetting sapSetting) {
         if (!entityManager.getTransaction().isActive()) {
             entityManager.getTransaction().begin();
@@ -45,5 +50,30 @@ public class SettingController {
             entityManager.clear();
         } catch (Exception e) {
         }
+    }
+
+    public SAPSetting saveDoInBackground(SAPSetting sapSetting, JTextField txtNameRPT, JTextField txtAddress, JTextField txtPhone, JTextField txtFax,JCheckBox chkPOV) {
+        String tmp = txtNameRPT.getText().trim();
+        sapSetting.setNameRpt(tmp.isEmpty() ? null : tmp);
+        tmp = txtAddress.getText().trim();
+        sapSetting.setAddress(tmp.isEmpty() ? null : tmp);
+        tmp = txtPhone.getText().trim();
+        sapSetting.setPhone(tmp.isEmpty() ? null : tmp);
+        tmp = txtFax.getText().trim();
+        sapSetting.setFax(tmp.isEmpty() ? null : tmp);
+        sapSetting.setCheckPov(chkPOV.isSelected() ? true : false);
+
+        if (!entityManager.getTransaction().isActive()) {
+            entityManager.getTransaction().begin();
+        }
+
+        // save sap setting
+        entityManager.merge(sapSetting);
+        entityManager.getTransaction().commit();
+        entityManager.clear();
+
+        sapSetting = entityManager.find(SAPSetting.class, sapSetting.getId());
+        entityManager.clear();
+        return sapSetting;
     }
 }

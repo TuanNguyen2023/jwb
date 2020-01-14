@@ -12,17 +12,15 @@ package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.service.SAPService;
-import com.gcs.wb.base.constant.Constants;
+import com.gcs.wb.controller.TransportAgentController;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.TransportAgentVehicle;
 import com.gcs.wb.jpa.entity.Vehicle;
 import com.gcs.wb.jpa.service.JPAService;
 import com.gcs.wb.jpa.repositorys.VehicleRepository;
-import java.awt.Color;
 import java.awt.Component;
 import java.util.List;
-import java.util.regex.Matcher;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.swing.DefaultListCellRenderer;
@@ -41,8 +39,8 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
 
     private EntityManager entityManager = JPAConnector.getInstance();
     private VehicleRepository vehicleRepository = new VehicleRepository();
-    SAPService sapService = new SAPService();
-    JPAService jpaService = new JPAService();
+    
+    public TransportAgentController transportAgentController = new TransportAgentController();
 
     /** Creates new form TransportAgentView */
     public TransportAgentView() {
@@ -298,7 +296,7 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
 
 private void btnVehicleRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVehicleRemoveActionPerformed
     // remove vehicle
-    jpaService.removeVehicle(transportAgentSelected.getId(), vehicleSelected.getId());
+    transportAgentController.vehicleRemoveActionPerformed(transportAgentSelected, vehicleSelected);
     lstVehicle.clearSelection();
     lstVehicle.setModel(getVehiclesModel());
     vehicleSelected = null;
@@ -306,8 +304,7 @@ private void btnVehicleRemoveActionPerformed(java.awt.event.ActionEvent evt) {//
 
 private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProhibitApplyActionPerformed
     // action prohibit vehicle
-    jpaService.prohibitApplyVehicle(vehicleSelected, chkProhibitVehicle.isSelected());
-
+    transportAgentController.prohibitApplyActionPerformed(vehicleSelected, chkProhibitVehicle);
     chkProhibitVehicle.setSelected(false);
     vehicleSelected = null;
     lstVehicle.clearSelection();
@@ -315,44 +312,25 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
 }//GEN-LAST:event_btnProhibitApplyActionPerformed
 
     private boolean validateLicensePlate() {
-        boolean isLicensePlate = false;
-        String licensePlateStr = txtLicensePlate.getText().trim();
-
-        Matcher matcher = Constants.TransportAgent.LICENSE_PLATE_PATTERN.matcher(licensePlateStr);
-        isLicensePlate = !licensePlateStr.isEmpty() && matcher.matches();
-        lblLicensePlate.setForeground(isLicensePlate ? Color.black : Color.red);
-
-        return isLicensePlate;
+        return transportAgentController.validateLicensePlate(txtLicensePlate, lblLicensePlate);
     }
 
     private DefaultListModel getTransportAgentsModel() {
         // get dvvc
-        List<TransportAgent> transportAgents = sapService.getTransportAgentList();
-        DefaultListModel model = new DefaultListModel();
-        for (TransportAgent transportAgent : transportAgents) {
-            model.addElement(transportAgent);
-        }
-        return model;
+        return transportAgentController.getTransportAgentsModel();
     }
 
     private DefaultListModel getVehiclesModel() {
-        List<TransportAgentVehicle> transportAgentVehicles = jpaService.getVehicle(transportAgentSelected.getId());
-        DefaultListModel model = new DefaultListModel();
-        for (TransportAgentVehicle transportAgentVehicle : transportAgentVehicles) {
-            model.addElement(transportAgentVehicle.getVehicle());
-        }
-        return model;
+        return transportAgentController.getVehiclesModel(transportAgentSelected);
     }
 
     @Action(enabledProperty = "vehicleCreatable")
     public void saveVehicle() {
-        Vehicle vehicle = vehicleRepository.findByPlateNo(txtLicensePlate.getText().trim());
 
         EntityTransaction entityTransaction = entityManager.getTransaction();
         try {
             //save vehicle
-            jpaService.saveVehicle(txtLicensePlate.getText().trim(), vehicle, transportAgentSelected);
-
+            transportAgentController.saveVehicle(txtLicensePlate, transportAgentSelected);
             setVehicleCreatable(false);
             vehicleSelected = null;
             txtLicensePlate.setText("");

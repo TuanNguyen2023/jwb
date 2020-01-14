@@ -33,6 +33,7 @@ import javax.persistence.TypedQuery;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import com.gcs.wb.base.util.FormatRenderer;
+import com.gcs.wb.controller.WTListController;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.DefaultListModel;
@@ -454,30 +455,7 @@ public class WTListView extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_rbtStateAllItemStateChanged
 
     private DefaultComboBoxModel getMatsModel() {
-        DefaultComboBoxModel result = new DefaultComboBoxModel();
-        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-        String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
-        List<Object[]> wts = weightTicketRepository.getMatsModel(client, plant);
-        if (wts != null) {
-            for (Object obj : wts) {
-                Object[] wt = (Object[]) obj;
-                MaterialPK matPK = new MaterialPK();
-                Material mat = new Material();
-                matPK.setMandt(WeighBridgeApp.getApplication().getConfig().getsClient());
-                if (wt[0] == null) {
-                    matPK.setMatnr("-1");
-                    mat.setMaktx("Linh tinh");
-                } else {
-                    matPK.setMatnr(wt[0].toString());
-                    mat.setMaktx(wt[1].toString());
-                }
-                mat.setMaterialPK(matPK);
-                if (result.getIndexOf(mat) < 0) {
-                    result.addElement(mat);
-                }
-            }
-        }
-        return result;
+        return wTListController.getMatsModel();
     }
 
     @Action
@@ -518,49 +496,7 @@ public class WTListView extends javax.swing.JInternalFrame {
             String tagent = ((TransportAgent) cbxTAgent.getSelectedItem()).getAbbr();
             String matnr = ((Material) cbxType.getSelectedItem()).getMaterialPK().getMatnr();
             try {
-                WeightTicketJpaController wCon = new WeightTicketJpaController();
-                List<WeightTicket> wts = wCon.findListWTs(month, year, tagent, matnr, modes, rbtDissolved.isSelected(), rbtPosted.isSelected());
-                wtData = new Object[wts.size()][wtCols.length];
-                for (int i = 0; i < wts.size(); i++) {
-                    WeightTicket item = wts.get(i);
-                    String hh;
-                    String mm;
-                    String ss;
-                    hh = item.getCreateTime().substring(0, 2);
-                    mm = item.getCreateTime().substring(2, 4);
-                    ss = item.getCreateTime().substring(4);
-                    Calendar create_date = Calendar.getInstance();
-                    create_date.setTime(item.getCreateDate());
-                    create_date.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hh));
-                    create_date.set(Calendar.MINUTE, Integer.valueOf(mm));
-                    create_date.set(Calendar.SECOND, Integer.valueOf(ss));
-                    wtData[i][0] = i + 1;// item.getSeqByMonth();
-                    wtData[i][1] = item.getWeightTicketPK().getSeqByDay();
-                    wtData[i][2] = item.getTenTaiXe();
-                    wtData[i][3] = item.getCmndBl();
-                    wtData[i][4] = item.getSoXe();
-                    wtData[i][5] = item.getSoRomooc();
-                    wtData[i][6] = item.getCreator();
-                    wtData[i][7] = create_date.getTime();
-                    wtData[i][8] = item.getRegCategory();
-                    wtData[i][9] = item.getRegItemText();
-                    wtData[i][10] = item.getFTime();
-                    wtData[i][11] = item.getFScale() == null ? item.getFScale() : item.getFScale().doubleValue() / 1000d;
-                    wtData[i][12] = item.getSTime();
-                    wtData[i][13] = item.getSScale() == null ? item.getSScale() : item.getSScale().doubleValue() / 1000d;
-                    wtData[i][14] = item.getGQty();
-                    wtData[i][15] = item.getDelivNumb();
-                    wtData[i][16] = item.getMatDoc();
-                    wtData[i][17] = item.getDissolved();
-//                    wtData[i][18] = item.getPosted();
-                    if(item.getPosted() == 1){
-                        wtData[i][18] = true;
-                    }else{
-                        wtData[i][18] = false;
-                    }
-                    wtData[i][19] = ((TransportAgent) cbxTAgent.getSelectedItem()).getName();
-                    wtData[i][20] = item.getEbeln();
-                }
+                wtData = wTListController.findWTsDoIn(month, year, tagent, matnr, modes, rbtDissolved, rbtPosted, cbxTAgent);
                 editable = new boolean[wtCols.length];
                 for (int i = 0; i < editable.length; i++) {
                     editable[i] = false;
@@ -599,21 +535,8 @@ public class WTListView extends javax.swing.JInternalFrame {
         @Override
         protected Object doInBackground() {
             try {
-                Map<String, Object> params = new HashMap<String, Object>();
-                params.put("P_PNAME_RPT", WeighBridgeApp.getApplication().getSapSetting().getNameRpt());
-                params.put("P_PADDRESS", WeighBridgeApp.getApplication().getSapSetting().getAddress());
-                params.put("P_PPHONE", WeighBridgeApp.getApplication().getSapSetting().getPhone());
-                params.put("P_PFAX", WeighBridgeApp.getApplication().getSapSetting().getFax());
-                params.put("P_TAGENT", ((TransportAgent) cbxTAgent.getSelectedItem()).getName());
-                params.put("P_MONTH", cbxMonth.getSelectedItem().toString());
-                params.put("P_YEAR", cbxYear.getSelectedItem().toString());
-                String reportName = null;
-                if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
-                    reportName = "./rpt/rptBT/WTList.jasper";
-                } else {
-                    reportName = "./rpt/rptPQ/WTList.jasper";
-                }
-                
+                Map<String, Object> params = wTListController.getParamPrintReport(cbxTAgent, cbxMonth, cbxYear);
+                String reportName = wTListController.getReportName();
                 JasperPrint jasperPrint = JasperFillManager.fillReport(reportName, params, new JRTableModelDataSource(tabWTList.getModel()));
                 JasperViewer jv = new JasperViewer(jasperPrint, false);
                 jv.setVisible(true);
@@ -708,4 +631,5 @@ public class WTListView extends javax.swing.JInternalFrame {
         String.class,
         String.class};
     private org.jdesktop.application.ResourceMap resourceMapMsg = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(WTListView.class);
+    public WTListController wTListController = new WTListController();
 }

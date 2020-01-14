@@ -21,10 +21,8 @@ import com.gcs.wb.bapi.goodsmvt.structure.GoodsMvtItemPoStructure;
 import com.gcs.wb.bapi.goodsmvt.structure.GoodsMvtWeightTicketStructure;
 import com.gcs.wb.bapi.helper.MatAvailableBapi;
 import com.gcs.wb.bapi.helper.MvtGetDetailBapi;
-import com.gcs.wb.bapi.helper.structure.BatchStocksStructure;
 import com.gcs.wb.bapi.helper.MvtReasonsGetListBapi;
 import com.gcs.wb.bapi.helper.structure.MvtReasonsGetListStructure;
-import com.gcs.wb.bapi.helper.SAP2Local;
 import com.gcs.wb.bapi.helper.structure.MatAvailableStructure;
 import com.gcs.wb.bapi.outbdlv.DOCreate2PGIBapi;
 import com.gcs.wb.bapi.outbdlv.DORevertBapi;
@@ -32,7 +30,6 @@ import com.gcs.wb.bapi.outbdlv.WsDeliveryUpdateBapi;
 import com.gcs.wb.bapi.outbdlv.structure.OutbDeliveryCreateStoStructure;
 import com.gcs.wb.bapi.outbdlv.structure.VbkokStructure;
 import com.gcs.wb.bapi.outbdlv.structure.VbpokStructure;
-import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.JReportConnector;
@@ -43,7 +40,6 @@ import com.gcs.wb.jpa.entity.BatchStocksPK;
 import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.CustomerPK;
 import com.gcs.wb.jpa.entity.Material;
-import com.gcs.wb.jpa.entity.MaterialPK;
 import com.gcs.wb.jpa.entity.Movement;
 import com.gcs.wb.jpa.entity.MovementPK;
 import com.gcs.wb.jpa.entity.OutbDel;
@@ -57,11 +53,9 @@ import com.gcs.wb.jpa.entity.SLoc;
 import com.gcs.wb.jpa.entity.SLocPK;
 import com.gcs.wb.jpa.entity.TimeRange;
 import com.gcs.wb.jpa.entity.User;
-import com.gcs.wb.jpa.entity.Vehicle;
 import com.gcs.wb.jpa.entity.Vendor;
 import com.gcs.wb.jpa.entity.VendorPK;
 import com.gcs.wb.jpa.entity.WeightTicket;
-import com.gcs.wb.jpa.entity.WeightTicketPK;
 import com.gcs.wb.base.util.RegexFormatter;
 import com.gcs.wb.model.AppConfig;
 import com.sap.conn.jco.JCoException;
@@ -104,6 +98,7 @@ import com.gcs.wb.jpa.repositorys.SignalsRepository;
 import com.gcs.wb.jpa.repositorys.ReasonRepository;
 import com.gcs.wb.jpa.repositorys.TimeRangeRepository;
 import com.gcs.wb.base.util.Conversion_Exit;
+import com.gcs.wb.controller.WeightTicketController;
 import com.gcs.wb.jpa.service.JPAService;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -139,6 +134,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     SignalsRepository noneRepository = new SignalsRepository();
     WeightTicketJpaRepository weightTicketJpaRepository = new WeightTicketJpaRepository();
     EntityManager entityManager = JPAConnector.getInstance();
+    
+    WeightTicketController weightTicketController = new WeightTicketController();
     SAPService sapService = new SAPService();
     JPAService jpaService = new JPAService();
 
@@ -186,23 +183,10 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         lblComplete.setVisible(false);
         cbxCompleted.setVisible(false);
         rbtMisc.setForeground(Color.red);
-        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-        List kunnr = this.customerRepository.getCustomerByMaNdt(client);
-        DefaultComboBoxModel result = new DefaultComboBoxModel();
-        result.addElement("");
-        for (Object obj : kunnr) {
-            Object[] wt = (Object[]) obj;
-            CustomerPK custPK = new CustomerPK();
-            Customer cust = new Customer();
-            custPK.setMandt(WeighBridgeApp.getApplication().getConfig().getsClient());
-            custPK.setKunnr(wt[1].toString());
-            cust.setCustomerPK(custPK);
-            cust.setName1(wt[2].toString());
-            cust.setName2(wt[3].toString());
-            if (result.getIndexOf(cust) < 0) {
-                result.addElement(cust);
-            }
-        }
+        //String client = WeighBridgeApp.getApplication().getConfig().getsClient();
+        //List kunnr = this.customerRepository.getCustomerByMaNdt(client);
+        DefaultComboBoxModel result = weightTicketController.getCustomerByMaNdt();
+        
         try {
             String pWbId = WeighBridgeApp.getApplication().getConfig().getWbId().trim();
             List sdev = null;// weightTicketRepository.getDev2(pWbId);
@@ -235,7 +219,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
         // tuanna 20120522_ setEnabled for "combo box Khach hang" depends on offline_mode
         cbxKunnr.setEnabled(WeighBridgeApp.getApplication().isOfflineMode());
-        TimeRange t = timeRangeRepository.findByMandtWbId(client, WeighBridgeApp.getApplication().getConfig().getWbId());
+        TimeRange t = weightTicketController.getTime();
         if (t != null) {
             timeFrom = 0 + Integer.parseInt(t.getTimeFrom() != null ? (t.getTimeFrom().trim()) : "0");
             timeTo = Integer.parseInt(t.getTimeTo() != null ? (t.getTimeTo().trim()) : "0");
@@ -1553,12 +1537,7 @@ private void btnPostAgainActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         setSaveNeeded(true);
         btnPostAgain.setEnabled(false);
         weightTicket.setPosted(0);
-        if (!entityManager.getTransaction().isActive()) {
-            entityManager.getTransaction().begin();
-        }
-        entityManager.merge(weightTicket);
-        entityManager.getTransaction().commit();
-        entityManager.clear();
+        weightTicketController.savePostAgainActionPerformed(weightTicket);
     } else {
         setSaveNeeded(false);
     }
@@ -1572,11 +1551,7 @@ private void cbxKunnrItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST
         Customer cust = (Customer) select[0];
         if (weightTicket != null) {
             weightTicket.setKunnr(cust.getCustomerPK().getKunnr());
-            if (!entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().begin();
-            }
-            entityManager.merge(weightTicket);
-            entityManager.getTransaction().commit();
+            weightTicketController.saveKunnrItemStateChanged(weightTicket);
         }
     }
 }//GEN-LAST:event_cbxKunnrItemStateChanged
@@ -1585,13 +1560,7 @@ private void txtOutTimeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 // TODO add your handling code here:
     if (txtOutTime.getText().length() == 19) {
         String[] time = txtOutTime.getText().split(" ");
-        String[] date = time[0].split("/");
-        String[] hour = time[1].split(":");
-        Calendar cal = Calendar.getInstance();
-        cal.set(Integer.parseInt(date[2]), Integer.parseInt(date[1]) - 1, Integer.parseInt(date[0]), Integer.parseInt(hour[0]), Integer.parseInt(hour[1]), Integer.parseInt(hour[2]));
-        Date stime = cal.getTime();
-        System.out.println(stime);
-        weightTicket.setSTime(stime);
+        weightTicket.setSTime(weightTicketController.setTimeWeightTicket(time));
     }
 }//GEN-LAST:event_txtOutTimeKeyReleased
 
@@ -1599,13 +1568,7 @@ private void txtInTimeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
 // TODO add your handling code here:
     if (txtInTime.getText().length() == 19) {
         String[] time = txtInTime.getText().split(" ");
-        String[] date = time[0].split("/");
-        String[] hour = time[1].split(":");
-        Calendar cal = Calendar.getInstance();
-        cal.set(Integer.parseInt(date[2]), Integer.parseInt(date[1]) - 1, Integer.parseInt(date[0]), Integer.parseInt(hour[0]), Integer.parseInt(hour[1]), Integer.parseInt(hour[2]));
-        Date stime = cal.getTime();
-        System.out.println(stime);
-        weightTicket.setFTime(stime);
+        weightTicket.setFTime(weightTicketController.setTimeWeightTicket(time));
     }
 }//GEN-LAST:event_txtInTimeKeyReleased
 
@@ -1910,15 +1873,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         outDetails_lits.clear();
         entityManager.clear();
         String txt = txtWTNum.getText().trim();
-        List wts = weightTicketRepository.getWeighTicketReg(txt);
-
-        String kq = null;
-        if (wts != null && wts.size() > 0) {
-            kq = wts.get(0).toString();
-        }
-        if (kq != null && kq.length() > 0) {
-            txt = kq.trim();
-        }
+        txt = weightTicketController.readWT(txt);
         chkDissolved.setEnabled(false);
         if (isEnteredValidWTNum()) {
             String sID = null;
@@ -2520,9 +2475,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
         @Override
         protected Object doInBackground() {
-            entityManager.clear();
-            weightTicket = entityManager.find(WeightTicket.class, new WeightTicketPK(config.getsClient(), config.getwPlant(), id, seq));
-            entityManager.clear();
+            weightTicket = weightTicketController.findWeightTicket(weightTicket, id, seq);
             if (weightTicket == null) {
                 failed(new Exception("Không có phiếu cân số: " + txtWTNum.getText()));
             } else {
@@ -2533,22 +2486,23 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                     rbtOutward.setSelected(true);
                 }
                 String pWtId = txtWTNum.getText().toString().trim();
-                String SoNiemXa = weightTicketRepository.getSoNiemXa(pWtId);
+                String SoNiemXa = weightTicketController.getSoNiemXa(pWtId);
                 String Posto = "";
                 txtCementDesc.setText(SoNiemXa);
                 try {
                     String maphieu = txtWTNum.getText().toString().trim();
-                    List wtxxx = weightTicketRepository.getTicketIndex(maphieu);
-                    if (wtxxx != null) {
-                        for (Object obj : wtxxx) {
-                            Object[] wt = (Object[]) obj;
-                            Posto = wt[2].toString().trim();
-                            txtPONum.setText(Posto);
-                            weightTicket.setAbbr(wt[3].toString().trim());
-                            rbtPO.setSelected(true);
-                        }
-
-                    }
+//                    List wtxxx = weightTicketRepository.getTicketIndex(maphieu);
+//                    if (wtxxx != null) {
+//                        for (Object obj : wtxxx) {
+//                            Object[] wt = (Object[]) obj;
+//                            Posto = wt[2].toString().trim();
+//                            txtPONum.setText(Posto);
+//                            weightTicket.setAbbr(wt[3].toString().trim());
+//                            rbtPO.setSelected(true);
+//                        }
+//
+//                    }
+                    weightTicketController.getTicketIndex(maphieu, txtPONum, weightTicket, rbtPO);
                 } catch (Throwable cause) {
                 }
                 // <editor-fold defaultstate="collapsed" desc="Determine state of Weight Ticket">
