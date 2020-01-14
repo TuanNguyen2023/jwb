@@ -419,9 +419,9 @@ public class WeighBridgeView extends FrameView {
     }//GEN-LAST:event_tabPaneStateChanged
 
     private void dpVRComponentRemoved(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_dpVRComponentRemoved
-        if (ifVR.isClosed()) {
-            ifVR.dispose();
-            ifVR = null;
+        if (vehicleRegistrationView.isClosed()) {
+            vehicleRegistrationView.dispose();
+            vehicleRegistrationView = null;
         }
     }//GEN-LAST:event_dpVRComponentRemoved
 
@@ -546,10 +546,10 @@ public class WeighBridgeView extends FrameView {
 
     private void reinitTabContain() {
         if (tabPane.getSelectedComponent().getName().equalsIgnoreCase(dpVR.getName())) {
-            if (ifVR == null) {
-                ifVR = new WTRegView(WTRegView.MODE_REG);
-                dpVR.add(ifVR);
-                ifVR.show();
+            if (vehicleRegistrationView == null) {
+                vehicleRegistrationView = new WTRegView();
+                dpVR.add(vehicleRegistrationView);
+                vehicleRegistrationView.show();
             }
         }
         if (tabPane.getSelectedComponent().getName().equalsIgnoreCase(dpWT.getName())) {
@@ -667,7 +667,7 @@ public class WeighBridgeView extends FrameView {
     private final Icon[] busyIcons = new Icon[15];
     private int busyIconIndex = 0;
     private JFrame mainFrame;
-    private JInternalFrame ifVR;
+    private JInternalFrame vehicleRegistrationView;
     private JInternalFrame ifWT;
     private JInternalFrame ifTA;
     private JInternalFrame ifWTList;
