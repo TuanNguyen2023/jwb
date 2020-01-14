@@ -5,7 +5,6 @@
 package com.gcs.wb.controller;
 
 import com.gcs.wb.WeighBridgeApp;
-import com.gcs.wb.bapi.helper.SAP2Local;
 import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.jpa.JPAConnector;
@@ -16,18 +15,15 @@ import com.gcs.wb.jpa.repositorys.TransportAgentRepository;
 import com.gcs.wb.jpa.repositorys.TransportAgentVehicleRepository;
 import com.gcs.wb.jpa.repositorys.VehicleRepository;
 import com.gcs.wb.jpa.service.JPAService;
-import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.views.TransportAgentView;
 import java.awt.Color;
 import java.util.List;
 import java.util.regex.Matcher;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.ResourceMap;
