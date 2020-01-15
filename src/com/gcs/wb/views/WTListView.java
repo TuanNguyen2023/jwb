@@ -10,39 +10,33 @@
  */
 package com.gcs.wb.views;
 
-import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.DefaultComboBoxModel;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
 import com.gcs.wb.WeighBridgeApp;
-import com.gcs.wb.jpa.controller.WeightTicketJpaController;
+import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.jpa.entity.Material;
-import com.gcs.wb.jpa.entity.MaterialPK;
 import com.gcs.wb.jpa.entity.TransportAgent;
-import com.gcs.wb.jpa.entity.WeightTicket;
 import com.gcs.wb.jpa.repositorys.TransportAgentRepository;
 import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import java.awt.Color;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import com.gcs.wb.base.util.FormatRenderer;
 import com.gcs.wb.controller.WTListController;
-import java.util.HashMap;
 import java.util.Map;
-import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRTableModelDataSource;
 import net.sf.jasperreports.view.JasperViewer;
 import org.apache.log4j.Logger;
+import org.jdesktop.application.ResourceMap;
 
 /**
  *
@@ -50,8 +44,14 @@ import org.apache.log4j.Logger;
  */
 public class WTListView extends javax.swing.JInternalFrame {
 
-    WeightTicketRepository weightTicketRepository = new WeightTicketRepository();
-    TransportAgentRepository trransportAgentRepository = new TransportAgentRepository();
+    private static Logger logger = Logger.getLogger(WTListView.class);
+    private boolean[] editable = null;
+    private List<Character> modes = null;
+    Object[][] wtData = null;
+    Object[] wtCols = Constants.WTList.wtCols;
+    Class[] wtTypes = Constants.WTList.wtTypes;
+    private ResourceMap resourceMapMsg = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(WTListView.class);
+    public WTListController wTListController = new WTListController();
 
     /** Creates new form WTListView */
     public WTListView() {
@@ -79,7 +79,7 @@ public class WTListView extends javax.swing.JInternalFrame {
     }
 
     private DefaultComboBoxModel getTAgentsModel() {
-        return trransportAgentRepository.getTAgentsModel();
+        return wTListController.getTAgentsModel();
     }
 
     /** This method is called from within the constructor to
@@ -582,54 +582,5 @@ public class WTListView extends javax.swing.JInternalFrame {
     private org.jdesktop.swingx.JXTable tabWTList;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
-    private static Logger logger = Logger.getLogger(WTListView.class);
-    private boolean[] editable = null;
-    private List<Character> modes = null;
-    Object[][] wtData = null;
-    Object[] wtCols = new String[]{
-        "STT",
-        "S.Đ.Tài",
-        "Tên tài xế",
-        "CMND/BL",
-        "Số Xe",
-        "Số Rơmoóc",
-        "Người tạo",
-        "Ngày giờ tạo",
-        "Nhập/Xuất(I/O)",
-        "Loại hàng",
-        "Ngày giờ vào",
-        "T.L vào",
-        "Ngày giờ ra",
-        "T.L ra",
-        "T.L Hàng",
-        "Số D.O",
-        "Số chứng từ SAP",
-        "Hủy",
-        "SAP Posted",
-        "Đơn vị vân chuyển",
-        "Số P.O"};
-    Class[] wtTypes = new Class[]{
-        Integer.class,
-        Integer.class,
-        String.class,
-        String.class,
-        String.class,
-        String.class,
-        String.class,
-        Date.class,
-        Character.class,
-        String.class,
-        Date.class,
-        BigDecimal.class,
-        Date.class,
-        BigDecimal.class,
-        BigDecimal.class,
-        String.class,
-        String.class,
-        Boolean.class,
-        Boolean.class,
-        String.class,
-        String.class};
-    private org.jdesktop.application.ResourceMap resourceMapMsg = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(WTListView.class);
-    public WTListController wTListController = new WTListController();
+    
 }

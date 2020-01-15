@@ -10,20 +10,15 @@
  */
 package com.gcs.wb.views;
 
-import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.DefaultComboBoxModel;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
 import com.gcs.wb.WeighBridgeApp;
-import com.gcs.wb.jpa.controller.WeightTicketJpaController;
+import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.jpa.entity.Material;
-import com.gcs.wb.jpa.entity.MaterialPK;
 import com.gcs.wb.jpa.entity.TransportAgent;
-import com.gcs.wb.jpa.entity.WeightTicket;
-import com.gcs.wb.jpa.repositorys.TransportAgentRepository;
-import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import java.awt.Component;
 import java.util.List;
 import javax.swing.DefaultListCellRenderer;
@@ -31,7 +26,6 @@ import javax.swing.JList;
 import com.gcs.wb.base.util.FormatRenderer;
 import com.gcs.wb.controller.WeightTicketReportController;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JOptionPane;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -40,6 +34,7 @@ import net.sf.jasperreports.engine.data.JRTableModelDataSource;
 import net.sf.jasperreports.view.JasperViewer;
 import org.apache.log4j.Logger;
 import org.jdesktop.application.Application;
+import org.jdesktop.application.ResourceMap;
 
 /**
  *
@@ -47,9 +42,17 @@ import org.jdesktop.application.Application;
  */
 public class WeightTicketReportView extends javax.swing.JInternalFrame {
 
-    private TransportAgentRepository transportAgentRepository = new TransportAgentRepository();
-    private WeightTicketRepository weightTicketRepository = new WeightTicketRepository();
     public WeightTicketReportController weighTicketReportController = new WeightTicketReportController();
+    private static Logger logger = Logger.getLogger(WeightTicketReportView.class);
+    private boolean[] editable = null;
+    private List<Character> modes = null;
+    private String[] modesModel = Constants.WeightTicketReport.modesModel;
+    private String[] statusModel = Constants.WeightTicketReport.statusModel;
+    Object[][] wtDatas = null;
+    Object[] wtColNames = Constants.WeightTicketReport.wtColNames;
+    Class[] wtColTypes = Constants.WeightTicketReport.wtColTypes;
+    public ResourceMap resourceMapMsg = Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(WeightTicketReportView.class);
+    
     /** Creates new form WeightTicketReportView */
     public WeightTicketReportView() {
         initComponents();
@@ -364,8 +367,7 @@ private void cbxModeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:
 }//GEN-LAST:event_cbxModeItemStateChanged
 
     private DefaultComboBoxModel getTransportAgentsModel() {
-        List<TransportAgent> transportAgents = transportAgentRepository.getListTransportAgent();
-        return new DefaultComboBoxModel(transportAgents.toArray());
+        return weighTicketReportController.getTransportAgentsModel();
     }
 
     private DefaultComboBoxModel getMaterialsModel() {
@@ -467,55 +469,5 @@ private void cbxModeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:
     private org.jdesktop.swingx.JXTable tabWeightTicket;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
-    private static Logger logger = Logger.getLogger(WeightTicketReportView.class);
-    private boolean[] editable = null;
-    private List<Character> modes = null;
-    private String[] modesModel = {"Tất cả", "Nhập", "Xuất"};
-    private String[] statusModel = {"Tất cả", "Bị hủy", "Hoàn tất"};
-    Object[][] wtDatas = null;
-    Object[] wtColNames = new String[]{
-        "STT",
-        "S.Đ.Tài",
-        "Tên tài xế",
-        "CMND/BL",
-        "Số Xe",
-        "Số Rơmoóc",
-        "Người tạo",
-        "Ngày giờ tạo",
-        "Nhập/Xuất(I/O)",
-        "Loại hàng",
-        "Ngày giờ vào",
-        "T.L vào",
-        "Ngày giờ ra",
-        "T.L ra",
-        "T.L Hàng",
-        "Số D.O",
-        "Số chứng từ SAP",
-        "Hủy",
-        "SAP Posted",
-        "DVVC",
-        "Số P.O"};
-    Class[] wtColTypes = new Class[]{
-        Integer.class,
-        Integer.class,
-        String.class,
-        String.class,
-        String.class,
-        String.class,
-        String.class,
-        Date.class,
-        Character.class,
-        String.class,
-        Date.class,
-        BigDecimal.class,
-        Date.class,
-        BigDecimal.class,
-        BigDecimal.class,
-        String.class,
-        String.class,
-        Boolean.class,
-        Boolean.class,
-        String.class,
-        String.class};
-    public org.jdesktop.application.ResourceMap resourceMapMsg = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(WeightTicketReportView.class);
+    
 }

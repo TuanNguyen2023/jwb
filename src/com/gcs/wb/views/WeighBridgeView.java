@@ -4,6 +4,7 @@
 package com.gcs.wb.views;
 
 import com.gcs.wb.*;
+import com.gcs.wb.controller.WeighBridgeController;
 import com.gcs.wb.jpa.JReportConnector;
 import com.gcs.wb.jpa.entity.SAPSetting;
 import com.gcs.wb.jpa.entity.User;
@@ -43,6 +44,7 @@ public class WeighBridgeView extends FrameView {
 
     private final SAPSetting sapSetting;
     private final User login;
+    private WeighBridgeController weighBridgeController = new WeighBridgeController();
 
     public WeighBridgeView(SingleFrameApplication app) {
         super(app);
@@ -51,19 +53,8 @@ public class WeighBridgeView extends FrameView {
         sapSetting = WeighBridgeApp.getApplication().getSapSetting();
         login = WeighBridgeApp.getApplication().getLogin();
 //        WeighBridgeView.txt_status.setText(sapSetting.getName1()+" - User:"+login.getFullName());
-        if (WeighBridgeApp.getApplication().isOfflineMode()) {
-            if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
-                WeighBridgeView.txt_status.setText(sapSetting.getName1() + " - User:" + login.getFullname() + " - Offline Mode");
-            } else {
-                WeighBridgeView.txt_status.setText(sapSetting.getName1() + " - User:" + WeighBridgeApp.getApplication().getCurrent_user_name() + " - Offline Mode");
-            }
-        } else {
-            if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
-                WeighBridgeView.txt_status.setText(sapSetting.getName1() + " - User:" + login.getFullname());
-            } else {
-                WeighBridgeView.txt_status.setText(sapSetting.getName1() + " - User:" + WeighBridgeApp.getApplication().getCurrent_user_name());
-            }
-        }
+        weighBridgeController.setStatus(login, txt_status);
+        
         app.getMainFrame().setSize(800, 600);
         this.getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.getFrame().addWindowListener(new WindowAdapter() {
@@ -436,19 +427,7 @@ public class WeighBridgeView extends FrameView {
         if (evt.getClickCount() == 2) {
             reinitTabContain();
         }
-        if (WeighBridgeApp.getApplication().isOfflineMode()) {
-            if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
-                WeighBridgeView.txt_status.setText(sapSetting.getName1() + " - User:" + login.getFullname() + " - Offline Mode");
-            } else {
-                WeighBridgeView.txt_status.setText(sapSetting.getName1() + " - User:" + WeighBridgeApp.getApplication().getCurrent_user_name() + " - Offline Mode");
-            }
-        } else {
-            if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
-                WeighBridgeView.txt_status.setText(sapSetting.getName1() + " - User:" + login.getFullname());
-            } else {
-                WeighBridgeView.txt_status.setText(sapSetting.getName1() + " - User:" + WeighBridgeApp.getApplication().getCurrent_user_name());
-            }
-        }
+        weighBridgeController.setStatus(login, txt_status);
     }//GEN-LAST:event_tabPaneMouseClicked
 
     private void dpVRMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dpVRMouseClicked
