@@ -49,7 +49,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="spnResult" alignment="1" pref="899" max="32767" attributes="0"/>
                   <Component id="pnPrintControl" alignment="1" pref="899" max="32767" attributes="0"/>
-                  <Component id="pnControl" alignment="0" pref="899" max="32767" attributes="2"/>
+                  <Component id="pnControl" alignment="0" max="32767" attributes="2"/>
                   <Component id="pnWTicket" alignment="0" max="32767" attributes="0"/>
                   <Component id="pnFilter" alignment="0" pref="899" max="32767" attributes="1"/>
               </Group>
@@ -67,10 +67,10 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="pnPrintControl" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="pnWTicket" min="-2" pref="148" max="-2" attributes="0"/>
+              <Component id="pnWTicket" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
               <Component id="pnControl" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="20" max="32767" attributes="0"/>
+              <EmptySpace pref="28" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -100,14 +100,8 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                      <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace pref="11" max="32767" attributes="1"/>
-                          <Component id="lblHourFrom" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace pref="11" max="32767" attributes="1"/>
-                          <Component id="lblDriverName" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="lblHourFrom" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblDriverName" alignment="1" min="-2" max="-2" attributes="0"/>
                       <Component id="lblDateFrom" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
@@ -259,7 +253,7 @@
             <Property name="name" type="java.lang.String" value="cbxMaterialType" noResource="true"/>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="cbxMaterialType.setRenderer(new DefaultListCellRenderer() {&#xa;   @Override&#xa;   public Component getListCellRendererComponent(&#xa;           JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {&#xa;       super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);&#xa;       if (value instanceof Material) {&#xa;           Material mat = (Material)value;&#xa;           setText(mat.getMaktx());&#xa;           setToolTipText(mat.getMaterialPK().getMatnr());&#xa;       }&#xa;       return this;&#xa;   }&#xa;});"/>
+            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="cbxMaterialType.setRenderer(new DefaultListCellRenderer() {&#xa;   @Override&#xa;   public Component getListCellRendererComponent(&#xa;           JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {&#xa;       super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);&#xa;       if (value instanceof Material) {&#xa;           Material mat = (Material)value;&#xa;           setText(mat.getMaktx());&#xa;           setToolTipText(mat.getMatnr());&#xa;       }&#xa;       return this;&#xa;   }&#xa;});"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JLabel" name="lblHourFrom">
@@ -354,7 +348,6 @@
         </Component>
         <Component class="javax.swing.JTextField" name="txtCreator">
           <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="txtCreator.text"/>
             <Property name="name" type="java.lang.String" value="txtCreator" noResource="true"/>
           </Properties>
         </Component>
@@ -363,11 +356,6 @@
             <Property name="text" type="java.lang.String" resourceKey="lblStatus.text"/>
             <Property name="name" type="java.lang.String" value="lblStatus" noResource="true"/>
           </Properties>
-          <AccessibilityProperties>
-            <Property name="AccessibleContext.accessibleParent" type="javax.accessibility.Accessible" editor="org.netbeans.modules.form.RADVisualComponent$AccessibleParentEditor">
-              <ComponentRef name="default"/>
-            </Property>
-          </AccessibilityProperties>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="WTRegView_lblState"/>
           </AuxValues>
@@ -421,7 +409,6 @@
         </Component>
         <Component class="javax.swing.JTextField" name="txtPlateNo">
           <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="txtPlateNo.text"/>
             <Property name="name" type="java.lang.String" value="txtPlateNo" noResource="true"/>
           </Properties>
         </Component>
@@ -922,7 +909,6 @@
         <Component class="javax.swing.JTextField" name="txtWeightTicketNo">
           <Properties>
             <Property name="editable" type="boolean" value="false"/>
-            <Property name="text" type="java.lang.String" resourceKey="txtWeightTicketNo.text"/>
             <Property name="autoscrolls" type="boolean" value="false"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">

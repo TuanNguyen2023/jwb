@@ -6,7 +6,6 @@ package com.gcs.wb.controller;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.helper.SAP2Local;
-import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.CustomerPK;
@@ -14,11 +13,9 @@ import com.gcs.wb.jpa.entity.OutbDel;
 import com.gcs.wb.jpa.entity.Vendor;
 import com.gcs.wb.jpa.entity.VendorPK;
 import com.gcs.wb.jpa.entity.WeightTicket;
-import com.gcs.wb.jpa.entity.WeightTicketPK;
 import com.gcs.wb.model.AppConfig;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -50,44 +47,44 @@ public class WTRegController {
         String fTo = format.format(dpTo.getDate());
         System.out.println("dpFrom : " + fFrom + " to " + fTo);
 
-        List<WeightTicket> result = conWTicket.findByMandtWPlantDateFull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMaterialPK().getMatnr(), txtBienSo.getText().trim());
-        List<WeightTicket> data = conWTicket.findByMandtWPlantDateFull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMaterialPK().getMatnr(), txtBienSo.getText().trim());
+        List<WeightTicket> result = conWTicket.findByDateFull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMatnr(), txtBienSo.getText().trim());
+        List<WeightTicket> data = conWTicket.findByDateFull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMatnr(), txtBienSo.getText().trim());
         result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
         if (selecttext.getMaktx().equals("Linh tinh")) {
-            data = conWTicket.findByMandtWPlantDateNull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
+            data = conWTicket.findByDateNull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
             result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
             if (rbtDissolved.isSelected()) {
-                data = conWTicket.findByMandtWPlantDateDissolvedNull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
+                data = conWTicket.findByDateDissolvedNull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
                 result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
             } else if (rbtPosted.isSelected()) {
-                data = conWTicket.findByMandtWPlantDatePostedNull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
+                data = conWTicket.findByDatePostedNull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
                 result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
             } else if (rbtStateAll.isSelected()) {
-                data = conWTicket.findByMandtWPlantDateAllNull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
+                data = conWTicket.findByDateAllNull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
                 result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
             }
         } else if (selecttext.getMaktx().equals("Tất cả")) {
-            data = conWTicket.findByMandtWPlantDateNullAll(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
+            data = conWTicket.findByDateNullAll(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
             result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
             if (rbtDissolved.isSelected()) {
-                data = conWTicket.findByMandtWPlantDateDissolvedNullAll(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
+                data = conWTicket.findByDateDissolvedNullAll(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
                 result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
             } else if (rbtPosted.isSelected()) {
-                data = conWTicket.findByMandtWPlantDatePostedNullAll(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
+                data = conWTicket.findByDatePostedNullAll(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
                 result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
             } else if (rbtStateAll.isSelected()) {
-                data = conWTicket.findByMandtWPlantDateAllNullAll(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
+                data = conWTicket.findByDateAllNullAll(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
                 result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
             }
         } else {
             if (rbtDissolved.isSelected()) {
-                data = conWTicket.findByMandtWPlantDateDissolved(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMaterialPK().getMatnr(), txtBienSo.getText().trim());
+                data = conWTicket.findByDateDissolved(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMatnr(), txtBienSo.getText().trim());
                 result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
             } else if (rbtPosted.isSelected()) {
-                data = conWTicket.findByMandtWPlantDatePosted(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMaterialPK().getMatnr(), txtBienSo.getText().trim());
+                data = conWTicket.findByDatePosted(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMatnr(), txtBienSo.getText().trim());
                 result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
             } else if (rbtStateAll.isSelected()) {
-                data = conWTicket.findByMandtWPlantDateAll(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMaterialPK().getMatnr(), txtBienSo.getText().trim());
+                data = conWTicket.findByDateAll(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMatnr(), txtBienSo.getText().trim());
                 result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
             }
         }
@@ -103,7 +100,7 @@ public class WTRegController {
                 WeightTicket item = null;
                 item = data.get(i);
 
-                String ct = item.getCreateTime();
+                String ct = item.getCreatedTime();
                 Character c0 = ct.charAt(0);
                 Character c1 = ct.charAt(1);
                 String ct1 = c0.toString().concat(c1.toString());
@@ -134,105 +131,39 @@ public class WTRegController {
         return result;
     }
 
-    public Object[][] handleWtData(String getMode, Object[][] wtData, Object[][] wtRptData, List<WeightTicket> weightTicketList, AppConfig config, Object[] wtCols, Object[] wtRptCols, String sVendor) {
+    public Object[][] handleWtData(String getMode, Object[][] wtData, List<WeightTicket> weightTicketList, AppConfig config, Object[] wtCols, String sVendor) {
         for (int i = 0; i < weightTicketList.size(); i++) {
             WeightTicket item = weightTicketList.get(i);
-            if (getMode.equalsIgnoreCase(Constants.WTRegView.MODE_REG)) {
-                WeightTicketPK pk = item.getWeightTicketPK();
-                if (!pk.getMandt().equalsIgnoreCase(config.getsClient()) && !pk.getWPlant().equalsIgnoreCase(config.getwPlant().toString())) {
-                    continue;
-                }
-                wtData[i][0] = pk.getSeqByDay();
-                wtData[i][1] = item.getTenTaiXe();
-                wtData[i][2] = item.getCmndBl();
-                wtData[i][3] = item.getSoXe();
-                wtData[i][4] = item.getSoRomooc();
-                wtData[i][5] = item.getRegCategory();
-                wtData[i][6] = item.getRegItemText();
-                wtData[i][7] = item.getRegItemQty();
-                wtData[i][8] = item.getDelivNumb();
-                wtData[i][9] = item.getCreator();
-                wtData[i][10] = item.getSeqByMonth();
-                wtData[i][11] = item.getCreateDate();
-                String hh;
-                String mm;
-                String ss;
-                hh = item.getCreateTime().substring(0, 2);
-                mm = item.getCreateTime().substring(2, 4);
-                ss = item.getCreateTime().substring(4);
-                wtData[i][12] = hh + ":" + mm + ":" + ss;
-                wtData[i][13] = item.getDissolved();
-                if (item.getPosted() == 1) {
-                    wtData[i][14] = true;
-                } else {
-                    wtData[i][14] = false;
-                }
-
-            } else if (getMode.equalsIgnoreCase(Constants.WTRegView.MODE_RPT)) {
-                WeightTicketPK pk = item.getWeightTicketPK();
-                if (!pk.getMandt().equalsIgnoreCase(config.getsClient()) && !pk.getWPlant().equalsIgnoreCase(config.getwPlant().toString())) {
-                    continue;
-                }
-                String hh;
-                String mm;
-                String ss;
-                hh = item.getCreateTime().substring(0, 2);
-                mm = item.getCreateTime().substring(2, 4);
-                ss = item.getCreateTime().substring(4);
-                Calendar create_date = Calendar.getInstance();
-                create_date.setTime(item.getCreateDate());
-                create_date.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hh));
-                create_date.set(Calendar.MINUTE, Integer.valueOf(mm));
-                create_date.set(Calendar.SECOND, Integer.valueOf(ss));
-                SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-                String ct = df.format(create_date.getTime());
-                wtRptData[i][0] = i + 1;// item.getSeqByMonth();
-                wtRptData[i][1] = item.getWeightTicketPK().getSeqByDay();
-                wtRptData[i][2] = item.getTenTaiXe();
-                wtRptData[i][3] = item.getCmndBl();
-                wtRptData[i][4] = item.getSoXe();
-                wtRptData[i][5] = item.getSoRomooc();
-                wtRptData[i][6] = item.getCreator();
-                wtRptData[i][7] = ct;
-                wtRptData[i][8] = item.getRegCategory();
-                wtRptData[i][9] = item.getRegItemText();
-                if (item.getFTime() != null) {
-                    Calendar cf = Calendar.getInstance();
-                    cf.setTime(item.getFTime());
-                    String ft = df.format(cf.getTime());
-                    wtRptData[i][10] = ft;//item.getFTime();
-                } else {
-                    wtRptData[i][10] = item.getFTime();
-                }
-                wtRptData[i][11] = item.getFScale() == null ? item.getFScale() : item.getFScale().doubleValue() / 1000d;
-                if (item.getSTime() != null) {
-                    Calendar sf = Calendar.getInstance();
-                    sf.setTime(item.getSTime());
-                    String st = df.format(sf.getTime());
-                    wtRptData[i][12] = st;//item.getSTime();
-                } else {
-                    wtRptData[i][12] = item.getSTime();
-                }
-                wtRptData[i][13] = item.getSScale() == null ? item.getSScale() : item.getSScale().doubleValue() / 1000d;
-                wtRptData[i][14] = item.getGQty();
-                wtRptData[i][15] = item.getDelivNumb();
-                wtRptData[i][16] = item.getMatDoc();
-                wtRptData[i][17] = item.getDissolved();
-                if (item.getPosted() == 1) {
-                    wtRptData[i][18] = true;
-                } else {
-                    wtRptData[i][18] = false;
-                }
-                wtRptData[i][20] = item.getEbeln();
-                wtRptData[i][19] = sVendor;
+            if (!item.getMandt().equalsIgnoreCase(config.getsClient()) && !item.getWplant().equalsIgnoreCase(config.getwPlant().toString())) {
+                continue;
+            }
+            wtData[i][0] = item.getSeqDay();
+            wtData[i][1] = item.getDriverName();
+            wtData[i][2] = item.getDriverIdNo();
+            wtData[i][3] = item.getPlateNo();
+            wtData[i][4] = item.getTrailerId();
+            wtData[i][5] = item.getRegType();
+            wtData[i][6] = item.getRegItemDescription();
+            wtData[i][7] = item.getRegItemQuantity();
+            wtData[i][8] = item.getDeliveryOrderNo();
+            wtData[i][9] = item.getCreator();
+            wtData[i][10] = item.getSeqMonth();
+            wtData[i][11] = item.getCreatedDate();
+            String hh;
+            String mm;
+            String ss;
+            hh = item.getCreatedTime().substring(0, 2);
+            mm = item.getCreatedTime().substring(2, 4);
+            ss = item.getCreatedTime().substring(4);
+            wtData[i][12] = hh + ":" + mm + ":" + ss;
+            wtData[i][13] = item.isDissolved();
+            if (item.isPosted()) {
+                wtData[i][14] = true;
+            } else {
+                wtData[i][14] = false;
             }
         }
-        if (getMode.equalsIgnoreCase(Constants.WTRegView.MODE_REG)) {
-            return wtData;
-        } else if (getMode.equalsIgnoreCase(Constants.WTRegView.MODE_RPT)) {
-            return wtRptData;
-        }
-        return null;
+        return wtData;
     }
 
     public String printReportDoInBackground(JXDatePicker dpFrom, JXDatePicker dpTo) {

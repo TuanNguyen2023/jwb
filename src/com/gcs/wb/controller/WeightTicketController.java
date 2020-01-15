@@ -43,7 +43,6 @@ import com.gcs.wb.jpa.entity.Reason;
 import com.gcs.wb.jpa.entity.SLoc;
 import com.gcs.wb.jpa.entity.TimeRange;
 import com.gcs.wb.jpa.entity.WeightTicket;
-import com.gcs.wb.jpa.entity.WeightTicketPK;
 import com.gcs.wb.jpa.procedures.WeightTicketJpaRepository;
 import com.gcs.wb.jpa.repositorys.BatchStocksRepository;
 import com.gcs.wb.jpa.repositorys.CustomerRepository;
@@ -131,7 +130,7 @@ public class WeightTicketController {
     }
 
     public void getSyncBatchStocks(SLoc selSloc, WeightTicket weightTicket) {
-        sapService.syncBatchStocks(selSloc.getSLocPK().getLgort(), weightTicket.getMatnrRef(), weightTicket.getLgort());;
+        sapService.syncBatchStocks(selSloc.getSLocPK().getLgort(), weightTicket.getMatnrRef(), weightTicket.getLgort());
     }
 
     public DefaultComboBoxModel setCbxBatch(List<BatchStocks> batchs) {
@@ -206,10 +205,8 @@ public class WeightTicketController {
     }
 
     public WeightTicket findWeightTicket(WeightTicket weightTicket, String id, Integer seq) {
-        entityManager.clear();
-        weightTicket = entityManager.find(WeightTicket.class, new WeightTicketPK(config.getsClient(), config.getwPlant(), id, seq));
-        entityManager.clear();
-        return weightTicket;
+        com.gcs.wb.jpa.repositorys.WeightTicketRepository repository = new com.gcs.wb.jpa.repositorys.WeightTicketRepository();
+        return repository.findByIdSeqDay(id, seq);
     }
 
     public String getSoNiemXa(String pWtId) {
@@ -244,7 +241,7 @@ public class WeightTicketController {
         for (String item : completedDOs) {
             bapi = new DORevertBapi(item);
 
-            OutbDel od_temp = new OutbDel(new OutbDelPK(weightTicket.getWeightTicketPK().getMandt(), item));
+            OutbDel od_temp = new OutbDel(new OutbDelPK(weightTicket.getMandt(), item));
             GoodsMvtWeightTicketStructure stWT = fillWTStructure(weightTicket, od_temp, outDetails_lits, weightTicket);
 
             bapi.setWeightticket(stWT);
@@ -277,12 +274,12 @@ public class WeightTicketController {
     public GoodsMvtWeightTicketStructure fillWTStructure(WeightTicket wt,
             OutbDel od, List<OutbDetailsV2> od_v2_list, WeightTicket weightTicket) {
         GoodsMvtWeightTicketStructure stWT = null;
-        if (wt == null || wt.getWeightTicketPK() == null) {
+        if (wt == null) {
             return stWT;
         }
-        String tempWTID = wt.getWeightTicketPK().getId().trim();
-        tempWTID = tempWTID.concat(Conversion_Exit.Conv_output_num(String.valueOf(weightTicket.getWeightTicketPK().getSeqByDay()), 3));
-        stWT = new GoodsMvtWeightTicketStructure(weightTicket.getWeightTicketPK().getWPlant(),
+        String tempWTID = new Integer(wt.getId()).toString();
+        tempWTID = tempWTID.concat(Conversion_Exit.Conv_output_num(String.valueOf(weightTicket.getSeqDay()), 3));
+        stWT = new GoodsMvtWeightTicketStructure(weightTicket.getWplant(),
                 weightTicket.getWbId(),
                 tempWTID);
 //          outb_details_v2
@@ -297,13 +294,13 @@ public class WeightTicketController {
             }
         }
 
-        stWT.setCAT_TYPE(String.valueOf(wt.getRegCategory()));
-        stWT.setDO_WT(wt.getDelivNumb());
+        stWT.setCAT_TYPE(String.valueOf(wt.getRegType()));
+        stWT.setDO_WT(wt.getDeliveryOrderNo());
         stWT.setDO_NUMBER(od != null && od.getOutbDelPK() != null
                 && od.getOutbDelPK().getDelivNumb() != null
                 ? od.getOutbDelPK().getDelivNumb() : "");
-        stWT.setDRIVERID(wt.getCmndBl());
-        stWT.setDRIVERN(wt.getTenTaiXe());
+        stWT.setDRIVERID(wt.getDriverIdNo());
+        stWT.setDRIVERN(wt.getDriverName());
         stWT.setFDATE(wt.getFTime());
         stWT.setFSCALE(wt.getFScale());
         stWT.setFTIME(wt.getFTime());
@@ -312,7 +309,7 @@ public class WeightTicketController {
         stWT.setKUNNR(wt.getKunnr());
         stWT.setLIFNR(wt.getAbbr());
         stWT.setMATID(wt.getMatnrRef());
-        stWT.setMATNAME(wt.getRegItemText());
+        stWT.setMATNAME(wt.getRegItemDescription());
         stWT.setMVT_TYPE(wt.getMoveType());
         if ((stWT.getMVT_TYPE() == null || stWT.getMVT_TYPE().isEmpty())
                 && od != null && od.getBwart() != null) {
@@ -320,7 +317,7 @@ public class WeightTicketController {
         }
         stWT.setNTEXT(wt.getText());
         stWT.setPO_NUMBER(wt.getEbeln());
-        stWT.setREGQTY_WT(wt.getRegItemQty());
+        stWT.setREGQTY_WT(wt.getRegItemQuantity());
         stWT.setREGQTY(od != null ? od.getLfimg() : BigDecimal.ZERO);
         stWT.setSALEDT(od_v2 != null ? od_v2.getBzirk() : "");
         stWT.setSDATE(wt.getSTime());
@@ -328,7 +325,7 @@ public class WeightTicketController {
         stWT.setSLOC(wt.getLgort());
         stWT.setSSCALE(wt.getSScale());
         stWT.setSTIME(wt.getSTime());
-        stWT.setTRANSID(wt.getSoXe());
+        stWT.setTRANSID(wt.getPlateNo());
         stWT.setUNIT(wt.getUnit());
         stWT.setUSERNAME(wt.getSCreator());
         stWT.setVTYPE(od != null ? od.getBwtar() : "");
@@ -384,14 +381,13 @@ public class WeightTicketController {
             doNum = outbDel.getOutbDelPK().getDelivNumb();
         }
         config = WeighBridgeApp.getApplication().getConfig();
-        String plateCombine = wt.getSoXe();
-        if (wt.getSoRomooc() != null && !wt.getSoRomooc().trim().isEmpty()) {
-            plateCombine += wt.getSoRomooc();
+        String plateCombine = wt.getPlateNo();
+        if (wt.getTrailerId() != null && !wt.getTrailerId().trim().isEmpty()) {
+            plateCombine += wt.getTrailerId();
         }
 
         GoodsMvtDoCreateBapi bapi = new GoodsMvtDoCreateBapi();
         GoodsMvtHeaderStructure header = new GoodsMvtHeaderStructure();
-        String tempWTID = weightTicket.getWeightTicketPK().getId();
 
         GoodsMvtWeightTicketStructure stWT = fillWTStructure(weightTicket,
                 (outbDel != null && outbDel.getOutbDelPK() != null
@@ -415,14 +411,14 @@ public class WeightTicketController {
         // >> end of modified      
 
         if (outbDel == null) {
-            header.setRefDocNo(wt.getDelivNumb());
+            header.setRefDocNo(wt.getDeliveryOrderNo());
         } else {
             header.setRefDocNo(doNum);
         }
         header.setBillOfLading(plateCombine);
-        header.setGrGiSlipNo(wt.getCmndBl());
+        header.setGrGiSlipNo(wt.getDriverIdNo());
         if (outbDel == null) {
-            header.setHeaderText(wt.getDelivNumb());
+            header.setHeaderText(wt.getDeliveryOrderNo());
         } else {
             header.setHeaderText(doNum);
         }
@@ -447,8 +443,8 @@ public class WeightTicketController {
         }
         kl_total = kl.add(kl_km);
         if (outbDel == null) {
-            tab_wa.setDeliv_numb(wt.getDelivNumb());
-            tab_wa.setDeliv_numb_to_search(wt.getDelivNumb());
+            tab_wa.setDeliv_numb(wt.getDeliveryOrderNo());
+            tab_wa.setDeliv_numb_to_search(wt.getDeliveryOrderNo());
         } else {
             tab_wa.setDeliv_numb(doNum);
             tab_wa.setDeliv_numb_to_search(doNum);
@@ -483,9 +479,9 @@ public class WeightTicketController {
 
     public Object getGrPoMigoBapi(WeightTicket wt, WeightTicket weightTicket, int timeFrom, int timeTo) {
         config = WeighBridgeApp.getApplication().getConfig();
-        String plateCombine = wt.getSoXe();
-        if (wt.getSoRomooc() != null && !wt.getSoRomooc().trim().isEmpty()) {
-            plateCombine += wt.getSoRomooc();
+        String plateCombine = wt.getPlateNo();
+        if (wt.getTrailerId() != null && !wt.getTrailerId().trim().isEmpty()) {
+            plateCombine += wt.getTrailerId();
         }
         GoodsMvtPoCreateBapi bapi = new GoodsMvtPoCreateBapi();
         GoodsMvtHeaderStructure header = new GoodsMvtHeaderStructure();
@@ -508,7 +504,7 @@ public class WeightTicketController {
         header.setPstngDate(DateUtil.stripTime(stime));
 
         header.setBillOfLading(plateCombine);
-        header.setGrGiSlipNo(wt.getCmndBl());
+        header.setGrGiSlipNo(wt.getDriverIdNo());
 
         List<GoodsMvtItemPoStructure> tab = new ArrayList<GoodsMvtItemPoStructure>();
         GoodsMvtItemPoStructure tab_wa = new GoodsMvtItemPoStructure();
@@ -539,9 +535,9 @@ public class WeightTicketController {
 
     public Object getGi541MigoBapi(WeightTicket wt, WeightTicket weightTicket, int timeFrom, int timeTo, PurOrder purOrder, JRadioButton rbtOutward) {
         config = WeighBridgeApp.getApplication().getConfig();
-        String plateCombine = wt.getSoXe();
-        if (wt.getSoRomooc() != null && !wt.getSoRomooc().trim().isEmpty()) {
-            plateCombine += wt.getSoRomooc();
+        String plateCombine = wt.getPlateNo();
+        if (wt.getTrailerId() != null && !wt.getTrailerId().trim().isEmpty()) {
+            plateCombine += wt.getTrailerId();
         }
         GoodsMvtPoCreateBapi bapi = new GoodsMvtPoCreateBapi(new GoodsMvtCodeStructure("04"));
         GoodsMvtHeaderStructure header = new GoodsMvtHeaderStructure();
@@ -560,7 +556,7 @@ public class WeightTicketController {
         header.setDocDate(DateUtil.stripTime(stime));
         header.setPstngDate(DateUtil.stripTime(stime));
         header.setBillOfLading(plateCombine);
-        header.setGrGiSlipNo(wt.getCmndBl());
+        header.setGrGiSlipNo(wt.getDriverIdNo());
 
         List<GoodsMvtItemPoStructure> tab = new ArrayList<GoodsMvtItemPoStructure>();
         GoodsMvtItemPoStructure tab_wa = new GoodsMvtItemPoStructure();
@@ -590,9 +586,9 @@ public class WeightTicketController {
         config = WeighBridgeApp.getApplication().getConfig();
         String vendorNo = null;
         String headertxt = null;
-        String plateCombine = wt.getSoXe();
-        if (wt.getSoRomooc() != null && !wt.getSoRomooc().trim().isEmpty()) {
-            plateCombine += wt.getSoRomooc();
+        String plateCombine = wt.getPlateNo();
+        if (wt.getTrailerId() != null && !wt.getTrailerId().trim().isEmpty()) {
+            plateCombine += wt.getTrailerId();
         }
         GoodsMvtPoCreateBapi bapi = new GoodsMvtPoCreateBapi(new GoodsMvtCodeStructure("04"));
         GoodsMvtHeaderStructure header = new GoodsMvtHeaderStructure();
@@ -611,7 +607,7 @@ public class WeightTicketController {
         header.setDocDate(DateUtil.stripTime(stime));
         header.setPstngDate(DateUtil.stripTime(stime));
         header.setRefDocNo(weightTicket.getRecvPo());
-        header.setGrGiSlipNo(wt.getCmndBl());
+        header.setGrGiSlipNo(wt.getDriverIdNo());
         if (vendorNo != null) {
             headertxt = plateCombine + "|" + vendorNo;
         } else {
@@ -654,13 +650,13 @@ public class WeightTicketController {
         config = WeighBridgeApp.getApplication().getConfig();
         DOCreate2PGIBapi bapi = new DOCreate2PGIBapi();
 
-        String plateCombine = wt.getSoXe();
-        if (wt.getSoRomooc() != null && !wt.getSoRomooc().trim().isEmpty()) {
-            plateCombine += "|" + wt.getSoRomooc();
+        String plateCombine = wt.getPlateNo();
+        if (wt.getTrailerId() != null && !wt.getTrailerId().trim().isEmpty()) {
+            plateCombine += "|" + wt.getTrailerId();
         }
         VbkokStructure wa = new VbkokStructure();
         if (outbDel == null) {
-            wa.setVbeln_vl(wt.getDelivNumb());
+            wa.setVbeln_vl(wt.getDeliveryOrderNo());
         } else {
             wa.setVbeln_vl(doNum);
         }
@@ -689,7 +685,7 @@ public class WeightTicketController {
         wa.setLfuhr(DateUtil.stripDate(stime));
         wa.setTraty("0004");
         wa.setTraid(plateCombine);
-        wa.setLifex(wt.getTenTaiXe());
+        wa.setLifex(wt.getDriverName());
         bapi.setVbkok_wa(wa);
 
         //get do details for current do
@@ -710,11 +706,11 @@ public class WeightTicketController {
         kl_total = kl.add(kl_km);
 
         List<OutbDeliveryCreateStoStructure> _StockTransItems = new ArrayList<OutbDeliveryCreateStoStructure>();
-        if (wt.getRegCategory() == 'O'
-                && wt.getRegItemText() != null
-                && wt.getRegItemText().toLowerCase().indexOf("bao") >= 0
+        if (wt.getRegType() == 'O'
+                && wt.getRegItemDescription() != null
+                && wt.getRegItemDescription().toLowerCase().indexOf("bao") >= 0
                 && wt.getMatnrRef() != null) {
-            _StockTransItems.add(new OutbDeliveryCreateStoStructure(wt.getEbeln(), wt.getItem(), wt.getRegItemQty(), wt.getUnit()));
+            _StockTransItems.add(new OutbDeliveryCreateStoStructure(wt.getEbeln(), wt.getItem(), wt.getRegItemQuantity(), wt.getUnit()));
         } else if (outbDel == null) {
             _StockTransItems.add(new OutbDeliveryCreateStoStructure(wt.getEbeln(), wt.getItem(), wt.getGQty(), wt.getUnit()));
         } else {
@@ -727,7 +723,7 @@ public class WeightTicketController {
         List<VbpokStructure> tab = new ArrayList<VbpokStructure>();
         VbpokStructure tab_wa = new VbpokStructure();
         if (outbDel == null) {
-            tab_wa.setVbeln_vl(wt.getDelivNumb());
+            tab_wa.setVbeln_vl(wt.getDeliveryOrderNo());
         } else {
             tab_wa.setVbeln_vl(doNum);
         }
@@ -760,13 +756,13 @@ public class WeightTicketController {
             doNum = outbDel.getOutbDelPK().getDelivNumb();
         }
         config = WeighBridgeApp.getApplication().getConfig();
-        String plateCombine = wt.getSoXe();
-        if (wt.getSoRomooc() != null && !wt.getSoRomooc().trim().isEmpty()) {
-            plateCombine += "|" + wt.getSoRomooc();
+        String plateCombine = wt.getPlateNo();
+        if (wt.getTrailerId() != null && !wt.getTrailerId().trim().isEmpty()) {
+            plateCombine += "|" + wt.getTrailerId();
         }
         WsDeliveryUpdateBapi bapi = new WsDeliveryUpdateBapi();
         if (outbDel == null) {
-            bapi.setDelivery(wt.getDelivNumb());
+            bapi.setDelivery(wt.getDeliveryOrderNo());
         } else {
             bapi.setDelivery(doNum);
         }
@@ -800,7 +796,7 @@ public class WeightTicketController {
         bapi.setYield(kl_total);
         VbkokStructure wa = new VbkokStructure();
         if (outbDel == null) {
-            wa.setVbeln_vl(wt.getDelivNumb());
+            wa.setVbeln_vl(wt.getDeliveryOrderNo());
         } else {
             wa.setVbeln_vl(doNum);
         }
@@ -827,13 +823,13 @@ public class WeightTicketController {
         wa.setLfuhr(DateUtil.stripDate(stime));
         wa.setTraty("0004");
         wa.setTraid(plateCombine);
-        wa.setLifex(wt.getTenTaiXe());
+        wa.setLifex(wt.getDriverName());
         bapi.setVbkok_wa(wa);
 
         List<VbpokStructure> tab = new ArrayList<VbpokStructure>();
         VbpokStructure tab_wa = new VbpokStructure();
         if (outbDel == null) {
-            tab_wa.setVbeln_vl(wt.getDelivNumb());
+            tab_wa.setVbeln_vl(wt.getDeliveryOrderNo());
         } else {
             tab_wa.setVbeln_vl(doNum);
         }
@@ -883,7 +879,7 @@ public class WeightTicketController {
 
         if (outbDel.getDelivItemFree() != null && (outbDel.getDelivItemFree() == null ? "" != null : !outbDel.getDelivItemFree().equals(""))) {
             if (outbDel == null) {
-                tab_wa_f.setVbeln_vl(wt.getDelivNumb());
+                tab_wa_f.setVbeln_vl(wt.getDeliveryOrderNo());
             } else {
                 tab_wa_f.setVbeln_vl(doNum);
             }
@@ -898,20 +894,19 @@ public class WeightTicketController {
         bapi.setVbpok_tab(tab);
         return bapi;
     }
-    
+
     public DefaultComboBoxModel getReasonModel() {
-        config = WeighBridgeApp.getApplication().getConfig();
         Movement mvt = new Movement();
+
         try {
             MovementRepository movementRepository = new MovementRepository();
-            String client = config.getsClient();
             String language = WeighBridgeApp.getApplication().getLogin().getLang().toString();
             mvt = movementRepository.findByMandtBwartSpras(client, language);
 
         } catch (NoResultException ex) {
-            MvtGetDetailBapi bMvt = new MvtGetDetailBapi(config.getsClient(), "101");
+            MvtGetDetailBapi bMvt = new MvtGetDetailBapi(client, "101");
             WeighBridgeApp.getApplication().getSAPSession().execute(bMvt);
-            mvt = new Movement(new MovementPK(config.getsClient(), bMvt.getItem().getBwart()), bMvt.getItem().getSpras());
+            mvt = new Movement(new MovementPK(client, bMvt.getItem().getBwart()), bMvt.getItem().getSpras());
             mvt.setBtext(bMvt.getItem().getBtext());
             if (!entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().begin();
@@ -920,14 +915,13 @@ public class WeightTicketController {
             entityManager.getTransaction().commit();
             entityManager.clear();
         }
-        String client = config.getsClient();
         String bwart = mvt.getMovementPK().getBwart().trim();
         ReasonRepository reasonRepository = new ReasonRepository();
-        
+
         List<Reason> reasons = reasonRepository.findByMandtBwart(client, bwart);
 
         if (reasons.isEmpty()) {
-            MvtReasonsGetListBapi bReason = new MvtReasonsGetListBapi(config.getsClient(), "101");
+            MvtReasonsGetListBapi bReason = new MvtReasonsGetListBapi(client, "101");
             WeighBridgeApp.getApplication().getSAPSession().execute(bReason);
             List<MvtReasonsGetListStructure> brReasons = bReason.getTdMvtsReasons();
             if (!entityManager.getTransaction().isActive()) {
@@ -946,27 +940,11 @@ public class WeightTicketController {
 
         return new DefaultComboBoxModel(reasons.toArray());
     }
-    
+
     public void printWT(WeightTicket wt, boolean reprint, String ximang, List<OutbDel> outbDel_list, List<OutbDetailsV2> outDetails_lits,
             OutbDel outbDel, JRadioButton rbtMisc, JRadioButton rbtPO, boolean isStage1, JRootPane rootPane) {
         config = WeighBridgeApp.getApplication().getConfig();
         OutbDel item = null;
-        ximang = null;
-        Boolean bag_tmp = false;
-        WeightTicketJpaController con = new WeightTicketJpaController();
-        Material m = null;
-        try {
-            m = con.CheckPOSTO(wt.getMatnrRef());
-        } catch (Exception ex) {
-        }
-        if (m != null) {
-            if (m.getXimang() == null) {
-                ximang = null;
-            } else if (m.getXimang() != null || !m.getXimang().equals("")) {
-                ximang = "X";
-            }
-            bag_tmp = m.getBag();
-        }
         try {
             Map<String, Object> map = new HashMap<String, Object>();
             Long bags = null;
@@ -974,26 +952,26 @@ public class WeightTicketController {
                 // can posto xi mang 
                 map.put("P_MANDT", WeighBridgeApp.getApplication().getConfig().getsClient());
                 map.put("P_WPlant", WeighBridgeApp.getApplication().getConfig().getwPlant());
-                map.put("P_ID", wt.getWeightTicketPK().getId());
-                map.put("P_DAYSEQ", wt.getWeightTicketPK().getSeqByDay());
+                map.put("P_ID", wt.getId());
+                map.put("P_DAYSEQ", wt.getSeqDay());
                 map.put("P_REPRINT", reprint);
                 map.put("P_ADDRESS", config.getRptId());
-                if (bag_tmp && (wt.getDissolved() == null || !wt.getDissolved())) {
+                if (!wt.isDissolved()) {
                     Double tmp;
 
                     if (wt.getMatnrRef() != null && wt.getMatnrRef().equalsIgnoreCase("000000101130400008")) // Tuanna - for bag 40K 27.04.2013
                     {
-                        tmp = ((wt.getRegItemQty().doubleValue()) * 1000d) / 40d;
+                        tmp = ((wt.getRegItemQuantity().doubleValue()) * 1000d) / 40d;
                     } else {
-                        tmp = ((wt.getRegItemQty().doubleValue()) * 1000d) / 50d;
+                        tmp = ((wt.getRegItemQuantity().doubleValue()) * 1000d) / 50d;
                     }
 
-                    if ((tmp == null || tmp == 0) && wt.getRegItemQty() != null) {
+                    if ((tmp == null || tmp == 0) && wt.getRegItemQuantity() != null) {
                         if (wt.getMatnrRef() != null && wt.getMatnrRef().equalsIgnoreCase("000000101130400008")) // Tuanna - for bag 40K 27.04.2013                           
                         {
-                            tmp = ((wt.getRegItemQty().doubleValue()) * 1000d) / 40d;
+                            tmp = ((wt.getRegItemQuantity().doubleValue()) * 1000d) / 40d;
                         } else {
-                            tmp = ((wt.getRegItemQty().doubleValue()) * 1000d) / 50d;
+                            tmp = ((wt.getRegItemQuantity().doubleValue()) * 1000d) / 50d;
                         }
                     }
                     bags = Math.round(tmp);
@@ -1008,7 +986,7 @@ public class WeightTicketController {
                     reportName1 = "./rpt/rptPQ/WeightTicket.jasper";
                 }
                 JasperReport jasperReport = JasperCompileManager.compileReport(reportName1);
-                
+
                 JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, connect);
                 JasperViewer jv = new JasperViewer(jasperPrint, false);
                 jv.setVisible(true);
@@ -1035,8 +1013,8 @@ public class WeightTicketController {
                     }
                     map.put("P_MANDT", WeighBridgeApp.getApplication().getConfig().getsClient());
                     map.put("P_WPlant", WeighBridgeApp.getApplication().getConfig().getwPlant());
-                    map.put("P_ID", wt.getWeightTicketPK().getId());
-                    map.put("P_DAYSEQ", wt.getWeightTicketPK().getSeqByDay());
+                    map.put("P_ID", wt.getId());
+                    map.put("P_DAYSEQ", wt.getSeqDay());
                     map.put("P_REPRINT", reprint);
                     map.put("P_ADDRESS", config.getRptId());
                     map.put("P_DEL_NUM", outbDel.getOutbDelPK().getDelivNumb());
@@ -1047,7 +1025,7 @@ public class WeightTicketController {
                     if (wt.getGQty() != null) {
                         gqty = wt.getGQty();
                     }
-                    if (reprint && wt.getPosted() == 0) {
+                    if (reprint && wt.isPosted()) {
                         sscale = BigDecimal.ZERO;
                         gqty = BigDecimal.ZERO;
                     }
@@ -1065,7 +1043,7 @@ public class WeightTicketController {
 
                     if (outbDel.getFreeQty() != null) {
                         map.put("P_TOTAL_QTY", String.valueOf(outbDel.getLfimg().add(outbDel.getFreeQty())));
-                        if (outbDel != null && (outbDel.getLfart().equalsIgnoreCase("LF") || outbDel.getLfart().equalsIgnoreCase("ZTLF") || outbDel.getLfart().equalsIgnoreCase("NL")) && bag_tmp) {
+                        if (outbDel != null && (outbDel.getLfart().equalsIgnoreCase("LF") || outbDel.getLfart().equalsIgnoreCase("ZTLF") || outbDel.getLfart().equalsIgnoreCase("NL"))) {
                             Double tmp;
                             // Double tmp = ((outbDel.getLfimg().doubleValue() + outbDel.getFreeQty().doubleValue()) * 1000d) / 50d;
                             if (outbDel.getMatnr().equalsIgnoreCase("000000101130400008")) // Tuanna - crazy lắm lun hix ai chơi hardcode  for bag 40K 27.04.2013
@@ -1081,7 +1059,7 @@ public class WeightTicketController {
                     } else {
                         map.put("P_TOTAL_QTY", String.valueOf(outbDel.getLfimg()));
                         Double tmp;
-                        if (outbDel != null && (outbDel.getLfart().equalsIgnoreCase("LF") || outbDel.getLfart().equalsIgnoreCase("ZTLF") || outbDel.getLfart().equalsIgnoreCase("NL")) && bag_tmp) {
+                        if (outbDel != null && (outbDel.getLfart().equalsIgnoreCase("LF") || outbDel.getLfart().equalsIgnoreCase("ZTLF") || outbDel.getLfart().equalsIgnoreCase("NL"))) {
                             if (outbDel.getMatnr().equalsIgnoreCase("000000101130400008")) // Tuanna - for bag 40K  27.04.2013
                             {
                                 tmp = (outbDel.getLfimg().doubleValue() * 1000d) / 40d;

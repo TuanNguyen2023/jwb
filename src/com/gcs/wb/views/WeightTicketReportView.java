@@ -17,11 +17,8 @@ import javax.swing.DefaultComboBoxModel;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
 import com.gcs.wb.WeighBridgeApp;
-import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.Material;
-import com.gcs.wb.jpa.entity.MaterialPK;
 import com.gcs.wb.jpa.entity.TransportAgent;
-import com.gcs.wb.jpa.entity.WeightTicket;
 import com.gcs.wb.jpa.repositorys.TransportAgentRepository;
 import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import java.awt.Component;
@@ -31,7 +28,6 @@ import javax.swing.JList;
 import com.gcs.wb.base.util.FormatRenderer;
 import com.gcs.wb.controller.WeightTicketReportController;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JOptionPane;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -212,7 +208,7 @@ public class WeightTicketReportView extends javax.swing.JInternalFrame {
                 if (value instanceof Material) {
                     Material mat = (Material)value;
                     setText(mat.getMaktx());
-                    setToolTipText(mat.getMaterialPK().getMatnr());
+                    setToolTipText(mat.getMatnr());
                 }
                 return this;
             }
@@ -244,16 +240,16 @@ public class WeightTicketReportView extends javax.swing.JInternalFrame {
                     .addComponent(lblType))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnExtraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cbxMaterial, 0, 217, Short.MAX_VALUE)
-                    .addComponent(cbxTransportAgent, 0, 217, Short.MAX_VALUE))
+                    .addComponent(cbxMaterial, 0, 233, Short.MAX_VALUE)
+                    .addComponent(cbxTransportAgent, 0, 233, Short.MAX_VALUE))
                 .addGap(23, 23, 23)
                 .addGroup(pnExtraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lblMode)
                     .addComponent(lblState))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnExtraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cbxStatus, 0, 89, Short.MAX_VALUE)
-                    .addComponent(cbxMode, 0, 89, Short.MAX_VALUE))
+                    .addComponent(cbxStatus, 0, 105, Short.MAX_VALUE)
+                    .addComponent(cbxMode, 0, 105, Short.MAX_VALUE))
                 .addContainerGap())
         );
         pnExtraLayout.setVerticalGroup(
@@ -350,7 +346,7 @@ public class WeightTicketReportView extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(pnFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE)
+                .addComponent(pnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -388,7 +384,7 @@ private void cbxModeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:
             String month = cbxMonth.getSelectedItem().toString();
             String year = cbxYear.getSelectedItem().toString();
             String tAgent = ((TransportAgent) cbxTransportAgent.getSelectedItem()).getAbbr();
-            String matnr = ((Material) cbxMaterial.getSelectedItem()).getMaterialPK().getMatnr();
+            String matnr = ((Material) cbxMaterial.getSelectedItem()).getMatnr();
             try {
                 wtDatas = weighTicketReportController.findWeightTickets(wtDatas, month, year, tAgent, matnr, modes, cbxStatus, cbxTransportAgent);
                 editable = new boolean[wtColNames.length];

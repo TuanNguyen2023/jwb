@@ -7,18 +7,12 @@ package com.gcs.wb.controller;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.WeightTicket;
-import com.gcs.wb.jpa.entity.WeightTicketPK;
 import com.gcs.wb.model.AppConfig;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.data.JRTableModelDataSource;
-import net.sf.jasperreports.view.JasperViewer;
 import org.jdesktop.swingx.JXDatePicker;
 
 /**
@@ -29,7 +23,7 @@ public class DailyReportController {
     AppConfig appConfig = WeighBridgeApp.getApplication().getConfig();
     public List<WeightTicket> findByCreateDateRange(JXDatePicker dpDateFrom, JXDatePicker dpDateTo) {
         WeightTicketJpaController weightTicketJpaController = new WeightTicketJpaController();
-        List<WeightTicket> weightTickets = weightTicketJpaController.findByCreateDateRange(dpDateFrom.getDate(), dpDateTo.getDate());
+        List<WeightTicket> weightTickets = weightTicketJpaController.findByCreatedDateRange(dpDateFrom.getDate(), dpDateTo.getDate());
         return weightTickets;
     }
 
@@ -39,30 +33,29 @@ public class DailyReportController {
 
         for (int i = 0; i < weightTicketList.size(); i++) {
             WeightTicket weightTicket = weightTicketList.get(i);
-            WeightTicketPK weightTicketPK = weightTicket.getWeightTicketPK();
-            if (!weightTicketPK.getMandt().equalsIgnoreCase(appConfig.getsClient()) && !weightTicketPK.getWPlant().equalsIgnoreCase(appConfig.getwPlant().toString())) {
+            if (!weightTicket.getMandt().equalsIgnoreCase(appConfig.getsClient()) && !weightTicket.getWplant().equalsIgnoreCase(appConfig.getwPlant().toString())) {
                 continue;
             }
-            String hh = weightTicket.getCreateTime().substring(0, 2);
-            String mm = weightTicket.getCreateTime().substring(2, 4);
-            String ss = weightTicket.getCreateTime().substring(4);
+            String hh = weightTicket.getCreatedTime().substring(0, 2);
+            String mm = weightTicket.getCreatedTime().substring(2, 4);
+            String ss = weightTicket.getCreatedTime().substring(4);
             Calendar create_date = Calendar.getInstance();
-            create_date.setTime(weightTicket.getCreateDate());
+            create_date.setTime(weightTicket.getCreatedDate());
             create_date.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hh));
             create_date.set(Calendar.MINUTE, Integer.valueOf(mm));
             create_date.set(Calendar.SECOND, Integer.valueOf(ss));
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
             String createdDateTime = dateFormat.format(create_date.getTime());
             wtDatas[i][0] = i + 1;
-            wtDatas[i][1] = weightTicket.getWeightTicketPK().getSeqByDay();
-            wtDatas[i][2] = weightTicket.getTenTaiXe();
-            wtDatas[i][3] = weightTicket.getCmndBl();
-            wtDatas[i][4] = weightTicket.getSoXe();
-            wtDatas[i][5] = weightTicket.getSoRomooc();
+            wtDatas[i][1] = weightTicket.getSeqDay();
+            wtDatas[i][2] = weightTicket.getDriverName();
+            wtDatas[i][3] = weightTicket.getDriverIdNo();
+            wtDatas[i][4] = weightTicket.getPlateNo();
+            wtDatas[i][5] = weightTicket.getTrailerId();
             wtDatas[i][6] = weightTicket.getCreator();
             wtDatas[i][7] = createdDateTime;
-            wtDatas[i][8] = weightTicket.getRegCategory();
-            wtDatas[i][9] = weightTicket.getRegItemText();
+            wtDatas[i][8] = weightTicket.getRegType();
+            wtDatas[i][9] = weightTicket.getRegItemDescription();
             if (weightTicket.getFTime() != null) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(weightTicket.getFTime());
@@ -82,10 +75,10 @@ public class DailyReportController {
             }
             wtDatas[i][13] = weightTicket.getSScale() == null ? weightTicket.getSScale() : weightTicket.getSScale().doubleValue() / 1000d;
             wtDatas[i][14] = weightTicket.getGQty();
-            wtDatas[i][15] = weightTicket.getDelivNumb();
+            wtDatas[i][15] = weightTicket.getDeliveryOrderNo();
             wtDatas[i][16] = weightTicket.getMatDoc();
-            wtDatas[i][17] = weightTicket.getDissolved();
-            if (weightTicket.getPosted() == 1) {
+            wtDatas[i][17] = weightTicket.isDissolved();
+            if (weightTicket.isPosted()) {
                 wtDatas[i][18] = true;
             } else {
                 wtDatas[i][18] = false;

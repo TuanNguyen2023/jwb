@@ -11,7 +11,6 @@
 package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
-import com.gcs.wb.bapi.helper.SAP2Local;
 import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.jpa.JPAConnector;
@@ -26,7 +25,6 @@ import com.gcs.wb.jpa.entity.Vehicle;
 import com.gcs.wb.jpa.entity.Vendor;
 import com.gcs.wb.jpa.entity.VendorPK;
 import com.gcs.wb.jpa.entity.WeightTicket;
-import com.gcs.wb.jpa.entity.WeightTicketPK;
 import com.gcs.wb.jpa.entity.VehicleValid;
 import com.gcs.wb.jpa.entity.VehicleValidPK;
 import com.gcs.wb.model.AppConfig;
@@ -38,7 +36,6 @@ import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +54,6 @@ import org.jdesktop.application.Task;
 import java.awt.Component;
 import javax.swing.JList;
 import com.gcs.wb.jpa.entity.Material;
-import com.gcs.wb.jpa.entity.MaterialPK;
 import com.gcs.wb.jpa.entity.OutbDetailsV2;
 import com.gcs.wb.jpa.procedures.WTRegRepository;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
@@ -65,6 +61,7 @@ import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
+import java.util.Date;
 import javax.persistence.EntityManager;
 import javax.swing.DefaultComboBoxModel;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -100,12 +97,10 @@ public class WTRegView extends javax.swing.JInternalFrame {
         DefaultComboBoxModel result = new DefaultComboBoxModel();
         for (Object obj : matnr) {
             Object[] wt = (Object[]) obj;
-            MaterialPK matPK = new MaterialPK();
             Material mat = new Material();
-            matPK.setMandt(WeighBridgeApp.getApplication().getConfig().getsClient());
-            matPK.setWplant(WeighBridgeApp.getApplication().getConfig().getwPlant());
-            matPK.setMatnr(wt[2].toString());
-            mat.setMaterialPK(matPK);
+            mat.setMandt(WeighBridgeApp.getApplication().getConfig().getsClient());
+            mat.setWplant(WeighBridgeApp.getApplication().getConfig().getwPlant());
+            mat.setMatnr(wt[2].toString());
             mat.setMaktx(wt[3].toString());
             if (result.getIndexOf(mat) < 0) {
                 result.addElement(mat.getMaktx());
@@ -231,7 +226,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 if (value instanceof Material) {
                     Material mat = (Material)value;
                     setText(mat.getMaktx());
-                    setToolTipText(mat.getMaterialPK().getMatnr());
+                    setToolTipText(mat.getMatnr());
                 }
                 return this;
             }
@@ -300,12 +295,8 @@ public class WTRegView extends javax.swing.JInternalFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnFilterLayout.createSequentialGroup()
                 .addGap(33, 33, 33)
                 .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(pnFilterLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
-                        .addComponent(lblHourFrom))
-                    .addGroup(pnFilterLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
-                        .addComponent(lblDriverName))
+                    .addComponent(lblHourFrom)
+                    .addComponent(lblDriverName)
                     .addComponent(lblDateFrom))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -800,7 +791,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(spnResult, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 899, Short.MAX_VALUE)
                     .addComponent(pnPrintControl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 899, Short.MAX_VALUE)
-                    .addComponent(pnControl, javax.swing.GroupLayout.DEFAULT_SIZE, 899, Short.MAX_VALUE)
+                    .addComponent(pnControl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pnWTicket, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pnFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 899, Short.MAX_VALUE))
                 .addContainerGap())
@@ -815,10 +806,10 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnPrintControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnWTicket, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(pnWTicket, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(pnControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         bindingGroup.bind();
@@ -1081,27 +1072,23 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         DefaultComboBoxModel result = new DefaultComboBoxModel();
         String client = WeighBridgeApp.getApplication().getConfig().getsClient();
         String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
-        List wts = weightTicketRepository.getMatsModel(client, plant);
-        MaterialPK matPK1 = new MaterialPK();
+        List wts = weightTicketRepository.getMatsModel();
         Material mat1 = new Material();
-        matPK1.setMandt(WeighBridgeApp.getApplication().getConfig().getsClient());
-        matPK1.setMatnr("-2");
+        mat1.setMandt(WeighBridgeApp.getApplication().getConfig().getsClient());
+        mat1.setMatnr("-2");
         mat1.setMaktx("Tất cả");
-        mat1.setMaterialPK(matPK1);
         result.addElement(mat1);
         for (Object obj : wts) {
             Object[] wt = (Object[]) obj;
-            MaterialPK matPK = new MaterialPK();
             Material mat = new Material();
-            matPK.setMandt(WeighBridgeApp.getApplication().getConfig().getsClient());
+            mat.setMandt(WeighBridgeApp.getApplication().getConfig().getsClient());
             if (wt[0] == null) {
-                matPK.setMatnr("-1");
+                mat.setMatnr("-1");
                 mat.setMaktx("Linh tinh");
             } else {
-                matPK.setMatnr(wt[0].toString());
+                mat.setMatnr(wt[0].toString());
                 mat.setMaktx(wt[1].toString());
             }
-            mat.setMaterialPK(matPK);
             if (result.getIndexOf(mat) < 0) {
                 result.addElement(mat);
             }
@@ -1278,8 +1265,8 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 AppConfig config = WeighBridgeApp.getApplication().getConfig();
                 //Tuanna add to protected data as folowing IT security policy -- 20/05/2013         
                 int days = (int) ((dpDateTo.getDate().getTime() - dpDateFrom.getDate().getTime()) / (1000 * 60 * 60 * 24));
-                Date Now = new Date();
-                int days2 = (int) ((Now.getTime() - dpDateTo.getDate().getTime()) / (1000 * 60 * 60 * 24));
+//                Date Now = new Date();
+//                int days2 = (int) ((Now.getTime() - dpDateTo.getDate().getTime()) / (1000 * 60 * 60 * 24));
 //                if ( days >1 || days2 > 1 || 1>1 )   
 //                {
 //                    JOptionPane.showMessageDialog(rootPane, "Thông báo ! Yêu cầu truy vấn dữ liệu vượt khoảng thời gian cho phép."  );
@@ -1296,44 +1283,44 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 String fTo = format.format(dpDateTo.getDate());
                 System.out.println("dpFrom : " + fFrom + " to " + fTo);
 
-                List<WeightTicket> result = conWTicket.findByMandtWPlantDateFull(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), selecttext.getMaterialPK().getMatnr(), txtPlateNo.getText().trim());
-                List<WeightTicket> data = conWTicket.findByMandtWPlantDateFull(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), selecttext.getMaterialPK().getMatnr(), txtPlateNo.getText().trim());
+                List<WeightTicket> result = conWTicket.findByDateFull(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), selecttext.getMatnr(), txtPlateNo.getText().trim());
+                List<WeightTicket> data = conWTicket.findByDateFull(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), selecttext.getMatnr(), txtPlateNo.getText().trim());
                 result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
                 if (selecttext.getMaktx().equals("Linh tinh")) {
-                    data = conWTicket.findByMandtWPlantDateNull(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
+                    data = conWTicket.findByDateNull(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
                     result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
                     if (rbtStatusDissolved.isSelected()) {
-                        data = conWTicket.findByMandtWPlantDateDissolvedNull(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
+                        data = conWTicket.findByDateDissolvedNull(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
                         result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
                     } else if (rbtStatusPosted.isSelected()) {
-                        data = conWTicket.findByMandtWPlantDatePostedNull(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
+                        data = conWTicket.findByDatePostedNull(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
                         result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
                     } else if (rbtStatusAll.isSelected()) {
-                        data = conWTicket.findByMandtWPlantDateAllNull(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
+                        data = conWTicket.findByDateAllNull(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
                         result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
                     }
                 } else if (selecttext.getMaktx().equals("Tất cả")) {
-                    data = conWTicket.findByMandtWPlantDateNullAll(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
+                    data = conWTicket.findByDateNullAll(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
                     result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
                     if (rbtStatusDissolved.isSelected()) {
-                        data = conWTicket.findByMandtWPlantDateDissolvedNullAll(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
+                        data = conWTicket.findByDateDissolvedNullAll(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
                         result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
                     } else if (rbtStatusPosted.isSelected()) {
-                        data = conWTicket.findByMandtWPlantDatePostedNullAll(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
+                        data = conWTicket.findByDatePostedNullAll(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
                         result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
                     } else if (rbtStatusAll.isSelected()) {
-                        data = conWTicket.findByMandtWPlantDateAllNullAll(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
+                        data = conWTicket.findByDateAllNullAll(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
                         result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
                     }
                 } else {
                     if (rbtStatusDissolved.isSelected()) {
-                        data = conWTicket.findByMandtWPlantDateDissolved(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), selecttext.getMaterialPK().getMatnr(), txtPlateNo.getText().trim());
+                        data = conWTicket.findByDateDissolved(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), selecttext.getMatnr(), txtPlateNo.getText().trim());
                         result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
                     } else if (rbtStatusPosted.isSelected()) {
-                        data = conWTicket.findByMandtWPlantDatePosted(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), selecttext.getMaterialPK().getMatnr(), txtPlateNo.getText().trim());
+                        data = conWTicket.findByDatePosted(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), selecttext.getMatnr(), txtPlateNo.getText().trim());
                         result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
                     } else if (rbtStatusAll.isSelected()) {
-                        data = conWTicket.findByMandtWPlantDateAll(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), selecttext.getMaterialPK().getMatnr(), txtPlateNo.getText().trim());
+                        data = conWTicket.findByDateAll(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), selecttext.getMatnr(), txtPlateNo.getText().trim());
                         result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
                     }
                 }
@@ -1345,31 +1332,30 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
                 for (int i = 0; i < weightTicketList.size(); i++) {
                     WeightTicket item = weightTicketList.get(i);
-                    WeightTicketPK pk = item.getWeightTicketPK();
-                    if (!pk.getMandt().equalsIgnoreCase(config.getsClient()) && !pk.getWPlant().equalsIgnoreCase(config.getwPlant().toString())) {
+                    if (!item.getMandt().equalsIgnoreCase(config.getsClient()) && !item.getWplant().equalsIgnoreCase(config.getwPlant().toString())) {
                         continue;
                     }
-                    wtData[i][0] = pk.getSeqByDay();
-                    wtData[i][1] = item.getTenTaiXe();
-                    wtData[i][2] = item.getCmndBl();
-                    wtData[i][3] = item.getSoXe();
-                    wtData[i][4] = item.getSoRomooc();
-                    wtData[i][5] = item.getRegCategory();
-                    wtData[i][6] = item.getRegItemText();
-                    wtData[i][7] = item.getRegItemQty();
-                    wtData[i][8] = item.getDelivNumb();
+                    wtData[i][0] = item.getSeqDay();
+                    wtData[i][1] = item.getDriverName();
+                    wtData[i][2] = item.getDriverIdNo();
+                    wtData[i][3] = item.getPlateNo();
+                    wtData[i][4] = item.getTrailerId();
+                    wtData[i][5] = item.getRegType();
+                    wtData[i][6] = item.getRegItemDescription();
+                    wtData[i][7] = item.getRegItemQuantity();
+                    wtData[i][8] = item.getDeliveryOrderNo();
                     wtData[i][9] = item.getCreator();
-                    wtData[i][10] = item.getSeqByMonth();
-                    wtData[i][11] = item.getCreateDate();
+                    wtData[i][10] = item.getSeqMonth();
+                    wtData[i][11] = item.getCreatedDate();
                     String hh;
                     String mm;
                     String ss;
-                    hh = item.getCreateTime().substring(0, 2);
-                    mm = item.getCreateTime().substring(2, 4);
-                    ss = item.getCreateTime().substring(4);
+                    hh = item.getCreatedTime().substring(0, 2);
+                    mm = item.getCreatedTime().substring(2, 4);
+                    ss = item.getCreatedTime().substring(4);
                     wtData[i][12] = hh + ":" + mm + ":" + ss;
-                    wtData[i][13] = item.getDissolved();
-                    if (item.getPosted() == 1) {
+                    wtData[i][13] = item.isDissolved();
+                    if (item.isPosted()) {
                         wtData[i][14] = true;
                     } else {
                         wtData[i][14] = false;
@@ -1427,14 +1413,14 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             selectedRow = weightTicketList.get(tabResults.convertRowIndexToModel(tabResults.getSelectedRow()));
             if (selectedRow != null) {
                 try {
-                    // if (selectedRow.getDissolved() == null)
+                    // if (selectedRow.isDissolved() == null)
                     //  {
                     //      selectedRow.setDissolved(false);
                     // }
-                    if ((selectedRow.getDissolved() == null) || (selectedRow.getDissolved() == false)) { //+20100112#01 Không cho in khi phiếu đăng tài bị hủy
+                    if (!selectedRow.isDissolved()) { //+20100112#01 Không cho in khi phiếu đăng tài bị hủy
                         setMessage(resourceMapMsg.getString("msg.rePrinting"));
-                        txtWeightTicketNo.setText(selectedRow.getWeightTicketPK().getId().toString()
-                                + String.format("%03d", selectedRow.getWeightTicketPK().getSeqByDay())); //+20100303
+                        txtWeightTicketNo.setText(selectedRow.getId()
+                                + String.format("%03d", selectedRow.getSeqDay())); //+20100303
 
 
                         // tuanna add -- copy ticket ID to clipboard. 28.11.2012 
@@ -1689,10 +1675,8 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 //Check if D.O was used already or not???
                 if (validDO && outb != null) {
                     WeightTicket wt = null;
-                    String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-                    String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
                     String delivNumb = outb.getOutbDelPK().getDelivNumb();
-                    wt = weightTicketRepository.findByMandtWPlantDelivNumb(client, plant, delivNumb);
+                    wt = weightTicketRepository.findByDeliveryOrderNo(delivNumb);
                     String wplant = "";
                     wplant = WeighBridgeApp.getApplication().getConfig().getwPlant().toString();
                     String sDoType = "LF,LR,NL,ZTLF,ZTLR";
@@ -1704,7 +1688,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     }
 
                     if ((sDoType.indexOf(Lfart) >= 0 && outb.getWbstk() == 'X' && outb.getWerks().toString().equalsIgnoreCase(wplant))
-                            || (wt != null && (wt.getDissolved() == null || wt.getDissolved() == false))) {
+                            || (wt != null && !wt.isDissolved())) {
                         validDO = false;
                         outb = null;
                         String msg = "D.O \" " + val[k] + " \" đã được dùng để " + mode + " hàng, vui lòng tự  kiểm tra trước khi liên hệ đường dây nóng Dịch vụ khách hàng 0919 49 59 69 ";
@@ -1823,7 +1807,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 if (validDO && outb != null) {
                     newWeightTicket.setItem(outb.getDelivItem());
                     newWeightTicket.setMatnrRef(outb.getMatnr());
-                    newWeightTicket.setRegItemText(outb.getArktx());
+                    newWeightTicket.setRegItemDescription(outb.getArktx());
                     newWeightTicket.setUnit(outb.getVrkme());
                     newWeightTicket.setKunnr(outb.getKunnr());
                     txtNMaterial.setText(outb.getArktx());
@@ -2053,10 +2037,8 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 //Check if D.O was used already or not???
                 if (validDO && outb != null) {
                     WeightTicket wt = null;
-                    String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-                    String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
                     String delivNumb = outb.getOutbDelPK().getDelivNumb();
-                    wt = weightTicketRepository.findByMandtWPlantDelivNumb(client, plant, delivNumb);
+                    wt = weightTicketRepository.findByDeliveryOrderNo(delivNumb);
                     String Lfart;
                     try {
                         Lfart = outb.getLfart();
@@ -2064,7 +2046,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     } catch (Exception ex) {
                     }
 
-                    if ((wt != null && (wt.getDissolved() == null || wt.getDissolved() == false))) {
+                    if (wt != null && !wt.isDissolved()) {
                         validDO = false;
                         outb = null;
                         String msg = "D.O \" " + val[k] + " \" đã được dùng để " + mode + " hàng, vui lòng tự  kiểm tra trước khi liên hệ đường dây nóng Dịch vụ khách hàng 0919 49 59 69 ";
@@ -2187,7 +2169,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 if (validDO && outb != null) {
                     newWeightTicket.setItem(outb.getDelivItem());
                     newWeightTicket.setMatnrRef(outb.getMatnr());
-                    newWeightTicket.setRegItemText(outb.getArktx());
+                    newWeightTicket.setRegItemDescription(outb.getArktx());
                     newWeightTicket.setUnit(outb.getVrkme());
                     newWeightTicket.setKunnr(outb.getKunnr());
                     txtNMaterial.setText(outb.getArktx());
@@ -2297,36 +2279,39 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             if (iCount > 0) {
                 seqBDay = seqBDay + iCount;
             }
-            newWeightTicket.setWeightTicketPK(new WeightTicketPK(sap.getsClient(), sap.getwPlant().toString(), id, seqBDay));
-            newWeightTicket.setSeqByMonth(seqBMonth);
-            newWeightTicket.setCreateDate(now);
+            newWeightTicket.setId(Integer.parseInt(id));
+            newWeightTicket.setMandt(sap.getsClient());
+            newWeightTicket.setWplant(sap.getwPlant().toString());
+            newWeightTicket.setSeqDay(seqBDay);
+            newWeightTicket.setSeqMonth(seqBMonth);
+            newWeightTicket.setCreatedDate((java.sql.Date) now);
             formatter.applyPattern("HHmmss");
-            newWeightTicket.setCreateTime(formatter.format(now));
+            newWeightTicket.setCreatedTime(formatter.format(now));
             newWeightTicket.setCreator(WeighBridgeApp.getApplication().getLogin().getUid());
             newWeightTicket.setOfflineMode(WeighBridgeApp.getApplication().isOfflineMode());
-            newWeightTicket.setRegCategory(rbtNInward.isSelected() ? 'I' : 'O');
-            newWeightTicket.setRegItemQty(new BigDecimal(((Number) txtNWeight.getValue()).doubleValue()));
+            newWeightTicket.setRegType(rbtNInward.isSelected() ? 'I' : 'O');
+            newWeightTicket.setRegItemQuantity(new BigDecimal(((Number) txtNWeight.getValue()).doubleValue()));
             newWeightTicket.setWbId(sap.getWbId().toString());
             newWeightTicket.setAbbr(abbr);
 //            System.out.println(WeighBridgeApp.getApplication().isOfflineMode());
 //            if(WeighBridgeApp.getApplication().isOfflineMode()){
             newWeightTicket.setDocYear(year);
-            newWeightTicket.setPosted(0);
-            newWeightTicket.setSoRomooc(txtNTrailerPlate.getText().trim());
+            newWeightTicket.setPosted(false);
+            newWeightTicket.setTrailerId(txtNTrailerPlate.getText().trim());
 //            }
-            if (newWeightTicket.getDelivNumb() != null && newWeightTicket.getDelivNumb().trim().isEmpty()) {
-                newWeightTicket.setDelivNumb(null);
+            if (newWeightTicket.getDeliveryOrderNo() != null && newWeightTicket.getDeliveryOrderNo().trim().isEmpty()) {
+                newWeightTicket.setDeliveryOrderNo(null);
                 newWeightTicket.setItem(null);
                 newWeightTicket.setMatnrRef(null);
-                newWeightTicket.setRegItemText(txtNMaterial.getText().trim());
+                newWeightTicket.setRegItemDescription(txtNMaterial.getText().trim());
                 newWeightTicket.setUnit(null);
             }
             //+20100113#01
             newWeightTicket.setKunnr(null);
-            if (newWeightTicket.getDelivNumb() != null && !newWeightTicket.getDelivNumb().trim().isEmpty()) {
-                String val = newWeightTicket.getDelivNumb().trim();
+            if (newWeightTicket.getDeliveryOrderNo() != null && !newWeightTicket.getDeliveryOrderNo().trim().isEmpty()) {
+                String val = newWeightTicket.getDeliveryOrderNo().trim();
                 val = Conversion_Exit.Conv_output_num(val, 10);
-                newWeightTicket.setDelivNumb(val);
+                newWeightTicket.setDeliveryOrderNo(val);
                 if (outbDel != null) {
                     newWeightTicket.setKunnr(outbDel.getKunnr());
                 }
@@ -2336,7 +2321,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             List<OutbDetailsV2> detail = new ArrayList<OutbDetailsV2>();
             OutbDetailsV2 item = null;
             if (WeighBridgeApp.getApplication().isOfflineMode() && !txtNDONum.getText().equals("")) {
-                newWeightTicket.setDelivNumb(txtNDONum.getText());
+                newWeightTicket.setDeliveryOrderNo(txtNDONum.getText());
             } else if (!WeighBridgeApp.getApplication().isOfflineMode()) {
                 if (!txtNDONum.getText().equals("")) {
                     String[] do_list = txtNDONum.getText().trim().split("-");
@@ -2379,8 +2364,8 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
             try {
                 setMessage(resourceMapMsg.getString("msg.printing"));
-                txtWeightTicketNo.setText(newWeightTicket.getWeightTicketPK().getId().toString()
-                        + String.format("%03d", newWeightTicket.getWeightTicketPK().getSeqByDay())); //+20100303
+                txtWeightTicketNo.setText(newWeightTicket.getId()
+                        + String.format("%03d", newWeightTicket.getSeqDay())); //+20100303
 
                 // tuanna -  update tai trong vao phieu can 
                 //  newWeightTicket.get
@@ -2419,13 +2404,11 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             setClearable(false);
             setSaveNeeded(false);
             if (flag_revert) {
-                String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-                String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
-                List<WeightTicket> wt = weightTicketRepository.getListByMandtWPlantDelivNumb(client, plant, outb_number);
+                List<WeightTicket> wt = weightTicketRepository.getListByDeliveryOrderNo(outb_number);
                 WeightTicket item = null;
                 for (int i = 0; i < wt.size() - 1; i++) {
                     item = wt.get(i);
-                    item.setPosted(-1);
+                    item.setPosted(false);
                     if (!entityManager.getTransaction().isActive()) {
                         entityManager.getTransaction().begin();
                     }
@@ -2567,8 +2550,8 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("P_CLIENT", WeighBridgeApp.getApplication().getConfig().getsClient());
             map.put("P_WPLANT", WeighBridgeApp.getApplication().getConfig().getwPlant());
-            map.put("P_ID", wt.getWeightTicketPK().getId());
-            map.put("P_DAYSEQ", wt.getWeightTicketPK().getSeqByDay());
+            map.put("P_ID", wt.getId());
+            map.put("P_DAYSEQ", wt.getSeqDay());
             map.put("P_REPRINT", reprint);
             map.put("P_ADDRESS", config.getRptId());
             String reportName = null;
@@ -2592,23 +2575,8 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     private boolean checkLicPlate(String lfart, String traid) {
         boolean result = false;
-        //20121217
-        Material mat_tmp = null;
-        Boolean ximang_tmp = false;
-        WeightTicketJpaController con = new WeightTicketJpaController();
-        try {
-
-            mat_tmp = con.CheckPOSTO(mat_numb);
-            if (mat_tmp.getXimang() != null) {
-                ximang_tmp = true;
-            } else {
-                ximang_tmp = false;
-            }
-        } catch (Exception ex) {
-            java.util.logging.Logger.getLogger(WeightTicketView.class.getName()).log(Level.SEVERE, null, ex);
-        }
         //if (lfart != null && ( lfart.equalsIgnoreCase("LF") || lfart.equalsIgnoreCase("ZTLF") ) ) {
-        if (lfart != null && ximang_tmp && (lfart.equalsIgnoreCase("ZTLF") || lfart.equalsIgnoreCase("NL"))) {
+        if (lfart != null && (lfart.equalsIgnoreCase("ZTLF") || lfart.equalsIgnoreCase("NL"))) {
             String txt = traid;
             String doLicPlate = null;
             int idx1 = txt.indexOf("|");
@@ -2660,22 +2628,21 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     doLicPlate = traid;
                 }
             }
-            if (doLicPlate.equalsIgnoreCase(newWeightTicket.getSoXe())) {
+            if (doLicPlate.equalsIgnoreCase(newWeightTicket.getPlateNo())) {
                 result = true;
             } else {
                 result = false;
-                JOptionPane.showMessageDialog(rootPane, "Số xe \"" + newWeightTicket.getSoXe()
+                JOptionPane.showMessageDialog(rootPane, "Số xe \"" + newWeightTicket.getPlateNo()
                         + "\" không khớp với số được đăng ký trong D.O: " + doLicPlate);
             }
         } else {
             //Do local check for entered Truck's License Plate
             SAPSetting sapSetting = WeighBridgeApp.getApplication().getSapSetting();
-            Vehicle v = entityManager.find(Vehicle.class, newWeightTicket.getSoXe());
+            Vehicle v = entityManager.find(Vehicle.class, newWeightTicket.getPlateNo());
 
-            if (v == null && !ximang_tmp //                    && (sapSetting.getCheckTalp() != null && sapSetting.getCheckTalp().booleanValue() == true)
-                    ) {
+            if (v == null) {
                 result = false;
-                JOptionPane.showMessageDialog(rootPane, "Số xe \" " + newWeightTicket.getSoXe()
+                JOptionPane.showMessageDialog(rootPane, "Số xe \" " + newWeightTicket.getPlateNo()
                         + " \" chưa được đăng ký để xuất/nhập hàng!");
             } else {
 
@@ -2725,7 +2692,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     private void cleanData() {
-        newWeightTicket.setWeightTicketPK(null);
+        newWeightTicket = null;
         outbDel = null;
         txtNDriverName.setText("");
         txtNCMNDBL.setText("");
@@ -2759,7 +2726,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 WeightTicket item = null;
                 item = data.get(i);
 
-                String ct = item.getCreateTime();
+                String ct = item.getCreatedTime();
 //                System.out.println(ct);
                 Character c0 = ct.charAt(0);
                 Character c1 = ct.charAt(1);

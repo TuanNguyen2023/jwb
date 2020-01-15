@@ -54,7 +54,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="pnScaleData" alignment="0" max="32767" attributes="2"/>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="pnWTFilter" pref="563" max="32767" attributes="0"/>
+                      <Component id="pnWTFilter" pref="577" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="pnCurScale" min="-2" max="-2" attributes="1"/>
                   </Group>
@@ -76,7 +76,7 @@
               <Component id="pnScaleData" min="-2" pref="119" max="-2" attributes="1"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="pnWTicket" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="66" max="32767" attributes="0"/>
+              <EmptySpace pref="64" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -109,7 +109,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="lblWTNum" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="txtWTNum" pref="336" max="32767" attributes="0"/>
+                          <Component id="txtWTNum" pref="350" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jButton1" min="-2" pref="58" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -123,7 +123,7 @@
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="txtPONum" min="-2" pref="131" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="rbtMvt311" pref="427" max="32767" attributes="0"/>
+                              <Component id="rbtMvt311" pref="441" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
@@ -522,9 +522,9 @@
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="txfGoodsQty" alignment="0" pref="326" max="32767" attributes="2"/>
-                      <Component id="txfOutQty" alignment="0" pref="326" max="32767" attributes="2"/>
-                      <Component id="txfInQty" alignment="0" pref="326" max="32767" attributes="2"/>
+                      <Component id="txfGoodsQty" alignment="0" pref="333" max="32767" attributes="2"/>
+                      <Component id="txfOutQty" alignment="0" pref="333" max="32767" attributes="2"/>
+                      <Component id="txfInQty" alignment="0" pref="333" max="32767" attributes="2"/>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -540,8 +540,8 @@
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="txtOutTime" pref="320" max="32767" attributes="2"/>
-                              <Component id="txtInTime" alignment="0" pref="320" max="32767" attributes="2"/>
+                              <Component id="txtOutTime" pref="327" max="32767" attributes="2"/>
+                              <Component id="txtInTime" alignment="0" pref="327" max="32767" attributes="2"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
@@ -809,7 +809,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="chkDissolved" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="347" max="32767" attributes="0"/>
+                          <EmptySpace pref="361" max="32767" attributes="0"/>
                           <Component id="jButton3" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="btnPostAgain" min="-2" max="-2" attributes="0"/>
@@ -825,12 +825,12 @@
                               <Component id="lblPoPosto" min="-2" max="-2" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="cbxReason" pref="240" max="32767" attributes="0"/>
-                                      <Component id="txtGRText" pref="240" max="32767" attributes="0"/>
-                                      <Component id="cbxSLoc" alignment="1" pref="240" max="32767" attributes="0"/>
-                                      <Component id="txtLicPlate" alignment="0" pref="240" max="32767" attributes="0"/>
-                                      <Component id="txtDName" alignment="0" pref="240" max="32767" attributes="2"/>
-                                      <Component id="txtTrailerPlate" alignment="0" pref="240" max="32767" attributes="0"/>
+                                      <Component id="cbxReason" pref="247" max="32767" attributes="0"/>
+                                      <Component id="txtGRText" pref="247" max="32767" attributes="0"/>
+                                      <Component id="cbxSLoc" alignment="1" pref="247" max="32767" attributes="0"/>
+                                      <Component id="txtLicPlate" alignment="0" pref="247" max="32767" attributes="0"/>
+                                      <Component id="txtDName" alignment="0" pref="247" max="32767" attributes="2"/>
+                                      <Component id="txtTrailerPlate" alignment="0" pref="247" max="32767" attributes="0"/>
                                       <Component id="txtCMNDBL" alignment="0" min="-2" pref="173" max="-2" attributes="2"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
@@ -848,21 +848,21 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="txtPoPosto" pref="429" max="32767" attributes="0"/>
+                              <Component id="txtPoPosto" pref="436" max="32767" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="rbtInward" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Component id="rbtOutward" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Component id="txtRegItem" alignment="0" min="-2" pref="250" max="-2" attributes="0"/>
-                              <Component id="txtDelNum" alignment="0" pref="429" max="32767" attributes="0"/>
-                              <Component id="cbxBatch" alignment="0" pref="429" max="32767" attributes="0"/>
-                              <Component id="txtCementDesc" alignment="0" pref="429" max="32767" attributes="0"/>
-                              <Component id="cbxCompleted" alignment="0" pref="429" max="32767" attributes="0"/>
-                              <Component id="txtMatnr" alignment="0" pref="429" max="32767" attributes="0"/>
-                              <Component id="cbxKunnr" alignment="0" pref="429" max="32767" attributes="0"/>
-                              <Component id="cbxVendorLoading" alignment="1" pref="429" max="32767" attributes="0"/>
-                              <Component id="cbxVendorTransport" alignment="1" pref="429" max="32767" attributes="0"/>
+                              <Component id="txtDelNum" alignment="0" pref="436" max="32767" attributes="0"/>
+                              <Component id="cbxBatch" alignment="0" pref="436" max="32767" attributes="0"/>
+                              <Component id="txtCementDesc" alignment="0" pref="436" max="32767" attributes="0"/>
+                              <Component id="cbxCompleted" alignment="0" pref="436" max="32767" attributes="0"/>
+                              <Component id="txtMatnr" alignment="0" pref="436" max="32767" attributes="0"/>
+                              <Component id="cbxKunnr" alignment="0" pref="436" max="32767" attributes="0"/>
+                              <Component id="cbxVendorLoading" alignment="1" pref="436" max="32767" attributes="0"/>
+                              <Component id="cbxVendorTransport" alignment="1" pref="436" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>

@@ -7,7 +7,6 @@ package com.gcs.wb.controller;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.Material;
-import com.gcs.wb.jpa.entity.MaterialPK;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.WeightTicket;
 import com.gcs.wb.jpa.repositorys.TransportAgentRepository;
@@ -70,22 +69,18 @@ public class WeightTicketReportController {
 
     public DefaultComboBoxModel getMaterialsModel() {
         DefaultComboBoxModel result = new DefaultComboBoxModel();
-        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-        String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
-        List weightTickets = weightTicketRepository.getMatsModel(client, plant);
+        List weightTickets = weightTicketRepository.getMatsModel();
         for (Object obj : weightTickets) {
             Object[] weightTicket = (Object[]) obj;
-            MaterialPK materialPK = new MaterialPK();
             Material material = new Material();
-            materialPK.setMandt(WeighBridgeApp.getApplication().getConfig().getsClient());
+            material.setMandt(WeighBridgeApp.getApplication().getConfig().getsClient());
             if (weightTicket[0] == null) {
-                materialPK.setMatnr("-1");
+                material.setMatnr("-1");
                 material.setMaktx("Linh tinh");
             } else {
-                materialPK.setMatnr(weightTicket[0].toString());
+                material.setMatnr(weightTicket[0].toString());
                 material.setMaktx(weightTicket[1].toString());
             }
-            material.setMaterialPK(materialPK);
             if (result.getIndexOf(material) < 0) {
                 result.addElement(material);
             }
@@ -99,33 +94,33 @@ public class WeightTicketReportController {
         wtDatas = new Object[weightTickets.size()][wtColNames.length];
         for (int i = 0; i < weightTickets.size(); i++) {
             WeightTicket item = weightTickets.get(i);
-            String hh = item.getCreateTime().substring(0, 2);
-            String mm = item.getCreateTime().substring(2, 4);
-            String ss = item.getCreateTime().substring(4);
+            String hh = item.getCreatedTime().substring(0, 2);
+            String mm = item.getCreatedTime().substring(2, 4);
+            String ss = item.getCreatedTime().substring(4);
             Calendar create_date = Calendar.getInstance();
-            create_date.setTime(item.getCreateDate());
+            create_date.setTime(item.getCreatedDate());
             create_date.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hh));
             create_date.set(Calendar.MINUTE, Integer.valueOf(mm));
             create_date.set(Calendar.SECOND, Integer.valueOf(ss));
             wtDatas[i][0] = i + 1;// item.getSeqByMonth();
-            wtDatas[i][1] = item.getWeightTicketPK().getSeqByDay();
-            wtDatas[i][2] = item.getTenTaiXe();
-            wtDatas[i][3] = item.getCmndBl();
-            wtDatas[i][4] = item.getSoXe();
-            wtDatas[i][5] = item.getSoRomooc();
+            wtDatas[i][1] = item.getSeqDay();
+            wtDatas[i][2] = item.getDriverName();
+            wtDatas[i][3] = item.getDriverIdNo();
+            wtDatas[i][4] = item.getPlateNo();
+            wtDatas[i][5] = item.getTrailerId();
             wtDatas[i][6] = item.getCreator();
             wtDatas[i][7] = create_date.getTime();
-            wtDatas[i][8] = item.getRegCategory();
-            wtDatas[i][9] = item.getRegItemText();
+            wtDatas[i][8] = item.getRegType();
+            wtDatas[i][9] = item.getRegItemDescription();
             wtDatas[i][10] = item.getFTime();
             wtDatas[i][11] = item.getFScale() == null ? item.getFScale() : item.getFScale().doubleValue() / 1000d;
             wtDatas[i][12] = item.getSTime();
             wtDatas[i][13] = item.getSScale() == null ? item.getSScale() : item.getSScale().doubleValue() / 1000d;
             wtDatas[i][14] = item.getGQty();
-            wtDatas[i][15] = item.getDelivNumb();
+            wtDatas[i][15] = item.getDeliveryOrderNo();
             wtDatas[i][16] = item.getMatDoc();
-            wtDatas[i][17] = item.getDissolved();
-            if (item.getPosted() == 1) {
+            wtDatas[i][17] = item.isDissolved();
+            if (item.isPosted()) {
                 wtDatas[i][18] = true;
             } else {
                 wtDatas[i][18] = false;

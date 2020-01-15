@@ -40,7 +40,6 @@ import com.gcs.wb.jpa.entity.OutbDetailsV2PK;
 import com.gcs.wb.jpa.entity.PurOrder;
 import com.gcs.wb.jpa.entity.SLoc;
 import com.gcs.wb.jpa.entity.TransportAgent;
-import com.gcs.wb.jpa.entity.Vehicle;
 import com.gcs.wb.jpa.entity.Vendor;
 import com.gcs.wb.jpa.entity.VendorPK;
 import com.gcs.wb.jpa.repositorys.BatchStocksRepository;
@@ -52,9 +51,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JOptionPane;
 import org.hibersap.session.Session;
 
 /**

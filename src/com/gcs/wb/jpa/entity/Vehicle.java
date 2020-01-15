@@ -4,6 +4,7 @@
  */
 package com.gcs.wb.jpa.entity;
 
+import com.gcs.wb.base.constant.Constants;
 import java.io.Serializable;
 import java.sql.Date;
 import javax.persistence.Column;
@@ -26,8 +27,6 @@ import javax.persistence.Table;
 public class Vehicle implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private static final String STATUS_ACTIVED = "ACTIVED";
-    private static final String STATUS_INACTIVED = "INACTIVED";
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -119,11 +118,11 @@ public class Vehicle implements Serializable {
     }
 
     public boolean isProhibit() {
-        return STATUS_INACTIVED.equals(this.status);
+        return Constants.Vehicle.STATUS_INACTIVED.equals(this.status);
     }
 
     public void setProhibit(boolean isProhibit) {
-        this.status = isProhibit ? STATUS_INACTIVED : STATUS_ACTIVED;
+        this.status = isProhibit ? Constants.Vehicle.STATUS_INACTIVED : Constants.Vehicle.STATUS_ACTIVED;
     }
 
     @Override

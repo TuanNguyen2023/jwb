@@ -5,9 +5,12 @@
 package com.gcs.wb.jpa.entity;
 
 import java.io.Serializable;
+import java.sql.Date;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -15,53 +18,90 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author admin
+ * @author thanghl
  */
 @Entity
-@Table(name = "material")
+@Table(name = "tbl_material")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Material.CheckPOSTO", query = "SELECT m FROM Material m WHERE m.materialPK.mandt = :mandt AND m.materialPK.wplant = :wplant AND m.materialPK.matnr LIKE :matnr")
+    @NamedQuery(name = "Material.findAll", query = "SELECT m FROM Material m"),
+    @NamedQuery(name = "Material.CheckPOSTO", query = "SELECT m FROM Material m WHERE m.matnr = :matnr")
 })
 public class Material implements Serializable {
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected MaterialPK materialPK;
-//    @Column(name = "WPLANT")
-//    private String wplant;
-    @Column(name = "MAKTX")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int id;
+    @Column(name = "matnr", unique = true)
+    private String matnr;
+    @Column(name = "mandt")
+    private String mandt;
+    @Column(name = "wplant")
+    private String wplant;
+    @Column(name = "maktx")
     private String maktx;
-    @Column(name = "MAKTG")
+    @Column(name = "maktg")
     private String maktg;
-    @Column(name = "XCHPF")
+    @Column(name = "xchpf")
     private Character xchpf;
-    @Column(name = "CHECK_POSTO")
+    @Column(name = "check_posto")
     private String checkPosto;
-    @Column(name = "Ximang")
-    private String ximang;
-    @Column(name = "Bag")
-    private Boolean bag;
+    @Column(name = "created_date")
+    private Date createdDate;
+    @Column(name = "updated_date")
+    private Date updatedDate;
+    @Column(name = "deleted_date")
+    private Date deletedDate;
         
     public Material() {
     }
 
-    public Material(MaterialPK materialPK) {
-        this.materialPK = materialPK;
+    public Material(int id) {
+        this.id = id;
     }
-
-    public Material(String mandt, String wplant, String matnr) {
-        this.materialPK = new MaterialPK(mandt, wplant, matnr);
-    }
+    
     public Material(String mandt, String wplant) {
-        this.materialPK = new MaterialPK(mandt, wplant);
+        this.mandt = mandt;
+        this.wplant = wplant;
+    }
+    
+    public Material(String mandt, String wplant, String matnr) {
+        this.mandt = mandt;
+        this.wplant = wplant;
+        this.matnr = matnr;
+     }
+
+    public int getId() {
+        return id;
     }
 
-    public MaterialPK getMaterialPK() {
-        return materialPK;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setMaterialPK(MaterialPK materialPK) {
-        this.materialPK = materialPK;
+    public String getMatnr() {
+        return matnr;
+    }
+
+    public void setMatnr(String matnr) {
+        this.matnr = matnr;
+    }
+
+    public String getMandt() {
+        return mandt;
+    }
+
+    public void setMandt(String mandt) {
+        this.mandt = mandt;
+    }
+
+    public String getWplant() {
+        return wplant;
+    }
+
+    public void setWplant(String wplant) {
+        this.wplant = wplant;
     }
 
     public String getMaktx() {
@@ -95,72 +135,74 @@ public class Material implements Serializable {
     public void setCheckPosto(String checkPosto) {
         this.checkPosto = checkPosto;
     }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (materialPK != null ? materialPK.hashCode() : 0);
-        return hash;
+    
+    public Date getCreatedDate() {
+        return createdDate;
     }
 
-    @Override
-    public boolean equals(Object object) {
+    public void setCreatedDate(Date created_date) {
+        this.createdDate = created_date;
+    }
 
-        if (!(object instanceof Material)) {
+    public Date getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(Date updated_date) {
+        this.updatedDate = updated_date;
+    }
+
+    public Date getDeletedDate() {
+        return deletedDate;
+    }
+
+    public void setDeletedDate(Date deleted_date) {
+        this.deletedDate = deleted_date;
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Material material = (Material) o;
+
+        if (id != material.id) return false;
+        if (matnr != null ? !matnr.equals(material.matnr) : material.matnr != null) return false;
+        if (mandt != null ? !mandt.equals(material.mandt) : material.mandt != null) return false;
+        if (wplant != null ? !wplant.equals(material.wplant) : material.wplant != null) return false;
+        if (maktx != null ? !maktx.equals(material.maktx) : material.maktx != null) return false;
+        if (maktg != null ? !maktg.equals(material.maktg) : material.maktg != null) return false;
+        if (xchpf != null ? !xchpf.equals(material.xchpf) : material.xchpf != null) return false;
+        if (checkPosto != null ? !checkPosto.equals(material.checkPosto) : material.checkPosto != null) return false;
+        if (createdDate != null ? !createdDate.equals(material.createdDate) : material.createdDate != null)
             return false;
-        }
-        Material other = (Material) object;
-        if ((this.materialPK == null && other.materialPK != null) || (this.materialPK != null && !this.materialPK.equals(other.materialPK))) {
+        if (updatedDate != null ? !updatedDate.equals(material.updatedDate) : material.updatedDate != null)
             return false;
-        }
+        if (deletedDate != null ? !deletedDate.equals(material.deletedDate) : material.deletedDate != null)
+            return false;
+
         return true;
     }
 
     @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 31));
+        result = 31 * result + (matnr != null ? matnr.hashCode() : 0);
+        result = 31 * result + (mandt != null ? mandt.hashCode() : 0);
+        result = 31 * result + (wplant != null ? wplant.hashCode() : 0);
+        result = 31 * result + (maktx != null ? maktx.hashCode() : 0);
+        result = 31 * result + (maktg != null ? maktg.hashCode() : 0);
+        result = 31 * result + (xchpf != null ? xchpf.hashCode() : 0);
+        result = 31 * result + (checkPosto != null ? checkPosto.hashCode() : 0);
+        result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
+        result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
+        result = 31 * result + (deletedDate != null ? deletedDate.hashCode() : 0);
+        return result;
+    }
+
+    @Override
     public String toString() {
-        return "com.gcs.wb.jpa.entity.Material[materialPK=" + materialPK + "]";
+        return "com.gcs.wb.jpa.entity.Material[id=" + id + "]";
     }
-
-    /**
-     * @return the wplant
-     */
-//    public String getWplant() {
-//        return wplant;
-//    }
-
-    /**
-     * @param wplant the wplant to set
-     */
-//    public void setWplant(String wplant) {
-//        this.wplant = wplant;
-//    }
-
-    /**
-     * @return the ximang
-     */
-    public String getXimang() {
-        return ximang;
-    }
-
-    /**
-     * @param ximang the ximang to set
-     */
-    public void setXimang(String ximang) {
-        this.ximang = ximang;
-    }
-
-    /**
-     * @return the bag
-     */
-    public Boolean getBag() {
-        return bag;
-    }
-
-    /**
-     * @param bag the bag to set
-     */
-    public void setBag(Boolean bag) {
-        this.bag = bag;
-    }
-   
 }
