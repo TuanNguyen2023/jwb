@@ -5,23 +5,27 @@
 package com.gcs.wb.controller;
 
 import com.gcs.wb.WeighBridgeApp;
-import com.gcs.wb.bapi.helper.SAP2Local;
+import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.base.constant.Constants;
+import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.TransportAgent;
+import com.gcs.wb.jpa.entity.TransportAgentVehicle;
 import com.gcs.wb.jpa.entity.Vehicle;
-import com.gcs.wb.model.AppConfig;
+import com.gcs.wb.jpa.repositorys.TransportAgentRepository;
+import com.gcs.wb.jpa.repositorys.TransportAgentVehicleRepository;
+import com.gcs.wb.jpa.repositorys.VehicleRepository;
+import com.gcs.wb.jpa.service.JPAService;
+import com.gcs.wb.views.TransportAgentView;
 import java.awt.Color;
 import java.util.List;
 import java.util.regex.Matcher;
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JRootPane;
 import javax.swing.JTextField;
+import org.jdesktop.application.Application;
 import org.jdesktop.application.ResourceMap;
 
 /**
@@ -30,70 +34,17 @@ import org.jdesktop.application.ResourceMap;
  */
 public class TransportAgentController {
 
-    public DefaultListModel getTransportAgentsModel(EntityManager entityManager, ResourceMap resourceMapMsg) {
-        AppConfig config = WeighBridgeApp.getApplication().getConfig();
-        TypedQuery<TransportAgent> typedQuery = entityManager.createNamedQuery("TransportAgent.findAll", TransportAgent.class);
-        List<TransportAgent> transportAgents = typedQuery.getResultList();
+    private EntityManager entityManager = JPAConnector.getInstance();
+    private TransportAgentVehicleRepository transportAgentVehicleRepository = new TransportAgentVehicleRepository();
+    private TransportAgentRepository transportAgentRepository = new TransportAgentRepository();
+    private VehicleRepository vehicleRepository = new VehicleRepository();
+    private JFrame mainFrame = WeighBridgeApp.getApplication().getMainFrame();
+    public ResourceMap resourceMapMsg = Application.getInstance(WeighBridgeApp.class).getContext().getResourceMap(TransportAgentView.class);
+    SAPService sapService = new SAPService();
+    JPAService jpaService = new JPAService();
 
-        // get from SAP
-        List<com.gcs.wb.jpa.entity.TransportAgent> transportAgentsSAP = SAP2Local.getTransportAgentList(config.getwPlant());
-        //sync SAP <=> DB
-        // delete data DB not exist SAP
-        for (TransportAgent transportAgent : transportAgents) {
-            if (transportAgentsSAP.indexOf(transportAgent) == -1) {
-                // delete in table Vehicle
-                TypedQuery<Vehicle> vehicleTypedQuery = entityManager.createNamedQuery("Vehicle.findByTaAbbr", Vehicle.class);
-                vehicleTypedQuery.setParameter("taAbbr", transportAgent.getAbbr());
-                List<Vehicle> vehicles = vehicleTypedQuery.getResultList();
-
-                if (!entityManager.getTransaction().isActive()) {
-                    entityManager.getTransaction().begin();
-                }
-                try {
-                    for (Vehicle vehicle : vehicles) {
-                        entityManager.remove(vehicle);
-                    }
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), resourceMapMsg.getString("msg.deleteVehicleFalse"));
-                    entityManager.getTransaction().rollback();
-                }
-                // delete dvvc
-                try {
-                    if (!entityManager.contains(transportAgent)) {
-                        transportAgent = entityManager.merge(transportAgent);
-                    }
-                    entityManager.remove(transportAgent);
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), resourceMapMsg.getString("msg.deleteProviderFalse"));
-                    entityManager.getTransaction().rollback();
-                }
-
-                entityManager.getTransaction().commit();
-                entityManager.clear();
-            }
-        }
-
-        try {
-            if (!entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().begin();
-            }
-            // update dara SAP -> DB
-            for (com.gcs.wb.jpa.entity.TransportAgent transportAgentSAP : transportAgentsSAP) {
-
-                if (transportAgents.indexOf(transportAgentSAP) == -1) {
-                    entityManager.persist(transportAgentSAP);
-                } else {
-                    entityManager.merge(transportAgentSAP);
-                }
-            }
-            entityManager.getTransaction().commit();
-            entityManager.clear();
-
-        } catch (Exception ex) {
-            entityManager.getTransaction().rollback();
-        }
-        // get dvvc
-        transportAgents = typedQuery.getResultList();
+    public DefaultListModel getTransportAgentsModel() {
+        List<TransportAgent> transportAgents = sapService.getTransportAgentList();
         DefaultListModel model = new DefaultListModel();
         for (TransportAgent transportAgent : transportAgents) {
             model.addElement(transportAgent);
@@ -101,81 +52,29 @@ public class TransportAgentController {
         return model;
     }
 
-    public DefaultListModel getVehiclesModel(EntityManager entityManager, TransportAgent transportAgentSelected) {
-        TypedQuery<Vehicle> typedQuery = entityManager.createNamedQuery("Vehicle.findByTaAbbr", Vehicle.class);
-        typedQuery.setParameter("taAbbr", transportAgentSelected.getAbbr());
-        List<Vehicle> vehicles = typedQuery.getResultList();
+    public DefaultListModel getVehiclesModel(TransportAgent transportAgentSelected) {
+        List<TransportAgentVehicle> transportAgentVehicles = jpaService.getVehicle(transportAgentSelected.getId());
         DefaultListModel model = new DefaultListModel();
-        for (Vehicle vehicle : vehicles) {
-            model.addElement(vehicle);
+        for (TransportAgentVehicle transportAgentVehicle : transportAgentVehicles) {
+            model.addElement(transportAgentVehicle.getVehicle());
         }
         return model;
     }
 
-    public Vehicle saveVehicle(EntityManager entityManager, TransportAgent transportAgentSelected, JTextField txtLicensePlate,
-            Vehicle vehicleSelected, JList lstVehicle, JRootPane rootPane, DefaultListModel getVehiclesModel) {
-        Vehicle vehicle = entityManager.find(Vehicle.class, txtLicensePlate.getText().trim());
-        if (vehicle == null) {
-            vehicle = new Vehicle();
-            // TODO uncomment
-            //vehicle.setSoXe(txtLicensePlate.getText().trim());
-            //vehicle.setTaAbbr(transportAgentSelected.getAbbr());
-            if (!entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().begin();
-            }
-            entityManager.persist(vehicle);
-            entityManager.getTransaction().commit();
-            entityManager.clear();
-            //setVehicleCreatable(false);
-            vehicleSelected = null;
-            txtLicensePlate.setText("");
-            lstVehicle.clearSelection();
-            lstVehicle.setModel(getVehiclesModel);
-        } else { // TODO uncomment
-            TransportAgent transportAgent = null;//entityManager.find(TransportAgent.class, vehicle.getTaAbbr());
-            if (transportAgent != null) {
-                JOptionPane.showMessageDialog(rootPane, "Số xe "
-                        + txtLicensePlate.getText().trim()
-                        + " đã được đăng ký cho đơn vị vận chuyển "
-                        + transportAgent.getName());
-            }
-        }
-        return vehicle;
+    public void saveVehicle(JTextField txtLicensePlate, TransportAgent transportAgentSelected) {
+        Vehicle vehicle = vehicleRepository.findByPlateNo(txtLicensePlate.getText().trim());
+        jpaService.saveVehicle(txtLicensePlate.getText().trim(), vehicle, transportAgentSelected);
     }
 
-    public void vehicleRemoveActionPerformed(EntityManager entityManager, JList lstVehicle,
-            Vehicle vehicleSelected, DefaultListModel getVehiclesModel) {
-        if (!entityManager.getTransaction().isActive()) {
-            entityManager.getTransaction().begin();
-        }
-        entityManager.remove(vehicleSelected);
-        entityManager.getTransaction().commit();
-
-        entityManager.clear();
-        lstVehicle.clearSelection();
-        lstVehicle.setModel(getVehiclesModel);
-        vehicleSelected = null;
+    public void vehicleRemoveActionPerformed(TransportAgent transportAgentSelected, Vehicle vehicleSelected) {
+        jpaService.removeVehicle(transportAgentSelected.getId(), vehicleSelected.getId());
     }
 
-    public void prohibitApplyActionPerformed(EntityManager entityManager, Vehicle vehicleSelected,
-            JCheckBox chkProhibitVehicle, JList lstVehicle, DefaultListModel getVehiclesModel) {
-        vehicleSelected.setProhibit(chkProhibitVehicle.isSelected());
-
-        if (!entityManager.getTransaction().isActive()) {
-            entityManager.getTransaction().begin();
-        }
-
-        entityManager.merge(vehicleSelected);
-        entityManager.getTransaction().commit();
-        entityManager.clear();
-
-        chkProhibitVehicle.setSelected(false);
-        vehicleSelected = null;
-        lstVehicle.clearSelection();
-        lstVehicle.setModel(getVehiclesModel);
+    public void prohibitApplyActionPerformed(Vehicle vehicleSelected, JCheckBox chkProhibitVehicle) {
+        jpaService.prohibitApplyVehicle(vehicleSelected, chkProhibitVehicle.isSelected());
     }
-    
-    public boolean validateLicensePlate(JTextField txtLicensePlate, JLabel lblLicensePlate){
+
+    public boolean validateLicensePlate(JTextField txtLicensePlate, JLabel lblLicensePlate) {
         boolean isLicensePlate = false;
         String licensePlateStr = txtLicensePlate.getText().trim();
 
