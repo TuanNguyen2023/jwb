@@ -11,7 +11,7 @@ import com.gcs.wb.bapi.helper.structure.DoGetDetailStructure;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
 import com.gcs.wb.jpa.entity.OutbDelPK;
-import com.gcs.wb.jpa.entity.OutbDetailsV2;
+import com.gcs.wb.jpa.entity.OutboundDetail;
 import com.gcs.wb.jpa.entity.OutbDetailsV2PK;
 import java.math.BigDecimal;
 import java.util.List;
@@ -33,7 +33,7 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
     @Override
     public OutboundDelivery convertsHasParameter(DoGetDetailBapi from, String val, boolean refresh) throws Exception {
         OutboundDelivery outb = null;
-        OutbDetailsV2 outb_details = null;
+        OutboundDetail outb_details = null;
         String item_cat = "";
         String item_num = null;
         String item_num_free = null;
@@ -46,7 +46,7 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
         if (dos.size() > 0) {
             EntityManager em_check = WeighBridgeApp.getApplication().getEm();
             WeightTicketJpaController con_check = new WeightTicketJpaController();
-            List<OutbDetailsV2> outb_detail_check;
+            List<OutboundDetail> outb_detail_check;
             if (refresh == true) {
                 try {
                     outb_detail_check = con_check.findByMandtDelivNumb(val);
@@ -71,7 +71,7 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
                     if (outb_detail_check.size() > 0) {
                         outb_details = outb_detail_check.get(0);
                     } else {
-                        outb_details = new OutbDetailsV2(new OutbDetailsV2PK(WeighBridgeApp.getApplication().getConfig().getsClient(), val, doItem.getPosnr().substring(4, 5)));
+                        outb_details = new OutboundDetail(new OutbDetailsV2PK(WeighBridgeApp.getApplication().getConfig().getsClient(), val, doItem.getPosnr().substring(4, 5)));
                     }
                 } catch (Exception ex) {
                     Logger.getLogger(SAP2Local.class.getName()).log(Level.SEVERE, null, ex);
@@ -110,9 +110,9 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
 
                     if ((outb_details.getPosted() == null)
                             || (!outb_details.getPosted().trim().equals("1"))
-                            || (outb_details.getLfimgOri() == null)
-                            || (outb_details.getLfimgOri().equals(BigDecimal.ZERO))) {
-                        outb_details.setLfimgOri(doItem.getLfimg());
+                            || (outb_details.getLfimg() == null)
+                            || (outb_details.getLfimg().equals(BigDecimal.ZERO))) {
+                        outb_details.setLfimg(doItem.getLfimg());
                     }
                     outb_details.setMeins(doItem.getMeins());
                     String split[] = doItem.getArktx().split("-");

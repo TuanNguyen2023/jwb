@@ -34,7 +34,7 @@ import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
 import com.gcs.wb.jpa.entity.OutbDelPK;
-import com.gcs.wb.jpa.entity.OutbDetailsV2;
+import com.gcs.wb.jpa.entity.OutboundDetail;
 import com.gcs.wb.jpa.entity.OutbDetailsV2PK;
 import com.gcs.wb.jpa.entity.PurOrder;
 import com.gcs.wb.jpa.entity.SLoc;
@@ -178,7 +178,7 @@ public class SAPService {
      */
     public OutboundDelivery getOutboundDelivery(String number, boolean refresh) {
         OutboundDelivery outb = null;
-        OutbDetailsV2 outb_details = null;
+        OutboundDetail outb_details = null;
         String item_cat = "";
         String item_num = null;
         String item_num_free = null;
@@ -196,7 +196,7 @@ public class SAPService {
             //check do detail exist
             EntityManager em_check = WeighBridgeApp.getApplication().getEm();
             WeightTicketJpaController con_check = new WeightTicketJpaController();
-            List<OutbDetailsV2> outb_detail_check;
+            List<OutboundDetail> outb_detail_check;
             if (refresh == true) {
                 try {
                     outb_detail_check = con_check.findByMandtDelivNumb(number);
@@ -223,7 +223,7 @@ public class SAPService {
                     if (outb_detail_check.size() > 0) {
                         outb_details = outb_detail_check.get(0);
                     } else {
-                        outb_details = new OutbDetailsV2(new OutbDetailsV2PK(config.getsClient(), number, doItem.getPosnr().substring(4, 5)));
+                        outb_details = new OutboundDetail(new OutbDetailsV2PK(config.getsClient(), number, doItem.getPosnr().substring(4, 5)));
                     }
                 } catch (Exception ex) {
                     Logger.getLogger(SAPService.class.getName()).log(Level.SEVERE, null, ex);
@@ -265,9 +265,9 @@ public class SAPService {
 
                     if ((outb_details.getPosted() == null)
                             || (!outb_details.getPosted().trim().equals("1"))
-                            || (outb_details.getLfimgOri() == null)
-                            || (outb_details.getLfimgOri().equals(BigDecimal.ZERO))) {
-                        outb_details.setLfimgOri(doItem.getLfimg());
+                            || (outb_details.getLfimg() == null)
+                            || (outb_details.getLfimg().equals(BigDecimal.ZERO))) {
+                        outb_details.setLfimg(doItem.getLfimg());
                     }
                     outb_details.setMeins(doItem.getMeins());
                     String split[] = doItem.getArktx().split("-");

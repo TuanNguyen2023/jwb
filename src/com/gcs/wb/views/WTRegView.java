@@ -50,7 +50,7 @@ import org.jdesktop.application.Task;
 import java.awt.Component;
 import javax.swing.JList;
 import com.gcs.wb.jpa.entity.Material;
-import com.gcs.wb.jpa.entity.OutbDetailsV2;
+import com.gcs.wb.jpa.entity.OutboundDetail;
 import com.gcs.wb.jpa.procedures.WTRegRepository;
 import com.gcs.wb.jpa.repositorys.CustomerRepository;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
@@ -1764,8 +1764,8 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     txtNMaterial.setText(outb.getArktx());
                     cbxNMaterial.setSelectedItem(outb.getArktx());
                     BigDecimal regqty = BigDecimal.ZERO;
-                    List<OutbDetailsV2> detail = new ArrayList<OutbDetailsV2>();
-                    OutbDetailsV2 item = null;
+                    List<OutboundDetail> detail = new ArrayList<OutboundDetail>();
+                    OutboundDetail item = null;
                     String[] do_list = txtNDONum.getText().trim().split("-");
                     for (int i = 0; i < do_list.length; i++) {
                         String doNum = do_list[i];
@@ -2126,8 +2126,8 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     txtNMaterial.setText(outb.getArktx());
                     cbxNMaterial.setSelectedItem(outb.getArktx());
                     BigDecimal regqty = BigDecimal.ZERO;
-                    List<OutbDetailsV2> detail = new ArrayList<OutbDetailsV2>();
-                    OutbDetailsV2 item = null;
+                    List<OutboundDetail> detail = new ArrayList<OutboundDetail>();
+                    OutboundDetail item = null;
                     String[] do_list = txtNDONum.getText().trim().split("-");
                     for (int i = 0; i < do_list.length; i++) {
                         String doNum = do_list[i];
@@ -2269,8 +2269,8 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             }
             //+20100113#01
             //set du lieu cho do detail
-            List<OutbDetailsV2> detail = new ArrayList<OutbDetailsV2>();
-            OutbDetailsV2 item = null;
+            List<OutboundDetail> detail = new ArrayList<OutboundDetail>();
+            OutboundDetail item = null;
             if (WeighBridgeApp.getApplication().isOfflineMode() && !txtNDONum.getText().equals("")) {
                 newWeightTicket.setDeliveryOrderNo(txtNDONum.getText());
             } else if (!WeighBridgeApp.getApplication().isOfflineMode()) {

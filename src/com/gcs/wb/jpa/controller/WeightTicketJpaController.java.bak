@@ -237,21 +237,21 @@ public class WeightTicketJpaController {
     public List<OutboundDetail> findByMandtDelivNumb(String deliv_numb) throws Exception {
         String client = WeighBridgeApp.getApplication().getConfig().getsClient();
         String devNumber = "%" + deliv_numb + "%";
-        OutboundDetailRepository repo = new OutboundDetailRepository();
+        OutboundDetail repo = new OutboundDetail();
         return repo.findByDeliveryOrderNo(client, devNumber);
 
     }
 
     public List<OutboundDetail> findByMandtDelivNumbItem(String deliv_numb, String item) throws Exception {
         String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-        OutboundDetailRepository repository = new OutboundDetailRepository();
+        OutboundDetail repository = new OutboundDetail();
         List<OutboundDetail> result = repository.findByDeliveryOrderNoAndDeliveryOrderItem(client, deliv_numb, item);
         return result;
     }
 
     public List<OutboundDetail> findByMandtWTID(String wt_id) throws Exception {
         String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-        OutboundDetailRepository repository = new OutboundDetailRepository();
+        OutboundDetail repository = new OutboundDetail();
         return repository.findByWtId(client, wt_id);
     }
 
