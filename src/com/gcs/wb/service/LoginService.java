@@ -17,6 +17,8 @@ import com.gcs.wb.jpa.entity.SAPSetting;
 import com.gcs.wb.jpa.entity.User;
 import com.gcs.wb.jpa.repositorys.SAPSettingRepository;
 import com.gcs.wb.model.AppConfig;
+import java.sql.Date;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -90,6 +92,7 @@ public class LoginService {
             }
 
             boolean updateUser = true;
+            Date now = new Date(Calendar.getInstance().getTime().getTime());
             if (user == null) {
                 updateUser = false;
                 if (sapSetting == null) {
@@ -100,6 +103,9 @@ public class LoginService {
                     sapSetting = new SAPSetting();
                     sapSetting.setName1((String) vals.get(PlantGeDetailConstants.NAME1));
                     sapSetting.setName2((String) vals.get(PlantGeDetailConstants.NAME2));
+                    sapSetting.setMandt(appConfig.getsClient().toString());
+                    sapSetting.setWplan(appConfig.getwPlant().toString());
+                    sapSetting.setCreatedDate(now);
                     entityManager.persist(sapSetting);
                 }
                 user = new User(username, password);
@@ -112,13 +118,17 @@ public class LoginService {
             user.setLang(userGetDetailAddrStructure.getLang().length() == 0 ? ' ' : userGetDetailAddrStructure.getLang().charAt(0));
             user.setLangIso(userGetDetailAddrStructure.getLangISO());
             user.setPassword(password);
+            user.setMandt(appConfig.getsClient().toString());
+            user.setWplan(appConfig.getwPlant().toString());
             if (roles != null) {
                 user.setRoles(roles);
             }
-
+            
             if (updateUser) {
+                user.setUpdatedDate(now);
                 entityManager.merge(user);
             } else {
+                user.setCreatedDate(now);
                 entityManager.persist(user);
             }
 
