@@ -17,13 +17,11 @@ import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.JReportConnector;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.Customer;
-import com.gcs.wb.jpa.entity.CustomerPK;
-import com.gcs.wb.jpa.entity.OutbDel;
+import com.gcs.wb.jpa.entity.OutboundDelivery;
 import com.gcs.wb.jpa.entity.OutbDelPK;
 import com.gcs.wb.jpa.entity.SAPSetting;
 import com.gcs.wb.jpa.entity.Vehicle;
 import com.gcs.wb.jpa.entity.Vendor;
-import com.gcs.wb.jpa.entity.VendorPK;
 import com.gcs.wb.jpa.entity.WeightTicket;
 import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.base.util.Conversion_Exit;
@@ -54,7 +52,9 @@ import javax.swing.JList;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.OutbDetailsV2;
 import com.gcs.wb.jpa.procedures.WTRegRepository;
+import com.gcs.wb.jpa.repositorys.CustomerRepository;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
+import com.gcs.wb.jpa.repositorys.VendorRepository;
 import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -80,6 +80,8 @@ public class WTRegView extends javax.swing.JInternalFrame {
     EntityManager entityManager = JPAConnector.getInstance();
     MaterialRepository materialRepository = new MaterialRepository();
     WeightTicketRepository weightTicketRepository = new WeightTicketRepository();
+    CustomerRepository customerRepository = new CustomerRepository();
+    VendorRepository vendorRepository = new VendorRepository();
     SAPService sapService = new SAPService();
 
     public WTRegView() {
@@ -114,7 +116,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         rbtRegCatGroup = new javax.swing.ButtonGroup();
         newWeightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
         selectedRow = new com.gcs.wb.jpa.entity.WeightTicket();
-        outbDel = new com.gcs.wb.jpa.entity.OutbDel();
+        outbDel = new com.gcs.wb.jpa.entity.OutboundDelivery();
         jTextField1 = new javax.swing.JTextField();
         buttonGroup1 = new javax.swing.ButtonGroup();
         pnFilter = new javax.swing.JPanel();
@@ -1460,7 +1462,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     private class CheckDOTask extends org.jdesktop.application.Task<Object, Void> {
 
-        private OutbDel outb = null;
+        private OutboundDelivery outb = null;
         private OutbDelPK outbPK = null;
         private String mode = null;
         private Customer kunnr = null;
@@ -1496,27 +1498,21 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 //            System.out.println(val);
 //            System.out.println(val.length());
                 outbPK = new OutbDelPK(WeighBridgeApp.getApplication().getConfig().getsClient(), val[k]);
-                outb = entityManager.find(OutbDel.class, outbPK);
+                outb = entityManager.find(OutboundDelivery.class, outbPK);
                 setMessage(resourceMapMsg.getString("checkDOInSap"));
                 setProgress(2, 1, 4);
-                OutbDel sapOutb = sapService.getOutboundDelivery(val[k], true);
+                OutboundDelivery sapOutb = sapService.getOutboundDelivery(val[k], true);
                 if (sapOutb != null) {
                     if (sapOutb.getKunnr() != null && !sapOutb.getKunnr().trim().isEmpty()) {
-                        kunnr = entityManager.find(
-                                Customer.class,
-                                new CustomerPK(WeighBridgeApp.getApplication().getConfig().getsClient(), sapOutb.getKunnr()));
+                        kunnr = customerRepository.findByKunnr(sapOutb.getKunnr());
                         sapKunnr = sapService.getCustomer(sapOutb.getKunnr());
                     }
                     if (sapOutb.getKunag() != null && !sapOutb.getKunag().trim().isEmpty()) {
-                        kunag = entityManager.find(
-                                Customer.class,
-                                new CustomerPK(WeighBridgeApp.getApplication().getConfig().getsClient(), sapOutb.getKunag()));
+                        kunag = customerRepository.findByKunnr(sapOutb.getKunag());
                         sapKunag = sapService.getCustomer(sapOutb.getKunag());
                     }
                     if (sapOutb.getLifnr() != null && !sapOutb.getLifnr().trim().isEmpty()) {
-                        lifnr = entityManager.find(
-                                Vendor.class,
-                                new VendorPK(WeighBridgeApp.getApplication().getConfig().getsClient(), sapOutb.getLifnr()));
+                        lifnr = vendorRepository.findByLifnr(sapOutb.getLifnr());
                         sapLifnr = sapService.getVendor(sapOutb.getLifnr());
                         // abbr = sapLifnr.getVendorPK().getLifnr();
                     }
@@ -1810,7 +1806,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     private class CheckDOOFFTask extends org.jdesktop.application.Task<Object, Void> {
 
-        private OutbDel outb = null;
+        private OutboundDelivery outb = null;
         private OutbDelPK outbPK = null;
         private String mode = null;
         private Customer kunnr = null;
@@ -1846,11 +1842,11 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 //            System.out.println(val);
 //            System.out.println(val.length());
                 outbPK = new OutbDelPK(WeighBridgeApp.getApplication().getConfig().getsClient(), val[k]);
-                outb = entityManager.find(OutbDel.class, outbPK);
+                outb = entityManager.find(OutboundDelivery.class, outbPK);
                 /*HLD18
                 setMessage("Kiểm tra D.O trong SAP ...");
                 setProgress(2, 1, 4);
-                OutbDel sapOutb = SAP2Local.getOutboundDelivery(val[k], true);
+                OutboundDelivery sapOutb = SAP2Local.getOutboundDelivery(val[k], true);
                 if (sapOutb != null) {
                 if (sapOutb.getKunnr() != null && !sapOutb.getKunnr().trim().isEmpty()) {
                 kunnr = entityManager.find(
@@ -2750,7 +2746,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private javax.swing.JLabel lblStatus;
     private javax.swing.JLabel lblWeightTicketNo;
     private com.gcs.wb.jpa.entity.WeightTicket newWeightTicket;
-    private com.gcs.wb.jpa.entity.OutbDel outbDel;
+    private com.gcs.wb.jpa.entity.OutboundDelivery outbDel;
     private javax.swing.JPanel pnControl;
     private javax.swing.JPanel pnFilter;
     private javax.swing.JPanel pnNLeft;

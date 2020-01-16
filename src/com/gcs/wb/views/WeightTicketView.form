@@ -12,7 +12,7 @@
     </Component>
     <Component class="com.gcs.wb.jpa.entity.PurOrder" name="purOrder">
     </Component>
-    <Component class="com.gcs.wb.jpa.entity.OutbDel" name="outbDel">
+    <Component class="com.gcs.wb.jpa.entity.OutboundDelivery" name="outbDel">
     </Component>
     <Component class="com.gcs.wb.jpa.entity.SAPSetting" name="setting">
       <AuxValues>

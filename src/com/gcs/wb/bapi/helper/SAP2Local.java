@@ -18,19 +18,18 @@ import com.gcs.wb.base.converter.CustomerConverter;
 import com.gcs.wb.base.converter.MaterialConverter;
 import com.gcs.wb.base.converter.MaterialsV1Converter;
 import com.gcs.wb.base.converter.MaterialsV2Converter;
-import com.gcs.wb.base.converter.OutbDelConverter;
+import com.gcs.wb.base.converter.OutboundDeliveryConverter;
 import com.gcs.wb.base.converter.PurOrderConverter;
 import com.gcs.wb.base.converter.TransportAgentsConverter;
 import com.gcs.wb.base.converter.VendorConverter;
 import com.gcs.wb.base.converter.VendorsConverter;
 import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.Material;
-import com.gcs.wb.jpa.entity.OutbDel;
+import com.gcs.wb.jpa.entity.OutboundDelivery;
 import com.gcs.wb.jpa.entity.PurOrder;
 import com.gcs.wb.jpa.entity.SLoc;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.Vendor;
-import com.gcs.wb.jpa.entity.VendorPK;
 import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.base.util.Conversion_Exit;
 import java.util.ArrayList;
@@ -47,13 +46,13 @@ import javax.swing.DefaultComboBoxModel;
  */
 public class SAP2Local {
 
-    public static OutbDel getOutboundDelivery(String number, boolean refresh) {
-        OutbDel outb = null;
+    public static OutboundDelivery getOutboundDelivery(String number, boolean refresh) {
+        OutboundDelivery outb = null;
         DoGetDetailBapi bapiDO = new DoGetDetailBapi();
         bapiDO.setId_do(Conversion_Exit.Conv_output_num(number, 10));
         WeighBridgeApp.getApplication().getSAPSession().execute(bapiDO);
         List<DoGetDetailStructure> dos = bapiDO.getTd_dos();
-        OutbDelConverter outbDelConverter = new OutbDelConverter();
+        OutboundDeliveryConverter outbDelConverter = new OutboundDeliveryConverter();
         try {
             outb = outbDelConverter.convertsHasParameter(bapiDO, number, refresh);
         } catch (Exception ex) {
@@ -263,9 +262,9 @@ public class SAP2Local {
                 entityManager.getTransaction().begin();
             }
             for (TransportagentGetListStructure venSap : venSaps) {
-                Vendor ven = null;
-                VendorPK vpk = new VendorPK(config.getsClient(), venSap.getLifnr());
-                ven = new Vendor(vpk);
+                Vendor ven = new Vendor();
+                ven.setMandt(config.getsClient());
+                ven.setLifnr(venSap.getLifnr());
                 ven.setName1(venSap.getName1());
                 ven.setName2(venSap.getName2());
                  if(vendors.indexOf(ven)==-1) {

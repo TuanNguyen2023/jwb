@@ -4,7 +4,6 @@
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>com.gcs.wb.jpa.entity.Customer</class>
     <class>com.gcs.wb.jpa.entity.Movement</class>
-    <class>com.gcs.wb.jpa.entity.OutbDel</class>
     <class>com.gcs.wb.jpa.entity.User</class>
     <class>com.gcs.wb.jpa.entity.DocFlow</class>
     <class>com.gcs.wb.jpa.entity.BatchStocks</class>
@@ -24,6 +23,7 @@
     <class>com.gcs.wb.jpa.entity.TimeRange</class>
     <class>com.gcs.wb.jpa.entity.OutbDetailsV2</class>
     <class>com.gcs.wb.jpa.entity.TransportAgentVehicle</class>
+    <class>com.gcs.wb.jpa.entity.OutboundDelivery</class>
     <properties>
       <property name="eclipselink.logging.level.sql" value="FINE"/>
       <property name="hibernate.show_sql" value="true"/>

@@ -30,11 +30,10 @@ import com.gcs.wb.jpa.JReportConnector;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.BatchStocks;
 import com.gcs.wb.jpa.entity.Customer;
-import com.gcs.wb.jpa.entity.CustomerPK;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.Movement;
 import com.gcs.wb.jpa.entity.MovementPK;
-import com.gcs.wb.jpa.entity.OutbDel;
+import com.gcs.wb.jpa.entity.OutboundDelivery;
 import com.gcs.wb.jpa.entity.OutbDelPK;
 import com.gcs.wb.jpa.entity.OutbDetailsV2;
 import com.gcs.wb.jpa.entity.PurOrder;
@@ -101,20 +100,12 @@ public class WeightTicketController {
     java.sql.Connection connect = JReportConnector.getInstance();
 
     public DefaultComboBoxModel getCustomerByMaNdt() {
-        List kunnr = this.customerRepository.getCustomerByMaNdt(client);
+        List<Customer> customers = this.customerRepository.getListCustomer();
         DefaultComboBoxModel result = new DefaultComboBoxModel();
         result.addElement("");
-        for (Object obj : kunnr) {
-            Object[] wt = (Object[]) obj;
-            CustomerPK custPK = new CustomerPK();
-            Customer cust = new Customer();
-            custPK.setMandt(WeighBridgeApp.getApplication().getConfig().getsClient());
-            custPK.setKunnr(wt[1].toString());
-            cust.setCustomerPK(custPK);
-            cust.setName1(wt[2].toString());
-            cust.setName2(wt[3].toString());
-            if (result.getIndexOf(cust) < 0) {
-                result.addElement(cust);
+        for (Customer customer : customers) {
+            if (result.getIndexOf(customer) < 0) {
+                result.addElement(customer);
             }
         }
         return result;
@@ -236,12 +227,12 @@ public class WeightTicketController {
         return sapService.getPurchaseOrder(poNum);
     }
 
-    public void revertCompletedDO(List<String> completedDOs, List<OutbDetailsV2> OutbDetailsV2, List<OutbDel> outbDels, WeightTicket weightTicket, List<OutbDetailsV2> outDetails_lits, Session sapSession) {
+    public void revertCompletedDO(List<String> completedDOs, List<OutbDetailsV2> OutbDetailsV2, List<OutboundDelivery> outbDels, WeightTicket weightTicket, List<OutbDetailsV2> outDetails_lits, Session sapSession) {
         DORevertBapi bapi = null;
         for (String item : completedDOs) {
             bapi = new DORevertBapi(item);
 
-            OutbDel od_temp = new OutbDel(new OutbDelPK(weightTicket.getMandt(), item));
+            OutboundDelivery od_temp = new OutboundDelivery(new OutbDelPK(weightTicket.getMandt(), item));
             GoodsMvtWeightTicketStructure stWT = fillWTStructure(weightTicket, od_temp, outDetails_lits, weightTicket);
 
             bapi.setWeightticket(stWT);
@@ -263,7 +254,7 @@ public class WeightTicketController {
             }
         }
         if (outbDels != null) {
-            for (OutbDel outbD : outbDels) {
+            for (OutboundDelivery outbD : outbDels) {
                 outbD.setPosted("-1");
                 entityManager.merge(outbD);
             }
@@ -272,7 +263,7 @@ public class WeightTicketController {
     }
 
     public GoodsMvtWeightTicketStructure fillWTStructure(WeightTicket wt,
-            OutbDel od, List<OutbDetailsV2> od_v2_list, WeightTicket weightTicket) {
+            OutboundDelivery od, List<OutbDetailsV2> od_v2_list, WeightTicket weightTicket) {
         GoodsMvtWeightTicketStructure stWT = null;
         if (wt == null) {
             return stWT;
@@ -375,7 +366,7 @@ public class WeightTicketController {
         return remaining;
     }
 
-    public Object getGrDoMigoBapi(WeightTicket wt, WeightTicket weightTicket, OutbDel outbDel, List<OutbDetailsV2> outDetails_lits, int timeFrom, int timeTo) {
+    public Object getGrDoMigoBapi(WeightTicket wt, WeightTicket weightTicket, OutboundDelivery outbDel, List<OutbDetailsV2> outDetails_lits, int timeFrom, int timeTo) {
         String doNum = null;
         if (outbDel != null) {
             doNum = outbDel.getOutbDelPK().getDelivNumb();
@@ -642,7 +633,7 @@ public class WeightTicketController {
         return bapi;
     }
 
-    public Object getDoCreate2PGI(WeightTicket wt, OutbDel outbDel, WeightTicket weightTicket, int timeFrom, int timeTo, List<OutbDetailsV2> outDetails_lits) {
+    public Object getDoCreate2PGI(WeightTicket wt, OutboundDelivery outbDel, WeightTicket weightTicket, int timeFrom, int timeTo, List<OutbDetailsV2> outDetails_lits) {
         String doNum = null;
         if (outbDel != null) {
             doNum = outbDel.getOutbDelPK().getDelivNumb();
@@ -750,7 +741,7 @@ public class WeightTicketController {
         return bapi;
     }
 
-    public Object getPgmVl02nBapi(WeightTicket wt, OutbDel outbDel, WeightTicket weightTicket, int timeFrom, int timeTo, List<OutbDetailsV2> outDetails_lits) {
+    public Object getPgmVl02nBapi(WeightTicket wt, OutboundDelivery outbDel, WeightTicket weightTicket, int timeFrom, int timeTo, List<OutbDetailsV2> outDetails_lits) {
         String doNum = null;
         if (outbDel != null) {
             doNum = outbDel.getOutbDelPK().getDelivNumb();
@@ -941,10 +932,10 @@ public class WeightTicketController {
         return new DefaultComboBoxModel(reasons.toArray());
     }
 
-    public void printWT(WeightTicket wt, boolean reprint, String ximang, List<OutbDel> outbDel_list, List<OutbDetailsV2> outDetails_lits,
-            OutbDel outbDel, JRadioButton rbtMisc, JRadioButton rbtPO, boolean isStage1, JRootPane rootPane) {
+    public void printWT(WeightTicket wt, boolean reprint, String ximang, List<OutboundDelivery> outbDel_list, List<OutbDetailsV2> outDetails_lits,
+            OutboundDelivery outbDel, JRadioButton rbtMisc, JRadioButton rbtPO, boolean isStage1, JRootPane rootPane) {
         config = WeighBridgeApp.getApplication().getConfig();
-        OutbDel item = null;
+        OutboundDelivery item = null;
         try {
             Map<String, Object> map = new HashMap<String, Object>();
             Long bags = null;

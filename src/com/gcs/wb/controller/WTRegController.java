@@ -6,13 +6,14 @@ package com.gcs.wb.controller;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.helper.SAP2Local;
+import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.Customer;
-import com.gcs.wb.jpa.entity.CustomerPK;
-import com.gcs.wb.jpa.entity.OutbDel;
+import com.gcs.wb.jpa.entity.OutboundDelivery;
 import com.gcs.wb.jpa.entity.Vendor;
-import com.gcs.wb.jpa.entity.VendorPK;
 import com.gcs.wb.jpa.entity.WeightTicket;
+import com.gcs.wb.jpa.repositorys.CustomerRepository;
+import com.gcs.wb.jpa.repositorys.VendorRepository;
 import com.gcs.wb.model.AppConfig;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,6 +34,9 @@ import org.jdesktop.swingx.JXDatePicker;
 public class WTRegController {
 
     WeightTicketJpaController conWTicket = new WeightTicketJpaController();
+    EntityManager entityManager = JPAConnector.getInstance();
+    CustomerRepository customerRepository = new CustomerRepository();
+    VendorRepository vendorRepository = new VendorRepository();
 
     public List<WeightTicket> listWeightTicketsDoInBackground(JXDatePicker dpFrom, JXDatePicker dpTo, JComboBox cbxType, JComboBox cbxTimeFrom, JComboBox cbxTimeTo, JTextField txtNguoitao, JRadioButton rbtDissolved, JRadioButton rbtPosted, JRadioButton rbtStateAll, JTextField txtTaixe, JTextField txtBienSo) throws Exception {
         AppConfig config = WeighBridgeApp.getApplication().getConfig();
@@ -192,24 +196,18 @@ public class WTRegController {
         return params;
     }
 
-    public void hanldeCheckDOOutbDel(EntityManager entityManager, OutbDel sapOutb, Customer kunnr, Customer kunag, Vendor lifnr, Customer sapKunnr, Customer sapKunag, Vendor sapLifnr) {
+    public void hanldeCheckDOOutbDel(OutboundDelivery sapOutb, Customer customer, Customer kunag, Vendor lifnr, Customer sapKunnr, Customer sapKunag, Vendor sapLifnr) {
         if (sapOutb != null) {
             if (sapOutb.getKunnr() != null && !sapOutb.getKunnr().trim().isEmpty()) {
-                kunnr = entityManager.find(
-                        Customer.class,
-                        new CustomerPK(WeighBridgeApp.getApplication().getConfig().getsClient(), sapOutb.getKunnr()));
+                customer = customerRepository.findByKunnr(sapOutb.getKunnr());
                 sapKunnr = SAP2Local.getCustomer(sapOutb.getKunnr());
             }
             if (sapOutb.getKunag() != null && !sapOutb.getKunag().trim().isEmpty()) {
-                kunag = entityManager.find(
-                        Customer.class,
-                        new CustomerPK(WeighBridgeApp.getApplication().getConfig().getsClient(), sapOutb.getKunag()));
+                kunag = customerRepository.findByKunnr(sapOutb.getKunag());
                 sapKunag = SAP2Local.getCustomer(sapOutb.getKunag());
             }
             if (sapOutb.getLifnr() != null && !sapOutb.getLifnr().trim().isEmpty()) {
-                lifnr = entityManager.find(
-                        Vendor.class,
-                        new VendorPK(WeighBridgeApp.getApplication().getConfig().getsClient(), sapOutb.getLifnr()));
+                lifnr = vendorRepository.findByLifnr(sapOutb.getLifnr());
                 sapLifnr = SAP2Local.getVendor(sapOutb.getLifnr());
                 // abbr = sapLifnr.getVendorPK().getLifnr();
             }

@@ -8,7 +8,7 @@ import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.Material;
-import com.gcs.wb.jpa.entity.OutbDel;
+import com.gcs.wb.jpa.entity.OutboundDelivery;
 import com.gcs.wb.jpa.entity.Variant;
 import com.gcs.wb.jpa.entity.WeightTicket;
 import com.gcs.wb.jpa.entity.OutbDetailsV2;
@@ -255,17 +255,12 @@ public class WeightTicketJpaController {
         return repository.findByMandtWTID(client, wt_id);
     }
 
-    public OutbDel findByMandtOutDel(String delnum) throws Exception {
+    public OutboundDelivery findByMandtOutDel(String delnum) throws Exception {
 
         String client = WeighBridgeApp.getApplication().getConfig().getsClient();
         OutbDelRepository repository = new OutbDelRepository();
         return repository.findByMandtOutDel(client, delnum);
 
-    }
-
-    public List<Customer> findCustByMandt(String mandt) throws Exception {
-        CustomerRepository customerRepository = new CustomerRepository();
-        return customerRepository.findCustByMandt(mandt);
     }
 
     public Material CheckPOSTO(String matnr) throws Exception {

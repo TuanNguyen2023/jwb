@@ -24,9 +24,8 @@ import com.gcs.wb.jpa.entity.OutbDetailsV2;
 import com.gcs.wb.jpa.entity.BatchStocks;
 import com.gcs.wb.jpa.entity.BatchStocksPK;
 import com.gcs.wb.jpa.entity.Customer;
-import com.gcs.wb.jpa.entity.CustomerPK;
 import com.gcs.wb.jpa.entity.Material;
-import com.gcs.wb.jpa.entity.OutbDel;
+import com.gcs.wb.jpa.entity.OutboundDelivery;
 import com.gcs.wb.jpa.entity.PurOrder;
 import com.gcs.wb.jpa.entity.PurOrderPK;
 import com.gcs.wb.jpa.entity.Reason;
@@ -37,7 +36,6 @@ import com.gcs.wb.jpa.entity.SLocPK;
 import com.gcs.wb.jpa.entity.TimeRange;
 import com.gcs.wb.jpa.entity.User;
 import com.gcs.wb.jpa.entity.Vendor;
-import com.gcs.wb.jpa.entity.VendorPK;
 import com.gcs.wb.jpa.entity.WeightTicket;
 import com.gcs.wb.base.util.RegexFormatter;
 import com.gcs.wb.model.AppConfig;
@@ -72,6 +70,7 @@ import com.gcs.wb.jpa.repositorys.CustomerRepository;
 import com.gcs.wb.jpa.repositorys.SignalsRepository;
 import com.gcs.wb.jpa.repositorys.TimeRangeRepository;
 import com.gcs.wb.controller.WeightTicketController;
+import com.gcs.wb.jpa.repositorys.VendorRepository;
 import com.gcs.wb.jpa.service.JPAService;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -103,6 +102,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     CustomerRepository customerRepository = new CustomerRepository();
     SignalsRepository noneRepository = new SignalsRepository();
     WeightTicketJpaRepository weightTicketJpaRepository = new WeightTicketJpaRepository();
+    VendorRepository vendorRepository = new VendorRepository();
     EntityManager entityManager = JPAConnector.getInstance();
     
     WeightTicketController weightTicketController = new WeightTicketController();
@@ -154,7 +154,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         cbxCompleted.setVisible(false);
         rbtMisc.setForeground(Color.red);
         //String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-        //List kunnr = this.customerRepository.getCustomerByMaNdt(client);
+        //List kunnr = this.customerRepository.getListCustomer(client);
         DefaultComboBoxModel result = weightTicketController.getCustomerByMaNdt();
         
         try {
@@ -229,7 +229,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         grbCat = new javax.swing.ButtonGroup();
         weightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
         purOrder = new com.gcs.wb.jpa.entity.PurOrder();
-        outbDel = new com.gcs.wb.jpa.entity.OutbDel();
+        outbDel = new com.gcs.wb.jpa.entity.OutboundDelivery();
         setting = java.beans.Beans.isDesignTime() ? null : WeighBridgeApp.getApplication().getSapSetting();
         material = new com.gcs.wb.jpa.entity.Material();
         pnWTFilter = new javax.swing.JPanel();
@@ -1508,7 +1508,7 @@ private void cbxKunnrItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST
         Object[] select = cbxKunnr.getSelectedObjects();
         Customer cust = (Customer) select[0];
         if (weightTicket != null) {
-            weightTicket.setKunnr(cust.getCustomerPK().getKunnr());
+            weightTicket.setKunnr(cust.getKunnr());
             weightTicketController.saveKunnrItemStateChanged(weightTicket);
         }
     }
@@ -1890,7 +1890,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                 valid = true;
             }
             //20121203 HOANGVV : check KL Dang Ky = KL Thuc te cho xi mang
-            OutbDel outdel_tmp = null;
+            OutboundDelivery outdel_tmp = null;
             WeightTicketJpaController con = new WeightTicketJpaController();
             List<OutbDetailsV2> details_list = new ArrayList<OutbDetailsV2>();
             OutbDetailsV2 item = null;
@@ -2434,7 +2434,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                 } else if (weightTicket.getFScale() != null && weightTicket.getSScale() == null) {
                     setStage2(true);
                 }
-                OutbDel od = null; //HLD18++
+                OutboundDelivery od = null; //HLD18++
                 // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc="Load D.O/P.O details">
                 if ((weightTicket.getDeliveryOrderNo() == null || weightTicket.getDeliveryOrderNo().trim().isEmpty())
@@ -2442,7 +2442,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                         || (weightTicket.getDeliveryOrderNo() == null && weightTicket.getEbeln() == null)) {
                     setWithoutDO(true);
                 } else {
-                    // OutbDel od = null; //HLD18--
+                    // OutboundDelivery od = null; //HLD18--
                     List<OutbDetailsV2> odt = null;
                     WeightTicketJpaController con = new WeightTicketJpaController();
                     try {
@@ -2511,13 +2511,13 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                     outDetails_lits.clear();
                     for (int i = 0; i < do_list.length; i++) {
                         try {
-                            //outbDel = entityManager.find(OutbDel.class, new OutbDelPK(config.getsClient(), do_list[i]));
+                            //outbDel = entityManager.find(OutboundDelivery.class, new OutbDelPK(config.getsClient(), do_list[i]));
                             outbDel = con.findByMandtOutDel(do_list[i]);
                         } catch (Exception ex) {
                             java.util.logging.Logger.getLogger(WeightTicketView.class.getName()).log(Level.SEVERE, null, ex);
                         }
                         if (!WeighBridgeApp.getApplication().isOfflineMode()) { //HLD18++offline
-                            OutbDel sapOutbDel = sapService.getOutboundDelivery(do_list[i], false);
+                            OutboundDelivery sapOutbDel = sapService.getOutboundDelivery(do_list[i], false);
                             if (sapOutbDel != null && outbDel == null) {
                                 if (!entityManager.getTransaction().isActive()) {
                                     entityManager.getTransaction().begin();
@@ -2679,7 +2679,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                 cbxKunnr.setSelectedIndex(-1);
                 if (weightTicket.getKunnr() != null && !weightTicket.getKunnr().trim().isEmpty()) {
                     entityManager.clear();
-                    Customer cust = entityManager.find(Customer.class, new CustomerPK(config.getsClient(), weightTicket.getKunnr()));
+                    Customer cust = customerRepository.findByKunnr(weightTicket.getKunnr());
                     cbxKunnr.setSelectedItem(cust);
                 }
                 if ((WeighBridgeApp.getApplication().isOfflineMode()
@@ -2895,21 +2895,15 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             }
             if (sapPurOrder != null) {
                 if (sapPurOrder.getVendor() != null && !sapPurOrder.getVendor().trim().isEmpty()) {
-                    vendor = entityManager.find(
-                            Vendor.class,
-                            new VendorPK(config.getsClient(), sapPurOrder.getVendor()));
+                    vendor = vendorRepository.findByLifnr(sapPurOrder.getVendor());
                     sapVendor = sapService.getVendor(sapPurOrder.getVendor());
                 }
                 if (sapPurOrder.getSupplVend() != null && !sapPurOrder.getSupplVend().trim().isEmpty()) {
-                    supVendor = entityManager.find(
-                            Vendor.class,
-                            new VendorPK(config.getsClient(), sapPurOrder.getSupplVend()));
+                    supVendor = vendorRepository.findByLifnr(sapPurOrder.getSupplVend());
                     sapSupVendor = sapService.getVendor(sapPurOrder.getSupplVend());
                 }
                 if (sapPurOrder.getCustomer() != null && !sapPurOrder.getCustomer().trim().isEmpty()) {
-                    customer = entityManager.find(
-                            Customer.class,
-                            new CustomerPK(config.getsClient(), sapPurOrder.getCustomer()));
+                    customer = customerRepository.findByKunnr(sapPurOrder.getCustomer());
                     sapCustomer = sapService.getCustomer(sapPurOrder.getCustomer());
                 }
             }
@@ -3064,7 +3058,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                 entityManager.getTransaction().begin();
             }
             entityManager.merge(weightTicket);
-            OutbDel outbDel = null;
+            OutboundDelivery outbDel = null;
             List<String> completedDO = new ArrayList<String>();
             if (rbtPO.isSelected()) {
                 if (((isStage2() || (!isStage1() && !isStage2())) && !weightTicket.isDissolved())
@@ -3162,26 +3156,20 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
                                 // <editor-fold defaultstate="collapsed" desc="Update D.O from SAP to DB">
                                 if (outbDel != null) {
-                                    OutbDel sapOutb = sapService.getOutboundDelivery(outbDel.getOutbDelPK().getDelivNumb(), false);
+                                    OutboundDelivery sapOutb = sapService.getOutboundDelivery(outbDel.getOutbDelPK().getDelivNumb(), false);
                                     Customer kunnr = null, sapKunnr = null, kunag = null, sapKunag = null;
                                     Vendor lifnr = null, sapLifnr = null;
                                     if (sapOutb != null) {
                                         if (sapOutb.getKunnr() != null && !sapOutb.getKunnr().trim().isEmpty()) {
-                                            kunnr = entityManager.find(
-                                                    Customer.class,
-                                                    new CustomerPK(WeighBridgeApp.getApplication().getConfig().getsClient(), sapOutb.getKunnr()));
+                                            kunnr = customerRepository.findByKunnr(sapOutb.getKunnr());
                                             sapKunnr = sapService.getCustomer(sapOutb.getKunnr());
                                         }
                                         if (sapOutb.getKunag() != null && !sapOutb.getKunag().trim().isEmpty()) {
-                                            kunag = entityManager.find(
-                                                    Customer.class,
-                                                    new CustomerPK(WeighBridgeApp.getApplication().getConfig().getsClient(), sapOutb.getKunag()));
+                                            kunag = customerRepository.findByKunnr(sapOutb.getKunag());
                                             sapKunag = sapService.getCustomer(sapOutb.getKunag());
                                         }
                                         if (sapOutb.getLifnr() != null && !sapOutb.getLifnr().trim().isEmpty()) {
-                                            lifnr = entityManager.find(
-                                                    Vendor.class,
-                                                    new VendorPK(WeighBridgeApp.getApplication().getConfig().getsClient(), sapOutb.getLifnr()));
+                                            lifnr = vendorRepository.findByLifnr(sapOutb.getLifnr());
                                             sapLifnr = sapService.getVendor(sapOutb.getLifnr());
                                         }
                                     }
@@ -3194,11 +3182,11 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                                         entityManager.remove(kunnr);
                                     }
                                     //Store Sold to party Info
-                                    if (sapKunag != null && kunag == null && !sapKunnr.getCustomerPK().getKunnr().equalsIgnoreCase(sapKunag.getCustomerPK().getKunnr())) {
+                                    if (sapKunag != null && kunag == null && !sapKunnr.getKunnr().equalsIgnoreCase(sapKunag.getKunnr())) {
                                         entityManager.persist(sapKunag);
                                     } else if (sapKunag != null && kunag != null) {
                                         entityManager.merge(sapKunag);
-                                    } else if (sapKunag == null && kunag != null && !sapKunnr.getCustomerPK().getKunnr().equalsIgnoreCase(sapKunag.getCustomerPK().getKunnr())) {
+                                    } else if (sapKunag == null && kunag != null && !sapKunnr.getKunnr().equalsIgnoreCase(sapKunag.getKunnr())) {
                                         entityManager.remove(kunag);
                                     }
                                     //Store Vendor Info
@@ -3454,26 +3442,20 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
                                     // <editor-fold defaultstate="collapsed" desc="Update D.O from SAP to DB">
                                     if (outbDel != null) {
-                                        OutbDel sapOutb = sapService.getOutboundDelivery(outbDel.getOutbDelPK().getDelivNumb(), false);
+                                        OutboundDelivery sapOutb = sapService.getOutboundDelivery(outbDel.getOutbDelPK().getDelivNumb(), false);
                                         Customer kunnr = null, sapKunnr = null, kunag = null, sapKunag = null;
                                         Vendor lifnr = null, sapLifnr = null;
                                         if (sapOutb != null) {
                                             if (sapOutb.getKunnr() != null && !sapOutb.getKunnr().trim().isEmpty()) {
-                                                kunnr = entityManager.find(
-                                                        Customer.class,
-                                                        new CustomerPK(WeighBridgeApp.getApplication().getConfig().getsClient(), sapOutb.getKunnr()));
+                                                kunnr = customerRepository.findByKunnr(sapOutb.getKunnr());
                                                 sapKunnr = sapService.getCustomer(sapOutb.getKunnr());
                                             }
                                             if (sapOutb.getKunag() != null && !sapOutb.getKunag().trim().isEmpty()) {
-                                                kunag = entityManager.find(
-                                                        Customer.class,
-                                                        new CustomerPK(WeighBridgeApp.getApplication().getConfig().getsClient(), sapOutb.getKunag()));
+                                                kunag = customerRepository.findByKunnr(sapOutb.getKunag());
                                                 sapKunag = sapService.getCustomer(sapOutb.getKunag());
                                             }
                                             if (sapOutb.getLifnr() != null && !sapOutb.getLifnr().trim().isEmpty()) {
-                                                lifnr = entityManager.find(
-                                                        Vendor.class,
-                                                        new VendorPK(WeighBridgeApp.getApplication().getConfig().getsClient(), sapOutb.getLifnr()));
+                                                lifnr = vendorRepository.findByLifnr(sapOutb.getLifnr());
                                                 sapLifnr = sapService.getVendor(sapOutb.getLifnr());
                                             }
                                         }
@@ -3486,11 +3468,11 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                                             entityManager.remove(kunnr);
                                         }
                                         //Store Sold to party Info
-                                        if (sapKunag != null && kunag == null && !sapKunnr.getCustomerPK().getKunnr().equalsIgnoreCase(sapKunag.getCustomerPK().getKunnr())) {
+                                        if (sapKunag != null && kunag == null && !sapKunnr.getKunnr().equalsIgnoreCase(sapKunag.getKunnr())) {
                                             entityManager.persist(sapKunag);
                                         } else if (sapKunag != null && kunag != null) {
                                             entityManager.merge(sapKunag);
-                                        } else if (sapKunag == null && kunag != null && !sapKunnr.getCustomerPK().getKunnr().equalsIgnoreCase(sapKunag.getCustomerPK().getKunnr())) {
+                                        } else if (sapKunag == null && kunag != null && !sapKunnr.getKunnr().equalsIgnoreCase(sapKunag.getKunnr())) {
                                             entityManager.remove(kunag);
                                         }
                                         //Store Vendor Info
@@ -3565,7 +3547,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             return null;
         }
 
-        protected void revertCompletedDO(List<String> completedDOs, List<OutbDetailsV2> OutbDetailsV2, List<OutbDel> outbDels) {
+        protected void revertCompletedDO(List<String> completedDOs, List<OutbDetailsV2> OutbDetailsV2, List<OutboundDelivery> outbDels) {
             weightTicketController.revertCompletedDO(completedDOs, OutbDetailsV2, outbDels, weightTicket, outDetails_lits, sapSession);
         }
 
@@ -4052,7 +4034,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 //        btnAccept.setEnabled(true);
     }
 
-    private Object getGrDoMigoBapi(WeightTicket wt, OutbDel outbDel) {
+    private Object getGrDoMigoBapi(WeightTicket wt, OutboundDelivery outbDel) {
         return weightTicketController.getGrDoMigoBapi(wt, weightTicket, outbDel, outDetails_lits, timeFrom, timeTo);
     }
 
@@ -4068,11 +4050,11 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         return weightTicketController.getGiMB1BBapi(wt, weightTicket, timeFrom, timeTo, rbtOutward);
     }
 
-    private Object getDoCreate2PGI(WeightTicket wt, OutbDel outbDel) {
+    private Object getDoCreate2PGI(WeightTicket wt, OutboundDelivery outbDel) {
         return weightTicketController.getDoCreate2PGI(wt, outbDel, weightTicket, timeFrom, timeTo, outDetails_lits);
     }
 
-    private Object getPgmVl02nBapi(WeightTicket wt, OutbDel outbDel) {
+    private Object getPgmVl02nBapi(WeightTicket wt, OutboundDelivery outbDel) {
         return weightTicketController.getPgmVl02nBapi(wt, outbDel, weightTicket, timeFrom, timeTo, outDetails_lits);
     }
 
@@ -4231,7 +4213,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
     }
 
     public GoodsMvtWeightTicketStructure fillWTStructure(WeightTicket wt,
-            OutbDel od, List<OutbDetailsV2> od_v2_list) {
+            OutboundDelivery od, List<OutbDetailsV2> od_v2_list) {
         return weightTicketController.fillWTStructure(wt, od, od_v2_list, weightTicket);
     }
     // </editor-fold>
@@ -4286,7 +4268,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
     private javax.swing.JLabel lblVendorTransport;
     private javax.swing.JLabel lblWTNum;
     private com.gcs.wb.jpa.entity.Material material;
-    private com.gcs.wb.jpa.entity.OutbDel outbDel;
+    private com.gcs.wb.jpa.entity.OutboundDelivery outbDel;
     private javax.swing.JPanel pnCurScale;
     private javax.swing.JPanel pnCurScaleData;
     private javax.swing.JPanel pnScaleData;
@@ -4328,7 +4310,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
     private BigDecimal total_qty_goods = BigDecimal.ZERO;
     private BigDecimal remain_qty_goods = BigDecimal.ZERO;
     private BigDecimal total_qty_free = BigDecimal.ZERO;
-    private List<OutbDel> outbDel_list = new ArrayList<OutbDel>();
+    private List<OutboundDelivery> outbDel_list = new ArrayList<OutboundDelivery>();
     private List<OutbDetailsV2> outDetails_lits = new ArrayList<OutbDetailsV2>();
     private String wt_ID = null;
     private boolean flag_fail = false;

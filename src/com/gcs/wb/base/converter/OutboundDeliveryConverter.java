@@ -9,7 +9,7 @@ import com.gcs.wb.bapi.helper.DoGetDetailBapi;
 import com.gcs.wb.bapi.helper.SAP2Local;
 import com.gcs.wb.bapi.helper.structure.DoGetDetailStructure;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
-import com.gcs.wb.jpa.entity.OutbDel;
+import com.gcs.wb.jpa.entity.OutboundDelivery;
 import com.gcs.wb.jpa.entity.OutbDelPK;
 import com.gcs.wb.jpa.entity.OutbDetailsV2;
 import com.gcs.wb.jpa.entity.OutbDetailsV2PK;
@@ -23,16 +23,16 @@ import javax.persistence.EntityManager;
  *
  * @author THANGPT
  */
-public class OutbDelConverter extends AbstractThrowableParamConverter<DoGetDetailBapi, OutbDel, Exception> {
+public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<DoGetDetailBapi, OutboundDelivery, Exception> {
 
     @Override
-    public OutbDel convertHasParameter(DoGetDetailBapi from, String val) throws Exception {
+    public OutboundDelivery convertHasParameter(DoGetDetailBapi from, String val) throws Exception {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public OutbDel convertsHasParameter(DoGetDetailBapi from, String val, boolean refresh) throws Exception {
-        OutbDel outb = null;
+    public OutboundDelivery convertsHasParameter(DoGetDetailBapi from, String val, boolean refresh) throws Exception {
+        OutboundDelivery outb = null;
         OutbDetailsV2 outb_details = null;
         String item_cat = "";
         String item_num = null;
@@ -62,7 +62,7 @@ public class OutbDelConverter extends AbstractThrowableParamConverter<DoGetDetai
                     Logger.getLogger(SAP2Local.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            outb = new OutbDel(new OutbDelPK(WeighBridgeApp.getApplication().getConfig().getsClient(), val));
+            outb = new OutboundDelivery(new OutbDelPK(WeighBridgeApp.getApplication().getConfig().getsClient(), val));
             outb.setShipPoint(from.getEs_vstel()); //set shipping point 20120712#01
             for (int i = 0; i < dos.size(); i++) {
                 DoGetDetailStructure doItem = dos.get(i);

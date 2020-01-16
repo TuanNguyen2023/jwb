@@ -8,7 +8,7 @@
     </Component>
     <Component class="com.gcs.wb.jpa.entity.WeightTicket" name="selectedRow">
     </Component>
-    <Component class="com.gcs.wb.jpa.entity.OutbDel" name="outbDel">
+    <Component class="com.gcs.wb.jpa.entity.OutboundDelivery" name="outbDel">
     </Component>
     <Component class="javax.swing.JTextField" name="jTextField1">
       <Properties>

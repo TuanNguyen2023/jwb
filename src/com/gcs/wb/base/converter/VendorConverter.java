@@ -6,8 +6,6 @@ package com.gcs.wb.base.converter;
 
 import com.gcs.wb.bapi.helper.structure.VendorGetDetailStructure;
 import com.gcs.wb.jpa.entity.Vendor;
-import com.gcs.wb.jpa.entity.VendorPK;
-import java.util.List;
 
 /**
  *
@@ -18,8 +16,9 @@ public class VendorConverter extends AbstractThrowableConverter<VendorGetDetailS
     public Vendor convert(VendorGetDetailStructure from){
         Vendor to = null;
         if (from != null && (from.getLifnr() != null && !from.getLifnr().trim().isEmpty())) {
-            VendorPK pk = new VendorPK(from.getMandt(), from.getLifnr().trim());
-            to = new Vendor(pk);
+            to = new Vendor();
+            to.setMandt(from.getMandt());
+            to.setLifnr(from.getLifnr().trim());
             to.setName1(from.getName1());
             to.setName2(from.getName2());
         }

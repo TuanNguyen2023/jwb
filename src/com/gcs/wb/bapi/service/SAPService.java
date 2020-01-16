@@ -31,9 +31,8 @@ import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.BatchStocks;
 import com.gcs.wb.jpa.entity.BatchStocksPK;
 import com.gcs.wb.jpa.entity.Customer;
-import com.gcs.wb.jpa.entity.CustomerPK;
 import com.gcs.wb.jpa.entity.Material;
-import com.gcs.wb.jpa.entity.OutbDel;
+import com.gcs.wb.jpa.entity.OutboundDelivery;
 import com.gcs.wb.jpa.entity.OutbDelPK;
 import com.gcs.wb.jpa.entity.OutbDetailsV2;
 import com.gcs.wb.jpa.entity.OutbDetailsV2PK;
@@ -41,7 +40,6 @@ import com.gcs.wb.jpa.entity.PurOrder;
 import com.gcs.wb.jpa.entity.SLoc;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.Vendor;
-import com.gcs.wb.jpa.entity.VendorPK;
 import com.gcs.wb.jpa.repositorys.BatchStocksRepository;
 import com.gcs.wb.jpa.service.JPAService;
 import com.gcs.wb.model.AppConfig;
@@ -133,9 +131,9 @@ public class SAPService {
             List<TransportagentGetListStructure> etVendors = bapi.getEtVendor();
             
             for (TransportagentGetListStructure vens : etVendors) {
-                Vendor ven = null;
-                VendorPK vpk = new VendorPK(config.getsClient(), vens.getLifnr());
-                ven = new Vendor(vpk);
+                Vendor ven = new Vendor();
+                ven.setMandt(config.getsClient());
+                ven.setLifnr(vens.getLifnr());
                 ven.setName1(vens.getName1());
                 ven.setName2(vens.getName2());
                 venSaps.add(ven);
@@ -178,8 +176,8 @@ public class SAPService {
      * @param refresh
      * @return 
      */
-    public OutbDel getOutboundDelivery(String number, boolean refresh) {
-        OutbDel outb = null;
+    public OutboundDelivery getOutboundDelivery(String number, boolean refresh) {
+        OutboundDelivery outb = null;
         OutbDetailsV2 outb_details = null;
         String item_cat = "";
         String item_num = null;
@@ -216,7 +214,7 @@ public class SAPService {
                 }
             }
             //end check
-            outb = new OutbDel(new OutbDelPK(config.getsClient(), number));
+            outb = new OutboundDelivery(new OutbDelPK(config.getsClient(), number));
             outb.setShipPoint(bapiDO.getEs_vstel());
             for (int i = 0; i < dos.size(); i++) {
                 DoGetDetailStructure doItem = dos.get(i);
@@ -527,8 +525,9 @@ public class SAPService {
         session.execute(bapiCust);
         CustomerGetDetailStructure strucCust = bapiCust.getEsKna1();
         if (strucCust != null && (strucCust.getKunnr() != null && !strucCust.getKunnr().trim().isEmpty())) {
-            CustomerPK pk = new CustomerPK(strucCust.getMandt(), strucCust.getKunnr());
-            result = new Customer(pk);
+            result = new Customer();
+            result.setMandt(strucCust.getMandt());
+            result.setKunnr(strucCust.getKunnr());
             result.setName1(strucCust.getName1());
             result.setName2(strucCust.getName2());
         }
@@ -547,8 +546,9 @@ public class SAPService {
         session.execute(bapiCust);
         VendorGetDetailStructure strucVendor = bapiCust.getEsLfa1();
         if (strucVendor != null && (strucVendor.getLifnr() != null && !strucVendor.getLifnr().trim().isEmpty())) {
-            VendorPK pk = new VendorPK(strucVendor.getMandt(), strucVendor.getLifnr().trim());
-            result = new Vendor(pk);
+            result = new Vendor();
+            result.setMandt(strucVendor.getMandt());
+            result.setLifnr(strucVendor.getLifnr().trim());
             result.setName1(strucVendor.getName1());
             result.setName2(strucVendor.getName2());
         }
