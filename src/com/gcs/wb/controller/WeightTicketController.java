@@ -34,7 +34,7 @@ import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.Movement;
 import com.gcs.wb.jpa.entity.MovementPK;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
-import com.gcs.wb.jpa.entity.OutbDetailsV2;
+import com.gcs.wb.jpa.entity.OutboundDetail;
 import com.gcs.wb.jpa.entity.PurOrder;
 import com.gcs.wb.jpa.entity.PurOrderPK;
 import com.gcs.wb.jpa.entity.Reason;
@@ -226,7 +226,7 @@ public class WeightTicketController {
         return sapService.getPurchaseOrder(poNum);
     }
 
-    public void revertCompletedDO(List<String> completedDOs, List<OutbDetailsV2> OutbDetailsV2, List<OutboundDelivery> outbDels, WeightTicket weightTicket, List<OutbDetailsV2> outDetails_lits, Session sapSession) {
+    public void revertCompletedDO(List<String> completedDOs, List<OutboundDetail> OutbDetailsV2, List<OutboundDelivery> outbDels, WeightTicket weightTicket, List<OutboundDetail> outDetails_lits, Session sapSession) {
         DORevertBapi bapi = null;
         for (String item : completedDOs) {
             bapi = new DORevertBapi(item);
@@ -247,8 +247,8 @@ public class WeightTicketController {
             entityManager.getTransaction().begin();
         }
         if (OutbDetailsV2 != null) {
-            for (OutbDetailsV2 outbDetail : OutbDetailsV2) {
-                outbDetail.setPosted("-1");
+            for (OutboundDetail outbDetail : OutbDetailsV2) {
+                outbDetail.setPosted(false);
                 entityManager.merge(outbDetail);
             }
         }
@@ -262,7 +262,7 @@ public class WeightTicketController {
     }
 
     public GoodsMvtWeightTicketStructure fillWTStructure(WeightTicket wt,
-            OutboundDelivery od, List<OutbDetailsV2> od_v2_list, WeightTicket weightTicket) {
+            OutboundDelivery od, List<OutboundDetail> od_v2_list, WeightTicket weightTicket) {
         GoodsMvtWeightTicketStructure stWT = null;
         if (wt == null) {
             return stWT;
@@ -273,11 +273,11 @@ public class WeightTicketController {
                 weightTicket.getWbId(),
                 tempWTID);
 //          outb_details_v2
-        OutbDetailsV2 od_v2 = null;
+        OutboundDetail od_v2 = null;
         if (od != null && od_v2_list != null) {
-            for (OutbDetailsV2 od_v2_tmp : od_v2_list) {
-                if (od_v2_tmp.getOutbDetailsV2PK().getDelivNumb() != null
-                        && od_v2_tmp.getOutbDetailsV2PK().getDelivNumb().equals(od.getDeliveryOrderNo())) {
+            for (OutboundDetail od_v2_tmp : od_v2_list) {
+                if (od_v2_tmp.getDeliveryOrderNo() != null
+                        && od_v2_tmp.getDeliveryOrderNo().equals(od.getDeliveryOrderNo())) {
                     od_v2 = od_v2_tmp;
                     break;
                 }
@@ -365,7 +365,7 @@ public class WeightTicketController {
         return remaining;
     }
 
-    public Object getGrDoMigoBapi(WeightTicket wt, WeightTicket weightTicket, OutboundDelivery outbDel, List<OutbDetailsV2> outDetails_lits, int timeFrom, int timeTo) {
+    public Object getGrDoMigoBapi(WeightTicket wt, WeightTicket weightTicket, OutboundDelivery outbDel, List<OutboundDetail> outDetails_lits, int timeFrom, int timeTo) {
         String doNum = null;
         if (outbDel != null) {
             doNum = outbDel.getDeliveryOrderNo();
@@ -416,13 +416,13 @@ public class WeightTicketController {
         List<GoodsMvtItemDoStructure> tab = new ArrayList<GoodsMvtItemDoStructure>();
 
         //get do details for current do
-        OutbDetailsV2 item = null;
+        OutboundDetail item = null;
         BigDecimal kl = BigDecimal.ZERO;
         BigDecimal kl_km = BigDecimal.ZERO;
         BigDecimal kl_total = BigDecimal.ZERO;
         for (int i = 0; i < outDetails_lits.size(); i++) {
             item = outDetails_lits.get(i);
-            if (item.getOutbDetailsV2PK().getDelivNumb().contains(doNum)) {
+            if (item.getDeliveryOrderNo().contains(doNum)) {
                 if (item.getFreeItem() == null || item.getFreeItem().equals("")) {
                     kl = kl.add((item.getGoodsQty() != null) ? item.getGoodsQty() : BigDecimal.ZERO);
                 } else {
@@ -631,7 +631,7 @@ public class WeightTicketController {
         return bapi;
     }
 
-    public Object getDoCreate2PGI(WeightTicket wt, OutboundDelivery outbDel, WeightTicket weightTicket, int timeFrom, int timeTo, List<OutbDetailsV2> outDetails_lits) {
+    public Object getDoCreate2PGI(WeightTicket wt, OutboundDelivery outbDel, WeightTicket weightTicket, int timeFrom, int timeTo, List<OutboundDetail> outDetails_lits) {
         String doNum = null;
         if (outbDel != null) {
             doNum = outbDel.getDeliveryOrderNo();
@@ -678,13 +678,13 @@ public class WeightTicketController {
         bapi.setVbkok_wa(wa);
 
         //get do details for current do
-        OutbDetailsV2 item = null;
+        OutboundDetail item = null;
         BigDecimal kl = BigDecimal.ZERO;
         BigDecimal kl_km = BigDecimal.ZERO;
         BigDecimal kl_total = BigDecimal.ZERO;
         for (int i = 0; i < outDetails_lits.size(); i++) {
             item = outDetails_lits.get(i);
-            if (item.getOutbDetailsV2PK().getDelivNumb().contains(doNum)) {
+            if (item.getDeliveryOrderNo().contains(doNum)) {
                 if (item.getFreeItem() == null || item.getFreeItem().equals("")) {
                     kl = kl.add((item.getGoodsQty() != null) ? item.getGoodsQty() : BigDecimal.ZERO);
                 } else {
@@ -739,7 +739,7 @@ public class WeightTicketController {
         return bapi;
     }
 
-    public Object getPgmVl02nBapi(WeightTicket wt, OutboundDelivery outbDel, WeightTicket weightTicket, int timeFrom, int timeTo, List<OutbDetailsV2> outDetails_lits) {
+    public Object getPgmVl02nBapi(WeightTicket wt, OutboundDelivery outbDel, WeightTicket weightTicket, int timeFrom, int timeTo, List<OutboundDetail> outDetails_lits) {
         String doNum = null;
         if (outbDel != null) {
             doNum = outbDel.getDeliveryOrderNo();
@@ -758,13 +758,13 @@ public class WeightTicketController {
         bapi.setUpdate_picking("X");
 
         //get do details for current do
-        OutbDetailsV2 item = null;
+        OutboundDetail item = null;
         BigDecimal kl = BigDecimal.ZERO;
         BigDecimal kl_km = BigDecimal.ZERO;
         BigDecimal kl_total = BigDecimal.ZERO;
         for (int i = 0; i < outDetails_lits.size(); i++) {
             item = outDetails_lits.get(i);
-            if (item.getOutbDetailsV2PK().getDelivNumb().contains(doNum)) {
+            if (item.getDeliveryOrderNo().contains(doNum)) {
                 if (item.getFreeItem() == null || item.getFreeItem().equals("")) {
                     kl = kl.add((item.getGoodsQty() != null) ? item.getGoodsQty() : BigDecimal.ZERO);
                 } else {
@@ -930,7 +930,7 @@ public class WeightTicketController {
         return new DefaultComboBoxModel(reasons.toArray());
     }
 
-    public void printWT(WeightTicket wt, boolean reprint, String ximang, List<OutboundDelivery> outbDel_list, List<OutbDetailsV2> outDetails_lits,
+    public void printWT(WeightTicket wt, boolean reprint, String ximang, List<OutboundDelivery> outbDel_list, List<OutboundDetail> outDetails_lits,
             OutboundDelivery outbDel, JRadioButton rbtMisc, JRadioButton rbtPO, boolean isStage1, JRootPane rootPane) {
         config = WeighBridgeApp.getApplication().getConfig();
         OutboundDelivery item = null;
@@ -983,15 +983,15 @@ public class WeightTicketController {
             } else {
                 for (int i = 0; i < outbDel_list.size(); i++) {
                     item = outbDel_list.get(i);
-                    OutbDetailsV2 out_detail = null;
+                    OutboundDetail out_detail = null;
                     BigDecimal sscale = BigDecimal.ZERO;
                     BigDecimal gqty = BigDecimal.ZERO;
                     BigDecimal lfimg_ori = BigDecimal.ZERO;
                     for (int k = 0; k < outDetails_lits.size(); k++) {
                         out_detail = outDetails_lits.get(k);
-                        if (out_detail.getOutbDetailsV2PK().getDelivNumb().contains(item.getDeliveryOrderNo())) {
-                            if (out_detail.getLfimgOri() != null) {
-                                lfimg_ori = lfimg_ori.add(out_detail.getLfimgOri());
+                        if (out_detail.getDeliveryOrderNo().contains(item.getDeliveryOrderNo())) {
+                            if (out_detail.getLfimg() != null) {
+                                lfimg_ori = lfimg_ori.add(out_detail.getLfimg());
                             }
                         }
                     }

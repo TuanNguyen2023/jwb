@@ -18,7 +18,7 @@ import com.gcs.wb.jpa.procedures.WeightTicketJpaRepository;
 
 import com.gcs.wb.jpa.repositorys.CustomerRepository;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
-import com.gcs.wb.jpa.repositorys.OutboundDeliveryRepository;
+import com.gcs.wb.jpa.repositorys.OutbDelRepository;
 import com.gcs.wb.jpa.repositorys.OutboundDetailRepository;
 import com.gcs.wb.jpa.repositorys.VariantRepository;
 import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
@@ -235,29 +235,31 @@ public class WeightTicketJpaController {
     }
 
     public List<OutboundDetail> findByMandtDelivNumb(String deliv_numb) throws Exception {
+        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
         String devNumber = "%" + deliv_numb + "%";
-        OutboundDetailRepository repo = new OutboundDetailRepository();
-        return repo.findByDeliveryOrderNo(devNumber);
+        OutboundDetail repo = new OutboundDetail();
+        return repo.findByDeliveryOrderNo(client, devNumber);
 
     }
 
     public List<OutboundDetail> findByMandtDelivNumbItem(String deliv_numb, String item) throws Exception {
-        OutboundDetailRepository repository = new OutboundDetailRepository();
-        List<OutboundDetail> result = repository.findByDeliveryOrderNoAndDeliveryOrderItem(deliv_numb, item);
+        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
+        OutboundDetail repository = new OutboundDetail();
+        List<OutboundDetail> result = repository.findByDeliveryOrderNoAndDeliveryOrderItem(client, deliv_numb, item);
         return result;
     }
 
     public List<OutboundDetail> findByMandtWTID(String wt_id) throws Exception {
         String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-        OutboundDetailRepository repository = new OutboundDetailRepository();
-        return repository.findByWtId(wt_id);
+        OutboundDetail repository = new OutboundDetail();
+        return repository.findByWtId(client, wt_id);
     }
 
     public OutboundDelivery findByMandtOutDel(String delnum) throws Exception {
 
         String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-        OutboundDeliveryRepository repository = new OutboundDeliveryRepository();
-        return repository.findByDeliveryOrderNo(delnum);
+        OutbDelRepository repository = new OutbDelRepository();
+        return repository.findByMandtOutDel(client, delnum);
 
     }
 

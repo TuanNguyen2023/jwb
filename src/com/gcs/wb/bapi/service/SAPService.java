@@ -33,8 +33,7 @@ import com.gcs.wb.jpa.entity.BatchStocksPK;
 import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
-import com.gcs.wb.jpa.entity.OutbDetailsV2;
-import com.gcs.wb.jpa.entity.OutbDetailsV2PK;
+import com.gcs.wb.jpa.entity.OutboundDetail;
 import com.gcs.wb.jpa.entity.PurOrder;
 import com.gcs.wb.jpa.entity.SLoc;
 import com.gcs.wb.jpa.entity.TransportAgent;
@@ -177,7 +176,7 @@ public class SAPService {
      */
     public OutboundDelivery getOutboundDelivery(String number, boolean refresh) {
         OutboundDelivery outb = null;
-        OutbDetailsV2 outb_details = null;
+        OutboundDetail outb_details = null;
         String item_cat = "";
         String item_num = null;
         String item_num_free = null;
@@ -195,7 +194,7 @@ public class SAPService {
             //check do detail exist
             EntityManager em_check = WeighBridgeApp.getApplication().getEm();
             WeightTicketJpaController con_check = new WeightTicketJpaController();
-            List<OutbDetailsV2> outb_detail_check;
+            List<OutboundDetail> outb_detail_check;
             if (refresh == true) {
                 try {
                     outb_detail_check = con_check.findByMandtDelivNumb(number);
@@ -222,7 +221,7 @@ public class SAPService {
                     if (outb_detail_check.size() > 0) {
                         outb_details = outb_detail_check.get(0);
                     } else {
-                        outb_details = new OutbDetailsV2(new OutbDetailsV2PK(config.getsClient(), number, doItem.getPosnr().substring(4, 5)));
+                        outb_details = new OutboundDetail(number, doItem.getPosnr().substring(4, 5));
                     }
                 } catch (Exception ex) {
                     Logger.getLogger(SAPService.class.getName()).log(Level.SEVERE, null, ex);
@@ -238,7 +237,7 @@ public class SAPService {
                     outb.setMatnrFree(doItem.getMatnr());
                     //set data cho details free goods
                     if (flag_detail == true) {
-                        outb_details.setFreeItem("X");
+                        outb_details.setFreeItem('X');
                         outb_details.setLfimg(doItem.getLfimg());
                         outb_details.setMeins(doItem.getMeins());
                         String split[] = doItem.getArktx().split("-");
@@ -262,11 +261,10 @@ public class SAPService {
                 if (flag_detail == true) {
                     outb_details.setLfimg(doItem.getLfimg());
 
-                    if ((outb_details.getPosted() == null)
-                            || (!outb_details.getPosted().trim().equals("1"))
-                            || (outb_details.getLfimgOri() == null)
-                            || (outb_details.getLfimgOri().equals(BigDecimal.ZERO))) {
-                        outb_details.setLfimgOri(doItem.getLfimg());
+                    if ((!outb_details.isPosted())
+                            || (outb_details.getLfimg() == null)
+                            || (outb_details.getLfimg().equals(BigDecimal.ZERO))) {
+                        outb_details.setLfimg(doItem.getLfimg());
                     }
                     outb_details.setMeins(doItem.getMeins());
                     String split[] = doItem.getArktx().split("-");
@@ -297,6 +295,7 @@ public class SAPService {
 
                 outb.setErdat((java.sql.Date) doItem.getErdat());
                 outb.setLfart(doItem.getLfart());
+
                 outb.setWadat((java.sql.Date) doItem.getWadat());
                 outb.setLddat((java.sql.Date) doItem.getLddat());
                 outb.setKodat((java.sql.Date) doItem.getKodat());
@@ -305,6 +304,7 @@ public class SAPService {
                 outb.setKunag(doItem.getKunag());
                 outb.setTraty(doItem.getTraty());
                 outb.setTraid(doItem.getTraid());
+
                 outb.setBldat((java.sql.Date) doItem.getBldat());
                 if(outb.getMatnr() == null || outb.getMatnr().trim().isEmpty()) {
                     outb.setMatnr(doItem.getMatnr());
@@ -337,17 +337,20 @@ public class SAPService {
                 outb.setLfimg(item_qty);
             }
             //set lai item number thanh number dau tien
+
             if (outb.getDeliveryItem() != null) {
                 if (!outb.getDeliveryItem().equals(item_num)) {
                     outb.setDeliveryItem(item_num);
                 }
             }
             if (item_num_free != null) {
+
                 if (!outb.getDeliveryItemFree().equals(item_num_free)) {
                     outb.setDeliveryItemFree(item_num_free);
                 }
             }
             //th chi co hang free goods
+
             if (outb.getDeliveryItem() == null) {
                 outb.setDeliveryItem(outb.getDeliveryItemFree());
                 outb.setLfimg(outb.getFreeQty());
