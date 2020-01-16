@@ -33,7 +33,6 @@ import com.gcs.wb.jpa.entity.BatchStocksPK;
 import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
-import com.gcs.wb.jpa.entity.OutbDelPK;
 import com.gcs.wb.jpa.entity.OutbDetailsV2;
 import com.gcs.wb.jpa.entity.OutbDetailsV2PK;
 import com.gcs.wb.jpa.entity.PurOrder;
@@ -214,7 +213,7 @@ public class SAPService {
                 }
             }
             //end check
-            outb = new OutboundDelivery(new OutbDelPK(config.getsClient(), number));
+            outb = new OutboundDelivery(number);
             outb.setShipPoint(bapiDO.getEs_vstel());
             for (int i = 0; i < dos.size(); i++) {
                 DoGetDetailStructure doItem = dos.get(i);
@@ -235,7 +234,7 @@ public class SAPService {
                 }
                 //end set
                 if (item_cat.equals("ZTNN")) {
-                    outb.setDelivItemFree(doItem.getPosnr());
+                    outb.setDeliveryItemFree(doItem.getPosnr());
                     outb.setMatnrFree(doItem.getMatnr());
                     //set data cho details free goods
                     if (flag_detail == true) {
@@ -258,7 +257,7 @@ public class SAPService {
 //                    continue;
                 }
 
-                outb.setDelivItem(doItem.getPosnr()); //Get position
+                outb.setDeliveryItem(doItem.getPosnr()); //Get position
                 //set data out details hang thuong
                 if (flag_detail == true) {
                     outb_details.setLfimg(doItem.getLfimg());
@@ -296,17 +295,17 @@ public class SAPService {
                     }
                 }
 
-                outb.setErdat(doItem.getErdat());
+                outb.setErdat((java.sql.Date) doItem.getErdat());
                 outb.setLfart(doItem.getLfart());
-                outb.setWadat(doItem.getWadat());
-                outb.setLddat(doItem.getLddat());
-                outb.setKodat(doItem.getKodat());
+                outb.setWadat((java.sql.Date) doItem.getWadat());
+                outb.setLddat((java.sql.Date) doItem.getLddat());
+                outb.setKodat((java.sql.Date) doItem.getKodat());
                 outb.setLifnr(doItem.getLifnr());
                 outb.setKunnr(doItem.getKunnr());
                 outb.setKunag(doItem.getKunag());
                 outb.setTraty(doItem.getTraty());
                 outb.setTraid(doItem.getTraid());
-                outb.setBldat(doItem.getBldat());
+                outb.setBldat((java.sql.Date) doItem.getBldat());
                 if(outb.getMatnr() == null || outb.getMatnr().trim().isEmpty()) {
                     outb.setMatnr(doItem.getMatnr());
                 }
@@ -338,21 +337,21 @@ public class SAPService {
                 outb.setLfimg(item_qty);
             }
             //set lai item number thanh number dau tien
-            if (outb.getDelivItem() != null) {
-                if (!outb.getDelivItem().equals(item_num)) {
-                    outb.setDelivItem(item_num);
+            if (outb.getDeliveryItem() != null) {
+                if (!outb.getDeliveryItem().equals(item_num)) {
+                    outb.setDeliveryItem(item_num);
                 }
             }
             if (item_num_free != null) {
-                if (!outb.getDelivItemFree().equals(item_num_free)) {
-                    outb.setDelivItemFree(item_num_free);
+                if (!outb.getDeliveryItemFree().equals(item_num_free)) {
+                    outb.setDeliveryItemFree(item_num_free);
                 }
             }
             //th chi co hang free goods
-            if (outb.getDelivItem() == null) {
-                outb.setDelivItem(outb.getDelivItemFree());
+            if (outb.getDeliveryItem() == null) {
+                outb.setDeliveryItem(outb.getDeliveryItemFree());
                 outb.setLfimg(outb.getFreeQty());
-                outb.setDelivItemFree(null);
+                outb.setDeliveryItemFree(null);
                 outb.setFreeQty(null);
             }
 

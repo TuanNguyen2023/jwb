@@ -18,7 +18,7 @@ import com.gcs.wb.jpa.procedures.WeightTicketJpaRepository;
 
 import com.gcs.wb.jpa.repositorys.CustomerRepository;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
-import com.gcs.wb.jpa.repositorys.OutbDelRepository;
+import com.gcs.wb.jpa.repositorys.OutboundDeliveryRepository;
 import com.gcs.wb.jpa.repositorys.OutbDetailsV2Repository;
 import com.gcs.wb.jpa.repositorys.VariantRepository;
 import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
@@ -258,8 +258,8 @@ public class WeightTicketJpaController {
     public OutboundDelivery findByMandtOutDel(String delnum) throws Exception {
 
         String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-        OutbDelRepository repository = new OutbDelRepository();
-        return repository.findByMandtOutDel(client, delnum);
+        OutboundDeliveryRepository repository = new OutboundDeliveryRepository();
+        return repository.findByDeliveryOrderNo(delnum);
 
     }
 

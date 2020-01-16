@@ -15,17 +15,16 @@ import org.apache.log4j.Logger;
  *
  * @author dinhhn.vr
  */
-public class OutbDelRepository {
+public class OutboundDeliveryRepository {
 
     EntityManager entityManager = JPAConnector.getInstance();
     Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
 
-    public OutboundDelivery findByMandtOutDel(String mandt, String delnum) {
+    public OutboundDelivery findByDeliveryOrderNo(String deliveryOrderNo) {
         OutboundDelivery outbDel = new OutboundDelivery();
         try {
-            TypedQuery<OutboundDelivery> nq = entityManager.createNamedQuery("OutbDel.findByMandtOutDel", OutboundDelivery.class);
-            nq.setParameter("mandt", mandt);
-            nq.setParameter("delivNumb", "%" + delnum + "%");
+            TypedQuery<OutboundDelivery> nq = entityManager.createNamedQuery("OutboundDelivery.findByDeliveryOrderNo", OutboundDelivery.class);
+            nq.setParameter("deliveryOrderNo", "%" + deliveryOrderNo + "%");
             List<OutboundDelivery> list = nq.getResultList();
             if (list != null & list.size() > 0) {
                 outbDel = list.get(0);

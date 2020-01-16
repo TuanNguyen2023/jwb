@@ -4,6 +4,7 @@
  */
 package com.gcs.wb.jpa.entity;
 
+import com.gcs.wb.base.constant.Constants;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -491,6 +492,14 @@ public class OutboundDelivery implements Serializable {
 
     public void setWplant(String wplant) {
         this.wplant = wplant;
+    }
+    
+    public boolean isPosted() {
+        return Constants.WeightTicket.STATUS_POSTED.equals(status);
+    }
+    
+    public void setPosted(boolean isPosted) {
+        this.status = isPosted ? Constants.WeightTicket.STATUS_POSTED : null;
     }
 
     @Override

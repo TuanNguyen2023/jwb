@@ -18,7 +18,6 @@ import com.gcs.wb.jpa.JReportConnector;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
-import com.gcs.wb.jpa.entity.OutbDelPK;
 import com.gcs.wb.jpa.entity.SAPSetting;
 import com.gcs.wb.jpa.entity.Vehicle;
 import com.gcs.wb.jpa.entity.Vendor;
@@ -54,6 +53,7 @@ import com.gcs.wb.jpa.entity.OutbDetailsV2;
 import com.gcs.wb.jpa.procedures.WTRegRepository;
 import com.gcs.wb.jpa.repositorys.CustomerRepository;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
+import com.gcs.wb.jpa.repositorys.OutboundDeliveryRepository;
 import com.gcs.wb.jpa.repositorys.VendorRepository;
 import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import java.awt.Toolkit;
@@ -82,6 +82,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
     WeightTicketRepository weightTicketRepository = new WeightTicketRepository();
     CustomerRepository customerRepository = new CustomerRepository();
     VendorRepository vendorRepository = new VendorRepository();
+    OutboundDeliveryRepository outboundDeliveryRepository = new OutboundDeliveryRepository();
     SAPService sapService = new SAPService();
 
     public WTRegView() {
@@ -1306,7 +1307,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     create_date.setTime(item.getCreatedDate());
                     SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
                     wtData[i][11] = dateFormat;
-                    
+
                     String hh = item.getCreatedTime().substring(0, 2);
                     String mm = item.getCreatedTime().substring(3, 5);
                     String ss = item.getCreatedTime().substring(6, 8);
@@ -1463,7 +1464,6 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private class CheckDOTask extends org.jdesktop.application.Task<Object, Void> {
 
         private OutboundDelivery outb = null;
-        private OutbDelPK outbPK = null;
         private String mode = null;
         private Customer kunnr = null;
         private Customer kunag = null;
@@ -1497,8 +1497,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 //+20100106 convert DO number to SAP format
 //            System.out.println(val);
 //            System.out.println(val.length());
-                outbPK = new OutbDelPK(WeighBridgeApp.getApplication().getConfig().getsClient(), val[k]);
-                outb = entityManager.find(OutboundDelivery.class, outbPK);
+                outb = outboundDeliveryRepository.findByDeliveryOrderNo(val[k]);
                 setMessage(resourceMapMsg.getString("checkDOInSap"));
                 setProgress(2, 1, 4);
                 OutboundDelivery sapOutb = sapService.getOutboundDelivery(val[k], true);
@@ -1626,7 +1625,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 //Check if D.O was used already or not???
                 if (validDO && outb != null) {
                     WeightTicket wt = null;
-                    String delivNumb = outb.getOutbDelPK().getDelivNumb();
+                    String delivNumb = outb.getDeliveryOrderNo();
                     wt = weightTicketRepository.findByDeliveryOrderNo(delivNumb);
                     String wplant = "";
                     wplant = WeighBridgeApp.getApplication().getConfig().getwPlant().toString();
@@ -1647,7 +1646,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         JOptionPane.showMessageDialog(rootPane, msg);
                     } else {
                         flag_revert = true;
-                        outb_number = outb.getOutbDelPK().getDelivNumb().toString().trim();
+                        outb_number = outb.getDeliveryOrderNo().toString().trim();
                     }
                 }
 //<< 20120712#01 - check shipping point -------
@@ -1756,7 +1755,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 }
                 //end 20121217
                 if (validDO && outb != null) {
-                    newWeightTicket.setItem(outb.getDelivItem());
+                    newWeightTicket.setItem(outb.getDeliveryItem());
                     newWeightTicket.setMatnrRef(outb.getMatnr());
                     newWeightTicket.setRegItemDescription(outb.getArktx());
                     newWeightTicket.setUnit(outb.getVrkme());
@@ -1807,7 +1806,6 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private class CheckDOOFFTask extends org.jdesktop.application.Task<Object, Void> {
 
         private OutboundDelivery outb = null;
-        private OutbDelPK outbPK = null;
         private String mode = null;
         private Customer kunnr = null;
         private Customer kunag = null;
@@ -1841,8 +1839,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 //+20100106 convert DO number to SAP format
 //            System.out.println(val);
 //            System.out.println(val.length());
-                outbPK = new OutbDelPK(WeighBridgeApp.getApplication().getConfig().getsClient(), val[k]);
-                outb = entityManager.find(OutboundDelivery.class, outbPK);
+                outb = outboundDeliveryRepository.findByDeliveryOrderNo(val[k]);
                 /*HLD18
                 setMessage("Kiểm tra D.O trong SAP ...");
                 setProgress(2, 1, 4);
@@ -1988,7 +1985,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 //Check if D.O was used already or not???
                 if (validDO && outb != null) {
                     WeightTicket wt = null;
-                    String delivNumb = outb.getOutbDelPK().getDelivNumb();
+                    String delivNumb = outb.getDeliveryOrderNo();
                     wt = weightTicketRepository.findByDeliveryOrderNo(delivNumb);
                     String Lfart;
                     try {
@@ -2005,7 +2002,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         JOptionPane.showMessageDialog(rootPane, msg);
                     } else {
                         flag_revert = true;
-                        outb_number = outb.getOutbDelPK().getDelivNumb().toString().trim();
+                        outb_number = outb.getDeliveryOrderNo().toString().trim();
                     }
                 }
 //<< 20120712#01 - check shipping point -------
@@ -2118,7 +2115,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 }
                 //end 20121217
                 if (validDO && outb != null) {
-                    newWeightTicket.setItem(outb.getDelivItem());
+                    newWeightTicket.setItem(outb.getDeliveryItem());
                     newWeightTicket.setMatnrRef(outb.getMatnr());
                     newWeightTicket.setRegItemDescription(outb.getArktx());
                     newWeightTicket.setUnit(outb.getVrkme());
@@ -2599,7 +2596,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 //            } else {
 //
 //                result = true;
-                //-----------------
+            //-----------------
 //                if (sapSetting.getCheckTalp() != null && sapSetting.getCheckTalp().booleanValue() == true) {
 //                    boolean l_not_valid = false;
 //                    VehicleValid vh = new VehicleValid();
@@ -2636,7 +2633,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 //                                + " \" đang bị cấm xuất/nhập hàng!");
 //                    }
 //                }
-                //-----------------
+            //-----------------
 //            }
         }
         return result;

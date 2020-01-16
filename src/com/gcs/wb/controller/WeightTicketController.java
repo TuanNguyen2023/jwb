@@ -34,7 +34,6 @@ import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.Movement;
 import com.gcs.wb.jpa.entity.MovementPK;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
-import com.gcs.wb.jpa.entity.OutbDelPK;
 import com.gcs.wb.jpa.entity.OutbDetailsV2;
 import com.gcs.wb.jpa.entity.PurOrder;
 import com.gcs.wb.jpa.entity.PurOrderPK;
@@ -232,7 +231,7 @@ public class WeightTicketController {
         for (String item : completedDOs) {
             bapi = new DORevertBapi(item);
 
-            OutboundDelivery od_temp = new OutboundDelivery(new OutbDelPK(weightTicket.getMandt(), item));
+            OutboundDelivery od_temp = new OutboundDelivery(item);
             GoodsMvtWeightTicketStructure stWT = fillWTStructure(weightTicket, od_temp, outDetails_lits, weightTicket);
 
             bapi.setWeightticket(stWT);
@@ -255,7 +254,7 @@ public class WeightTicketController {
         }
         if (outbDels != null) {
             for (OutboundDelivery outbD : outbDels) {
-                outbD.setPosted("-1");
+                outbD.setPosted(false);
                 entityManager.merge(outbD);
             }
         }
@@ -278,7 +277,7 @@ public class WeightTicketController {
         if (od != null && od_v2_list != null) {
             for (OutbDetailsV2 od_v2_tmp : od_v2_list) {
                 if (od_v2_tmp.getOutbDetailsV2PK().getDelivNumb() != null
-                        && od_v2_tmp.getOutbDetailsV2PK().getDelivNumb().equals(od.getOutbDelPK().getDelivNumb())) {
+                        && od_v2_tmp.getOutbDetailsV2PK().getDelivNumb().equals(od.getDeliveryOrderNo())) {
                     od_v2 = od_v2_tmp;
                     break;
                 }
@@ -287,9 +286,9 @@ public class WeightTicketController {
 
         stWT.setCAT_TYPE(String.valueOf(wt.getRegType()));
         stWT.setDO_WT(wt.getDeliveryOrderNo());
-        stWT.setDO_NUMBER(od != null && od.getOutbDelPK() != null
-                && od.getOutbDelPK().getDelivNumb() != null
-                ? od.getOutbDelPK().getDelivNumb() : "");
+        stWT.setDO_NUMBER(od != null
+                && od.getDeliveryOrderNo() != null
+                ? od.getDeliveryOrderNo() : "");
         stWT.setDRIVERID(wt.getDriverIdNo());
         stWT.setDRIVERN(wt.getDriverName());
         stWT.setFDATE(wt.getFTime());
@@ -369,7 +368,7 @@ public class WeightTicketController {
     public Object getGrDoMigoBapi(WeightTicket wt, WeightTicket weightTicket, OutboundDelivery outbDel, List<OutbDetailsV2> outDetails_lits, int timeFrom, int timeTo) {
         String doNum = null;
         if (outbDel != null) {
-            doNum = outbDel.getOutbDelPK().getDelivNumb();
+            doNum = outbDel.getDeliveryOrderNo();
         }
         config = WeighBridgeApp.getApplication().getConfig();
         String plateCombine = wt.getPlateNo();
@@ -381,9 +380,8 @@ public class WeightTicketController {
         GoodsMvtHeaderStructure header = new GoodsMvtHeaderStructure();
 
         GoodsMvtWeightTicketStructure stWT = fillWTStructure(weightTicket,
-                (outbDel != null && outbDel.getOutbDelPK() != null
-                && outbDel.getOutbDelPK().getDelivNumb() != null
-                && !outbDel.getOutbDelPK().getDelivNumb().isEmpty() ? outbDel : null),
+                (outbDel != null && outbDel.getDeliveryOrderNo() != null
+                && !outbDel.getDeliveryOrderNo().isEmpty() ? outbDel : null),
                 outDetails_lits, weightTicket);
         bapi.setWeightticket(stWT);
         header.setDocDate(DateUtil.stripTime(wt.getSTime()));
@@ -636,7 +634,7 @@ public class WeightTicketController {
     public Object getDoCreate2PGI(WeightTicket wt, OutboundDelivery outbDel, WeightTicket weightTicket, int timeFrom, int timeTo, List<OutbDetailsV2> outDetails_lits) {
         String doNum = null;
         if (outbDel != null) {
-            doNum = outbDel.getOutbDelPK().getDelivNumb();
+            doNum = outbDel.getDeliveryOrderNo();
         }
         config = WeighBridgeApp.getApplication().getConfig();
         DOCreate2PGIBapi bapi = new DOCreate2PGIBapi();
@@ -744,7 +742,7 @@ public class WeightTicketController {
     public Object getPgmVl02nBapi(WeightTicket wt, OutboundDelivery outbDel, WeightTicket weightTicket, int timeFrom, int timeTo, List<OutbDetailsV2> outDetails_lits) {
         String doNum = null;
         if (outbDel != null) {
-            doNum = outbDel.getOutbDelPK().getDelivNumb();
+            doNum = outbDel.getDeliveryOrderNo();
         }
         config = WeighBridgeApp.getApplication().getConfig();
         String plateCombine = wt.getPlateNo();
@@ -868,14 +866,14 @@ public class WeightTicketController {
         tab_wa_f.setVrkme(wt.getUnit());
         tab_wa_f.setMeins(outbDel.getMeins());
 
-        if (outbDel.getDelivItemFree() != null && (outbDel.getDelivItemFree() == null ? "" != null : !outbDel.getDelivItemFree().equals(""))) {
+        if (outbDel.getDeliveryItemFree() != null && (outbDel.getDeliveryItemFree() == null ? "" != null : !outbDel.getDeliveryItemFree().equals(""))) {
             if (outbDel == null) {
                 tab_wa_f.setVbeln_vl(wt.getDeliveryOrderNo());
             } else {
                 tab_wa_f.setVbeln_vl(doNum);
             }
             tab_wa_f.setMatnr(outbDel.getMatnrFree());
-            tab_wa_f.setPosnr_vl(outbDel.getDelivItemFree());
+            tab_wa_f.setPosnr_vl(outbDel.getDeliveryItemFree());
             tab_wa_f.setVbeln(tab_wa_f.getVbeln_vl());
             tab_wa_f.setPosnn(tab_wa_f.getPosnr_vl());
             tab_wa_f.setPikmg(outbDel.getFreeQty());
@@ -991,7 +989,7 @@ public class WeightTicketController {
                     BigDecimal lfimg_ori = BigDecimal.ZERO;
                     for (int k = 0; k < outDetails_lits.size(); k++) {
                         out_detail = outDetails_lits.get(k);
-                        if (out_detail.getOutbDetailsV2PK().getDelivNumb().contains(item.getOutbDelPK().getDelivNumb())) {
+                        if (out_detail.getOutbDetailsV2PK().getDelivNumb().contains(item.getDeliveryOrderNo())) {
                             if (out_detail.getLfimgOri() != null) {
                                 lfimg_ori = lfimg_ori.add(out_detail.getLfimgOri());
                             }
@@ -1008,7 +1006,7 @@ public class WeightTicketController {
                     map.put("P_DAYSEQ", wt.getSeqDay());
                     map.put("P_REPRINT", reprint);
                     map.put("P_ADDRESS", config.getRptId());
-                    map.put("P_DEL_NUM", outbDel.getOutbDelPK().getDelivNumb());
+                    map.put("P_DEL_NUM", outbDel.getDeliveryOrderNo());
                     if (wt.getSScale() != null) {
                         BigDecimal n_1000 = new BigDecimal(1000);
                         sscale = wt.getSScale().divide(n_1000);
