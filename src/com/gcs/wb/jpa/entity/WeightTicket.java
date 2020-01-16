@@ -186,7 +186,7 @@ public class WeightTicket implements Serializable {
     private Character regType;
     @Column(name = "reg_item_description")
     private String regItemDescription;
-    @Column(name = "req_item_quantity")
+    @Column(name = "reg_item_quantity")
     private BigDecimal regItemQuantity;
     @Column(name = "delivery_order_no")
     private String deliveryOrderNo;

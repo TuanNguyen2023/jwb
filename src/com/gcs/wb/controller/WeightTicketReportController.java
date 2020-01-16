@@ -9,6 +9,7 @@ import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.WeightTicket;
+import com.gcs.wb.jpa.repositorys.MaterialRepository;
 import com.gcs.wb.jpa.repositorys.TransportAgentRepository;
 import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ public class WeightTicketReportController {
 
     private TransportAgentRepository transportAgentRepository = new TransportAgentRepository();
     private WeightTicketRepository weightTicketRepository = new WeightTicketRepository();
+    private MaterialRepository materialRepository = new MaterialRepository();
     private Object[] wtColNames = new String[]{
         "STT",
         "S.Đ.Tài",
@@ -69,19 +71,15 @@ public class WeightTicketReportController {
 
     public DefaultComboBoxModel getMaterialsModel() {
         DefaultComboBoxModel result = new DefaultComboBoxModel();
-        List weightTickets = weightTicketRepository.getMatsModel();
-        for (Object obj : weightTickets) {
-            Object[] weightTicket = (Object[]) obj;
-            Material material = new Material();
-            material.setMandt(WeighBridgeApp.getApplication().getConfig().getsClient());
-            if (weightTicket[0] == null) {
-                material.setMatnr("-1");
-                material.setMaktx("Linh tinh");
-            } else {
-                material.setMatnr(weightTicket[0].toString());
-                material.setMaktx(weightTicket[1].toString());
-            }
-            if (result.getIndexOf(material) < 0) {
+        List<Material> materials = materialRepository.getListMaterial();
+        Material mat = new Material();
+        mat.setMatnr("-1");
+        mat.setMaktx("Tất cả");
+        result.addElement(mat);
+
+        for (Material material : materials) {
+            if (result.getIndexOf(material) < 0 && material.getMatnr() != null
+                    && material.getMaktx() != null && !material.getMaktx().isEmpty()) {
                 result.addElement(material);
             }
         }

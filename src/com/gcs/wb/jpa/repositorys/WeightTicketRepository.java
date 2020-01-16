@@ -22,7 +22,7 @@ public class WeightTicketRepository {
     EntityManager entityManager = JPAConnector.getInstance();
     Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
 
-    public List getMatsModel() {
+    public List<WeightTicket> getListWeightTicket() {
         TypedQuery<WeightTicket> query = entityManager.createNamedQuery("WeightTicket.findAll", WeightTicket.class);
         return query.getResultList();
     }
@@ -59,7 +59,7 @@ public class WeightTicketRepository {
     public List<WeightTicket> findByCreatedDateRange(Date from, Date to) {
         List<WeightTicket> list = new ArrayList<WeightTicket>();
         try {
-            TypedQuery<WeightTicket> nq = entityManager.createNamedQuery("WeightTicket.findByCreateDateRange", WeightTicket.class);
+            TypedQuery<WeightTicket> nq = entityManager.createNamedQuery("WeightTicket.findByCreatedDateRange", WeightTicket.class);
             nq.setParameter("from", from);
             nq.setParameter("to", to);
             list = nq.getResultList();

@@ -20,7 +20,7 @@ public class MaterialRepository {
     EntityManager entityManager = JPAConnector.getInstance();
     Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
 
-    public List<Material> getListMaterial(String client, String plant) {
+    public List<Material> getListMaterial() {
         TypedQuery<Material> typedQuery = entityManager.createNamedQuery("Material.findAll", Material.class);
         return typedQuery.getResultList();
     }
