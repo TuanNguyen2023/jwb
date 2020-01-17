@@ -4,10 +4,19 @@
  */
 package com.gcs.wb.controller;
 
+import com.gcs.wb.jpa.entity.User;
+import com.gcs.wb.service.WeighBridgeService;
+import javax.swing.JLabel;
+
 /**
  *
  * @author THANGPT
  */
 public class WeighBridgeController {
-    
+
+    private WeighBridgeService weighBridgeService = new WeighBridgeService();
+
+    public void setStatus(User login, JLabel txt_status) {
+        weighBridgeService.setStatus(login, txt_status);
+    }
 }

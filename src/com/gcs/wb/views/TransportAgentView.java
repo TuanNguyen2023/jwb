@@ -11,16 +11,11 @@
 package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
-import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.controller.TransportAgentController;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.TransportAgent;
-import com.gcs.wb.jpa.entity.TransportAgentVehicle;
 import com.gcs.wb.jpa.entity.Vehicle;
-import com.gcs.wb.jpa.service.JPAService;
-import com.gcs.wb.jpa.repositorys.VehicleRepository;
 import java.awt.Component;
-import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.swing.DefaultListCellRenderer;
@@ -30,6 +25,7 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Application;
+import org.jdesktop.application.ResourceMap;
 
 /**
  *
@@ -38,9 +34,11 @@ import org.jdesktop.application.Application;
 public class TransportAgentView extends javax.swing.JInternalFrame {
 
     private EntityManager entityManager = JPAConnector.getInstance();
-    private VehicleRepository vehicleRepository = new VehicleRepository();
     
     public TransportAgentController transportAgentController = new TransportAgentController();
+    private boolean vehicleCreatable = false;
+    private JFrame mainFrame = WeighBridgeApp.getApplication().getMainFrame();
+    public ResourceMap resourceMapMsg = Application.getInstance(WeighBridgeApp.class).getContext().getResourceMap(TransportAgentView.class);
 
     /** Creates new form TransportAgentView */
     public TransportAgentView() {
@@ -372,7 +370,5 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
     private com.gcs.wb.jpa.entity.Vehicle vehicleSelected;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
-    private boolean vehicleCreatable = false;
-    private JFrame mainFrame = WeighBridgeApp.getApplication().getMainFrame();
-    public org.jdesktop.application.ResourceMap resourceMapMsg = Application.getInstance(WeighBridgeApp.class).getContext().getResourceMap(TransportAgentView.class);
+   
 }

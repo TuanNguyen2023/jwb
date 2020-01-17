@@ -25,8 +25,7 @@ import com.gcs.wb.jpa.entity.BatchStocks;
 import com.gcs.wb.jpa.entity.BatchStocksPK;
 import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.Material;
-import com.gcs.wb.jpa.entity.OutboundDelivery;
-import com.gcs.wb.jpa.entity.PurOrder;
+import com.gcs.wb.jpa.entity.MovementPK;import com.gcs.wb.jpa.entity.OutboundDelivery;import com.gcs.wb.jpa.entity.PurOrder;
 import com.gcs.wb.jpa.entity.PurOrderPK;
 import com.gcs.wb.jpa.entity.Reason;
 import com.gcs.wb.jpa.entity.ReasonPK;
@@ -90,24 +89,16 @@ import java.util.*;
  */
 public class WeightTicketView extends javax.swing.JInternalFrame {
 
-    WeightTicketRepository weightTicketRepository = new WeightTicketRepository();
-    BatchStocksRepository batchStocksRepository = new BatchStocksRepository();
-    TimeRangeRepository timeRangeRepository = new TimeRangeRepository();
     private AppConfig config = null;
     private final SAPSetting sapSetting;
     private final User login;
-    private String last_value = null;
-    private String current_value = null;
-    public HashMap hmMsg = new HashMap();
-    CustomerRepository customerRepository = new CustomerRepository();
     SignalsRepository noneRepository = new SignalsRepository();
-    WeightTicketJpaRepository weightTicketJpaRepository = new WeightTicketJpaRepository();
     VendorRepository vendorRepository = new VendorRepository();
     EntityManager entityManager = JPAConnector.getInstance();
     
     WeightTicketController weightTicketController = new WeightTicketController();
     SAPService sapService = new SAPService();
-    JPAService jpaService = new JPAService();
+    //JPAService jpaService = new JPAService();
 
     public WeightTicketView() {
         initComponents();
@@ -1775,7 +1766,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         String last = WeighBridgeApp.getApplication().getLast().toString();
         String now = WeighBridgeApp.getApplication().getNow().toString();
         if (!last.equals(now)) {
-            JOptionPane.showMessageDialog(rootPane, "Xin đợi cho cân ổn định");
+            JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.weighStability"));
             return null;
         }
         boolean fCheckSignal = false;
@@ -1808,7 +1799,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                         return new AcceptScaleTask(WeighBridgeApp.getApplication());
                     } else if (m.getCheckPosto() != null || !m.getCheckPosto().equals("")) {
                         if (!purOrder.getValType().equals("TRANSIT")) {
-                            JOptionPane.showMessageDialog(rootPane, "Valuation Type khác 'TRANSIT', vui lòng kiểm tra lại!!");
+                            JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.Transit"));
                             return null;
                         }
                     }
@@ -1873,7 +1864,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             if (!weightTicket.isDissolved()) { //+20100112#01 Phieu bi huy khong dc in lai
                 return new ReprintWTTask(WeighBridgeApp.getApplication());
             } else { //+20100112#01 Phieu bi huy khong dc in lai
-                JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), "Phiếu cân đã bị hủy!");
+                JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), resourceMapMsg.getString("msg.ticketDestroy"));
                 return null;
             } //+20100112#01 Phieu bi huy khong dc in lai
         }
@@ -1928,7 +1919,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             }
             if (!flag_tmp) {
                 //    JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(),cmes.getMsg("3") );
-                String Mes = "Điểm nhận hàng trên phiếu không hợp lệ, vui lòng kiểm tra, hoặc liên hệ DVKH để được hỗ trợ. ";
+                String Mes = resourceMapMsg.getString("msg.errorPointReceive");
                 //    Mes = cmes.getMsg("3") ;
                 JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), Mes.toString());
             }
@@ -1942,7 +1933,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             String wplant = WeighBridgeApp.getApplication().getConfig().getwPlant().toString();
             try {
                 //  msg = cmes.getMsg("2");
-                msg = "Lỗi thiếu thông tin ghi chú ! Vui lòng nhập thông tin ghi chú ";
+                msg = resourceMapMsg.getString("msg.errorNote");
             } catch (Exception ex) {
                 java.util.logging.Logger.getLogger(WeightTicketView.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -2023,7 +2014,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                                     procoView.dispose();
                                     procoView = null;
                                     if (weightTicket.getPpProcord() == null) {
-                                        JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), "Cần nhập Process Order để thực hiện thao tác xuất XM PCB40 !!!");
+                                        JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), resourceMapMsg.getString("msg.needProcessOrder"));
                                         return null;
                                     }
                                 }
@@ -2768,10 +2759,10 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                     }
                     if (cbxBatch.getModel().getSize() == 0) {
                         // sync data
-                        sapService.syncBatchStocks(lgort, weightTicket.getMatnrRef(), weightTicket.getLgort());
+                        //sapService.syncBatchStocks(lgort, weightTicket.getMatnrRef(), weightTicket.getLgort());
+                        weightTicketController.getSyncBatchStocks((SLoc) cbxSLoc.getSelectedItem(), weightTicket);
                         // get data DB
-                        List<BatchStocks> batchs = batchStocksRepository.getList(config.getsClient(), config.getwPlant(),
-                                lgort, weightTicket.getMatnrRef());
+                        List<BatchStocks> batchs =  weightTicketController.getBatchStocks((SLoc) cbxSLoc.getSelectedItem(), weightTicket);
                         DefaultComboBoxModel result = new DefaultComboBoxModel();
                         for (BatchStocks b : batchs) {
                             if (b.getLvorm() == null || b.getLvorm().toString().trim().isEmpty()) {
@@ -2877,7 +2868,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
         @Override
         protected Object doInBackground() {
-            setMessage("Đang đọc P.O từ CSDL ...");
+            setMessage(resourceMapMsg.getString("msg.getDataPO"));
             setProgress(0, 0, 3);
             // Tuanna >> 14.06.13 
             cbxKunnr.setSelectedIndex(-1);
@@ -2885,7 +2876,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
             // << end comment.
             purOrder = weightTicketController.findPurOrder(poNum);
-            setMessage("Tìm dữ liệu của P.O trong SAP ...");
+            setMessage(resourceMapMsg.getString("msg.searchDataPo"));
             setProgress(1, 0, 3);
 
             try {
@@ -2909,7 +2900,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             }
 
 
-            setMessage("Lưu dữ liệu P.O vào CSDL ...");
+            setMessage(resourceMapMsg.getString("msg.saveData"));
             setProgress(2, 0, 3);
             if (!entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().begin();
@@ -3539,7 +3530,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             entityManager.clear();
             if (completed) {
                 if (!weightTicket.isDissolved() || weightTicket.isPosted()) { //+20100111#01 khong in neu huy phieu
-                    setMessage("Đang in phiếu cân...");
+                    setMessage(resourceMapMsg.getString("msg.printing"));
                     printWT(weightTicket, false);
                 }
             }
@@ -3619,10 +3610,10 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             }
             lblBatch.setForeground(Color.black);
             if (isSubContract() && txfGoodsQty.getValue() != null) {
-                setMessage("Đang kiểm tra tồn kho trong SAP...");
+                setMessage(resourceMapMsg.getString("msg.checkIssetWarehouse"));
                 Double remaining = CheckMatStock(weightTicket.getMatnrRef(), config.getwPlant(), weightTicket.getLgort(), weightTicket.getCharg());
                 if (weightTicket.getGQty().doubleValue() > remaining) {
-                    JOptionPane.showMessageDialog(rootPane, "K.L xuất lớn hơn K.L tồn kho!!!");
+                    JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.oBiggerWarehouse"));
                     txfOutQty.setValue(null);
                     txfGoodsQty.setValue(null);
                     weightTicket.setGQty(null);
@@ -3668,7 +3659,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                 if (dIn > dOut) {
                     result = dIn - dOut;
                     if (weightTicket.getRegType() == 'O') {
-                        JOptionPane.showMessageDialog(rootPane, "K.L nhập lớn hơn K.L xuất!");
+                        JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.iBiggerO"));
                         txfOutQty.setValue(null);
                         txfGoodsQty.setValue(null);
                         weightTicket.setGQty(null);
@@ -3677,7 +3668,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                 } else {
                     result = dOut - dIn;
                     if (weightTicket.getRegType() == 'I') {
-                        JOptionPane.showMessageDialog(rootPane, "K.L xuất lớn hơn K.L nhập!");
+                        JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.oBiggerI"));
                         txfOutQty.setValue(null);
                         txtOutTime.setText(null);
                         txfGoodsQty.setValue(null);
@@ -3687,7 +3678,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                 }
                 result = result / 1000d;
                 if (result == 0) {
-                    JOptionPane.showMessageDialog(rootPane, "Khối lượng hàng không hợp lệ!");
+                    JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.massOrderInvalid"));
                     txfOutQty.setValue(null);
                     txfGoodsQty.setValue(null);
                     weightTicket.setGQty(null);
@@ -3764,11 +3755,9 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                         float klmax = 0;
                         float ilock;
                         boolean block = false;
-                        String pPlant = config.getwPlant().toString().trim();
-                        String pWbid = config.getWbId().toString().trim();
                         String pBs = weightTicket.getPlateNo().toString().trim();
-                        List wts = weightTicketRepository.getMaxL(pPlant, pWbid, pBs);
-                        List wts2 = weightTicketRepository.getMaxLLock(pPlant, pWbid, pBs);
+                        List wts = weightTicketController.getMaxL(pBs);
+                        List wts2 = weightTicketController.getMaxLLock(pBs);
                         try {
                             klmax = Float.parseFloat(wts.get(0).toString());
                             ilock = Float.parseFloat(wts2.get(0).toString());
@@ -3783,8 +3772,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
                         if (block == false && klmax == -1 && isKTC == false) {
 
-                            String msg = weightTicketJpaRepository.getMsg("6");
-
+                            String msg = weightTicketController.getMsg();
 
                             ask = JOptionPane.showConfirmDialog(rootPane, msg, "Thông báo ", JOptionPane.YES_NO_OPTION);
                             if (ask == JOptionPane.NO_OPTION) {
@@ -3824,9 +3812,9 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                         } else {
                             String msg = null;
                             try {
-                                msg = weightTicketJpaRepository.getMsg("6");
+                                msg = weightTicketController.getMsg();
                             } catch (Exception ex) {
-                                msg = "Khối lượng ngoài giới hạn cho phép";
+                                msg = resourceMapMsg.getString("msg.massOrderOutLimit");
                             }
                             JOptionPane.showMessageDialog(rootPane, msg); //variant mesage --> Tuanna
                             txfOutQty.setValue(null);
@@ -3843,13 +3831,13 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                         weightTicket.setGQty(new BigDecimal(result));
                     }
                 } else if (isSubContract() && weightTicket.getLgort() != null && weightTicket.getCharg() != null) {
-                    setMessage("Đang kiểm tra tồn kho trong SAP..."); // checking stock --tuanna
+                    setMessage(resourceMapMsg.getString("msg.checkIssetWarehouse")); // checking stock --tuanna
                     Double remaining = CheckMatStock(weightTicket.getMatnrRef(), config.getwPlant(), weightTicket.getLgort(), weightTicket.getCharg());
                     if (result <= remaining) {
                         txfGoodsQty.setValue(result);
                         weightTicket.setGQty(new BigDecimal(result));
                     } else {
-                        JOptionPane.showMessageDialog(rootPane, "K.L xuất lớn hơn K.L tồn kho!!!");
+                        JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.oBiggerWarehouse"));
                         txfOutQty.setValue(null);
                         txfGoodsQty.setValue(null);
                         weightTicket.setGQty(null);

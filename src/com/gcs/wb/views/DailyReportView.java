@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
 import com.gcs.wb.WeighBridgeApp;
+import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.controller.DailyReportController;
 import com.gcs.wb.jpa.entity.WeightTicket;
 import java.util.HashMap;
@@ -29,12 +30,22 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRTableModelDataSource;
 import net.sf.jasperreports.view.JasperViewer;
 import org.jdesktop.application.Application;
+import org.jdesktop.application.ResourceMap;
 
 /**
  *
  * @author thanghl
  */
 public class DailyReportView extends javax.swing.JInternalFrame {
+    
+    private static Logger logger = Logger.getLogger(DailyReportView.class);
+    private List<WeightTicket> weightTicketList;
+    private boolean[] editable = null;
+    Object[][] wtDatas = null;
+    Object[] wtColNames = Constants.DailyReport.wtColNames;
+    Class[] wtColTypes = Constants.DailyReport.wtColTypes;
+    ResourceMap resourceMapMsg = Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(DailyReportView.class);
+    DailyReportController dailyReportController = new DailyReportController();
 
     /** Creates new form DailyReportView */
     public DailyReportView() {
@@ -198,6 +209,7 @@ public class DailyReportView extends javax.swing.JInternalFrame {
                 setMessage(resourceMapMsg.getString("msg.handleData"));
                 weightTicketList.addAll(weightTickets);
                 wtDatas = dailyReportController.handleWtDatas(wtDatas, weightTicketList, wtColNames);
+
                 setProgress(3, 0, 4);
                 editable = new boolean[wtColNames.length];
                 for (int i = 0; i < editable.length; i++) {
@@ -242,18 +254,7 @@ public class DailyReportView extends javax.swing.JInternalFrame {
         protected Object doInBackground() {
             try {
                 Map<String, Object> params = new HashMap<String, Object>();
-//                params.put("P_PNAME_RPT", WeighBridgeApp.getApplication().getSapSetting().getNameRpt());
-//                params.put("P_PADDRESS", WeighBridgeApp.getApplication().getSapSetting().getAddress());
-//                params.put("P_PPHONE", WeighBridgeApp.getApplication().getSapSetting().getPhone());
-//                params.put("P_PFAX", WeighBridgeApp.getApplication().getSapSetting().getFax());
-//                params.put("P_FROM", dpDateFrom.getDate());
-//                params.put("P_TO", dpDateTo.getDate());
                 String reportName = null;
-//                if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
-//                    reportName = "./rpt/rptBT/WTList.jasper";
-//                } else {
-//                    reportName = "./rpt/rptPQ/WTList.jasper";
-//                }
                 params = dailyReportController.getParamsReport(dpDateFrom, dpDateTo);
                 reportName = dailyReportController.getReportName();
                 JasperPrint jasperPrint = JasperFillManager.fillReport(reportName, params, new JRTableModelDataSource(tabResults.getModel()));
@@ -283,54 +284,5 @@ public class DailyReportView extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane spnResult;
     private org.jdesktop.swingx.JXTable tabResults;
     // End of variables declaration//GEN-END:variables
-    private static Logger logger = Logger.getLogger(DailyReportView.class);
-    private java.util.List<WeightTicket> weightTicketList;
-    private boolean[] editable = null;
-    Object[][] wtDatas = null;
-    Object[] wtColNames = new String[]{
-        "STT",
-        "Số đăng tài",
-        "Tên tài xế",
-        "CMND/Bằng lái",
-        "Số Xe",
-        "Số Rơmoóc",
-        "Người tạo",
-        "Ngày giờ tạo",
-        "Nhập/Xuất(I/O)",
-        "Loại hàng",
-        "Ngày giờ vào",
-        "T.L vào",
-        "Ngày giờ ra",
-        "T.L ra",
-        "T.L Hàng",
-        "Số DO",
-        "Số chứng từ SAP",
-        "Hủy",
-        "SAP Posted",
-        "DVVC",
-        "Số P.O"};
-    Class[] wtColTypes = new Class[]{
-        Integer.class,
-        Integer.class,
-        String.class,
-        String.class,
-        String.class,
-        String.class,
-        String.class,
-        Date.class,
-        Character.class,
-        String.class,
-        Date.class,
-        BigDecimal.class,
-        Date.class,
-        BigDecimal.class,
-        BigDecimal.class,
-        String.class,
-        String.class,
-        Boolean.class,
-        Boolean.class,
-        String.class,
-        String.class};
-    org.jdesktop.application.ResourceMap resourceMapMsg = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(DailyReportView.class);
-    DailyReportController dailyReportController = new DailyReportController();
+    
 }
