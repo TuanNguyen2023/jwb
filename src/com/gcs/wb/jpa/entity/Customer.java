@@ -40,7 +40,7 @@ public class Customer implements Serializable {
     private String kunnr;
     @Column(name = "name1")
     private String name1;
-    @Column(name = "name1")
+    @Column(name = "name2")
     private String name2;
     @Column(name = "created_date")
     private Date createdDate;

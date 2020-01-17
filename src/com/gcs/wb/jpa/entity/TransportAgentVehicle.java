@@ -26,6 +26,9 @@ import javax.persistence.Table;
     @NamedQuery(name = "TransportAgentVehicle.findByTransportAgentId",
     query = "SELECT tv FROM TransportAgentVehicle tv"
     + " WHERE tv.transportAgent.id = :transportAgentId"),
+    @NamedQuery(name = "TransportAgentVehicle.findByVehicleId",
+    query = "SELECT tv FROM TransportAgentVehicle tv"
+    + " WHERE tv.vehicle.id = :vehicleId"),
     @NamedQuery(name = "TransportAgentVehicle.findByTransportAgentIdAndVehicleId",
     query = "SELECT tv FROM TransportAgentVehicle tv"
     + " WHERE tv.transportAgent.id = :transportAgentId AND tv.vehicle.id = :vehicleId")

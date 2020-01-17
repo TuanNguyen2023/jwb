@@ -20,6 +20,7 @@ import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
 import com.gcs.wb.jpa.entity.SAPSetting;
 import com.gcs.wb.jpa.entity.Vehicle;
+import com.gcs.wb.jpa.entity.TransportAgentVehicle;
 import com.gcs.wb.jpa.entity.Vendor;
 import com.gcs.wb.jpa.entity.WeightTicket;
 import com.gcs.wb.model.AppConfig;
@@ -54,6 +55,8 @@ import com.gcs.wb.jpa.procedures.WTRegRepository;
 import com.gcs.wb.jpa.repositorys.CustomerRepository;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
 import com.gcs.wb.jpa.repositorys.OutboundDeliveryRepository;
+import com.gcs.wb.jpa.repositorys.TransportAgentVehicleRepository;
+import com.gcs.wb.jpa.repositorys.VehicleRepository;
 import com.gcs.wb.jpa.repositorys.VendorRepository;
 import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import java.awt.Toolkit;
@@ -83,6 +86,8 @@ public class WTRegView extends javax.swing.JInternalFrame {
     CustomerRepository customerRepository = new CustomerRepository();
     VendorRepository vendorRepository = new VendorRepository();
     OutboundDeliveryRepository outboundDeliveryRepository = new OutboundDeliveryRepository();
+    VehicleRepository vehicleRepository = new VehicleRepository();
+    TransportAgentVehicleRepository transportAgentVehicleRepository = new TransportAgentVehicleRepository();
     SAPService sapService = new SAPService();
 
     public WTRegView() {
@@ -2583,58 +2588,27 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 JOptionPane.showMessageDialog(rootPane, "Số xe \"" + newWeightTicket.getPlateNo()
                         + "\" không khớp với số được đăng ký trong D.O: " + doLicPlate);
             }
-        } else {
+        } else if (newWeightTicket != null) {
             //Do local check for entered Truck's License Plate
-//            SAPSetting sapSetting = WeighBridgeApp.getApplication().getSapSetting();
-//            Vehicle v = entityManager.find(Vehicle.class, newWeightTicket.getPlateNo());
-//
-//
-//            if (v == null) {
-//                result = false;
-//                JOptionPane.showMessageDialog(rootPane, "Số xe \" " + newWeightTicket.getPlateNo()
-//                        + " \" chưa được đăng ký để xuất/nhập hàng!");
-//            } else {
-//
-//                result = true;
-            //-----------------
-//                if (sapSetting.getCheckTalp() != null && sapSetting.getCheckTalp().booleanValue() == true) {
-//                    boolean l_not_valid = false;
-//                    VehicleValid vh = new VehicleValid();
-//                    VehicleValidPK vhPK = new VehicleValidPK();
-//                    //EntityManager entityManager = java.beans.Beans.isDesignTime() ? null : WeighBridgeApp.getApplication().getEm();
-//                    AppConfig lconfig = WeighBridgeApp.getApplication().getConfig();
-//                    //Tuanna 201800904
-//                    if ( txtDName1.getText().startsWith("N") )
-//                         abbr = sVendor; 
-//                    else 
-//                        //abbr = (v != null ? v.getTaAbbr() : ""); //"vendor"
-//                        abbr = "";
-//                    
-//                   //End --Tuanna 201800904 
-//                    //vhPK.setMandt(lconfig.getsClient().toString());
-//                    vhPK.setWPlant(lconfig.getwPlant().toString());
-//                    vhPK.setSoXe(newWeightTicket.getSoXe());
-//                    vh.setVehicleValidPK(vhPK);
-//                    vh = entityManager.find(VehicleValid.class, vh.getVehicleValidPK());
-//                    if (vh != null) {
-//                        try {
-//                            l_not_valid = vh.getNotValid();
-//                            //if (l_valid == true){
-//                            //chk_not_valid.setSelected(l_valid);
-//                            //                }
-//                        } catch (Exception e) {
-//                        }
-//                    }
-//
-//                    entityManager.clear();
-//                    if (l_not_valid == true) {
-//                        result = false;
-//                        JOptionPane.showMessageDialog(rootPane, "Số xe \" " + newWeightTicket.getSoXe()
-//                                + " \" đang bị cấm xuất/nhập hàng!");
-//                    }
-//                }
-            //-----------------
-//            }
+            Vehicle vehicle = vehicleRepository.findByPlateNo(newWeightTicket.getPlateNo());
+
+            if (vehicle == null) {
+                result = false;
+                JOptionPane.showMessageDialog(rootPane, "Số xe \" " + newWeightTicket.getPlateNo()
+                        + " \" chưa được đăng ký để xuất/nhập hàng!");
+            } else {
+                result = true;
+                if (vehicle.isProhibit()) {
+                    result = false;
+                    JOptionPane.showMessageDialog(rootPane, "Số xe \" " + newWeightTicket.getPlateNo()
+                            + " \" đang bị cấm xuất/nhập hàng!");
+                }
+
+                List<TransportAgentVehicle> transportAgentVehicles = transportAgentVehicleRepository.findByVehicleId(vehicle.getId());
+                if (transportAgentVehicles != null && transportAgentVehicles.size() == 1) {
+                    abbr = transportAgentVehicles.get(0).getTransportAgent().getAbbr();
+                }
+            }
         }
         return result;
     }
