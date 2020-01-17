@@ -8,7 +8,6 @@ import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.SAPSetting;
 import com.gcs.wb.jpa.entity.Variant;
-import com.gcs.wb.jpa.entity.VariantPK;
 import com.gcs.wb.model.AppConfig;
 import javax.persistence.EntityManager;
 import javax.swing.JCheckBox;
@@ -32,13 +31,11 @@ public class SettingService {
         sapSetting = entityManager.find(SAPSetting.class, sapSetting.getId());
         entityManager.clear();
         Variant vari = new Variant();
-        VariantPK variPK = new VariantPK();
         try {
             AppConfig lconfig = WeighBridgeApp.getApplication().getConfig();
-            variPK.setMandt(lconfig.getsClient().toString());
-            variPK.setWPlant(lconfig.getwPlant().toString());
-            variPK.setParam("PROCESS_ORDER_CF");
-            vari.setVariantPK(variPK);
+            vari.setMandt(lconfig.getsClient().toString());
+            vari.setWplant(lconfig.getwPlant().toString());
+            vari.setParam("PROCESS_ORDER_CF");
             if (!entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().begin();
             }

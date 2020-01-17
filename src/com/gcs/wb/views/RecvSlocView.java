@@ -13,7 +13,7 @@ package com.gcs.wb.views;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.helper.SAP2Local;
 import com.gcs.wb.jpa.entity.SLoc;
-import com.gcs.wb.jpa.entity.SLocPK;
+import com.gcs.wb.jpa.repositorys.SLocRepository;
 import java.awt.Color;
 import java.awt.Component;
 import javax.swing.DefaultListCellRenderer;
@@ -28,6 +28,7 @@ import org.jdesktop.application.Action;
  * @author vunguyent
  */
 public class RecvSlocView extends javax.swing.JDialog {
+    SLocRepository sLocRepository = new SLocRepository();
 
     /** Creates new form RecvSlocView */
     public RecvSlocView(java.awt.Frame parent, String recv_lgort, String ref_po) {
@@ -36,7 +37,7 @@ public class RecvSlocView extends javax.swing.JDialog {
         this.refPO = ref_po;
         txtPONumber.setText(this.refPO);
         if (recv_lgort != null) {
-            SLoc recv_sloc = entityManager.find(SLoc.class, new SLocPK(config.getsClient(), config.getwPlant(), recv_lgort));
+            SLoc recv_sloc = sLocRepository.findByLgort(recv_lgort);
             this.recSloc = recv_sloc;
         } else {
             this.recSloc = null;

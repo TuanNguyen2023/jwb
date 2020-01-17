@@ -14,8 +14,10 @@ import com.gcs.wb.jpa.entity.TransportAgentVehicle;
 import com.gcs.wb.jpa.entity.Vehicle;
 import com.gcs.wb.jpa.entity.Vendor;
 import com.gcs.wb.jpa.repositorys.BatchStocksRepository;
+import com.gcs.wb.jpa.repositorys.SLocRepository;
 import com.gcs.wb.jpa.repositorys.TransportAgentRepository;
 import com.gcs.wb.jpa.repositorys.TransportAgentVehicleRepository;
+import com.gcs.wb.jpa.repositorys.VendorRepository;
 import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.views.TransportAgentView;
 import java.util.ArrayList;
@@ -37,6 +39,8 @@ public class JPAService {
     AppConfig config = WeighBridgeApp.getApplication().getConfig();
     private TransportAgentRepository transportAgentRepository = new TransportAgentRepository();
     private TransportAgentVehicleRepository transportAgentVehicleRepository = new TransportAgentVehicleRepository();
+    SLocRepository sLocRepository = new SLocRepository();
+    VendorRepository vendorRepository = new VendorRepository();
     
     private JFrame mainFrame = WeighBridgeApp.getApplication().getMainFrame();
     public org.jdesktop.application.ResourceMap resourceMapMsg = Application.getInstance(WeighBridgeApp.class).getContext().getResourceMap(TransportAgentView.class);
@@ -77,11 +81,7 @@ public class JPAService {
      * @return 
      */
     public List<Vendor> getVendorList() {
-        TypedQuery<Vendor> tVendor = entityManager.createNamedQuery("Vendor.findByMandt", Vendor.class);
-        tVendor.setParameter("mandt", config.getsClient());
-        List<Vendor> vendors = new ArrayList<Vendor>();
-        vendors = tVendor.getResultList();
-        return vendors;
+        return vendorRepository.getListVendor();
     }
     
     /**
@@ -89,12 +89,7 @@ public class JPAService {
      * @return 
      */
     public List<SLoc> getSlocList() {
-        List<SLoc> slocs = new ArrayList<SLoc>();
-        TypedQuery<SLoc> tSlocQ = entityManager.createNamedQuery("SLoc.findByMandtWPlant", SLoc.class);
-        tSlocQ.setParameter("mandt", config.getsClient());
-        tSlocQ.setParameter("wPlant", config.getwPlant());
-        slocs = tSlocQ.getResultList();
-        return slocs;
+        return sLocRepository.getListSLoc();
     }
     
     /**

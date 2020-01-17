@@ -148,9 +148,9 @@ public class WeightTicketController {
         return weightTicketService.getPgmVl02nBapi(wt, outbDel, weightTicket, timeFrom, timeTo, outDetails_lits);
     }
 
-    public DefaultComboBoxModel getReasonModel() {
-        return weightTicketService.getReasonModel();
-    }
+//    public DefaultComboBoxModel getReasonModel() {
+//        return weightTicketService.getReasonModel();
+//    }
     
     public void printWT(WeightTicket wt, boolean reprint, String ximang, List<OutboundDelivery> outbDel_list, List<OutboundDetail> outDetails_lits,
             OutboundDelivery outbDel, JRadioButton rbtMisc, JRadioButton rbtPO, boolean isStage1, JRootPane rootPane) {

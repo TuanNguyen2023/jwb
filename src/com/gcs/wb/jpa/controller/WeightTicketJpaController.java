@@ -227,11 +227,9 @@ public class WeightTicketJpaController {
         return count;
     }
 
-    public List<Variant> findVariant(String param) throws Exception {
-        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-        String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
+    public Variant findVariant(String param) throws Exception {
         VariantRepository variantRepository = new VariantRepository();
-        return variantRepository.findVariant(param, client, plant);
+        return variantRepository.findByParam(param);
     }
 
     public List<OutboundDetail> findByMandtDelivNumb(String deliv_numb) throws Exception {

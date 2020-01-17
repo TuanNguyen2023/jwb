@@ -123,7 +123,7 @@ public class SAP2Local {
                 entityManager.getTransaction().begin();
             }
             for (SLocsGetListStructure s : bSlocs) {
-                SLoc sloc = new SLoc(s.getMandt(), s.getWerks(), s.getLgort());
+                SLoc sloc = new SLoc(s.getLgort());
                 sloc.setLgobe(s.getLgobe());
                 if (slocs.indexOf(sloc) == -1) {
                     entityManager.persist(sloc);
@@ -149,7 +149,7 @@ public class SAP2Local {
                 for (int i = 0; i < slocs.size(); i++) {
                     item = slocs.get(i);
                     for (int j = 0; j < sloc1.length; j++) {
-                        if (item.getSLocPK().getLgort().equals(sloc1[j])) {
+                        if (item.getLgort().equals(sloc1[j])) {
                             result.add(item);
                         }
                     }
