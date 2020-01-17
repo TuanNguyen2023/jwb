@@ -25,7 +25,9 @@ import com.gcs.wb.jpa.entity.BatchStocks;
 import com.gcs.wb.jpa.entity.BatchStocksPK;
 import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.Material;
-import com.gcs.wb.jpa.entity.MovementPK;import com.gcs.wb.jpa.entity.OutboundDelivery;import com.gcs.wb.jpa.entity.PurOrder;
+import com.gcs.wb.jpa.entity.MovementPK;
+import com.gcs.wb.jpa.entity.OutboundDelivery;
+import com.gcs.wb.jpa.entity.PurOrder;
 import com.gcs.wb.jpa.entity.PurOrderPK;
 import com.gcs.wb.jpa.entity.Reason;
 import com.gcs.wb.jpa.entity.ReasonPK;
@@ -95,6 +97,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     SignalsRepository noneRepository = new SignalsRepository();
     VendorRepository vendorRepository = new VendorRepository();
     EntityManager entityManager = JPAConnector.getInstance();
+    CustomerRepository customerRepository = new CustomerRepository();
     
     WeightTicketController weightTicketController = new WeightTicketController();
     SAPService sapService = new SAPService();
