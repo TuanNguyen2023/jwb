@@ -5,48 +5,87 @@
 package com.gcs.wb.jpa.entity;
 
 import java.io.Serializable;
+import java.sql.Date;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
  *
- * @author vunguyent
+ * @author thanghl
  */
 @Entity
-@Table(name = "SLoc")
+@Table(name = "tbl_sloc")
 @NamedQueries({
-    @NamedQuery(name = "SLoc.findByMandtWPlant", query = "SELECT s FROM SLoc s WHERE s.sLocPK.mandt = :mandt AND s.sLocPK.wPlant = :wPlant")})
+    @NamedQuery(name = "SLoc.findAll", query = "SELECT s FROM SLoc s"),
+    @NamedQuery(name = "SLoc.findByLgort", query = "SELECT s FROM SLoc s WHERE s.lgort = :lgort")
+})
 public class SLoc implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected SLocPK sLocPK;
-    @Column(name = "LGOBE")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int id;
+    @Column(name = "lgort", unique = true)
+    private String lgort;
+    @Column(name = "mandt")
+    private String mandt;
+    @Column(name = "wplant")
+    private String wplant;
+    @Column(name = "lgobe")
     private String lgobe;
+    @Column(name = "created_date")
+    private Date createdDate;
+    @Column(name = "updated_date")
+    private Date updatedDate;
+    @Column(name = "deleted_date")
+    private Date deletedDate;
 
     public SLoc() {
     }
 
-    public SLoc(SLocPK sLocPK) {
-        this.sLocPK = sLocPK;
+    public SLoc(String lgort) {
+        this.lgort = lgort;
     }
 
-    public SLoc(String mandt, String wPlant, String lgort) {
-        this.sLocPK = new SLocPK(mandt, wPlant, lgort);
+    public int getId() {
+        return id;
     }
 
-    public SLocPK getSLocPK() {
-        return sLocPK;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setSLocPK(SLocPK sLocPK) {
-        this.sLocPK = sLocPK;
+    public String getLgort() {
+        return lgort;
     }
 
+    public void setLgort(String lgort) {
+        this.lgort = lgort;
+    }
+
+    public String getMandt() {
+        return mandt;
+    }
+
+    public void setMandt(String mandt) {
+        this.mandt = mandt;
+    }
+
+    public String getWplant() {
+        return wplant;
+    }
+
+    public void setWplant(String wplant) {
+        this.wplant = wplant;
+    }
+    
     public String getLgobe() {
         return lgobe;
     }
@@ -54,29 +93,65 @@ public class SLoc implements Serializable {
     public void setLgobe(String lgobe) {
         this.lgobe = lgobe;
     }
+    
+    public Date getCreatedDate() {
+        return createdDate;
+    }
 
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (sLocPK != null ? sLocPK.hashCode() : 0);
-        return hash;
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Date getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(Date updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
+    public Date getDeletedDate() {
+        return deletedDate;
+    }
+
+    public void setDeletedDate(Date deletedDate) {
+        this.deletedDate = deletedDate;
     }
 
     @Override
-    public boolean equals(Object object) {
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        if (!(object instanceof SLoc)) {
-            return false;
-        }
-        SLoc other = (SLoc) object;
-        if ((this.sLocPK == null && other.sLocPK != null) || (this.sLocPK != null && !this.sLocPK.equals(other.sLocPK))) {
-            return false;
-        }
+        SLoc sloc = (SLoc) o;
+
+        if (id != sloc.id) return false;
+        if (lgort != null ? !lgort.equals(sloc.lgort) : sloc.lgort != null) return false;
+        if (mandt != null ? !mandt.equals(sloc.mandt) : sloc.mandt != null) return false;
+        if (wplant != null ? !wplant.equals(sloc.wplant) : sloc.wplant != null) return false;
+        if (lgobe != null ? !lgobe.equals(sloc.lgobe) : sloc.lgobe != null) return false;
+        if (createdDate != null ? !createdDate.equals(sloc.createdDate) : sloc.createdDate != null) return false;
+        if (updatedDate != null ? !updatedDate.equals(sloc.updatedDate) : sloc.updatedDate != null) return false;
+        if (deletedDate != null ? !deletedDate.equals(sloc.deletedDate) : sloc.deletedDate != null) return false;
+
         return true;
     }
 
     @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 31));
+        result = 31 * result + (lgort != null ? lgort.hashCode() : 0);
+        result = 31 * result + (mandt != null ? mandt.hashCode() : 0);
+        result = 31 * result + (wplant != null ? wplant.hashCode() : 0);
+        result = 31 * result + (lgobe != null ? lgobe.hashCode() : 0);
+        result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
+        result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
+        result = 31 * result + (deletedDate != null ? deletedDate.hashCode() : 0);
+        return result;
+    }
+
+    @Override
     public String toString() {
-        return "com.gcs.wb.jpa.entity.SLoc[sLocPK=" + sLocPK + "]";
+        return "com.gcs.wb.jpa.entity.SLoc[id=" + id + "]";
     }
 }

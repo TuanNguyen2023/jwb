@@ -18,13 +18,13 @@ public class VendorRepository {
 
     EntityManager entityManager = JPAConnector.getInstance();
 
-    public List<Vendor> getListCustomer() {
+    public List<Vendor> getListVendor() {
         TypedQuery<Vendor> typedQuery = entityManager.createNamedQuery("Vendor.findAll", Vendor.class);
         return typedQuery.getResultList();
     }
 
     public Vendor findByLifnr(String lifnr) {
-        TypedQuery<Vendor> typedQuery = entityManager.createNamedQuery("Vendor.findLifnr", Vendor.class);
+        TypedQuery<Vendor> typedQuery = entityManager.createNamedQuery("Vendor.findByLifnr", Vendor.class);
         typedQuery.setParameter("lifnr", lifnr);
         List<Vendor> vendors = typedQuery.getResultList();
         if (vendors != null && vendors.size() > 0) {

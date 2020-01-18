@@ -6,9 +6,6 @@ package com.gcs.wb.controller;
 
 import com.gcs.wb.jpa.entity.SAPSetting;
 import com.gcs.wb.service.SettingService;
-import javax.persistence.EntityManager;
-import javax.swing.JCheckBox;
-import javax.swing.JTextField;
 
 /**
  *

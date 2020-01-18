@@ -13,10 +13,10 @@ package com.gcs.wb.views;
 import com.gcs.wb.base.util.RegexFormatter;
 import org.jdesktop.application.Action;
 import com.gcs.wb.jpa.entity.Variant;
-import com.gcs.wb.jpa.entity.VariantPK;
 import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.base.constant.Constants;
+import com.gcs.wb.jpa.repositorys.VariantRepository;
 import javax.persistence.EntityManager;
 
 /**
@@ -24,6 +24,7 @@ import javax.persistence.EntityManager;
  * @author vunguyent
  */
 public class ProcOrdView extends javax.swing.JDialog {
+    VariantRepository variantRepository = new VariantRepository();
 
     /** Creates new form ProcOrdView */
     public ProcOrdView(java.awt.Frame parent, String _procOrd) {
@@ -31,22 +32,13 @@ public class ProcOrdView extends javax.swing.JDialog {
         initComponents();
         //Save production order
         if ((_procOrd == null) || (_procOrd == null ? "" == null : _procOrd.equals(""))) {
-            Variant vari = new Variant();
-            VariantPK variPK = new VariantPK();
-            EntityManager entityManager = java.beans.Beans.isDesignTime() ? null : WeighBridgeApp.getApplication().getEm();
-            AppConfig lconfig = WeighBridgeApp.getApplication().getConfig();
-            variPK.setMandt(lconfig.getsClient().toString());
-            variPK.setWPlant(lconfig.getwPlant().toString());
-            variPK.setParam("PROCESS_ORDER");
-            vari.setVariantPK(variPK);
-            vari = entityManager.find(Variant.class, vari.getVariantPK());
+            Variant vari = variantRepository.findByParam("PROCESS_ORDER");
             if (vari != null) {
                 try {
                     _procOrd = vari.getValue().toString();
                 } catch (Exception e) {
                 }
             }
-            entityManager.clear();
         }
         //
         setProcOrd(_procOrd);
@@ -135,14 +127,12 @@ public class ProcOrdView extends javax.swing.JDialog {
         firePropertyChange(Constants.ProcOrdView.PROP_PROCORD, oldProcOrd, procOrd);
         //Save production order
         Variant vari = new Variant();
-        VariantPK variPK = new VariantPK();
         EntityManager entityManager = java.beans.Beans.isDesignTime() ? null : WeighBridgeApp.getApplication().getEm();
         AppConfig lconfig = WeighBridgeApp.getApplication().getConfig();
         try {
-            variPK.setMandt(lconfig.getsClient().toString());
-            variPK.setWPlant(lconfig.getwPlant().toString());
-            variPK.setParam("PROCESS_ORDER");
-            vari.setVariantPK(variPK);
+            vari.setMandt(lconfig.getsClient().toString());
+            vari.setWplant(lconfig.getwPlant().toString());
+            vari.setParam("PROCESS_ORDER");
             vari.setValue(procOrd);
 
             txtProcOrd.setValue(procOrd);

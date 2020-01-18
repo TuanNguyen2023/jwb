@@ -117,11 +117,11 @@ public class WeightTicketService {
 
     public List<BatchStocks> getBatchStocks(SLoc selSloc, WeightTicket weightTicket) {
         return batchStocksRepository.getList(config.getsClient(), config.getwPlant(),
-                selSloc.getSLocPK().getLgort(), weightTicket.getMatnrRef());
+                selSloc.getLgort(), weightTicket.getMatnrRef());
     }
 
     public void getSyncBatchStocks(SLoc selSloc, WeightTicket weightTicket) {
-        sapService.syncBatchStocks(selSloc.getSLocPK().getLgort(), weightTicket.getMatnrRef(), weightTicket.getLgort());
+        sapService.syncBatchStocks(selSloc.getLgort(), weightTicket.getMatnrRef(), weightTicket.getLgort());
     }
 
     public DefaultComboBoxModel setCbxBatch(List<BatchStocks> batchs) {
@@ -897,51 +897,51 @@ public class WeightTicketService {
         return bapi;
     }
 
-    public DefaultComboBoxModel getReasonModel() {
-        Movement mvt = new Movement();
-
-        try {
-            MovementRepository movementRepository = new MovementRepository();
-            String language = WeighBridgeApp.getApplication().getLogin().getLang().toString();
-            mvt = movementRepository.findByMandtBwartSpras(client, language);
-
-        } catch (NoResultException ex) {
-            MvtGetDetailBapi bMvt = new MvtGetDetailBapi(client, "101");
-            WeighBridgeApp.getApplication().getSAPSession().execute(bMvt);
-            mvt = new Movement(new MovementPK(client, bMvt.getItem().getBwart()), bMvt.getItem().getSpras());
-            mvt.setBtext(bMvt.getItem().getBtext());
-            if (!entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().begin();
-            }
-            entityManager.persist(mvt);
-            entityManager.getTransaction().commit();
-            entityManager.clear();
-        }
-        String bwart = mvt.getMovementPK().getBwart().trim();
-        ReasonRepository reasonRepository = new ReasonRepository();
-
-        List<Reason> reasons = reasonRepository.findByMandtBwart(client, bwart);
-
-        if (reasons.isEmpty()) {
-            MvtReasonsGetListBapi bReason = new MvtReasonsGetListBapi(client, "101");
-            WeighBridgeApp.getApplication().getSAPSession().execute(bReason);
-            List<MvtReasonsGetListStructure> brReasons = bReason.getTdMvtsReasons();
-            if (!entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().begin();
-            }
-            for (MvtReasonsGetListStructure r : brReasons) {
-                Reason reason = new Reason(r.getMandt(), r.getBwart(), r.getGrund());
-                reason.setGrtxt(r.getGrtxt());
-                entityManager.persist(reason);
-                reasons.add(reason);
-            }
-            entityManager.getTransaction().commit();
-            entityManager.clear();
-        }
-
-
-        return new DefaultComboBoxModel(reasons.toArray());
-    }
+//    public DefaultComboBoxModel getReasonModel() {
+//        Movement mvt = new Movement();
+//
+//        try {
+//            MovementRepository movementRepository = new MovementRepository();
+//            String language = WeighBridgeApp.getApplication().getLogin().getLang().toString();
+//            mvt = movementRepository.findByMandtBwartSpras(client, language);
+//
+//        } catch (NoResultException ex) {
+//            MvtGetDetailBapi bMvt = new MvtGetDetailBapi(client, "101");
+//            WeighBridgeApp.getApplication().getSAPSession().execute(bMvt);
+//            mvt = new Movement(new MovementPK(client, bMvt.getItem().getBwart()), bMvt.getItem().getSpras());
+//            mvt.setBtext(bMvt.getItem().getBtext());
+//            if (!entityManager.getTransaction().isActive()) {
+//                entityManager.getTransaction().begin();
+//            }
+//            entityManager.persist(mvt);
+//            entityManager.getTransaction().commit();
+//            entityManager.clear();
+//        }
+//        String bwart = mvt.getMovementPK().getBwart().trim();
+//        ReasonRepository reasonRepository = new ReasonRepository();
+//
+//        List<Reason> reasons = reasonRepository.findByMandtBwart(client, bwart);
+//
+//        if (reasons.isEmpty()) {
+//            MvtReasonsGetListBapi bReason = new MvtReasonsGetListBapi(client, "101");
+//            WeighBridgeApp.getApplication().getSAPSession().execute(bReason);
+//            List<MvtReasonsGetListStructure> brReasons = bReason.getTdMvtsReasons();
+//            if (!entityManager.getTransaction().isActive()) {
+//                entityManager.getTransaction().begin();
+//            }
+//            for (MvtReasonsGetListStructure r : brReasons) {
+//                Reason reason = new Reason(r.getMandt(), r.getBwart(), r.getGrund());
+//                reason.setGrtxt(r.getGrtxt());
+//                entityManager.persist(reason);
+//                reasons.add(reason);
+//            }
+//            entityManager.getTransaction().commit();
+//            entityManager.clear();
+//        }
+//
+//
+//        return new DefaultComboBoxModel(reasons.toArray());
+//    }
 
     public void printWT(WeightTicket wt, boolean reprint, String ximang, List<OutboundDelivery> outbDel_list, List<OutboundDetail> outDetails_lits,
             OutboundDelivery outbDel, JRadioButton rbtMisc, JRadioButton rbtPO, boolean isStage1, JRootPane rootPane) {

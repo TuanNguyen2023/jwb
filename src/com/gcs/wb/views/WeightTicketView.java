@@ -33,7 +33,6 @@ import com.gcs.wb.jpa.entity.Reason;
 import com.gcs.wb.jpa.entity.ReasonPK;
 import com.gcs.wb.jpa.entity.SAPSetting;
 import com.gcs.wb.jpa.entity.SLoc;
-import com.gcs.wb.jpa.entity.SLocPK;
 import com.gcs.wb.jpa.entity.TimeRange;
 import com.gcs.wb.jpa.entity.User;
 import com.gcs.wb.jpa.entity.Vendor;
@@ -63,7 +62,6 @@ import org.jdesktop.application.Task;
 
 import javax.persistence.EntityManager;
 import com.gcs.wb.jpa.entity.Variant;
-import com.gcs.wb.jpa.entity.VariantPK;
 import com.gcs.wb.jpa.procedures.WeightTicketJpaRepository;
 import com.gcs.wb.jpa.procedures.WeightTicketRepository;
 import com.gcs.wb.jpa.repositorys.BatchStocksRepository;
@@ -71,6 +69,8 @@ import com.gcs.wb.jpa.repositorys.CustomerRepository;
 import com.gcs.wb.jpa.repositorys.SignalsRepository;
 import com.gcs.wb.jpa.repositorys.TimeRangeRepository;
 import com.gcs.wb.controller.WeightTicketController;
+import com.gcs.wb.jpa.repositorys.SLocRepository;
+import com.gcs.wb.jpa.repositorys.VariantRepository;
 import com.gcs.wb.jpa.repositorys.VendorRepository;
 import com.gcs.wb.jpa.service.JPAService;
 import java.awt.Toolkit;
@@ -91,13 +91,15 @@ import java.util.*;
  */
 public class WeightTicketView extends javax.swing.JInternalFrame {
 
-    private AppConfig config = null;
+    private AppConfig config = WeighBridgeApp.getApplication().getConfig();
     private final SAPSetting sapSetting;
     private final User login;
     SignalsRepository noneRepository = new SignalsRepository();
     VendorRepository vendorRepository = new VendorRepository();
     EntityManager entityManager = JPAConnector.getInstance();
     CustomerRepository customerRepository = new CustomerRepository();
+    SLocRepository sLocRepository = new SLocRepository();
+    VariantRepository variantRepository = new VariantRepository();
     
     WeightTicketController weightTicketController = new WeightTicketController();
     SAPService sapService = new SAPService();
@@ -183,11 +185,11 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
         // tuanna 20120522_ setEnabled for "combo box Khach hang" depends on offline_mode
         cbxKunnr.setEnabled(WeighBridgeApp.getApplication().isOfflineMode());
-        TimeRange t = weightTicketController.getTime();
-        if (t != null) {
-            timeFrom = 0 + Integer.parseInt(t.getTimeFrom() != null ? (t.getTimeFrom().trim()) : "0");
-            timeTo = Integer.parseInt(t.getTimeTo() != null ? (t.getTimeTo().trim()) : "0");
-        }
+//        TimeRange t = weightTicketController.getTime();
+//        if (t != null) {
+//            timeFrom = 0 + Integer.parseInt(t.getTimeFrom() != null ? (t.getTimeFrom().trim()) : "0");
+//            timeTo = Integer.parseInt(t.getTimeTo() != null ? (t.getTimeTo().trim()) : "0");
+//        }
 
         // cấu hình cho cầu cân hiển thị PO và vendor
         if ((sapSetting.getCheckPov()) != null && (sapSetting.getCheckPov()) == true) {
@@ -861,8 +863,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 if (value instanceof SLoc) {
                     SLoc sloc = (SLoc)value;
-                    setText(sloc.getSLocPK().getLgort().concat(" - ").concat(sloc.getLgobe()));
-                    //                    setText(sloc.getLgobe().concat(" - ").concat(sloc.getSLocPK().getLgort()));
+                    setText(sloc.getLgort().concat(" - ").concat(sloc.getLgobe()));
+                    //                    setText(sloc.getLgobe().concat(" - ").concat(sloc.getLgort()));
                 }
                 return this;
             }
@@ -1347,7 +1349,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         }
         config = WeighBridgeApp.getApplication().getConfig();
         SLoc selSloc = (SLoc) cbxSLoc.getSelectedItem();
-        weightTicket.setLgort(selSloc.getSLocPK().getLgort());
+        weightTicket.setLgort(selSloc.getLgort());
         if (selSloc != null && (txtMatnr.getText() != null && !txtMatnr.getText().trim().isEmpty())) {
             lblSLoc.setForeground(Color.black);
             // sync data
@@ -1603,7 +1605,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             WeighBridgeApp.getApplication().show(rsview);
             if (!rsview.isShowing()) {
                 if (rsview.getRecSloc() != null) {
-                    weightTicket.setRecvLgort(rsview.getRecSloc().getSLocPK().getLgort());
+                    weightTicket.setRecvLgort(rsview.getRecSloc().getLgort());
                 } else {
                     weightTicket.setRecvLgort(null);
                 }
@@ -1655,7 +1657,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             WeighBridgeApp.getApplication().show(mvt311View);
             if (!mvt311View.isShowing()) {
                 if (mvt311View.getRecSloc() != null) {
-                    weightTicket.setRecvLgort(mvt311View.getRecSloc().getSLocPK().getLgort());
+                    weightTicket.setRecvLgort(mvt311View.getRecSloc().getLgort());
                 } else {
                     weightTicket.setRecvLgort(null);
                 }
@@ -1986,13 +1988,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                         if (result > remaining) {
                             //}+20101202#02 check material availability
                             //+{add logic check confirm
-                            Variant vari = new Variant();
-                            VariantPK variPK = new VariantPK();
-                            variPK.setMandt(config.getsClient().toString());
-                            variPK.setWPlant(config.getwPlant().toString());
-                            variPK.setParam("PROCESS_ORDER_CF");
-                            vari.setVariantPK(variPK);
-                            vari = entityManager.find(Variant.class, vari.getVariantPK());
+                            Variant vari = variantRepository.findByParam("PROCESS_ORDER_CF");
                             String chkPROC1 = "";
                             if (vari != null) {
                                 try {
@@ -2690,10 +2686,10 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                 }
                 if (weightTicket.getLgort() != null && !weightTicket.getLgort().trim().isEmpty()) {
                     entityManager.clear();
-                    SLoc sloc = entityManager.find(SLoc.class, new SLocPK(config.getsClient(), config.getwPlant(), weightTicket.getLgort()));
+                    SLoc sloc = sLocRepository.findByLgort(weightTicket.getLgort());
                     cbxSLoc.setSelectedItem(sloc);
                 } else if (outbDel != null && outbDel.getLgort() != null && !outbDel.getLgort().trim().isEmpty()) {
-                    SLoc sloc = entityManager.find(SLoc.class, new SLocPK(config.getsClient(), config.getwPlant(), outbDel.getLgort()));
+                    SLoc sloc = sLocRepository.findByLgort(outbDel.getLgort());
                     cbxSLoc.setSelectedItem(sloc);
                 } else {
                     cbxSLoc.setSelectedIndex(-1);
@@ -2753,7 +2749,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                         && ((weightTicket.getCharg() != null && !weightTicket.getCharg().trim().isEmpty())
                         || (!isWithoutDO() && outbDel != null && outbDel.getCharg() != null && !outbDel.getCharg().trim().isEmpty()))
                         && weightTicket.getMatnrRef() != null && !weightTicket.getMatnrRef().trim().isEmpty()) {
-                    String lgort = ((SLoc) cbxSLoc.getSelectedItem()).getSLocPK().getLgort();
+                    String lgort = ((SLoc) cbxSLoc.getSelectedItem()).getLgort();
                     BatchStocks batch = null;
                     if (weightTicket.getCharg() != null && !weightTicket.getCharg().trim().isEmpty()) {
                         batch = entityManager.find(BatchStocks.class, new BatchStocksPK(config.getsClient(), config.getwPlant(), lgort, weightTicket.getMatnrRef(), weightTicket.getCharg()));
@@ -3729,19 +3725,12 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                 }
                 if (bCompare) // end add
                 {
-                    Variant vari = new Variant();
-                    VariantPK variPK = new VariantPK();
-                    EntityManager entityManager = java.beans.Beans.isDesignTime() ? null : WeighBridgeApp.getApplication().getEm();
-                    AppConfig lconfig = WeighBridgeApp.getApplication().getConfig();
-                    variPK.setMandt(lconfig.getsClient().toString());
-                    variPK.setWPlant(lconfig.getwPlant().toString());
-                    variPK.setParam((outbDel != null && outbDel.getMatnr() != null) ? outbDel.getMatnr().toString() : "");
-                    if (variPK.getParam().equals("") && purOrder != null
+                    String param = (outbDel != null && outbDel.getMatnr() != null) ? outbDel.getMatnr().toString() : "";
+                    if (param.equals("") && purOrder != null
                             && purOrder.getMaterial() != null && !purOrder.getMaterial().isEmpty()) {
-                        variPK.setParam(purOrder.getMaterial());
+                        param = purOrder.getMaterial();
                     }
-                    vari.setVariantPK(variPK);
-                    vari = entityManager.find(Variant.class, vari.getVariantPK());
+                    Variant vari = variantRepository.findByParam("PROCESS_ORDER_CF");
                     double valu = 0;
                     double valu1 = 0;
 
@@ -3749,10 +3738,11 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
                         if (!vari.getValue().equals("")) {
                             valu = Double.parseDouble(vari.getValue());
+                            valu1 = Double.parseDouble(vari.getValue());
                         }
-                        if (!vari.getValue1().equals("")) {
-                            valu1 = Double.parseDouble(vari.getValue1());
-                        }
+//                        if (!vari.getValue1().equals("")) {
+//                            valu1 = Double.parseDouble(vari.getValue1());
+//                        }
                         double upper = qty + (qty * valu1) / 100;
                         double lower = qty - (qty * valu) / 100;
                         float klmax = 0;
@@ -4050,7 +4040,8 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
     }
 
     private DefaultComboBoxModel getReasonModel() {
-        return weightTicketController.getReasonModel();
+//        return weightTicketController.getReasonModel();
+        return new DefaultComboBoxModel();
     }
 
     private void printWT(WeightTicket wt, boolean reprint) {

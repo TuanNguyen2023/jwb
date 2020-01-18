@@ -569,7 +569,7 @@ public class SAPService {
             session.execute(bSloc);
             List<SLocsGetListStructure> tdSLocs = bSloc.getTdSLocs();
             for (SLocsGetListStructure s : tdSLocs) {
-            SLoc sloc = new SLoc(s.getMandt(), s.getWerks(), s.getLgort());
+            SLoc sloc = new SLoc(s.getLgort());
             sloc.setLgobe(s.getLgobe());
             slocSaps.add(sloc);
         }
@@ -611,7 +611,7 @@ public class SAPService {
                 for (int i = 0; i < slocDBs.size(); i++) {
                     item = slocDBs.get(i);
                     for (int j = 0; j < sloc1.length; j++) {
-                        if (item.getSLocPK().getLgort().equals(sloc1[j])) {
+                        if (item.getLgort().equals(sloc1[j])) {
                             result.add(item);
                         }
                     }

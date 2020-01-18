@@ -5,50 +5,83 @@
 package com.gcs.wb.jpa.entity;
 
 import java.io.Serializable;
+import java.sql.Date;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Lob;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
  *
- * @author gcsadmin
+ * @author thanghl
  */
 @Entity
-@Table(name = "variant")
+@Table(name = "tbl_variant")
 @NamedQueries({
-    @NamedQuery(name = "Variant.findByFullParam", query = "SELECT v FROM Variant v WHERE v.variantPK.param = :param AND v.variantPK.mandt = :mandt AND v.variantPK.wPlant = :wPlant")})
+    @NamedQuery(name = "Variant.findByParam", query = "SELECT v FROM Variant v WHERE v.param = :param")})
 public class Variant implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected VariantPK variantPK;
-    @Lob
-    @Column(name = "VALUE")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int id;
+    @Column(name = "param", unique = true)
+    private String param;
+    @Column(name = "mandt")
+    private String mandt;
+    @Column(name = "wplant")
+    private String wplant;
+    @Column(name = "value")
     private String value;
-    @Column(name = "VALUE1")
-    private String value1;
+    @Column(name = "created_date")
+    private Date createdDate;
+    @Column(name = "updated_date")
+    private Date updatedDate;
+    @Column(name = "deleted_date")
+    private Date deletedDate;
 
     public Variant() {
     }
 
-    public Variant(VariantPK variantPK) {
-        this.variantPK = variantPK;
+    public Variant(String param) {
+        this.param = param;
     }
 
-    public Variant(String mandt, String wPlant, String param) {
-        this.variantPK = new VariantPK(mandt, wPlant, param);
+    public int getId() {
+        return id;
     }
 
-    public VariantPK getVariantPK() {
-        return variantPK;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setVariantPK(VariantPK variantPK) {
-        this.variantPK = variantPK;
+    public String getParam() {
+        return param;
+    }
+
+    public void setParam(String param) {
+        this.param = param;
+    }
+
+    public String getMandt() {
+        return mandt;
+    }
+
+    public void setMandt(String mandt) {
+        this.mandt = mandt;
+    }
+
+    public String getWplant() {
+        return wplant;
+    }
+
+    public void setWplant(String wplant) {
+        this.wplant = wplant;
     }
 
     public String getValue() {
@@ -59,42 +92,64 @@ public class Variant implements Serializable {
         this.value = value;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (variantPK != null ? variantPK.hashCode() : 0);
-        return hash;
+    public Date getCreatedDate() {
+        return createdDate;
     }
 
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Date getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(Date updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
+    public Date getDeletedDate() {
+        return deletedDate;
+    }
+
+    public void setDeletedDate(Date deletedDate) {
+        this.deletedDate = deletedDate;
+    }
+    
     @Override
-    public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Variant)) {
-            return false;
-        }
-        Variant other = (Variant) object;
-        if ((this.variantPK == null && other.variantPK != null) || (this.variantPK != null && !this.variantPK.equals(other.variantPK))) {
-            return false;
-        }
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Variant variant = (Variant) o;
+
+        if (id != variant.id) return false;
+        if (mandt != null ? !mandt.equals(variant.mandt) : variant.mandt != null) return false;
+        if (wplant != null ? !wplant.equals(variant.wplant) : variant.wplant != null) return false;
+        if (param != null ? !param.equals(variant.param) : variant.param != null) return false;
+        if (value != null ? !value.equals(variant.value) : variant.value != null) return false;
+        if (createdDate != null ? !createdDate.equals(variant.createdDate) : variant.createdDate != null) return false;
+        if (updatedDate != null ? !updatedDate.equals(variant.updatedDate) : variant.updatedDate != null) return false;
+        if (deletedDate != null ? !deletedDate.equals(variant.deletedDate) : variant.deletedDate != null) return false;
+
         return true;
     }
 
     @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 31));
+        result = 31 * result + (mandt != null ? mandt.hashCode() : 0);
+        result = 31 * result + (wplant != null ? wplant.hashCode() : 0);
+        result = 31 * result + (param != null ? param.hashCode() : 0);
+        result = 31 * result + (value != null ? value.hashCode() : 0);
+        result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
+        result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
+        result = 31 * result + (deletedDate != null ? deletedDate.hashCode() : 0);
+        return result;
+    }
+
+    @Override
     public String toString() {
-        return "com.gcs.wb.jpa.entity.Variant[variantPK=" + variantPK + "]";
-    }
-
-    /**
-     * @return the value1
-     */
-    public String getValue1() {
-        return value1;
-    }
-
-    /**
-     * @param value1 the value1 to set
-     */
-    public void setValue1(String value1) {
-        this.value1 = value1;
+        return "com.gcs.wb.jpa.entity.Variant[id=" + id + "]";
     }
 }
