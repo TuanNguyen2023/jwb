@@ -66,7 +66,7 @@ public class WeightTicketJpaController {
         }
     }
 
-    public WeightTicket findByIdSeqDay(String id, int seqDay) throws Exception {
+    public WeightTicket findByIdSeqDay(int id, int seqDay) throws Exception {
         WeightTicketRepository repository = new WeightTicketRepository();
         return repository.findByIdSeqDay(id, seqDay);
     }

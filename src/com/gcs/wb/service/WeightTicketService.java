@@ -208,7 +208,7 @@ public class WeightTicketService {
         return result;
     }
 
-    public WeightTicket findWeightTicket(WeightTicket weightTicket, String id, Integer seq) {
+    public WeightTicket findWeightTicket(WeightTicket weightTicket, int id, Integer seq) {
         com.gcs.wb.jpa.repositorys.WeightTicketRepository repository = new com.gcs.wb.jpa.repositorys.WeightTicketRepository();
         return repository.findByIdSeqDay(id, seq);
     }
