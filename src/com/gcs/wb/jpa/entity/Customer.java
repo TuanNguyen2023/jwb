@@ -135,18 +135,7 @@ public class Customer implements Serializable {
 
         Customer customer = (Customer) o;
 
-        if (id != customer.id) return false;
-        if (mandt != null ? !mandt.equals(customer.mandt) : customer.mandt != null) return false;
-        if (wplant != null ? !wplant.equals(customer.wplant) : customer.wplant != null) return false;
         if (kunnr != null ? !kunnr.equals(customer.kunnr) : customer.kunnr != null) return false;
-        if (name1 != null ? !name1.equals(customer.name1) : customer.name1 != null) return false;
-        if (name2 != null ? !name2.equals(customer.name2) : customer.name2 != null) return false;
-        if (createdDate != null ? !createdDate.equals(customer.createdDate) : customer.createdDate != null)
-            return false;
-        if (updatedDate != null ? !updatedDate.equals(customer.updatedDate) : customer.updatedDate != null)
-            return false;
-        if (deletedDate != null ? !deletedDate.equals(customer.deletedDate) : customer.deletedDate != null)
-            return false;
 
         return true;
     }

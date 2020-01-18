@@ -455,47 +455,8 @@ public class PurchaseOrder implements Serializable {
 
         PurchaseOrder that = (PurchaseOrder) o;
 
-        if (id != that.id) return false;
-        if (mandt != null ? !mandt.equals(that.mandt) : that.mandt != null) return false;
         if (poNumber != null ? !poNumber.equals(that.poNumber) : that.poNumber != null) return false;
-        if (docType != null ? !docType.equals(that.docType) : that.docType != null) return false;
-        if (deleteInd != null ? !deleteInd.equals(that.deleteInd) : that.deleteInd != null) return false;
-        if (status != null ? !status.equals(that.status) : that.status != null) return false;
-        if (creatDate != null ? !creatDate.equals(that.creatDate) : that.creatDate != null) return false;
-        if (vendor != null ? !vendor.equals(that.vendor) : that.vendor != null) return false;
-        if (supplVend != null ? !supplVend.equals(that.supplVend) : that.supplVend != null) return false;
-        if (customer != null ? !customer.equals(that.customer) : that.customer != null) return false;
-        if (supplPlnt != null ? !supplPlnt.equals(that.supplPlnt) : that.supplPlnt != null) return false;
-        if (poRelInd != null ? !poRelInd.equals(that.poRelInd) : that.poRelInd != null) return false;
-        if (poItem != null ? !poItem.equals(that.poItem) : that.poItem != null) return false;
-        if (poItemFree != null ? !poItemFree.equals(that.poItemFree) : that.poItemFree != null) return false;
-        if (iDeleteInd != null ? !iDeleteInd.equals(that.iDeleteInd) : that.iDeleteInd != null) return false;
-        if (ifDeleteInd != null ? !ifDeleteInd.equals(that.ifDeleteInd) : that.ifDeleteInd != null) return false;
-        if (shortText != null ? !shortText.equals(that.shortText) : that.shortText != null) return false;
-        if (material != null ? !material.equals(that.material) : that.material != null) return false;
-        if (plant != null ? !plant.equals(that.plant) : that.plant != null) return false;
-        if (stgeLoc != null ? !stgeLoc.equals(that.stgeLoc) : that.stgeLoc != null) return false;
-        if (vendMat != null ? !vendMat.equals(that.vendMat) : that.vendMat != null) return false;
-        if (quantity != null ? !quantity.equals(that.quantity) : that.quantity != null) return false;
-        if (quantityFree != null ? !quantityFree.equals(that.quantityFree) : that.quantityFree != null) return false;
-        if (poUnit != null ? !poUnit.equals(that.poUnit) : that.poUnit != null) return false;
-        if (poUnitIso != null ? !poUnitIso.equals(that.poUnitIso) : that.poUnitIso != null) return false;
-        if (qualInsp != null ? !qualInsp.equals(that.qualInsp) : that.qualInsp != null) return false;
-        if (overDlvTol != null ? !overDlvTol.equals(that.overDlvTol) : that.overDlvTol != null) return false;
-        if (unlimitedDlv != null ? !unlimitedDlv.equals(that.unlimitedDlv) : that.unlimitedDlv != null) return false;
-        if (underDlvTol != null ? !underDlvTol.equals(that.underDlvTol) : that.underDlvTol != null) return false;
-        if (valType != null ? !valType.equals(that.valType) : that.valType != null) return false;
-        if (noMoreGr != null ? !noMoreGr.equals(that.noMoreGr) : that.noMoreGr != null) return false;
-        if (finalInv != null ? !finalInv.equals(that.finalInv) : that.finalInv != null) return false;
-        if (itemCat != null ? !itemCat.equals(that.itemCat) : that.itemCat != null) return false;
-        if (itemFreeCat != null ? !itemFreeCat.equals(that.itemFreeCat) : that.itemFreeCat != null) return false;
-        if (grInd != null ? !grInd.equals(that.grInd) : that.grInd != null) return false;
-        if (grNonVal != null ? !grNonVal.equals(that.grNonVal) : that.grNonVal != null) return false;
-        if (delivCompl != null ? !delivCompl.equals(that.delivCompl) : that.delivCompl != null) return false;
-        if (partDeliv != null ? !partDeliv.equals(that.partDeliv) : that.partDeliv != null) return false;
-        if (relStatus != null ? !relStatus.equals(that.relStatus) : that.relStatus != null) return false;
-        if (createdDate != null ? !createdDate.equals(that.createdDate) : that.createdDate != null) return false;
-
+        
         return true;
     }
 

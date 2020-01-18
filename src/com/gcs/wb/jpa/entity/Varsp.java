@@ -128,15 +128,10 @@ public class Varsp implements Serializable {
 
         Varsp varsp = (Varsp) o;
 
-        if (id != varsp.id) return false;
         if (spid != null ? !spid.equals(varsp.spid) : varsp.spid != null) return false;
         if (wbid != null ? !wbid.equals(varsp.wbid) : varsp.wbid != null) return false;
         if (matid != null ? !matid.equals(varsp.matid) : varsp.matid != null) return false;
-        if (note != null ? !note.equals(varsp.note) : varsp.note != null) return false;
-        if (createdDate != null ? !createdDate.equals(varsp.createdDate) : varsp.createdDate != null) return false;
-        if (updatedDate != null ? !updatedDate.equals(varsp.updatedDate) : varsp.updatedDate != null) return false;
-        if (deletedDate != null ? !deletedDate.equals(varsp.deletedDate) : varsp.deletedDate != null) return false;
-
+        
         return true;
     }
 

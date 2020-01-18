@@ -114,14 +114,8 @@ public class NiemXa implements Serializable {
 
         NiemXa niemXa = (NiemXa) o;
 
-        if (id != niemXa.id) return false;
         if (wtid != null ? !wtid.equals(niemXa.wtid) : niemXa.wtid != null) return false;
-        if (value != null ? !value.equals(niemXa.value) : niemXa.value != null) return false;
-        if (createBy != null ? !createBy.equals(niemXa.createBy) : niemXa.createBy != null) return false;
-        if (createdDate != null ? !createdDate.equals(niemXa.createdDate) : niemXa.createdDate != null) return false;
-        if (updatedDate != null ? !updatedDate.equals(niemXa.updatedDate) : niemXa.updatedDate != null) return false;
-        if (deletedDate != null ? !deletedDate.equals(niemXa.deletedDate) : niemXa.deletedDate != null) return false;
-
+        
         return true;
     }
 

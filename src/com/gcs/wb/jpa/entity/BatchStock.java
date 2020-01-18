@@ -151,18 +151,12 @@ public class BatchStock implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
 
         BatchStock that = (BatchStock) o;
-
-        if (id != that.id) return false;
-        if (mandt != null ? !mandt.equals(that.mandt) : that.mandt != null) return false;
+        
         if (werks != null ? !werks.equals(that.werks) : that.werks != null) return false;
         if (lgort != null ? !lgort.equals(that.lgort) : that.lgort != null) return false;
         if (matnr != null ? !matnr.equals(that.matnr) : that.matnr != null) return false;
         if (charg != null ? !charg.equals(that.charg) : that.charg != null) return false;
-        if (lvorm != null ? !lvorm.equals(that.lvorm) : that.lvorm != null) return false;
-        if (createdDate != null ? !createdDate.equals(that.createdDate) : that.createdDate != null) return false;
-        if (updatedDate != null ? !updatedDate.equals(that.updatedDate) : that.updatedDate != null) return false;
-        if (deletedDate != null ? !deletedDate.equals(that.deletedDate) : that.deletedDate != null) return false;
-
+        
         return true;
     }
 
