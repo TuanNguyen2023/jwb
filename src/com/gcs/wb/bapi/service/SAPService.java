@@ -643,12 +643,13 @@ public class SAPService {
             List<TransportagentGetListStructure> transports = bapi.getEtVendor();
             TransportAgentsConverter transportAgentsConverter = new TransportAgentsConverter();
             transportSaps = transportAgentsConverter.convert(transports);
+            //sync SAP <=> DB
+            jpaService.syncTransportAgent(transportDBs, transportSaps);
         } catch (Exception ex) {
             // to do
         }
         // end get data SAP
-        //sync SAP <=> DB
-        jpaService.syncTransportAgent(transportDBs, transportSaps);
+
 
         // return data
         result = jpaService.getTransportAgent();
