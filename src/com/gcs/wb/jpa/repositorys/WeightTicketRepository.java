@@ -27,7 +27,7 @@ public class WeightTicketRepository {
         return query.getResultList();
     }
     
-    public WeightTicket findByIdSeqDay(String id, int seqDay) {
+    public WeightTicket findByIdSeqDay(int id, int seqDay) {
         WeightTicket weightTicket = null;
         TypedQuery<WeightTicket> query = entityManager.createNamedQuery("WeightTicket.findByIdSeqDay", WeightTicket.class);
         query.setParameter("id", id);

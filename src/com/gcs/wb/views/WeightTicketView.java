@@ -2370,7 +2370,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
     private class ReadWTTask extends Task<Object, Void> {
 
-        String id;
+        int id;
         Integer seq;
         /*
         ReadWTTask(Application app, String id, String seq, String RegId ) {
@@ -2386,7 +2386,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
         ReadWTTask(Application app, String id, String seq) {
             super(app);
-            this.id = id;
+            this.id = Integer.parseInt(id);
             this.seq = Integer.valueOf(seq);
             setReprintable(false);
             grbType.clearSelection();
