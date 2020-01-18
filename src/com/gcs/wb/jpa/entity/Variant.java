@@ -123,15 +123,8 @@ public class Variant implements Serializable {
 
         Variant variant = (Variant) o;
 
-        if (id != variant.id) return false;
-        if (mandt != null ? !mandt.equals(variant.mandt) : variant.mandt != null) return false;
-        if (wplant != null ? !wplant.equals(variant.wplant) : variant.wplant != null) return false;
         if (param != null ? !param.equals(variant.param) : variant.param != null) return false;
-        if (value != null ? !value.equals(variant.value) : variant.value != null) return false;
-        if (createdDate != null ? !createdDate.equals(variant.createdDate) : variant.createdDate != null) return false;
-        if (updatedDate != null ? !updatedDate.equals(variant.updatedDate) : variant.updatedDate != null) return false;
-        if (deletedDate != null ? !deletedDate.equals(variant.deletedDate) : variant.deletedDate != null) return false;
-
+        
         return true;
     }
 

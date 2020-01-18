@@ -8,40 +8,39 @@ import java.io.Serializable;
 import java.sql.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 /**
  *
  * @author thanghl
  */
 @Entity
-@Table(name = "tbl_customer")
+@Table(name = "tbl_varsp")
 @NamedQueries({
-    @NamedQuery(name = "Customer.findAll", query = "SELECT c FROM Customer c"),
-    @NamedQuery(name = "Customer.findByKunnr", query = "SELECT c FROM Customer c WHERE c.kunnr = :kunnr")
+    @NamedQuery(name = "Varsp.findAll", query = "SELECT v FROM Varsp v"),
+    @NamedQuery(name = "Varsp.findBySpidWbidMatid",
+    query = "SELECT v FROM Varsp v WHERE v.spid = :spid AND v.wbid = :wbid AND v.matid = :matid")
 })
-public class Customer implements Serializable {
+public class Varsp implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
-    @Column(name = "mandt")
-    private String mandt;
-    @Column(name = "wplant")
-    private String wplant;
-    @Column(name = "kunnr", unique = true)
-    private String kunnr;
-    @Column(name = "name1")
-    private String name1;
-    @Column(name = "name2")
-    private String name2;
+    @Column(name = "spid", unique = true)
+    private String spid;
+    @Column(name = "wbid", unique = true)
+    private String wbid;
+    @Column(name = "matid", unique = true)
+    private String matid;
+    @Column(name = "note")
+    private String note;
     @Column(name = "created_date")
     private Date createdDate;
     @Column(name = "updated_date")
@@ -49,11 +48,13 @@ public class Customer implements Serializable {
     @Column(name = "deleted_date")
     private Date deletedDate;
 
-    public Customer() {
+    public Varsp() {
     }
 
-    public Customer(String kunnr) {
-        this.kunnr = kunnr;
+    public Varsp(String spid, String wbid, String matid) {
+        this.spid = spid;
+        this.wbid = wbid;
+        this.matid = matid;
     }
 
     public int getId() {
@@ -64,44 +65,36 @@ public class Customer implements Serializable {
         this.id = id;
     }
 
-    public String getMandt() {
-        return mandt;
+    public String getSpid() {
+        return spid;
     }
 
-    public void setMandt(String mandt) {
-        this.mandt = mandt;
+    public void setSpid(String spid) {
+        this.spid = spid;
     }
 
-    public String getWplant() {
-        return wplant;
+    public String getWbid() {
+        return wbid;
     }
 
-    public void setWplant(String wplant) {
-        this.wplant = wplant;
+    public void setWbid(String wbid) {
+        this.wbid = wbid;
     }
 
-    public String getKunnr() {
-        return kunnr;
+    public String getMatid() {
+        return matid;
     }
 
-    public void setKunnr(String kunnr) {
-        this.kunnr = kunnr;
+    public void setMatid(String matid) {
+        this.matid = matid;
     }
 
-    public String getName1() {
-        return name1;
+    public String getNote() {
+        return note;
     }
 
-    public void setName1(String name1) {
-        this.name1 = name1;
-    }
-
-    public String getName2() {
-        return name2;
-    }
-
-    public void setName2(String name2) {
-        this.name2 = name2;
+    public void setNote(String note) {
+        this.note = note;
     }
 
     public Date getCreatedDate() {
@@ -133,21 +126,22 @@ public class Customer implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Customer customer = (Customer) o;
+        Varsp varsp = (Varsp) o;
 
-        if (kunnr != null ? !kunnr.equals(customer.kunnr) : customer.kunnr != null) return false;
-
+        if (spid != null ? !spid.equals(varsp.spid) : varsp.spid != null) return false;
+        if (wbid != null ? !wbid.equals(varsp.wbid) : varsp.wbid != null) return false;
+        if (matid != null ? !matid.equals(varsp.matid) : varsp.matid != null) return false;
+        
         return true;
     }
 
     @Override
     public int hashCode() {
         int result = (int) (id ^ (id >>> 31));
-        result = 31 * result + (mandt != null ? mandt.hashCode() : 0);
-        result = 31 * result + (wplant != null ? wplant.hashCode() : 0);
-        result = 31 * result + (kunnr != null ? kunnr.hashCode() : 0);
-        result = 31 * result + (name1 != null ? name1.hashCode() : 0);
-        result = 31 * result + (name2 != null ? name2.hashCode() : 0);
+        result = 31 * result + (spid != null ? spid.hashCode() : 0);
+        result = 31 * result + (wbid != null ? wbid.hashCode() : 0);
+        result = 31 * result + (matid != null ? matid.hashCode() : 0);
+        result = 31 * result + (note != null ? note.hashCode() : 0);
         result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
         result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
         result = 31 * result + (deletedDate != null ? deletedDate.hashCode() : 0);
@@ -156,6 +150,6 @@ public class Customer implements Serializable {
 
     @Override
     public String toString() {
-        return "com.gcs.wb.jpa.entity.Customer[id=" + id + "]";
+        return "com.gcs.wb.jpa.entity.Varsp[id=" + id + "]";
     }
 }

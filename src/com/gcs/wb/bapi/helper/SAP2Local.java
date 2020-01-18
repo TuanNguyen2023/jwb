@@ -26,7 +26,7 @@ import com.gcs.wb.base.converter.VendorsConverter;
 import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
-import com.gcs.wb.jpa.entity.PurOrder;
+import com.gcs.wb.jpa.entity.PurchaseOrder;
 import com.gcs.wb.jpa.entity.SLoc;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.Vendor;
@@ -62,8 +62,8 @@ public class SAP2Local {
         return outb;
     }
 
-    public static PurOrder getPurchaseOrder(String poNum) throws Exception {
-        PurOrder result = null;
+    public static PurchaseOrder getPurchaseOrder(String poNum) throws Exception {
+        PurchaseOrder result = null;
         org.hibersap.session.Session session = WeighBridgeApp.getApplication().getSAPSession();
         PoGetDetailBapi bPO = new PoGetDetailBapi();
         bPO.setPURCHASEORDER(poNum);

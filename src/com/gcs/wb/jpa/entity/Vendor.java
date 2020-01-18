@@ -131,21 +131,17 @@ public class Vendor implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Vendor vendor = (Vendor) o;
-
-        if (id != vendor.id) return false;
-        if (lifnr != null ? !lifnr.equals(vendor.lifnr) : vendor.lifnr != null) return false;
-        if (mandt != null ? !mandt.equals(vendor.mandt) : vendor.mandt != null) return false;
-        if (wplant != null ? !wplant.equals(vendor.wplant) : vendor.wplant != null) return false;
-        if (name1 != null ? !name1.equals(vendor.name1) : vendor.name1 != null) return false;
-        if (name2 != null ? !name2.equals(vendor.name2) : vendor.name2 != null) return false;
-        if (createdDate != null ? !createdDate.equals(vendor.createdDate) : vendor.createdDate != null) return false;
-        if (updatedDate != null ? !updatedDate.equals(vendor.updatedDate) : vendor.updatedDate != null) return false;
-        if (deletedDate != null ? !deletedDate.equals(vendor.deletedDate) : vendor.deletedDate != null) return false;
-
+        if (lifnr != null ? !lifnr.equals(vendor.lifnr) : vendor.lifnr != null) {
+            return false;
+        }
         return true;
     }
 
