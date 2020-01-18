@@ -53,25 +53,13 @@
 		</parameter>
 		<parameter name="P_SIGN" class="java.lang.String" isForPrompting="false"/>
 		<parameter name="P_GQTY" class="java.math.BigDecimal" isForPrompting="false"/>
+		<parameter name="P_PCB40BAG" class="java.lang.Long" isForPrompting="false"/>
+		<parameter name="P_STAGE1" class="java.lang.Boolean" isForPrompting="false"/>
+		<parameter name="P_STAGE2" class="java.lang.Boolean" isForPrompting="false"/>
 		<queryString>
-			<![CDATA[SELECT
-     outb_details.`MANDT` AS outb_details_MANDT,
-     outb_details.`ID` AS outb_details_ID,
-     outb_details.`DELIV_NUMB` AS outb_details_DELIV_NUMB,
-     outb_details.`DELIV_ITEM` AS outb_details_DELIV_ITEM,
-     outb_details.`MATNR` AS outb_details_MATNR,
-     outb_details.`ARKTX` AS outb_details_ARKTX,
-     outb_details.`LFIMG` AS outb_details_LFIMG,
-     outb_details.`MEINS` AS outb_details_MEINS,
-     outb_details.`VGBEL` AS outb_details_VGBEL,
-     outb_details.`FREE_ITEM` AS outb_details_FREE_ITEM
-FROM
-     `outb_details` outb_details
-WHERE outb_details.`MANDT` = $P{P_MANDT}
-AND outb_details.`DELIV_NUMB` = $P{P_DEL_NUM}]]>
+			<![CDATA[store_bq_outb_details_v2 $P{P_MANDT},$P{P_DEL_NUM}]]>
 		</queryString>
 		<field name="outb_details_MANDT" class="java.lang.String"/>
-		<field name="outb_details_ID" class="java.lang.Integer"/>
 		<field name="outb_details_DELIV_NUMB" class="java.lang.String"/>
 		<field name="outb_details_DELIV_ITEM" class="java.lang.String"/>
 		<field name="outb_details_MATNR" class="java.lang.String"/>
@@ -80,6 +68,9 @@ AND outb_details.`DELIV_NUMB` = $P{P_DEL_NUM}]]>
 		<field name="outb_details_MEINS" class="java.lang.String"/>
 		<field name="outb_details_VGBEL" class="java.lang.String"/>
 		<field name="outb_details_FREE_ITEM" class="java.lang.String"/>
+		<field name="outb_details_GOODS_QTY" class="java.math.BigDecimal"/>
+		<field name="outb_details_BZIRK" class="java.lang.String"/>
+		<field name="outb_details_BZTXT" class="java.lang.String"/>
 	</subDataset>
 	<parameter name="P_MANDT" class="java.lang.String"/>
 	<parameter name="P_WPlant" class="java.lang.String"/>
@@ -92,98 +83,11 @@ AND outb_details.`DELIV_NUMB` = $P{P_DEL_NUM}]]>
 	<parameter name="P_MAT_DOC" class="java.lang.String"/>
 	<parameter name="P_SSCALE" class="java.math.BigDecimal" isForPrompting="false"/>
 	<parameter name="P_GQTY" class="java.math.BigDecimal"/>
+	<parameter name="P_ADDRESS" class="java.lang.String"/>
+	<parameter name="P_STAGE1" class="java.lang.Boolean" isForPrompting="false"/>
+	<parameter name="P_STAGE2" class="java.lang.Boolean" isForPrompting="false"/>
 	<queryString>
-		<![CDATA[SELECT
-     WeightTicket.`MANDT` AS MANDT,
-     WeightTicket.`ID` AS ID,
-     WeightTicket.`SEQ_BY_DAY` AS SEQ_BY_DAY,
-     WeightTicket.`SEQ_BY_MONTH` AS SEQ_BY_MONTH,
-     WeightTicket.`TEN_TAI_XE` AS TEN_TAI_XE,
-     WeightTicket.`CMND_BL` AS CMND_BL,
-     WeightTicket.`SO_XE` AS SO_XE,
-     WeightTicket.`SO_ROMOOC` AS SO_ROMOOC,
-     WeightTicket.`REG_CATEGORY` AS REG_CATEGORY,
-     WeightTicket.`REG_ITEM_TEXT` AS REG_ITEM_TEXT,
-     WeightTicket.`REG_ITEM_QTY` AS REG_ITEM_QTY,
-     WeightTicket.`CREATE_DATE` AS CREATE_DATE,
-     WeightTicket.`CREATE_TIME` AS CREATE_TIME,
-     WeightTicket.`CREATOR` AS CREATOR,
-     WeightTicket.`WPlant` AS WPlant,
-     (SELECT Name1 from SAPSetting where SAPSetting.`MANDT` = WeightTicket.`MANDT` AND SAPSetting.`WPlant` = WeightTicket.`WPlant`) AS PName1,
-     (SELECT Name2 from SAPSetting where SAPSetting.`MANDT` = WeightTicket.`MANDT` AND SAPSetting.`WPlant` = WeightTicket.`WPlant`) AS PName2,
-     (SELECT Name_RPT from SAPSetting where SAPSetting.`MANDT` = WeightTicket.`MANDT` AND SAPSetting.`WPlant` = WeightTicket.`WPlant`) AS PName_RPT,
-     (SELECT ADDRESS from SAPSetting where SAPSetting.`MANDT` = WeightTicket.`MANDT` AND SAPSetting.`WPlant` = WeightTicket.`WPlant`) AS PAddress,
-     (SELECT Phone from SAPSetting where SAPSetting.`MANDT` = WeightTicket.`MANDT` AND SAPSetting.`WPlant` = WeightTicket.`WPlant`) AS PPhone,
-     (SELECT FAX from SAPSetting where SAPSetting.`MANDT` = WeightTicket.`MANDT` AND SAPSetting.`WPlant` = WeightTicket.`WPlant`) AS PFAX,
-     WeightTicket.`LGORT` AS LGORT,
-     (SELECT LGOBE from SLoc where SLoc.`MANDT` = WeightTicket.`MANDT` AND SLoc.`WPlant` = WeightTicket.`WPlant` AND SLoc.`LGORT` =  WeightTicket.`LGORT`) AS SLocName,
-     WeightTicket.`CHARG` AS CHARG,
-     WeightTicket.`DELIV_NUMB` AS DELIV_NUMB,
-     OutbDel.LIFNR,
-     (SELECT NAME1 FROM Vendor WHERE Vendor.MANDT = OutbDel.MANDT and Vendor.LIFNR = OutbDel.LIFNR) AS DOSPName1,
-     (SELECT NAME2 FROM Vendor WHERE Vendor.MANDT = OutbDel.MANDT and Vendor.LIFNR = OutbDel.LIFNR) AS DOSPName2,
-     WeightTicket.KUNNR,
-     (SELECT NAME1 FROM Customer WHERE Customer.MANDT = WeightTicket.MANDT AND Customer.KUNNR = WeightTicket.KUNNR) AS SHPName1,
-     (SELECT NAME2 FROM Customer WHERE Customer.MANDT = WeightTicket.MANDT AND Customer.KUNNR = WeightTicket.KUNNR) AS SHPName2,
-     OutbDel.KUNAG,
-     (SELECT NAME1 FROM Customer WHERE Customer.MANDT = OutbDel.MANDT AND Customer.KUNNR = OutbDel.KUNAG) AS SOPName1,
-     (SELECT NAME2 FROM Customer WHERE Customer.MANDT = OutbDel.MANDT AND Customer.KUNNR = OutbDel.KUNAG) AS SOPName2,
-     OutbDel.RECV_PLANT,
-     (SELECT Name1 from SAPSetting where SAPSetting.`MANDT` = WeightTicket.`MANDT` AND SAPSetting.`WPlant` = OutbDel.RECV_PLANT) AS RPName1,
-     (SELECT Name2 from SAPSetting where SAPSetting.`MANDT` = WeightTicket.`MANDT` AND SAPSetting.`WPlant` = OutbDel.RECV_PLANT) AS RPName2,
-     OutbDel.WERKS AS ISSU_PLANT,
-     (SELECT Name1 from SAPSetting where SAPSetting.`MANDT` = WeightTicket.`MANDT` AND SAPSetting.`WPlant` = OutbDel.WERKS) AS IPName,
-     WeightTicket.`EBELN` AS EBELN,
-     PurOrder.PLANT AS PORPlant,
-     (SELECT Name1 from SAPSetting where SAPSetting.`MANDT` = WeightTicket.`MANDT` AND SAPSetting.`WPlant` = PurOrder.PLANT) AS PORPName1,
-     (SELECT Name2 from SAPSetting where SAPSetting.`MANDT` = WeightTicket.`MANDT` AND SAPSetting.`WPlant` = PurOrder.PLANT) AS PORPName2,
-     (SELECT Name_RPT from SAPSetting where SAPSetting.`MANDT` = WeightTicket.`MANDT` AND SAPSetting.`WPlant` = PurOrder.PLANT) AS PORPName_RPT,
-     PurOrder.SUPPL_VEND,
-     (SELECT NAME1 FROM Vendor WHERE Vendor.MANDT = PurOrder.MANDT and Vendor.LIFNR = PurOrder.SUPPL_VEND) AS PURSVName1,
-     (SELECT NAME2 FROM Vendor WHERE Vendor.MANDT = PurOrder.MANDT and Vendor.LIFNR = PurOrder.SUPPL_VEND) AS PURSVName2,
-     PurOrder.Customer,
-     (SELECT NAME1 FROM Customer WHERE Customer.MANDT = PurOrder.MANDT AND Customer.KUNNR = PurOrder.Customer) AS CName1,
-     (SELECT NAME2 FROM Customer WHERE Customer.MANDT = PurOrder.MANDT AND Customer.KUNNR = PurOrder.Customer) AS CName2,
-     PurOrder.SUPPL_PLNT,
-     (SELECT NAME1 FROM Vendor WHERE Vendor.MANDT = PurOrder.MANDT and Vendor.LIFNR = PurOrder.SUPPL_PLNT) AS PURSPName1,
-     (SELECT NAME2 FROM Vendor WHERE Vendor.MANDT = PurOrder.MANDT and Vendor.LIFNR = PurOrder.SUPPL_PLNT) AS PURSPName2,
-     WeightTicket.RECV_LGORT,
-     (SELECT LGOBE from SLoc where SLoc.`MANDT` = WeightTicket.`MANDT` AND SLoc.`WPlant` = WeightTicket.`WPlant` AND SLoc.`LGORT` =  WeightTicket.RECV_LGORT) AS RecvSLocName,
-     WeightTicket.`ITEM` AS ITEM,
-     WeightTicket.`MATNR_REF` AS MATNR_REF,
-     WeightTicket.`TEXT` AS TEXT,
-     WeightTicket.`SO_NIEM_XA` AS SO_NIEM_XA,
-     (WeightTicket.`F_SCALE` / 1000) AS F_SCALE,
-     WeightTicket.`F_TIME` AS F_TIME,
-     WeightTicket.`F_CREATOR` AS F_CREATOR,
-     (WeightTicket.`S_SCALE` / 1000) AS S_SCALE,
-     WeightTicket.`S_TIME` AS S_TIME,
-     WeightTicket.`S_CREATOR` AS S_CREATOR,
-     WeightTicket.`G_QTY` AS G_QTY,
-     WeightTicket.`UNIT` AS UNIT,
-     WeightTicket.`MAT_DOC` AS MAT_DOC,
-     WeightTicket.`DOC_YEAR` AS DOC_YEAR,
-     WeightTicket.`TRANSFERED_POSTING` AS TRANSFERED_POSTING,
-     WeightTicket.`OFFLINE_MODE` AS OFFLINE_MODE,
-     WeightTicket.`DISSOLVED` AS DISSOLVED,
-     WeightTicket.`POSTED` AS POSTED,
-     (CASE WHEN WeightTicket.`MOVE_TYPE` = '313' THEN 'Gia công ngoài'
-           WHEN WeightTicket.`MOVE_TYPE` = '311' THEN 'C.Kho nội bộ' END) AS MVT,
-     (CASE WHEN ( S_SCALE IS NULL AND REG_CATEGORY = 'I' ) THEN 'PHIẾU YÊU CẦU NHẬP HÀNG'
-           WHEN ( S_SCALE IS NOT NULL AND REG_CATEGORY = 'I' ) THEN 'PHIẾU NHẬP HÀNG'
-           WHEN ( S_SCALE IS NULL AND REG_CATEGORY = 'O' ) THEN 'PHIẾU YÊU CẦU XUẤT HÀNG'
-           WHEN ( S_SCALE IS NOT NULL AND REG_CATEGORY = 'O' ) THEN 'PHIẾU GIAO HÀNG KIÊM PHIẾU XUẤT KHO XI MĂNG' END) AS TITLE,
-     (CASE WHEN S_SCALE IS NULL THEN  'P.X Sản Xuất'
-           WHEN ( S_SCALE IS NOT NULL AND REG_CATEGORY = 'I' ) THEN 'Người giao hàng'
-           WHEN ( S_SCALE IS NOT NULL AND REG_CATEGORY = 'O' ) THEN 'Người nhận hàng' END) AS SIGN3
-FROM
-     `WeightTicket` WeightTicket
-     LEFT OUTER JOIN `OutbDel` OutbDel ON WeightTicket.MANDT = OutbDel.MANDT AND WeightTicket.DELIV_NUMB = OutbDel.DELIV_NUMB
-     LEFT OUTER JOIN `PurOrder` PurOrder on WeightTicket.MANDT = PurOrder.MANDT AND WeightTicket.EBELN = PurOrder.PO_NUMBER
-WHERE WeightTicket.`MANDT` = $P{P_MANDT}
-  AND WeightTicket.`WPlant` =  $P{P_WPlant}
-  AND WeightTicket.`ID` = $P{P_ID}
-  AND WeightTicket.`SEQ_BY_DAY` = $P{P_DAYSEQ}]]>
+		<![CDATA[store_bq_Weightticket_New $P{P_ADDRESS},$P{P_MANDT},$P{P_WPlant},$P{P_ID},$P{P_DAYSEQ}]]>
 	</queryString>
 	<field name="MANDT" class="java.lang.String"/>
 	<field name="ID" class="java.lang.String"/>
@@ -261,6 +165,7 @@ WHERE WeightTicket.`MANDT` = $P{P_MANDT}
 	<field name="MVT" class="java.lang.String"/>
 	<field name="TITLE" class="java.lang.String"/>
 	<field name="SIGN3" class="java.lang.String"/>
+	<field name="PHIEUCAN" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -304,12 +209,12 @@ WHERE WeightTicket.`MANDT` = $P{P_MANDT}
 					<jr:codeExpression><![CDATA[$F{ID}+$F{SEQ_BY_DAY}]]></jr:codeExpression>
 				</jr:Code128>
 			</componentElement>
-			<textField isStretchWithOverflow="true">
-				<reportElement x="149" y="28" width="278" height="18" forecolor="#FF0000"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="149" y="28" width="278" height="18" forecolor="#000000"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" size="14" isBold="true" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{TITLE}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{TITLE}+$F{PHIEUCAN}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement positionType="Float" x="0" y="53" width="545" height="10"/>
@@ -437,19 +342,20 @@ WHERE WeightTicket.`MANDT` = $P{P_MANDT}
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{KUNNR} != null ? $F{KUNNR} :
-$F{KUNAG} != null ? $F{KUNAG} :
-$F{RECV_PLANT} != null ?$F{RECV_PLANT}:
-$F{PORPlant} != null ? $F{PORPlant} :
-$F{RECV_LGORT} != null ? $F{RECV_LGORT} : null]]></textFieldExpression>
+						$F{KUNAG} != null ? $F{KUNAG} :
+						$F{RECV_PLANT} != null ?$F{RECV_PLANT}:
+						$F{PORPlant} != null ? $F{PORPlant} :
+						$F{RECV_LGORT} != null ? $F{RECV_LGORT} : null]]>
+					</textFieldExpression>
 				</textField>
 				<rectangle>
 					<reportElement x="95" y="20" width="196" height="20"/>
 				</rectangle>
-				<textField isBlankWhenNull="true">
-					<reportElement x="95" y="20" width="196" height="20"/>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement stretchType="RelativeToTallestObject" x="95" y="20" width="196" height="20" isPrintWhenDetailOverflows="true"/>
 					<box leftPadding="2"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
-						<font fontName="DejaVu Sans" size="8"/>
+						<font fontName="DejaVu Sans" size="6" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{KUNNR} != null ? $F{SHPName1} != null ? $F{SHPName1} : "" + " "+ $F{SHPName2} != null ? $F{SHPName2} : "" :
 $F{KUNAG} != null ? $F{SOPName1} != null ? $F{SOPName1} : "" + " "+ $F{SOPName2} != null ? $F{SOPName2} : "" :
@@ -530,7 +436,7 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 				<rectangle>
 					<reportElement x="385" y="40" width="42" height="20"/>
 				</rectangle>
-				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<textField pattern="#,##0.000;-#,##0.000" isBlankWhenNull="true">
 					<reportElement x="385" y="40" width="42" height="20"/>
 					<box rightPadding="2"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
@@ -573,7 +479,7 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 				<rectangle>
 					<reportElement x="385" y="60" width="42" height="20"/>
 				</rectangle>
-				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<textField pattern="#,##0.000;-#,##0.000" isBlankWhenNull="true">
 					<reportElement x="385" y="60" width="42" height="20"/>
 					<box rightPadding="2"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
@@ -616,7 +522,7 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 				<rectangle>
 					<reportElement x="385" y="80" width="42" height="20"/>
 				</rectangle>
-				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" pattern="#,##0.000;-#,##0.000" isBlankWhenNull="true">
 					<reportElement x="385" y="80" width="42" height="20"/>
 					<box rightPadding="2"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
@@ -633,7 +539,9 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 					<textElement verticalAlignment="Middle" markup="none">
 						<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA[($F{DISSOLVED} == null || $F{DISSOLVED} == false ) ? "Tấn (T)" : $F{REG_CATEGORY} == "I" ? "Không NHẬN hàng" : "Không GIAO hàng"]]></textFieldExpression>
+					<textFieldExpression>
+					<![CDATA[($F{DISSOLVED} == null || $F{DISSOLVED} == false ) ? " Tấn " : $F{REG_CATEGORY} == "I" ? "Không NHẬN hàng" : "Không GIAO hàng"]]>
+					</textFieldExpression>
 				</textField>
 				<rectangle>
 					<reportElement x="291" y="100" width="94" height="20"/>
@@ -718,9 +626,11 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="9" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[($F{DELIV_NUMB} != null && !$F{DELIV_NUMB}.trim().isEmpty()) ? $P{P_DEL_NUM} :
-($F{EBELN} != null && !$F{EBELN}.trim().isEmpty()) ? $F{EBELN} :
-($F{RECV_LGORT} != null && !$F{RECV_LGORT}.trim().isEmpty()) ? $F{MVT} : null]]></textFieldExpression>
+					<textFieldExpression>
+					<![CDATA[($F{DELIV_NUMB} != null && !$F{DELIV_NUMB}.trim().isEmpty()) ? $P{P_DEL_NUM} :
+					($F{EBELN} != null && !$F{EBELN}.trim().isEmpty()) ? $F{EBELN} :
+					($F{RECV_LGORT} != null && !$F{RECV_LGORT}.trim().isEmpty()) ? $F{MVT} : null]]>
+					</textFieldExpression>
 				</textField>
 			</frame>
 			<frame>
@@ -872,7 +782,7 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 					</jr:column>
 					<jr:column width="54">
 						<jr:detailCell style="table_TD" height="15" rowSpan="1">
-							<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+							<textField pattern="#,##0.000;-#,##0.000" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="54" height="15"/>
 								<textElement textAlignment="Right" verticalAlignment="Middle">
 									<font fontName="DejaVu Sans" size="8"/>
@@ -883,12 +793,12 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 					</jr:column>
 					<jr:column width="54">
 						<jr:detailCell style="table_TD" height="15" rowSpan="1">
-							<textField pattern="" isBlankWhenNull="true">
+							<textField pattern="#,##0.000;-#,##0.000" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="54" height="15"/>
 								<textElement textAlignment="Right" verticalAlignment="Middle">
 									<font fontName="DejaVu Sans" size="8"/>
 								</textElement>
-								<textFieldExpression><![CDATA[($P{P_GQTY} == null) ? "" : $F{outb_details_LFIMG}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$P{P_STAGE2} != true ? "" : ($P{P_PCB40BAG} != null) ? $F{outb_details_LFIMG} : ($F{outb_details_GOODS_QTY} == null) ? "" : $F{outb_details_GOODS_QTY}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -899,7 +809,7 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="DejaVu Sans" size="8"/>
 								</textElement>
-								<text><![CDATA[Tấn]]></text>
+								<text><![CDATA[ Tấn ]]></text>
 							</staticText>
 						</jr:detailCell>
 					</jr:column>
@@ -907,9 +817,18 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 						<jr:detailCell style="table_TD" height="15" rowSpan="1">
 							<staticText>
 								<reportElement x="0" y="0" width="117" height="15"/>
-								<textElement/>
+								<textElement>
+									<font size="5"/>
+								</textElement>
 								<text><![CDATA[]]></text>
 							</staticText>
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="117" height="14"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="DejaVu Sans" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{outb_details_BZTXT}]]></textFieldExpression>
+							</textField>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="44">
@@ -930,7 +849,7 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression><![CDATA[($F{S_SCALE} == null) ? $F{SIGN3} : "Bảo vệ"]]></textFieldExpression>
+					<textFieldExpression><![CDATA[($F{S_SCALE} == null) ? $F{SIGN3} : " Bảo vệ "]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="0" y="0" width="149" height="20"/>
@@ -987,14 +906,15 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 					</textElement>
 					<textFieldExpression><![CDATA[$P{P_PCB40BAG} != null ?"Tổng số bao: " : ""]]></textFieldExpression>
 				</textField>
-				<textField isBlankWhenNull="true">
+				<textField pattern="#,##0.000;-#,##0.000" isBlankWhenNull="true">
 					<reportElement x="266" y="0" width="54" height="15"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[($F{G_QTY} == null) ? "" : $P{P_TOTAL_QTY}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{P_STAGE2} != true ? "" : ($P{P_PCB40BAG} != null) ? $P{P_TOTAL_QTY} : ($F{G_QTY} == null) ? "" : $P{P_GQTY}
+]]></textFieldExpression>
 				</textField>
-				<textField isBlankWhenNull="true">
+				<textField pattern="#,##0.000;-#,##0.000" isBlankWhenNull="true">
 					<reportElement x="212" y="0" width="54" height="15"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8" isBold="true"/>
