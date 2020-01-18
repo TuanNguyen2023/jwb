@@ -28,17 +28,16 @@ import com.gcs.wb.bapi.helper.structure.VendorGetDetailStructure;
 import com.gcs.wb.base.converter.TransportAgentsConverter;
 import com.gcs.wb.base.util.Conversion_Exit;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
-import com.gcs.wb.jpa.entity.BatchStocks;
-import com.gcs.wb.jpa.entity.BatchStocksPK;
+import com.gcs.wb.jpa.entity.BatchStock;
 import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
 import com.gcs.wb.jpa.entity.OutboundDetail;
-import com.gcs.wb.jpa.entity.PurOrder;
+import com.gcs.wb.jpa.entity.PurchaseOrder;
 import com.gcs.wb.jpa.entity.SLoc;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.Vendor;
-import com.gcs.wb.jpa.repositorys.BatchStocksRepository;
+import com.gcs.wb.jpa.repositorys.BatchStockRepository;
 import com.gcs.wb.jpa.service.JPAService;
 import com.gcs.wb.model.AppConfig;
 import java.math.BigDecimal;
@@ -55,7 +54,7 @@ import org.hibersap.session.Session;
  * @author HANGTT
  */
 public class SAPService {
-    BatchStocksRepository batchStocksRepository = new BatchStocksRepository();
+    BatchStockRepository batchStockRepository = new BatchStockRepository();
     EntityManager entityManager = JPAConnector.getInstance();
     JPAService jpaService = new JPAService();
     AppConfig config = WeighBridgeApp.getApplication().getConfig();
@@ -368,14 +367,14 @@ public class SAPService {
      * @return
      * @throws Exception 
      */
-    public PurOrder getPurchaseOrder(String poNum) throws Exception {
+    public PurchaseOrder getPurchaseOrder(String poNum) throws Exception {
         String item_num = null;
         String item_num_free = null;
         boolean flag_free = true;
         boolean flag = true;
         BigDecimal item_qty = BigDecimal.ZERO;
         BigDecimal item_qty_free = BigDecimal.ZERO;
-        PurOrder result = null;
+        PurchaseOrder result = null;
         PoGetDetailBapi bPO = new PoGetDetailBapi();
         bPO.setPURCHASEORDER(poNum);
         session.execute(bPO);
@@ -385,7 +384,7 @@ public class SAPService {
             throw new Exception("Không hỗ trợ P.O số: " + poNum + "!");
         }
 
-        result = new PurOrder(config.getsClient(), poNum);
+        result = new PurchaseOrder(config.getsClient(), poNum);
         result.setDocType(header.getDOC_TYPE());
         result.setDeleteInd(header.getDELETE_IND() == null || header.getDELETE_IND().trim().isEmpty() ? ' ' : header.getDELETE_IND().charAt(0));
         result.setStatus(header.getSTATUS() == null || header.getSTATUS().trim().isEmpty() ? ' ' : header.getSTATUS().charAt(0));
@@ -474,10 +473,10 @@ public class SAPService {
      */
     public void syncBatchStocks(String lgortSloc, String matnr, String lgortWT) {
         // get data DB
-        List<BatchStocks> batchs = jpaService.getBatchStocks(config.getsClient(), config.getwPlant(), lgortSloc, matnr);
+        List<BatchStock> batchs = jpaService.getBatchStocks(config.getwPlant(), lgortSloc, matnr);
         // get data SAP
         BatchStocksGetListBapi bBatch = new BatchStocksGetListBapi();
-        List<BatchStocks> batchStockSaps = new ArrayList<BatchStocks>();
+        List<BatchStock> batchStockSaps = new ArrayList<BatchStock>();
         bBatch.setIdMandt(config.getsClient());
         bBatch.setIdWerks(config.getwPlant());
         bBatch.setIdLgort(lgortSloc);
@@ -486,7 +485,7 @@ public class SAPService {
             session.execute(bBatch);
             List<BatchStocksStructure> bBatchStocks = bBatch.getBatchStocks();
             for (BatchStocksStructure b : bBatchStocks) {
-                BatchStocks bs = new BatchStocks(new BatchStocksPK(config.getsClient(), config.getwPlant(), b.getLgort(), b.getMatnr(), b.getCharg()));
+                BatchStock bs = batchStockRepository.findByWerksLgortMatnrCharg(config.getwPlant(), b.getLgort(), b.getMatnr(), b.getCharg());
                 bs.setLvorm(b.getLvorm() == null || b.getLvorm().trim().isEmpty() ? ' ' : b.getLvorm().charAt(0));
                 batchStockSaps.add(bs);
             }
@@ -497,13 +496,13 @@ public class SAPService {
             entityManager.getTransaction().begin();
         }
         //case delete
-        for(BatchStocks b: batchs) {
+        for(BatchStock b: batchs) {
             if(batchStockSaps.indexOf(b) == -1) {
                 entityManager.remove(b);
             }
         }
         //case persit/merge
-        for (BatchStocks bs : batchStockSaps) {
+        for (BatchStock bs : batchStockSaps) {
             if (batchs.indexOf(bs) == -1) {
                 entityManager.persist(bs);
             } else {

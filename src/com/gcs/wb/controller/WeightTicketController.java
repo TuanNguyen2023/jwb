@@ -5,11 +5,11 @@
 package com.gcs.wb.controller;
 
 import com.gcs.wb.bapi.goodsmvt.structure.GoodsMvtWeightTicketStructure;
-import com.gcs.wb.jpa.entity.BatchStocks;
+import com.gcs.wb.jpa.entity.BatchStock;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
 import com.gcs.wb.jpa.entity.OutboundDetail;
-import com.gcs.wb.jpa.entity.PurOrder;
+import com.gcs.wb.jpa.entity.PurchaseOrder;
 import com.gcs.wb.jpa.entity.SLoc;
 import com.gcs.wb.jpa.entity.TimeRange;
 import com.gcs.wb.jpa.entity.WeightTicket;
@@ -38,7 +38,7 @@ public class WeightTicketController {
         return weightTicketService.getTime();
     }
 
-    public List<BatchStocks> getBatchStocks(SLoc selSloc, WeightTicket weightTicket) {
+    public List<BatchStock> getBatchStocks(SLoc selSloc, WeightTicket weightTicket) {
         return weightTicketService.getBatchStocks(selSloc, weightTicket);
     }
 
@@ -46,7 +46,7 @@ public class WeightTicketController {
         weightTicketService.getSyncBatchStocks(selSloc, weightTicket);
     }
 
-    public DefaultComboBoxModel setCbxBatch(List<BatchStocks> batchs) {
+    public DefaultComboBoxModel setCbxBatch(List<BatchStock> batchs) {
         return weightTicketService.setCbxBatch(batchs);
 
     }
@@ -95,11 +95,11 @@ public class WeightTicketController {
         weightTicketService.getTicketIndex(maphieu, txtPONum, weightTicket, rbtPO);
     }
 
-    public PurOrder findPurOrder(String poNum) {
+    public PurchaseOrder findPurOrder(String poNum) {
         return weightTicketService.findPurOrder(poNum);
     }
 
-    public PurOrder getSapPurOrder(String poNum) throws Exception {
+    public PurchaseOrder getSapPurOrder(String poNum) throws Exception {
         return weightTicketService.getSapPurOrder(poNum);
     }
 
@@ -116,7 +116,7 @@ public class WeightTicketController {
         return weightTicketService.getServerTime();
     }
 
-    public Material checkPOSTO(PurOrder purOrder) throws Exception {
+    public Material checkPOSTO(PurchaseOrder purOrder) throws Exception {
         return weightTicketService.checkPOSTO(purOrder);
     }
 
@@ -132,7 +132,7 @@ public class WeightTicketController {
         return weightTicketService.getGrPoMigoBapi(wt, weightTicket, timeFrom, timeTo);
     }
 
-    public Object getGi541MigoBapi(WeightTicket wt, WeightTicket weightTicket, int timeFrom, int timeTo, PurOrder purOrder, JRadioButton rbtOutward) {
+    public Object getGi541MigoBapi(WeightTicket wt, WeightTicket weightTicket, int timeFrom, int timeTo, PurchaseOrder purOrder, JRadioButton rbtOutward) {
         return weightTicketService.getGi541MigoBapi(wt, weightTicket, timeFrom, timeTo, purOrder, rbtOutward);
     }
 
