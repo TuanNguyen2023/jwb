@@ -102,9 +102,11 @@ public class SAPService {
         }
         // update SAP -> DB    
         for (Material mSap : result) {
-            if (materialsDB.indexOf(mSap) == -1) {
+            int index = materialsDB.indexOf(mSap);
+            if (index == -1) {
                 entityManager.persist(mSap);
             } else {
+                mSap.setId(materialsDB.get(index).getId());
                 entityManager.merge(mSap);
             }
         }
@@ -151,9 +153,11 @@ public class SAPService {
         
         // update SAP - DB
         for (Vendor venSap : venSaps) {
-            if (vendorDBs.indexOf(venSap) == -1) {
+            int index = vendorDBs.indexOf(venSap);
+            if (index == -1) {
                 entityManager.persist(venSap);
             } else {
+                venSap.setId(vendorDBs.get(index).getId());
                 entityManager.merge(venSap);
             }
         }
@@ -503,9 +507,11 @@ public class SAPService {
         }
         //case persit/merge
         for (BatchStock bs : batchStockSaps) {
-            if (batchs.indexOf(bs) == -1) {
+            int index = batchs.indexOf(bs);
+            if (index == -1) {
                 entityManager.persist(bs);
             } else {
+                bs.setId(batchs.get(index).getId());
                 entityManager.merge(bs);
             }
         }
@@ -586,9 +592,11 @@ public class SAPService {
         }
         // update case persit/merge
         for(SLoc sloc: slocSaps) {
-            if (slocDBs.indexOf(sloc) == -1) {
+            int index = slocDBs.indexOf(sloc);
+            if (index == -1) {
                 entityManager.persist(sloc);
             } else {
+                sloc.setId(slocDBs.get(index).getId());
                 entityManager.merge(sloc);
             }
         }
