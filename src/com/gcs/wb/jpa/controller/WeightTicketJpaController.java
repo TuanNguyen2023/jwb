@@ -8,19 +8,18 @@ import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.Material;
-import com.gcs.wb.jpa.entity.OutbDel;
+import com.gcs.wb.jpa.entity.OutboundDelivery;
 import com.gcs.wb.jpa.entity.Variant;
 import com.gcs.wb.jpa.entity.WeightTicket;
-import com.gcs.wb.jpa.entity.WeightTicketPK;
-import com.gcs.wb.jpa.entity.OutbDetailsV2;
+import com.gcs.wb.jpa.entity.OutboundDetail;
 
 
 import com.gcs.wb.jpa.procedures.WeightTicketJpaRepository;
 
 import com.gcs.wb.jpa.repositorys.CustomerRepository;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
-import com.gcs.wb.jpa.repositorys.OutbDelRepository;
-import com.gcs.wb.jpa.repositorys.OutbDetailsV2Repository;
+import com.gcs.wb.jpa.repositorys.OutboundDeliveryRepository;
+import com.gcs.wb.jpa.repositorys.OutboundDetailRepository;
 import com.gcs.wb.jpa.repositorys.VariantRepository;
 import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import javax.persistence.EntityManager;
@@ -67,116 +66,88 @@ public class WeightTicketJpaController {
         }
     }
 
-    public WeightTicket findWeightTicket(WeightTicketPK id) throws Exception {
-
-        try {
-            return entityManager.find(WeightTicket.class, id);
-        } catch (Exception ex) {
-            logger.error(id, ex);
-            throw ex;
-        }
+    public WeightTicket findByIdSeqDay(String id, int seqDay) throws Exception {
+        WeightTicketRepository repository = new WeightTicketRepository();
+        return repository.findByIdSeqDay(id, seqDay);
     }
 
-    public List<WeightTicket> findByCreateDateRange(Date sfrom, Date sto) {
+    public List<WeightTicket> findByCreatedDateRange(Date sfrom, Date sto) {
         WeightTicketRepository repository = new WeightTicketRepository();
-        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-        String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
         java.sql.Date from = new java.sql.Date(sfrom.getTime());
         java.sql.Date to = new java.sql.Date(sto.getTime());
-        return repository.findByCreateDateRange(client, plant, from, to);
+        return repository.findByCreatedDateRange(from, to);
 
     }
 
-    public List<WeightTicket> findByMandtWPlantDateFull(String sfrom, String sto, String creator, String taixe, String loaihang, String bienso) throws Exception {
-        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-        String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
+    public List<WeightTicket> findByDateFull(String sfrom, String sto, String creator, String taixe, String loaihang, String bienso) throws Exception {
         java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
         System.out.println(" hic " + sfrom.toString());
         java.sql.Date to = java.sql.Date.valueOf(sto.toString());
         WeightTicketRepository repository = new WeightTicketRepository();
-        return repository.findByMandtWPlantDateFull(client, plant, from, to, creator, taixe, loaihang, bienso);
+        return repository.findByDateFull(from, to, creator, taixe, loaihang, bienso);
     }
 
-    public List<WeightTicket> findByMandtWPlantDateNull(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
-        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-        String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
+    public List<WeightTicket> findByDateNull(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
         WeightTicketRepository repository = new WeightTicketRepository();
         java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
         java.sql.Date to = java.sql.Date.valueOf(sto.toString());
-        return repository.findByMandtWPlantDateNull(client, plant, from, to, creator, taixe, bienso);
+        return repository.findByDateNull(from, to, creator, taixe, bienso);
 
     }
 
-    public List<WeightTicket> findByMandtWPlantDateNullAll(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
-        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-        String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
+    public List<WeightTicket> findByDateNullAll(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
         WeightTicketRepository repository = new WeightTicketRepository();
         java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
         java.sql.Date to = java.sql.Date.valueOf(sto.toString());
-        return repository.findByMandtWPlantDateNullAll(client, plant, from, to, creator, taixe, bienso);
+        return repository.findByDateNullAll(from, to, creator, taixe, bienso);
     }
 
-    public List<WeightTicket> findByMandtWPlantDateDissolved(String sfrom, String sto,
+    public List<WeightTicket> findByDateDissolved(String sfrom, String sto,
             String creator, String taixe,
             String loaihang, String bienso) throws Exception {
-        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-        String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
         WeightTicketRepository repository = new WeightTicketRepository();
         java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
         java.sql.Date to = java.sql.Date.valueOf(sto.toString());
-        return repository.findByMandtWPlantDateDissolved(client, plant, from, to, creator, taixe, loaihang, bienso);
+        return repository.findByDateDissolved(from, to, creator, taixe, loaihang, bienso);
     }
 
-    public List<WeightTicket> findByMandtWPlantDateDissolvedNull(String sfrom, String sto,
+    public List<WeightTicket> findByDateDissolvedNull(String sfrom, String sto,
             String creator, String taixe,
             String bienso) throws Exception {
-
-        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-        String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
         WeightTicketRepository repository = new WeightTicketRepository();
         java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
         java.sql.Date to = java.sql.Date.valueOf(sto.toString());
-        return repository.findByMandtWPlantDateDissolvedNull(client, plant, from, to, creator, taixe, bienso);
+        return repository.findByDateDissolvedNull(from, to, creator, taixe, bienso);
     }
 
-    public List<WeightTicket> findByMandtWPlantDateDissolvedNullAll(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
-
-        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-        String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
+    public List<WeightTicket> findByDateDissolvedNullAll(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
         WeightTicketRepository repository = new WeightTicketRepository();
         java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
         java.sql.Date to = java.sql.Date.valueOf(sto.toString());
-        return repository.findByMandtWPlantDateDissolvedNullAll(client, plant, from, to, creator, taixe, bienso);
+        return repository.findByDateDissolvedNullAll(from, to, creator, taixe, bienso);
 
     }
 
-    public List<WeightTicket> findByMandtWPlantDatePosted(String sfrom, String sto, String creator, String taixe, String loaihang, String bienso) throws Exception {
-        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-        String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
+    public List<WeightTicket> findByDatePosted(String sfrom, String sto, String creator, String taixe, String loaihang, String bienso) throws Exception {
         WeightTicketRepository repository = new WeightTicketRepository();
         java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
         java.sql.Date to = java.sql.Date.valueOf(sto.toString());
-        return repository.findByMandtWPlantDatePosted(client, plant, from, to, creator, taixe, loaihang, bienso);
+        return repository.findByDatePosted(from, to, creator, taixe, loaihang, bienso);
 
     }
 
-    public List<WeightTicket> findByMandtWPlantDatePostedNull(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
-
-        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-        String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
+    public List<WeightTicket> findByDatePostedNull(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
         WeightTicketRepository repository = new WeightTicketRepository();
         java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
         java.sql.Date to = java.sql.Date.valueOf(sto.toString());
-        return repository.findByMandtWPlantDatePostedNull(client, plant, from, to, creator, taixe, bienso);
+        return repository.findByDatePostedNull(from, to, creator, taixe, bienso);
     }
 
-    public List<WeightTicket> findByMandtWPlantDatePostedNullAll(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
-        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-        String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
+    public List<WeightTicket> findByDatePostedNullAll(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
         WeightTicketRepository repository = new WeightTicketRepository();
         java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
         java.sql.Date to = java.sql.Date.valueOf(sto.toString());
-        return repository.findByMandtWPlantDatePostedNullAll(client, plant, from, to, creator, taixe, bienso);
+        return repository.findByDatePostedNullAll(from, to, creator, taixe, bienso);
     }
 
     public String getMsg(String id) {
@@ -185,34 +156,26 @@ public class WeightTicketJpaController {
         return msg;
     }
 
-    public List<WeightTicket> findByMandtWPlantDateAll(String sfrom, String sto, String creator, String taixe, String loaihang, String bienso) throws Exception {
-
-        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-        String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
+    public List<WeightTicket> findByDateAll(String sfrom, String sto, String creator, String taixe, String loaihang, String bienso) throws Exception {
         WeightTicketRepository repository = new WeightTicketRepository();
         java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
         java.sql.Date to = java.sql.Date.valueOf(sto.toString());
-        return repository.findByMandtWPlantDateAll(client, plant, from, to, creator, taixe, loaihang, bienso);
+        return repository.findByDateAll(from, to, creator, taixe, loaihang, bienso);
 
     }
 
-    public List<WeightTicket> findByMandtWPlantDateAllNull(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
-
-        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-        String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
+    public List<WeightTicket> findByDateAllNull(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
         WeightTicketRepository repository = new WeightTicketRepository();
         java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
         java.sql.Date to = java.sql.Date.valueOf(sto.toString());
-        return repository.findByMandtWPlantDateAllNull(client, plant, from, to, creator, taixe, bienso);
+        return repository.findByDateAllNull(from, to, creator, taixe, bienso);
     }
 
-    public List<WeightTicket> findByMandtWPlantDateAllNullAll(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
-        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-        String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
+    public List<WeightTicket> findByDateAllNullAll(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
         WeightTicketRepository repository = new WeightTicketRepository();
         java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
         java.sql.Date to = java.sql.Date.valueOf(sto.toString());
-        return repository.findByMandtWPlantDateAllNullAll(client, plant, from, to, creator, taixe, bienso);
+        return repository.findByDateAllNullAll(from, to, creator, taixe, bienso);
     }
 
     public List<WeightTicket> findListWTs(String month, String year, String tagent, String matnr, List<Character> modes, boolean isDissovled, boolean isPosted) throws Exception {
@@ -220,33 +183,31 @@ public class WeightTicketJpaController {
         String name_query = null;
         if (isDissovled) {
             if (matnr == null) {
-                name_query = "WeightTicket.findByMandtWPlantIdSoxeRegcatDissovled";
+                name_query = "WeightTicket.findByIdPlateNoRegTypeDissovled";
             } else {
-                name_query = "WeightTicket.findByMandtWPlantIdSoxeMatnrRegcatDissovled";
+                name_query = "WeightTicket.findByIdPlateNoMatnrRegTypeDissovled";
             }
         } else if (isPosted) {
             if (matnr == null) {
-                name_query = "WeightTicket.findByMandtWPlantIdSoxeRegcatPosted";
+                name_query = "WeightTicket.findByIdPlateNoRegTypePosted";
             } else {
-                name_query = "WeightTicket.findByMandtWPlantIdSoxeMatnrRegcatPosted";
+                name_query = "WeightTicket.findByIdPlateNoMatnrRegTypePosted";
             }
         } else {
             if (matnr.equalsIgnoreCase("-1")) {
-                name_query = "WeightTicket.findByMandtWPlantIdSoxeRegcat";
+                name_query = "WeightTicket.findByIdPlateNoRegType";
             } else {
-                name_query = "WeightTicket.findByMandtWPlantIdSoxeMatnrRegcat";
+                name_query = "WeightTicket.findByIdPlateNoMatnrRegType";
             }
         }
         try {
             TypedQuery<WeightTicket> nq = entityManager.createNamedQuery(name_query, WeightTicket.class);
-            nq.setParameter("mandt", WeighBridgeApp.getApplication().getConfig().getsClient());
-            nq.setParameter("wPlant", WeighBridgeApp.getApplication().getConfig().getwPlant());
             nq.setParameter("id", id);
             nq.setParameter("taAbbr", tagent);
             if (!matnr.equalsIgnoreCase("-1")) {
                 nq.setParameter("matnrRef", matnr);
             }
-            nq.setParameter("regCategory", modes);
+            nq.setParameter("regType", modes);
             return nq.getResultList();
         } catch (Exception ex) {
             logger.error(null, ex);
@@ -266,53 +227,42 @@ public class WeightTicketJpaController {
         return count;
     }
 
-    public List<Variant> findVariant(String param) throws Exception {
-        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-        String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
+    public Variant findVariant(String param) throws Exception {
         VariantRepository variantRepository = new VariantRepository();
-        return variantRepository.findVariant(param, client, plant);
+        return variantRepository.findByParam(param);
     }
 
-    public List<OutbDetailsV2> findByMandtDelivNumb(String deliv_numb) throws Exception {
-        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
+    public List<OutboundDetail> findByMandtDelivNumb(String deliv_numb) throws Exception {
         String devNumber = "%" + deliv_numb + "%";
-        OutbDetailsV2Repository repo = new OutbDetailsV2Repository();
-        return repo.findByMandtDelivNumb(client, devNumber);
+        OutboundDetailRepository repo = new OutboundDetailRepository();
+        return repo.findByDeliveryOrderNo(devNumber);
 
     }
 
-    public List<OutbDetailsV2> findByMandtDelivNumbItem(String deliv_numb, String item) throws Exception {
-        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-        OutbDetailsV2Repository repository = new OutbDetailsV2Repository();
-        List<OutbDetailsV2> result = repository.findByMandtDelivNumbItem(client, deliv_numb, item);
+    public List<OutboundDetail> findByMandtDelivNumbItem(String deliv_numb, String item) throws Exception {
+        OutboundDetailRepository repository = new OutboundDetailRepository();
+        List<OutboundDetail> result = repository.findByDeliveryOrderNoAndDeliveryOrderItem(deliv_numb, item);
         return result;
     }
 
-    public List<OutbDetailsV2> findByMandtWTID(String wt_id) throws Exception {
+    public List<OutboundDetail> findByMandtWTID(String wt_id) throws Exception {
         String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-        OutbDetailsV2Repository repository = new OutbDetailsV2Repository();
-        return repository.findByMandtWTID(client, wt_id);
+        OutboundDetailRepository repository = new OutboundDetailRepository();
+        return repository.findByWtId(wt_id);
     }
 
-    public OutbDel findByMandtOutDel(String delnum) throws Exception {
+    public OutboundDelivery findByMandtOutDel(String delnum) throws Exception {
 
         String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-        OutbDelRepository repository = new OutbDelRepository();
-        return repository.findByMandtOutDel(client, delnum);
+        OutboundDeliveryRepository repository = new OutboundDeliveryRepository();
+        return repository.findByDeliveryOrderNo(delnum);
 
-    }
-
-    public List<Customer> findCustByMandt(String mandt) throws Exception {
-        CustomerRepository customerRepository = new CustomerRepository();
-        return customerRepository.findCustByMandt(mandt);
     }
 
     public Material CheckPOSTO(String matnr) throws Exception {
-        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-        String wplant = WeighBridgeApp.getApplication().getConfig().getwPlant();
         Material material = new Material();
         MaterialRepository repository = new MaterialRepository();
-        material = repository.CheckPOSTO(client, wplant, matnr);
+        material = repository.CheckPOSTO(matnr);
         return material;
     }
 

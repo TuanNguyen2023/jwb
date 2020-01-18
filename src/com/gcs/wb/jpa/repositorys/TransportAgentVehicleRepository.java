@@ -24,6 +24,13 @@ public class TransportAgentVehicleRepository {
 
         return typedQuery.getResultList();
     }
+    
+    public List<TransportAgentVehicle> findByVehicleId(int vehicleId) {
+        TypedQuery<TransportAgentVehicle> typedQuery = entityManager.createNamedQuery("TransportAgentVehicle.findByVehicleId", TransportAgentVehicle.class);
+        typedQuery.setParameter("vehicleId", vehicleId);
+
+        return typedQuery.getResultList();
+    }
 
     public TransportAgentVehicle findByTransportAgentIdAndVehicleId(int transportAgentId, int vehicleId) {
         TypedQuery<TransportAgentVehicle> typedQuery = entityManager.createNamedQuery("TransportAgentVehicle.findByTransportAgentIdAndVehicleId", TransportAgentVehicle.class);

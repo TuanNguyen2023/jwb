@@ -31,18 +31,13 @@ import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.BatchStocks;
 import com.gcs.wb.jpa.entity.BatchStocksPK;
 import com.gcs.wb.jpa.entity.Customer;
-import com.gcs.wb.jpa.entity.CustomerPK;
 import com.gcs.wb.jpa.entity.Material;
-import com.gcs.wb.jpa.entity.OutbDel;
-import com.gcs.wb.jpa.entity.OutbDelPK;
-import com.gcs.wb.jpa.entity.OutbDetailsV2;
-import com.gcs.wb.jpa.entity.OutbDetailsV2PK;
+import com.gcs.wb.jpa.entity.OutboundDelivery;
+import com.gcs.wb.jpa.entity.OutboundDetail;
 import com.gcs.wb.jpa.entity.PurOrder;
 import com.gcs.wb.jpa.entity.SLoc;
 import com.gcs.wb.jpa.entity.TransportAgent;
-import com.gcs.wb.jpa.entity.Vehicle;
 import com.gcs.wb.jpa.entity.Vendor;
-import com.gcs.wb.jpa.entity.VendorPK;
 import com.gcs.wb.jpa.repositorys.BatchStocksRepository;
 import com.gcs.wb.jpa.service.JPAService;
 import com.gcs.wb.model.AppConfig;
@@ -52,9 +47,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JOptionPane;
 import org.hibersap.session.Session;
 
 /**
@@ -136,9 +129,9 @@ public class SAPService {
             List<TransportagentGetListStructure> etVendors = bapi.getEtVendor();
             
             for (TransportagentGetListStructure vens : etVendors) {
-                Vendor ven = null;
-                VendorPK vpk = new VendorPK(config.getsClient(), vens.getLifnr());
-                ven = new Vendor(vpk);
+                Vendor ven = new Vendor();
+                ven.setMandt(config.getsClient());
+                ven.setLifnr(vens.getLifnr());
                 ven.setName1(vens.getName1());
                 ven.setName2(vens.getName2());
                 venSaps.add(ven);
@@ -181,9 +174,9 @@ public class SAPService {
      * @param refresh
      * @return 
      */
-    public OutbDel getOutboundDelivery(String number, boolean refresh) {
-        OutbDel outb = null;
-        OutbDetailsV2 outb_details = null;
+    public OutboundDelivery getOutboundDelivery(String number, boolean refresh) {
+        OutboundDelivery outb = null;
+        OutboundDetail outb_details = null;
         String item_cat = "";
         String item_num = null;
         String item_num_free = null;
@@ -201,7 +194,7 @@ public class SAPService {
             //check do detail exist
             EntityManager em_check = WeighBridgeApp.getApplication().getEm();
             WeightTicketJpaController con_check = new WeightTicketJpaController();
-            List<OutbDetailsV2> outb_detail_check;
+            List<OutboundDetail> outb_detail_check;
             if (refresh == true) {
                 try {
                     outb_detail_check = con_check.findByMandtDelivNumb(number);
@@ -219,7 +212,7 @@ public class SAPService {
                 }
             }
             //end check
-            outb = new OutbDel(new OutbDelPK(config.getsClient(), number));
+            outb = new OutboundDelivery(number);
             outb.setShipPoint(bapiDO.getEs_vstel());
             for (int i = 0; i < dos.size(); i++) {
                 DoGetDetailStructure doItem = dos.get(i);
@@ -228,7 +221,7 @@ public class SAPService {
                     if (outb_detail_check.size() > 0) {
                         outb_details = outb_detail_check.get(0);
                     } else {
-                        outb_details = new OutbDetailsV2(new OutbDetailsV2PK(config.getsClient(), number, doItem.getPosnr().substring(4, 5)));
+                        outb_details = new OutboundDetail(number, doItem.getPosnr().substring(4, 5));
                     }
                 } catch (Exception ex) {
                     Logger.getLogger(SAPService.class.getName()).log(Level.SEVERE, null, ex);
@@ -240,11 +233,11 @@ public class SAPService {
                 }
                 //end set
                 if (item_cat.equals("ZTNN")) {
-                    outb.setDelivItemFree(doItem.getPosnr());
+                    outb.setDeliveryItemFree(doItem.getPosnr());
                     outb.setMatnrFree(doItem.getMatnr());
                     //set data cho details free goods
                     if (flag_detail == true) {
-                        outb_details.setFreeItem("X");
+                        outb_details.setFreeItem('X');
                         outb_details.setLfimg(doItem.getLfimg());
                         outb_details.setMeins(doItem.getMeins());
                         String split[] = doItem.getArktx().split("-");
@@ -263,16 +256,15 @@ public class SAPService {
 //                    continue;
                 }
 
-                outb.setDelivItem(doItem.getPosnr()); //Get position
+                outb.setDeliveryItem(doItem.getPosnr()); //Get position
                 //set data out details hang thuong
                 if (flag_detail == true) {
                     outb_details.setLfimg(doItem.getLfimg());
 
-                    if ((outb_details.getPosted() == null)
-                            || (!outb_details.getPosted().trim().equals("1"))
-                            || (outb_details.getLfimgOri() == null)
-                            || (outb_details.getLfimgOri().equals(BigDecimal.ZERO))) {
-                        outb_details.setLfimgOri(doItem.getLfimg());
+                    if ((!outb_details.isPosted())
+                            || (outb_details.getLfimg() == null)
+                            || (outb_details.getLfimg().equals(BigDecimal.ZERO))) {
+                        outb_details.setLfimg(doItem.getLfimg());
                     }
                     outb_details.setMeins(doItem.getMeins());
                     String split[] = doItem.getArktx().split("-");
@@ -301,17 +293,19 @@ public class SAPService {
                     }
                 }
 
-                outb.setErdat(doItem.getErdat());
+                outb.setErdat((java.sql.Date) doItem.getErdat());
                 outb.setLfart(doItem.getLfart());
-                outb.setWadat(doItem.getWadat());
-                outb.setLddat(doItem.getLddat());
-                outb.setKodat(doItem.getKodat());
+
+                outb.setWadat((java.sql.Date) doItem.getWadat());
+                outb.setLddat((java.sql.Date) doItem.getLddat());
+                outb.setKodat((java.sql.Date) doItem.getKodat());
                 outb.setLifnr(doItem.getLifnr());
                 outb.setKunnr(doItem.getKunnr());
                 outb.setKunag(doItem.getKunag());
                 outb.setTraty(doItem.getTraty());
                 outb.setTraid(doItem.getTraid());
-                outb.setBldat(doItem.getBldat());
+
+                outb.setBldat((java.sql.Date) doItem.getBldat());
                 if(outb.getMatnr() == null || outb.getMatnr().trim().isEmpty()) {
                     outb.setMatnr(doItem.getMatnr());
                 }
@@ -343,21 +337,24 @@ public class SAPService {
                 outb.setLfimg(item_qty);
             }
             //set lai item number thanh number dau tien
-            if (outb.getDelivItem() != null) {
-                if (!outb.getDelivItem().equals(item_num)) {
-                    outb.setDelivItem(item_num);
+
+            if (outb.getDeliveryItem() != null) {
+                if (!outb.getDeliveryItem().equals(item_num)) {
+                    outb.setDeliveryItem(item_num);
                 }
             }
             if (item_num_free != null) {
-                if (!outb.getDelivItemFree().equals(item_num_free)) {
-                    outb.setDelivItemFree(item_num_free);
+
+                if (!outb.getDeliveryItemFree().equals(item_num_free)) {
+                    outb.setDeliveryItemFree(item_num_free);
                 }
             }
             //th chi co hang free goods
-            if (outb.getDelivItem() == null) {
-                outb.setDelivItem(outb.getDelivItemFree());
+
+            if (outb.getDeliveryItem() == null) {
+                outb.setDeliveryItem(outb.getDeliveryItemFree());
                 outb.setLfimg(outb.getFreeQty());
-                outb.setDelivItemFree(null);
+                outb.setDeliveryItemFree(null);
                 outb.setFreeQty(null);
             }
 
@@ -530,8 +527,9 @@ public class SAPService {
         session.execute(bapiCust);
         CustomerGetDetailStructure strucCust = bapiCust.getEsKna1();
         if (strucCust != null && (strucCust.getKunnr() != null && !strucCust.getKunnr().trim().isEmpty())) {
-            CustomerPK pk = new CustomerPK(strucCust.getMandt(), strucCust.getKunnr());
-            result = new Customer(pk);
+            result = new Customer();
+            result.setMandt(strucCust.getMandt());
+            result.setKunnr(strucCust.getKunnr());
             result.setName1(strucCust.getName1());
             result.setName2(strucCust.getName2());
         }
@@ -550,8 +548,9 @@ public class SAPService {
         session.execute(bapiCust);
         VendorGetDetailStructure strucVendor = bapiCust.getEsLfa1();
         if (strucVendor != null && (strucVendor.getLifnr() != null && !strucVendor.getLifnr().trim().isEmpty())) {
-            VendorPK pk = new VendorPK(strucVendor.getMandt(), strucVendor.getLifnr().trim());
-            result = new Vendor(pk);
+            result = new Vendor();
+            result.setMandt(strucVendor.getMandt());
+            result.setLifnr(strucVendor.getLifnr().trim());
             result.setName1(strucVendor.getName1());
             result.setName2(strucVendor.getName2());
         }
@@ -570,7 +569,7 @@ public class SAPService {
             session.execute(bSloc);
             List<SLocsGetListStructure> tdSLocs = bSloc.getTdSLocs();
             for (SLocsGetListStructure s : tdSLocs) {
-            SLoc sloc = new SLoc(s.getMandt(), s.getWerks(), s.getLgort());
+            SLoc sloc = new SLoc(s.getLgort());
             sloc.setLgobe(s.getLgobe());
             slocSaps.add(sloc);
         }
@@ -612,7 +611,7 @@ public class SAPService {
                 for (int i = 0; i < slocDBs.size(); i++) {
                     item = slocDBs.get(i);
                     for (int j = 0; j < sloc1.length; j++) {
-                        if (item.getSLocPK().getLgort().equals(sloc1[j])) {
+                        if (item.getLgort().equals(sloc1[j])) {
                             result.add(item);
                         }
                     }

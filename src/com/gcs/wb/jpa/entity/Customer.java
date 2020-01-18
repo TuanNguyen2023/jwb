@@ -5,48 +5,87 @@
 package com.gcs.wb.jpa.entity;
 
 import java.io.Serializable;
+import java.sql.Date;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 /**
  *
- * @author vunguyent
+ * @author thanghl
  */
 @Entity
-@Table(name = "Customer")
+@Table(name = "tbl_customer")
 @NamedQueries({
-    @NamedQuery(name = "Customer.findByMandt", query = "SELECT c FROM Customer c WHERE c.customerPK.mandt = :mandt")})
+    @NamedQuery(name = "Customer.findAll", query = "SELECT c FROM Customer c"),
+    @NamedQuery(name = "Customer.findByKunnr", query = "SELECT c FROM Customer c WHERE c.kunnr = :kunnr")
+})
 public class Customer implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected CustomerPK customerPK;
-    @Column(name = "NAME1")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int id;
+    @Column(name = "mandt")
+    private String mandt;
+    @Column(name = "wplant")
+    private String wplant;
+    @Column(name = "kunnr", unique = true)
+    private String kunnr;
+    @Column(name = "name1")
     private String name1;
-    @Column(name = "NAME2")
+    @Column(name = "name2")
     private String name2;
+    @Column(name = "created_date")
+    private Date createdDate;
+    @Column(name = "updated_date")
+    private Date updatedDate;
+    @Column(name = "deleted_date")
+    private Date deletedDate;
 
     public Customer() {
     }
 
-    public Customer(CustomerPK customerPK) {
-        this.customerPK = customerPK;
+    public Customer(String kunnr) {
+        this.kunnr = kunnr;
     }
 
-    public Customer(String mandt, String kunnr) {
-        this.customerPK = new CustomerPK(mandt, kunnr);
+    public int getId() {
+        return id;
     }
 
-    public CustomerPK getCustomerPK() {
-        return customerPK;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setCustomerPK(CustomerPK customerPK) {
-        this.customerPK = customerPK;
+    public String getMandt() {
+        return mandt;
+    }
+
+    public void setMandt(String mandt) {
+        this.mandt = mandt;
+    }
+
+    public String getWplant() {
+        return wplant;
+    }
+
+    public void setWplant(String wplant) {
+        this.wplant = wplant;
+    }
+
+    public String getKunnr() {
+        return kunnr;
+    }
+
+    public void setKunnr(String kunnr) {
+        this.kunnr = kunnr;
     }
 
     public String getName1() {
@@ -65,28 +104,69 @@ public class Customer implements Serializable {
         this.name2 = name2;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (customerPK != null ? customerPK.hashCode() : 0);
-        return hash;
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Date getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(Date updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
+    public Date getDeletedDate() {
+        return deletedDate;
+    }
+
+    public void setDeletedDate(Date deletedDate) {
+        this.deletedDate = deletedDate;
     }
 
     @Override
-    public boolean equals(Object object) {
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        if (!(object instanceof Customer)) {
+        Customer customer = (Customer) o;
+
+        if (id != customer.id) return false;
+        if (mandt != null ? !mandt.equals(customer.mandt) : customer.mandt != null) return false;
+        if (wplant != null ? !wplant.equals(customer.wplant) : customer.wplant != null) return false;
+        if (kunnr != null ? !kunnr.equals(customer.kunnr) : customer.kunnr != null) return false;
+        if (name1 != null ? !name1.equals(customer.name1) : customer.name1 != null) return false;
+        if (name2 != null ? !name2.equals(customer.name2) : customer.name2 != null) return false;
+        if (createdDate != null ? !createdDate.equals(customer.createdDate) : customer.createdDate != null)
             return false;
-        }
-        Customer other = (Customer) object;
-        if ((this.customerPK == null && other.customerPK != null) || (this.customerPK != null && !this.customerPK.equals(other.customerPK))) {
+        if (updatedDate != null ? !updatedDate.equals(customer.updatedDate) : customer.updatedDate != null)
             return false;
-        }
+        if (deletedDate != null ? !deletedDate.equals(customer.deletedDate) : customer.deletedDate != null)
+            return false;
+
         return true;
     }
 
     @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 31));
+        result = 31 * result + (mandt != null ? mandt.hashCode() : 0);
+        result = 31 * result + (wplant != null ? wplant.hashCode() : 0);
+        result = 31 * result + (kunnr != null ? kunnr.hashCode() : 0);
+        result = 31 * result + (name1 != null ? name1.hashCode() : 0);
+        result = 31 * result + (name2 != null ? name2.hashCode() : 0);
+        result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
+        result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
+        result = 31 * result + (deletedDate != null ? deletedDate.hashCode() : 0);
+        return result;
+    }
+
+    @Override
     public String toString() {
-        return "com.gcs.wb.jpa.entity.Customer[customerPK=" + customerPK + "]";
+        return "com.gcs.wb.jpa.entity.Customer[id=" + id + "]";
     }
 }

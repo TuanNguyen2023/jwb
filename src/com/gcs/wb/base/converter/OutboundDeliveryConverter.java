@@ -9,10 +9,8 @@ import com.gcs.wb.bapi.helper.DoGetDetailBapi;
 import com.gcs.wb.bapi.helper.SAP2Local;
 import com.gcs.wb.bapi.helper.structure.DoGetDetailStructure;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
-import com.gcs.wb.jpa.entity.OutbDel;
-import com.gcs.wb.jpa.entity.OutbDelPK;
-import com.gcs.wb.jpa.entity.OutbDetailsV2;
-import com.gcs.wb.jpa.entity.OutbDetailsV2PK;
+import com.gcs.wb.jpa.entity.OutboundDelivery;
+import com.gcs.wb.jpa.entity.OutboundDetail;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.logging.Level;
@@ -23,17 +21,17 @@ import javax.persistence.EntityManager;
  *
  * @author THANGPT
  */
-public class OutbDelConverter extends AbstractThrowableParamConverter<DoGetDetailBapi, OutbDel, Exception> {
+public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<DoGetDetailBapi, OutboundDelivery, Exception> {
 
     @Override
-    public OutbDel convertHasParameter(DoGetDetailBapi from, String val) throws Exception {
+    public OutboundDelivery convertHasParameter(DoGetDetailBapi from, String val) throws Exception {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public OutbDel convertsHasParameter(DoGetDetailBapi from, String val, boolean refresh) throws Exception {
-        OutbDel outb = null;
-        OutbDetailsV2 outb_details = null;
+    public OutboundDelivery convertsHasParameter(DoGetDetailBapi from, String val, boolean refresh) throws Exception {
+        OutboundDelivery outb = null;
+        OutboundDetail outb_details = null;
         String item_cat = "";
         String item_num = null;
         String item_num_free = null;
@@ -46,7 +44,7 @@ public class OutbDelConverter extends AbstractThrowableParamConverter<DoGetDetai
         if (dos.size() > 0) {
             EntityManager em_check = WeighBridgeApp.getApplication().getEm();
             WeightTicketJpaController con_check = new WeightTicketJpaController();
-            List<OutbDetailsV2> outb_detail_check;
+            List<OutboundDetail> outb_detail_check;
             if (refresh == true) {
                 try {
                     outb_detail_check = con_check.findByMandtDelivNumb(val);
@@ -62,7 +60,7 @@ public class OutbDelConverter extends AbstractThrowableParamConverter<DoGetDetai
                     Logger.getLogger(SAP2Local.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            outb = new OutbDel(new OutbDelPK(WeighBridgeApp.getApplication().getConfig().getsClient(), val));
+            outb = new OutboundDelivery(val);
             outb.setShipPoint(from.getEs_vstel()); //set shipping point 20120712#01
             for (int i = 0; i < dos.size(); i++) {
                 DoGetDetailStructure doItem = dos.get(i);
@@ -71,7 +69,7 @@ public class OutbDelConverter extends AbstractThrowableParamConverter<DoGetDetai
                     if (outb_detail_check.size() > 0) {
                         outb_details = outb_detail_check.get(0);
                     } else {
-                        outb_details = new OutbDetailsV2(new OutbDetailsV2PK(WeighBridgeApp.getApplication().getConfig().getsClient(), val, doItem.getPosnr().substring(4, 5)));
+                        outb_details = new OutboundDetail(val, doItem.getPosnr().substring(4, 5));
                     }
                 } catch (Exception ex) {
                     Logger.getLogger(SAP2Local.class.getName()).log(Level.SEVERE, null, ex);
@@ -80,12 +78,12 @@ public class OutbDelConverter extends AbstractThrowableParamConverter<DoGetDetai
                 item_cat = doItem.getPstyv();
                 //end set
                 if (item_cat.equals("ZTNN")) {
-                    outb.setDelivItemFree(doItem.getPosnr());
+                    outb.setDeliveryItemFree(doItem.getPosnr());
                     outb.setMatnrFree(doItem.getMatnr());
                     //set data cho details free goods
                     if (flag_detail == true) {
                         // outb_details.setDelivItem(doItem.getPosnr().substring(4, 5));
-                        outb_details.setFreeItem("X");
+                        outb_details.setFreeItem('X');
                         outb_details.setLfimg(doItem.getLfimg());
                         outb_details.setMeins(doItem.getMeins());
                         String split[] = doItem.getArktx().split("-");
@@ -103,16 +101,15 @@ public class OutbDelConverter extends AbstractThrowableParamConverter<DoGetDetai
                     item_qty_free = item_qty_free.add(doItem.getLfimg());
                 }
 
-                outb.setDelivItem(doItem.getPosnr()); //Get position
+                outb.setDeliveryItem(doItem.getPosnr()); //Get position
                 //set data out details hang thuong
                 if (flag_detail == true) {
                     outb_details.setLfimg(doItem.getLfimg());
 
-                    if ((outb_details.getPosted() == null)
-                            || (!outb_details.getPosted().trim().equals("1"))
-                            || (outb_details.getLfimgOri() == null)
-                            || (outb_details.getLfimgOri().equals(BigDecimal.ZERO))) {
-                        outb_details.setLfimgOri(doItem.getLfimg());
+                    if ((!outb_details.isPosted())
+                            || (outb_details.getLfimg() == null)
+                            || (outb_details.getLfimg().equals(BigDecimal.ZERO))) {
+                        outb_details.setLfimg(doItem.getLfimg());
                     }
                     outb_details.setMeins(doItem.getMeins());
                     String split[] = doItem.getArktx().split("-");
@@ -141,19 +138,19 @@ public class OutbDelConverter extends AbstractThrowableParamConverter<DoGetDetai
                         flag = false;
                     }
                 }
-                outb.setErdat(doItem.getErdat());
+                outb.setErdat((java.sql.Date) doItem.getErdat());
                 outb.setLfart(doItem.getLfart());
                 //autlf
-                outb.setWadat(doItem.getWadat());
-                outb.setLddat(doItem.getLddat());
-                outb.setKodat(doItem.getKodat());
+                outb.setWadat((java.sql.Date) doItem.getWadat());
+                outb.setLddat((java.sql.Date) doItem.getLddat());
+                outb.setKodat((java.sql.Date) doItem.getKodat());
                 //outb.setShipPoint(doItem.getVstel());
                 outb.setLifnr(doItem.getLifnr());
                 outb.setKunnr(doItem.getKunnr());
                 outb.setKunag(doItem.getKunag());
                 outb.setTraty(doItem.getTraty());
                 outb.setTraid(doItem.getTraid());
-                outb.setBldat(doItem.getBldat());
+                outb.setBldat((java.sql.Date) doItem.getBldat());
                 if (outb.getMatnr() == null || outb.getMatnr().trim().isEmpty()) {
                     outb.setMatnr(doItem.getMatnr());
                 }
@@ -184,21 +181,21 @@ public class OutbDelConverter extends AbstractThrowableParamConverter<DoGetDetai
                 outb.setLfimg(item_qty);
             }
             //set lai item val thanh val dau tien
-            if (outb.getDelivItem() != null) {
-                if (!outb.getDelivItem().equals(item_num)) {
-                    outb.setDelivItem(item_num);
+            if (outb.getDeliveryItem() != null) {
+                if (!outb.getDeliveryItem().equals(item_num)) {
+                    outb.setDeliveryItem(item_num);
                 }
             }
             if (item_num_free != null) {
-                if (!outb.getDelivItemFree().equals(item_num_free)) {
-                    outb.setDelivItemFree(item_num_free);
+                if (!outb.getDeliveryItemFree().equals(item_num_free)) {
+                    outb.setDeliveryItemFree(item_num_free);
                 }
             }
             //th chi co hang free goods
-            if (outb.getDelivItem() == null) {
-                outb.setDelivItem(outb.getDelivItemFree());
+            if (outb.getDeliveryItem() == null) {
+                outb.setDeliveryItem(outb.getDeliveryItemFree());
                 outb.setLfimg(outb.getFreeQty());
-                outb.setDelivItemFree(null);
+                outb.setDeliveryItemFree(null);
                 outb.setFreeQty(null);
             }
         }

@@ -5,42 +5,41 @@
 package com.gcs.wb.jpa.controller;
 
 import com.gcs.wb.WeighBridgeApp;
+import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.Material;
-import com.gcs.wb.jpa.entity.OutbDel;
+import com.gcs.wb.jpa.entity.OutboundDelivery;
 import com.gcs.wb.jpa.entity.Variant;
 import com.gcs.wb.jpa.entity.WeightTicket;
-import com.gcs.wb.jpa.entity.WeightTicketPK;
-import com.gcs.wb.jpa.entity.OutbDetails;
-import com.gcs.wb.jpa.entity.OutbDetailsPK;
-import com.gcs.wb.jpa.entity.UserLocal;
-import java.util.List;
+import com.gcs.wb.jpa.entity.OutboundDetail;
+
+
+import com.gcs.wb.jpa.procedures.WeightTicketJpaRepository;
+
+import com.gcs.wb.jpa.repositorys.CustomerRepository;
+import com.gcs.wb.jpa.repositorys.MaterialRepository;
+import com.gcs.wb.jpa.repositorys.OutbDelRepository;
+import com.gcs.wb.jpa.repositorys.OutboundDetailRepository;
+import com.gcs.wb.jpa.repositorys.VariantRepository;
+import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import org.apache.log4j.Logger;
+import com.gcs.wb.base.util.Base64_Utils;
+import com.gcs.wb.model.AppConfig;
+import java.util.*;
 
 /**
  *
- * @author vunguyent
+ * Tuanna modified 30/06/2013
  */
 public class WeightTicketJpaController {
 
-    private EntityManager gEM = null;
+    WeightTicketJpaRepository weightTicketJpaRepository = new WeightTicketJpaRepository();
+    private EntityManager entityManager = JPAConnector.getInstance();
     private Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
-
-    public WeightTicketJpaController(EntityManager em) {
-        this.gEM = em;
-    }
-
-    public EntityManager getEntityManager() {
-        return gEM;
-    }
 
     public List<WeightTicket> findWeightTicketEntities() throws Exception {
         return findWeightTicketEntities(true, -1, -1);
@@ -51,11 +50,11 @@ public class WeightTicketJpaController {
     }
 
     private List<WeightTicket> findWeightTicketEntities(boolean all, int maxResults, int firstResult) throws Exception {
-        EntityManager em = getEntityManager();
+
         try {
-            CriteriaQuery<WeightTicket> cq = em.getCriteriaBuilder().createQuery(WeightTicket.class);
+            CriteriaQuery<WeightTicket> cq = entityManager.getCriteriaBuilder().createQuery(WeightTicket.class);
             cq.select(cq.from(WeightTicket.class));
-            TypedQuery<WeightTicket> q = em.createQuery(cq);
+            TypedQuery<WeightTicket> q = entityManager.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
                 q.setFirstResult(firstResult);
@@ -67,331 +66,116 @@ public class WeightTicketJpaController {
         }
     }
 
-    public WeightTicket findWeightTicket(WeightTicketPK id) throws Exception {
-        EntityManager em = getEntityManager();
-        try {
-            return em.find(WeightTicket.class, id);
-        } catch (Exception ex) {
-            logger.error(id, ex);
-            throw ex;
-        }
+    public WeightTicket findByIdSeqDay(String id, int seqDay) throws Exception {
+        WeightTicketRepository repository = new WeightTicketRepository();
+        return repository.findByIdSeqDay(id, seqDay);
     }
 
-    public List<WeightTicket> findByCreateDateRange(Date from, Date to) throws Exception {
-        EntityManager em = getEntityManager();
-        em.clear();
-        try {
-            TypedQuery<WeightTicket> nq = em.createNamedQuery("WeightTicket.findByCreateDateRange", WeightTicket.class);
-            nq.setParameter("mandt", WeighBridgeApp.getApplication().getConfig().getsClient());
-            nq.setParameter("wPlant", WeighBridgeApp.getApplication().getConfig().getwPlant());
-            nq.setParameter("from", from);
-            nq.setParameter("to", to);
-            return nq.getResultList();
-        } catch (Exception ex) {
-            logger.error(null, ex);
-            throw ex;
-        }
-    }
-    //hoangvv modify
+    public List<WeightTicket> findByCreatedDateRange(Date sfrom, Date sto) {
+        WeightTicketRepository repository = new WeightTicketRepository();
+        java.sql.Date from = new java.sql.Date(sfrom.getTime());
+        java.sql.Date to = new java.sql.Date(sto.getTime());
+        return repository.findByCreatedDateRange(from, to);
 
-    public List<WeightTicket> findByMandtWPlantDateFull(Date from, Date to, String creator, String taixe, String loaihang, String bienso) throws Exception {
-        EntityManager em = getEntityManager();
-        em.clear();
-        try {
-            TypedQuery<WeightTicket> nq = em.createNamedQuery("WeightTicket.findByMandtWPlantDateFull", WeightTicket.class);
-            nq.setParameter("mandt", WeighBridgeApp.getApplication().getConfig().getsClient());
-            nq.setParameter("wPlant", WeighBridgeApp.getApplication().getConfig().getwPlant());
-            nq.setParameter("from", from);
-            nq.setParameter("to", to);
-            nq.setParameter("creator", "%" + creator + "%");
-            nq.setParameter("tenTaiXe", "%" + taixe + "%");
-            nq.setParameter("loaihang", loaihang);
-            nq.setParameter("soXe", "%" + bienso + "%");
-//            int n1 = Integer.parseInt(timefrom+"0000");
-//            int n2 = Integer.parseInt(timeto+"9999");
-//            nq.setParameter("timefrom", timefrom+"0000");
-//            nq.setParameter("timeto", timeto+"9999");
-//            nq.setParameter("dissolved", isDissolved);
-//            nq.setParameter("posted", isPosted);
-            return nq.getResultList();
-        } catch (Exception ex) {
-            logger.error(null, ex);
-            throw ex;
-        }
     }
 
-    public List<WeightTicket> findByMandtWPlantDateNull(Date from, Date to, String creator, String taixe, String bienso) throws Exception {
-        EntityManager em = getEntityManager();
-        em.clear();
-        try {
-            TypedQuery<WeightTicket> nq = em.createNamedQuery("WeightTicket.findByMandtWPlantDateNull", WeightTicket.class);
-            nq.setParameter("mandt", WeighBridgeApp.getApplication().getConfig().getsClient());
-            nq.setParameter("wPlant", WeighBridgeApp.getApplication().getConfig().getwPlant());
-            nq.setParameter("from", from);
-            nq.setParameter("to", to);
-            nq.setParameter("creator", "%" + creator + "%");
-            nq.setParameter("tenTaiXe", "%" + taixe + "%");
-            nq.setParameter("soXe", "%" + bienso + "%");
-//            int n1 = Integer.parseInt(timefrom+"0000");
-//            int n2 = Integer.parseInt(timeto+"9999");
-//            nq.setParameter("timefrom", timefrom+"0000");
-//            nq.setParameter("timeto", timeto+"9999");
-//            nq.setParameter("dissolved", isDissolved);
-//            nq.setParameter("posted", isPosted);
-            return nq.getResultList();
-        } catch (Exception ex) {
-            logger.error(null, ex);
-            throw ex;
-        }
-    }
-    public List<WeightTicket> findByMandtWPlantDateNullAll(Date from, Date to, String creator, String taixe, String bienso) throws Exception {
-        EntityManager em = getEntityManager();
-        em.clear();
-        try {
-            TypedQuery<WeightTicket> nq = em.createNamedQuery("WeightTicket.findByMandtWPlantDateNullAll", WeightTicket.class);
-            nq.setParameter("mandt", WeighBridgeApp.getApplication().getConfig().getsClient());
-            nq.setParameter("wPlant", WeighBridgeApp.getApplication().getConfig().getwPlant());
-            nq.setParameter("from", from);
-            nq.setParameter("to", to);
-            nq.setParameter("creator", "%" + creator + "%");
-            nq.setParameter("tenTaiXe", "%" + taixe + "%");
-            nq.setParameter("soXe", "%" + bienso + "%");
-//            int n1 = Integer.parseInt(timefrom+"0000");
-//            int n2 = Integer.parseInt(timeto+"9999");
-//            nq.setParameter("timefrom", timefrom+"0000");
-//            nq.setParameter("timeto", timeto+"9999");
-//            nq.setParameter("dissolved", isDissolved);
-//            nq.setParameter("posted", isPosted);
-            return nq.getResultList();
-        } catch (Exception ex) {
-            logger.error(null, ex);
-            throw ex;
-        }
+    public List<WeightTicket> findByDateFull(String sfrom, String sto, String creator, String taixe, String loaihang, String bienso) throws Exception {
+        java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
+        System.out.println(" hic " + sfrom.toString());
+        java.sql.Date to = java.sql.Date.valueOf(sto.toString());
+        WeightTicketRepository repository = new WeightTicketRepository();
+        return repository.findByDateFull(from, to, creator, taixe, loaihang, bienso);
     }
 
-    public List<WeightTicket> findByMandtWPlantDateDissolved(Date from, Date to, String creator, String taixe, String loaihang, String bienso) throws Exception {
-        EntityManager em = getEntityManager();
-        em.clear();
-        try {
-            TypedQuery<WeightTicket> nq = em.createNamedQuery("WeightTicket.findByMandtWPlantDateDissolved", WeightTicket.class);
-            nq.setParameter("mandt", WeighBridgeApp.getApplication().getConfig().getsClient());
-            nq.setParameter("wPlant", WeighBridgeApp.getApplication().getConfig().getwPlant());
-            nq.setParameter("from", from);
-            nq.setParameter("to", to);
-            nq.setParameter("creator", "%" + creator + "%");
-            nq.setParameter("tenTaiXe", "%" + taixe + "%");
-            nq.setParameter("loaihang", loaihang);
-            nq.setParameter("soXe", "%" + bienso + "%");
-//            int n1 = Integer.parseInt(timefrom+"0000");
-//            int n2 = Integer.parseInt(timeto+"9999");
-//            nq.setParameter("timefrom", timefrom+"0000");
-//            nq.setParameter("timeto", timeto+"9999");
-//            nq.setParameter("dissolved", isDissolved);
-//            nq.setParameter("posted", isPosted);
-            return nq.getResultList();
-        } catch (Exception ex) {
-            logger.error(null, ex);
-            throw ex;
-        }
+    public List<WeightTicket> findByDateNull(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
+        WeightTicketRepository repository = new WeightTicketRepository();
+        java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
+        java.sql.Date to = java.sql.Date.valueOf(sto.toString());
+        return repository.findByDateNull(from, to, creator, taixe, bienso);
+
     }
 
-    public List<WeightTicket> findByMandtWPlantDateDissolvedNull(Date from, Date to, String creator, String taixe, String bienso) throws Exception {
-        EntityManager em = getEntityManager();
-        em.clear();
-        try {
-            TypedQuery<WeightTicket> nq = em.createNamedQuery("WeightTicket.findByMandtWPlantDateDissolvedNull", WeightTicket.class);
-            nq.setParameter("mandt", WeighBridgeApp.getApplication().getConfig().getsClient());
-            nq.setParameter("wPlant", WeighBridgeApp.getApplication().getConfig().getwPlant());
-            nq.setParameter("from", from);
-            nq.setParameter("to", to);
-            nq.setParameter("creator", "%" + creator + "%");
-            nq.setParameter("tenTaiXe", "%" + taixe + "%");
-            nq.setParameter("soXe", "%" + bienso + "%");
-//            int n1 = Integer.parseInt(timefrom+"0000");
-//            int n2 = Integer.parseInt(timeto+"9999");
-//            nq.setParameter("timefrom", timefrom+"0000");
-//            nq.setParameter("timeto", timeto+"9999");
-//            nq.setParameter("dissolved", isDissolved);
-//            nq.setParameter("posted", isPosted);
-            return nq.getResultList();
-        } catch (Exception ex) {
-            logger.error(null, ex);
-            throw ex;
-        }
-    }
-    public List<WeightTicket> findByMandtWPlantDateDissolvedNullAll(Date from, Date to, String creator, String taixe, String bienso) throws Exception {
-        EntityManager em = getEntityManager();
-        em.clear();
-        try {
-            TypedQuery<WeightTicket> nq = em.createNamedQuery("WeightTicket.findByMandtWPlantDateDissolvedNullAll", WeightTicket.class);
-            nq.setParameter("mandt", WeighBridgeApp.getApplication().getConfig().getsClient());
-            nq.setParameter("wPlant", WeighBridgeApp.getApplication().getConfig().getwPlant());
-            nq.setParameter("from", from);
-            nq.setParameter("to", to);
-            nq.setParameter("creator", "%" + creator + "%");
-            nq.setParameter("tenTaiXe", "%" + taixe + "%");
-            nq.setParameter("soXe", "%" + bienso + "%");
-//            int n1 = Integer.parseInt(timefrom+"0000");
-//            int n2 = Integer.parseInt(timeto+"9999");
-//            nq.setParameter("timefrom", timefrom+"0000");
-//            nq.setParameter("timeto", timeto+"9999");
-//            nq.setParameter("dissolved", isDissolved);
-//            nq.setParameter("posted", isPosted);
-            return nq.getResultList();
-        } catch (Exception ex) {
-            logger.error(null, ex);
-            throw ex;
-        }
+    public List<WeightTicket> findByDateNullAll(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
+        WeightTicketRepository repository = new WeightTicketRepository();
+        java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
+        java.sql.Date to = java.sql.Date.valueOf(sto.toString());
+        return repository.findByDateNullAll(from, to, creator, taixe, bienso);
     }
 
-    public List<WeightTicket> findByMandtWPlantDatePosted(Date from, Date to, String creator, String taixe, String loaihang, String bienso) throws Exception {
-        EntityManager em = getEntityManager();
-        em.clear();
-        try {
-            TypedQuery<WeightTicket> nq = em.createNamedQuery("WeightTicket.findByMandtWPlantDatePosted", WeightTicket.class);
-            nq.setParameter("mandt", WeighBridgeApp.getApplication().getConfig().getsClient());
-            nq.setParameter("wPlant", WeighBridgeApp.getApplication().getConfig().getwPlant());
-            nq.setParameter("from", from);
-            nq.setParameter("to", to);
-            nq.setParameter("creator", "%" + creator + "%");
-            nq.setParameter("tenTaiXe", "%" + taixe + "%");
-            nq.setParameter("loaihang", loaihang);
-            nq.setParameter("soXe", "%" + bienso + "%");
-//           int n1 = Integer.parseInt(timefrom+"0000");
-//            int n2 = Integer.parseInt(timeto+"9999");
-//            nq.setParameter("timefrom", timefrom+"0000");
-//            nq.setParameter("timeto", timeto+"9999");
-//            nq.setParameter("dissolved", isDissolved);
-//            nq.setParameter("posted", isPosted);
-            return nq.getResultList();
-        } catch (Exception ex) {
-            logger.error(null, ex);
-            throw ex;
-        }
+    public List<WeightTicket> findByDateDissolved(String sfrom, String sto,
+            String creator, String taixe,
+            String loaihang, String bienso) throws Exception {
+        WeightTicketRepository repository = new WeightTicketRepository();
+        java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
+        java.sql.Date to = java.sql.Date.valueOf(sto.toString());
+        return repository.findByDateDissolved(from, to, creator, taixe, loaihang, bienso);
     }
 
-    public List<WeightTicket> findByMandtWPlantDatePostedNull(Date from, Date to, String creator, String taixe, String bienso) throws Exception {
-        EntityManager em = getEntityManager();
-        em.clear();
-        try {
-            TypedQuery<WeightTicket> nq = em.createNamedQuery("WeightTicket.findByMandtWPlantDatePostedNull", WeightTicket.class);
-            nq.setParameter("mandt", WeighBridgeApp.getApplication().getConfig().getsClient());
-            nq.setParameter("wPlant", WeighBridgeApp.getApplication().getConfig().getwPlant());
-            nq.setParameter("from", from);
-            nq.setParameter("to", to);
-            nq.setParameter("creator", "%" + creator + "%");
-            nq.setParameter("tenTaiXe", "%" + taixe + "%");
-            nq.setParameter("soXe", "%" + bienso + "%");
-//            int n1 = Integer.parseInt(timefrom+"0000");
-//            int n2 = Integer.parseInt(timeto+"9999");
-//            nq.setParameter("timefrom", timefrom+"0000");
-//            nq.setParameter("timeto", timeto+"9999");
-//            nq.setParameter("dissolved", isDissolved);
-//            nq.setParameter("posted", isPosted);
-            return nq.getResultList();
-        } catch (Exception ex) {
-            logger.error(null, ex);
-            throw ex;
-        }
-    }
-    public List<WeightTicket> findByMandtWPlantDatePostedNullAll(Date from, Date to, String creator, String taixe, String bienso) throws Exception {
-        EntityManager em = getEntityManager();
-        em.clear();
-        try {
-            TypedQuery<WeightTicket> nq = em.createNamedQuery("WeightTicket.findByMandtWPlantDatePostedNullAll", WeightTicket.class);
-            nq.setParameter("mandt", WeighBridgeApp.getApplication().getConfig().getsClient());
-            nq.setParameter("wPlant", WeighBridgeApp.getApplication().getConfig().getwPlant());
-            nq.setParameter("from", from);
-            nq.setParameter("to", to);
-            nq.setParameter("creator", "%" + creator + "%");
-            nq.setParameter("tenTaiXe", "%" + taixe + "%");
-            nq.setParameter("soXe", "%" + bienso + "%");
-//            int n1 = Integer.parseInt(timefrom+"0000");
-//            int n2 = Integer.parseInt(timeto+"9999");
-//            nq.setParameter("timefrom", timefrom+"0000");
-//            nq.setParameter("timeto", timeto+"9999");
-//            nq.setParameter("dissolved", isDissolved);
-//            nq.setParameter("posted", isPosted);
-            return nq.getResultList();
-        } catch (Exception ex) {
-            logger.error(null, ex);
-            throw ex;
-        }
+    public List<WeightTicket> findByDateDissolvedNull(String sfrom, String sto,
+            String creator, String taixe,
+            String bienso) throws Exception {
+        WeightTicketRepository repository = new WeightTicketRepository();
+        java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
+        java.sql.Date to = java.sql.Date.valueOf(sto.toString());
+        return repository.findByDateDissolvedNull(from, to, creator, taixe, bienso);
     }
 
-    public List<WeightTicket> findByMandtWPlantDateAll(Date from, Date to, String creator, String taixe, String loaihang, String bienso) throws Exception {
-        EntityManager em = getEntityManager();
-        em.clear();
-        try {
-            TypedQuery<WeightTicket> nq = em.createNamedQuery("WeightTicket.findByMandtWPlantDateAll", WeightTicket.class);
-            nq.setParameter("mandt", WeighBridgeApp.getApplication().getConfig().getsClient());
-            nq.setParameter("wPlant", WeighBridgeApp.getApplication().getConfig().getwPlant());
-            nq.setParameter("from", from);
-            nq.setParameter("to", to);
-            nq.setParameter("creator", "%" + creator + "%");
-            nq.setParameter("tenTaiXe", "%" + taixe + "%");
-            nq.setParameter("loaihang", loaihang);
-            nq.setParameter("soXe", "%" + bienso + "%");
-//            int n1 = Integer.parseInt(timefrom+"0000");
-//            int n2 = Integer.parseInt(timeto+"9999");
-//            nq.setParameter("timefrom", timefrom+"0000");
-//            nq.setParameter("timeto", timeto+"9999");
-//            nq.setParameter("dissolved", isDissolved);
-//            nq.setParameter("posted", isPosted);
-            return nq.getResultList();
-        } catch (Exception ex) {
-            logger.error(null, ex);
-            throw ex;
-        }
+    public List<WeightTicket> findByDateDissolvedNullAll(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
+        WeightTicketRepository repository = new WeightTicketRepository();
+        java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
+        java.sql.Date to = java.sql.Date.valueOf(sto.toString());
+        return repository.findByDateDissolvedNullAll(from, to, creator, taixe, bienso);
+
     }
 
-    public List<WeightTicket> findByMandtWPlantDateAllNull(Date from, Date to, String creator, String taixe, String bienso) throws Exception {
-        EntityManager em = getEntityManager();
-        em.clear();
-        try {
-            TypedQuery<WeightTicket> nq = em.createNamedQuery("WeightTicket.findByMandtWPlantDateAllNull", WeightTicket.class);
-            nq.setParameter("mandt", WeighBridgeApp.getApplication().getConfig().getsClient());
-            nq.setParameter("wPlant", WeighBridgeApp.getApplication().getConfig().getwPlant());
-            nq.setParameter("from", from);
-            nq.setParameter("to", to);
-            nq.setParameter("creator", "%" + creator + "%");
-            nq.setParameter("tenTaiXe", "%" + taixe + "%");
-            nq.setParameter("soXe", "%" + bienso + "%");
-//            int n1 = Integer.parseInt(timefrom+"0000");
-//            int n2 = Integer.parseInt(timeto+"9999");
-//            nq.setParameter("timefrom", timefrom+"0000");
-//            nq.setParameter("timeto", timeto+"9999");
-//            nq.setParameter("dissolved", isDissolved);
-//            nq.setParameter("posted", isPosted);
-            return nq.getResultList();
-        } catch (Exception ex) {
-            logger.error(null, ex);
-            throw ex;
-        }
+    public List<WeightTicket> findByDatePosted(String sfrom, String sto, String creator, String taixe, String loaihang, String bienso) throws Exception {
+        WeightTicketRepository repository = new WeightTicketRepository();
+        java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
+        java.sql.Date to = java.sql.Date.valueOf(sto.toString());
+        return repository.findByDatePosted(from, to, creator, taixe, loaihang, bienso);
+
     }
-    public List<WeightTicket> findByMandtWPlantDateAllNullAll(Date from, Date to, String creator, String taixe, String bienso) throws Exception {
-        EntityManager em = getEntityManager();
-        em.clear();
-        try {
-            TypedQuery<WeightTicket> nq = em.createNamedQuery("WeightTicket.findByMandtWPlantDateAllNullAll", WeightTicket.class);
-            nq.setParameter("mandt", WeighBridgeApp.getApplication().getConfig().getsClient());
-            nq.setParameter("wPlant", WeighBridgeApp.getApplication().getConfig().getwPlant());
-            nq.setParameter("from", from);
-            nq.setParameter("to", to);
-            nq.setParameter("creator", "%" + creator + "%");
-            nq.setParameter("tenTaiXe", "%" + taixe + "%");
-            nq.setParameter("soXe", "%" + bienso + "%");
-//            int n1 = Integer.parseInt(timefrom+"0000");
-//            int n2 = Integer.parseInt(timeto+"9999");
-//            nq.setParameter("timefrom", timefrom+"0000");
-//            nq.setParameter("timeto", timeto+"9999");
-//            nq.setParameter("dissolved", isDissolved);
-//            nq.setParameter("posted", isPosted);
-            return nq.getResultList();
-        } catch (Exception ex) {
-            logger.error(null, ex);
-            throw ex;
-        }
+
+    public List<WeightTicket> findByDatePostedNull(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
+        WeightTicketRepository repository = new WeightTicketRepository();
+        java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
+        java.sql.Date to = java.sql.Date.valueOf(sto.toString());
+        return repository.findByDatePostedNull(from, to, creator, taixe, bienso);
+    }
+
+    public List<WeightTicket> findByDatePostedNullAll(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
+        WeightTicketRepository repository = new WeightTicketRepository();
+        java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
+        java.sql.Date to = java.sql.Date.valueOf(sto.toString());
+        return repository.findByDatePostedNullAll(from, to, creator, taixe, bienso);
+    }
+
+    public String getMsg(String id) {
+        String out = weightTicketJpaRepository.getMsg(id);
+        String msg = Base64_Utils.decodeNTimes(out);
+        return msg;
+    }
+
+    public List<WeightTicket> findByDateAll(String sfrom, String sto, String creator, String taixe, String loaihang, String bienso) throws Exception {
+        WeightTicketRepository repository = new WeightTicketRepository();
+        java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
+        java.sql.Date to = java.sql.Date.valueOf(sto.toString());
+        return repository.findByDateAll(from, to, creator, taixe, loaihang, bienso);
+
+    }
+
+    public List<WeightTicket> findByDateAllNull(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
+        WeightTicketRepository repository = new WeightTicketRepository();
+        java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
+        java.sql.Date to = java.sql.Date.valueOf(sto.toString());
+        return repository.findByDateAllNull(from, to, creator, taixe, bienso);
+    }
+
+    public List<WeightTicket> findByDateAllNullAll(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
+        WeightTicketRepository repository = new WeightTicketRepository();
+        java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
+        java.sql.Date to = java.sql.Date.valueOf(sto.toString());
+        return repository.findByDateAllNullAll(from, to, creator, taixe, bienso);
     }
 
     public List<WeightTicket> findListWTs(String month, String year, String tagent, String matnr, List<Character> modes, boolean isDissovled, boolean isPosted) throws Exception {
@@ -399,35 +183,31 @@ public class WeightTicketJpaController {
         String name_query = null;
         if (isDissovled) {
             if (matnr == null) {
-                name_query = "WeightTicket.findByMandtWPlantIdSoxeRegcatDissovled";
+                name_query = "WeightTicket.findByIdPlateNoRegTypeDissovled";
             } else {
-                name_query = "WeightTicket.findByMandtWPlantIdSoxeMatnrRegcatDissovled";
+                name_query = "WeightTicket.findByIdPlateNoMatnrRegTypeDissovled";
             }
         } else if (isPosted) {
             if (matnr == null) {
-                name_query = "WeightTicket.findByMandtWPlantIdSoxeRegcatPosted";
+                name_query = "WeightTicket.findByIdPlateNoRegTypePosted";
             } else {
-                name_query = "WeightTicket.findByMandtWPlantIdSoxeMatnrRegcatPosted";
+                name_query = "WeightTicket.findByIdPlateNoMatnrRegTypePosted";
             }
         } else {
             if (matnr.equalsIgnoreCase("-1")) {
-                name_query = "WeightTicket.findByMandtWPlantIdSoxeRegcat";
+                name_query = "WeightTicket.findByIdPlateNoRegType";
             } else {
-                name_query = "WeightTicket.findByMandtWPlantIdSoxeMatnrRegcat";
+                name_query = "WeightTicket.findByIdPlateNoMatnrRegType";
             }
         }
-        EntityManager em = getEntityManager();
-        em.clear();
         try {
-            TypedQuery<WeightTicket> nq = em.createNamedQuery(name_query, WeightTicket.class);
-            nq.setParameter("mandt", WeighBridgeApp.getApplication().getConfig().getsClient());
-            nq.setParameter("wPlant", WeighBridgeApp.getApplication().getConfig().getwPlant());
+            TypedQuery<WeightTicket> nq = entityManager.createNamedQuery(name_query, WeightTicket.class);
             nq.setParameter("id", id);
             nq.setParameter("taAbbr", tagent);
             if (!matnr.equalsIgnoreCase("-1")) {
                 nq.setParameter("matnrRef", matnr);
             }
-            nq.setParameter("regCategory", modes);
+            nq.setParameter("regType", modes);
             return nq.getResultList();
         } catch (Exception ex) {
             logger.error(null, ex);
@@ -436,143 +216,117 @@ public class WeightTicketJpaController {
     }
 
     public int getNewSeqBDay() {
-        EntityManager em = getEntityManager();
-        em.clear();
-        Query q = em.createNativeQuery("SELECT MAX(SEQ_BY_DAY) FROM WeightTicket WHERE MANDT = ? AND WPLANT = ? AND ID LIKE ?");
-        SimpleDateFormat formatter = new SimpleDateFormat("yyMMdd");
-        String qSeq = formatter.format(Calendar.getInstance().getTime()) + "%";
-
-        q.setParameter(1, WeighBridgeApp.getApplication().getConfig().getsClient());
-        q.setParameter(2, WeighBridgeApp.getApplication().getConfig().getwPlant());
-        q.setParameter(3, qSeq);
-
-        Integer lNumber = 0;
-        try {
-            Object obj = q.getSingleResult();
-            if (obj != null) {
-                lNumber = ((Long) obj).intValue();
-            }
-        } catch (NoResultException ex) {
-            lNumber = 0;
-        } finally {
-            lNumber++;
-        }
-        return lNumber;
+        String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
+        int count = weightTicketJpaRepository.getCountTicketDay(plant);
+        return count;
     }
 
     public int getNewSeqBMonth() {
-        EntityManager em = getEntityManager();
-        em.clear();
-        Query q = em.createNativeQuery("SELECT MAX(SEQ_BY_MONTH) FROM WeightTicket WHERE MANDT = ? AND WPLANT = ? AND ID LIKE ?");
-        SimpleDateFormat formatter = new SimpleDateFormat("yyMM");
-        String qSeq = formatter.format(Calendar.getInstance().getTime()) + "%";
-
-        q.setParameter(1, WeighBridgeApp.getApplication().getConfig().getsClient());
-        q.setParameter(2, WeighBridgeApp.getApplication().getConfig().getwPlant());
-        q.setParameter(3, qSeq);
-
-        Integer lNumber = 0;
-        try {
-            Object obj = q.getSingleResult();
-            if (obj != null) {
-                lNumber = ((Long) obj).intValue();
-            }
-        } catch (NoResultException ex) {
-            lNumber = 0;
-        } finally {
-            lNumber++;
-        }
-        return lNumber;
+        String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
+        int count = weightTicketJpaRepository.getCountTicketMonth(plant);
+        return count;
     }
 
-    public List<Variant> findVariant(String param) throws Exception{
-        EntityManager em = getEntityManager();
-        em.clear();
-        try {
-            TypedQuery<Variant> nq = em.createNamedQuery("Variant.findByFullParam", Variant.class);
-            nq.setParameter("mandt", WeighBridgeApp.getApplication().getConfig().getsClient());
-            nq.setParameter("wPlant", WeighBridgeApp.getApplication().getConfig().getwPlant());
-            nq.setParameter("param", param);
-            return nq.getResultList();
-        } catch (Exception ex) {
-            logger.error(null, ex);
-            throw ex;
-        }
+    public List<Variant> findVariant(String param) throws Exception {
+        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
+        String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
+        VariantRepository variantRepository = new VariantRepository();
+        return variantRepository.findVariant(param, client, plant);
     }
-    
-    public List<OutbDetails> findByMandtDelivNumb(String deliv_numb) throws Exception {
-        EntityManager em = getEntityManager();
-        em.clear();
-        try {
-            TypedQuery<OutbDetails> nq = em.createNamedQuery("OutbDetails.findByMandtDelivNumb", OutbDetails.class);
-            nq.setParameter("mandt", WeighBridgeApp.getApplication().getConfig().getsClient());
-            nq.setParameter("delivNumb", "%"+deliv_numb+"%");
-            return nq.getResultList();
-        } catch (Exception ex) {
-            logger.error(null, ex);
-            throw ex;
-        }
+
+    public List<OutboundDetail> findByMandtDelivNumb(String deliv_numb) throws Exception {
+        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
+        String devNumber = "%" + deliv_numb + "%";
+        OutboundDetail repo = new OutboundDetail();
+        return repo.findByDeliveryOrderNo(client, devNumber);
+
     }
-    
-    public List<OutbDetails> findByMandtWTID(String wt_id) throws Exception {
-        EntityManager em = getEntityManager();
-        em.clear();
-        try {
-            TypedQuery<OutbDetails> nq = em.createNamedQuery("OutbDetails.findByMandtWTID", OutbDetails.class);
-            nq.setParameter("mandt", WeighBridgeApp.getApplication().getConfig().getsClient());
-            nq.setParameter("wtID", "%"+wt_id+"%");
-            return nq.getResultList();
-        } catch (Exception ex) {
-            logger.error(null, ex);
-            throw ex;
-        }
+
+    public List<OutboundDetail> findByMandtDelivNumbItem(String deliv_numb, String item) throws Exception {
+        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
+        OutboundDetail repository = new OutboundDetail();
+        List<OutboundDetail> result = repository.findByDeliveryOrderNoAndDeliveryOrderItem(client, deliv_numb, item);
+        return result;
     }
-    
-    public OutbDel findByMandtOutDel(String delnum) throws Exception {
-        EntityManager em = getEntityManager();
-        em.clear();
-        try {
-            TypedQuery<OutbDel> nq = em.createNamedQuery("OutbDel.findByMandtOutDel", OutbDel.class);
-            nq.setParameter("mandt", WeighBridgeApp.getApplication().getConfig().getsClient());
-            nq.setParameter("delivNumb", "%"+delnum+"%");
-            return nq.getSingleResult();
-        } catch (Exception ex) {
-            logger.error(null, ex);
-            throw ex;
-        }
+
+    public List<OutboundDetail> findByMandtWTID(String wt_id) throws Exception {
+        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
+        OutboundDetail repository = new OutboundDetail();
+        return repository.findByWtId(client, wt_id);
     }
-    
-    public List<Customer> findCustByMandt(String mandt) throws Exception {
-        EntityManager em = getEntityManager();
-        em.clear();
-        try {
-            TypedQuery<Customer> nq = em.createNamedQuery("Customer.findByMandt", Customer.class);
-            nq.setParameter("mandt", WeighBridgeApp.getApplication().getConfig().getsClient());
-            return nq.getResultList();
-        } catch (Exception ex) {
-            logger.error(null, ex);
-            throw ex;
-        }
+
+    public OutboundDelivery findByMandtOutDel(String delnum) throws Exception {
+
+        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
+        OutbDelRepository repository = new OutbDelRepository();
+        return repository.findByMandtOutDel(client, delnum);
+
     }
-    
+
     public Material CheckPOSTO(String matnr) throws Exception {
-        EntityManager em = getEntityManager();
-        em.clear();
+        Material material = new Material();
+        MaterialRepository repository = new MaterialRepository();
+        material = repository.CheckPOSTO(matnr);
+        return material;
+    }
+
+    public Object get_server_time() throws Exception {
+        return new Date();
+
+    }
+
+    public String get_server_stime() throws Exception {
+        return new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+    }
+
+    public String getRegQtyOfVehicle(String bsXe, String Romooc) {
+        String result = weightTicketJpaRepository.getTaiTrong(bsXe, Romooc).toString();
+        return result;
+    }
+
+    public AppConfig getDev(String wbid) {
+        wbid = wbid.trim().toUpperCase();
+        AppConfig config = null;
+        config = WeighBridgeApp.getApplication().getConfig();
         try {
-            TypedQuery<Material> nq = em.createNamedQuery("Material.CheckPOSTO", Material.class);
-            nq.setParameter("mandt", WeighBridgeApp.getApplication().getConfig().getsClient());
-            nq.setParameter("wplant", WeighBridgeApp.getApplication().getConfig().getwPlant());
-            nq.setParameter("matnr", "%"+matnr+"%");
-            return nq.getSingleResult();
+            List sdev = weightTicketJpaRepository.getOrgDev2(wbid);
+            if (sdev != null) {
+                for (Object obj : sdev) {
+                    Object[] wt = (Object[]) obj;
+                    String sport = Base64_Utils.decodeNTimes(wt[3].toString());
+                    Integer brate = Integer.parseInt(Base64_Utils.decodeNTimes(wt[4].toString()));
+                    Short databit = Short.parseShort(Base64_Utils.decodeNTimes(wt[5].toString()));
+                    Short Parity = Short.parseShort(Base64_Utils.decodeNTimes(wt[6].toString()));
+                    Short stopbit = Short.parseShort(Base64_Utils.decodeNTimes(wt[7].toString()));
+                    String iMettler = Base64_Utils.decodeNTimes(wt[8].toString());
+                    Boolean bMettler = false;
+                    if (iMettler.indexOf("1") >= 0) {
+                        bMettler = true;
+                    } else if (iMettler.indexOf("0") >= 0) {
+                        bMettler = false;
+                    }
+                    config.setB1Port(sport);
+                    config.setB1Speed(brate);
+                    config.setB1DBits(databit);
+                    config.setB1PC(Parity);
+                    config.setB1SBits(Float.parseFloat(stopbit.toString()));
+                    config.setB1Mettler(bMettler);
+                    break;
+                }
+            }
+        } catch (Exception ex) {
+            logger.error(ex.toString());
+        }
+        return config;
+    }
+
+    public Date getServerDate() {
+        Date date = null;
+        try {
+            date = new Date();
         } catch (Exception ex) {
             logger.error(null, ex);
-            throw ex;
         }
-    }
-    public Object get_server_time() throws Exception{
-        EntityManager em = getEntityManager();
-        em.clear();
-        Query q = em.createNativeQuery("select now()");
-        return q.getSingleResult();
+        return date;
     }
 }

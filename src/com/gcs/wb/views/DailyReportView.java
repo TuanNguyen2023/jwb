@@ -13,7 +13,6 @@ package com.gcs.wb.views;
 import java.util.Calendar;
 import java.util.List;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.JOptionPane;
@@ -21,10 +20,9 @@ import org.apache.log4j.Logger;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
 import com.gcs.wb.WeighBridgeApp;
-import com.gcs.wb.jpa.controller.WeightTicketJpaController;
+import com.gcs.wb.base.constant.Constants;
+import com.gcs.wb.controller.DailyReportController;
 import com.gcs.wb.jpa.entity.WeightTicket;
-import com.gcs.wb.jpa.entity.WeightTicketPK;
-import com.gcs.wb.model.AppConfig;
 import java.util.HashMap;
 import java.util.Map;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -32,12 +30,22 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRTableModelDataSource;
 import net.sf.jasperreports.view.JasperViewer;
 import org.jdesktop.application.Application;
+import org.jdesktop.application.ResourceMap;
 
 /**
  *
  * @author thanghl
  */
 public class DailyReportView extends javax.swing.JInternalFrame {
+    
+    private static Logger logger = Logger.getLogger(DailyReportView.class);
+    private List<WeightTicket> weightTicketList;
+    private boolean[] editable = null;
+    Object[][] wtDatas = null;
+    Object[] wtColNames = Constants.DailyReport.wtColNames;
+    Class[] wtColTypes = Constants.DailyReport.wtColTypes;
+    ResourceMap resourceMapMsg = Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(DailyReportView.class);
+    DailyReportController dailyReportController = new DailyReportController();
 
     /** Creates new form DailyReportView */
     public DailyReportView() {
@@ -195,71 +203,13 @@ public class DailyReportView extends javax.swing.JInternalFrame {
 
                 setProgress(1, 0, 4);
                 setMessage(resourceMapMsg.getString("msg.getData"));
-                AppConfig appConfig = WeighBridgeApp.getApplication().getConfig();
-                WeightTicketJpaController weightTicketJpaController = new WeightTicketJpaController();
-                List<WeightTicket> weightTickets = weightTicketJpaController.findByCreateDateRange(dpDateFrom.getDate(), dpDateTo.getDate());
+                List<WeightTicket> weightTickets = dailyReportController.findByCreateDateRange(dpDateFrom, dpDateTo);
 
                 setProgress(2, 0, 4);
                 setMessage(resourceMapMsg.getString("msg.handleData"));
                 weightTicketList.addAll(weightTickets);
-                wtDatas = new Object[weightTicketList.size()][wtColNames.length];
+                wtDatas = dailyReportController.handleWtDatas(wtDatas, weightTicketList, wtColNames);
 
-                for (int i = 0; i < weightTicketList.size(); i++) {
-                    WeightTicket weightTicket = weightTicketList.get(i);
-                    WeightTicketPK weightTicketPK = weightTicket.getWeightTicketPK();
-                    if (!weightTicketPK.getMandt().equalsIgnoreCase(appConfig.getsClient()) && !weightTicketPK.getWPlant().equalsIgnoreCase(appConfig.getwPlant().toString())) {
-                        continue;
-                    }
-                    String hh = weightTicket.getCreateTime().substring(0, 2);
-                    String mm = weightTicket.getCreateTime().substring(2, 4);
-                    String ss = weightTicket.getCreateTime().substring(4);
-                    Calendar create_date = Calendar.getInstance();
-                    create_date.setTime(weightTicket.getCreateDate());
-                    create_date.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hh));
-                    create_date.set(Calendar.MINUTE, Integer.valueOf(mm));
-                    create_date.set(Calendar.SECOND, Integer.valueOf(ss));
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-                    String createdDateTime = dateFormat.format(create_date.getTime());
-                    wtDatas[i][0] = i + 1;
-                    wtDatas[i][1] = weightTicket.getWeightTicketPK().getSeqByDay();
-                    wtDatas[i][2] = weightTicket.getTenTaiXe();
-                    wtDatas[i][3] = weightTicket.getCmndBl();
-                    wtDatas[i][4] = weightTicket.getSoXe();
-                    wtDatas[i][5] = weightTicket.getSoRomooc();
-                    wtDatas[i][6] = weightTicket.getCreator();
-                    wtDatas[i][7] = createdDateTime;
-                    wtDatas[i][8] = weightTicket.getRegCategory();
-                    wtDatas[i][9] = weightTicket.getRegItemText();
-                    if (weightTicket.getFTime() != null) {
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.setTime(weightTicket.getFTime());
-                        String inDateTime = dateFormat.format(calendar.getTime());
-                        wtDatas[i][10] = inDateTime;//item.getFTime();
-                    } else {
-                        wtDatas[i][10] = weightTicket.getFTime();
-                    }
-                    wtDatas[i][11] = weightTicket.getFScale() == null ? weightTicket.getFScale() : weightTicket.getFScale().doubleValue() / 1000d;
-                    if (weightTicket.getSTime() != null) {
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.setTime(weightTicket.getSTime());
-                        String outDateTime = dateFormat.format(calendar.getTime());
-                        wtDatas[i][12] = outDateTime;//item.getSTime();
-                    } else {
-                        wtDatas[i][12] = weightTicket.getSTime();
-                    }
-                    wtDatas[i][13] = weightTicket.getSScale() == null ? weightTicket.getSScale() : weightTicket.getSScale().doubleValue() / 1000d;
-                    wtDatas[i][14] = weightTicket.getGQty();
-                    wtDatas[i][15] = weightTicket.getDelivNumb();
-                    wtDatas[i][16] = weightTicket.getMatDoc();
-                    wtDatas[i][17] = weightTicket.getDissolved();
-                    if (weightTicket.getPosted() == 1) {
-                        wtDatas[i][18] = true;
-                    } else {
-                        wtDatas[i][18] = false;
-                    }
-                    wtDatas[i][19] = weightTicket.getEbeln();
-                    wtDatas[i][20] = "";
-                }
                 setProgress(3, 0, 4);
                 editable = new boolean[wtColNames.length];
                 for (int i = 0; i < editable.length; i++) {
@@ -304,18 +254,9 @@ public class DailyReportView extends javax.swing.JInternalFrame {
         protected Object doInBackground() {
             try {
                 Map<String, Object> params = new HashMap<String, Object>();
-                params.put("P_PNAME_RPT", WeighBridgeApp.getApplication().getSapSetting().getNameRpt());
-                params.put("P_PADDRESS", WeighBridgeApp.getApplication().getSapSetting().getAddress());
-                params.put("P_PPHONE", WeighBridgeApp.getApplication().getSapSetting().getPhone());
-                params.put("P_PFAX", WeighBridgeApp.getApplication().getSapSetting().getFax());
-                params.put("P_FROM", dpDateFrom.getDate());
-                params.put("P_TO", dpDateTo.getDate());
                 String reportName = null;
-                if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
-                    reportName = "./rpt/rptBT/WTList.jasper";
-                } else {
-                    reportName = "./rpt/rptPQ/WTList.jasper";
-                }
+                params = dailyReportController.getParamsReport(dpDateFrom, dpDateTo);
+                reportName = dailyReportController.getReportName();
                 JasperPrint jasperPrint = JasperFillManager.fillReport(reportName, params, new JRTableModelDataSource(tabResults.getModel()));
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                 jasperViewer.setVisible(true);
@@ -343,53 +284,5 @@ public class DailyReportView extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane spnResult;
     private org.jdesktop.swingx.JXTable tabResults;
     // End of variables declaration//GEN-END:variables
-    private static Logger logger = Logger.getLogger(DailyReportView.class);
-    private java.util.List<WeightTicket> weightTicketList;
-    private boolean[] editable = null;
-    Object[][] wtDatas = null;
-    Object[] wtColNames = new String[]{
-        "STT",
-        "Số đăng tài",
-        "Tên tài xế",
-        "CMND/Bằng lái",
-        "Số Xe",
-        "Số Rơmoóc",
-        "Người tạo",
-        "Ngày giờ tạo",
-        "Nhập/Xuất(I/O)",
-        "Loại hàng",
-        "Ngày giờ vào",
-        "T.L vào",
-        "Ngày giờ ra",
-        "T.L ra",
-        "T.L Hàng",
-        "Số DO",
-        "Số chứng từ SAP",
-        "Hủy",
-        "SAP Posted",
-        "DVVC",
-        "Số P.O"};
-    Class[] wtColTypes = new Class[]{
-        Integer.class,
-        Integer.class,
-        String.class,
-        String.class,
-        String.class,
-        String.class,
-        String.class,
-        Date.class,
-        Character.class,
-        String.class,
-        Date.class,
-        BigDecimal.class,
-        Date.class,
-        BigDecimal.class,
-        BigDecimal.class,
-        String.class,
-        String.class,
-        Boolean.class,
-        Boolean.class,
-        String.class,
-        String.class};
-    org.jdesktop.application.ResourceMap resourceMapMsg = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(DailyReportView.class);
+    
 }

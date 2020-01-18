@@ -14,8 +14,8 @@ import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.base.validator.LengthValidator;
 import com.gcs.wb.base.validator.PhoneValidator;
+import com.gcs.wb.controller.SettingController;
 import com.gcs.wb.jpa.JPAConnector;
-import com.gcs.wb.jpa.entity.SAPSetting;
 import java.awt.Color;
 import javax.persistence.EntityManager;
 import javax.swing.JLabel;
@@ -36,6 +36,8 @@ public class SettingView extends javax.swing.JDialog {
     private boolean isAddressValid = true;
     private boolean isPhoneValid = true;
     private boolean isFaxValid = true;
+    
+    private SettingController controller = new SettingController();
 
     /** Creates new form SettingView */
     public SettingView(java.awt.Frame parent) {
@@ -319,29 +321,8 @@ private void txtPhoneKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
 
         @Override
         protected Object doInBackground() {
-            String tmp = txtNameRPT.getText().trim();
-            sapSetting.setNameRpt(tmp.isEmpty() ? null : tmp);
-            tmp = txtAddress.getText().trim();
-            sapSetting.setAddress(tmp.isEmpty() ? null : tmp);
-            tmp = txtPhone.getText().trim();
-            sapSetting.setPhone(tmp.isEmpty() ? null : tmp);
-            tmp = txtFax.getText().trim();
-            sapSetting.setFax(tmp.isEmpty() ? null : tmp);
-            sapSetting.setCheckPov(chkPOV.isSelected() ? true : false);
-
-            if (!entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().begin();
-            }
-
-            // save sap setting
-            entityManager.merge(sapSetting);
-            entityManager.getTransaction().commit();
-            entityManager.clear();
-
-            sapSetting = entityManager.find(SAPSetting.class, sapSetting.getId());
-            entityManager.clear();
-
-            return null;  // return your result
+            sapSetting = controller.saveDoInBackground(sapSetting, txtNameRPT, txtAddress, txtPhone, txtFax, chkPOV);
+            return null;
         }
 
         @Override

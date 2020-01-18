@@ -4,13 +4,10 @@
  */
 package com.gcs.wb.jpa.repositorys;
 
-import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.Customer;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import org.apache.log4j.Logger;
 
@@ -23,23 +20,19 @@ public class CustomerRepository {
     EntityManager entityManager = JPAConnector.getInstance();
     Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
 
-    public List<Object[]> getCustomerByMaNdt(String client) {
-        List<Object[]> list = new ArrayList<Object[]>();
-        Query q = entityManager.createNativeQuery("Select * from Customer where MANDT = ?");
-        q.setParameter(1, client);
-        list = q.getResultList();
-        return list;
+    public List<Customer> getListCustomer() {
+        TypedQuery<Customer> typedQuery = entityManager.createNamedQuery("Customer.findAll", Customer.class);
+        return typedQuery.getResultList();
     }
 
-    public List<Customer> findCustByMandt(String mandt) {
-        List<Customer> result = new ArrayList<Customer>();
-        try {
-            TypedQuery<Customer> query = entityManager.createNamedQuery("Customer.findByMandt", Customer.class);
-            query.setParameter("mandt", WeighBridgeApp.getApplication().getConfig().getsClient());
-            result = query.getResultList();
-        } catch (Exception ex) {
-            logger.error(null, ex);
+    public Customer findByKunnr(String kunnr) {
+        TypedQuery<Customer> typedQuery = entityManager.createNamedQuery("Customer.findKunnr", Customer.class);
+        typedQuery.setParameter("kunnr", kunnr);
+        List<Customer> customers = typedQuery.getResultList();
+        if (customers != null && customers.size() > 0) {
+            return customers.get(0);
         }
-        return result;
+
+        return null;
     }
 }

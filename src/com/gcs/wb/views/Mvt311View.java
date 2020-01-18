@@ -11,11 +11,10 @@
 package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
-import com.gcs.wb.bapi.helper.SAP2Local;
 import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.SLoc;
-import com.gcs.wb.jpa.entity.SLocPK;
+import com.gcs.wb.jpa.repositorys.SLocRepository;
 import java.awt.Component;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
@@ -29,13 +28,14 @@ public class Mvt311View extends javax.swing.JDialog {
 
     private com.gcs.wb.model.AppConfig config;
     SAPService sapService = new SAPService();
+    SLocRepository sLocRepository = new SLocRepository();
     
     /** Creates new form Mvt311View */
     public Mvt311View(java.awt.Frame parent, String recv_lgort, Material mat) {
         super(parent);
         initComponents();
         if (recv_lgort != null) {
-            SLoc recv_sloc = entityManager.find(SLoc.class, new SLocPK(config.getsClient(), config.getwPlant(), recv_lgort));
+            SLoc recv_sloc = sLocRepository.findByLgort(recv_lgort);
             this.recSloc = recv_sloc;
         } else {
             this.recSloc = null;
@@ -46,8 +46,8 @@ public class Mvt311View extends javax.swing.JDialog {
             cbxRecvSloc.setSelectedItem(this.recSloc);
         }
         this.selMaterial = mat;
-        if (this.selMaterial != null && this.selMaterial.getMaterialPK() != null) {
-            txtMatnr.setText(this.selMaterial.getMaterialPK().getMatnr());
+        if (this.selMaterial != null) {
+            txtMatnr.setText(this.selMaterial.getMatnr());
         }
     }
 
@@ -184,8 +184,8 @@ public class Mvt311View extends javax.swing.JDialog {
         lmat.setLocationRelativeTo(WeighBridgeApp.getApplication().getMainFrame());
         WeighBridgeApp.getApplication().show(lmat);
         if (!lmat.isShowing()) {
-            if (lmat.getfMaterial() != null && lmat.getfMaterial().getMaterialPK() != null) {
-                txtMatnr.setText(lmat.getfMaterial().getMaterialPK().getMatnr());
+            if (lmat.getfMaterial() != null) {
+                txtMatnr.setText(lmat.getfMaterial().getMatnr());
                 setSelMaterial(lmat.getfMaterial());
             }
             lmat.dispose();

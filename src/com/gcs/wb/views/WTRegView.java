@@ -11,24 +11,18 @@
 package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
-import com.gcs.wb.bapi.helper.SAP2Local;
 import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.JReportConnector;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.Customer;
-import com.gcs.wb.jpa.entity.CustomerPK;
-import com.gcs.wb.jpa.entity.OutbDel;
-import com.gcs.wb.jpa.entity.OutbDelPK;
+import com.gcs.wb.jpa.entity.OutboundDelivery;
 import com.gcs.wb.jpa.entity.SAPSetting;
 import com.gcs.wb.jpa.entity.Vehicle;
+import com.gcs.wb.jpa.entity.TransportAgentVehicle;
 import com.gcs.wb.jpa.entity.Vendor;
-import com.gcs.wb.jpa.entity.VendorPK;
 import com.gcs.wb.jpa.entity.WeightTicket;
-import com.gcs.wb.jpa.entity.WeightTicketPK;
-import com.gcs.wb.jpa.entity.VehicleValid;
-import com.gcs.wb.jpa.entity.VehicleValidPK;
 import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.base.util.Conversion_Exit;
 import com.sap.conn.jco.JCoException;
@@ -38,7 +32,6 @@ import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,14 +50,20 @@ import org.jdesktop.application.Task;
 import java.awt.Component;
 import javax.swing.JList;
 import com.gcs.wb.jpa.entity.Material;
-import com.gcs.wb.jpa.entity.MaterialPK;
-import com.gcs.wb.jpa.entity.OutbDetailsV2;
+import com.gcs.wb.jpa.entity.OutboundDetail;
 import com.gcs.wb.jpa.procedures.WTRegRepository;
+import com.gcs.wb.jpa.repositorys.CustomerRepository;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
+import com.gcs.wb.jpa.repositorys.OutboundDeliveryRepository;
+import com.gcs.wb.jpa.repositorys.TransportAgentVehicleRepository;
+import com.gcs.wb.jpa.repositorys.VehicleRepository;
+import com.gcs.wb.jpa.repositorys.VendorRepository;
 import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
+import java.awt.event.KeyEvent;
+import java.util.Date;
 import javax.persistence.EntityManager;
 import javax.swing.DefaultComboBoxModel;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -84,38 +83,30 @@ public class WTRegView extends javax.swing.JInternalFrame {
     EntityManager entityManager = JPAConnector.getInstance();
     MaterialRepository materialRepository = new MaterialRepository();
     WeightTicketRepository weightTicketRepository = new WeightTicketRepository();
+    CustomerRepository customerRepository = new CustomerRepository();
+    VendorRepository vendorRepository = new VendorRepository();
+    OutboundDeliveryRepository outboundDeliveryRepository = new OutboundDeliveryRepository();
+    VehicleRepository vehicleRepository = new VehicleRepository();
+    TransportAgentVehicleRepository transportAgentVehicleRepository = new TransportAgentVehicleRepository();
     SAPService sapService = new SAPService();
 
-    public WTRegView(String _mode) {
-        this.mode = _mode;
+    public WTRegView() {
         initComponents();
         weightTicketList = new ArrayList<WeightTicket>();
         ListWeightTicketsTask t = new ListWeightTicketsTask(WeighBridgeApp.getApplication());
         t.execute();
-        
-        if (getMode().equalsIgnoreCase(Constants.WTRegView.MODE_RPT)) {
-            this.setTitle("Báo cáo ngày");
-        }
-        cbxTimeTo.setSelectedIndex(23);
-        txtRegItem.setVisible(false);
-        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-        String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
-        List matnr = materialRepository.getListMaterial(client, plant);
+
+        cbxHourTo.setSelectedIndex(23);
+        txtNMaterial.setVisible(false);
+        List<Material> materials = materialRepository.getListMaterial();
         DefaultComboBoxModel result = new DefaultComboBoxModel();
-        for (Object obj : matnr) {
-            Object[] wt = (Object[]) obj;
-            MaterialPK matPK = new MaterialPK();
-            Material mat = new Material();
-            matPK.setMandt(WeighBridgeApp.getApplication().getConfig().getsClient());
-            matPK.setWplant(WeighBridgeApp.getApplication().getConfig().getwPlant());
-            matPK.setMatnr(wt[2].toString());
-            mat.setMaterialPK(matPK);
-            mat.setMaktx(wt[3].toString());
-            if (result.getIndexOf(mat) < 0) {
-                result.addElement(mat.getMaktx());
+        for (Material material : materials) {
+            if (result.getIndexOf(material) < 0 && material.getMatnr() != null
+                    && material.getMaktx() != null && !material.getMaktx().isEmpty()) {
+                result.addElement(material.getMaktx());
             }
         }
-        txtRegItem1.setModel(result);
+        cbxNMaterial.setModel(result);
     }
 
     /** This method is called from within the constructor to
@@ -131,72 +122,65 @@ public class WTRegView extends javax.swing.JInternalFrame {
         rbtRegCatGroup = new javax.swing.ButtonGroup();
         newWeightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
         selectedRow = new com.gcs.wb.jpa.entity.WeightTicket();
-        outbDel = new com.gcs.wb.jpa.entity.OutbDel();
+        outbDel = new com.gcs.wb.jpa.entity.OutboundDelivery();
         jTextField1 = new javax.swing.JTextField();
         buttonGroup1 = new javax.swing.ButtonGroup();
         pnFilter = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
-        lblFrom = new javax.swing.JLabel();
-        dpFrom = new org.jdesktop.swingx.JXDatePicker();
-        lblTo = new javax.swing.JLabel();
-        dpTo = new org.jdesktop.swingx.JXDatePicker();
-        cbxType = new javax.swing.JComboBox();
-        lblType = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
-        lblState = new javax.swing.JLabel();
-        rbtStateAll = new javax.swing.JRadioButton();
-        rbtPosted = new javax.swing.JRadioButton();
-        rbtDissolved = new javax.swing.JRadioButton();
+        lblDateFrom = new javax.swing.JLabel();
+        dpDateFrom = new org.jdesktop.swingx.JXDatePicker();
+        lblDateTo = new javax.swing.JLabel();
+        dpDateTo = new org.jdesktop.swingx.JXDatePicker();
+        lblMaterialType = new javax.swing.JLabel();
+        cbxMaterialType = new javax.swing.JComboBox();
+        lblHourFrom = new javax.swing.JLabel();
+        cbxHourFrom = new javax.swing.JComboBox();
+        lblHourTo = new javax.swing.JLabel();
+        cbxHourTo = new javax.swing.JComboBox();
+        lblCreator = new javax.swing.JLabel();
+        txtCreator = new javax.swing.JTextField();
+        lblStatus = new javax.swing.JLabel();
+        rbtStatusAll = new javax.swing.JRadioButton();
+        rbtStatusPosted = new javax.swing.JRadioButton();
+        rbtStatusDissolved = new javax.swing.JRadioButton();
+        lblDriverName = new javax.swing.JLabel();
+        txtDriverName = new javax.swing.JTextField();
+        lblPlateNo = new javax.swing.JLabel();
+        txtPlateNo = new javax.swing.JTextField();
         btnFind = new javax.swing.JButton();
-        lblType1 = new javax.swing.JLabel();
-        txtTaixe = new javax.swing.JTextField();
-        lblType2 = new javax.swing.JLabel();
-        txtNguoitao = new javax.swing.JTextField();
-        lblBienSo = new javax.swing.JLabel();
-        txtBienSo = new javax.swing.JTextField();
-        lblGio = new javax.swing.JLabel();
-        cbxTimeFrom = new javax.swing.JComboBox();
-        lblGioden = new javax.swing.JLabel();
-        cbxTimeTo = new javax.swing.JComboBox();
-        pnWTs = new javax.swing.JScrollPane();
-        tabWTs = new org.jdesktop.swingx.JXTable();
+        spnResult = new javax.swing.JScrollPane();
+        tabResults = new org.jdesktop.swingx.JXTable();
         pnPrintControl = new javax.swing.JPanel();
         btnReprint = new javax.swing.JButton();
-        btnPrintRpt = new javax.swing.JButton();
         pnWTicket = new javax.swing.JPanel();
-        lblDName = new javax.swing.JLabel();
-        txtDName = new javax.swing.JTextField();
-        lblCMNDBL = new javax.swing.JLabel();
-        txtCMNDBL = new javax.swing.JTextField();
-        lblLicPlate = new javax.swing.JLabel();
-        txtLicPlate = new javax.swing.JTextField();
-        lblTrailerPlate = new javax.swing.JLabel();
-        lblRegCat = new javax.swing.JLabel();
-        rbtInward = new javax.swing.JRadioButton();
-        rbtOutward = new javax.swing.JRadioButton();
-        lblRegItem = new javax.swing.JLabel();
-        txtRegItem = new javax.swing.JTextField();
-        lblRegQty = new javax.swing.JLabel();
-        lblUnit = new javax.swing.JLabel();
-        txfRegQty = new javax.swing.JFormattedTextField();
-        lblDelNum = new javax.swing.JLabel();
-        txtDelNum = new javax.swing.JTextField();
-        txtSoRomooc = new javax.swing.JTextField();
-        txtRegItem1 = new javax.swing.JComboBox();
+        pnNLeft = new javax.swing.JPanel();
+        lblNDriverName = new javax.swing.JLabel();
+        txtNDriverName = new javax.swing.JTextField();
+        lblNCMNDBL = new javax.swing.JLabel();
+        txtNCMNDBL = new javax.swing.JTextField();
+        lblNPlateNo = new javax.swing.JLabel();
+        txtNPlateNo = new javax.swing.JTextField();
+        lblNTrailerPlate = new javax.swing.JLabel();
+        txtNTrailerPlate = new javax.swing.JTextField();
+        pnNRight = new javax.swing.JPanel();
+        lblNRegCat = new javax.swing.JLabel();
+        rbtNInward = new javax.swing.JRadioButton();
+        rbtNOutward = new javax.swing.JRadioButton();
+        txtNMaterial = new javax.swing.JTextField();
+        lblNMaterial = new javax.swing.JLabel();
+        cbxNMaterial = new javax.swing.JComboBox();
+        lblNWeight = new javax.swing.JLabel();
+        txtNWeight = new javax.swing.JFormattedTextField();
+        lblNWeightUnit = new javax.swing.JLabel();
+        lblNDONum = new javax.swing.JLabel();
+        txtNDONum = new javax.swing.JTextField();
         btnCheckDO = new javax.swing.JButton();
-        txfRegQty1 = new javax.swing.JFormattedTextField();
-        lblLicPlate1 = new javax.swing.JLabel();
-        lblDName1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        txtDName1 = new javax.swing.JTextField();
         pnControl = new javax.swing.JPanel();
-        jSeparator1 = new javax.swing.JSeparator();
         btnNew = new javax.swing.JButton();
         btnClear = new javax.swing.JButton();
         btnMany = new javax.swing.JButton();
         btnSave = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        txtSodangtai = new javax.swing.JTextField();
+        lblWeightTicketNo = new javax.swing.JLabel();
+        txtWeightTicketNo = new javax.swing.JTextField();
 
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(WTRegView.class);
         jTextField1.setText(resourceMap.getString("jTextField1.text")); // NOI18N
@@ -212,31 +196,31 @@ public class WTRegView extends javax.swing.JInternalFrame {
         pnFilter.setMinimumSize(new java.awt.Dimension(12, 35));
         pnFilter.setName("pnFilter"); // NOI18N
         pnFilter.setPreferredSize(new java.awt.Dimension(315, 35));
-        pnFilter.setLayout(new javax.swing.BoxLayout(pnFilter, javax.swing.BoxLayout.Y_AXIS));
 
-        jPanel1.setName("jPanel1"); // NOI18N
-        jPanel1.setPreferredSize(new java.awt.Dimension(300, 10));
+        lblDateFrom.setText(resourceMap.getString("lblDateFrom.text")); // NOI18N
+        lblDateFrom.setName("lblDateFrom"); // NOI18N
 
-        lblFrom.setText(resourceMap.getString("lblFrom.text")); // NOI18N
-        lblFrom.setName("lblFrom"); // NOI18N
-
-        dpFrom.setDate(Calendar.getInstance().getTime());
-        dpFrom.setName("dpFrom"); // NOI18N
-        dpFrom.addActionListener(new java.awt.event.ActionListener() {
+        dpDateFrom.setDate(Calendar.getInstance().getTime());
+        dpDateFrom.setName("dpDateFrom"); // NOI18N
+        dpDateFrom.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                dpFromActionPerformed(evt);
+                dpDateFromActionPerformed(evt);
             }
         });
 
-        lblTo.setText(resourceMap.getString("lblTo.text")); // NOI18N
-        lblTo.setName("lblTo"); // NOI18N
+        lblDateTo.setText(resourceMap.getString("lblDateTo.text")); // NOI18N
+        lblDateTo.setName("lblDateTo"); // NOI18N
 
-        dpTo.setDate(Calendar.getInstance().getTime());
-        dpTo.setName("dpTo"); // NOI18N
+        dpDateTo.setDate(Calendar.getInstance().getTime());
+        dpDateTo.setName("dpDateTo"); // NOI18N
 
-        cbxType.setModel(getMatsModel());
-        cbxType.setName("cbxType"); // NOI18N
-        cbxType.setRenderer(new DefaultListCellRenderer() {
+        lblMaterialType.setLabelFor(cbxMaterialType);
+        lblMaterialType.setText(resourceMap.getString("lblMaterialType.text")); // NOI18N
+        lblMaterialType.setName("lblMaterialType"); // NOI18N
+
+        cbxMaterialType.setModel(getMatsModel());
+        cbxMaterialType.setName("cbxMaterialType"); // NOI18N
+        cbxMaterialType.setRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(
                 JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -244,186 +228,158 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 if (value instanceof Material) {
                     Material mat = (Material)value;
                     setText(mat.getMaktx());
-                    setToolTipText(mat.getMaterialPK().getMatnr());
+                    setToolTipText(mat.getMatnr());
                 }
                 return this;
             }
         });
 
-        lblType.setLabelFor(cbxType);
-        lblType.setText(resourceMap.getString("lblType.text")); // NOI18N
-        lblType.setName("lblType"); // NOI18N
+        lblHourFrom.setText(resourceMap.getString("lblHourFrom.text")); // NOI18N
+        lblHourFrom.setName("lblHourFrom"); // NOI18N
 
-        jPanel2.setName("jPanel2"); // NOI18N
-        jPanel2.setPreferredSize(new java.awt.Dimension(612, 10));
+        cbxHourFrom.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" }));
+        cbxHourFrom.setName("cbxHourFrom"); // NOI18N
 
-        lblState.setText(resourceMap.getString("lblState.text")); // NOI18N
-        lblState.setName("lblState"); // NOI18N
+        lblHourTo.setText(resourceMap.getString("lblHourTo.text")); // NOI18N
+        lblHourTo.setName("lblHourTo"); // NOI18N
 
-        buttonGroup1.add(rbtStateAll);
-        rbtStateAll.setText(resourceMap.getString("rbtStateAll.text")); // NOI18N
-        rbtStateAll.setName("rbtStateAll"); // NOI18N
+        cbxHourTo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" }));
+        cbxHourTo.setName("cbxHourTo"); // NOI18N
+        cbxHourTo.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbxHourToItemStateChanged(evt);
+            }
+        });
 
-        buttonGroup1.add(rbtPosted);
-        rbtPosted.setText(resourceMap.getString("rbtPosted.text")); // NOI18N
-        rbtPosted.setName("rbtPosted"); // NOI18N
+        lblCreator.setLabelFor(txtCreator);
+        lblCreator.setText(resourceMap.getString("lblCreator.text")); // NOI18N
+        lblCreator.setName("lblCreator"); // NOI18N
 
-        buttonGroup1.add(rbtDissolved);
-        rbtDissolved.setText(resourceMap.getString("rbtDissolved.text")); // NOI18N
-        rbtDissolved.setName("rbtDissolved"); // NOI18N
+        txtCreator.setName("txtCreator"); // NOI18N
+
+        lblStatus.setText(resourceMap.getString("lblStatus.text")); // NOI18N
+        lblStatus.setName("lblStatus"); // NOI18N
+
+        buttonGroup1.add(rbtStatusAll);
+        rbtStatusAll.setSelected(true);
+        rbtStatusAll.setText(resourceMap.getString("rbtStatusAll.text")); // NOI18N
+        rbtStatusAll.setName("rbtStatusAll"); // NOI18N
+
+        buttonGroup1.add(rbtStatusPosted);
+        rbtStatusPosted.setText(resourceMap.getString("rbtStatusPosted.text")); // NOI18N
+        rbtStatusPosted.setName("rbtStatusPosted"); // NOI18N
+
+        buttonGroup1.add(rbtStatusDissolved);
+        rbtStatusDissolved.setText(resourceMap.getString("rbtStatusDissolved.text")); // NOI18N
+        rbtStatusDissolved.setName("rbtStatusDissolved"); // NOI18N
+
+        lblDriverName.setLabelFor(txtCreator);
+        lblDriverName.setText(resourceMap.getString("lblDriverName.text")); // NOI18N
+        lblDriverName.setName("lblDriverName"); // NOI18N
+
+        txtDriverName.setName("txtDriverName"); // NOI18N
+
+        lblPlateNo.setText(resourceMap.getString("lblPlateNo.text")); // NOI18N
+        lblPlateNo.setName("lblPlateNo"); // NOI18N
+
+        txtPlateNo.setName("txtPlateNo"); // NOI18N
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getActionMap(WTRegView.class, this);
         btnFind.setAction(actionMap.get("listWeightTickets")); // NOI18N
         btnFind.setText(resourceMap.getString("btnFind.text")); // NOI18N
         btnFind.setName("btnFind"); // NOI18N
 
-        lblType1.setLabelFor(txtNguoitao);
-        lblType1.setText(resourceMap.getString("lblType1.text")); // NOI18N
-        lblType1.setName("lblType1"); // NOI18N
-
-        txtTaixe.setName("txtTaixe"); // NOI18N
-
-        lblType2.setLabelFor(txtNguoitao);
-        lblType2.setText(resourceMap.getString("lblType2.text")); // NOI18N
-        lblType2.setName("lblType2"); // NOI18N
-
-        txtNguoitao.setText(resourceMap.getString("txtNguoitao.text")); // NOI18N
-        txtNguoitao.setName("txtNguoitao"); // NOI18N
-
-        lblBienSo.setText(resourceMap.getString("lblBienSo.text")); // NOI18N
-        lblBienSo.setName("lblBienSo"); // NOI18N
-
-        txtBienSo.setText(resourceMap.getString("txtBienSo.text")); // NOI18N
-        txtBienSo.setName("txtBienSo"); // NOI18N
-
-        lblGio.setText(resourceMap.getString("lblGio.text")); // NOI18N
-        lblGio.setName("lblGio"); // NOI18N
-
-        cbxTimeFrom.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" }));
-        cbxTimeFrom.setName("cbxTimeFrom"); // NOI18N
-
-        lblGioden.setText(resourceMap.getString("lblGioden.text")); // NOI18N
-        lblGioden.setName("lblGioden"); // NOI18N
-
-        cbxTimeTo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" }));
-        cbxTimeTo.setName("cbxTimeTo"); // NOI18N
-        cbxTimeTo.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cbxTimeToItemStateChanged(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(lblState)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(rbtDissolved)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(rbtPosted)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(rbtStateAll)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblBienSo))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(lblGio)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbxTimeFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(lblGioden)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbxTimeTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lblType1)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtBienSo)
-                    .addComponent(txtTaixe, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblType2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtNguoitao, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnFind, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(74, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblType1)
-                    .addComponent(txtTaixe, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblType2)
-                    .addComponent(txtNguoitao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblGio)
-                    .addComponent(cbxTimeFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblGioden)
-                    .addComponent(cbxTimeTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        javax.swing.GroupLayout pnFilterLayout = new javax.swing.GroupLayout(pnFilter);
+        pnFilter.setLayout(pnFilterLayout);
+        pnFilterLayout.setHorizontalGroup(
+            pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnFilterLayout.createSequentialGroup()
+                .addGap(33, 33, 33)
+                .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(lblHourFrom)
+                    .addComponent(lblDriverName)
+                    .addComponent(lblDateFrom))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblBienSo)
-                    .addComponent(txtBienSo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblState)
-                    .addComponent(rbtDissolved)
-                    .addComponent(rbtPosted)
-                    .addComponent(rbtStateAll)
-                    .addComponent(btnFind))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        lblState.getAccessibleContext().setAccessibleParent(jPanel2);
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(lblFrom)
-                        .addGap(28, 28, 28)
-                        .addComponent(dpFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(lblTo)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(dpTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnFind, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(pnFilterLayout.createSequentialGroup()
+                        .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(dpDateFrom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(pnFilterLayout.createSequentialGroup()
+                                .addComponent(cbxHourFrom, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(14, 14, 14)
+                                .addComponent(lblHourTo)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbxHourTo, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtDriverName))
+                        .addGap(36, 36, 36)
+                        .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblCreator)
+                            .addComponent(lblPlateNo)
+                            .addComponent(lblDateTo))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lblType)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbxType, 0, 357, Short.MAX_VALUE))
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 791, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                        .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtPlateNo, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtCreator)
+                            .addComponent(dpDateTo, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE))
+                        .addGap(46, 46, 46)
+                        .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblMaterialType)
+                            .addComponent(lblStatus))
+                        .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnFilterLayout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(rbtStatusAll)
+                                .addGap(18, 18, 18)
+                                .addComponent(rbtStatusPosted)
+                                .addGap(18, 18, 18)
+                                .addComponent(rbtStatusDissolved))
+                            .addGroup(pnFilterLayout.createSequentialGroup()
+                                .addGap(9, 9, 9)
+                                .addComponent(cbxMaterialType, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(27, 27, 27))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(dpFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblTo)
-                    .addComponent(dpTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblType)
-                    .addComponent(cbxType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblFrom))
+        pnFilterLayout.setVerticalGroup(
+            pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnFilterLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(dpDateTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblDateFrom)
+                    .addComponent(lblDateTo)
+                    .addComponent(dpDateFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbxMaterialType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblMaterialType))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnFilterLayout.createSequentialGroup()
+                        .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cbxHourFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbxHourTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblHourFrom)
+                            .addComponent(txtCreator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblCreator)
+                            .addComponent(lblHourTo))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtDriverName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblDriverName, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtPlateNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblPlateNo, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lblStatus)
+                        .addComponent(rbtStatusAll)
+                        .addComponent(rbtStatusPosted, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(rbtStatusDissolved, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addComponent(btnFind, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(36, 36, 36))
         );
 
-        pnFilter.add(jPanel1);
+        spnResult.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("spnResult.border.title"))); // NOI18N
+        spnResult.setName("spnResult"); // NOI18N
 
-        if(this.mode.equalsIgnoreCase(this.MODE_REG)){
-            pnWTs.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("pnWTs.border.title"))); // NOI18N
-        }else if(this.mode.equalsIgnoreCase(this.MODE_RPT)){
-            pnWTs.setBorder(javax.swing.BorderFactory.createTitledBorder("Kết quả")); // NOI18N
-        }
-        pnWTs.setName("pnWTs"); // NOI18N
-
-        tabWTs.setModel(new javax.swing.table.DefaultTableModel(
+        tabResults.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {},
                 {},
@@ -434,10 +390,10 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
             }
         ));
-        tabWTs.setEditable(false);
-        tabWTs.setName("tabWTs"); // NOI18N
-        tabWTs.setShowGrid(true);
-        pnWTs.setViewportView(tabWTs);
+        tabResults.setEditable(false);
+        tabResults.setName("tabResults"); // NOI18N
+        tabResults.setShowGrid(true);
+        spnResult.setViewportView(tabResults);
 
         pnPrintControl.setName("pnPrintControl"); // NOI18N
         pnPrintControl.setLayout(new javax.swing.BoxLayout(pnPrintControl, javax.swing.BoxLayout.LINE_AXIS));
@@ -446,216 +402,258 @@ public class WTRegView extends javax.swing.JInternalFrame {
         btnReprint.setText(resourceMap.getString("btnReprint.text")); // NOI18N
         btnReprint.setName("btnReprint"); // NOI18N
         pnPrintControl.add(btnReprint);
-        btnReprint.setVisible(this.mode.equalsIgnoreCase(this.MODE_REG));
-
-        btnPrintRpt.setAction(actionMap.get("printReport")); // NOI18N
-        btnPrintRpt.setText(resourceMap.getString("btnPrintRpt.text")); // NOI18N
-        btnPrintRpt.setName("btnPrintRpt"); // NOI18N
-        pnPrintControl.add(btnPrintRpt);
-        btnPrintRpt.setVisible(this.mode.equalsIgnoreCase(this.MODE_RPT));
 
         pnWTicket.setName("pnWTicket"); // NOI18N
+        pnWTicket.setLayout(new javax.swing.BoxLayout(pnWTicket, javax.swing.BoxLayout.LINE_AXIS));
 
-        lblDName.setText(resourceMap.getString("lblDName.text")); // NOI18N
-        lblDName.setName("lblDName"); // NOI18N
+        pnNLeft.setName("pnNLeft"); // NOI18N
 
-        txtDName.setName("txtDName"); // NOI18N
+        lblNDriverName.setText(resourceMap.getString("lblNDriverName.text")); // NOI18N
+        lblNDriverName.setName("lblNDriverName"); // NOI18N
 
-        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, newWeightTicket, org.jdesktop.beansbinding.ELProperty.create("${tenTaiXe}"), txtDName, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        txtNDriverName.setName("txtNDriverName"); // NOI18N
+
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, newWeightTicket, org.jdesktop.beansbinding.ELProperty.create("${tenTaiXe}"), txtNDriverName, org.jdesktop.beansbinding.BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txtDName, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txtNDriverName, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
 
-        txtDName.addActionListener(new java.awt.event.ActionListener() {
+        txtNDriverName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtDNameActionPerformed(evt);
+                txtNDriverNameActionPerformed(evt);
             }
         });
-        txtDName.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtNDriverName.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtDNameKeyReleased(evt);
+                txtNDriverNameKeyReleased(evt);
             }
         });
 
-        lblCMNDBL.setText(resourceMap.getString("lblCMNDBL.text")); // NOI18N
-        lblCMNDBL.setName("lblCMNDBL"); // NOI18N
+        lblNCMNDBL.setText(resourceMap.getString("lblNCMNDBL.text")); // NOI18N
+        lblNCMNDBL.setName("lblNCMNDBL"); // NOI18N
 
-        txtCMNDBL.setName("txtCMNDBL"); // NOI18N
+        txtNCMNDBL.setName("txtNCMNDBL"); // NOI18N
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, newWeightTicket, org.jdesktop.beansbinding.ELProperty.create("${cmndBl}"), txtCMNDBL, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, newWeightTicket, org.jdesktop.beansbinding.ELProperty.create("${cmndBl}"), txtNCMNDBL, org.jdesktop.beansbinding.BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txtCMNDBL, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txtNCMNDBL, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
 
-        txtCMNDBL.addActionListener(new java.awt.event.ActionListener() {
+        txtNCMNDBL.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtCMNDBLActionPerformed(evt);
+                txtNCMNDBLActionPerformed(evt);
             }
         });
-        txtCMNDBL.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtNCMNDBL.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtCMNDBLKeyReleased(evt);
+                txtNCMNDBLKeyReleased(evt);
             }
         });
 
-        lblLicPlate.setText(resourceMap.getString("lblLicPlate.text")); // NOI18N
-        lblLicPlate.setName("lblLicPlate"); // NOI18N
+        lblNPlateNo.setText(resourceMap.getString("lblNPlateNo.text")); // NOI18N
+        lblNPlateNo.setName("lblNPlateNo"); // NOI18N
 
-        txtLicPlate.setName("txtLicPlate"); // NOI18N
+        txtNPlateNo.setName("txtNPlateNo"); // NOI18N
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, newWeightTicket, org.jdesktop.beansbinding.ELProperty.create("${soXe}"), txtLicPlate, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, newWeightTicket, org.jdesktop.beansbinding.ELProperty.create("${soXe}"), txtNPlateNo, org.jdesktop.beansbinding.BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txtLicPlate, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txtNPlateNo, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
 
-        txtLicPlate.addActionListener(new java.awt.event.ActionListener() {
+        txtNPlateNo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtLicPlateActionPerformed(evt);
+                txtNPlateNoActionPerformed(evt);
             }
         });
-        txtLicPlate.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtNPlateNo.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtLicPlateKeyReleased(evt);
+                txtNPlateNoKeyReleased(evt);
             }
         });
 
-        lblTrailerPlate.setText(resourceMap.getString("lblTrailerPlate.text")); // NOI18N
-        lblTrailerPlate.setName("lblTrailerPlate"); // NOI18N
+        lblNTrailerPlate.setText(resourceMap.getString("lblNTrailerPlate.text")); // NOI18N
+        lblNTrailerPlate.setName("lblNTrailerPlate"); // NOI18N
 
-        lblRegCat.setText(resourceMap.getString("lblRegCat.text")); // NOI18N
-        lblRegCat.setName("lblRegCat"); // NOI18N
+        txtNTrailerPlate.setName("txtNTrailerPlate"); // NOI18N
 
-        rbtRegCatGroup.add(rbtInward);
-        rbtInward.setText(resourceMap.getString("rbtInward.text")); // NOI18N
-        rbtInward.setName("rbtInward"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${rbtEnabled}"), rbtInward, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, newWeightTicket, org.jdesktop.beansbinding.ELProperty.create("${soRomooc}"), txtNTrailerPlate, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        bindingGroup.addBinding(binding);
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txtNTrailerPlate, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
 
-        rbtInward.addItemListener(new java.awt.event.ItemListener() {
+        txtNTrailerPlate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNTrailerPlateActionPerformed(evt);
+            }
+        });
+        txtNTrailerPlate.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtNTrailerPlateKeyReleased(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pnNLeftLayout = new javax.swing.GroupLayout(pnNLeft);
+        pnNLeft.setLayout(pnNLeftLayout);
+        pnNLeftLayout.setHorizontalGroup(
+            pnNLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnNLeftLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnNLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblNTrailerPlate)
+                    .addComponent(lblNDriverName)
+                    .addComponent(lblNCMNDBL)
+                    .addComponent(lblNPlateNo))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnNLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(txtNPlateNo, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtNTrailerPlate, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtNDriverName, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
+                    .addComponent(txtNCMNDBL))
+                .addContainerGap(36, Short.MAX_VALUE))
+        );
+        pnNLeftLayout.setVerticalGroup(
+            pnNLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnNLeftLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnNLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblNDriverName)
+                    .addComponent(txtNDriverName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnNLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblNCMNDBL)
+                    .addComponent(txtNCMNDBL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnNLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtNPlateNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblNPlateNo))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnNLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblNTrailerPlate)
+                    .addComponent(txtNTrailerPlate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(18, Short.MAX_VALUE))
+        );
+
+        pnWTicket.add(pnNLeft);
+
+        pnNRight.setName("pnNRight"); // NOI18N
+
+        lblNRegCat.setText(resourceMap.getString("lblNRegCat.text")); // NOI18N
+        lblNRegCat.setName("lblNRegCat"); // NOI18N
+
+        rbtRegCatGroup.add(rbtNInward);
+        rbtNInward.setSelected(true);
+        rbtNInward.setText(resourceMap.getString("rbtNInward.text")); // NOI18N
+        rbtNInward.setName("rbtNInward"); // NOI18N
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${rbtEnabled}"), rbtNInward, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        bindingGroup.addBinding(binding);
+
+        rbtNInward.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                rbtInwardItemStateChanged(evt);
+                rbtNInwardItemStateChanged(evt);
             }
         });
 
-        rbtRegCatGroup.add(rbtOutward);
-        rbtOutward.setText(resourceMap.getString("rbtOutward.text")); // NOI18N
-        rbtOutward.setName("rbtOutward"); // NOI18N
+        rbtRegCatGroup.add(rbtNOutward);
+        rbtNOutward.setText(resourceMap.getString("rbtNOutward.text")); // NOI18N
+        rbtNOutward.setName("rbtNOutward"); // NOI18N
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${rbtEnabled}"), rbtOutward, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${rbtEnabled}"), rbtNOutward, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
 
-        rbtOutward.addItemListener(new java.awt.event.ItemListener() {
+        rbtNOutward.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                rbtOutwardItemStateChanged(evt);
+                rbtNOutwardItemStateChanged(evt);
             }
         });
 
-        lblRegItem.setText(resourceMap.getString("lblRegItem.text")); // NOI18N
-        lblRegItem.setName("lblRegItem"); // NOI18N
+        txtNMaterial.setName("txtNMaterial"); // NOI18N
 
-        txtRegItem.setName("txtRegItem"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, newWeightTicket, org.jdesktop.beansbinding.ELProperty.create("${regItemText}"), txtRegItem, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, newWeightTicket, org.jdesktop.beansbinding.ELProperty.create("${regItemText}"), txtNMaterial, org.jdesktop.beansbinding.BeanProperty.create("text"));
         bindingGroup.addBinding(binding);
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txtRegItem, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txtNMaterial, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
 
-        txtRegItem.addActionListener(new java.awt.event.ActionListener() {
+        txtNMaterial.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtRegItemActionPerformed(evt);
+                txtNMaterialActionPerformed(evt);
             }
         });
-        txtRegItem.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtNMaterial.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtRegItemKeyReleased(evt);
+                txtNMaterialKeyReleased(evt);
             }
         });
 
-        lblRegQty.setText(resourceMap.getString("lblRegQty.text")); // NOI18N
-        lblRegQty.setName("lblRegQty"); // NOI18N
+        lblNMaterial.setText(resourceMap.getString("lblNMaterial.text")); // NOI18N
+        lblNMaterial.setName("lblNMaterial"); // NOI18N
 
-        lblUnit.setText(resourceMap.getString("lblUnit.text")); // NOI18N
-        lblUnit.setName("lblUnit"); // NOI18N
+        cbxNMaterial.setEditable(true);
+        cbxNMaterial.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " " }));
+        cbxNMaterial.setName("cbxNMaterial"); // NOI18N
 
-        txfRegQty.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
-        txfRegQty.setName("txfRegQty"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txfRegQty, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), cbxNMaterial, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
 
-        txfRegQty.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txfRegQtyActionPerformed(evt);
-            }
-        });
-        txfRegQty.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txfRegQtyKeyReleased(evt);
-            }
-        });
-
-        lblDelNum.setText(resourceMap.getString("lblDelNum.text")); // NOI18N
-        lblDelNum.setName("lblDelNum"); // NOI18N
-
-        txtDelNum.setEditable(false);
-        txtDelNum.setAction(actionMap.get("checkDO")); // NOI18N
-        txtDelNum.setName("txtDelNum"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, newWeightTicket, org.jdesktop.beansbinding.ELProperty.create("${delivNumb}"), txtDelNum, org.jdesktop.beansbinding.BeanProperty.create("text"));
-        bindingGroup.addBinding(binding);
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txtDelNum, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
-        bindingGroup.addBinding(binding);
-
-        txtDelNum.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtDelNumActionPerformed(evt);
-            }
-        });
-        txtDelNum.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtDelNumKeyReleased(evt);
-            }
-        });
-
-        txtSoRomooc.setName("txtSoRomooc"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, newWeightTicket, org.jdesktop.beansbinding.ELProperty.create("${soRomooc}"), txtSoRomooc, org.jdesktop.beansbinding.BeanProperty.create("text"));
-        bindingGroup.addBinding(binding);
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txtSoRomooc, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
-        bindingGroup.addBinding(binding);
-
-        txtSoRomooc.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtSoRomoocActionPerformed(evt);
-            }
-        });
-        txtSoRomooc.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtSoRomoocKeyReleased(evt);
-            }
-        });
-
-        txtRegItem1.setEditable(true);
-        txtRegItem1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " " }));
-        txtRegItem1.setName("txtRegItem1"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txtRegItem1, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
-        bindingGroup.addBinding(binding);
-
-        txtRegItem1.addItemListener(new java.awt.event.ItemListener() {
+        cbxNMaterial.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                txtRegItem1ItemStateChanged(evt);
+                cbxNMaterialItemStateChanged(evt);
             }
         });
-        txtRegItem1.addActionListener(new java.awt.event.ActionListener() {
+        cbxNMaterial.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtRegItem1ActionPerformed(evt);
+                cbxNMaterialActionPerformed(evt);
             }
         });
-        txtRegItem1.addKeyListener(new java.awt.event.KeyAdapter() {
+        cbxNMaterial.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtRegItem1KeyReleased(evt);
+                cbxNMaterialKeyReleased(evt);
+            }
+        });
+
+        lblNWeight.setText(resourceMap.getString("lblNWeight.text")); // NOI18N
+        lblNWeight.setName("lblNWeight"); // NOI18N
+
+        txtNWeight.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
+        txtNWeight.setName("txtNWeight"); // NOI18N
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txtNWeight, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        bindingGroup.addBinding(binding);
+
+        txtNWeight.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNWeightActionPerformed(evt);
+            }
+        });
+        txtNWeight.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtNWeightKeyReleased(evt);
+            }
+        });
+
+        lblNWeightUnit.setText(resourceMap.getString("lblNWeightUnit.text")); // NOI18N
+        lblNWeightUnit.setName("lblNWeightUnit"); // NOI18N
+
+        lblNDONum.setText(resourceMap.getString("lblNDONum.text")); // NOI18N
+        lblNDONum.setName("lblNDONum"); // NOI18N
+
+        txtNDONum.setEditable(false);
+        txtNDONum.setAction(actionMap.get("checkDO")); // NOI18N
+        txtNDONum.setName("txtNDONum"); // NOI18N
+
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, newWeightTicket, org.jdesktop.beansbinding.ELProperty.create("${delivNumb}"), txtNDONum, org.jdesktop.beansbinding.BeanProperty.create("text"));
+        bindingGroup.addBinding(binding);
+        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txtNDONum, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        bindingGroup.addBinding(binding);
+
+        txtNDONum.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNDONumActionPerformed(evt);
+            }
+        });
+        txtNDONum.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtNDONumKeyReleased(evt);
             }
         });
 
@@ -668,167 +666,65 @@ public class WTRegView extends javax.swing.JInternalFrame {
             }
         });
 
-        txfRegQty1.setEditable(false);
-        txfRegQty1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
-        txfRegQty1.setName("txfRegQtyTruck"); // NOI18N
-        txfRegQty1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txfRegQty1ActionPerformed(evt);
-            }
-        });
-        txfRegQty1.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txfRegQty1KeyReleased(evt);
-            }
-        });
-
-        lblLicPlate1.setText(resourceMap.getString("lblLicPlate1.text")); // NOI18N
-        lblLicPlate1.setName("lblLicPlate1"); // NOI18N
-
-        lblDName1.setText(resourceMap.getString("lblDName1.text")); // NOI18N
-        lblDName1.setName("lblDName1"); // NOI18N
-
-        jButton1.setActionCommand(resourceMap.getString("btnLoad.actionCommand")); // NOI18N
-        jButton1.setLabel(resourceMap.getString("btnLoad.label")); // NOI18N
-        jButton1.setName("btnLoad"); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
-        txtDName1.setName("txtDName1"); // NOI18N
-        txtDName1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtDName1ActionPerformed(evt);
-            }
-        });
-        txtDName1.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtDName1KeyReleased(evt);
-            }
-        });
-
-        javax.swing.GroupLayout pnWTicketLayout = new javax.swing.GroupLayout(pnWTicket);
-        pnWTicket.setLayout(pnWTicketLayout);
-        pnWTicketLayout.setHorizontalGroup(
-            pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnWTicketLayout.createSequentialGroup()
+        javax.swing.GroupLayout pnNRightLayout = new javax.swing.GroupLayout(pnNRight);
+        pnNRight.setLayout(pnNRightLayout);
+        pnNRightLayout.setHorizontalGroup(
+            pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnNRightLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblTrailerPlate)
-                    .addComponent(lblLicPlate)
-                    .addComponent(lblCMNDBL)
-                    .addComponent(lblDName)
-                    .addComponent(lblDName1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtCMNDBL, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(pnWTicketLayout.createSequentialGroup()
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(txtLicPlate)
-                            .addComponent(txtSoRomooc, javax.swing.GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE))
-                        .addGap(49, 49, 49)
-                        .addComponent(lblLicPlate1)
+                .addGroup(pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblNDONum)
+                    .addComponent(lblNWeight)
+                    .addComponent(lblNMaterial)
+                    .addComponent(lblNRegCat))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnNRightLayout.createSequentialGroup()
+                        .addComponent(rbtNInward)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txfRegQty1, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnWTicketLayout.createSequentialGroup()
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(txtDName, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtDName1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE))
+                        .addComponent(rbtNOutward)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton1)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 149, Short.MAX_VALUE)
-                .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnWTicketLayout.createSequentialGroup()
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lblRegItem)
-                            .addComponent(lblRegCat)
-                            .addComponent(lblRegQty)
-                            .addComponent(lblDelNum))
+                        .addComponent(txtNMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnNRightLayout.createSequentialGroup()
+                        .addComponent(txtNWeight, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnWTicketLayout.createSequentialGroup()
-                                .addComponent(rbtInward)
-                                .addGap(18, 18, 18)
-                                .addComponent(rbtOutward))
-                            .addComponent(txtRegItem1, 0, 197, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnWTicketLayout.createSequentialGroup()
-                                .addComponent(txtDelNum, javax.swing.GroupLayout.DEFAULT_SIZE, 117, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnCheckDO, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(pnWTicketLayout.createSequentialGroup()
-                                .addComponent(txfRegQty, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(lblUnit))))
-                    .addGroup(pnWTicketLayout.createSequentialGroup()
-                        .addGap(88, 88, 88)
-                        .addComponent(txtRegItem, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)))
+                        .addComponent(lblNWeightUnit))
+                    .addGroup(pnNRightLayout.createSequentialGroup()
+                        .addComponent(txtNDONum, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnCheckDO, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbxNMaterial, 0, 340, Short.MAX_VALUE))
                 .addContainerGap())
         );
-        pnWTicketLayout.setVerticalGroup(
-            pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnWTicketLayout.createSequentialGroup()
-                .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(pnWTicketLayout.createSequentialGroup()
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtRegItem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(pnWTicketLayout.createSequentialGroup()
-                                .addGap(13, 13, 13)
-                                .addComponent(lblDName1)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE))
-                    .addGroup(pnWTicketLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtDName1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton1))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblDName)
-                    .addComponent(lblRegCat)
-                    .addComponent(rbtInward)
-                    .addComponent(rbtOutward)
-                    .addComponent(txtDName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        pnNRightLayout.setVerticalGroup(
+            pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnNRightLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblNRegCat)
+                    .addComponent(rbtNInward)
+                    .addComponent(rbtNOutward)
+                    .addComponent(txtNMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnWTicketLayout.createSequentialGroup()
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblCMNDBL)
-                            .addComponent(txtCMNDBL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnWTicketLayout.createSequentialGroup()
-                                .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(lblLicPlate)
-                                    .addComponent(txtLicPlate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(lblTrailerPlate)
-                                    .addComponent(txtSoRomooc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(txfRegQty1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(lblLicPlate1, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(pnWTicketLayout.createSequentialGroup()
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblRegItem)
-                            .addComponent(txtRegItem1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblRegQty)
-                            .addComponent(lblUnit)
-                            .addComponent(txfRegQty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblDelNum)
-                            .addComponent(txtDelNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnCheckDO)))))
+                .addGroup(pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblNMaterial)
+                    .addComponent(cbxNMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblNWeight)
+                    .addComponent(txtNWeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblNWeightUnit))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblNDONum)
+                    .addComponent(txtNDONum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCheckDO))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        pnControl.setName("pnControl"); // NOI18N
-        pnControl.setLayout(new javax.swing.BoxLayout(pnControl, javax.swing.BoxLayout.LINE_AXIS));
+        pnWTicket.add(pnNRight);
 
-        jSeparator1.setName("jSeparator1"); // NOI18N
-        pnControl.add(jSeparator1);
+        pnControl.setName("pnControl"); // NOI18N
 
         btnNew.setAction(actionMap.get("newRecord")); // NOI18N
         btnNew.setText(resourceMap.getString("btnNew.text")); // NOI18N
@@ -856,22 +752,19 @@ public class WTRegView extends javax.swing.JInternalFrame {
             }
         });
 
-        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
-        jLabel1.setName("jLabel1"); // NOI18N
+        lblWeightTicketNo.setText(resourceMap.getString("lblWeightTicketNo.text")); // NOI18N
+        lblWeightTicketNo.setName("lblWeightTicketNo"); // NOI18N
 
-        txtSodangtai.setEditable(false);
-        txtSodangtai.setText(resourceMap.getString("txtSodangtai.text")); // NOI18N
-        txtSodangtai.setAutoscrolls(false);
-        txtSodangtai.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        txtSodangtai.setName("txtSodangtai"); // NOI18N
+        txtWeightTicketNo.setEditable(false);
+        txtWeightTicketNo.setAutoscrolls(false);
+        txtWeightTicketNo.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        txtWeightTicketNo.setName("txtWeightTicketNo"); // NOI18N
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 866, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+        javax.swing.GroupLayout pnControlLayout = new javax.swing.GroupLayout(pnControl);
+        pnControl.setLayout(pnControlLayout);
+        pnControlLayout.setHorizontalGroup(
+            pnControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnControlLayout.createSequentialGroup()
                 .addComponent(btnNew)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnClear)
@@ -879,52 +772,55 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addComponent(btnMany)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnSave)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtSodangtai, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnControl, javax.swing.GroupLayout.DEFAULT_SIZE, 1, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(82, 82, 82)
+                .addComponent(lblWeightTicketNo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txtWeightTicketNo, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(127, 127, 127))
+        );
+        pnControlLayout.setVerticalGroup(
+            pnControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnControlLayout.createSequentialGroup()
+                .addGap(1, 1, 1)
+                .addGroup(pnControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnNew)
+                    .addComponent(btnClear)
+                    .addComponent(btnMany)
+                    .addComponent(btnSave)))
+            .addGroup(pnControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(txtWeightTicketNo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblWeightTicketNo))
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(pnWTs, javax.swing.GroupLayout.DEFAULT_SIZE, 842, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(pnWTicket, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnPrintControl, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 842, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pnFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 909, Short.MAX_VALUE)
+                    .addComponent(spnResult, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 909, Short.MAX_VALUE)
+                    .addComponent(pnPrintControl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 909, Short.MAX_VALUE)
+                    .addComponent(pnWTicket, javax.swing.GroupLayout.DEFAULT_SIZE, 909, Short.MAX_VALUE)
+                    .addComponent(pnControl, javax.swing.GroupLayout.DEFAULT_SIZE, 909, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(pnFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addComponent(pnFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnWTs, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(spnResult, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnPrintControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnWTicket, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(5, 5, 5)
-                        .addComponent(pnControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnNew)
-                            .addComponent(btnClear)
-                            .addComponent(btnMany)
-                            .addComponent(btnSave)
-                            .addComponent(jLabel1)
-                            .addComponent(txtSodangtai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(73, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(pnControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(24, Short.MAX_VALUE))
         );
-
-        pnWTicket.setVisible(this.mode.equalsIgnoreCase(this.MODE_REG));
-        pnControl.setVisible(this.mode.equalsIgnoreCase(this.MODE_REG));
 
         bindingGroup.bind();
 
@@ -932,72 +828,72 @@ public class WTRegView extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     // <editor-fold defaultstate="collapsed" desc="Event methods">
-    private void txtDNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDNameKeyReleased
-        //setSaveNeeded(isValidated());
-}//GEN-LAST:event_txtDNameKeyReleased
-
-    private void txtCMNDBLKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCMNDBLKeyReleased
-        //setSaveNeeded(isValidated());
-}//GEN-LAST:event_txtCMNDBLKeyReleased
-
-    private void rbtInwardItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbtInwardItemStateChanged
+    private void txtNDriverNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNDriverNameKeyReleased
         setSaveNeeded(isValidated());
-}//GEN-LAST:event_rbtInwardItemStateChanged
+}//GEN-LAST:event_txtNDriverNameKeyReleased
 
-    private void rbtOutwardItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbtOutwardItemStateChanged
+    private void txtNCMNDBLKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNCMNDBLKeyReleased
         setSaveNeeded(isValidated());
-}//GEN-LAST:event_rbtOutwardItemStateChanged
+}//GEN-LAST:event_txtNCMNDBLKeyReleased
 
-    private void txtRegItemKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRegItemKeyReleased
-//        setSaveNeeded(isValidated());
-}//GEN-LAST:event_txtRegItemKeyReleased
+    private void rbtNInwardItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbtNInwardItemStateChanged
+        setSaveNeeded(isValidated());
+}//GEN-LAST:event_rbtNInwardItemStateChanged
 
-    private void txfRegQtyKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txfRegQtyKeyReleased
-        //setSaveNeeded(isValidated());
-}//GEN-LAST:event_txfRegQtyKeyReleased
+    private void rbtNOutwardItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbtNOutwardItemStateChanged
+        setSaveNeeded(isValidated());
+}//GEN-LAST:event_rbtNOutwardItemStateChanged
 
-    private void txtDelNumKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDelNumKeyReleased
-//        if (WeighBridgeApp.getApplication().isOfflineMode()) {
-//            return;
-//        } else {
-//            if (txtDelNum.getText().trim() == null) {
-//                return;
-//            }
-//            String valDO = txtDelNum.getText().trim();
-//            //val = Conversion_Exit.Conv_output_num(val, 10); //+20100112#01 conversion number output
-//            if (valDO.length() == 0 || (validDO && valDO.length() >= 7 && validDO && valDO.length() <= 10)) {
-//                if ((evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) || (evt.isShiftDown() && evt.getKeyCode() == KeyEvent.VK_INSERT)) {
-//                    validDO = false;
-//                    lblDelNum.setForeground(Color.red);
-//                } else {
-//                    lblDelNum.setForeground(Color.black);
-//                }
-//            } else {
-//                validDO = false;
-//                lblDelNum.setForeground(Color.red);
-//            }
-//            if (valDO.length() == 0) {
-//                validDO = true;
-//                setRbtEnabled(true);
-//            } else {
-////            setRbtEnabled(false);
-//            }
-//            if (valDO.length() != 0) {
-//                txtRegItem.setEditable(false);
-//                txfRegQty.setEditable(false);
-//            } else {
-//                txtRegItem.setEditable(true);
-//                txfRegQty.setEditable(true);
-//            }
-//            //setSaveNeeded(isValidated() && validDO);
-////        setSaveNeeded(validDO);
-//            if (validDO) {
-//                setSaveNeeded(isValidated());
-//            }
-//        }
-}//GEN-LAST:event_txtDelNumKeyReleased
+    private void txtNMaterialKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNMaterialKeyReleased
+        setSaveNeeded(isValidated());
+}//GEN-LAST:event_txtNMaterialKeyReleased
 
-    private void txtLicPlateKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtLicPlateKeyReleased
+    private void txtNWeightKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNWeightKeyReleased
+        setSaveNeeded(isValidated());
+}//GEN-LAST:event_txtNWeightKeyReleased
+
+    private void txtNDONumKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNDONumKeyReleased
+        if (WeighBridgeApp.getApplication().isOfflineMode()) {
+            return;
+        } else {
+            if (txtNDONum.getText().trim() == null) {
+                return;
+            }
+            String valDO = txtNDONum.getText().trim();
+            //val = Conversion_Exit.Conv_output_num(val, 10); //+20100112#01 conversion number output
+            if (valDO.length() == 0 || (validDO && valDO.length() >= 7 && validDO && valDO.length() <= 10)) {
+                if ((evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) || (evt.isShiftDown() && evt.getKeyCode() == KeyEvent.VK_INSERT)) {
+                    validDO = false;
+                    txtNDONum.setForeground(Color.red);
+                } else {
+                    txtNDONum.setForeground(Color.black);
+                }
+            } else {
+                validDO = false;
+                txtNDONum.setForeground(Color.red);
+            }
+            if (valDO.length() == 0) {
+                validDO = true;
+                setRbtEnabled(true);
+            } else {
+//            setRbtEnabled(false);
+            }
+            if (valDO.length() != 0) {
+                txtNMaterial.setEditable(false);
+                txtNWeight.setEditable(false);
+            } else {
+                txtNMaterial.setEditable(true);
+                txtNWeight.setEditable(true);
+            }
+            //setSaveNeeded(isValidated() && validDO);
+//        setSaveNeeded(validDO);
+            if (validDO) {
+                setSaveNeeded(isValidated());
+            }
+        }
+}//GEN-LAST:event_txtNDONumKeyReleased
+
+    private void txtNPlateNoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNPlateNoKeyReleased
         /* if (!evt.isActionKey() && evt.getKeyCode() != KeyEvent.VK_ENTER && evt.getKeyCode() != KeyEvent.VK_ESCAPE) {
         //-{20110119#01 bo qua viec kiem tra hop le khi nhap so xe
         //setSaveNeeded(isValidated());
@@ -1005,75 +901,75 @@ public class WTRegView extends javax.swing.JInternalFrame {
         }
          * 
          */
-        //   if (!evt.isActionKey() && evt.getKeyCode() != KeyEvent.VK_ENTER) 
-        //      setSaveNeeded(isValidated()); 
-    }//GEN-LAST:event_txtLicPlateKeyReleased
-
-    private void txtLicPlateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtLicPlateActionPerformed
+        if (!evt.isActionKey() && evt.getKeyCode() != KeyEvent.VK_ENTER) {
+            setSaveNeeded(isValidated());
+        }
+    }//GEN-LAST:event_txtNPlateNoKeyReleased
+    private void txtNPlateNoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNPlateNoActionPerformed
         // TODO add your handling code here:
         setSaveNeeded(isValidated());
-    }//GEN-LAST:event_txtLicPlateActionPerformed
+    }//GEN-LAST:event_txtNPlateNoActionPerformed
 
-private void txtDNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDNameActionPerformed
+private void txtNDriverNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNDriverNameActionPerformed
 // TODO add your handling code here:
     setSaveNeeded(isValidated());
-}//GEN-LAST:event_txtDNameActionPerformed
+}//GEN-LAST:event_txtNDriverNameActionPerformed
 
-private void txtCMNDBLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCMNDBLActionPerformed
+private void txtNCMNDBLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNCMNDBLActionPerformed
 // TODO add your handling code here:
     setSaveNeeded(isValidated());
-}//GEN-LAST:event_txtCMNDBLActionPerformed
+}//GEN-LAST:event_txtNCMNDBLActionPerformed
 
-private void txtRegItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRegItemActionPerformed
+private void txtNMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNMaterialActionPerformed
 // TODO add your handling code here:
     setSaveNeeded(isValidated());
-}//GEN-LAST:event_txtRegItemActionPerformed
+}//GEN-LAST:event_txtNMaterialActionPerformed
 
-private void txfRegQtyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txfRegQtyActionPerformed
+private void txtNWeightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNWeightActionPerformed
 // TODO add your handling code here:
     setSaveNeeded(isValidated());
-}//GEN-LAST:event_txfRegQtyActionPerformed
+}//GEN-LAST:event_txtNWeightActionPerformed
 
-private void txtDelNumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDelNumActionPerformed
+private void txtNDONumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNDONumActionPerformed
 // TODO add your handling code here:
-//    setSaveNeeded(isValidated());
-}//GEN-LAST:event_txtDelNumActionPerformed
+    setSaveNeeded(isValidated());
+}//GEN-LAST:event_txtNDONumActionPerformed
 
-private void txtSoRomoocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSoRomoocActionPerformed
+private void txtNTrailerPlateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNTrailerPlateActionPerformed
 // TODO add your handling code here:
-}//GEN-LAST:event_txtSoRomoocActionPerformed
+}//GEN-LAST:event_txtNTrailerPlateActionPerformed
 
-private void txtSoRomoocKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSoRomoocKeyReleased
+private void txtNTrailerPlateKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNTrailerPlateKeyReleased
 // TODO add your handling code here:
-}//GEN-LAST:event_txtSoRomoocKeyReleased
+}//GEN-LAST:event_txtNTrailerPlateKeyReleased
 
-private void cbxTimeToItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbxTimeToItemStateChanged
+private void cbxHourToItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbxHourToItemStateChanged
 // TODO add your handling code here:
-    if (cbxTimeTo.getSelectedIndex() < cbxTimeFrom.getSelectedIndex()) {
-        cbxTimeTo.setSelectedIndex(cbxTimeFrom.getSelectedIndex());
+    if (cbxHourTo.getSelectedIndex() < cbxHourFrom.getSelectedIndex()) {
+        cbxHourTo.setSelectedIndex(cbxHourFrom.getSelectedIndex());
     }
-}//GEN-LAST:event_cbxTimeToItemStateChanged
+}//GEN-LAST:event_cbxHourToItemStateChanged
 
-private void txtRegItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRegItem1ActionPerformed
+private void cbxNMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxNMaterialActionPerformed
 // TODO add your handling code here:
 
-    txtRegItem.setText(txtRegItem1.getSelectedItem().toString());
+    txtNMaterial.setText(cbxNMaterial.getSelectedItem().toString());
 
     setSaveNeeded(isValidated());
-}//GEN-LAST:event_txtRegItem1ActionPerformed
+}//GEN-LAST:event_cbxNMaterialActionPerformed
 
-private void txtRegItem1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_txtRegItem1ItemStateChanged
+private void cbxNMaterialItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbxNMaterialItemStateChanged
 // TODO add your handling code here:
 
-    txtRegItem.setText(txtRegItem1.getSelectedItem().toString());
+    txtNMaterial.setText(cbxNMaterial.getSelectedItem().toString());
     setSaveNeeded(isValidated());
-}//GEN-LAST:event_txtRegItem1ItemStateChanged
+}//GEN-LAST:event_cbxNMaterialItemStateChanged
 
-private void txtRegItem1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRegItem1KeyReleased
+private void cbxNMaterialKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cbxNMaterialKeyReleased
 // TODO add your handling code here:
-    txtRegItem.setText(txtRegItem1.getSelectedItem().toString());
+    txtNMaterial.setText(cbxNMaterial.getSelectedItem().toString());
     setSaveNeeded(isValidated());
-}//GEN-LAST:event_txtRegItem1KeyReleased
+}//GEN-LAST:event_cbxNMaterialKeyReleased
 
 private void btnManyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManyActionPerformed
 // TODO add your handling code here:
@@ -1091,183 +987,75 @@ private void btnManyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
             }
         }
         if (isNumber && soDO.length() >= 8 && soDO.length() <= 10) {
-            if (txtDelNum.getText().equals("")) {
-                txtDelNum.setText(Conversion_Exit.Conv_output_num(soDO, 10));
-                
+            if (txtNDONum.getText().equals("")) {
+                txtNDONum.setText(Conversion_Exit.Conv_output_num(soDO, 10));
+
             } else {
-                String inputDO = (soDO.length() == 8 ) ? Conversion_Exit.Conv_output_num(soDO, 8): Conversion_Exit.Conv_output_num(soDO, 10);
+                String inputDO = (soDO.length() == 8) ? Conversion_Exit.Conv_output_num(soDO, 8) : Conversion_Exit.Conv_output_num(soDO, 10);
                 // String inputDO2 = Conversion_Exit.Conv_output_num(soDO, 8);
-                if (txtDelNum.getText().indexOf(inputDO) == -1 ) {
-                    txtDelNum.setText(txtDelNum.getText() + "-" + inputDO);
+                if (txtNDONum.getText().indexOf(inputDO) == -1) {
+                    txtNDONum.setText(txtNDONum.getText() + "-" + inputDO);
                 } else {
                     JOptionPane.showMessageDialog(this.getRootPane(), resourceMapMsg.getString("msg.duplicateDo"));
                 }
             }
         } else {
             JOptionPane.showMessageDialog(this.getRootPane(), resourceMapMsg.getString("msg.falseDo"));
-            txtDelNum.setText(""); 
+            txtNDONum.setText("");
         }
-        
+
     }
 }//GEN-LAST:event_btnManyActionPerformed
-private boolean CheckTaiTrong( )
-{
-     String bsxe = "" ; 
- String bsRoomoc  ="" ; 
- String fTrongtai = ""; 
- int answer = 1 ; 
-         
-        WeightTicketJpaController con = new WeightTicketJpaController();
-  
-    txtLicPlate.setText(txtLicPlate.getText().trim().toUpperCase());
-    
-    if(txtSoRomooc.getText() == "" )
-         txtSoRomooc.setText(""); 
-    else 
-        txtSoRomooc.setText(txtSoRomooc.getText().trim().toUpperCase());
 
-    bsxe = txtLicPlate.getText() ; 
-    bsRoomoc = txtSoRomooc.getText();     
-    txtDName.setText(txtDName.getText().trim().toUpperCase());
-    txtCMNDBL.setText(txtCMNDBL.getText().trim().toUpperCase());
-    //  txtSoRomooc.setText(txtSoRomooc.getText().trim().toUpperCase());
-    
-    if (bsxe != "" || bsRoomoc != "" ) 
-    {            
-        fTrongtai = con.getRegQtyOfVehicle(bsxe, bsRoomoc); 
-        txfRegQty1.setText(fTrongtai);   
-        
-       // if (  bCheckTrongTai(fTrongtai, txfRegQty.getText().toString() ))
-            if (  Double.parseDouble( fTrongtai ) <  Double.parseDouble(txfRegQty.getText().toString())) 
-             answer = iMessage(" Lưu ý ! Khối lượng hàng đăng ký vượt quá trọng tải của phương tiện. Có muốn tiếp tục thực hiện không ? ") ;        
-     }
-    
-    return (answer <=0 )? false : true ; 
-}
-        
 private void btnCheckDOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCheckDOActionPerformed
 // TODO add your handling code here:
     //  txtLicPlate = 
 
-       
+
     //if (!CheckTaiTrong( ) ) 
-       //    return ; 
+    //    return ; 
 
     setSaveNeeded(isValidated());
     flag_check = true;
 }//GEN-LAST:event_btnCheckDOActionPerformed
-private boolean bCheckTrongTai( String Trongtai, String  Kldk )         
-{
-   
-     return ( Double.parseDouble( Trongtai ) <  Double.parseDouble (Kldk)) ? false : true ; 
-      
-}
 
-private int  iMessage(String messg )        
-{
-     int answer = 0 ;      
-     answer = JOptionPane.showConfirmDialog( this.getRootPane(),messg ,                  
-                    JOptionPane.MESSAGE_PROPERTY,
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.QUESTION_MESSAGE); 
-              if( answer ==  JOptionPane.NO_OPTION)
-                  return answer ; 
-              
-              return 1 ;
-}
+    private int iMessage(String messg) {
+        int answer = 0;
+        answer = JOptionPane.showConfirmDialog(this.getRootPane(), messg,
+                JOptionPane.MESSAGE_PROPERTY,
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
+        if (answer == JOptionPane.NO_OPTION) {
+            return answer;
+        }
+
+        return 1;
+    }
 
 private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-
-         
-   // if (!CheckTaiTrong( ) ) 
-   //        return ; 
-           
+    // if (!CheckTaiTrong( ) ) 
+    //        return ; 
 }//GEN-LAST:event_btnSaveActionPerformed
 
-    private void txfRegQty1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txfRegQty1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txfRegQty1ActionPerformed
-
-    private void txfRegQty1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txfRegQty1KeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txfRegQty1KeyReleased
-
-    private void txtDName1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDName1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtDName1ActionPerformed
-
-    private void txtDName1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDName1KeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtDName1KeyReleased
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        try {
-            String pRegId = txtDName1.getText().toString().trim();
-            if (pRegId == null) {
-                pRegId = "";
-            }
-            List wts = this.wTRegRepository.getDangtaiV2(pRegId);
-            if (wts != null) {
-                for (Object obj : wts) {
-                    Object[] wt = (Object[]) obj;
-                    txtDName.setText(wt[4].toString());
-                    txtCMNDBL.setText(wt[5].toString());
-                    txtLicPlate.setText(wt[2].toString());
-                    txtSoRomooc.setText(wt[3].toString());
-                    txtDelNum.setText(wt[30].toString());
-                    sPO = wt[33].toString();
-                    txfRegQty.setText(wt[32].toString());
-                    dKldk = Double.parseDouble(wt[32].toString());
-                    if (txtDName1.getText().startsWith("N")) {
-                        rbtOutward.setSelected(true);
-                        txtRegItem.setText(wt[35].toString());
-                    }
-                    cPara.G_POSTO = sPO;
-                    cPara.G_REGID = txtDName1.getText().trim();
-                    cPara.G_PLANT_TRANS = wt[34].toString();
-                    cPara.G_VENDOR = sVendor;
-                    sVendor = wt[31].toString();
-                }
-            }
-
-        } catch (Exception ex) {
-            logger.error(ex.toString());
-
-        }
-         
-        
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dpFromActionPerformed
+private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dpDateFromActionPerformed
 // TODO add your handling code here:
-}//GEN-LAST:event_dpFromActionPerformed
+}//GEN-LAST:event_dpDateFromActionPerformed
     private DefaultComboBoxModel getMatsModel() {
         DefaultComboBoxModel result = new DefaultComboBoxModel();
-        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-        String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
-        List wts = weightTicketRepository.getMatsModel(client, plant);
-        MaterialPK matPK1 = new MaterialPK();
-        Material mat1 = new Material();
-        matPK1.setMandt(WeighBridgeApp.getApplication().getConfig().getsClient());
-        matPK1.setMatnr("-2");
-        mat1.setMaktx("Tất cả");
-        mat1.setMaterialPK(matPK1);
-        result.addElement(mat1);
-        for (Object obj : wts) {
-            Object[] wt = (Object[]) obj;
-            MaterialPK matPK = new MaterialPK();
-            Material mat = new Material();
-            matPK.setMandt(WeighBridgeApp.getApplication().getConfig().getsClient());
-            if (wt[0] == null) {
-                matPK.setMatnr("-1");
+        List<Material> materials = materialRepository.getListMaterial();
+        Material mat = new Material();
+        mat.setMatnr("-2");
+        mat.setMaktx("Tất cả");
+        result.addElement(mat);
+        for (Material material : materials) {
+            if (material.getMatnr() == null) {
+                mat = new Material();
+                mat.setMatnr("-1");
                 mat.setMaktx("Linh tinh");
-            } else {
-                matPK.setMatnr(wt[0].toString());
-                mat.setMaktx(wt[1].toString());
             }
-            mat.setMaterialPK(matPK);
-            if (result.getIndexOf(mat) < 0) {
-                result.addElement(mat);
+
+            if (result.getIndexOf(material) < 0) {
+                result.addElement(material);
             }
         }
 
@@ -1276,13 +1064,13 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
 
     @Action(block = Task.BlockingScope.ACTION)
     public Task listWeightTickets() {
-                
+
         return new ListWeightTicketsTask(WeighBridgeApp.getApplication());
     }
 
     @Action(block = Task.BlockingScope.ACTION)
     public Task reprintRecord() {
-        if (tabWTs.getSelectedRow() == -1) {
+        if (tabResults.getSelectedRow() == -1) {
             return null;
         } else {
             return new ReprintRecordTask(WeighBridgeApp.getApplication());
@@ -1291,8 +1079,10 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
 
     @Action(block = Task.BlockingScope.ACTION)
     public Task printReport() {
-        if (tabWTs.getModel().getRowCount() == 0) {
+        if (tabResults.getModel().getRowCount() == 0) {
             return null;
+
+
         } else {
             return new PrintReportTask(org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class));
         }
@@ -1302,22 +1092,22 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
     public Task checkDO() {
 
         // upper & trim  -- tuanna add 28.11.fc2012 
-        txtLicPlate.setText(txtLicPlate.getText().trim().toUpperCase());
-        txtDName.setText(txtDName.getText().trim().toUpperCase());
-        txtCMNDBL.setText(txtCMNDBL.getText().trim().toUpperCase());
+        txtNPlateNo.setText(txtNPlateNo.getText().trim().toUpperCase());
+        txtNDriverName.setText(txtNDriverName.getText().trim().toUpperCase());
+        txtNCMNDBL.setText(txtNCMNDBL.getText().trim().toUpperCase());
         // End add  
-        
+
         // Fix bug đơn hàng sai mã vật tư - 01/04/2013 
-          
+
         // end fix
-        
+
 
         if (WeighBridgeApp.getApplication().isOfflineMode()) {
             return new CheckDOOFFTask(WeighBridgeApp.getApplication());
             //setSaveNeeded(isValidated() && validDO);
             //return null;
         } else {
-            String val[] = txtDelNum.getText().trim().split("-");
+            String val[] = txtNDONum.getText().trim().split("-");
             for (int i = 0; i < val.length; i++) {
                 if (val[i].length() > 0) {
                     //+20100106 convert DO number to SAP format
@@ -1325,12 +1115,12 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                     //+20100106 convert DO number to SAP format
                     return new CheckDOTask(WeighBridgeApp.getApplication());
                 } else if (val[i].length() == 0) {
-                    lblDelNum.setForeground(Color.black);
+                    lblNDONum.setForeground(Color.black);
                     validDO = true;
                     setSaveNeeded(isValidated() && validDO);
                     return null;
                 } else {
-                    lblDelNum.setForeground(Color.red);
+                    lblNDONum.setForeground(Color.red);
                     validDO = false;
                     setSaveNeeded(isValidated() && validDO);
                 }
@@ -1347,24 +1137,22 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
         setCreatable(false);
         setClearable(true);
         setSaveNeeded(isValidated());
-        txtSodangtai.setText("");
+        txtWeightTicketNo.setText("");
         //txtRegId.setText("");
-        txtRegItem.setEditable(true);
-        txtRegItem1.setEditable(true);
-        txfRegQty.setEditable(true);
+        txtNMaterial.setEditable(true);
+        cbxNMaterial.setEditable(true);
+        txtNWeight.setEditable(true);
         btnMany.setEnabled(true);
         btnCheckDO.setEnabled(true);
         btnSave.setEnabled(false);
-        jButton1.setEnabled(true); 
         // Nha may FICO Hiep Phuoc only 
-       if( WeighBridgeApp.getApplication().getConfig().getwPlant().contentEquals("1411"))
-       {
-        rbtOutward.setSelected(true);
-        rbtInward.setEnabled(false); 
-       }
-        
-        
-        
+        if (WeighBridgeApp.getApplication().getConfig().getwPlant().contentEquals("1411")) {
+            rbtNOutward.setSelected(true);
+            rbtNInward.setEnabled(false);
+        }
+
+
+
     }
 
     @Action(enabledProperty = "clearable")
@@ -1378,12 +1166,10 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
 //        txtSodangtai.setText("");
         btnMany.setEnabled(false);
         btnCheckDO.setEnabled(false);
-        sVendor = ""; 
+        sVendor = "";
         sPO = "";
-        dKldk = 0; 
-        cPara.G_POSTO = ""; 
-        cPara.G_REGID ="";
-          
+        dKldk = 0;
+
     }
 
     @Action(enabledProperty = "saveNeeded")
@@ -1391,15 +1177,15 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
         //+20110119#01
         btnMany.setEnabled(false);
         btnCheckDO.setEnabled(false);
-        btnSave.setEnabled(false); 
-        
+        btnSave.setEnabled(false);
+
         if (!(isValidated() && validDO)) {
             return null;
         }
         //+20110119#01
 
         int answer = -1;
-        if (txtDelNum.getText().trim().isEmpty() || txtDelNum.getText() == null) {
+        if (txtNDONum.getText().trim().isEmpty() || txtNDONum.getText() == null) {
             answer = JOptionPane.showConfirmDialog(
                     this.getRootPane(),
                     "Bạn có muốn tiếp lục lưu phiếu đăng tài không có số D.O ?",
@@ -1410,17 +1196,19 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
             answer = JOptionPane.YES_OPTION;
         }
         if (answer == JOptionPane.YES_OPTION) {
-            btnSave.setEnabled(false); 
-            return new SaveRecordTask(WeighBridgeApp.getApplication());           
-            
+            btnSave.setEnabled(false);
+            return new SaveRecordTask(WeighBridgeApp.getApplication());
+
         } else {
             btnMany.setEnabled(true);
             btnCheckDO.setEnabled(true);
-            
+
             btnSave.setEnabled(true);
             return null;
+
+
         }
-         
+
     }
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Task Classes">
@@ -1445,203 +1233,99 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                 setMessage(resourceMapMsg.getString("msg.getData"));
                 AppConfig config = WeighBridgeApp.getApplication().getConfig();
                 //Tuanna add to protected data as folowing IT security policy -- 20/05/2013         
-                int days = (int)((dpTo.getDate().getTime() - dpFrom.getDate().getTime()) / (1000 * 60 * 60 * 24));               
-                    Date Now = new Date();
-                int days2 = (int)((Now.getTime() - dpTo.getDate().getTime()) / (1000 * 60 * 60 * 24));                
+                int days = (int) ((dpDateTo.getDate().getTime() - dpDateFrom.getDate().getTime()) / (1000 * 60 * 60 * 24));
+//                Date Now = new Date();
+//                int days2 = (int) ((Now.getTime() - dpDateTo.getDate().getTime()) / (1000 * 60 * 60 * 24));
 //                if ( days >1 || days2 > 1 || 1>1 )   
 //                {
 //                    JOptionPane.showMessageDialog(rootPane, "Thông báo ! Yêu cầu truy vấn dữ liệu vượt khoảng thời gian cho phép."  );
 //                      return null; 
 //                }                    
-               //End add 
-              
+                //End add 
+
                 WeightTicketJpaController conWTicket = new WeightTicketJpaController();
                 //filter modified by hoangvv
-                Object[] select = cbxType.getSelectedObjects();
+                Object[] select = cbxMaterialType.getSelectedObjects();
                 com.gcs.wb.jpa.entity.Material selecttext = (com.gcs.wb.jpa.entity.Material) select[0];
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                String fFrom = format.format(dpFrom.getDate());
-                String fTo = format.format(dpTo.getDate());
+                String fFrom = format.format(dpDateFrom.getDate());
+                String fTo = format.format(dpDateTo.getDate());
                 System.out.println("dpFrom : " + fFrom + " to " + fTo);
 
-                List<WeightTicket> result = conWTicket.findByMandtWPlantDateFull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMaterialPK().getMatnr(), txtBienSo.getText().trim());;
-                List<WeightTicket> data = conWTicket.findByMandtWPlantDateFull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMaterialPK().getMatnr(), txtBienSo.getText().trim());
-                result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
-                if (selecttext.getMaktx().equals("Linh tinh")) {
-                    data = conWTicket.findByMandtWPlantDateNull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
-                    result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
-                    if (rbtDissolved.isSelected()) {
-                        data = conWTicket.findByMandtWPlantDateDissolvedNull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
-                        result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
-                    } else if (rbtPosted.isSelected()) {
-                        data = conWTicket.findByMandtWPlantDatePostedNull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
-                        result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
-                    } else if (rbtStateAll.isSelected()) {
-                        data = conWTicket.findByMandtWPlantDateAllNull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
-                        result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
+                List<WeightTicket> result = null;
+                List<WeightTicket> data = null;
+                if (selecttext.getMatnr().equals("-1")) {
+                    if (rbtStatusDissolved.isSelected()) {
+                        data = conWTicket.findByDateDissolvedNull(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
+                        result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
+                    } else if (rbtStatusPosted.isSelected()) {
+                        data = conWTicket.findByDatePostedNull(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
+                        result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
+                    } else if (rbtStatusAll.isSelected()) {
+                        data = conWTicket.findByDateAllNull(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
+                        result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
                     }
-                } else if (selecttext.getMaktx().equals("Tất cả")) {
-                    data = conWTicket.findByMandtWPlantDateNullAll(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
-                    result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
-                    if (rbtDissolved.isSelected()) {
-                        data = conWTicket.findByMandtWPlantDateDissolvedNullAll(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
-                        result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
-                    } else if (rbtPosted.isSelected()) {
-                        data = conWTicket.findByMandtWPlantDatePostedNullAll(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
-                        result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
-                    } else if (rbtStateAll.isSelected()) {
-                        data = conWTicket.findByMandtWPlantDateAllNullAll(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
-                        result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
+                } else if (selecttext.getMatnr().equals("-2")) {
+                    if (rbtStatusDissolved.isSelected()) {
+                        data = conWTicket.findByDateDissolvedNullAll(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
+                        result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
+                    } else if (rbtStatusPosted.isSelected()) {
+                        data = conWTicket.findByDatePostedNullAll(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
+                        result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
+                    } else if (rbtStatusAll.isSelected()) {
+                        data = conWTicket.findByDateAllNullAll(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
+                        result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
                     }
                 } else {
-                    if (rbtDissolved.isSelected()) {
-                        data = conWTicket.findByMandtWPlantDateDissolved(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMaterialPK().getMatnr(), txtBienSo.getText().trim());
-                        result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
-                    } else if (rbtPosted.isSelected()) {
-                        data = conWTicket.findByMandtWPlantDatePosted(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMaterialPK().getMatnr(), txtBienSo.getText().trim());
-                        result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
-                    } else if (rbtStateAll.isSelected()) {
-                        data = conWTicket.findByMandtWPlantDateAll(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMaterialPK().getMatnr(), txtBienSo.getText().trim());
-                        result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
+                    if (rbtStatusDissolved.isSelected()) {
+                        data = conWTicket.findByDateDissolved(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), selecttext.getMatnr(), txtPlateNo.getText().trim());
+                        result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
+                    } else if (rbtStatusPosted.isSelected()) {
+                        data = conWTicket.findByDatePosted(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), selecttext.getMatnr(), txtPlateNo.getText().trim());
+                        result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
+                    } else if (rbtStatusAll.isSelected()) {
+                        data = conWTicket.findByDateAll(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), selecttext.getMatnr(), txtPlateNo.getText().trim());
+                        result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
                     }
                 }
 
                 setProgress(2, 0, 4);
                 setMessage(resourceMapMsg.getString("msg.handleDate"));
                 weightTicketList.addAll(result);
-                if (getMode().equalsIgnoreCase(Constants.WTRegView.MODE_REG)) {
-                    wtData = new Object[weightTicketList.size()][wtCols.length];
-                } else if (getMode().equalsIgnoreCase(Constants.WTRegView.MODE_RPT)) {
-                    wtRptData = new Object[weightTicketList.size()][wtRptCols.length];
+                wtData = new Object[weightTicketList.size()][wtCols.length];
 
-                }
                 for (int i = 0; i < weightTicketList.size(); i++) {
                     WeightTicket item = weightTicketList.get(i);
-                    if (getMode().equalsIgnoreCase(Constants.WTRegView.MODE_REG)) {
-                        WeightTicketPK pk = item.getWeightTicketPK();
-                        if (!pk.getMandt().equalsIgnoreCase(config.getsClient()) && !pk.getWPlant().equalsIgnoreCase(config.getwPlant().toString())) {
-                            continue;
-                        }
-                        wtData[i][0] = pk.getSeqByDay();
-                        wtData[i][1] = item.getTenTaiXe();
-                        wtData[i][2] = item.getCmndBl();
-                        wtData[i][3] = item.getSoXe();
-                        wtData[i][4] = item.getSoRomooc();
-                        wtData[i][5] = item.getRegCategory();
-                        wtData[i][6] = item.getRegItemText();
-                        wtData[i][7] = item.getRegItemQty();
-                        wtData[i][8] = item.getDelivNumb();
-                        wtData[i][9] = item.getCreator();
-                        wtData[i][10] = item.getSeqByMonth();
-                        wtData[i][11] = item.getCreateDate();
-                        String hh;
-                        String mm;
-                        String ss;
-                        hh = item.getCreateTime().substring(0, 2);
-                        mm = item.getCreateTime().substring(2, 4);
-                        ss = item.getCreateTime().substring(4);
-                        wtData[i][12] = hh + ":" + mm + ":" + ss;
-                        wtData[i][13] = item.getDissolved();
-                        if (item.getPosted() == 1) {
-                            wtData[i][14] = true;
-                        } else {
-                            wtData[i][14] = false;
-                        }
+                    wtData[i][0] = item.getSeqDay();
+                    wtData[i][1] = item.getDriverName();
+                    wtData[i][2] = item.getDriverIdNo();
+                    wtData[i][3] = item.getPlateNo();
+                    wtData[i][4] = item.getTrailerId();
+                    wtData[i][5] = item.getRegType();
+                    wtData[i][6] = item.getRegItemDescription();
+                    wtData[i][7] = item.getRegItemQuantity();
+                    wtData[i][8] = item.getDeliveryOrderNo();
+                    wtData[i][9] = item.getCreator();
+                    wtData[i][10] = item.getSeqMonth();
 
-                    } else if (getMode().equalsIgnoreCase(Constants.WTRegView.MODE_RPT)) {
-                        WeightTicketPK pk = item.getWeightTicketPK();
-                        if (!pk.getMandt().equalsIgnoreCase(config.getsClient()) && !pk.getWPlant().equalsIgnoreCase(config.getwPlant().toString())) {
-                            continue;
-                        }
-                        String hh;
-                        String mm;
-                        String ss;
-                        hh = item.getCreateTime().substring(0, 2);
-                        mm = item.getCreateTime().substring(2, 4);
-                        ss = item.getCreateTime().substring(4);
-                        Calendar create_date = Calendar.getInstance();
-                        create_date.setTime(item.getCreateDate());
-                        create_date.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hh));
-                        create_date.set(Calendar.MINUTE, Integer.valueOf(mm));
-                        create_date.set(Calendar.SECOND, Integer.valueOf(ss));
-                        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-                        String ct = df.format(create_date.getTime());
-                        wtRptData[i][0] = i + 1;// item.getSeqByMonth();
-                        wtRptData[i][1] = item.getWeightTicketPK().getSeqByDay();
-                        wtRptData[i][2] = item.getTenTaiXe();
-                        wtRptData[i][3] = item.getCmndBl();
-                        wtRptData[i][4] = item.getSoXe();
-                        wtRptData[i][5] = item.getSoRomooc();
-                        wtRptData[i][6] = item.getCreator();
-                        wtRptData[i][7] = ct;
-                        wtRptData[i][8] = item.getRegCategory();
-                        wtRptData[i][9] = item.getRegItemText();
-                        if (item.getFTime() != null) {
-                            Calendar cf = Calendar.getInstance();
-                            cf.setTime(item.getFTime());
-                            String ft = df.format(cf.getTime());
-                            wtRptData[i][10] = ft;//item.getFTime();
-                        } else {
-                            wtRptData[i][10] = item.getFTime();
-                        }
-                        wtRptData[i][11] = item.getFScale() == null ? item.getFScale() : item.getFScale().doubleValue() / 1000d;
-                        if (item.getSTime() != null) {
-                            Calendar sf = Calendar.getInstance();
-                            sf.setTime(item.getSTime());
-                            String st = df.format(sf.getTime());
-                            wtRptData[i][12] = st;//item.getSTime();
-                        } else {
-                            wtRptData[i][12] = item.getSTime();
-                        }
-                        wtRptData[i][13] = item.getSScale() == null ? item.getSScale() : item.getSScale().doubleValue() / 1000d;
-                        wtRptData[i][14] = item.getGQty();
-                        wtRptData[i][15] = item.getDelivNumb();
-                        wtRptData[i][16] = item.getMatDoc();
-                        wtRptData[i][17] = item.getDissolved();
-                        if (item.getPosted() == 1) {
-                            wtRptData[i][18] = true;
-                        } else {
-                            wtRptData[i][18] = false;
-                        }
-//                        wtRptData[i][18] = item.getPosted();
-                        
-                        // Tuanna 2018 07 22 set transport vendor 
-                        /*
-                        Vehicle v = entityManager.find(Vehicle.class, item.getSoXe());
-                        if (v != null && v.getTaAbbr() != null) {
-                            TransportAgent tagent = entityManager.find(TransportAgent.class, v.getTaAbbr());
-                            if (tagent != null) {
-                                wtRptData[i][19] = tagent.getName();
-                            }
-                        }
-                         * 
-                         */
-                       
-                        
-                         wtRptData[i][20] = item.getEbeln();
-                         wtRptData[i][19] = sVendor;  
-/*
- //tuanna add 24.12.2012 to show ID Ticket on grid ;
-                        int seq = item.getWeightTicketPK().getSeqByDay() ; 
-                        String sseq = "" ;       
-                        sseq =(seq <10 )?"00":((seq >= 10 && seq <100)?"0":"");
-                        sseq += Integer.toString(seq); 
-                        
-                        /*
-                        if (seq <10 )
-                            sseq = "00" + Integer.toString(seq);
-                        else if (seq >= 10 && seq <100 )
-                             sseq = "0" + Integer.toString(seq); 
-                        else 
-                            sseq =  Integer.toString(seq);
-                        */
-  //                      wtRptData[i][21] = item.getWeightTicketPK().getId()+sseq;
+                    Calendar create_date = Calendar.getInstance();
+                    create_date.setTime(item.getCreatedDate());
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                    wtData[i][11] = dateFormat;
 
-
+                    String hh = item.getCreatedTime().substring(0, 2);
+                    String mm = item.getCreatedTime().substring(3, 5);
+                    String ss = item.getCreatedTime().substring(6, 8);
+                    wtData[i][12] = hh + ":" + mm + ":" + ss;
+                    wtData[i][13] = item.isDissolved();
+                    if (item.isPosted()) {
+                        wtData[i][14] = true;
+                    } else {
+                        wtData[i][14] = false;
                     }
                 }
                 setProgress(3, 0, 4);
-                editable = new boolean[getMode().equalsIgnoreCase(Constants.WTRegView.MODE_REG) ? wtCols.length : wtRptCols.length];
+                editable = new boolean[wtCols.length];
                 for (int i = 0; i < editable.length; i++) {
                     editable[i] = false;
                 }
@@ -1661,11 +1345,8 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
         @Override
         protected void finished() {
             setMessage(resourceMapMsg.getString("msg.finished"));
-            if (getMode().equalsIgnoreCase(Constants.WTRegView.MODE_REG)) {
-                WeighBridgeApp.getApplication().bindJTableModel(tabWTs, wtData, wtCols, wtTypes, editable);
-            } else if (getMode().equalsIgnoreCase(Constants.WTRegView.MODE_RPT)) {
-                WeighBridgeApp.getApplication().bindJTableModel(tabWTs, wtRptData, wtRptCols, wtRptTypes, editable);
-            }
+            WeighBridgeApp.getApplication().bindJTableModel(tabResults, wtData, wtCols, wtTypes, editable);
+
             setCreatable(true);
             setFormEditable(false);
 //            setRbtEnabled(false);
@@ -1692,27 +1373,27 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
 
         @Override
         protected Object doInBackground() {
-            selectedRow = weightTicketList.get(tabWTs.convertRowIndexToModel(tabWTs.getSelectedRow()));
+            selectedRow = weightTicketList.get(tabResults.convertRowIndexToModel(tabResults.getSelectedRow()));
             if (selectedRow != null) {
                 try {
-                    // if (selectedRow.getDissolved() == null)
+                    // if (selectedRow.isDissolved() == null)
                     //  {
                     //      selectedRow.setDissolved(false);
                     // }
-                    if ((selectedRow.getDissolved() == null) || (selectedRow.getDissolved() == false)) { //+20100112#01 Không cho in khi phiếu đăng tài bị hủy
+                    if (!selectedRow.isDissolved()) { //+20100112#01 Không cho in khi phiếu đăng tài bị hủy
                         setMessage(resourceMapMsg.getString("msg.rePrinting"));
-                        txtSodangtai.setText(selectedRow.getWeightTicketPK().getId().toString()
-                                + String.format("%03d", selectedRow.getWeightTicketPK().getSeqByDay())); //+20100303
+                        txtWeightTicketNo.setText(selectedRow.getId()
+                                + String.format("%03d", selectedRow.getSeqDay())); //+20100303
 
 
                         // tuanna add -- copy ticket ID to clipboard. 28.11.2012 
 
-                        StringSelection stringSelection = new StringSelection(txtSodangtai.getText());
+                        StringSelection stringSelection = new StringSelection(txtWeightTicketNo.getText());
                         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                         clipboard.setContents(stringSelection, null);
 
                         // End add. 
-                        printWT(selectedRow, true); 
+                        printWT(selectedRow, true);
                     } else { //+20100112#01  Không cho in khi phiếu đăng tài bị hủy
                         setMessage(resourceMapMsg.getString("msg.ticketDestroy"));
                     } //+20100112#01  Không cho in khi phiếu đăng tài bị hủy
@@ -1753,8 +1434,8 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
         protected Object doInBackground() {
             try {
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                String kFrom = format.format(dpFrom.getDate());
-                String kTo = format.format(dpTo.getDate());
+                String kFrom = format.format(dpDateFrom.getDate());
+                String kTo = format.format(dpDateTo.getDate());
                 System.out.println("dpFrom : " + kFrom + " to " + kTo);
                 Map<String, Object> params = new HashMap<String, Object>();
                 params.put("P_PNAME_RPT", WeighBridgeApp.getApplication().getSapSetting().getNameRpt());
@@ -1769,7 +1450,7 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                 } else {
                     reportName = "./rpt/rptPQ/WTList.jasper";
                 }
-                JasperPrint jasperPrint = JasperFillManager.fillReport(reportName, params, new JRTableModelDataSource(tabWTs.getModel()));
+                JasperPrint jasperPrint = JasperFillManager.fillReport(reportName, params, new JRTableModelDataSource(tabResults.getModel()));
                 JasperViewer jv = new JasperViewer(jasperPrint, false);
                 jv.setVisible(true);
             } catch (Exception ex) {
@@ -1787,8 +1468,7 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
 
     private class CheckDOTask extends org.jdesktop.application.Task<Object, Void> {
 
-        private OutbDel outb = null;
-        private OutbDelPK outbPK = null;
+        private OutboundDelivery outb = null;
         private String mode = null;
         private Customer kunnr = null;
         private Customer kunag = null;
@@ -1810,7 +1490,7 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
         protected Object doInBackground() {
             String oldKunnr = "";
             String oldSoxe = "";
-            String[] val = txtDelNum.getText().trim().split("-");
+            String[] val = txtNDONum.getText().trim().split("-");
             for (int k = 0; k < val.length; k++) {
                 setMessage(resourceMapMsg.getString("msg.checkDOInDB"));
                 setProgress(1, 1, 4);
@@ -1822,28 +1502,21 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                 //+20100106 convert DO number to SAP format
 //            System.out.println(val);
 //            System.out.println(val.length());
-                outbPK = new OutbDelPK(WeighBridgeApp.getApplication().getConfig().getsClient(), val[k]);
-                outb = entityManager.find(OutbDel.class, outbPK);
+                outb = outboundDeliveryRepository.findByDeliveryOrderNo(val[k]);
                 setMessage(resourceMapMsg.getString("checkDOInSap"));
                 setProgress(2, 1, 4);
-                OutbDel sapOutb = sapService.getOutboundDelivery(val[k], true);
+                OutboundDelivery sapOutb = sapService.getOutboundDelivery(val[k], true);
                 if (sapOutb != null) {
                     if (sapOutb.getKunnr() != null && !sapOutb.getKunnr().trim().isEmpty()) {
-                        kunnr = entityManager.find(
-                                Customer.class,
-                                new CustomerPK(WeighBridgeApp.getApplication().getConfig().getsClient(), sapOutb.getKunnr()));
+                        kunnr = customerRepository.findByKunnr(sapOutb.getKunnr());
                         sapKunnr = sapService.getCustomer(sapOutb.getKunnr());
                     }
                     if (sapOutb.getKunag() != null && !sapOutb.getKunag().trim().isEmpty()) {
-                        kunag = entityManager.find(
-                                Customer.class,
-                                new CustomerPK(WeighBridgeApp.getApplication().getConfig().getsClient(), sapOutb.getKunag()));
+                        kunag = customerRepository.findByKunnr(sapOutb.getKunag());
                         sapKunag = sapService.getCustomer(sapOutb.getKunag());
                     }
                     if (sapOutb.getLifnr() != null && !sapOutb.getLifnr().trim().isEmpty()) {
-                        lifnr = entityManager.find(
-                                Vendor.class,
-                                new VendorPK(WeighBridgeApp.getApplication().getConfig().getsClient(), sapOutb.getLifnr()));
+                        lifnr = vendorRepository.findByLifnr(sapOutb.getLifnr());
                         sapLifnr = sapService.getVendor(sapOutb.getLifnr());
                         // abbr = sapLifnr.getVendorPK().getLifnr();
                     }
@@ -1899,9 +1572,9 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                 entityManager.getTransaction().commit();
                 entityManager.clear();
 //                Check kunnr
-                if (outb != null &&
-                        !oldKunnr.equals("") &&
-                        !oldKunnr.equals(outb.getKunnr())) {
+                if (outb != null
+                        && !oldKunnr.equals("")
+                        && !oldKunnr.equals(outb.getKunnr())) {
                     validDO = false;
                     String msg = resourceMapMsg.getString("msg.notDuplicateCode");
                     setMessage(msg);
@@ -1910,17 +1583,17 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                     oldKunnr = outb.getKunnr();
                 }
 //                Check bien so xe
-                if (outb != null &&
-                        !oldSoxe.equals("") &&
-                        !oldSoxe.equals(outb.getTraid())) {
+                if (outb != null
+                        && !oldSoxe.equals("")
+                        && !oldSoxe.equals(outb.getTraid())) {
                     validDO = false;
                     String msg = resourceMapMsg.getString("msg.notDuplicateLicensePlate");
                     setMessage(msg);
                     JOptionPane.showMessageDialog(rootPane, msg);
                 } else if (outb != null) {
                     oldSoxe = outb.getTraid();
-                }                                        
-                
+                }
+
                 //Set Mode
                 if (validDO && outb != null) {
                     /**
@@ -1957,10 +1630,8 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                 //Check if D.O was used already or not???
                 if (validDO && outb != null) {
                     WeightTicket wt = null;
-                    String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-                    String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
-                    String delivNumb = outb.getOutbDelPK().getDelivNumb();
-                    wt = weightTicketRepository.findByMandtWPlantDelivNumb(client, plant, delivNumb);
+                    String delivNumb = outb.getDeliveryOrderNo();
+                    wt = weightTicketRepository.findByDeliveryOrderNo(delivNumb);
                     String wplant = "";
                     wplant = WeighBridgeApp.getApplication().getConfig().getwPlant().toString();
                     String sDoType = "LF,LR,NL,ZTLF,ZTLR";
@@ -1972,7 +1643,7 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                     }
 
                     if ((sDoType.indexOf(Lfart) >= 0 && outb.getWbstk() == 'X' && outb.getWerks().toString().equalsIgnoreCase(wplant))
-                            || (wt != null && (wt.getDissolved() == null || wt.getDissolved() == false))) {
+                            || (wt != null && !wt.isDissolved())) {
                         validDO = false;
                         outb = null;
                         String msg = "D.O \" " + val[k] + " \" đã được dùng để " + mode + " hàng, vui lòng tự  kiểm tra trước khi liên hệ đường dây nóng Dịch vụ khách hàng 0919 49 59 69 ";
@@ -1980,83 +1651,81 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                         JOptionPane.showMessageDialog(rootPane, msg);
                     } else {
                         flag_revert = true;
-                        outb_number = outb.getOutbDelPK().getDelivNumb().toString().trim();
+                        outb_number = outb.getDeliveryOrderNo().toString().trim();
                     }
                 }
 //<< 20120712#01 - check shipping point -------
-                
-              
+
+
                 if (validDO && outb != null) {
                     // Tạm thời sử dụng đầu tây ninh
                     //ship_point = "(?i).*" + outb.getShipPoint() + "*";
                     // if (WeighBridgeApp.getApplication().getConfig().getShId().toString().matches(ship_point)){
                     //--------- Tuấn sửa ngày 050812  ------------------    
                     ship_point = outb.getShipPoint();
-                    String tmpShippoint = WeighBridgeApp.getApplication().getConfig().getShId().toString(); 
+                    String tmpShippoint = WeighBridgeApp.getApplication().getConfig().getShId().toString();
                     String WbID = WeighBridgeApp.getApplication().getConfig().getWbId().toString();
-                    
-                    String Matname  = outb.getArktx().toUpperCase();
-                   
-                    String sp =  ship_point.toString(); 
-                    Boolean ship =true  ;
-                     //--------- Tuấn sửa ngày 04.04.2013  ------------------ 
+
+                    String Matname = outb.getArktx().toUpperCase();
+
+                    String sp = ship_point.toString();
+                    Boolean ship = true;
+                    //--------- Tuấn sửa ngày 04.04.2013  ------------------ 
                     //-- Checking SALE ORDER wrong material - plant 
-                    
+
                     String mymode = "";
-                    
-                    if( rbtInward.isSelected()==true ) 
-                        
-                            mymode = "Nhập"; 
-                    else 
-                       if (rbtOutward.isSelected()==true) 
-                            mymode = "Xuất"; 
-                       else 
-                           mymode = "..."; 
-                    
-                    if (mymode.indexOf("...")>=0)
-                    {
-                         String msg = resourceMapMsg.getString("msg.plzChooseIO");
-                            setMessage(msg);
-                            JOptionPane.showMessageDialog(rootPane, msg);
+
+                    if (rbtNInward.isSelected() == true) {
+                        mymode = "Nhập";
+                    } else if (rbtNOutward.isSelected() == true) {
+                        mymode = "Xuất";
+                    } else {
+                        mymode = "...";
                     }
-            /*       
+
+                    if (mymode.indexOf("...") >= 0) {
+                        String msg = resourceMapMsg.getString("msg.plzChooseIO");
+                        setMessage(msg);
+                        JOptionPane.showMessageDialog(rootPane, msg);
+                    }
+                    /*       
                     if (tmpShippoint.indexOf(sp) < 0) 
                     {                        
-                        ship = false ;
+                    ship = false ;
                     }
                     if ( Matname.indexOf("XI")>=0 ) 
-                        {                               
-                           if ( ((sp.equals("1208") || sp.equals("141D")) && ( Matname.indexOf("NM FICO") < 0 ) )   
-                                   ||    ((sp.equals("1208") || sp.equals("141D")) && ( Matname.indexOf("NMFICO") < 0 ) )
-                              || ( sp.equals("131D")  && ( Matname.indexOf("NM TN") < 0)  ) 
-                              || ( sp.equals("1201")  && ( Matname.indexOf("GC DIC") < 0)  ) 
-                              || ( !sp.equals("1201")  && ( Matname.indexOf("GC DIC") >= 0)  )
-                              || ( sp.equals("1213")  && ( Matname.indexOf("DICBP") < 0)  )  
-                              || ( ! sp.equals("1213")  && ( Matname.indexOf("DICBP") >= 0)  )
-                              || ( ( sp.equals("1209") ||sp.equals("151D") ) && (  Matname.indexOf("NM TN") < 0 )   ) 
-                               
-                            )
-                                   ship = false ; 
-                                                      
-                          }   
+                    {                               
+                    if ( ((sp.equals("1208") || sp.equals("141D")) && ( Matname.indexOf("NM FICO") < 0 ) )   
+                    ||    ((sp.equals("1208") || sp.equals("141D")) && ( Matname.indexOf("NMFICO") < 0 ) )
+                    || ( sp.equals("131D")  && ( Matname.indexOf("NM TN") < 0)  ) 
+                    || ( sp.equals("1201")  && ( Matname.indexOf("GC DIC") < 0)  ) 
+                    || ( !sp.equals("1201")  && ( Matname.indexOf("GC DIC") >= 0)  )
+                    || ( sp.equals("1213")  && ( Matname.indexOf("DICBP") < 0)  )  
+                    || ( ! sp.equals("1213")  && ( Matname.indexOf("DICBP") >= 0)  )
+                    || ( ( sp.equals("1209") ||sp.equals("151D") ) && (  Matname.indexOf("NM TN") < 0 )   ) 
+                    
+                    )
+                    ship = false ; 
+                    
+                    }   
                     if (  ( sp.equals("131D") ) && (  Matname.indexOf("NM TN") >= 0 ) && ( WbID.indexOf("1511")>=0 && mode.indexOf("nh") >= 0 ) && mymode.indexOf("Nhập")>=0 && mymode.indexOf("...") < 0  )
-                        ship = true; 
+                    ship = true; 
                     
-                     if (  ( sp.equals("1213") ) && (  Matname.indexOf("DICBP") >= 0 ) )
-                        ship = true; 
+                    if (  ( sp.equals("1213") ) && (  Matname.indexOf("DICBP") >= 0 ) )
+                    ship = true; 
                     
                     if (  ( sp.equals("131D") ) && (  Matname.indexOf("NM TN") >= 0 ) && ( WbID.indexOf("1511")>=0 && mode.indexOf("nh") >= 0 ) && mymode.indexOf("Nhập")>=0 && mymode.indexOf("...") < 0  )
-                        ship = true; 
+                    ship = true; 
                     
-                  if (  ( sp.equals("131D") ) && (  Matname.indexOf("NM TN") >= 0 ) && ( WbID.indexOf("1111")>=0 && mode.indexOf("nh") >= 0 ) && mymode.indexOf("Nhập")>=0 && mymode.indexOf("...") < 0  )
-                        ship = true; 
+                    if (  ( sp.equals("131D") ) && (  Matname.indexOf("NM TN") >= 0 ) && ( WbID.indexOf("1111")>=0 && mode.indexOf("nh") >= 0 ) && mymode.indexOf("Nhập")>=0 && mymode.indexOf("...") < 0  )
+                    ship = true; 
                     
-                     if (mymode.indexOf("...")>=0)
-                          ship = false;
-                     */     
-                  //Modified by Tuan Nguyen at Tafico Jsc 23/12/2014
-                    
-                    float fCount = 0; 
+                    if (mymode.indexOf("...")>=0)
+                    ship = false;
+                     */
+                    //Modified by Tuan Nguyen at Tafico Jsc 23/12/2014
+
+                    float fCount = 0;
                     String pDoNumber = val[k];
                     String pWplant = WeighBridgeApp.getApplication().getConfig().getwPlant();
 
@@ -2091,17 +1760,17 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                 }
                 //end 20121217
                 if (validDO && outb != null) {
-                    newWeightTicket.setItem(outb.getDelivItem());
+                    newWeightTicket.setItem(outb.getDeliveryItem());
                     newWeightTicket.setMatnrRef(outb.getMatnr());
-                    newWeightTicket.setRegItemText(outb.getArktx());
+                    newWeightTicket.setRegItemDescription(outb.getArktx());
                     newWeightTicket.setUnit(outb.getVrkme());
                     newWeightTicket.setKunnr(outb.getKunnr());
-                    txtRegItem.setText(outb.getArktx());
-                    txtRegItem1.setSelectedItem(outb.getArktx());
+                    txtNMaterial.setText(outb.getArktx());
+                    cbxNMaterial.setSelectedItem(outb.getArktx());
                     BigDecimal regqty = BigDecimal.ZERO;
-                    List<OutbDetailsV2> detail = new ArrayList<OutbDetailsV2>();
-                    OutbDetailsV2 item = null;
-                    String[] do_list = txtDelNum.getText().trim().split("-");
+                    List<OutboundDetail> detail = new ArrayList<OutboundDetail>();
+                    OutboundDetail item = null;
+                    String[] do_list = txtNDONum.getText().trim().split("-");
                     for (int i = 0; i < do_list.length; i++) {
                         String doNum = do_list[i];
                         WeightTicketJpaController conWTicket = new WeightTicketJpaController();
@@ -2115,7 +1784,7 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                             regqty = regqty.add(item.getLfimg());
                         }
                     }
-                    txfRegQty.setValue(regqty.doubleValue());
+                    txtNWeight.setValue(regqty.doubleValue());
                     outbDel = outb;
                 }
                 setProgress(4, 1, 4);
@@ -2141,8 +1810,7 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
 
     private class CheckDOOFFTask extends org.jdesktop.application.Task<Object, Void> {
 
-        private OutbDel outb = null;
-        private OutbDelPK outbPK = null;
+        private OutboundDelivery outb = null;
         private String mode = null;
         private Customer kunnr = null;
         private Customer kunag = null;
@@ -2164,7 +1832,7 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
         protected Object doInBackground() {
             String oldKunnr = "";
             String oldSoxe = "";
-            String[] val = txtDelNum.getText().trim().split("-");
+            String[] val = txtNDONum.getText().trim().split("-");
             for (int k = 0; k < val.length; k++) {
                 setMessage(resourceMapMsg.getString("msg.checkDOInDb"));
                 setProgress(1, 1, 4);
@@ -2176,98 +1844,97 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                 //+20100106 convert DO number to SAP format
 //            System.out.println(val);
 //            System.out.println(val.length());
-                outbPK = new OutbDelPK(WeighBridgeApp.getApplication().getConfig().getsClient(), val[k]);
-                outb = entityManager.find(OutbDel.class, outbPK);
+                outb = outboundDeliveryRepository.findByDeliveryOrderNo(val[k]);
                 /*HLD18
                 setMessage("Kiểm tra D.O trong SAP ...");
                 setProgress(2, 1, 4);
-                OutbDel sapOutb = SAP2Local.getOutboundDelivery(val[k], true);
+                OutboundDelivery sapOutb = SAP2Local.getOutboundDelivery(val[k], true);
                 if (sapOutb != null) {
-                    if (sapOutb.getKunnr() != null && !sapOutb.getKunnr().trim().isEmpty()) {
-                        kunnr = entityManager.find(
-                                Customer.class,
-                                new CustomerPK(WeighBridgeApp.getApplication().getConfig().getsClient(), sapOutb.getKunnr()));
-                        sapKunnr = SAP2Local.getCustomer(sapOutb.getKunnr());
-                    }
-                    if (sapOutb.getKunag() != null && !sapOutb.getKunag().trim().isEmpty()) {
-                        kunag = entityManager.find(
-                                Customer.class,
-                                new CustomerPK(WeighBridgeApp.getApplication().getConfig().getsClient(), sapOutb.getKunag()));
-                        sapKunag = SAP2Local.getCustomer(sapOutb.getKunag());
-                    }
-                    if (sapOutb.getLifnr() != null && !sapOutb.getLifnr().trim().isEmpty()) {
-                        lifnr = entityManager.find(
-                                Vendor.class,
-                                new VendorPK(WeighBridgeApp.getApplication().getConfig().getsClient(), sapOutb.getLifnr()));
-                        sapLifnr = SAP2Local.getVendor(sapOutb.getLifnr());
-                        // abbr = sapLifnr.getVendorPK().getLifnr();
-                    }
-
+                if (sapOutb.getKunnr() != null && !sapOutb.getKunnr().trim().isEmpty()) {
+                kunnr = entityManager.find(
+                Customer.class,
+                new CustomerPK(WeighBridgeApp.getApplication().getConfig().getsClient(), sapOutb.getKunnr()));
+                sapKunnr = SAP2Local.getCustomer(sapOutb.getKunnr());
+                }
+                if (sapOutb.getKunag() != null && !sapOutb.getKunag().trim().isEmpty()) {
+                kunag = entityManager.find(
+                Customer.class,
+                new CustomerPK(WeighBridgeApp.getApplication().getConfig().getsClient(), sapOutb.getKunag()));
+                sapKunag = SAP2Local.getCustomer(sapOutb.getKunag());
+                }
+                if (sapOutb.getLifnr() != null && !sapOutb.getLifnr().trim().isEmpty()) {
+                lifnr = entityManager.find(
+                Vendor.class,
+                new VendorPK(WeighBridgeApp.getApplication().getConfig().getsClient(), sapOutb.getLifnr()));
+                sapLifnr = SAP2Local.getVendor(sapOutb.getLifnr());
+                // abbr = sapLifnr.getVendorPK().getLifnr();
+                }
+                
                 }
                 setMessage("Lưu dữ liệu D.O xuống CSDL ...");
                 setProgress(3, 1, 4);
                 if (!entityManager.getTransaction().isActive()) {
-                    entityManager.getTransaction().begin();
+                entityManager.getTransaction().begin();
                 }
                 //Store Ship to party Info
                 if (sapKunnr != null && kunnr == null) {
-                    entityManager.persist(sapKunnr);
+                entityManager.persist(sapKunnr);
                 } else if (sapKunnr != null && kunnr != null) {
-                    entityManager.merge(sapKunnr);
+                entityManager.merge(sapKunnr);
                 } else if (sapKunnr == null && kunnr != null) {
-                    entityManager.remove(kunnr);
+                entityManager.remove(kunnr);
                 }
                 //Store Sold to party Info
                 if (sapKunag != null && kunag == null && !sapOutb.getKunnr().equalsIgnoreCase(sapOutb.getKunag())) {
-                    entityManager.persist(sapKunag);
+                entityManager.persist(sapKunag);
                 } else if (sapKunag != null && kunag != null) {
-                    entityManager.merge(sapKunag);
+                entityManager.merge(sapKunag);
                 } else if (sapKunag == null && kunag != null && !sapOutb.getKunnr().equalsIgnoreCase(sapOutb.getKunag())) {
-                    entityManager.remove(kunag);
+                entityManager.remove(kunag);
                 }
                 //Store Vendor Info
                 if (sapLifnr != null && lifnr == null) {
-                    entityManager.persist(sapLifnr);
+                entityManager.persist(sapLifnr);
                 } else if (sapLifnr != null && lifnr != null) {
-                    entityManager.merge(sapLifnr);
+                entityManager.merge(sapLifnr);
                 } else if (sapLifnr == null && lifnr != null) {
-                    entityManager.remove(lifnr);
+                entityManager.remove(lifnr);
                 }
                  *                 
                 if (sapOutb != null && outb == null) {
-                    entityManager.persist(sapOutb);
-                    outb = sapOutb;
-                    validDO = true;
+                entityManager.persist(sapOutb);
+                outb = sapOutb;
+                validDO = true;
                 } else if (sapOutb != null && outb != null) {
-                    entityManager.merge(sapOutb);
-                    outb = sapOutb;
-                    validDO = true;
+                entityManager.merge(sapOutb);
+                outb = sapOutb;
+                validDO = true;
                 } else {
-                    if (outb != null) {
-                        entityManager.remove(outb);
-                        outb = null;
-                    }
-                    validDO = false;
-                    String msg = "Số D.O \" " + val[k] + " \" không tồn tại!";
-                    setMessage(msg);
-                    JOptionPane.showMessageDialog(rootPane, msg);
+                if (outb != null) {
+                entityManager.remove(outb);
+                outb = null;
+                }
+                validDO = false;
+                String msg = "Số D.O \" " + val[k] + " \" không tồn tại!";
+                setMessage(msg);
+                JOptionPane.showMessageDialog(rootPane, msg);
                 }
                  * 
                  */
                 if (outb != null) {
                     validDO = true;
-                } else {                    
+                } else {
                     validDO = false;
                     String msg = "Số D.O \" " + val[k] + " \" không tồn tại!";
                     setMessage(msg);
                     JOptionPane.showMessageDialog(rootPane, msg);
                 }
-               // entityManager.getTransaction().commit();
-               // entityManager.clear();
+                // entityManager.getTransaction().commit();
+                // entityManager.clear();
 //                Check kunnr
-                if (outb != null &&
-                        !oldKunnr.equals("") &&
-                        !oldKunnr.equals(outb.getKunnr())) {
+                if (outb != null
+                        && !oldKunnr.equals("")
+                        && !oldKunnr.equals(outb.getKunnr())) {
                     validDO = false;
                     String msg = resourceMapMsg.getString("msg.notDuplicateCode");
                     setMessage(msg);
@@ -2276,17 +1943,17 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                     oldKunnr = outb.getKunnr();
                 }
 //                Check bien so xe
-                if (outb != null &&
-                        !oldSoxe.equals("") &&
-                        !oldSoxe.equals(outb.getTraid())) {
+                if (outb != null
+                        && !oldSoxe.equals("")
+                        && !oldSoxe.equals(outb.getTraid())) {
                     validDO = false;
                     String msg = resourceMapMsg.getString("msg.notDuplicateLicensePlate");
                     setMessage(msg);
                     JOptionPane.showMessageDialog(rootPane, msg);
                 } else if (outb != null) {
                     oldSoxe = outb.getTraid();
-                }                                        
-                
+                }
+
                 //Set Mode
                 if (validDO && outb != null) {
                     /**
@@ -2323,10 +1990,8 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                 //Check if D.O was used already or not???
                 if (validDO && outb != null) {
                     WeightTicket wt = null;
-                    String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-                    String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
-                    String delivNumb = outb.getOutbDelPK().getDelivNumb();
-                    wt = weightTicketRepository.findByMandtWPlantDelivNumb(client, plant, delivNumb);
+                    String delivNumb = outb.getDeliveryOrderNo();
+                    wt = weightTicketRepository.findByDeliveryOrderNo(delivNumb);
                     String Lfart;
                     try {
                         Lfart = outb.getLfart();
@@ -2334,7 +1999,7 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                     } catch (Exception ex) {
                     }
 
-                    if ((wt != null && (wt.getDissolved() == null || wt.getDissolved() == false))) {
+                    if (wt != null && !wt.isDissolved()) {
                         validDO = false;
                         outb = null;
                         String msg = "D.O \" " + val[k] + " \" đã được dùng để " + mode + " hàng, vui lòng tự  kiểm tra trước khi liên hệ đường dây nóng Dịch vụ khách hàng 0919 49 59 69 ";
@@ -2342,82 +2007,80 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                         JOptionPane.showMessageDialog(rootPane, msg);
                     } else {
                         flag_revert = true;
-                        outb_number = outb.getOutbDelPK().getDelivNumb().toString().trim();
+                        outb_number = outb.getDeliveryOrderNo().toString().trim();
                     }
                 }
 //<< 20120712#01 - check shipping point -------
-                
-              
+
+
                 if (validDO && outb != null) {
                     // Tạm thời sử dụng đầu tây ninh
                     //ship_point = "(?i).*" + outb.getShipPoint() + "*";
                     // if (WeighBridgeApp.getApplication().getConfig().getShId().toString().matches(ship_point)){
                     //--------- Tuấn sửa ngày 050812  ------------------    
                     ship_point = outb.getShipPoint();
-                    String tmpShippoint = WeighBridgeApp.getApplication().getConfig().getShId().toString(); 
+                    String tmpShippoint = WeighBridgeApp.getApplication().getConfig().getShId().toString();
                     String WbID = WeighBridgeApp.getApplication().getConfig().getWbId().toString();
-                    
-                    String Matname  = outb.getArktx().toUpperCase();
-                   
-                    String sp =  ship_point.toString(); 
-                    Boolean ship =true  ;
-                     //--------- Tuấn sửa ngày 04.04.2013  ------------------ 
+
+                    String Matname = outb.getArktx().toUpperCase();
+
+                    String sp = ship_point.toString();
+                    Boolean ship = true;
+                    //--------- Tuấn sửa ngày 04.04.2013  ------------------ 
                     //-- Checking SALE ORDER wrong material - plant 
-                    
+
                     String mymode = "";
-                    
-                    if( rbtInward.isSelected()==true ) 
-                        
-                            mymode = "Nhập"; 
-                    else 
-                       if (rbtOutward.isSelected()==true) 
-                            mymode = "Xuất"; 
-                       else 
-                           mymode = "..."; 
-                    
-                    if (mymode.indexOf("...")>=0)
-                    {
-                         String msg = resourceMapMsg.getString("msg.plzChooseIO");
-                            setMessage(msg);
-                            JOptionPane.showMessageDialog(rootPane, msg);
+
+                    if (rbtNInward.isSelected() == true) {
+                        mymode = "Nhập";
+                    } else if (rbtNOutward.isSelected() == true) {
+                        mymode = "Xuất";
+                    } else {
+                        mymode = "...";
                     }
-            /*       
+
+                    if (mymode.indexOf("...") >= 0) {
+                        String msg = resourceMapMsg.getString("msg.plzChooseIO");
+                        setMessage(msg);
+                        JOptionPane.showMessageDialog(rootPane, msg);
+                    }
+                    /*       
                     if (tmpShippoint.indexOf(sp) < 0) 
                     {                        
-                        ship = false ;
+                    ship = false ;
                     }
                     if ( Matname.indexOf("XI")>=0 ) 
-                        {                               
-                           if ( ((sp.equals("1208") || sp.equals("141D")) && ( Matname.indexOf("NM FICO") < 0 ) )   
-                                   ||    ((sp.equals("1208") || sp.equals("141D")) && ( Matname.indexOf("NMFICO") < 0 ) )
-                              || ( sp.equals("131D")  && ( Matname.indexOf("NM TN") < 0)  ) 
-                              || ( sp.equals("1201")  && ( Matname.indexOf("GC DIC") < 0)  ) 
-                              || ( !sp.equals("1201")  && ( Matname.indexOf("GC DIC") >= 0)  )
-                              || ( sp.equals("1213")  && ( Matname.indexOf("DICBP") < 0)  )  
-                              || ( ! sp.equals("1213")  && ( Matname.indexOf("DICBP") >= 0)  )
-                              || ( ( sp.equals("1209") ||sp.equals("151D") ) && (  Matname.indexOf("NM TN") < 0 )   ) 
-                               
-                            )
-                                   ship = false ; 
-                                                      
-                          }   
+                    {                               
+                    if ( ((sp.equals("1208") || sp.equals("141D")) && ( Matname.indexOf("NM FICO") < 0 ) )   
+                    ||    ((sp.equals("1208") || sp.equals("141D")) && ( Matname.indexOf("NMFICO") < 0 ) )
+                    || ( sp.equals("131D")  && ( Matname.indexOf("NM TN") < 0)  ) 
+                    || ( sp.equals("1201")  && ( Matname.indexOf("GC DIC") < 0)  ) 
+                    || ( !sp.equals("1201")  && ( Matname.indexOf("GC DIC") >= 0)  )
+                    || ( sp.equals("1213")  && ( Matname.indexOf("DICBP") < 0)  )  
+                    || ( ! sp.equals("1213")  && ( Matname.indexOf("DICBP") >= 0)  )
+                    || ( ( sp.equals("1209") ||sp.equals("151D") ) && (  Matname.indexOf("NM TN") < 0 )   ) 
+                    
+                    )
+                    ship = false ; 
+                    
+                    }   
                     if (  ( sp.equals("131D") ) && (  Matname.indexOf("NM TN") >= 0 ) && ( WbID.indexOf("1511")>=0 && mode.indexOf("nh") >= 0 ) && mymode.indexOf("Nhập")>=0 && mymode.indexOf("...") < 0  )
-                        ship = true; 
+                    ship = true; 
                     
-                     if (  ( sp.equals("1213") ) && (  Matname.indexOf("DICBP") >= 0 ) )
-                        ship = true; 
+                    if (  ( sp.equals("1213") ) && (  Matname.indexOf("DICBP") >= 0 ) )
+                    ship = true; 
                     
                     if (  ( sp.equals("131D") ) && (  Matname.indexOf("NM TN") >= 0 ) && ( WbID.indexOf("1511")>=0 && mode.indexOf("nh") >= 0 ) && mymode.indexOf("Nhập")>=0 && mymode.indexOf("...") < 0  )
-                        ship = true; 
+                    ship = true; 
                     
-                  if (  ( sp.equals("131D") ) && (  Matname.indexOf("NM TN") >= 0 ) && ( WbID.indexOf("1111")>=0 && mode.indexOf("nh") >= 0 ) && mymode.indexOf("Nhập")>=0 && mymode.indexOf("...") < 0  )
-                        ship = true; 
+                    if (  ( sp.equals("131D") ) && (  Matname.indexOf("NM TN") >= 0 ) && ( WbID.indexOf("1111")>=0 && mode.indexOf("nh") >= 0 ) && mymode.indexOf("Nhập")>=0 && mymode.indexOf("...") < 0  )
+                    ship = true; 
                     
-                     if (mymode.indexOf("...")>=0)
-                          ship = false;
-                     */     
-                  //Modified by Tuan Nguyen at Tafico Jsc 23/12/2014
-                    
+                    if (mymode.indexOf("...")>=0)
+                    ship = false;
+                     */
+                    //Modified by Tuan Nguyen at Tafico Jsc 23/12/2014
+
                     float fCount = 0;
                     String pDoNumber = val[k];
                     String pWplant = WeighBridgeApp.getApplication().getConfig().getwPlant();
@@ -2449,7 +2112,7 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                         JOptionPane.showMessageDialog(rootPane, msg);
                     }
                 }
-                
+
                 //  -------------------------------------------->> 
                 //20121217
                 if (validDO && outb != null) {
@@ -2457,17 +2120,17 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                 }
                 //end 20121217
                 if (validDO && outb != null) {
-                    newWeightTicket.setItem(outb.getDelivItem());
+                    newWeightTicket.setItem(outb.getDeliveryItem());
                     newWeightTicket.setMatnrRef(outb.getMatnr());
-                    newWeightTicket.setRegItemText(outb.getArktx());
+                    newWeightTicket.setRegItemDescription(outb.getArktx());
                     newWeightTicket.setUnit(outb.getVrkme());
                     newWeightTicket.setKunnr(outb.getKunnr());
-                    txtRegItem.setText(outb.getArktx());
-                    txtRegItem1.setSelectedItem(outb.getArktx());
+                    txtNMaterial.setText(outb.getArktx());
+                    cbxNMaterial.setSelectedItem(outb.getArktx());
                     BigDecimal regqty = BigDecimal.ZERO;
-                    List<OutbDetailsV2> detail = new ArrayList<OutbDetailsV2>();
-                    OutbDetailsV2 item = null;
-                    String[] do_list = txtDelNum.getText().trim().split("-");
+                    List<OutboundDetail> detail = new ArrayList<OutboundDetail>();
+                    OutboundDetail item = null;
+                    String[] do_list = txtNDONum.getText().trim().split("-");
                     for (int i = 0; i < do_list.length; i++) {
                         String doNum = do_list[i];
                         WeightTicketJpaController conWTicket = new WeightTicketJpaController();
@@ -2486,7 +2149,7 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
 //                } else {
 //                    regqty = outb.getLfimg();
 //                }
-                    txfRegQty.setValue(regqty.doubleValue());
+                    txtNWeight.setValue(regqty.doubleValue());
                     outbDel = outb;
                 }
                 setProgress(4, 1, 4);
@@ -2518,14 +2181,13 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
         }
     }
 
-   
     private class SaveRecordTask extends org.jdesktop.application.Task<Object, Void> {
 
         SaveRecordTask(org.jdesktop.application.Application app) {
             // Runs on the EDT.  Copy GUI state that
             // doInBackground() depends on from parameters
             // to SaveRecordTask fields, here.
-            
+
             super(app);
             setSaveNeeded(false);
             setClearable(false);
@@ -2536,24 +2198,24 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
 
             WeightTicketJpaController wCon = new WeightTicketJpaController();
             Date now = wCon.getServerDate();
-           
+
             if (now == null) {
-                now = Calendar.getInstance().getTime();                 
-                             
+                now = Calendar.getInstance().getTime();
+
             }
             SimpleDateFormat formatter = new SimpleDateFormat();
             AppConfig sap = WeighBridgeApp.getApplication().getConfig();
             int seqBDay = wCon.getNewSeqBDay();
             int seqBMonth = wCon.getNewSeqBMonth();
-            
+
             formatter.applyPattern("yyMMddHHmm");
             String id = formatter.format(now);
 
             formatter.applyPattern("yyyy");
-          //   if (entityManager.
-            String sPlant  = "";         
-         
-            sPlant =  WeighBridgeApp.getApplication().getConfig().getwPlant().toString();
+            //   if (entityManager.
+            String sPlant = "";
+
+            sPlant = WeighBridgeApp.getApplication().getConfig().getwPlant().toString();
             Calendar currdate = Calendar.getInstance();
             String yearplus = "";
             int y = 0;
@@ -2570,49 +2232,52 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
             if (iCount > 0) {
                 seqBDay = seqBDay + iCount;
             }
-            newWeightTicket.setWeightTicketPK(new WeightTicketPK(sap.getsClient(), sap.getwPlant().toString(), id, seqBDay));
-            newWeightTicket.setSeqByMonth(seqBMonth);
-            newWeightTicket.setCreateDate(now);
+//            newWeightTicket.setId(Integer.parseInt(id));
+            newWeightTicket.setMandt(sap.getsClient());
+            newWeightTicket.setWplant(sap.getwPlant().toString());
+            newWeightTicket.setSeqDay(seqBDay);
+            newWeightTicket.setSeqMonth(seqBMonth);
+            newWeightTicket.setCreatedDate((java.sql.Date) now);
             formatter.applyPattern("HHmmss");
-            newWeightTicket.setCreateTime(formatter.format(now));
+            newWeightTicket.setCreatedTime(formatter.format(now));
             newWeightTicket.setCreator(WeighBridgeApp.getApplication().getLogin().getUid());
             newWeightTicket.setOfflineMode(WeighBridgeApp.getApplication().isOfflineMode());
-            newWeightTicket.setRegCategory(rbtInward.isSelected() ? 'I' : 'O');
-            newWeightTicket.setRegItemQty(new BigDecimal(((Number) txfRegQty.getValue()).doubleValue()));
+            newWeightTicket.setRegType(rbtNInward.isSelected() ? 'I' : 'O');
+            newWeightTicket.setRegItemQuantity(new BigDecimal(((Number) txtNWeight.getValue()).doubleValue()));
             newWeightTicket.setWbId(sap.getWbId().toString());
             newWeightTicket.setAbbr(abbr);
 //            System.out.println(WeighBridgeApp.getApplication().isOfflineMode());
 //            if(WeighBridgeApp.getApplication().isOfflineMode()){
             newWeightTicket.setDocYear(year);
-            newWeightTicket.setPosted(0);
-            newWeightTicket.setSoRomooc(txtSoRomooc.getText().trim());
+            newWeightTicket.setPosted(false);
+            newWeightTicket.setTrailerId(txtNTrailerPlate.getText().trim());
 //            }
-            if (newWeightTicket.getDelivNumb() != null && newWeightTicket.getDelivNumb().trim().isEmpty()) {
-                newWeightTicket.setDelivNumb(null);
+            if (newWeightTicket.getDeliveryOrderNo() != null && newWeightTicket.getDeliveryOrderNo().trim().isEmpty()) {
+                newWeightTicket.setDeliveryOrderNo(null);
                 newWeightTicket.setItem(null);
                 newWeightTicket.setMatnrRef(null);
-                newWeightTicket.setRegItemText(txtRegItem.getText().trim());
+                newWeightTicket.setRegItemDescription(txtNMaterial.getText().trim());
                 newWeightTicket.setUnit(null);
             }
             //+20100113#01
             newWeightTicket.setKunnr(null);
-            if (newWeightTicket.getDelivNumb() != null && !newWeightTicket.getDelivNumb().trim().isEmpty()) {
-                String val = newWeightTicket.getDelivNumb().trim();
+            if (newWeightTicket.getDeliveryOrderNo() != null && !newWeightTicket.getDeliveryOrderNo().trim().isEmpty()) {
+                String val = newWeightTicket.getDeliveryOrderNo().trim();
                 val = Conversion_Exit.Conv_output_num(val, 10);
-                newWeightTicket.setDelivNumb(val);
+                newWeightTicket.setDeliveryOrderNo(val);
                 if (outbDel != null) {
                     newWeightTicket.setKunnr(outbDel.getKunnr());
                 }
             }
             //+20100113#01
             //set du lieu cho do detail
-            List<OutbDetailsV2> detail = new ArrayList<OutbDetailsV2>();
-            OutbDetailsV2 item = null;
-            if (WeighBridgeApp.getApplication().isOfflineMode() && !txtDelNum.getText().equals("")) {
-                newWeightTicket.setDelivNumb(txtDelNum.getText());
+            List<OutboundDetail> detail = new ArrayList<OutboundDetail>();
+            OutboundDetail item = null;
+            if (WeighBridgeApp.getApplication().isOfflineMode() && !txtNDONum.getText().equals("")) {
+                newWeightTicket.setDeliveryOrderNo(txtNDONum.getText());
             } else if (!WeighBridgeApp.getApplication().isOfflineMode()) {
-                if (!txtDelNum.getText().equals("")) {
-                    String[] do_list = txtDelNum.getText().trim().split("-");
+                if (!txtNDONum.getText().equals("")) {
+                    String[] do_list = txtNDONum.getText().trim().split("-");
                     for (int i = 0; i < do_list.length; i++) {
                         String doNum = do_list[i];
                         WeightTicketJpaController conWTicket = new WeightTicketJpaController();
@@ -2647,28 +2312,28 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
             }
             entityManager.persist(newWeightTicket);
             entityManager.getTransaction().commit();
-            
-            
-             
+
+
+
             try {
                 setMessage(resourceMapMsg.getString("msg.printing"));
-                txtSodangtai.setText(newWeightTicket.getWeightTicketPK().getId().toString()
-                        + String.format("%03d", newWeightTicket.getWeightTicketPK().getSeqByDay())); //+20100303
-                
+                txtWeightTicketNo.setText(newWeightTicket.getId()
+                        + String.format("%03d", newWeightTicket.getSeqDay())); //+20100303
+
                 // tuanna -  update tai trong vao phieu can 
-               //  newWeightTicket.get
-               //  con  = null ; 
-                 
-                
+                //  newWeightTicket.get
+                //  con  = null ; 
+
+
                 printWT(newWeightTicket, false);
 
                 // tuanna add -- copy ticket ID to clipboard. 28.11.2012 
 
-                StringSelection stringSelection = new StringSelection(txtSodangtai.getText());
+                StringSelection stringSelection = new StringSelection(txtWeightTicketNo.getText());
                 Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                 clipboard.setContents(stringSelection, null);
             } catch (Exception ex) {
-                 btnSave.setEnabled(true); 
+                btnSave.setEnabled(true);
             }
             ListWeightTicketsTask t = new ListWeightTicketsTask(this.getApplication());
             t.execute();
@@ -2692,13 +2357,11 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
             setClearable(false);
             setSaveNeeded(false);
             if (flag_revert) {
-                String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-                String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
-                List<WeightTicket> wt = weightTicketRepository.getListByMandtWPlantDelivNumb(client, plant, outb_number);
+                List<WeightTicket> wt = weightTicketRepository.getListByDeliveryOrderNo(outb_number);
                 WeightTicket item = null;
                 for (int i = 0; i < wt.size() - 1; i++) {
                     item = wt.get(i);
-                    item.setPosted(-1);
+                    item.setPosted(false);
                     if (!entityManager.getTransaction().isActive()) {
                         entityManager.getTransaction().begin();
                     }
@@ -2708,8 +2371,8 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
             }
         }
     }
-    // </editor-fold>
-    // <editor-fold defaultstate="collapsed" desc="Form's properties">
+// </editor-fold>
+// <editor-fold defaultstate="collapsed" desc="Form's properties">
     private boolean creatable = false;
 
     public boolean isCreatable() {
@@ -2748,85 +2411,85 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
         boolean bDriName = false, bCMNDBL = false, bLicPlate = false,
                 bRegCat = false, bRegITxt = false, bRegIQty = false,
                 bResult = false;
-        bDriName = !(txtDName.getText() == null || txtDName.getText().trim().isEmpty());
+        bDriName = !(txtNDriverName.getText() == null || txtNDriverName.getText().trim().isEmpty());
         if (bDriName) {
-            lblDName.setForeground(Color.black);
+            lblNDriverName.setForeground(Color.black);
         } else {
-            lblDName.setForeground(Color.red);
+            lblNDriverName.setForeground(Color.red);
         }
-        bCMNDBL = !(txtCMNDBL.getText() == null || txtCMNDBL.getText().trim().isEmpty() || txtCMNDBL.getText().trim().length() > 9);
+        bCMNDBL = !(txtNCMNDBL.getText() == null || txtNCMNDBL.getText().trim().isEmpty() || txtNCMNDBL.getText().trim().length() > 9);
         if (bCMNDBL) {
-            lblCMNDBL.setForeground(Color.black);
+            lblNCMNDBL.setForeground(Color.black);
         } else {
-            lblCMNDBL.setForeground(Color.red);
+            lblNCMNDBL.setForeground(Color.red);
         }
-        Matcher m = Constants.WTRegView.patLicPlate.matcher(txtLicPlate.getText().trim());
-        Matcher m_new = Constants.WTRegView.patLicPlatenew.matcher(txtLicPlate.getText().trim());
+        Matcher m = Constants.WTRegView.patLicPlate.matcher(txtNPlateNo.getText().trim());
+        Matcher m_new = Constants.WTRegView.patLicPlatenew.matcher(txtNPlateNo.getText().trim());
 
-        bLicPlate = !(txtLicPlate.getText().trim().isEmpty());// || !(m.matches() || m_new.matches()));
+        bLicPlate = !(txtNPlateNo.getText().trim().isEmpty());// || !(m.matches() || m_new.matches()));
         // 
 
         if (bLicPlate) {
-            if (txtDelNum.getText().trim().isEmpty() || outbDel == null) {
+            if (txtNDONum.getText().trim().isEmpty() || outbDel == null) {
                 bLicPlate = checkLicPlate(null, null);
             } else {
                 bLicPlate = checkLicPlate(outbDel.getLfart(), outbDel.getTraid());
             }
         }
-        if (bLicPlate && rbtInward.isSelected()) {
+        if (bLicPlate && rbtNInward.isSelected()) {
             if (outbDel != null) {
-                String soXe_tmp = txtLicPlate.getText().trim();
+                String soXe_tmp = txtNPlateNo.getText().trim();
                 int indexRomooc = -1;
-                if (outbDel.getTraid() != null && !outbDel.getTraid().equals("")) {                    
+                if (outbDel.getTraid() != null && !outbDel.getTraid().equals("")) {
                     indexRomooc = outbDel.getTraid().indexOf("|");
                     if (indexRomooc >= 0) {
-                        soXe_tmp = soXe_tmp.concat("|").concat(txtSoRomooc.getText().trim());
-                    }                            
-                }
-                if (!soXe_tmp.equals(outbDel.getTraid().trim())) {                    
-                    if (outbDel.getTraid() != null 
-                            && indexRomooc >= 0 
-                            && indexRomooc != (outbDel.getTraid().trim().length() -1)
-                            && txtSoRomooc.getText().trim().equals("")) {
-                        JOptionPane.showMessageDialog(rootPane, 
-                            resourceMapMsg.getString("msg.plzInputRomoc"));
-                    } else {
-                    JOptionPane.showMessageDialog(rootPane, 
-                            resourceMapMsg.getString("msg.errorLicensePlate"));
+                        soXe_tmp = soXe_tmp.concat("|").concat(txtNTrailerPlate.getText().trim());
                     }
                 }
-               
+                if (!soXe_tmp.equals(outbDel.getTraid().trim())) {
+                    if (outbDel.getTraid() != null
+                            && indexRomooc >= 0
+                            && indexRomooc != (outbDel.getTraid().trim().length() - 1)
+                            && txtNTrailerPlate.getText().trim().equals("")) {
+                        JOptionPane.showMessageDialog(rootPane,
+                                resourceMapMsg.getString("msg.plzInputRomoc"));
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane,
+                                resourceMapMsg.getString("msg.errorLicensePlate"));
+                    }
+                }
+
             }
         }
         if (bLicPlate) {
-            lblLicPlate.setForeground(Color.black);
+            lblNPlateNo.setForeground(Color.black);
         } else {
-            lblLicPlate.setForeground(Color.red);
+            lblNPlateNo.setForeground(Color.red);
         }
-        bRegCat = rbtInward.isSelected() || rbtOutward.isSelected();
+        bRegCat = rbtNInward.isSelected() || rbtNOutward.isSelected();
         if (bRegCat) {
-            lblRegCat.setForeground(Color.black);
+            lblNRegCat.setForeground(Color.black);
         } else {
-            lblRegCat.setForeground(Color.red);
+            lblNRegCat.setForeground(Color.red);
         }
-        bRegITxt = !(txtRegItem.getText() == null || txtRegItem.getText().trim().isEmpty());
+        bRegITxt = !(txtNMaterial.getText() == null || txtNMaterial.getText().trim().isEmpty());
         if (bRegITxt) {
-            lblRegItem.setForeground(Color.black);
+            lblNMaterial.setForeground(Color.black);
         } else {
-            lblRegItem.setForeground(Color.red);
+            lblNMaterial.setForeground(Color.red);
         }
-        bRegIQty = !(txfRegQty.getValue() == null || ((Number) txfRegQty.getValue()).doubleValue() <= 0d);
+        bRegIQty = !(txtNWeight.getText().isEmpty() || Double.parseDouble(txtNWeight.getText()) <= 0d);
         if (bRegIQty) {
-            lblRegQty.setForeground(Color.black);
+            lblNWeight.setForeground(Color.black);
         } else {
-            lblRegQty.setForeground(Color.red);
+            lblNWeight.setForeground(Color.red);
         }
 
         bResult = bDriName && bCMNDBL && bLicPlate && bRegCat && bRegITxt && bRegIQty;
         setFormValid(bResult);
 //        return bResult && validDO;
         boolean r;
-        if (txtDelNum.getText() != null || !txtDelNum.getText().equals("")) {
+        if (txtNDONum.getText() != null || !txtNDONum.getText().equals("")) {
             r = bResult && validDO && flag_check;
         } else {
             r = bResult && validDO;
@@ -2840,8 +2503,8 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("P_CLIENT", WeighBridgeApp.getApplication().getConfig().getsClient());
             map.put("P_WPLANT", WeighBridgeApp.getApplication().getConfig().getwPlant());
-            map.put("P_ID", wt.getWeightTicketPK().getId());
-            map.put("P_DAYSEQ", wt.getWeightTicketPK().getSeqByDay());
+            map.put("P_ID", wt.getId());
+            map.put("P_DAYSEQ", wt.getSeqDay());
             map.put("P_REPRINT", reprint);
             map.put("P_ADDRESS", config.getRptId());
             String reportName = null;
@@ -2865,23 +2528,8 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
 
     private boolean checkLicPlate(String lfart, String traid) {
         boolean result = false;
-        //20121217
-        Material mat_tmp = null;
-        Boolean ximang_tmp = false;
-        WeightTicketJpaController con = new WeightTicketJpaController();
-        try {
-            
-            mat_tmp = con.CheckPOSTO(mat_numb);            
-            if (mat_tmp.getXimang() != null) {
-                ximang_tmp = true;
-            } else {
-                ximang_tmp = false;
-            }
-        } catch (Exception ex) {
-            java.util.logging.Logger.getLogger(WeightTicketView.class.getName()).log(Level.SEVERE, null, ex);
-        }
         //if (lfart != null && ( lfart.equalsIgnoreCase("LF") || lfart.equalsIgnoreCase("ZTLF") ) ) {
-        if (lfart != null && ximang_tmp && (lfart.equalsIgnoreCase("ZTLF") || lfart.equalsIgnoreCase("NL"))) {
+        if (lfart != null && traid != null && (lfart.equalsIgnoreCase("ZTLF") || lfart.equalsIgnoreCase("NL"))) {
             String txt = traid;
             String doLicPlate = null;
             int idx1 = txt.indexOf("|");
@@ -2933,101 +2581,61 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                     doLicPlate = traid;
                 }
             }
-            if (doLicPlate.equalsIgnoreCase(newWeightTicket.getSoXe())) {
+            if (doLicPlate.equalsIgnoreCase(newWeightTicket.getPlateNo())) {
                 result = true;
             } else {
                 result = false;
-                JOptionPane.showMessageDialog(rootPane, "Số xe \"" + newWeightTicket.getSoXe()
+                JOptionPane.showMessageDialog(rootPane, "Số xe \"" + newWeightTicket.getPlateNo()
                         + "\" không khớp với số được đăng ký trong D.O: " + doLicPlate);
             }
-        } else {
+        } else if (newWeightTicket != null) {
             //Do local check for entered Truck's License Plate
-            SAPSetting sapSetting = WeighBridgeApp.getApplication().getSapSetting();
-            Vehicle v = entityManager.find(Vehicle.class, newWeightTicket.getSoXe());
+            Vehicle vehicle = vehicleRepository.findByPlateNo(newWeightTicket.getPlateNo());
 
-            if (v == null && !ximang_tmp
-//                    && (sapSetting.getCheckTalp() != null && sapSetting.getCheckTalp().booleanValue() == true)
-                    ) {
+            if (vehicle == null) {
                 result = false;
-                JOptionPane.showMessageDialog(rootPane, "Số xe \" " + newWeightTicket.getSoXe()
+                JOptionPane.showMessageDialog(rootPane, "Số xe \" " + newWeightTicket.getPlateNo()
                         + " \" chưa được đăng ký để xuất/nhập hàng!");
             } else {
-
                 result = true;
-                //-----------------
-//                if (sapSetting.getCheckTalp() != null && sapSetting.getCheckTalp().booleanValue() == true) {
-//                    boolean l_not_valid = false;
-//                    VehicleValid vh = new VehicleValid();
-//                    VehicleValidPK vhPK = new VehicleValidPK();
-//                    //EntityManager entityManager = java.beans.Beans.isDesignTime() ? null : WeighBridgeApp.getApplication().getEm();
-//                    AppConfig lconfig = WeighBridgeApp.getApplication().getConfig();
-//                    //Tuanna 201800904
-//                    if ( txtDName1.getText().startsWith("N") )
-//                         abbr = sVendor; 
-//                    else 
-//                        //abbr = (v != null ? v.getTaAbbr() : ""); //"vendor"
-//                        abbr = "";
-//                    
-//                   //End --Tuanna 201800904 
-//                    //vhPK.setMandt(lconfig.getsClient().toString());
-//                    vhPK.setWPlant(lconfig.getwPlant().toString());
-//                    vhPK.setSoXe(newWeightTicket.getSoXe());
-//                    vh.setVehicleValidPK(vhPK);
-//                    vh = entityManager.find(VehicleValid.class, vh.getVehicleValidPK());
-//                    if (vh != null) {
-//                        try {
-//                            l_not_valid = vh.getNotValid();
-//                            //if (l_valid == true){
-//                            //chk_not_valid.setSelected(l_valid);
-//                            //                }
-//                        } catch (Exception e) {
-//                        }
-//                    }
-//
-//                    entityManager.clear();
-//                    if (l_not_valid == true) {
-//                        result = false;
-//                        JOptionPane.showMessageDialog(rootPane, "Số xe \" " + newWeightTicket.getSoXe()
-//                                + " \" đang bị cấm xuất/nhập hàng!");
-//                    }
-//                }
-                //-----------------
-            }
+                if (vehicle.isProhibit()) {
+                    result = false;
+                    JOptionPane.showMessageDialog(rootPane, "Số xe \" " + newWeightTicket.getPlateNo()
+                            + " \" đang bị cấm xuất/nhập hàng!");
+                }
 
+                List<TransportAgentVehicle> transportAgentVehicles = transportAgentVehicleRepository.findByVehicleId(vehicle.getId());
+                if (transportAgentVehicles != null && transportAgentVehicles.size() == 1) {
+                    abbr = transportAgentVehicles.get(0).getTransportAgent().getAbbr();
+                }
+            }
         }
         return result;
     }
 
     private void cleanData() {
-        newWeightTicket.setWeightTicketPK(null);
+        newWeightTicket = null;
         outbDel = null;
-        txtDName.setText("");
-        txtCMNDBL.setText("");
-        txtLicPlate.setText("");
-        txtSoRomooc.setText("");
-        txtDName1.setText("");
+        txtNDriverName.setText("");
+        txtNCMNDBL.setText("");
+        txtNPlateNo.setText("");
+        txtNTrailerPlate.setText("");
         rbtRegCatGroup.clearSelection();
-        rbtInward.setEnabled(true);
-        rbtOutward.setEnabled(true);
-        txtRegItem.setText("");
-        txtRegItem1.setSelectedItem("");
-        txfRegQty.setValue(null);
-        txfRegQty1.setValue(null);
-        txtDelNum.setText("");
+        rbtNInward.setEnabled(true);
+        rbtNOutward.setEnabled(true);
+        txtNMaterial.setText("");
+        cbxNMaterial.setSelectedItem("");
+        txtNWeight.setValue(null);
+        txtNDONum.setText("");
 
-        lblDName.setForeground(Color.black);
-        lblCMNDBL.setForeground(Color.black);
-        lblLicPlate.setForeground(Color.black);
-        lblTrailerPlate.setForeground(Color.black);
-        lblRegCat.setForeground(Color.black);
-        lblRegItem.setForeground(Color.black);
-        lblRegQty.setForeground(Color.black);
-        lblDelNum.setForeground(Color.black);
-        
-        //20180722 Tuanna 
-        
-        cPara.G_POSTO = "";
-        
+        lblNDriverName.setForeground(Color.black);
+        lblNCMNDBL.setForeground(Color.black);
+        lblNPlateNo.setForeground(Color.black);
+        lblNTrailerPlate.setForeground(Color.black);
+        lblNRegCat.setForeground(Color.black);
+        lblNMaterial.setForeground(Color.black);
+        lblNWeight.setForeground(Color.black);
+        lblNDONum.setForeground(Color.black);
         validDO = true;
     }
 
@@ -3040,7 +2648,7 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
                 WeightTicket item = null;
                 item = data.get(i);
 
-                String ct = item.getCreateTime();
+                String ct = item.getCreatedTime();
 //                System.out.println(ct);
                 Character c0 = ct.charAt(0);
                 Character c1 = ct.charAt(1);
@@ -3079,102 +2687,74 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
     private javax.swing.JButton btnFind;
     private javax.swing.JButton btnMany;
     private javax.swing.JButton btnNew;
-    private javax.swing.JButton btnPrintRpt;
     private javax.swing.JButton btnReprint;
     private javax.swing.JButton btnSave;
     private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JComboBox cbxTimeFrom;
-    private javax.swing.JComboBox cbxTimeTo;
-    private javax.swing.JComboBox cbxType;
-    private org.jdesktop.swingx.JXDatePicker dpFrom;
-    private org.jdesktop.swingx.JXDatePicker dpTo;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JComboBox cbxHourFrom;
+    private javax.swing.JComboBox cbxHourTo;
+    private javax.swing.JComboBox cbxMaterialType;
+    private javax.swing.JComboBox cbxNMaterial;
+    private org.jdesktop.swingx.JXDatePicker dpDateFrom;
+    private org.jdesktop.swingx.JXDatePicker dpDateTo;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JLabel lblBienSo;
-    private javax.swing.JLabel lblCMNDBL;
-    private javax.swing.JLabel lblDName;
-    private javax.swing.JLabel lblDName1;
-    private javax.swing.JLabel lblDelNum;
-    private javax.swing.JLabel lblFrom;
-    private javax.swing.JLabel lblGio;
-    private javax.swing.JLabel lblGioden;
-    private javax.swing.JLabel lblLicPlate;
-    private javax.swing.JLabel lblLicPlate1;
-    private javax.swing.JLabel lblRegCat;
-    private javax.swing.JLabel lblRegItem;
-    private javax.swing.JLabel lblRegQty;
-    private javax.swing.JLabel lblState;
-    private javax.swing.JLabel lblTo;
-    private javax.swing.JLabel lblTrailerPlate;
-    private javax.swing.JLabel lblType;
-    private javax.swing.JLabel lblType1;
-    private javax.swing.JLabel lblType2;
-    private javax.swing.JLabel lblUnit;
+    private javax.swing.JLabel lblCreator;
+    private javax.swing.JLabel lblDateFrom;
+    private javax.swing.JLabel lblDateTo;
+    private javax.swing.JLabel lblDriverName;
+    private javax.swing.JLabel lblHourFrom;
+    private javax.swing.JLabel lblHourTo;
+    private javax.swing.JLabel lblMaterialType;
+    private javax.swing.JLabel lblNCMNDBL;
+    private javax.swing.JLabel lblNDONum;
+    private javax.swing.JLabel lblNDriverName;
+    private javax.swing.JLabel lblNMaterial;
+    private javax.swing.JLabel lblNPlateNo;
+    private javax.swing.JLabel lblNRegCat;
+    private javax.swing.JLabel lblNTrailerPlate;
+    private javax.swing.JLabel lblNWeight;
+    private javax.swing.JLabel lblNWeightUnit;
+    private javax.swing.JLabel lblPlateNo;
+    private javax.swing.JLabel lblStatus;
+    private javax.swing.JLabel lblWeightTicketNo;
     private com.gcs.wb.jpa.entity.WeightTicket newWeightTicket;
-    private com.gcs.wb.jpa.entity.OutbDel outbDel;
+    private com.gcs.wb.jpa.entity.OutboundDelivery outbDel;
     private javax.swing.JPanel pnControl;
     private javax.swing.JPanel pnFilter;
+    private javax.swing.JPanel pnNLeft;
+    private javax.swing.JPanel pnNRight;
     private javax.swing.JPanel pnPrintControl;
     private javax.swing.JPanel pnWTicket;
-    private javax.swing.JScrollPane pnWTs;
-    private javax.swing.JRadioButton rbtDissolved;
-    private javax.swing.JRadioButton rbtInward;
-    private javax.swing.JRadioButton rbtOutward;
-    private javax.swing.JRadioButton rbtPosted;
+    private javax.swing.JRadioButton rbtNInward;
+    private javax.swing.JRadioButton rbtNOutward;
     private javax.swing.ButtonGroup rbtRegCatGroup;
-    private javax.swing.JRadioButton rbtStateAll;
+    private javax.swing.JRadioButton rbtStatusAll;
+    private javax.swing.JRadioButton rbtStatusDissolved;
+    private javax.swing.JRadioButton rbtStatusPosted;
     private com.gcs.wb.jpa.entity.WeightTicket selectedRow;
-    private org.jdesktop.swingx.JXTable tabWTs;
-    private javax.swing.JFormattedTextField txfRegQty;
-    private javax.swing.JFormattedTextField txfRegQty1;
-    private javax.swing.JTextField txtBienSo;
-    private javax.swing.JTextField txtCMNDBL;
-    private javax.swing.JTextField txtDName;
-    private javax.swing.JTextField txtDName1;
-    private javax.swing.JTextField txtDelNum;
-    private javax.swing.JTextField txtLicPlate;
-    private javax.swing.JTextField txtNguoitao;
-    private javax.swing.JTextField txtRegItem;
-    private javax.swing.JComboBox txtRegItem1;
-    private javax.swing.JTextField txtSoRomooc;
-    private javax.swing.JTextField txtSodangtai;
-    private javax.swing.JTextField txtTaixe;
+    private javax.swing.JScrollPane spnResult;
+    private org.jdesktop.swingx.JXTable tabResults;
+    private javax.swing.JTextField txtCreator;
+    private javax.swing.JTextField txtDriverName;
+    private javax.swing.JTextField txtNCMNDBL;
+    private javax.swing.JTextField txtNDONum;
+    private javax.swing.JTextField txtNDriverName;
+    private javax.swing.JTextField txtNMaterial;
+    private javax.swing.JTextField txtNPlateNo;
+    private javax.swing.JTextField txtNTrailerPlate;
+    private javax.swing.JFormattedTextField txtNWeight;
+    private javax.swing.JTextField txtPlateNo;
+    private javax.swing.JTextField txtWeightTicketNo;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
     private static Logger logger = Logger.getLogger(WTRegView.class);
     private java.util.List<WeightTicket> weightTicketList;
     private boolean validDO = true;
     private boolean formValid;
-    public static final String MODE_REG = "MODE_REG";
-    public static final String MODE_RPT = "MODE_RPT";
-    private String mode = null;
     private String abbr;
     private boolean flag_revert = false;
     private String outb_number = null;
     private boolean flag_check = false;
     private String mat_numb = null;
-
-    /**
-     * Get the value of mode
-     *
-     * @return the value of mode
-     */
-    public String getMode() {
-        return mode;
-    }
-
-    /**
-     * Set the value of mode
-     *
-     * @param mode new value of mode
-     */
-    public void setMode(String mode) {
-        this.mode = mode;
-    }
 
     /**
      * Get the value of formValid
@@ -3237,7 +2817,6 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
         this.rbtEnabled = rbtEnabled;
         firePropertyChange(Constants.WTRegView.PROP_RBTENABLED, oldRbtEnabled, rbtEnabled);
     }
-    
     private boolean[] editable = null;
     Object[][] wtData = null;
     Object[] wtCols = new String[]{
@@ -3272,50 +2851,5 @@ private void dpFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
         String.class,
         Boolean.class,
         Boolean.class};
-    Object[][] wtRptData = null;
-    Object[] wtRptCols = new String[]{
-        "STT",
-        "S.Đ.Tài",
-        "Tên tài xế",
-        "CMND/BL",
-        "Số Xe",
-        "Số Rơmoóc",
-        "Người tạo",
-        "Ngày giờ tạo",
-        "Nhập/Xuất(I/O)",
-        "Loại hàng",
-        "Ngày giờ vào",
-        "T.L vào",
-        "Ngày giờ ra",
-        "T.L ra",
-        "T.L Hàng",
-        "Số D.O",
-        "Số chứng từ SAP",
-        "Hủy",
-        "SAP Posted",
-        "Đơn vị vân chuyển",
-        "Số P.O"};
-    Class[] wtRptTypes = new Class[]{
-        Integer.class,
-        Integer.class,
-        String.class,
-        String.class,
-        String.class,
-        String.class,
-        String.class,
-        Date.class,
-        Character.class,
-        String.class,
-        Date.class,
-        BigDecimal.class,
-        Date.class,
-        BigDecimal.class,
-        BigDecimal.class,
-        String.class,
-        String.class,
-        Boolean.class,
-        Boolean.class,
-        String.class,
-        String.class};
     public org.jdesktop.application.ResourceMap resourceMapMsg = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(WTRegView.class);
 }

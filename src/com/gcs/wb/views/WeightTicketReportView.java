@@ -10,27 +10,22 @@
  */
 package com.gcs.wb.views;
 
-import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.DefaultComboBoxModel;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
 import com.gcs.wb.WeighBridgeApp;
-import com.gcs.wb.jpa.controller.WeightTicketJpaController;
+import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.jpa.entity.Material;
-import com.gcs.wb.jpa.entity.MaterialPK;
 import com.gcs.wb.jpa.entity.TransportAgent;
-import com.gcs.wb.jpa.entity.WeightTicket;
-import com.gcs.wb.jpa.repositorys.TransportAgentRepository;
-import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import java.awt.Component;
 import java.util.List;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import com.gcs.wb.base.util.FormatRenderer;
+import com.gcs.wb.controller.WeightTicketReportController;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JOptionPane;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -39,6 +34,7 @@ import net.sf.jasperreports.engine.data.JRTableModelDataSource;
 import net.sf.jasperreports.view.JasperViewer;
 import org.apache.log4j.Logger;
 import org.jdesktop.application.Application;
+import org.jdesktop.application.ResourceMap;
 
 /**
  *
@@ -46,9 +42,17 @@ import org.jdesktop.application.Application;
  */
 public class WeightTicketReportView extends javax.swing.JInternalFrame {
 
-    private TransportAgentRepository transportAgentRepository = new TransportAgentRepository();
-    private WeightTicketRepository weightTicketRepository = new WeightTicketRepository();
-
+    public WeightTicketReportController weighTicketReportController = new WeightTicketReportController();
+    private static Logger logger = Logger.getLogger(WeightTicketReportView.class);
+    private boolean[] editable = null;
+    private List<Character> modes = null;
+    private String[] modesModel = Constants.WeightTicketReport.modesModel;
+    private String[] statusModel = Constants.WeightTicketReport.statusModel;
+    Object[][] wtDatas = null;
+    Object[] wtColNames = Constants.WeightTicketReport.wtColNames;
+    Class[] wtColTypes = Constants.WeightTicketReport.wtColTypes;
+    public ResourceMap resourceMapMsg = Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(WeightTicketReportView.class);
+    
     /** Creates new form WeightTicketReportView */
     public WeightTicketReportView() {
         initComponents();
@@ -211,7 +215,7 @@ public class WeightTicketReportView extends javax.swing.JInternalFrame {
                 if (value instanceof Material) {
                     Material mat = (Material)value;
                     setText(mat.getMaktx());
-                    setToolTipText(mat.getMaterialPK().getMatnr());
+                    setToolTipText(mat.getMatnr());
                 }
                 return this;
             }
@@ -243,16 +247,16 @@ public class WeightTicketReportView extends javax.swing.JInternalFrame {
                     .addComponent(lblType))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnExtraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cbxMaterial, 0, 217, Short.MAX_VALUE)
-                    .addComponent(cbxTransportAgent, 0, 217, Short.MAX_VALUE))
+                    .addComponent(cbxMaterial, 0, 233, Short.MAX_VALUE)
+                    .addComponent(cbxTransportAgent, 0, 233, Short.MAX_VALUE))
                 .addGap(23, 23, 23)
                 .addGroup(pnExtraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lblMode)
                     .addComponent(lblState))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnExtraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cbxStatus, 0, 89, Short.MAX_VALUE)
-                    .addComponent(cbxMode, 0, 89, Short.MAX_VALUE))
+                    .addComponent(cbxStatus, 0, 105, Short.MAX_VALUE)
+                    .addComponent(cbxMode, 0, 105, Short.MAX_VALUE))
                 .addContainerGap())
         );
         pnExtraLayout.setVerticalGroup(
@@ -349,7 +353,7 @@ public class WeightTicketReportView extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(pnFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE)
+                .addComponent(pnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -359,49 +363,15 @@ public class WeightTicketReportView extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
 private void cbxModeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbxModeItemStateChanged
-    modes = new ArrayList<Character>();
-    switch (cbxMode.getSelectedIndex()) {
-        case 0:
-            modes.add('I');
-            modes.add('O');
-            break;
-        case 1:
-            modes.add('I');
-            break;
-        case 2:
-            modes.add('O');
-            break;
-    }
+    modes = weighTicketReportController.getModeItemStateChanged(modes, cbxMode);
 }//GEN-LAST:event_cbxModeItemStateChanged
 
     private DefaultComboBoxModel getTransportAgentsModel() {
-        List<TransportAgent> transportAgents = transportAgentRepository.getListTransportAgent();
-        return new DefaultComboBoxModel(transportAgents.toArray());
+        return weighTicketReportController.getTransportAgentsModel();
     }
 
     private DefaultComboBoxModel getMaterialsModel() {
-        DefaultComboBoxModel result = new DefaultComboBoxModel();
-        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-        String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
-        List weightTickets = weightTicketRepository.getMatsModel(client, plant);
-        for (Object obj : weightTickets) {
-            Object[] weightTicket = (Object[]) obj;
-            MaterialPK materialPK = new MaterialPK();
-            Material material = new Material();
-            materialPK.setMandt(WeighBridgeApp.getApplication().getConfig().getsClient());
-            if (weightTicket[0] == null) {
-                materialPK.setMatnr("-1");
-                material.setMaktx("Linh tinh");
-            } else {
-                materialPK.setMatnr(weightTicket[0].toString());
-                material.setMaktx(weightTicket[1].toString());
-            }
-            material.setMaterialPK(materialPK);
-            if (result.getIndexOf(material) < 0) {
-                result.addElement(material);
-            }
-        }
-        return result;
+        return weighTicketReportController.getMaterialsModel();
     }
 
     @Action
@@ -420,48 +390,9 @@ private void cbxModeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:
             String month = cbxMonth.getSelectedItem().toString();
             String year = cbxYear.getSelectedItem().toString();
             String tAgent = ((TransportAgent) cbxTransportAgent.getSelectedItem()).getAbbr();
-            String matnr = ((Material) cbxMaterial.getSelectedItem()).getMaterialPK().getMatnr();
+            String matnr = ((Material) cbxMaterial.getSelectedItem()).getMatnr();
             try {
-                WeightTicketJpaController weightTicketJpaController = new WeightTicketJpaController();
-                List<WeightTicket> weightTickets = weightTicketJpaController.findListWTs(month, year, tAgent, matnr, modes, cbxStatus.getSelectedIndex() == 1, cbxStatus.getSelectedIndex() == 2);
-                wtDatas = new Object[weightTickets.size()][wtColNames.length];
-                for (int i = 0; i < weightTickets.size(); i++) {
-                    WeightTicket item = weightTickets.get(i);
-                    String hh = item.getCreateTime().substring(0, 2);
-                    String mm = item.getCreateTime().substring(2, 4);
-                    String ss = item.getCreateTime().substring(4);
-                    Calendar create_date = Calendar.getInstance();
-                    create_date.setTime(item.getCreateDate());
-                    create_date.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hh));
-                    create_date.set(Calendar.MINUTE, Integer.valueOf(mm));
-                    create_date.set(Calendar.SECOND, Integer.valueOf(ss));
-                    wtDatas[i][0] = i + 1;// item.getSeqByMonth();
-                    wtDatas[i][1] = item.getWeightTicketPK().getSeqByDay();
-                    wtDatas[i][2] = item.getTenTaiXe();
-                    wtDatas[i][3] = item.getCmndBl();
-                    wtDatas[i][4] = item.getSoXe();
-                    wtDatas[i][5] = item.getSoRomooc();
-                    wtDatas[i][6] = item.getCreator();
-                    wtDatas[i][7] = create_date.getTime();
-                    wtDatas[i][8] = item.getRegCategory();
-                    wtDatas[i][9] = item.getRegItemText();
-                    wtDatas[i][10] = item.getFTime();
-                    wtDatas[i][11] = item.getFScale() == null ? item.getFScale() : item.getFScale().doubleValue() / 1000d;
-                    wtDatas[i][12] = item.getSTime();
-                    wtDatas[i][13] = item.getSScale() == null ? item.getSScale() : item.getSScale().doubleValue() / 1000d;
-                    wtDatas[i][14] = item.getGQty();
-                    wtDatas[i][15] = item.getDelivNumb();
-                    wtDatas[i][16] = item.getMatDoc();
-                    wtDatas[i][17] = item.getDissolved();
-//                    wtDatas[i][18] = item.getPosted();
-                    if (item.getPosted() == 1) {
-                        wtDatas[i][18] = true;
-                    } else {
-                        wtDatas[i][18] = false;
-                    }
-                    wtDatas[i][19] = ((TransportAgent) cbxTransportAgent.getSelectedItem()).getName();
-                    wtDatas[i][20] = item.getEbeln();
-                }
+                wtDatas = weighTicketReportController.findWeightTickets(wtDatas, month, year, tAgent, matnr, modes, cbxStatus, cbxTransportAgent);
                 editable = new boolean[wtColNames.length];
                 for (int i = 0; i < editable.length; i++) {
                     editable[i] = false;
@@ -497,21 +428,8 @@ private void cbxModeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:
         @Override
         protected Object doInBackground() {
             try {
-                Map<String, Object> params = new HashMap<String, Object>();
-                params.put("P_PNAME_RPT", WeighBridgeApp.getApplication().getSapSetting().getNameRpt());
-                params.put("P_PADDRESS", WeighBridgeApp.getApplication().getSapSetting().getAddress());
-                params.put("P_PPHONE", WeighBridgeApp.getApplication().getSapSetting().getPhone());
-                params.put("P_PFAX", WeighBridgeApp.getApplication().getSapSetting().getFax());
-                params.put("P_TAGENT", ((TransportAgent) cbxTransportAgent.getSelectedItem()).getName());
-                params.put("P_MONTH", cbxMonth.getSelectedItem().toString());
-                params.put("P_YEAR", cbxYear.getSelectedItem().toString());
-                String reportName = null;
-                if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
-                    reportName = "./rpt/rptBT/WTList.jasper";
-                } else {
-                    reportName = "./rpt/rptPQ/WTList.jasper";
-                }
-
+                Map<String, Object> params = weighTicketReportController.getParamReport(cbxTransportAgent, cbxMonth, cbxYear);
+                String reportName = weighTicketReportController.getReportName();
                 JasperPrint jasperPrint = JasperFillManager.fillReport(reportName, params, new JRTableModelDataSource(tabWeightTicket.getModel()));
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                 jasperViewer.setVisible(true);
@@ -551,55 +469,5 @@ private void cbxModeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:
     private org.jdesktop.swingx.JXTable tabWeightTicket;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
-    private static Logger logger = Logger.getLogger(WeightTicketReportView.class);
-    private boolean[] editable = null;
-    private List<Character> modes = null;
-    private String[] modesModel = {"Tất cả", "Nhập", "Xuất"};
-    private String[] statusModel = {"Tất cả", "Bị hủy", "Hoàn tất"};
-    Object[][] wtDatas = null;
-    Object[] wtColNames = new String[]{
-        "STT",
-        "S.Đ.Tài",
-        "Tên tài xế",
-        "CMND/BL",
-        "Số Xe",
-        "Số Rơmoóc",
-        "Người tạo",
-        "Ngày giờ tạo",
-        "Nhập/Xuất(I/O)",
-        "Loại hàng",
-        "Ngày giờ vào",
-        "T.L vào",
-        "Ngày giờ ra",
-        "T.L ra",
-        "T.L Hàng",
-        "Số D.O",
-        "Số chứng từ SAP",
-        "Hủy",
-        "SAP Posted",
-        "DVVC",
-        "Số P.O"};
-    Class[] wtColTypes = new Class[]{
-        Integer.class,
-        Integer.class,
-        String.class,
-        String.class,
-        String.class,
-        String.class,
-        String.class,
-        Date.class,
-        Character.class,
-        String.class,
-        Date.class,
-        BigDecimal.class,
-        Date.class,
-        BigDecimal.class,
-        BigDecimal.class,
-        String.class,
-        String.class,
-        Boolean.class,
-        Boolean.class,
-        String.class,
-        String.class};
-    public org.jdesktop.application.ResourceMap resourceMapMsg = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(WeightTicketReportView.class);
+    
 }

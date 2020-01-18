@@ -205,7 +205,7 @@ public class LookupMatView extends javax.swing.JDialog {
             wtData = new Object[materials.size()][wtCols.length];
             for (int i = 0; i < materials.size(); i++) {
                 Material mat = materials.get(i);
-                wtData[i][0] = mat.getMaterialPK().getMatnr();
+                wtData[i][0] = mat.getMatnr();
                 wtData[i][1] = mat.getMaktx();
             }
             editable = new boolean[wtCols.length];

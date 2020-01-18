@@ -5,52 +5,88 @@
 package com.gcs.wb.jpa.entity;
 
 import java.io.Serializable;
+import java.sql.Date;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 /**
  *
- * @author vunguyent
+ * @author thanghl
  */
 @Entity
-@Table(name = "Vendor")
+@Table(name = "tbl_vendor")
 @NamedQueries({
-        @NamedQuery(name = "Vendor.findAll", query = "SELECT v FROM Vendor v"),
-        @NamedQuery(name = "Vendor.findByMandt", query = "SELECT v FROM Vendor v WHERE v.vendorPK.mandt = :mandt"),
-        @NamedQuery(name = "Vendor.findByLifnr", query = "SELECT v FROM Vendor v WHERE v.vendorPK.lifnr = :lifnr"),
-        @NamedQuery(name = "Vendor.findByName1", query = "SELECT v FROM Vendor v WHERE v.name1 = :name1"),
-        @NamedQuery(name = "Vendor.findByName2", query = "SELECT v FROM Vendor v WHERE v.name2 = :name2")})
+    @NamedQuery(name = "Vendor.findAll", query = "SELECT v FROM Vendor v"),
+    @NamedQuery(name = "Vendor.findByLifnr", query = "SELECT v FROM Vendor v WHERE v.lifnr = :lifnr"),
+    @NamedQuery(name = "Vendor.findByName1", query = "SELECT v FROM Vendor v WHERE v.name1 = :name1"),
+    @NamedQuery(name = "Vendor.findByName2", query = "SELECT v FROM Vendor v WHERE v.name2 = :name2")})
 public class Vendor implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected VendorPK vendorPK;
-    @Column(name = "NAME1")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int id;
+    @Column(name = "lifnr", unique = true)
+    private String lifnr;
+    @Column(name = "mandt")
+    private String mandt;
+    @Column(name = "wplant")
+    private String wplant;
+    @Column(name = "name1")
     private String name1;
-    @Column(name = "NAME2")
+    @Column(name = "name2")
     private String name2;
+    @Column(name = "created_date")
+    private Date createdDate;
+    @Column(name = "updated_date")
+    private Date updatedDate;
+    @Column(name = "deleted_date")
+    private Date deletedDate;
 
     public Vendor() {
     }
 
-    public Vendor(VendorPK vendorPK) {
-        this.vendorPK = vendorPK;
+    public Vendor(String lifnr) {
+        this.lifnr = lifnr;
     }
 
-    public Vendor(String mandt, String lifnr) {
-        this.vendorPK = new VendorPK(mandt, lifnr);
+    public int getId() {
+        return id;
     }
 
-    public VendorPK getVendorPK() {
-        return vendorPK;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setVendorPK(VendorPK vendorPK) {
-        this.vendorPK = vendorPK;
+    public String getLifnr() {
+        return lifnr;
+    }
+
+    public void setLifnr(String lifnr) {
+        this.lifnr = lifnr;
+    }
+
+    public String getMandt() {
+        return mandt;
+    }
+
+    public void setMandt(String mandt) {
+        this.mandt = mandt;
+    }
+
+    public String getWplant() {
+        return wplant;
+    }
+
+    public void setWplant(String wplant) {
+        this.wplant = wplant;
     }
 
     public String getName1() {
@@ -69,28 +105,66 @@ public class Vendor implements Serializable {
         this.name2 = name2;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (vendorPK != null ? vendorPK.hashCode() : 0);
-        return hash;
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Date getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(Date updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
+    public Date getDeletedDate() {
+        return deletedDate;
+    }
+
+    public void setDeletedDate(Date deletedDate) {
+        this.deletedDate = deletedDate;
     }
 
     @Override
-    public boolean equals(Object object) {
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-        if (!(object instanceof Vendor)) {
-            return false;
-        }
-        Vendor other = (Vendor) object;
-        if ((this.vendorPK == null && other.vendorPK != null) || (this.vendorPK != null && !this.vendorPK.equals(other.vendorPK))) {
-            return false;
-        }
+        Vendor vendor = (Vendor) o;
+
+        if (id != vendor.id) return false;
+        if (lifnr != null ? !lifnr.equals(vendor.lifnr) : vendor.lifnr != null) return false;
+        if (mandt != null ? !mandt.equals(vendor.mandt) : vendor.mandt != null) return false;
+        if (wplant != null ? !wplant.equals(vendor.wplant) : vendor.wplant != null) return false;
+        if (name1 != null ? !name1.equals(vendor.name1) : vendor.name1 != null) return false;
+        if (name2 != null ? !name2.equals(vendor.name2) : vendor.name2 != null) return false;
+        if (createdDate != null ? !createdDate.equals(vendor.createdDate) : vendor.createdDate != null) return false;
+        if (updatedDate != null ? !updatedDate.equals(vendor.updatedDate) : vendor.updatedDate != null) return false;
+        if (deletedDate != null ? !deletedDate.equals(vendor.deletedDate) : vendor.deletedDate != null) return false;
+
         return true;
     }
 
     @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 31));
+        result = 31 * result + (lifnr != null ? lifnr.hashCode() : 0);
+        result = 31 * result + (mandt != null ? mandt.hashCode() : 0);
+        result = 31 * result + (wplant != null ? wplant.hashCode() : 0);
+        result = 31 * result + (name1 != null ? name1.hashCode() : 0);
+        result = 31 * result + (name2 != null ? name2.hashCode() : 0);
+        result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
+        result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
+        result = 31 * result + (deletedDate != null ? deletedDate.hashCode() : 0);
+        return result;
+    }
+
+    @Override
     public String toString() {
-        return "com.gcs.wb.jpa.entity.Vendor[vendorPK=" + vendorPK + "]";
+        return "com.gcs.wb.jpa.entity.Vendor[id=" + id + "]";
     }
 }
