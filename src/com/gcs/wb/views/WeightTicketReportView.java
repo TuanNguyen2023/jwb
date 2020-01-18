@@ -363,7 +363,7 @@ public class WeightTicketReportView extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
 private void cbxModeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbxModeItemStateChanged
-    modes = weighTicketReportController.getModeItemStateChanged(modes, cbxMode);
+    modes = weighTicketReportController.getModeItemStateChanged(modes, cbxMode.getSelectedIndex());
 }//GEN-LAST:event_cbxModeItemStateChanged
 
     private DefaultComboBoxModel getTransportAgentsModel() {
@@ -392,7 +392,7 @@ private void cbxModeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:
             String tAgent = ((TransportAgent) cbxTransportAgent.getSelectedItem()).getAbbr();
             String matnr = ((Material) cbxMaterial.getSelectedItem()).getMatnr();
             try {
-                wtDatas = weighTicketReportController.findWeightTickets(wtDatas, month, year, tAgent, matnr, modes, cbxStatus, cbxTransportAgent);
+                wtDatas = weighTicketReportController.findWeightTickets(wtDatas, month, year, tAgent, matnr, modes, cbxStatus.getSelectedIndex(), ((TransportAgent) cbxTransportAgent.getSelectedItem()).getName());
                 editable = new boolean[wtColNames.length];
                 for (int i = 0; i < editable.length; i++) {
                     editable[i] = false;

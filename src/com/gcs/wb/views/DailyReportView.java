@@ -37,7 +37,7 @@ import org.jdesktop.application.ResourceMap;
  * @author thanghl
  */
 public class DailyReportView extends javax.swing.JInternalFrame {
-    
+
     private static Logger logger = Logger.getLogger(DailyReportView.class);
     private List<WeightTicket> weightTicketList;
     private boolean[] editable = null;
@@ -208,7 +208,7 @@ public class DailyReportView extends javax.swing.JInternalFrame {
                 setProgress(2, 0, 4);
                 setMessage(resourceMapMsg.getString("msg.handleData"));
                 weightTicketList.addAll(weightTickets);
-                wtDatas = dailyReportController.handleWtDatas(wtDatas, weightTicketList, wtColNames);
+                wtDatas = dailyReportController.handleWtDatas(wtDatas, weightTicketList);
 
                 setProgress(3, 0, 4);
                 editable = new boolean[wtColNames.length];
@@ -284,5 +284,4 @@ public class DailyReportView extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane spnResult;
     private org.jdesktop.swingx.JXTable tabResults;
     // End of variables declaration//GEN-END:variables
-    
 }

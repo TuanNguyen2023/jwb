@@ -32,15 +32,15 @@ import org.jdesktop.application.Application;
  * @author HANGTT
  */
 public class JPAService {
+
     EntityManager entityManager = JPAConnector.getInstance();
     BatchStocksRepository batchStocksRepository = new BatchStocksRepository();
     AppConfig config = WeighBridgeApp.getApplication().getConfig();
     private TransportAgentRepository transportAgentRepository = new TransportAgentRepository();
     private TransportAgentVehicleRepository transportAgentVehicleRepository = new TransportAgentVehicleRepository();
-    
     private JFrame mainFrame = WeighBridgeApp.getApplication().getMainFrame();
     public org.jdesktop.application.ResourceMap resourceMapMsg = Application.getInstance(WeighBridgeApp.class).getContext().getResourceMap(TransportAgentView.class);
-    
+
     /**
      * Get data material
      * @param desc
@@ -54,7 +54,7 @@ public class JPAService {
         materials = tMaterial.getResultList();
         return materials;
     }
-    
+
     /**
      * Get data for "Vat tu"
      * @param desc
@@ -70,7 +70,7 @@ public class JPAService {
         }
         return result;
     }
-    
+
     /**
      * 
      * Get data for "Vendor boc xep/van chuyen"
@@ -83,7 +83,7 @@ public class JPAService {
         vendors = tVendor.getResultList();
         return vendors;
     }
-    
+
     /**
      * get list "Kho"
      * @return 
@@ -96,7 +96,7 @@ public class JPAService {
         slocs = tSlocQ.getResultList();
         return slocs;
     }
-    
+
     /**
      * get list DVVC
      * @return 
@@ -105,17 +105,17 @@ public class JPAService {
         List<TransportAgent> transportAgents = transportAgentRepository.getListTransportAgent();
         return transportAgents;
     }
-    
+
     /**
      * get list BS Xe
      * @param id
      * @return 
      */
-    public List<TransportAgentVehicle> getVehicle(int  id) {
+    public List<TransportAgentVehicle> getVehicle(int id) {
         List<TransportAgentVehicle> transportAgentVehicles = transportAgentVehicleRepository.findByTransportAgentId(id);
         return transportAgentVehicles;
     }
-    
+
     /**
      * remove Vehicle
      * @param transportId
@@ -140,7 +140,7 @@ public class JPAService {
             entityManager.clear();
         }
     }
-    
+
     /**
      * action prohibit Vehicle
      * @param vehicleSelected
@@ -173,44 +173,51 @@ public class JPAService {
      */
     public void saveVehicle(String licensePlate, Vehicle vehicle, TransportAgent transportAgentSelected) {
         EntityTransaction entityTransaction = entityManager.getTransaction();
-        TransportAgentVehicle transportAgentVehicle = new TransportAgentVehicle();
-        if (!entityTransaction.isActive()) {
-            entityTransaction.begin();
-        }
+        try {
+            TransportAgentVehicle transportAgentVehicle = new TransportAgentVehicle();
+            if (!entityTransaction.isActive()) {
+                entityTransaction.begin();
+            }
 
-        if (vehicle == null) {
-            // insert new vehicle
-            vehicle = new Vehicle();
-            vehicle.setPlateNo(licensePlate);
-            vehicle.setProhibit(false);
-            entityManager.persist(vehicle);
+            if (vehicle == null) {
+                // insert new vehicle
+                vehicle = new Vehicle();
+                vehicle.setPlateNo(licensePlate);
+                vehicle.setProhibit(false);
+                entityManager.persist(vehicle);
 
-            // insert vehicle relationship
-            transportAgentVehicle.setTransportAgent(transportAgentSelected);
-            transportAgentVehicle.setVehicle(vehicle);
-            entityManager.persist(transportAgentVehicle);
-        } else {
-            // check vehicle has exit in transport agent
-            transportAgentVehicle = transportAgentVehicleRepository.findByTransportAgentIdAndVehicleId(transportAgentSelected.getId(), vehicle.getId());
-            if (transportAgentVehicle != null) {
-                JOptionPane.showMessageDialog(mainFrame,
-                        resourceMapMsg.getString("msg.duplicationPlateNo",
-                        licensePlate,
-                        transportAgentSelected.getName()));
-                return;
-            } else {
                 // insert vehicle relationship
-                transportAgentVehicle = new TransportAgentVehicle();
                 transportAgentVehicle.setTransportAgent(transportAgentSelected);
                 transportAgentVehicle.setVehicle(vehicle);
                 entityManager.persist(transportAgentVehicle);
+            } else {
+                // check vehicle has exit in transport agent
+                transportAgentVehicle = transportAgentVehicleRepository.findByTransportAgentIdAndVehicleId(transportAgentSelected.getId(), vehicle.getId());
+                if (transportAgentVehicle != null) {
+                    JOptionPane.showMessageDialog(mainFrame,
+                            resourceMapMsg.getString("msg.duplicationPlateNo",
+                            licensePlate,
+                            transportAgentSelected.getName()));
+                    return;
+                } else {
+                    // insert vehicle relationship
+                    transportAgentVehicle = new TransportAgentVehicle();
+                    transportAgentVehicle.setTransportAgent(transportAgentSelected);
+                    transportAgentVehicle.setVehicle(vehicle);
+                    entityManager.persist(transportAgentVehicle);
+                }
             }
-        }
 
-        entityTransaction.commit();
-        entityManager.clear();
+            entityTransaction.commit();
+            entityManager.clear();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.addPlateNoFalse"));
+
+            entityTransaction.rollback();
+            entityManager.clear();
+        }
     }
-    
+
     /**
      * sync DVVC
      * @param transportDBs
@@ -279,7 +286,7 @@ public class JPAService {
             //return null;
         }
     }
-    
+
     /**
      * get list batch stock
      * @param client

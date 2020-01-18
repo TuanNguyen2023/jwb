@@ -18,11 +18,7 @@ public class SettingController {
 
     private SettingService settingService = new SettingService();
     
-    public void handleDoInBackground(EntityManager entityManager, SAPSetting sapSetting) {
-        settingService.handleDoInBackground(sapSetting);
-    }
-
-    public SAPSetting saveDoInBackground(SAPSetting sapSetting, JTextField txtNameRPT, JTextField txtAddress, JTextField txtPhone, JTextField txtFax,JCheckBox chkPOV) {
-        return settingService.saveDoInBackground(sapSetting, txtNameRPT, txtAddress, txtPhone, txtFax, chkPOV);
+    public SAPSetting saveDoInBackground(SAPSetting sapSetting) {
+        return settingService.saveDoInBackground(sapSetting);
     }
 }

@@ -31,9 +31,9 @@ public class WeightTicketReportService {
     private MaterialRepository materialRepository = new MaterialRepository();
     private Object[] wtColNames = Constants.WeightTicketReport.wtColNames;
 
-    public List<Character> getModeItemStateChanged(List<Character> modes, JComboBox cbxMode) {
+    public List<Character> getModeItemStateChanged(List<Character> modes, int mode) {
         modes = new ArrayList<Character>();
-        switch (cbxMode.getSelectedIndex()) {
+        switch (mode) {
             case 0:
                 modes.add('I');
                 modes.add('O');
@@ -65,9 +65,9 @@ public class WeightTicketReportService {
         return result;
     }
 
-    public Object[][] findWeightTickets(Object[][] wtDatas, String month, String year, String tAgent, String matnr, List<Character> modes, JComboBox cbxStatus, JComboBox cbxTransportAgent) throws Exception {
+    public Object[][] findWeightTickets(Object[][] wtDatas, String month, String year, String tAgent, String matnr, List<Character> modes, int status, String transportAgentName) throws Exception {
         WeightTicketJpaController weightTicketJpaController = new WeightTicketJpaController();
-        List<WeightTicket> weightTickets = weightTicketJpaController.findListWTs(month, year, tAgent, matnr, modes, cbxStatus.getSelectedIndex() == 1, cbxStatus.getSelectedIndex() == 2);
+        List<WeightTicket> weightTickets = weightTicketJpaController.findListWTs(month, year, tAgent, matnr, modes, status == 1, status == 2);
         wtDatas = new Object[weightTickets.size()][wtColNames.length];
         for (int i = 0; i < weightTickets.size(); i++) {
             WeightTicket item = weightTickets.get(i);
@@ -102,32 +102,10 @@ public class WeightTicketReportService {
             } else {
                 wtDatas[i][18] = false;
             }
-            wtDatas[i][19] = ((TransportAgent) cbxTransportAgent.getSelectedItem()).getName();
+            wtDatas[i][19] = transportAgentName;
             wtDatas[i][20] = item.getEbeln();
         }
         return wtDatas;
-    }
-
-    public Map<String, Object> getParamReport(JComboBox cbxTransportAgent, JComboBox cbxMonth, JComboBox cbxYear) {
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("P_PNAME_RPT", WeighBridgeApp.getApplication().getSapSetting().getNameRpt());
-        params.put("P_PADDRESS", WeighBridgeApp.getApplication().getSapSetting().getAddress());
-        params.put("P_PPHONE", WeighBridgeApp.getApplication().getSapSetting().getPhone());
-        params.put("P_PFAX", WeighBridgeApp.getApplication().getSapSetting().getFax());
-        params.put("P_TAGENT", ((TransportAgent) cbxTransportAgent.getSelectedItem()).getName());
-        params.put("P_MONTH", cbxMonth.getSelectedItem().toString());
-        params.put("P_YEAR", cbxYear.getSelectedItem().toString());
-        return params;
-    }
-
-    public String getReportName() {
-        String reportName = null;
-        if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
-            reportName = "./rpt/rptBT/WTList.jasper";
-        } else {
-            reportName = "./rpt/rptPQ/WTList.jasper";
-        }
-        return reportName;
     }
 
     public DefaultComboBoxModel getTransportAgentsModel() {

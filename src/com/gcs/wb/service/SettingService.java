@@ -22,48 +22,11 @@ public class SettingService {
 
     private EntityManager entityManager = JPAConnector.getInstance();
 
-    public void handleDoInBackground(SAPSetting sapSetting) {
+    public SAPSetting saveDoInBackground(SAPSetting sapSetting) {
+        
         if (!entityManager.getTransaction().isActive()) {
             entityManager.getTransaction().begin();
         }
-        entityManager.merge(sapSetting);
-        entityManager.getTransaction().commit();
-        entityManager.clear();
-        sapSetting = entityManager.find(SAPSetting.class, sapSetting.getId());
-        entityManager.clear();
-        Variant vari = new Variant();
-        VariantPK variPK = new VariantPK();
-        try {
-            AppConfig lconfig = WeighBridgeApp.getApplication().getConfig();
-            variPK.setMandt(lconfig.getsClient().toString());
-            variPK.setWPlant(lconfig.getwPlant().toString());
-            variPK.setParam("PROCESS_ORDER_CF");
-            vari.setVariantPK(variPK);
-            if (!entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().begin();
-            }
-            entityManager.merge(vari);
-            entityManager.getTransaction().commit();
-            entityManager.clear();
-        } catch (Exception e) {
-        }
-    }
-
-    public SAPSetting saveDoInBackground(SAPSetting sapSetting, JTextField txtNameRPT, JTextField txtAddress, JTextField txtPhone, JTextField txtFax, JCheckBox chkPOV) {
-        String tmp = txtNameRPT.getText().trim();
-        sapSetting.setNameRpt(tmp.isEmpty() ? null : tmp);
-        tmp = txtAddress.getText().trim();
-        sapSetting.setAddress(tmp.isEmpty() ? null : tmp);
-        tmp = txtPhone.getText().trim();
-        sapSetting.setPhone(tmp.isEmpty() ? null : tmp);
-        tmp = txtFax.getText().trim();
-        sapSetting.setFax(tmp.isEmpty() ? null : tmp);
-        sapSetting.setCheckPov(chkPOV.isSelected() ? true : false);
-
-        if (!entityManager.getTransaction().isActive()) {
-            entityManager.getTransaction().begin();
-        }
-
         // save sap setting
         entityManager.merge(sapSetting);
         entityManager.getTransaction().commit();

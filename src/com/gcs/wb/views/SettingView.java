@@ -321,7 +321,17 @@ private void txtPhoneKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
 
         @Override
         protected Object doInBackground() {
-            sapSetting = controller.saveDoInBackground(sapSetting, txtNameRPT, txtAddress, txtPhone, txtFax, chkPOV);
+            String tmp = txtNameRPT.getText().trim();
+            sapSetting.setNameRpt(tmp.isEmpty() ? null : tmp);
+            tmp = txtAddress.getText().trim();
+            sapSetting.setAddress(tmp.isEmpty() ? null : tmp);
+            tmp = txtPhone.getText().trim();
+            sapSetting.setPhone(tmp.isEmpty() ? null : tmp);
+            tmp = txtFax.getText().trim();
+            sapSetting.setFax(tmp.isEmpty() ? null : tmp);
+            sapSetting.setCheckPov(chkPOV.isSelected() ? true : false);
+
+            sapSetting = controller.saveDoInBackground(sapSetting);
             return null;
         }
 
