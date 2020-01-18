@@ -135,7 +135,9 @@ public class LoginService {
             entityTransaction.commit();
             entityManager.clear();
         } catch (Exception ex) {
-            entityTransaction.rollback();
+            if (entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
             throw ex;
         }
     }

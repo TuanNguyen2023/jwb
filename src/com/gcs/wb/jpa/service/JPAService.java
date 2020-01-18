@@ -131,7 +131,9 @@ public class JPAService {
             entityManager.clear();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.deleteVehicleFalse"));
-            entityTransaction.rollback();
+            if (entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
             entityManager.clear();
         }
     }
@@ -154,7 +156,9 @@ public class JPAService {
             entityManager.clear();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.prohibitFalse"));
-            entityTransaction.rollback();
+            if (entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
             entityManager.clear();
         }
     }
@@ -230,7 +234,7 @@ public class JPAService {
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.deleteVehicleFalse"));
                     entityTransaction.rollback();
-                    //return null;
+                    continue;
                 }
 
                 // delete dvvc
@@ -242,7 +246,7 @@ public class JPAService {
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.deleteProviderFalse"));
                     entityTransaction.rollback();
-                    //return null;
+                    continue;
                 }
 
                 entityTransaction.commit();
@@ -260,7 +264,7 @@ public class JPAService {
                 if (index == -1) {
                     entityManager.persist(transportAgentSAP);
                 } else {
-                    //transportAgentSAP.setId(transportDBs.get(index).getId());
+                    transportAgentSAP.setId(transportDBs.get(index).getId());
                     entityManager.merge(transportAgentSAP);
                 }
             }
@@ -270,8 +274,9 @@ public class JPAService {
 
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.syncProviderFalse"));
-            entityTransaction.rollback();
-            //return null;
+            if (entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
         }
     }
     
