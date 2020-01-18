@@ -5,6 +5,9 @@
 package com.gcs.wb.views;
 
 import org.jdesktop.application.Action;
+import org.jdesktop.application.ResourceMap;
+
+import javax.swing.*;
 
 public class AboutView extends javax.swing.JDialog {
 
@@ -39,115 +42,152 @@ public class AboutView extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(AboutView.class);
-        setTitle(resourceMap.getString("title")); // NOI18N
-        setModal(true);
-        setName("aboutBox"); // NOI18N
-        setResizable(false);
-
-        imageLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        imageLabel.setIcon(resourceMap.getIcon("imageLabel.icon")); // NOI18N
-        imageLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        imageLabel.setAlignmentY(0.0F);
-        imageLabel.setName("imageLabel"); // NOI18N
-
-        appTitleLabel.setFont(appTitleLabel.getFont().deriveFont(appTitleLabel.getFont().getStyle() | java.awt.Font.BOLD, appTitleLabel.getFont().getSize()+4));
-        appTitleLabel.setText(resourceMap.getString("Application.title")); // NOI18N
-        appTitleLabel.setName("appTitleLabel"); // NOI18N
-
-        appDescLabel.setText(resourceMap.getString("appDescLabel.text")); // NOI18N
-        appDescLabel.setName("appDescLabel"); // NOI18N
-
-        versionLabel.setFont(versionLabel.getFont().deriveFont(versionLabel.getFont().getStyle() | java.awt.Font.BOLD));
-        versionLabel.setText(resourceMap.getString("versionLabel.text")); // NOI18N
-        versionLabel.setName("versionLabel"); // NOI18N
-
-        vendorLabel.setFont(vendorLabel.getFont().deriveFont(vendorLabel.getFont().getStyle() | java.awt.Font.BOLD));
-        vendorLabel.setText(resourceMap.getString("vendorLabel.text")); // NOI18N
-        vendorLabel.setName("vendorLabel"); // NOI18N
-
-        appVendorLabel.setText(resourceMap.getString("Application.vendor")); // NOI18N
-        appVendorLabel.setName("appVendorLabel"); // NOI18N
-
-        homepageLabel.setFont(homepageLabel.getFont().deriveFont(homepageLabel.getFont().getStyle() | java.awt.Font.BOLD));
-        homepageLabel.setText(resourceMap.getString("homepageLabel.text")); // NOI18N
-        homepageLabel.setName("homepageLabel"); // NOI18N
-
-        appHomepageLabel.setText(resourceMap.getString("Application.homepage")); // NOI18N
-        appHomepageLabel.setName("appHomepageLabel"); // NOI18N
-
-        appVersionLabel.setText(resourceMap.getString("appVersionLabel.text")); // NOI18N
-        appVersionLabel.setName("appVersionLabel"); // NOI18N
+        initAbouBox(resourceMap);
+        initImageLabel(imageLabel, resourceMap);
+        InitAppTitleLabel(appTitleLabel, resourceMap);
+        InitAppDescLabel(appDescLabel, resourceMap);
+        InitVersionLabel(versionLabel, resourceMap);
+        InitVendorLable(vendorLabel, resourceMap);
+        InitAppVendorLabel(appVendorLabel, resourceMap);
+        InitHomepageLabel(homepageLabel, resourceMap);
+        InitAppHomepageLabel(appHomepageLabel, resourceMap);
+        InitAppVersionLabel(resourceMap);
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getActionMap(AboutView.class, this);
-        closeButton.setAction(actionMap.get("closeAboutBox")); // NOI18N
-        closeButton.setName("closeButton"); // NOI18N
+        InitCloseButton(actionMap);
+        InitGroupLayout(imageLabel, appTitleLabel, appDescLabel, versionLabel, vendorLabel, appVendorLabel, homepageLabel, appHomepageLabel);
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+    private void InitGroupLayout(JLabel imageLabel, JLabel appTitleLabel, JLabel appDescLabel, JLabel versionLabel, JLabel vendorLabel, JLabel appVendorLabel, JLabel homepageLabel, JLabel appHomepageLabel) {
+        GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(imageLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(imageLabel, GroupLayout.PREFERRED_SIZE, 127, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(appDescLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE)
+                                .addComponent(appDescLabel, GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE)
                                 .addContainerGap())
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(appTitleLabel)
                                 .addContainerGap(89, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                     .addComponent(versionLabel)
                                     .addComponent(vendorLabel)
                                     .addComponent(homepageLabel))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                     .addComponent(appHomepageLabel)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                             .addComponent(appVersionLabel)
                                             .addComponent(appVendorLabel))
                                         .addContainerGap(113, Short.MAX_VALUE))))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(closeButton)
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGap(16, 16, 16)
                         .addComponent(imageLabel))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                    .addGroup(GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(appTitleLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(appDescLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(appDescLabel, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                             .addComponent(versionLabel)
                             .addComponent(appVersionLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                             .addComponent(vendorLabel)
                             .addComponent(appVendorLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                             .addComponent(homepageLabel)
                             .addComponent(appHomepageLabel))))
                 .addGap(23, 23, 23)
                 .addComponent(closeButton)
                 .addContainerGap())
         );
+    }
 
-        pack();
-    }// </editor-fold>//GEN-END:initComponents
-    
+    private void InitCloseButton(ActionMap actionMap) {
+        closeButton.setAction(actionMap.get("closeAboutBox")); // NOI18N
+        closeButton.setName("closeButton"); // NOI18N
+    }
+
+    private void InitAppVersionLabel(ResourceMap resourceMap) {
+        appVersionLabel.setText(resourceMap.getString("appVersionLabel.text")); // NOI18N
+        appVersionLabel.setName("appVersionLabel"); // NOI18N
+    }
+
+    private void InitAppHomepageLabel(JLabel appHomepageLabel, ResourceMap resourceMap) {
+        appHomepageLabel.setText(resourceMap.getString("Application.homepage")); // NOI18N
+        appHomepageLabel.setName("appHomepageLabel"); // NOI18N
+    }
+
+    private void InitHomepageLabel(JLabel homepageLabel, ResourceMap resourceMap) {
+        homepageLabel.setFont(homepageLabel.getFont().deriveFont(homepageLabel.getFont().getStyle() | java.awt.Font.BOLD));
+        homepageLabel.setText(resourceMap.getString("homepageLabel.text")); // NOI18N
+        homepageLabel.setName("homepageLabel"); // NOI18N
+    }
+
+    private void InitAppVendorLabel(JLabel appVendorLabel, ResourceMap resourceMap) {
+        appVendorLabel.setText(resourceMap.getString("Application.vendor")); // NOI18N
+        appVendorLabel.setName("appVendorLabel"); // NOI18N
+    }
+
+    private void InitVendorLable(JLabel vendorLabel, ResourceMap resourceMap) {
+        vendorLabel.setFont(vendorLabel.getFont().deriveFont(vendorLabel.getFont().getStyle() | java.awt.Font.BOLD));
+        vendorLabel.setText(resourceMap.getString("vendorLabel.text")); // NOI18N
+        vendorLabel.setName("vendorLabel"); // NOI18N
+    }
+
+    private void InitVersionLabel(JLabel versionLabel, ResourceMap resourceMap) {
+        versionLabel.setFont(versionLabel.getFont().deriveFont(versionLabel.getFont().getStyle() | java.awt.Font.BOLD));
+        versionLabel.setText(resourceMap.getString("versionLabel.text")); // NOI18N
+        versionLabel.setName("versionLabel"); // NOI18N
+    }
+
+    private void InitAppDescLabel(JLabel appDescLabel, ResourceMap resourceMap) {
+        appDescLabel.setText(resourceMap.getString("appDescLabel.text")); // NOI18N
+        appDescLabel.setName("appDescLabel"); // NOI18N
+    }
+
+    private void InitAppTitleLabel(JLabel appTitleLabel, ResourceMap resourceMap) {
+        appTitleLabel.setFont(appTitleLabel.getFont().deriveFont(appTitleLabel.getFont().getStyle() | java.awt.Font.BOLD, appTitleLabel.getFont().getSize()+4));
+        appTitleLabel.setText(resourceMap.getString("Application.title")); // NOI18N
+        appTitleLabel.setName("appTitleLabel"); // NOI18N
+    }
+
+    private void initImageLabel(JLabel imageLabel, ResourceMap resourceMap) {
+        imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        imageLabel.setIcon(resourceMap.getIcon("imageLabel.icon")); // NOI18N
+        imageLabel.setVerticalAlignment(SwingConstants.TOP);
+        imageLabel.setAlignmentY(0.0F);
+        imageLabel.setName("imageLabel"); // NOI18N
+    }
+
+    private void initAbouBox(ResourceMap resourceMap) {
+        setTitle(resourceMap.getString("title")); // NOI18N
+        setModal(true);
+        setName("aboutBox"); // NOI18N
+        setResizable(false);
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel appVersionLabel;
     private javax.swing.JButton closeButton;
