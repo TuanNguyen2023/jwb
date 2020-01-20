@@ -57,7 +57,7 @@
 		<parameter name="P_STAGE1" class="java.lang.Boolean" isForPrompting="false"/>
 		<parameter name="P_STAGE2" class="java.lang.Boolean" isForPrompting="false"/>
 		<queryString>
-		<![CDATA[store_bt_outb_details_v2 $P{P_MANDT},$P{P_DEL_NUM}]]>
+		<![CDATA[p_store_bt_outbound_detail $P{P_MANDT},$P{P_DEL_NUM}]]>
 		</queryString>
 		<field name="outb_details_MANDT" class="java.lang.String"/>
 		<field name="outb_details_DELIV_NUMB" class="java.lang.String"/>
@@ -87,7 +87,7 @@
 	<parameter name="P_STAGE1" class="java.lang.Boolean" isForPrompting="false"/>
 	<parameter name="P_STAGE2" class="java.lang.Boolean" isForPrompting="false"/>
 	<queryString>
-		<![CDATA[store_bt_WeightTicket_New $P{P_MANDT},$P{P_WPlant},$P{P_ID},$P{P_DAYSEQ},$P{P_ADDRESS}]]>
+		<![CDATA[p_store_bt_weight_ticket_new $P{P_MANDT},$P{P_WPlant},$P{P_ID},$P{P_DAYSEQ},$P{P_ADDRESS}]]>
 	</queryString>
 	<field name="MANDT" class="java.lang.String"/>
 	<field name="ID" class="java.lang.String"/>
@@ -158,14 +158,14 @@
 	<field name="UNIT" class="java.lang.String"/>
 	<field name="MAT_DOC" class="java.lang.String"/>
 	<field name="DOC_YEAR" class="java.lang.Integer"/>
-	<field name="TRANSFERED_POSTING" class="java.lang.Boolean"/>
+	<!--<field name="TRANSFERED_POSTING" class="java.lang.Boolean"/>-->
 	<field name="OFFLINE_MODE" class="java.lang.Boolean"/>
 	<field name="DISSOLVED" class="java.lang.Boolean"/>
 	<field name="POSTED" class="java.lang.Boolean"/>
 	<field name="MVT" class="java.lang.String"/>
 	<field name="TITLE" class="java.lang.String"/>
 	<field name="SIGN3" class="java.lang.String"/>
-	<field name="PHIEUCAN" class="java.lang.String"/>
+	<!--<field name="PHIEUCAN" class="java.lang.String"/>-->
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -214,7 +214,8 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" size="14" isBold="true" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{TITLE}+$F{PHIEUCAN}]]></textFieldExpression>
+				<!--<textFieldExpression><![CDATA[$F{TITLE}+$F{PHIEUCAN}]]></textFieldExpression>-->
+				<textFieldExpression><![CDATA[$F{TITLE}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement positionType="Float" x="0" y="53" width="545" height="10"/>

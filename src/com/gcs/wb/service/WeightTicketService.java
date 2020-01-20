@@ -13,10 +13,7 @@ import com.gcs.wb.bapi.goodsmvt.structure.GoodsMvtItemDoStructure;
 import com.gcs.wb.bapi.goodsmvt.structure.GoodsMvtItemPoStructure;
 import com.gcs.wb.bapi.goodsmvt.structure.GoodsMvtWeightTicketStructure;
 import com.gcs.wb.bapi.helper.MatAvailableBapi;
-import com.gcs.wb.bapi.helper.MvtGetDetailBapi;
-import com.gcs.wb.bapi.helper.MvtReasonsGetListBapi;
 import com.gcs.wb.bapi.helper.structure.MatAvailableStructure;
-import com.gcs.wb.bapi.helper.structure.MvtReasonsGetListStructure;
 import com.gcs.wb.bapi.outbdlv.DOCreate2PGIBapi;
 import com.gcs.wb.bapi.outbdlv.DORevertBapi;
 import com.gcs.wb.bapi.outbdlv.WsDeliveryUpdateBapi;
@@ -26,18 +23,14 @@ import com.gcs.wb.bapi.outbdlv.structure.VbpokStructure;
 import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.base.util.Conversion_Exit;
 import com.gcs.wb.jpa.JPAConnector;
-import com.gcs.wb.jpa.JReportConnector;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.BatchStocks;
 import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.Material;
-import com.gcs.wb.jpa.entity.Movement;
-import com.gcs.wb.jpa.entity.MovementPK;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
 import com.gcs.wb.jpa.entity.OutboundDetail;
 import com.gcs.wb.jpa.entity.PurOrder;
 import com.gcs.wb.jpa.entity.PurOrderPK;
-import com.gcs.wb.jpa.entity.Reason;
 import com.gcs.wb.jpa.entity.SLoc;
 import com.gcs.wb.jpa.entity.TimeRange;
 import com.gcs.wb.jpa.entity.WeightTicket;
@@ -47,13 +40,11 @@ import com.gcs.wb.jpa.repositorys.CustomerRepository;
 import com.gcs.wb.jpa.repositorys.SignalsRepository;
 import com.gcs.wb.jpa.repositorys.TimeRangeRepository;
 import com.gcs.wb.jpa.procedures.WeightTicketRepository;
-import com.gcs.wb.jpa.repositorys.MovementRepository;
-import com.gcs.wb.jpa.repositorys.ReasonRepository;
 import com.gcs.wb.jpa.service.JPAService;
+import com.gcs.wb.jpa.service.JReportService;
 import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.views.WeightTicketView;
 import java.math.BigDecimal;
-import java.sql.Connection;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -63,18 +54,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JRootPane;
 import javax.swing.JTextField;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.view.JasperViewer;
 import org.hibersap.session.Session;
 import org.hibersap.util.DateUtil;
 
@@ -97,7 +82,7 @@ public class WeightTicketService {
     WeightTicketJpaController con = new WeightTicketJpaController();
     SAPService sapService = new SAPService();
     JPAService jpaService = new JPAService();
-    Connection connect = JReportConnector.getInstance();
+    JReportService jreportService = new JReportService();
 
     public DefaultComboBoxModel getCustomerByMaNdt() {
         List<Customer> customers = this.customerRepository.getListCustomer();
@@ -987,11 +972,7 @@ public class WeightTicketService {
                 } else {
                     reportName1 = "./rpt/rptPQ/WeightTicket.jasper";
                 }
-                JasperReport jasperReport = JasperCompileManager.compileReport(reportName1);
-
-                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, connect);
-                JasperViewer jv = new JasperViewer(jasperPrint, false);
-                jv.setVisible(true);
+                jreportService.printReport(map, reportName1);
 
             } else {
                 for (int i = 0; i < outbDel_list.size(); i++) {
@@ -1089,16 +1070,13 @@ public class WeightTicketService {
                         path = "./rpt/rptPQ/";
                     }
                     if (rbtMisc.isSelected() || rbtPO.isSelected()) {
-                        reportName = path.concat("WeightTicket.jrxml");
+                        reportName = path.concat("WeightTicket.jasper");
                         //reportName = path.concat("WeightTicket.jasper");
                     } else {
-                        reportName = path.concat("WeightTicket_NEW.jrxml");
+                        reportName = path.concat("WeightTicket_NEW.jasper");
                         //reportName = path.concat("WeightTicket.jasper");
                     }
-                    JasperReport jasperReport = JasperCompileManager.compileReport(reportName);
-                    JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, connect);
-                    JasperViewer jv = new JasperViewer(jasperPrint, false);
-                    jv.setVisible(true);
+                    jreportService.printReport(map, reportName);
                 }
             }
 

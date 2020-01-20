@@ -7,6 +7,7 @@ package com.gcs.wb.controller;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.jpa.entity.WeightTicket;
+import com.gcs.wb.jpa.service.JReportService;
 import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.service.DailyReportService;
 import java.text.SimpleDateFormat;
@@ -25,6 +26,7 @@ public class DailyReportController {
     DailyReportService dailyReportService = new DailyReportService();
     Object[] wtColNames = Constants.DailyReport.wtColNames;
     AppConfig appConfig = WeighBridgeApp.getApplication().getConfig();
+    JReportService jreportService = new JReportService();
 
     public List<WeightTicket> findByCreateDateRange(JXDatePicker dpDateFrom, JXDatePicker dpDateTo) {
         return dailyReportService.findByCreateDateRange(dpDateFrom, dpDateTo);
@@ -51,6 +53,10 @@ public class DailyReportController {
         return params;
     }
 
+    public void printReport(Map<String, Object> map, String reportName){
+        jreportService.printReport(map, reportName);
+    }
+    
     public Object[][] handleWtDatas(Object[][] wtDatas, List<WeightTicket> weightTicketList) {
 
         wtDatas = new Object[weightTicketList.size()][wtColNames.length];

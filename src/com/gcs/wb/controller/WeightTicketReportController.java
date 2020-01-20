@@ -6,6 +6,7 @@ package com.gcs.wb.controller;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.jpa.entity.TransportAgent;
+import com.gcs.wb.jpa.service.JReportService;
 import com.gcs.wb.service.WeightTicketReportService;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +21,7 @@ import javax.swing.JComboBox;
 public class WeightTicketReportController {
 
     private WeightTicketReportService weightTicketReportService = new WeightTicketReportService();
+    JReportService jreportService = new JReportService();
 
     public List<Character> getModeItemStateChanged(List<Character> modes, int mode) {
         return weightTicketReportService.getModeItemStateChanged(modes, mode);
@@ -57,5 +59,9 @@ public class WeightTicketReportController {
 
     public DefaultComboBoxModel getTransportAgentsModel() {
         return weightTicketReportService.getTransportAgentsModel();
+    }
+    
+    public void printReport(Map<String, Object> map, String reportName){
+        jreportService.printReport(map, reportName);
     }
 }

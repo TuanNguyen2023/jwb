@@ -16,33 +16,52 @@ import org.eclipse.persistence.config.PersistenceUnitProperties;
  */
 public class DataSources {
 
+//    public static Map getOrProperties() {
+//        AppConfig appConf = WeighBridgeApp.getApplication().getConfig();
+//        StringBuilder sbURL = new StringBuilder();
+//        sbURL.append("jdbc:sqlserver://");
+//        sbURL.append(appConf.getDbHost());
+//        sbURL.append("/");
+//        sbURL.append(appConf.getDbName());
+//        Map<String, String> properties = new HashMap<String, String>();
+//        properties.put(PersistenceUnitProperties.JDBC_DRIVER, "com.microsoft.sqlserver.jdbc.SQLServerDriver");
+//        properties.put(PersistenceUnitProperties.JDBC_URL, "jdbc:sqlserver://172.16.20.181:1433;databaseName=ors");
+//        properties.put(PersistenceUnitProperties.JDBC_USER, appConf.getDbUsr());
+//        properties.put(PersistenceUnitProperties.JDBC_PASSWORD, appConf.getDbPwd());
+//        return properties;
+//    }
+//
+//    public static Map getJweighbridgeProperties() {
+//        AppConfig appConf = WeighBridgeApp.getApplication().getConfig();
+//        StringBuilder sbURL = new StringBuilder();
+//        sbURL.append("jdbc:sqlserver://");
+//        sbURL.append(appConf.getDbHost());
+//        sbURL.append("/");
+//        sbURL.append(appConf.getDbName());
+//        Map<String, String> properties = new HashMap<String, String>();
+//        properties.put(PersistenceUnitProperties.JDBC_DRIVER, "com.microsoft.sqlserver.jdbc.SQLServerDriver");
+//        properties.put(PersistenceUnitProperties.JDBC_URL, "jdbc:sqlserver://172.16.20.181:1433;databaseName=jweighbridge");
+//        properties.put(PersistenceUnitProperties.JDBC_USER, appConf.getDbUsr());
+//        properties.put(PersistenceUnitProperties.JDBC_PASSWORD, appConf.getDbPwd());
+//        return properties;
+//    }
     public static Map getOrProperties() {
-        AppConfig appConf = WeighBridgeApp.getApplication().getConfig();
-        StringBuilder sbURL = new StringBuilder();
-        sbURL.append("jdbc:sqlserver://");
-        sbURL.append(appConf.getDbHost());
-        sbURL.append("/");
-        sbURL.append(appConf.getDbName());
         Map<String, String> properties = new HashMap<String, String>();
-        properties.put(PersistenceUnitProperties.JDBC_DRIVER, "com.microsoft.sqlserver.jdbc.SQLServerDriver");
-        properties.put(PersistenceUnitProperties.JDBC_URL, "jdbc:sqlserver://172.16.20.181:1433;databaseName=ors");
-        properties.put(PersistenceUnitProperties.JDBC_USER, appConf.getDbUsr());
-        properties.put(PersistenceUnitProperties.JDBC_PASSWORD, appConf.getDbPwd());
+        properties.put("javax.persistence.jdbc.driver", "com.microsoft.sqlserver.jdbc.SQLServerDriver");
+        properties.put("javax.persistence.jdbc.url", "jdbc:sqlserver://172.16.20.181:1433;databaseName=ors");
+        properties.put("javax.persistence.jdbc.user", "sa");
+        properties.put("javax.persistence.jdbc.password", "1qaZ2wsX");
         return properties;
     }
 
+ 
+
     public static Map getJweighbridgeProperties() {
-        AppConfig appConf = WeighBridgeApp.getApplication().getConfig();
-        StringBuilder sbURL = new StringBuilder();
-        sbURL.append("jdbc:sqlserver://");
-        sbURL.append(appConf.getDbHost());
-        sbURL.append("/");
-        sbURL.append(appConf.getDbName());
         Map<String, String> properties = new HashMap<String, String>();
-        properties.put(PersistenceUnitProperties.JDBC_DRIVER, "com.microsoft.sqlserver.jdbc.SQLServerDriver");
-        properties.put(PersistenceUnitProperties.JDBC_URL, "jdbc:sqlserver://172.16.20.181:1433;databaseName=weighbridge");
-        properties.put(PersistenceUnitProperties.JDBC_USER, appConf.getDbUsr());
-        properties.put(PersistenceUnitProperties.JDBC_PASSWORD, appConf.getDbPwd());
+        properties.put("javax.persistence.jdbc.driver", "com.microsoft.sqlserver.jdbc.SQLServerDriver");
+        properties.put("javax.persistence.jdbc.url", "jdbc:sqlserver://172.16.20.181:1433;databaseName=plant");
+        properties.put("javax.persistence.jdbc.user", "sa");
+        properties.put("javax.persistence.jdbc.password", "1qaZ2wsX");
         return properties;
     }
 }

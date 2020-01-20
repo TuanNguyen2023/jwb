@@ -5,19 +5,13 @@
 package com.gcs.wb.service;
 
 import com.gcs.wb.bapi.service.SAPService;
-import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.TransportAgentVehicle;
 import com.gcs.wb.jpa.entity.Vehicle;
 import com.gcs.wb.jpa.repositorys.VehicleRepository;
 import com.gcs.wb.jpa.service.JPAService;
-import java.awt.Color;
 import java.util.List;
-import java.util.regex.Matcher;
 import javax.swing.DefaultListModel;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
 
 /**
  *

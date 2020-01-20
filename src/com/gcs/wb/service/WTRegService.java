@@ -6,7 +6,6 @@ package com.gcs.wb.service;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.helper.SAP2Local;
-import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.Customer;
@@ -18,7 +17,6 @@ import com.gcs.wb.jpa.repositorys.VendorRepository;
 import com.gcs.wb.model.AppConfig;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -171,32 +169,7 @@ public class WTRegService {
         }
         return wtData;
     }
-
-    public String printReportDoInBackground(JXDatePicker dpFrom, JXDatePicker dpTo) {
-
-        String reportName = null;
-        if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
-            reportName = "./rpt/rptBT/WTList.jasper";
-        } else {
-            reportName = "./rpt/rptPQ/WTList.jasper";
-        }
-        return reportName;
-    }
-
-    public Map<String, Object> getPrintReport(JXDatePicker dpFrom, JXDatePicker dpTo) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        String kFrom = format.format(dpFrom.getDate());
-        String kTo = format.format(dpTo.getDate());
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("P_PNAME_RPT", WeighBridgeApp.getApplication().getSapSetting().getNameRpt());
-        params.put("P_PADDRESS", WeighBridgeApp.getApplication().getSapSetting().getAddress());
-        params.put("P_PPHONE", WeighBridgeApp.getApplication().getSapSetting().getPhone());
-        params.put("P_PFAX", WeighBridgeApp.getApplication().getSapSetting().getFax());
-        params.put("P_FROM", kFrom);
-        params.put("P_TO", kTo);
-        return params;
-    }
-
+    
     public void hanldeCheckDOOutbDel(OutboundDelivery sapOutb, Customer customer, Customer kunag, Vendor lifnr, Customer sapKunnr, Customer sapKunag, Vendor sapLifnr) {
         if (sapOutb != null) {
             if (sapOutb.getKunnr() != null && !sapOutb.getKunnr().trim().isEmpty()) {

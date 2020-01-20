@@ -28,10 +28,6 @@ import com.gcs.wb.controller.WeightTicketReportController;
 import java.util.ArrayList;
 import java.util.Map;
 import javax.swing.JOptionPane;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.data.JRTableModelDataSource;
-import net.sf.jasperreports.view.JasperViewer;
 import org.apache.log4j.Logger;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.ResourceMap;
@@ -430,9 +426,7 @@ private void cbxModeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:
             try {
                 Map<String, Object> params = weighTicketReportController.getParamReport(cbxTransportAgent, cbxMonth, cbxYear);
                 String reportName = weighTicketReportController.getReportName();
-                JasperPrint jasperPrint = JasperFillManager.fillReport(reportName, params, new JRTableModelDataSource(tabWeightTicket.getModel()));
-                JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
-                jasperViewer.setVisible(true);
+                weighTicketReportController.printReport(params, reportName);
             } catch (Exception ex) {
                 failed(ex);
             }
