@@ -24,23 +24,25 @@ import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.base.util.Conversion_Exit;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
-import com.gcs.wb.jpa.entity.BatchStocks;
+import com.gcs.wb.jpa.entity.BatchStock;
 import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
 import com.gcs.wb.jpa.entity.OutboundDetail;
-import com.gcs.wb.jpa.entity.PurOrder;
-import com.gcs.wb.jpa.entity.PurOrderPK;
+import com.gcs.wb.jpa.entity.PurchaseOrder;
 import com.gcs.wb.jpa.entity.SLoc;
 import com.gcs.wb.jpa.entity.TimeRange;
 import com.gcs.wb.jpa.entity.WeightTicket;
 import com.gcs.wb.jpa.procedures.WeightTicketJpaRepository;
-import com.gcs.wb.jpa.repositorys.BatchStocksRepository;
+import com.gcs.wb.jpa.repositorys.BatchStockRepository;
 import com.gcs.wb.jpa.repositorys.CustomerRepository;
 import com.gcs.wb.jpa.repositorys.SignalsRepository;
 import com.gcs.wb.jpa.repositorys.TimeRangeRepository;
 import com.gcs.wb.jpa.procedures.WeightTicketRepository;
-import com.gcs.wb.jpa.service.JPAService;
+import com.gcs.wb.jpa.repositorys.ReasonRepository;
+import com.gcs.wb.jpa.repositorys.MovementRepository;
+import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
+import com.gcs.wb.jpa.repositorys.ReasonRepository;import com.gcs.wb.jpa.service.JPAService;
 import com.gcs.wb.jpa.service.JReportService;
 import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.views.WeightTicketView;
@@ -70,7 +72,7 @@ import org.hibersap.util.DateUtil;
 public class WeightTicketService {
 
     WeightTicketRepository weightTicketRepository = new WeightTicketRepository();
-    BatchStocksRepository batchStocksRepository = new BatchStocksRepository();
+    BatchStockRepository batchStocksRepository = new BatchStockRepository();
     TimeRangeRepository timeRangeRepository = new TimeRangeRepository();
     private AppConfig config = null;
     public HashMap hmMsg = new HashMap();
@@ -83,6 +85,7 @@ public class WeightTicketService {
     SAPService sapService = new SAPService();
     JPAService jpaService = new JPAService();
     JReportService jreportService = new JReportService();
+    PurchaseOrderRepository purchaseOrderRepository = new PurchaseOrderRepository();
 
     public DefaultComboBoxModel getCustomerByMaNdt() {
         List<Customer> customers = this.customerRepository.getListCustomer();
@@ -100,8 +103,8 @@ public class WeightTicketService {
         return timeRangeRepository.findByMandtWbId(client, WeighBridgeApp.getApplication().getConfig().getWbId());
     }
 
-    public List<BatchStocks> getBatchStocks(SLoc selSloc, WeightTicket weightTicket) {
-        return batchStocksRepository.getList(config.getsClient(), config.getwPlant(),
+    public List<BatchStock> getBatchStocks(SLoc selSloc, WeightTicket weightTicket) {
+        return batchStocksRepository.getListBatchStock(config.getwPlant(),
                 selSloc.getLgort(), weightTicket.getMatnrRef());
     }
 
@@ -109,15 +112,15 @@ public class WeightTicketService {
         sapService.syncBatchStocks(selSloc.getLgort(), weightTicket.getMatnrRef(), weightTicket.getLgort());
     }
 
-    public DefaultComboBoxModel setCbxBatch(List<BatchStocks> batchs) {
+    public DefaultComboBoxModel setCbxBatch(List<BatchStock> batchs) {
         DefaultComboBoxModel result = new DefaultComboBoxModel();
-        for (BatchStocks b : batchs) {
+        for (BatchStock b : batchs) {
             if (b.getLvorm() == null || b.getLvorm().toString().trim().isEmpty()) {
                 // Fillter BATCH not contain "-" by Tuanna -10.01.2013 
                 if (WeighBridgeApp.getApplication().getConfig().getwPlant().indexOf("1311") >= 0) {
-                    result.addElement(b.getBatchStocksPK().getCharg());
-                } else if (b.getBatchStocksPK().getCharg().indexOf("-") < 0) {
-                    result.addElement(b.getBatchStocksPK().getCharg());
+                    result.addElement(b.getCharg());
+                } else if (b.getCharg().indexOf("-") < 0) {
+                    result.addElement(b.getCharg());
                 }
             }
         }
@@ -192,7 +195,7 @@ public class WeightTicketService {
         return result;
     }
 
-    public WeightTicket findWeightTicket(WeightTicket weightTicket, String id, Integer seq) {
+    public WeightTicket findWeightTicket(WeightTicket weightTicket, int id, Integer seq) {
         com.gcs.wb.jpa.repositorys.WeightTicketRepository repository = new com.gcs.wb.jpa.repositorys.WeightTicketRepository();
         return repository.findByIdSeqDay(id, seq);
     }
@@ -216,11 +219,13 @@ public class WeightTicketService {
         }
     }
 
-    public PurOrder findPurOrder(String poNum) {
-        return entityManager.find(PurOrder.class, new PurOrderPK(config.getsClient(), poNum));
+
+    public PurchaseOrder findPurOrder(String poNum) {
+        return purchaseOrderRepository.findByPoNumber(poNum);
     }
 
-    public PurOrder getSapPurOrder(String poNum) throws Exception {
+
+    public PurchaseOrder getSapPurOrder(String poNum) throws Exception {
         return sapService.getPurchaseOrder(poNum);
     }
 
@@ -342,7 +347,7 @@ public class WeightTicketService {
         return now;
     }
 
-    public Material checkPOSTO(PurOrder purOrder) throws Exception {
+    public Material checkPOSTO(PurchaseOrder purOrder) throws Exception {
         return con.CheckPOSTO(purOrder.getMaterial());
     }
 
@@ -520,7 +525,8 @@ public class WeightTicketService {
         return bapi;
     }
 
-    public Object getGi541MigoBapi(WeightTicket wt, WeightTicket weightTicket, int timeFrom, int timeTo, PurOrder purOrder, JRadioButton rbtOutward) {
+
+    public Object getGi541MigoBapi(WeightTicket wt, WeightTicket weightTicket, int timeFrom, int timeTo, PurchaseOrder purOrder, JRadioButton rbtOutward) {
         config = WeighBridgeApp.getApplication().getConfig();
         String plateCombine = wt.getPlateNo();
         if (wt.getTrailerId() != null && !wt.getTrailerId().trim().isEmpty()) {
@@ -927,7 +933,6 @@ public class WeightTicketService {
 //
 //        return new DefaultComboBoxModel(reasons.toArray());
 //    }
-
     public void printWT(WeightTicket wt, boolean reprint, String ximang, List<OutboundDelivery> outbDel_list, List<OutboundDetail> outDetails_lits,
             OutboundDelivery outbDel, JRadioButton rbtMisc, JRadioButton rbtPO, boolean isStage1, JRootPane rootPane) {
         config = WeighBridgeApp.getApplication().getConfig();
@@ -972,7 +977,9 @@ public class WeightTicketService {
                 } else {
                     reportName1 = "./rpt/rptPQ/WeightTicket.jasper";
                 }
+
                 jreportService.printReport(map, reportName1);
+
 
             } else {
                 for (int i = 0; i < outbDel_list.size(); i++) {
@@ -1070,12 +1077,15 @@ public class WeightTicketService {
                         path = "./rpt/rptPQ/";
                     }
                     if (rbtMisc.isSelected() || rbtPO.isSelected()) {
+
                         reportName = path.concat("WeightTicket.jasper");
                         //reportName = path.concat("WeightTicket.jasper");
                     } else {
+
                         reportName = path.concat("WeightTicket_NEW.jasper");
                         //reportName = path.concat("WeightTicket.jasper");
                     }
+
                     jreportService.printReport(map, reportName);
                 }
             }

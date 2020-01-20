@@ -7,122 +7,149 @@ package com.gcs.wb.jpa.entity;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import javax.persistence.Basic;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
  *
- * @author vunguyent
+ * @author thanghl
  */
 @Entity
-@Table(name = "PurOrder")
-public class PurOrder implements Serializable {
+@Table(name = "tbl_purchase_order")
+@NamedQueries({
+    @NamedQuery(name = "PurchaseOrder.findAll", query = "SELECT po FROM PurchaseOrder po"),
+    @NamedQuery(name = "PurchaseOrder.findByPoNumber", query = "SELECT po FROM PurchaseOrder po WHERE po.poNumber = :poNumber")
+})
+public class PurchaseOrder implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected PurOrderPK purOrderPK;
-    @Column(name = "DOC_TYPE")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int id;
+    @Column(name = "mandt")
+    private String mandt;
+    @Column(name = "po_number", unique = true)
+    private String poNumber;
+    @Column(name = "doc_type")
     private String docType;
-    @Column(name = "DELETE_IND")
+    @Column(name = "delete_ind")
     private Character deleteInd;
-    @Column(name = "STATUS")
+    @Column(name = "status")
     private Character status;
-    @Column(name = "CREAT_DATE")
+    @Column(name = "creat_date")
     @Temporal(TemporalType.DATE)
     private Date creatDate;
-    @Column(name = "VENDOR")
+    @Column(name = "vendor")
     private String vendor;
-    @Column(name = "SUPPL_VEND")
+    @Column(name = "suppl_vend")
     private String supplVend;
-    @Column(name = "CUSTOMER")
+    @Column(name = "customer")
     private String customer;
-    @Column(name = "SUPPL_PLNT")
+    @Column(name = "suppl_plnt")
     private String supplPlnt;
-    @Column(name = "PO_REL_IND")
+    @Column(name = "po_rel_ind")
     private Character poRelInd;
-    @Basic(optional = false)
-    @Column(name = "PO_ITEM")
+    @Column(name = "po_item")
     private String poItem;
-    @Column(name = "PO_ITEM_FREE")
+    @Column(name = "po_item_free")
     private String poItemFree;
-    @Column(name = "I_DELETE_IND")
+    @Column(name = "i_delete_ind")
     private Character iDeleteInd;
-    @Column(name = "IF_DELETE_IND")
+    @Column(name = "if_delete_ind")
     private Character ifDeleteInd;
-    @Column(name = "SHORT_TEXT")
+    @Column(name = "short_text")
     private String shortText;
-    @Column(name = "MATERIAL")
+    @Column(name = "material")
     private String material;
-    @Column(name = "PLANT")
+    @Column(name = "plant")
     private String plant;
-    @Column(name = "STGE_LOC")
+    @Column(name = "stge_loc")
     private String stgeLoc;
-    @Column(name = "VEND_MAT")
+    @Column(name = "vend_mat")
     private String vendMat;
-    @Column(name = "QUANTITY")
+    @Column(name = "quantity")
     private BigDecimal quantity;
-    @Column(name = "QUANTITY_FREE")
+    @Column(name = "quantity_free")
     private BigDecimal quantityFree;
-    @Column(name = "PO_UNIT")
+    @Column(name = "po_unit")
     private String poUnit;
-    @Column(name = "PO_UNIT_ISO")
+    @Column(name = "po_unit_iso")
     private String poUnitIso;
-    @Column(name = "QUAL_INSP")
+    @Column(name = "qual_insp")
     private Character qualInsp;
-    @Column(name = "OVER_DLV_TOL")
+    @Column(name = "over_dlv_tol")
     private BigDecimal overDlvTol;
-    @Column(name = "UNLIMITED_DLV")
+    @Column(name = "unlimited_dlv")
     private Character unlimitedDlv;
-    @Column(name = "UNDER_DLV_TOL")
+    @Column(name = "under_dlv_tol")
     private BigDecimal underDlvTol;
-    @Column(name = "VAL_TYPE")
+    @Column(name = "val_type")
     private String valType;
-    @Column(name = "NO_MORE_GR")
+    @Column(name = "no_more_gr")
     private Character noMoreGr;
-    @Column(name = "FINAL_INV")
+    @Column(name = "final_inv")
     private Character finalInv;
-    @Column(name = "ITEM_CAT")
+    @Column(name = "item_cat")
     private Character itemCat;
-    @Column(name = "ITEM_FREE_CAT")
+    @Column(name = "item_free_cat")
     private Character itemFreeCat;
-    @Column(name = "GR_IND")
+    @Column(name = "gr_ind")
     private Character grInd;
-    @Column(name = "GR_NON_VAL")
+    @Column(name = "gr_non_val")
     private Character grNonVal;
-    @Column(name = "DELIV_COMPL")
+    @Column(name = "deliv_compl")
     private Character delivCompl;
-    @Column(name = "PART_DELIV")
+    @Column(name = "part_deliv")
     private Character partDeliv;
-    @Column(name = "REL_STATUS")
+    @Column(name = "rel_status")
     private String relStatus;
+    @Column(name = "created_date")
+    @Temporal(TemporalType.DATE)
+    private Date createdDate;
 
-    public PurOrder() {
+    public PurchaseOrder() {
     }
 
-    public PurOrder(PurOrderPK purOrderPK) {
-        this.purOrderPK = purOrderPK;
+    public PurchaseOrder(String poNumber) {
+        this.poNumber = poNumber;
     }
 
-    public PurOrder(PurOrderPK purOrderPK, String poItem) {
-        this.purOrderPK = purOrderPK;
+    public PurchaseOrder(String poNumber, String poItem) {
+        this.poNumber = poNumber;
         this.poItem = poItem;
     }
 
-    public PurOrder(String mandt, String poNumber) {
-        this.purOrderPK = new PurOrderPK(mandt, poNumber);
+    public int getId() {
+        return id;
     }
 
-    public PurOrderPK getPurOrderPK() {
-        return purOrderPK;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setPurOrderPK(PurOrderPK purOrderPK) {
-        this.purOrderPK = purOrderPK;
+    public String getMandt() {
+        return mandt;
+    }
+
+    public void setMandt(String mandt) {
+        this.mandt = mandt;
+    }
+
+    public String getPoNumber() {
+        return poNumber;
+    }
+
+    public void setPoNumber(String poNumber) {
+        this.poNumber = poNumber;
     }
 
     public String getDocType() {
@@ -413,27 +440,73 @@ public class PurOrder implements Serializable {
         this.relStatus = relStatus;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (purOrderPK != null ? purOrderPK.hashCode() : 0);
-        return hash;
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
     }
 
     @Override
-    public boolean equals(Object object) {
-        if (!(object instanceof PurOrder)) {
-            return false;
-        }
-        PurOrder other = (PurOrder) object;
-        if ((this.purOrderPK == null && other.purOrderPK != null) || (this.purOrderPK != null && !this.purOrderPK.equals(other.purOrderPK))) {
-            return false;
-        }
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PurchaseOrder that = (PurchaseOrder) o;
+
+        if (poNumber != null ? !poNumber.equals(that.poNumber) : that.poNumber != null) return false;
+        
         return true;
     }
 
     @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 31));
+        result = 31 * result + (mandt != null ? mandt.hashCode() : 0);
+        result = 31 * result + (poNumber != null ? poNumber.hashCode() : 0);
+        result = 31 * result + (docType != null ? docType.hashCode() : 0);
+        result = 31 * result + (deleteInd != null ? deleteInd.hashCode() : 0);
+        result = 31 * result + (status != null ? status.hashCode() : 0);
+        result = 31 * result + (creatDate != null ? creatDate.hashCode() : 0);
+        result = 31 * result + (vendor != null ? vendor.hashCode() : 0);
+        result = 31 * result + (supplVend != null ? supplVend.hashCode() : 0);
+        result = 31 * result + (customer != null ? customer.hashCode() : 0);
+        result = 31 * result + (supplPlnt != null ? supplPlnt.hashCode() : 0);
+        result = 31 * result + (poRelInd != null ? poRelInd.hashCode() : 0);
+        result = 31 * result + (poItem != null ? poItem.hashCode() : 0);
+        result = 31 * result + (poItemFree != null ? poItemFree.hashCode() : 0);
+        result = 31 * result + (iDeleteInd != null ? iDeleteInd.hashCode() : 0);
+        result = 31 * result + (ifDeleteInd != null ? ifDeleteInd.hashCode() : 0);
+        result = 31 * result + (shortText != null ? shortText.hashCode() : 0);
+        result = 31 * result + (material != null ? material.hashCode() : 0);
+        result = 31 * result + (plant != null ? plant.hashCode() : 0);
+        result = 31 * result + (stgeLoc != null ? stgeLoc.hashCode() : 0);
+        result = 31 * result + (vendMat != null ? vendMat.hashCode() : 0);
+        result = 31 * result + (quantity != null ? quantity.hashCode() : 0);
+        result = 31 * result + (quantityFree != null ? quantityFree.hashCode() : 0);
+        result = 31 * result + (poUnit != null ? poUnit.hashCode() : 0);
+        result = 31 * result + (poUnitIso != null ? poUnitIso.hashCode() : 0);
+        result = 31 * result + (qualInsp != null ? qualInsp.hashCode() : 0);
+        result = 31 * result + (overDlvTol != null ? overDlvTol.hashCode() : 0);
+        result = 31 * result + (unlimitedDlv != null ? unlimitedDlv.hashCode() : 0);
+        result = 31 * result + (underDlvTol != null ? underDlvTol.hashCode() : 0);
+        result = 31 * result + (valType != null ? valType.hashCode() : 0);
+        result = 31 * result + (noMoreGr != null ? noMoreGr.hashCode() : 0);
+        result = 31 * result + (finalInv != null ? finalInv.hashCode() : 0);
+        result = 31 * result + (itemCat != null ? itemCat.hashCode() : 0);
+        result = 31 * result + (itemFreeCat != null ? itemFreeCat.hashCode() : 0);
+        result = 31 * result + (grInd != null ? grInd.hashCode() : 0);
+        result = 31 * result + (grNonVal != null ? grNonVal.hashCode() : 0);
+        result = 31 * result + (delivCompl != null ? delivCompl.hashCode() : 0);
+        result = 31 * result + (partDeliv != null ? partDeliv.hashCode() : 0);
+        result = 31 * result + (relStatus != null ? relStatus.hashCode() : 0);
+        result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
+        return result;
+    }
+
+    @Override
     public String toString() {
-        return "com.gcs.wb.jpa.entity.PurOrder[purOrderPK=" + purOrderPK + "]";
+        return "com.gcs.wb.jpa.entity.PurchaseOrder[id=" + id + "]";
     }
 }

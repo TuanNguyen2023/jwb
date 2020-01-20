@@ -8,7 +8,7 @@ import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.helper.PoGetDetailBapi;
 import com.gcs.wb.bapi.helper.structure.PoGetDetailHeaderStructure;
 import com.gcs.wb.bapi.helper.structure.PoGetDetailItemStructure;
-import com.gcs.wb.jpa.entity.PurOrder;
+import com.gcs.wb.jpa.entity.PurchaseOrder;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -16,24 +16,24 @@ import java.util.List;
  *
  * @author THANGPT
  */
-public class PurOrderConverter extends AbstractThrowableParamConverter<PoGetDetailBapi, PurOrder, Exception> {
+public class PurOrderConverter extends AbstractThrowableParamConverter<PoGetDetailBapi, PurchaseOrder, Exception> {
 
     @Override
-    public PurOrder convertHasParameter(PoGetDetailBapi from, String val) throws Exception {
+    public PurchaseOrder convertHasParameter(PoGetDetailBapi from, String val) throws Exception {
         String item_num = null;
         String item_num_free = null;
         boolean flag_free = true;
         boolean flag = true;
         BigDecimal item_qty = BigDecimal.ZERO;
         BigDecimal item_qty_free = BigDecimal.ZERO;
-        PurOrder result = null;
+        PurchaseOrder result = null;
         PoGetDetailHeaderStructure header = from.getPoHeader();
         List<PoGetDetailItemStructure> items = from.getPoItems();
         if (items.size() == 2 && !items.get(0).getMATERIAL().equalsIgnoreCase(items.get(1).getMATERIAL())) {
             throw new Exception("Không hỗ trợ P.O số: " + val + "!");
         }
 
-        result = new PurOrder(WeighBridgeApp.getApplication().getConfig().getsClient(), val);
+        result = new PurchaseOrder(WeighBridgeApp.getApplication().getConfig().getsClient(), val);
         result.setDocType(header.getDOC_TYPE());
         result.setDeleteInd(header.getDELETE_IND() == null || header.getDELETE_IND().trim().isEmpty() ? ' ' : header.getDELETE_IND().charAt(0));
         result.setStatus(header.getSTATUS() == null || header.getSTATUS().trim().isEmpty() ? ' ' : header.getSTATUS().charAt(0));
@@ -114,7 +114,7 @@ public class PurOrderConverter extends AbstractThrowableParamConverter<PoGetDeta
         return result;
     }
     @Override
-    public PurOrder convertsHasParameter(PoGetDetailBapi from, String val, boolean refresh) throws Exception {
+    public PurchaseOrder convertsHasParameter(PoGetDetailBapi from, String val, boolean refresh) throws Exception {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

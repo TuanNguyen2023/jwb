@@ -509,54 +509,8 @@ public class OutboundDelivery implements Serializable {
 
         OutboundDelivery that = (OutboundDelivery) o;
 
-        if (id != that.id) return false;
-        if (deliveryOrderNo != null ? !deliveryOrderNo.equals(that.deliveryOrderNo) : that.deliveryOrderNo != null)
-            return false;
-        if (mandt != null ? !mandt.equals(that.mandt) : that.mandt != null) return false;
-        if (wplant != null ? !wplant.equals(that.wplant) : that.wplant != null) return false;
-        if (deliveryItem != null ? !deliveryItem.equals(that.deliveryItem) : that.deliveryItem != null) return false;
-        if (deliveryItemFree != null ? !deliveryItemFree.equals(that.deliveryItemFree) : that.deliveryItemFree != null)
-            return false;
-        if (matnr != null ? !matnr.equals(that.matnr) : that.matnr != null) return false;
-        if (arktx != null ? !arktx.equals(that.arktx) : that.arktx != null) return false;
-        if (erdat != null ? !erdat.equals(that.erdat) : that.erdat != null) return false;
-        if (lfart != null ? !lfart.equals(that.lfart) : that.lfart != null) return false;
-        if (lddat != null ? !lddat.equals(that.lddat) : that.lddat != null) return false;
-        if (wadat != null ? !wadat.equals(that.wadat) : that.wadat != null) return false;
-        if (kodat != null ? !kodat.equals(that.kodat) : that.kodat != null) return false;
-        if (shipPoint != null ? !shipPoint.equals(that.shipPoint) : that.shipPoint != null) return false;
-        if (lifnr != null ? !lifnr.equals(that.lifnr) : that.lifnr != null) return false;
-        if (kunnr != null ? !kunnr.equals(that.kunnr) : that.kunnr != null) return false;
-        if (kunag != null ? !kunag.equals(that.kunag) : that.kunag != null) return false;
-        if (traty != null ? !traty.equals(that.traty) : that.traty != null) return false;
-        if (traid != null ? !traid.equals(that.traid) : that.traid != null) return false;
-        if (bldat != null ? !bldat.equals(that.bldat) : that.bldat != null) return false;
-        if (werks != null ? !werks.equals(that.werks) : that.werks != null) return false;
-        if (recvPlant != null ? !recvPlant.equals(that.recvPlant) : that.recvPlant != null) return false;
-        if (lgort != null ? !lgort.equals(that.lgort) : that.lgort != null) return false;
-        if (charg != null ? !charg.equals(that.charg) : that.charg != null) return false;
-        if (lichn != null ? !lichn.equals(that.lichn) : that.lichn != null) return false;
-        if (lfimg != null ? !lfimg.equals(that.lfimg) : that.lfimg != null) return false;
-        if (freeQty != null ? !freeQty.equals(that.freeQty) : that.freeQty != null) return false;
-        if (meins != null ? !meins.equals(that.meins) : that.meins != null) return false;
-        if (vrkme != null ? !vrkme.equals(that.vrkme) : that.vrkme != null) return false;
-        if (untto != null ? !untto.equals(that.untto) : that.untto != null) return false;
-        if (uebto != null ? !uebto.equals(that.uebto) : that.uebto != null) return false;
-        if (uebtk != null ? !uebtk.equals(that.uebtk) : that.uebtk != null) return false;
-        if (vgbel != null ? !vgbel.equals(that.vgbel) : that.vgbel != null) return false;
-        if (vgpos != null ? !vgpos.equals(that.vgpos) : that.vgpos != null) return false;
-        if (bwtar != null ? !bwtar.equals(that.bwtar) : that.bwtar != null) return false;
-        if (bwart != null ? !bwart.equals(that.bwart) : that.bwart != null) return false;
-        if (kostk != null ? !kostk.equals(that.kostk) : that.kostk != null) return false;
-        if (koquk != null ? !koquk.equals(that.koquk) : that.koquk != null) return false;
-        if (wbstk != null ? !wbstk.equals(that.wbstk) : that.wbstk != null) return false;
-        if (matDoc != null ? !matDoc.equals(that.matDoc) : that.matDoc != null) return false;
-        if (matnrFree != null ? !matnrFree.equals(that.matnrFree) : that.matnrFree != null) return false;
-        if (status != null ? !status.equals(that.status) : that.status != null) return false;
-        if (createdDate != null ? !createdDate.equals(that.createdDate) : that.createdDate != null) return false;
-        if (updatedDate != null ? !updatedDate.equals(that.updatedDate) : that.updatedDate != null) return false;
-        if (deletedDate != null ? !deletedDate.equals(that.deletedDate) : that.deletedDate != null) return false;
-
+        if (deliveryOrderNo != null ? !deliveryOrderNo.equals(that.deliveryOrderNo) : that.deliveryOrderNo != null) return false;
+        
         return true;
     }
 

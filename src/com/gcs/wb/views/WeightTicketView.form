@@ -10,7 +10,7 @@
     </Component>
     <Component class="com.gcs.wb.jpa.entity.WeightTicket" name="weightTicket">
     </Component>
-    <Component class="com.gcs.wb.jpa.entity.PurOrder" name="purOrder">
+    <Component class="com.gcs.wb.jpa.entity.PurchaseOrder" name="purOrder">
     </Component>
     <Component class="com.gcs.wb.jpa.entity.OutboundDelivery" name="outbDel">
     </Component>

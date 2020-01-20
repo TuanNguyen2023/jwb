@@ -6,14 +6,14 @@ package com.gcs.wb.jpa.service;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.jpa.JPAConnector;
-import com.gcs.wb.jpa.entity.BatchStocks;
+import com.gcs.wb.jpa.entity.BatchStock;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.SLoc;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.TransportAgentVehicle;
 import com.gcs.wb.jpa.entity.Vehicle;
 import com.gcs.wb.jpa.entity.Vendor;
-import com.gcs.wb.jpa.repositorys.BatchStocksRepository;
+import com.gcs.wb.jpa.repositorys.BatchStockRepository;
 import com.gcs.wb.jpa.repositorys.SLocRepository;
 import com.gcs.wb.jpa.repositorys.TransportAgentRepository;
 import com.gcs.wb.jpa.repositorys.TransportAgentVehicleRepository;
@@ -35,7 +35,7 @@ import org.jdesktop.application.Application;
  */
 public class JPAService {
     EntityManager entityManager = JPAConnector.getInstance();
-    BatchStocksRepository batchStocksRepository = new BatchStocksRepository();
+    BatchStockRepository batchStocksRepository = new BatchStockRepository();
     AppConfig config = WeighBridgeApp.getApplication().getConfig();
     private TransportAgentRepository transportAgentRepository = new TransportAgentRepository();
     private TransportAgentVehicleRepository transportAgentVehicleRepository = new TransportAgentVehicleRepository();
@@ -131,7 +131,9 @@ public class JPAService {
             entityManager.clear();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.deleteVehicleFalse"));
-            entityTransaction.rollback();
+            if (entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
             entityManager.clear();
         }
     }
@@ -154,7 +156,9 @@ public class JPAService {
             entityManager.clear();
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.prohibitFalse"));
-            entityTransaction.rollback();
+            if (entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
             entityManager.clear();
         }
     }
@@ -230,7 +234,7 @@ public class JPAService {
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.deleteVehicleFalse"));
                     entityTransaction.rollback();
-                    //return null;
+                    continue;
                 }
 
                 // delete dvvc
@@ -242,7 +246,7 @@ public class JPAService {
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.deleteProviderFalse"));
                     entityTransaction.rollback();
-                    //return null;
+                    continue;
                 }
 
                 entityTransaction.commit();
@@ -260,7 +264,7 @@ public class JPAService {
                 if (index == -1) {
                     entityManager.persist(transportAgentSAP);
                 } else {
-                    //transportAgentSAP.setId(transportDBs.get(index).getId());
+                    transportAgentSAP.setId(transportDBs.get(index).getId());
                     entityManager.merge(transportAgentSAP);
                 }
             }
@@ -270,8 +274,9 @@ public class JPAService {
 
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.syncProviderFalse"));
-            entityTransaction.rollback();
-            //return null;
+            if (entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
         }
     }
     
@@ -283,9 +288,9 @@ public class JPAService {
      * @param matnrRef
      * @return 
      */
-    public List<BatchStocks> getBatchStocks(String client, String plant, String lgort, String matnrRef) {
-        List<BatchStocks> batchStocks = new ArrayList<BatchStocks>();
-        batchStocks = batchStocksRepository.getList(client, plant, lgort, matnrRef);
+    public List<BatchStock> getBatchStocks(String plant, String lgort, String matnrRef) {
+        List<BatchStock> batchStocks = new ArrayList<BatchStock>();
+        batchStocks = batchStocksRepository.getListBatchStock(plant, lgort, matnrRef);
         return batchStocks;
     }
 }

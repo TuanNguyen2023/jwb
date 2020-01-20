@@ -327,35 +327,10 @@ public class OutboundDetail implements Serializable {
 
         OutboundDetail that = (OutboundDetail) o;
 
-        if (id != that.id) return false;
-        if (deliveryOrderItem != null ? !deliveryOrderItem.equals(that.deliveryOrderItem) : that.deliveryOrderItem != null)
-            return false;
-        if (matnr != null ? !matnr.equals(that.matnr) : that.matnr != null) return false;
-        if (arktx != null ? !arktx.equals(that.arktx) : that.arktx != null) return false;
-        if (lfimg != null ? !lfimg.equals(that.lfimg) : that.lfimg != null) return false;
-        if (meins != null ? !meins.equals(that.meins) : that.meins != null) return false;
-        if (vgbel != null ? !vgbel.equals(that.vgbel) : that.vgbel != null) return false;
-        if (freeItem != null ? !freeItem.equals(that.freeItem) : that.freeItem != null) return false;
-        if (wtId != null ? !wtId.equals(that.wtId) : that.wtId != null) return false;
-        if (matDoc != null ? !matDoc.equals(that.matDoc) : that.matDoc != null) return false;
-        if (docYear != null ? !docYear.equals(that.docYear) : that.docYear != null) return false;
-        if (inScale != null ? !inScale.equals(that.inScale) : that.inScale != null) return false;
-        if (outScale != null ? !outScale.equals(that.outScale) : that.outScale != null) return false;
-        if (goodsQty != null ? !goodsQty.equals(that.goodsQty) : that.goodsQty != null) return false;
-        if (bzirk != null ? !bzirk.equals(that.bzirk) : that.bzirk != null) return false;
-        if (bztxt != null ? !bztxt.equals(that.bztxt) : that.bztxt != null) return false;
-        if (lfimg != null ? !lfimg.equals(that.lfimg) : that.lfimg != null) return false;
-        if (sTime != null ? !sTime.equals(that.sTime) : that.sTime != null) return false;
-        if (fTime != null ? !fTime.equals(that.fTime) : that.fTime != null) return false;
-        if (status != null ? !status.equals(that.status) : that.status != null) return false;
-        if (createdDate != null ? !createdDate.equals(that.createdDate) : that.createdDate != null) return false;
-        if (updatedDate != null ? !updatedDate.equals(that.updatedDate) : that.updatedDate != null) return false;
-        if (deletedDate != null ? !deletedDate.equals(that.deletedDate) : that.deletedDate != null) return false;
-        if (mandt != null ? !mandt.equals(that.mandt) : that.mandt != null) return false;
-        if (wplant != null ? !wplant.equals(that.wplant) : that.wplant != null) return false;
-
+        if (deliveryOrderItem != null ? !deliveryOrderItem.equals(that.deliveryOrderItem) : that.deliveryOrderItem != null) return false;
+        if (deliveryOrderNo != null ? !deliveryOrderNo.equals(that.deliveryOrderNo) : that.deliveryOrderNo != null) return false;
+        
         return true;
-
     }
 
     @Override

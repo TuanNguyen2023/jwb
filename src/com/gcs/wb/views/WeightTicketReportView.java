@@ -75,7 +75,7 @@ public class WeightTicketReportView extends javax.swing.JInternalFrame {
 
         // Init mode combobox
         cbxMode.setModel(new DefaultComboBoxModel(modesModel));
-        modes = new ArrayList<Character>();
+        modes = new ArrayList<>();
         modes.add('I');
         modes.add('O');
 

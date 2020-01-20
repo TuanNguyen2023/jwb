@@ -43,7 +43,6 @@ public class LoginService {
         Session session = WeighBridgeApp.getApplication().getSAPSession();
         if (session != null) {
             session.close();
-            session = null;
         }
         SessionManager sessionManager = BAPIConfiguration.getSessionManager(appConfig, credentials);
         session = sessionManager.openSession(credentials);
@@ -52,7 +51,6 @@ public class LoginService {
     }
 
     public void checkVersionWB(Session session) throws Exception {
-        // Checking version of WB application
         CheckVersionWBBapi version = new CheckVersionWBBapi("2.40"); //09/07/2013
         try {
             session.execute(version);
@@ -92,7 +90,6 @@ public class LoginService {
             }
 
             boolean updateUser = true;
-            Date now = new Date(Calendar.getInstance().getTime().getTime());
             if (user == null) {
                 updateUser = false;
                 if (sapSetting == null) {
@@ -105,12 +102,9 @@ public class LoginService {
                     sapSetting.setName2((String) vals.get(PlantGeDetailConstants.NAME2));
                     sapSetting.setMandt(appConfig.getsClient().toString());
                     sapSetting.setWplan(appConfig.getwPlant().toString());
-                    sapSetting.setCreatedDate(now);
                     entityManager.persist(sapSetting);
                 }
                 user = new User(username, password);
-            } else {
-                updateUser = true;
             }
 
             user.setTitle(userGetDetailAddrStructure.getTitle());
@@ -125,17 +119,18 @@ public class LoginService {
             }
             
             if (updateUser) {
-                user.setUpdatedDate(now);
+                user.setUpdatedDate(new Date(Calendar.getInstance().getTime().getTime()));
                 entityManager.merge(user);
             } else {
-                user.setCreatedDate(now);
                 entityManager.persist(user);
             }
 
             entityTransaction.commit();
             entityManager.clear();
         } catch (Exception ex) {
-            entityTransaction.rollback();
+            if (entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
             throw ex;
         }
     }

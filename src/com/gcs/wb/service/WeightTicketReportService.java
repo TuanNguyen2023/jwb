@@ -53,7 +53,7 @@ public class WeightTicketReportService {
         List<Material> materials = materialRepository.getListMaterial();
         Material mat = new Material();
         mat.setMatnr("-1");
-        mat.setMaktx("Tất cả");
+        mat.setMaktx("Khác");
         result.addElement(mat);
 
         for (Material material : materials) {
@@ -62,6 +62,7 @@ public class WeightTicketReportService {
                 result.addElement(material);
             }
         }
+        
         return result;
     }
 
@@ -72,8 +73,8 @@ public class WeightTicketReportService {
         for (int i = 0; i < weightTickets.size(); i++) {
             WeightTicket item = weightTickets.get(i);
             String hh = item.getCreatedTime().substring(0, 2);
-            String mm = item.getCreatedTime().substring(2, 4);
-            String ss = item.getCreatedTime().substring(4);
+            String mm = item.getCreatedTime().substring(3, 5);
+            String ss = item.getCreatedTime().substring(6, 8);
             Calendar create_date = Calendar.getInstance();
             create_date.setTime(item.getCreatedDate());
             create_date.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hh));

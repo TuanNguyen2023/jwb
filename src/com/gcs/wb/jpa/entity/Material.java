@@ -167,20 +167,7 @@ public class Material implements Serializable {
 
         Material material = (Material) o;
 
-        if (id != material.id) return false;
         if (matnr != null ? !matnr.equals(material.matnr) : material.matnr != null) return false;
-        if (mandt != null ? !mandt.equals(material.mandt) : material.mandt != null) return false;
-        if (wplant != null ? !wplant.equals(material.wplant) : material.wplant != null) return false;
-        if (maktx != null ? !maktx.equals(material.maktx) : material.maktx != null) return false;
-        if (maktg != null ? !maktg.equals(material.maktg) : material.maktg != null) return false;
-        if (xchpf != null ? !xchpf.equals(material.xchpf) : material.xchpf != null) return false;
-        if (checkPosto != null ? !checkPosto.equals(material.checkPosto) : material.checkPosto != null) return false;
-        if (createdDate != null ? !createdDate.equals(material.createdDate) : material.createdDate != null)
-            return false;
-        if (updatedDate != null ? !updatedDate.equals(material.updatedDate) : material.updatedDate != null)
-            return false;
-        if (deletedDate != null ? !deletedDate.equals(material.deletedDate) : material.deletedDate != null)
-            return false;
 
         return true;
     }

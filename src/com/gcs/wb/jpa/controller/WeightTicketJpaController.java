@@ -5,6 +5,7 @@
 package com.gcs.wb.jpa.controller;
 
 import com.gcs.wb.WeighBridgeApp;
+import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.Material;
@@ -66,7 +67,7 @@ public class WeightTicketJpaController {
         }
     }
 
-    public WeightTicket findByIdSeqDay(String id, int seqDay) throws Exception {
+    public WeightTicket findByIdSeqDay(int id, int seqDay) throws Exception {
         WeightTicketRepository repository = new WeightTicketRepository();
         return repository.findByIdSeqDay(id, seqDay);
     }
@@ -179,34 +180,34 @@ public class WeightTicketJpaController {
     }
 
     public List<WeightTicket> findListWTs(String month, String year, String tagent, String matnr, List<Character> modes, boolean isDissovled, boolean isPosted) throws Exception {
-        String id = year.substring(2) + month + "%";
         String name_query = null;
-        if (isDissovled) {
+        if (isDissovled || isPosted) {
             if (matnr == null) {
-                name_query = "WeightTicket.findByIdPlateNoRegTypeDissovled";
+                name_query = "WeightTicket.findByPlateNoMatnrRegTypeStatus";
             } else {
-                name_query = "WeightTicket.findByIdPlateNoMatnrRegTypeDissovled";
-            }
-        } else if (isPosted) {
-            if (matnr == null) {
-                name_query = "WeightTicket.findByIdPlateNoRegTypePosted";
-            } else {
-                name_query = "WeightTicket.findByIdPlateNoMatnrRegTypePosted";
+                name_query = "WeightTicket.findByPlateNoRegTypeStatus";
             }
         } else {
             if (matnr.equalsIgnoreCase("-1")) {
-                name_query = "WeightTicket.findByIdPlateNoRegType";
+                name_query = "WeightTicket.findByPlateNoRegTypeInMonth";
             } else {
-                name_query = "WeightTicket.findByIdPlateNoMatnrRegType";
+                name_query = "WeightTicket.findByPlateNoMatnrRegTypeInMonth";
             }
         }
         try {
             TypedQuery<WeightTicket> nq = entityManager.createNamedQuery(name_query, WeightTicket.class);
-            nq.setParameter("id", id);
+            nq.setParameter("year", Integer.parseInt(year));
+            nq.setParameter("month", Integer.parseInt(month));
             nq.setParameter("taAbbr", tagent);
             if (!matnr.equalsIgnoreCase("-1")) {
                 nq.setParameter("matnrRef", matnr);
             }
+            if (isDissovled) {
+                nq.setParameter("status", Constants.WeightTicket.STATUS_DISSOLVED);
+            } else if (isPosted) {
+                nq.setParameter("status",  Constants.WeightTicket.STATUS_POSTED);
+            }
+
             nq.setParameter("regType", modes);
             return nq.getResultList();
         } catch (Exception ex) {

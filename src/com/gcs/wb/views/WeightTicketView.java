@@ -21,14 +21,12 @@ import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.OutboundDetail;
-import com.gcs.wb.jpa.entity.BatchStocks;
-import com.gcs.wb.jpa.entity.BatchStocksPK;
+import com.gcs.wb.jpa.entity.BatchStock;
 import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.MovementPK;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
-import com.gcs.wb.jpa.entity.PurOrder;
-import com.gcs.wb.jpa.entity.PurOrderPK;
+import com.gcs.wb.jpa.entity.PurchaseOrder;
 import com.gcs.wb.jpa.entity.Reason;
 import com.gcs.wb.jpa.entity.ReasonPK;
 import com.gcs.wb.jpa.entity.SAPSetting;
@@ -64,11 +62,12 @@ import javax.persistence.EntityManager;
 import com.gcs.wb.jpa.entity.Variant;
 import com.gcs.wb.jpa.procedures.WeightTicketJpaRepository;
 import com.gcs.wb.jpa.procedures.WeightTicketRepository;
-import com.gcs.wb.jpa.repositorys.BatchStocksRepository;
+import com.gcs.wb.jpa.repositorys.BatchStockRepository;
 import com.gcs.wb.jpa.repositorys.CustomerRepository;
 import com.gcs.wb.jpa.repositorys.SignalsRepository;
 import com.gcs.wb.jpa.repositorys.TimeRangeRepository;
 import com.gcs.wb.controller.WeightTicketController;
+import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
 import com.gcs.wb.jpa.repositorys.SLocRepository;
 import com.gcs.wb.jpa.repositorys.VariantRepository;
 import com.gcs.wb.jpa.repositorys.VendorRepository;
@@ -100,6 +99,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     CustomerRepository customerRepository = new CustomerRepository();
     SLocRepository sLocRepository = new SLocRepository();
     VariantRepository variantRepository = new VariantRepository();
+    BatchStockRepository batchStockRepository = new BatchStockRepository();
+    PurchaseOrderRepository purchaseOrderRepository = new PurchaseOrderRepository();
     
     WeightTicketController weightTicketController = new WeightTicketController();
     SAPService sapService = new SAPService();
@@ -224,7 +225,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         grbBridge = new javax.swing.ButtonGroup();
         grbCat = new javax.swing.ButtonGroup();
         weightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
-        purOrder = new com.gcs.wb.jpa.entity.PurOrder();
+        purOrder = new com.gcs.wb.jpa.entity.PurchaseOrder();
         outbDel = new com.gcs.wb.jpa.entity.OutboundDelivery();
         setting = java.beans.Beans.isDesignTime() ? null : WeighBridgeApp.getApplication().getSapSetting();
         material = new com.gcs.wb.jpa.entity.Material();
@@ -1355,7 +1356,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             // sync data
             weightTicketController.getSyncBatchStocks(selSloc, weightTicket);
             // get data DB
-            List<BatchStocks> batchs = weightTicketController.getBatchStocks(selSloc, weightTicket);
+            List<BatchStock> batchs = weightTicketController.getBatchStocks(selSloc, weightTicket);
             cbxBatch.setModel(weightTicketController.setCbxBatch(batchs));
             cbxBatch.setSelectedIndex(-1);
         }
@@ -2369,7 +2370,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
     private class ReadWTTask extends Task<Object, Void> {
 
-        String id;
+        int id;
         Integer seq;
         /*
         ReadWTTask(Application app, String id, String seq, String RegId ) {
@@ -2385,7 +2386,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
         ReadWTTask(Application app, String id, String seq) {
             super(app);
-            this.id = id;
+            this.id = Integer.parseInt(id);
             this.seq = Integer.valueOf(seq);
             setReprintable(false);
             grbType.clearSelection();
@@ -2571,7 +2572,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                 }
                 if (weightTicket.getEbeln() != null && !weightTicket.getEbeln().trim().isEmpty()) {
 
-                    purOrder = entityManager.find(PurOrder.class, new PurOrderPK(config.getsClient(), weightTicket.getEbeln()));
+                    purOrder = purchaseOrderRepository.findByPoNumber(weightTicket.getEbeln());
                     txtPONum.setText(weightTicket.getEbeln());
                     setValidPONum(true);
                     rbtPO.setSelected(true);
@@ -2750,28 +2751,28 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                         || (!isWithoutDO() && outbDel != null && outbDel.getCharg() != null && !outbDel.getCharg().trim().isEmpty()))
                         && weightTicket.getMatnrRef() != null && !weightTicket.getMatnrRef().trim().isEmpty()) {
                     String lgort = ((SLoc) cbxSLoc.getSelectedItem()).getLgort();
-                    BatchStocks batch = null;
+                    BatchStock batch = null;
                     if (weightTicket.getCharg() != null && !weightTicket.getCharg().trim().isEmpty()) {
-                        batch = entityManager.find(BatchStocks.class, new BatchStocksPK(config.getsClient(), config.getwPlant(), lgort, weightTicket.getMatnrRef(), weightTicket.getCharg()));
+                        batch = batchStockRepository.findByWerksLgortMatnrCharg(config.getwPlant(), lgort, weightTicket.getMatnrRef(), weightTicket.getCharg());
                     } else if (!isWithoutDO() && outbDel.getCharg() != null && !outbDel.getCharg().trim().isEmpty()) {
-                        batch = entityManager.find(BatchStocks.class, new BatchStocksPK(config.getsClient(), config.getwPlant(), lgort, weightTicket.getMatnrRef(), outbDel.getCharg()));
+                        batch = batchStockRepository.findByWerksLgortMatnrCharg(config.getwPlant(), lgort, weightTicket.getMatnrRef(), outbDel.getCharg());
                     }
                     if (cbxBatch.getModel().getSize() == 0) {
                         // sync data
                         //sapService.syncBatchStocks(lgort, weightTicket.getMatnrRef(), weightTicket.getLgort());
                         weightTicketController.getSyncBatchStocks((SLoc) cbxSLoc.getSelectedItem(), weightTicket);
                         // get data DB
-                        List<BatchStocks> batchs =  weightTicketController.getBatchStocks((SLoc) cbxSLoc.getSelectedItem(), weightTicket);
+                        List<BatchStock> batchs =  weightTicketController.getBatchStocks((SLoc) cbxSLoc.getSelectedItem(), weightTicket);
                         DefaultComboBoxModel result = new DefaultComboBoxModel();
-                        for (BatchStocks b : batchs) {
+                        for (BatchStock b : batchs) {
                             if (b.getLvorm() == null || b.getLvorm().toString().trim().isEmpty()) {
-                                result.addElement(b.getBatchStocksPK().getCharg());
+                                result.addElement(b.getCharg());
                             }
                         }
                         cbxBatch.setModel(result);
                     }
                     if (batch != null) {
-                        cbxBatch.setSelectedItem(batch.getBatchStocksPK().getCharg());
+                        cbxBatch.setSelectedItem(batch.getCharg());
                     } else if (weightTicket.getCharg() != null && cbxBatch.isEditable()) {
                         cbxBatch.setSelectedItem(weightTicket.getCharg());
                     } else {
@@ -2851,7 +2852,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
     private class ReadPOTask extends Task<Object, Void> {
 
         String poNum;
-        PurOrder sapPurOrder = null;
+        PurchaseOrder sapPurOrder = null;
         Vendor vendor = null;
         Vendor supVendor = null;
         Customer customer = null;
@@ -2938,7 +2939,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             entityManager.getTransaction().commit();
             entityManager.clear();
             if (sapPurOrder != null) {
-                purOrder = entityManager.find(PurOrder.class, sapPurOrder.getPurOrderPK());
+                purOrder = purchaseOrderRepository.findByPoNumber(sapPurOrder.getPoNumber());
                 entityManager.refresh(purOrder);
                 entityManager.clear();
                 setValidPONum(true);
@@ -2995,7 +2996,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                 setSaveNeeded(isValidated());
                 txtRegItem.setText(purOrder.getShortText());
                 txtMatnr.setText(purOrder.getMaterial());
-                weightTicket.setEbeln(purOrder.getPurOrderPK().getPoNumber());
+                weightTicket.setEbeln(purOrder.getPoNumber());
                 weightTicket.setItem(purOrder.getPoItem());
                 weightTicket.setRegItemDescription(purOrder.getShortText());
                 weightTicket.setMatnrRef(purOrder.getMaterial());
@@ -4256,7 +4257,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
     private javax.swing.JPanel pnScaleData;
     private javax.swing.JPanel pnWTFilter;
     private javax.swing.JPanel pnWTicket;
-    private com.gcs.wb.jpa.entity.PurOrder purOrder;
+    private com.gcs.wb.jpa.entity.PurchaseOrder purOrder;
     private javax.swing.JRadioButton rbtBridge1;
     private javax.swing.JRadioButton rbtBridge2;
     private javax.swing.JRadioButton rbtInward;

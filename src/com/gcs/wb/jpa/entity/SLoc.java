@@ -85,7 +85,7 @@ public class SLoc implements Serializable {
     public void setWplant(String wplant) {
         this.wplant = wplant;
     }
-    
+
     public String getLgobe() {
         return lgobe;
     }
@@ -93,7 +93,7 @@ public class SLoc implements Serializable {
     public void setLgobe(String lgobe) {
         this.lgobe = lgobe;
     }
-    
+
     public Date getCreatedDate() {
         return createdDate;
     }
@@ -120,19 +120,17 @@ public class SLoc implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         SLoc sloc = (SLoc) o;
-
-        if (id != sloc.id) return false;
-        if (lgort != null ? !lgort.equals(sloc.lgort) : sloc.lgort != null) return false;
-        if (mandt != null ? !mandt.equals(sloc.mandt) : sloc.mandt != null) return false;
-        if (wplant != null ? !wplant.equals(sloc.wplant) : sloc.wplant != null) return false;
-        if (lgobe != null ? !lgobe.equals(sloc.lgobe) : sloc.lgobe != null) return false;
-        if (createdDate != null ? !createdDate.equals(sloc.createdDate) : sloc.createdDate != null) return false;
-        if (updatedDate != null ? !updatedDate.equals(sloc.updatedDate) : sloc.updatedDate != null) return false;
-        if (deletedDate != null ? !deletedDate.equals(sloc.deletedDate) : sloc.deletedDate != null) return false;
+        if (lgort != null ? !lgort.equals(sloc.lgort) : sloc.lgort != null) {
+            return false;
+        }
 
         return true;
     }
