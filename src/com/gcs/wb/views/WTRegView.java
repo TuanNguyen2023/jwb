@@ -1472,8 +1472,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     // }
                     if (!selectedRow.isDissolved()) { //+20100112#01 Không cho in khi phiếu đăng tài bị hủy
                         setMessage(resourceMapMsg.getString("msg.rePrinting"));
-                        txtWeightTicketNo.setText(selectedRow.getId()
-                                + String.format("%03d", selectedRow.getSeqDay())); //+20100303
+                        txtWeightTicketNo.setText("" + selectedRow.getId()); //+20100303
 
 
                         // tuanna add -- copy ticket ID to clipboard. 28.11.2012 
