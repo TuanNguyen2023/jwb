@@ -1137,13 +1137,12 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         mat.setMatnr("-2");
         mat.setMaktx("Tất cả");
         result.addElement(mat);
+        
+        mat = new Material();
+        mat.setMatnr("-1");
+        mat.setMaktx("Khác");
+        result.addElement(mat);
         for (Material material : materials) {
-            if (material.getMatnr() == null) {
-                mat = new Material();
-                mat.setMatnr("-1");
-                mat.setMaktx("Linh tinh");
-            }
-
             if (result.getIndexOf(material) < 0) {
                 result.addElement(material);
             }
