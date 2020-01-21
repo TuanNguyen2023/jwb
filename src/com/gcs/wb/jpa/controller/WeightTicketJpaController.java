@@ -179,33 +179,38 @@ public class WeightTicketJpaController {
         return repository.findByDateAllNullAll(from, to, creator, taixe, bienso);
     }
 
-    public List<WeightTicket> findListWTs(String month, String year, String tagent, String matnr, List<Character> modes, boolean isDissovled, boolean isPosted) throws Exception {
-        String name_query = null;
-        if (isDissovled || isPosted) {
-            if (matnr == null) {
-                name_query = "WeightTicket.findByPlateNoMatnrRegTypeStatus";
+    public List<WeightTicket> findListWTs(String month, String year, String tagent, String matnr, List<Character> modes, boolean isPosted) throws Exception {
+        String query = "SELECT w FROM WeightTicket w "
+                + "WHERE FUNC('YEAR', w.createdDate) = :year "
+                + " AND FUNC('MONTH', w.createdDate) = :month "
+                + " AND w.regType IN :regType ";
+
+        if (!tagent.equalsIgnoreCase("-2")) {
+            query += " AND w.plateNo IN ( SELECT tv.vehicle.plateNo FROM TransportAgentVehicle tv WHERE tv.transportAgent.abbr = :taAbbr ) ";
+        }
+
+        if (!matnr.equalsIgnoreCase("-2")) {
+            if (!matnr.equalsIgnoreCase("-1")) {
+                query += " AND w.matnrRef = :matnrRef ";
             } else {
-                name_query = "WeightTicket.findByPlateNoRegTypeStatus";
-            }
-        } else {
-            if (matnr.equalsIgnoreCase("-1")) {
-                name_query = "WeightTicket.findByPlateNoRegTypeInMonth";
-            } else {
-                name_query = "WeightTicket.findByPlateNoMatnrRegTypeInMonth";
+                query += " AND w.matnrRef IS NULL ";
             }
         }
+
+        if (isPosted) {
+            query += " AND w.status = '" + Constants.WeightTicket.STATUS_POSTED + "' ";
+        }
+
         try {
-            TypedQuery<WeightTicket> nq = entityManager.createNamedQuery(name_query, WeightTicket.class);
+            TypedQuery<WeightTicket> nq = entityManager.createQuery(query, WeightTicket.class);
             nq.setParameter("year", Integer.parseInt(year));
             nq.setParameter("month", Integer.parseInt(month));
-            nq.setParameter("taAbbr", tagent);
-            if (!matnr.equalsIgnoreCase("-1")) {
-                nq.setParameter("matnrRef", matnr);
+            if (!tagent.equalsIgnoreCase("-2")) {
+                nq.setParameter("taAbbr", tagent);
             }
-            if (isDissovled) {
-                nq.setParameter("status", Constants.WeightTicket.STATUS_DISSOLVED);
-            } else if (isPosted) {
-                nq.setParameter("status",  Constants.WeightTicket.STATUS_POSTED);
+
+            if (!matnr.equalsIgnoreCase("-1") && !matnr.equalsIgnoreCase("-2")) {
+                nq.setParameter("matnrRef", matnr);
             }
 
             nq.setParameter("regType", modes);

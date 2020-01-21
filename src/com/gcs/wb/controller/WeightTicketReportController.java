@@ -36,7 +36,7 @@ public class WeightTicketReportController {
     }
 
     public Map<String, Object> getParamReport(JComboBox cbxTransportAgent, JComboBox cbxMonth, JComboBox cbxYear) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("P_PNAME_RPT", WeighBridgeApp.getApplication().getSapSetting().getNameRpt());
         params.put("P_PADDRESS", WeighBridgeApp.getApplication().getSapSetting().getAddress());
         params.put("P_PPHONE", WeighBridgeApp.getApplication().getSapSetting().getPhone());
