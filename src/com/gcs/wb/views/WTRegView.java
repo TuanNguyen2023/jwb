@@ -24,7 +24,6 @@ import com.gcs.wb.jpa.entity.TransportAgentVehicle;
 import com.gcs.wb.jpa.entity.Vendor;
 import com.gcs.wb.jpa.entity.WeightTicket;
 import com.gcs.wb.model.AppConfig;
-import com.gcs.wb.base.util.Conversion_Exit;
 import com.gcs.wb.controller.WTRegController;
 import com.gcs.wb.jpa.JPAConnector;
 import com.sap.conn.jco.JCoException;
@@ -2181,7 +2180,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             newWeightTicket.setKunnr(null);
             if (newWeightTicket.getDeliveryOrderNo() != null && !newWeightTicket.getDeliveryOrderNo().trim().isEmpty()) {
                 String val = newWeightTicket.getDeliveryOrderNo().trim();
-                val = Conversion_Exit.Conv_output_num(val, 10);
+                val = StringUtil.paddingZero(val, 10);
                 newWeightTicket.setDeliveryOrderNo(val);
                 if (outbDel != null) {
                     newWeightTicket.setKunnr(outbDel.getKunnr());
