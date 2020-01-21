@@ -1,0 +1,33 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package com.gcs.wb.base.util;
+
+import org.apache.commons.lang.StringUtils;
+
+/**
+ *
+ * @author gcsadmin
+ */
+public class StringUtil {
+
+    public static String paddingZero(String input_string, int length){
+        String val = input_string;
+        String zero = "0";
+        while (val.length() < length) {
+            val = zero.concat(val);
+        }
+
+        return val;
+    }
+
+    public static boolean isEmptyString(String input){
+        return StringUtils.isEmpty(input) && StringUtils.isEmpty(input.trim());
+    }
+
+    public static boolean isNotEmptyString(String input){
+        return !isEmptyString(input);
+    }
+}

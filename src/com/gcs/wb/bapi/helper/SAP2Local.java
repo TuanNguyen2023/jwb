@@ -23,6 +23,7 @@ import com.gcs.wb.base.converter.PurOrderConverter;
 import com.gcs.wb.base.converter.TransportAgentsConverter;
 import com.gcs.wb.base.converter.VendorConverter;
 import com.gcs.wb.base.converter.VendorsConverter;
+import com.gcs.wb.base.util.StringUtil;
 import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
@@ -31,7 +32,7 @@ import com.gcs.wb.jpa.entity.SLoc;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.Vendor;
 import com.gcs.wb.model.AppConfig;
-import com.gcs.wb.base.util.Conversion_Exit;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -49,7 +50,7 @@ public class SAP2Local {
     public static OutboundDelivery getOutboundDelivery(String number, boolean refresh) {
         OutboundDelivery outb = null;
         DoGetDetailBapi bapiDO = new DoGetDetailBapi();
-        bapiDO.setId_do(Conversion_Exit.Conv_output_num(number, 10));
+        bapiDO.setId_do(StringUtil.paddingZero(number, 10));
         WeighBridgeApp.getApplication().getSAPSession().execute(bapiDO);
         List<DoGetDetailStructure> dos = bapiDO.getTd_dos();
         OutboundDeliveryConverter outbDelConverter = new OutboundDeliveryConverter();

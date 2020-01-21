@@ -26,7 +26,7 @@ import com.gcs.wb.bapi.helper.structure.SLocsGetListStructure;
 import com.gcs.wb.bapi.helper.structure.TransportagentGetListStructure;
 import com.gcs.wb.bapi.helper.structure.VendorGetDetailStructure;
 import com.gcs.wb.base.converter.TransportAgentsConverter;
-import com.gcs.wb.base.util.Conversion_Exit;
+import com.gcs.wb.base.util.StringUtil;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.BatchStock;
 import com.gcs.wb.jpa.entity.Customer;
@@ -189,7 +189,7 @@ public class SAPService {
         BigDecimal item_qty = BigDecimal.ZERO;
         BigDecimal item_qty_free = BigDecimal.ZERO;
         DoGetDetailBapi bapiDO = new DoGetDetailBapi();
-        bapiDO.setId_do(Conversion_Exit.Conv_output_num(number, 10));
+        bapiDO.setId_do(StringUtil.paddingZero(number, 10));
         session.execute(bapiDO);
         List<DoGetDetailStructure> dos = bapiDO.getTd_dos();
         if (dos.size() > 0) {

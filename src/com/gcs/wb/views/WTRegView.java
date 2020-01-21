@@ -13,6 +13,7 @@ package com.gcs.wb.views;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.base.constant.Constants;
+import com.gcs.wb.base.util.StringUtil;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.JReportConnector;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
@@ -23,7 +24,6 @@ import com.gcs.wb.jpa.entity.TransportAgentVehicle;
 import com.gcs.wb.jpa.entity.Vendor;
 import com.gcs.wb.jpa.entity.WeightTicket;
 import com.gcs.wb.model.AppConfig;
-import com.gcs.wb.base.util.Conversion_Exit;
 import com.sap.conn.jco.JCoException;
 import java.awt.Color;
 import java.math.BigDecimal;
@@ -950,7 +950,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 return;
             }
             String valDO = txtNDONum.getText().trim();
-            //val = Conversion_Exit.Conv_output_num(val, 10); //+20100112#01 conversion number output
+            //val = StringUtil.paddingZero(val, 10); //+20100112#01 conversion number output
             if (valDO.length() == 0 || (validDO && valDO.length() >= 7 && validDO && valDO.length() <= 10)) {
                 if ((evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) || (evt.isShiftDown() && evt.getKeyCode() == KeyEvent.VK_INSERT)) {
                     validDO = false;
@@ -1078,11 +1078,11 @@ private void btnManyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
         }
         if (isNumber && soDO.length() >= 8 && soDO.length() <= 10) {
             if (txtNDONum.getText().equals("")) {
-                txtNDONum.setText(Conversion_Exit.Conv_output_num(soDO, 10));
+                txtNDONum.setText(StringUtil.paddingZero(soDO, 10));
 
             } else {
-                String inputDO = (soDO.length() == 8) ? Conversion_Exit.Conv_output_num(soDO, 8) : Conversion_Exit.Conv_output_num(soDO, 10);
-                // String inputDO2 = Conversion_Exit.Conv_output_num(soDO, 8);
+                String inputDO = (soDO.length() == 8) ? StringUtil.paddingZero(soDO, 8) : StringUtil.paddingZero(soDO, 10);
+                // String inputDO2 = StringUtil.paddingZero(soDO, 8);
                 if (txtNDONum.getText().indexOf(inputDO) == -1) {
                     txtNDONum.setText(txtNDONum.getText() + "-" + inputDO);
                 } else {
@@ -1200,7 +1200,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             for (int i = 0; i < val.length; i++) {
                 if (val[i].length() > 0) {
                     //+20100106 convert DO number to SAP format
-                    val[i] = Conversion_Exit.Conv_output_num(val[i], 10);
+                    val[i] = StringUtil.paddingZero(val[i], 10);
                     //+20100106 convert DO number to SAP format
                     return new CheckDOTask(WeighBridgeApp.getApplication());
                 } else if (val[i].length() == 0) {
@@ -1471,8 +1471,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     // }
                     if (!selectedRow.isDissolved()) { //+20100112#01 Không cho in khi phiếu đăng tài bị hủy
                         setMessage(resourceMapMsg.getString("msg.rePrinting"));
-                        txtWeightTicketNo.setText(selectedRow.getId()
-                                + String.format("%03d", selectedRow.getSeqDay())); //+20100303
+                        txtWeightTicketNo.setText("" + selectedRow.getId()); //+20100303
 
 
                         // tuanna add -- copy ticket ID to clipboard. 28.11.2012 
@@ -1556,7 +1555,6 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     private class CheckDOTask extends org.jdesktop.application.Task<Object, Void> {
-
         private OutboundDelivery outb = null;
         private String mode = null;
         private Customer kunnr = null;
@@ -1568,9 +1566,6 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         private String ship_point = null;
 
         CheckDOTask(org.jdesktop.application.Application app) {
-            // Runs on the EDT.  Copy GUI state that
-            // doInBackground() depends on from parameters
-            // to CheckDOTask fields, here.
             super(app);
             outbDel = null;
         }
@@ -1579,307 +1574,305 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         protected Object doInBackground() {
             String oldKunnr = "";
             String oldSoxe = "";
-            String[] val = txtNDONum.getText().trim().split("-");
-            for (int k = 0; k < val.length; k++) {
-                setMessage(resourceMapMsg.getString("msg.checkDOInDB"));
-                setProgress(1, 1, 4);
-                //+20100106 convert DO number to SAP format
-//            System.out.println(val);
-//            System.out.println(val.length());
-                val[k] = Conversion_Exit.Conv_output_num(val[k], 10);
-//                System.out.println(val[k]);
-                //+20100106 convert DO number to SAP format
-//            System.out.println(val);
-//            System.out.println(val.length());
-                outb = outboundDeliveryRepository.findByDeliveryOrderNo(val[k]);
-                setMessage(resourceMapMsg.getString("checkDOInSap"));
-                setProgress(2, 1, 4);
-                OutboundDelivery sapOutb = sapService.getOutboundDelivery(val[k], true);
+            String[] listDO = txtNDONum.getText().trim().split("-");
+            for (int index = 0; index < listDO.length; index++) {
+                setStep(1, resourceMapMsg.getString("msg.checkDOInDB"));
+                listDO[index] = StringUtil.paddingZero(listDO[index], 10);
+                outb = outboundDeliveryRepository.findByDeliveryOrderNo(listDO[index]);
+
+                setStep(2, resourceMapMsg.getString("checkDOInSap"));
+                OutboundDelivery sapOutb = sapService.getOutboundDelivery(listDO[index], true);
                 if (sapOutb != null) {
-                    if (sapOutb.getKunnr() != null && !sapOutb.getKunnr().trim().isEmpty()) {
-                        kunnr = customerRepository.findByKunnr(sapOutb.getKunnr());
-                        sapKunnr = sapService.getCustomer(sapOutb.getKunnr());
-                    }
-                    if (sapOutb.getKunag() != null && !sapOutb.getKunag().trim().isEmpty()) {
-                        kunag = customerRepository.findByKunnr(sapOutb.getKunag());
-                        sapKunag = sapService.getCustomer(sapOutb.getKunag());
-                    }
-                    if (sapOutb.getLifnr() != null && !sapOutb.getLifnr().trim().isEmpty()) {
-                        lifnr = vendorRepository.findByLifnr(sapOutb.getLifnr());
-                        sapLifnr = sapService.getVendor(sapOutb.getLifnr());
-                        // abbr = sapLifnr.getVendorPK().getLifnr();
-                    }
-
-                }
-                setMessage(resourceMapMsg.getString("msg.saveDataToDb"));
-                setProgress(3, 1, 4);
-                if (!entityManager.getTransaction().isActive()) {
-                    entityManager.getTransaction().begin();
-                }
-                //Store Ship to party Info
-                if (sapKunnr != null && kunnr == null) {
-                    entityManager.persist(sapKunnr);
-                } else if (sapKunnr != null && kunnr != null) {
-                    entityManager.merge(sapKunnr);
-                } else if (sapKunnr == null && kunnr != null) {
-                    entityManager.remove(kunnr);
-                }
-                //Store Sold to party Info
-                if (sapKunag != null && kunag == null && !sapOutb.getKunnr().equalsIgnoreCase(sapOutb.getKunag())) {
-                    entityManager.persist(sapKunag);
-                } else if (sapKunag != null && kunag != null) {
-                    entityManager.merge(sapKunag);
-                } else if (sapKunag == null && kunag != null && !sapOutb.getKunnr().equalsIgnoreCase(sapOutb.getKunag())) {
-                    entityManager.remove(kunag);
-                }
-                //Store Vendor Info
-                if (sapLifnr != null && lifnr == null) {
-                    entityManager.persist(sapLifnr);
-                } else if (sapLifnr != null && lifnr != null) {
-                    entityManager.merge(sapLifnr);
-                } else if (sapLifnr == null && lifnr != null) {
-                    entityManager.remove(lifnr);
-                }
-                if (sapOutb != null && outb == null) {
-                    entityManager.persist(sapOutb);
-                    outb = sapOutb;
-                    validDO = true;
-                } else if (sapOutb != null && outb != null) {
-                    entityManager.merge(sapOutb);
-                    outb = sapOutb;
-                    validDO = true;
-                } else {
-                    if (outb != null) {
-                        entityManager.remove(outb);
-                        outb = null;
-                    }
-                    validDO = false;
-                    String msg = "Số D.O \" " + val[k] + " \" không tồn tại!";
-                    setMessage(msg);
-                    JOptionPane.showMessageDialog(rootPane, msg);
-                }
-                entityManager.getTransaction().commit();
-                entityManager.clear();
-//                Check kunnr
-                if (outb != null
-                        && !oldKunnr.equals("")
-                        && !oldKunnr.equals(outb.getKunnr())) {
-                    validDO = false;
-                    String msg = resourceMapMsg.getString("msg.notDuplicateCode");
-                    setMessage(msg);
-                    JOptionPane.showMessageDialog(rootPane, msg);
-                } else if (outb != null) {
-                    oldKunnr = outb.getKunnr();
-                }
-//                Check bien so xe
-                if (outb != null
-                        && !oldSoxe.equals("")
-                        && !oldSoxe.equals(outb.getTraid())) {
-                    validDO = false;
-                    String msg = resourceMapMsg.getString("msg.notDuplicateLicensePlate");
-                    setMessage(msg);
-                    JOptionPane.showMessageDialog(rootPane, msg);
-                } else if (outb != null) {
-                    oldSoxe = outb.getTraid();
+                    fetchCustomerByKunnr(sapOutb);
+                    fetchCustomerByKunag(sapOutb);
+                    fetchVendor(sapOutb);
                 }
 
-                //Set Mode
-                if (validDO && outb != null) {
-                    /**
-                     * At this screen, if enter D.O type LF => Outward mode
-                     * Otherwise, Inward mode.
-                     */
-                    if (outb.getLfart().equalsIgnoreCase("LF") || outb.getLfart().equalsIgnoreCase("ZTLF")) {
-//                    rbtOutward.setSelected(true);
-                        mode = "xuất";
-                    } else {
-//                    rbtInward.setSelected(true);
-                        mode = "nhập";
-                    }
-                }
-                //Check suitable plant from D.O for In/Outward mode against working plant.
-                if (validDO && outb != null) {
-                    String msg = null;
-                    //{-20101203#01 - comment logic to check plant
-                /*
-                    if (((outb.getLfart().equalsIgnoreCase("LF") || outb.getLfart().equalsIgnoreCase("LR")||outb.getLfart().equalsIgnoreCase("ZTLF") || outb.getLfart().equalsIgnoreCase("ZTLR")) && (outb.getWerks() != null && !outb.getWerks().equalsIgnoreCase(WeighBridgeApp.getApplication().getConfig().getwPlant())))
-                    || ((!outb.getLfart().equalsIgnoreCase("LF") && !outb.getLfart().equalsIgnoreCase("LR") && !outb.getLfart().equalsIgnoreCase("ZTLF") && !outb.getLfart().equalsIgnoreCase("ZTLR")) && (outb.getRecvPlant() != null && !outb.getRecvPlant().equalsIgnoreCase(WeighBridgeApp.getApplication().getConfig().getwPlant())))) {
-                    
-                    
-                    msg = "D.O \" " + val + " \" không được phép dùng để " + mode
-                    + " hàng trong Plant \" "
-                    + WeighBridgeApp.getApplication().getConfig().getwPlant() + " \" !";
-                    setMessage(msg);
-                    JOptionPane.showMessageDialog(rootPane, msg);
-                    validDO = false;
-                    outb = null;
-                    } */
-                    //}-20101203#01 - comment logic to check plant
-                }
-                //Check if D.O was used already or not???
-                if (validDO && outb != null) {
-                    WeightTicket wt = null;
-                    String delivNumb = outb.getDeliveryOrderNo();
-                    wt = weightTicketRepository.findByDeliveryOrderNo(delivNumb);
-                    String wplant = "";
-                    wplant = WeighBridgeApp.getApplication().getConfig().getwPlant().toString();
-                    String sDoType = "LF,LR,NL,ZTLF,ZTLR";
-                    String Lfart = "";
-                    try {
-                        Lfart = outb.getLfart();
+                setStep(3, resourceMapMsg.getString("msg.saveDataToDb"));
+                startTransaction();
+                syncCustomerByKunnr();
+                syncCustomerByKunag(sapOutb);
+                syncVendor();
+                syncOutboundDelivery(listDO[index], sapOutb);
+                finishTransaction();
 
-                    } catch (Exception ex) {
-                    }
+                oldKunnr = checkKunnr(oldKunnr);
+                oldSoxe = checkPlate(oldSoxe);
 
-                    if ((sDoType.indexOf(Lfart) >= 0 && outb.getWbstk() == 'X' && outb.getWerks().toString().equalsIgnoreCase(wplant))
-                            || (wt != null && !wt.isDissolved())) {
-                        validDO = false;
-                        outb = null;
-                        String msg = "D.O \" " + val[k] + " \" đã được dùng để " + mode + " hàng, vui lòng tự  kiểm tra trước khi liên hệ đường dây nóng Dịch vụ khách hàng 0919 49 59 69 ";
-                        setMessage(msg);
-                        JOptionPane.showMessageDialog(rootPane, msg);
-                    } else {
-                        flag_revert = true;
-                        outb_number = outb.getDeliveryOrderNo().toString().trim();
-                    }
-                }
-//<< 20120712#01 - check shipping point -------
+                setMode();
 
+                checkDOInUsed(listDO[index]);
+                checkShippingPoint(listDO[index]);
 
-                if (validDO && outb != null) {
-                    // Tạm thời sử dụng đầu tây ninh
-                    //ship_point = "(?i).*" + outb.getShipPoint() + "*";
-                    // if (WeighBridgeApp.getApplication().getConfig().getShId().toString().matches(ship_point)){
-                    //--------- Tuấn sửa ngày 050812  ------------------    
-                    ship_point = outb.getShipPoint();
-                    String tmpShippoint = WeighBridgeApp.getApplication().getConfig().getShId().toString();
-                    String WbID = WeighBridgeApp.getApplication().getConfig().getWbId().toString();
+                setMaterialNumber();
 
-                    String Matname = outb.getArktx().toUpperCase();
+                updateWeightTicket();
 
-                    String sp = ship_point.toString();
-                    Boolean ship = true;
-                    //--------- Tuấn sửa ngày 04.04.2013  ------------------ 
-                    //-- Checking SALE ORDER wrong material - plant 
-
-                    String mymode = "";
-
-                    if (rbtNInward.isSelected() == true) {
-                        mymode = "Nhập";
-                    } else if (rbtNOutward.isSelected() == true) {
-                        mymode = "Xuất";
-                    } else {
-                        mymode = "...";
-                    }
-
-                    if (mymode.indexOf("...") >= 0) {
-                        String msg = resourceMapMsg.getString("msg.plzChooseIO");
-                        setMessage(msg);
-                        JOptionPane.showMessageDialog(rootPane, msg);
-                    }
-                    /*       
-                    if (tmpShippoint.indexOf(sp) < 0) 
-                    {                        
-                    ship = false ;
-                    }
-                    if ( Matname.indexOf("XI")>=0 ) 
-                    {                               
-                    if ( ((sp.equals("1208") || sp.equals("141D")) && ( Matname.indexOf("NM FICO") < 0 ) )   
-                    ||    ((sp.equals("1208") || sp.equals("141D")) && ( Matname.indexOf("NMFICO") < 0 ) )
-                    || ( sp.equals("131D")  && ( Matname.indexOf("NM TN") < 0)  ) 
-                    || ( sp.equals("1201")  && ( Matname.indexOf("GC DIC") < 0)  ) 
-                    || ( !sp.equals("1201")  && ( Matname.indexOf("GC DIC") >= 0)  )
-                    || ( sp.equals("1213")  && ( Matname.indexOf("DICBP") < 0)  )  
-                    || ( ! sp.equals("1213")  && ( Matname.indexOf("DICBP") >= 0)  )
-                    || ( ( sp.equals("1209") ||sp.equals("151D") ) && (  Matname.indexOf("NM TN") < 0 )   ) 
-                    
-                    )
-                    ship = false ; 
-                    
-                    }   
-                    if (  ( sp.equals("131D") ) && (  Matname.indexOf("NM TN") >= 0 ) && ( WbID.indexOf("1511")>=0 && mode.indexOf("nh") >= 0 ) && mymode.indexOf("Nhập")>=0 && mymode.indexOf("...") < 0  )
-                    ship = true; 
-                    
-                    if (  ( sp.equals("1213") ) && (  Matname.indexOf("DICBP") >= 0 ) )
-                    ship = true; 
-                    
-                    if (  ( sp.equals("131D") ) && (  Matname.indexOf("NM TN") >= 0 ) && ( WbID.indexOf("1511")>=0 && mode.indexOf("nh") >= 0 ) && mymode.indexOf("Nhập")>=0 && mymode.indexOf("...") < 0  )
-                    ship = true; 
-                    
-                    if (  ( sp.equals("131D") ) && (  Matname.indexOf("NM TN") >= 0 ) && ( WbID.indexOf("1111")>=0 && mode.indexOf("nh") >= 0 ) && mymode.indexOf("Nhập")>=0 && mymode.indexOf("...") < 0  )
-                    ship = true; 
-                    
-                    if (mymode.indexOf("...")>=0)
-                    ship = false;
-                     */
-                    //Modified by Tuan Nguyen at Tafico Jsc 23/12/2014
-
-                    float fCount = 0;
-                    String pDoNumber = val[k];
-                    String pWplant = WeighBridgeApp.getApplication().getConfig().getwPlant();
-
-                    List wts1 = wTRegRepository.checkDoExist(pDoNumber, pWplant);
-
-                    if (wts1 != null) {
-                        fCount = Float.parseFloat(wts1.get(0).toString());
-                    } else {
-                        fCount = 2;
-                    }
-                    if (fCount > 0) {
-                        validDO = false;
-                        outb = null;
-                        String msg = "D.O \" " + val[k] + " \" đã được sử dụng , vui lòng liên hệ NPP hoặc DVKH đổi mã khác. Giao dịch lỗi này của người dùng đã được hệ thống lưu nhật ký";
-                        setMessage(msg);
-                        JOptionPane.showMessageDialog(rootPane, msg);
-                    }
-                    int klmax = wTRegRepository.getSPVar(WbID, sp, outb.getMatnr().toString().trim());
-
-                    ship = (klmax <= 0) ? false : true;
-                    if (ship == false) {
-                        validDO = false;
-                        outb = null;
-                        String msg = "D.O \" " + val[k] + " \" không được " + mymode + " hàng ở điểm nhận hàng này!, vui lòng liên hệ dịch vụ khách hàng Hotline 0919 49 59 69 để được hỗ trợ. ";
-                        setMessage(msg);
-                        JOptionPane.showMessageDialog(rootPane, msg);
-                    }
-                }
-                //20121217
-                if (validDO && outb != null) {
-                    mat_numb = outb.getMatnr().trim();
-                }
-                //end 20121217
-                if (validDO && outb != null) {
-                    newWeightTicket.setItem(outb.getDeliveryItem());
-                    newWeightTicket.setMatnrRef(outb.getMatnr());
-                    newWeightTicket.setRegItemDescription(outb.getArktx());
-                    newWeightTicket.setUnit(outb.getVrkme());
-                    newWeightTicket.setKunnr(outb.getKunnr());
-                    txtNMaterial.setText(outb.getArktx());
-                    cbxNMaterial.setSelectedItem(outb.getArktx());
-                    BigDecimal regqty = BigDecimal.ZERO;
-                    List<OutboundDetail> detail = new ArrayList<OutboundDetail>();
-                    OutboundDetail item = null;
-                    String[] do_list = txtNDONum.getText().trim().split("-");
-                    for (int i = 0; i < do_list.length; i++) {
-                        String doNum = do_list[i];
-                        WeightTicketJpaController conWTicket = new WeightTicketJpaController();
-                        try {
-                            detail = conWTicket.findByMandtDelivNumb(doNum);
-                        } catch (Exception ex) {
-                            java.util.logging.Logger.getLogger(WTRegView.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                        for (int j = 0; j < detail.size(); j++) {
-                            item = detail.get(j);
-                            regqty = regqty.add(item.getLfimg());
-                        }
-                    }
-                    txtNWeight.setValue(regqty.doubleValue());
-                    outbDel = outb;
-                }
-                setProgress(4, 1, 4);
+                setStep(4, null);
                 continue;
             }
+
             return null;
+        }
+
+        private void setMaterialNumber() {
+            if (validDO && outb != null) {
+                mat_numb = outb.getMatnr().trim();
+            }
+        }
+
+        private void setStep(int step, String msg) {
+            if (StringUtil.isNotEmptyString(msg)) {
+                setMessage(msg);
+            }
+            setProgress(step, 1, 4);
+        }
+
+        private void updateWeightTicket() {
+            if (validDO && outb != null) {
+                newWeightTicket.setItem(outb.getDeliveryItem());
+                newWeightTicket.setMatnrRef(outb.getMatnr());
+                newWeightTicket.setRegItemDescription(outb.getArktx());
+                newWeightTicket.setUnit(outb.getVrkme());
+                newWeightTicket.setKunnr(outb.getKunnr());
+                txtNMaterial.setText(outb.getArktx());
+                cbxNMaterial.setSelectedItem(outb.getArktx());
+                BigDecimal regqty = BigDecimal.ZERO;
+                List<OutboundDetail> detail = new ArrayList<OutboundDetail>();
+                OutboundDetail item = null;
+                String[] do_list = txtNDONum.getText().trim().split("-");
+                for (int i = 0; i < do_list.length; i++) {
+                    String doNum = do_list[i];
+                    WeightTicketJpaController conWTicket = new WeightTicketJpaController();
+                    try {
+                        detail = conWTicket.findByMandtDelivNumb(doNum);
+                    } catch (Exception ex) {
+                        java.util.logging.Logger.getLogger(WTRegView.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    for (int j = 0; j < detail.size(); j++) {
+                        item = detail.get(j);
+                        regqty = regqty.add(item.getLfimg());
+                    }
+                }
+                txtNWeight.setValue(regqty.doubleValue());
+                outbDel = outb;
+            }
+        }
+
+        private String getSelectedMode() {
+            String selectedMode = "";
+            if (rbtNInward.isSelected()) {
+                selectedMode = "Nhập";
+            }
+
+            if (rbtNOutward.isSelected()) {
+                selectedMode = "Xuất";
+            }
+
+            return selectedMode;
+        }
+
+        private void handleUnselectedMode(String selectedMode) {
+            if (StringUtil.isEmptyString(selectedMode)) {
+                String msg = resourceMapMsg.getString("msg.plzChooseIO");
+                setMessage(msg);
+                JOptionPane.showMessageDialog(rootPane, msg);
+            }
+        }
+
+        private void handleDOCheckExist(String doNumber) {
+            List wts1 = wTRegRepository.checkDoExist(doNumber, WeighBridgeApp.getApplication().getConfig().getwPlant());
+
+            float fCount = 0;
+            if (wts1 != null) {
+                fCount = Float.parseFloat(wts1.get(0).toString());
+            } else {
+                fCount = 2;
+            }
+            if (fCount > 0) {
+                validDO = false;
+                outb = null;
+                String msg = "D.O \" " + doNumber + " \" đã được sử dụng , vui lòng liên hệ NPP hoặc DVKH đổi mã khác. Giao dịch lỗi này của người dùng đã được hệ thống lưu nhật ký";
+                setMessage(msg);
+                JOptionPane.showMessageDialog(rootPane, msg);
+            }
+
+        }
+
+        private void handleShippingPointVar(String doNumber, String selectedMode) {
+            int klmax = wTRegRepository.getSPVar(WeighBridgeApp.getApplication().getConfig().getWbId().toString(), ship_point, outb.getMatnr().toString().trim());
+
+            Boolean ship = (klmax <= 0) ? false : true;
+            if (ship == false) {
+                validDO = false;
+                outb = null;
+                String msg = "D.O \" " + doNumber + " \" không được " + selectedMode + " hàng ở điểm nhận hàng này!, vui lòng liên hệ dịch vụ khách hàng Hotline 0919 49 59 69 để được hỗ trợ. ";
+                setMessage(msg);
+                JOptionPane.showMessageDialog(rootPane, msg);
+            }
+        }
+
+        private void checkShippingPoint(String doNumber) {
+            if (validDO && outb != null) {
+                ship_point = outb.getShipPoint();
+                String selectedMode = getSelectedMode();
+                handleUnselectedMode(selectedMode);
+                handleDOCheckExist(doNumber);
+                handleShippingPointVar(doNumber, selectedMode);
+            }
+        }
+
+        private void checkDOInUsed(String doNumber) {
+            if (validDO && outb != null) {
+                WeightTicket wt = null;
+                String delivNumb = outb.getDeliveryOrderNo();
+                wt = weightTicketRepository.findByDeliveryOrderNo(delivNumb);
+                String wplant = "";
+                wplant = WeighBridgeApp.getApplication().getConfig().getwPlant().toString();
+                String sDoType = "LF,LR,NL,ZTLF,ZTLR";
+                String Lfart = "";
+                try {
+                    Lfart = outb.getLfart();
+
+                } catch (Exception ex) {
+                }
+
+                if ((sDoType.indexOf(Lfart) >= 0 && outb.getWbstk() == 'X' && outb.getWerks().toString().equalsIgnoreCase(wplant))
+                        || (wt != null && !wt.isDissolved())) {
+                    validDO = false;
+                    outb = null;
+                    String msg = "D.O \" " + doNumber + " \" đã được dùng để " + mode + " hàng, vui lòng tự  kiểm tra trước khi liên hệ đường dây nóng Dịch vụ khách hàng 0919 49 59 69 ";
+                    setMessage(msg);
+                    JOptionPane.showMessageDialog(rootPane, msg);
+                } else {
+                    flag_revert = true;
+                    outb_number = outb.getDeliveryOrderNo().toString().trim();
+                }
+            }
+        }
+
+        private void setMode() {
+            if (validDO && outb != null) {
+                if (outb.getLfart().equalsIgnoreCase("LF") || outb.getLfart().equalsIgnoreCase("ZTLF")) {
+                    mode = "xuất";
+                } else {
+                    mode = "nhập";
+                }
+            }
+        }
+
+        private String checkPlate(String oldSoxe) {
+            if (outb != null
+                    && !oldSoxe.equals("")
+                    && !oldSoxe.equals(outb.getTraid())) {
+                validDO = false;
+                String msg = resourceMapMsg.getString("msg.notDuplicateLicensePlate");
+                setMessage(msg);
+                JOptionPane.showMessageDialog(rootPane, msg);
+            } else if (outb != null) {
+                oldSoxe = outb.getTraid();
+            }
+            return oldSoxe;
+        }
+
+        private String checkKunnr(String oldKunnr) {
+            if (outb != null
+                    && !oldKunnr.equals("")
+                    && !oldKunnr.equals(outb.getKunnr())) {
+                validDO = false;
+                String msg = resourceMapMsg.getString("msg.notDuplicateCode");
+                setMessage(msg);
+                JOptionPane.showMessageDialog(rootPane, msg);
+            } else if (outb != null) {
+                oldKunnr = outb.getKunnr();
+            }
+            return oldKunnr;
+        }
+
+        private void syncOutboundDelivery(String val, OutboundDelivery sapOutb) {
+            if (sapOutb != null && outb == null) {
+                entityManager.persist(sapOutb);
+                outb = sapOutb;
+                validDO = true;
+            } else if (sapOutb != null && outb != null) {
+                entityManager.merge(sapOutb);
+                outb = sapOutb;
+                validDO = true;
+            } else {
+                if (outb != null) {
+                    entityManager.remove(outb);
+                    outb = null;
+                }
+                validDO = false;
+                String msg = "Số D.O \" " + val + " \" không tồn tại!";
+                setMessage(msg);
+                JOptionPane.showMessageDialog(rootPane, msg);
+            }
+        }
+
+        private void finishTransaction() {
+            entityManager.getTransaction().commit();
+            entityManager.clear();
+        }
+
+        private void startTransaction() {
+            if (!entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().begin();
+            }
+        }
+
+        private void syncVendor() {
+            //Store Vendor Info
+            if (sapLifnr != null && lifnr == null) {
+                entityManager.persist(sapLifnr);
+            } else if (sapLifnr != null && lifnr != null) {
+                entityManager.merge(sapLifnr);
+            } else if (sapLifnr == null && lifnr != null) {
+                entityManager.remove(lifnr);
+            }
+        }
+
+        private void syncCustomerByKunag(OutboundDelivery sapOutb) {
+            //Store Sold to party Info
+            if (sapKunag != null && kunag == null && !sapOutb.getKunnr().equalsIgnoreCase(sapOutb.getKunag())) {
+                entityManager.persist(sapKunag);
+            } else if (sapKunag != null && kunag != null) {
+                entityManager.merge(sapKunag);
+            } else if (sapKunag == null && kunag != null && !sapOutb.getKunnr().equalsIgnoreCase(sapOutb.getKunag())) {
+                entityManager.remove(kunag);
+            }
+        }
+
+        private void syncCustomerByKunnr() {
+            //Store Ship to party Info
+            if (sapKunnr != null && kunnr == null) {
+                entityManager.persist(sapKunnr);
+            } else if (sapKunnr != null && kunnr != null) {
+                entityManager.merge(sapKunnr);
+            } else if (sapKunnr == null && kunnr != null) {
+                entityManager.remove(kunnr);
+            }
+        }
+
+        private void fetchVendor(OutboundDelivery sapOutb) {
+            if (StringUtil.isNotEmptyString(sapOutb.getLifnr())) {
+                lifnr = vendorRepository.findByLifnr(sapOutb.getLifnr());
+                sapLifnr = sapService.getVendor(sapOutb.getLifnr());
+            }
+        }
+
+        private void fetchCustomerByKunag(OutboundDelivery sapOutb) {
+            if (StringUtil.isNotEmptyString(sapOutb.getKunag())) {
+                kunag = customerRepository.findByKunnr(sapOutb.getKunag());
+                sapKunag = sapService.getCustomer(sapOutb.getKunag());
+            }
+        }
+
+        private void fetchCustomerByKunnr(OutboundDelivery sapOutb) {
+            if (StringUtil.isNotEmptyString(sapOutb.getKunnr())) {
+                kunnr = customerRepository.findByKunnr(sapOutb.getKunnr());
+                sapKunnr = sapService.getCustomer(sapOutb.getKunnr());
+            }
         }
 
         @Override
@@ -1901,18 +1894,9 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
         private OutboundDelivery outb = null;
         private String mode = null;
-        private Customer kunnr = null;
-        private Customer kunag = null;
-        private Vendor lifnr = null;
-        private Customer sapKunnr = null;
-        private Customer sapKunag = null;
-        private Vendor sapLifnr = null;
         private String ship_point = null;
 
         CheckDOOFFTask(org.jdesktop.application.Application app) {
-            // Runs on the EDT.  Copy GUI state that
-            // doInBackground() depends on from parameters
-            // to CheckDOTask fields, here.
             super(app);
             outbDel = null;
         }
@@ -1925,91 +1909,10 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             for (int k = 0; k < val.length; k++) {
                 setMessage(resourceMapMsg.getString("msg.checkDOInDb"));
                 setProgress(1, 1, 4);
-                //+20100106 convert DO number to SAP format
-//            System.out.println(val);
-//            System.out.println(val.length());
-                val[k] = Conversion_Exit.Conv_output_num(val[k], 10);
-//                System.out.println(val[k]);
-                //+20100106 convert DO number to SAP format
-//            System.out.println(val);
-//            System.out.println(val.length());
+                val[k] = StringUtil.paddingZero(val[k], 10);
+
                 outb = outboundDeliveryRepository.findByDeliveryOrderNo(val[k]);
-                /*HLD18
-                setMessage("Kiểm tra D.O trong SAP ...");
-                setProgress(2, 1, 4);
-                OutboundDelivery sapOutb = SAP2Local.getOutboundDelivery(val[k], true);
-                if (sapOutb != null) {
-                if (sapOutb.getKunnr() != null && !sapOutb.getKunnr().trim().isEmpty()) {
-                kunnr = entityManager.find(
-                Customer.class,
-                new CustomerPK(WeighBridgeApp.getApplication().getConfig().getsClient(), sapOutb.getKunnr()));
-                sapKunnr = SAP2Local.getCustomer(sapOutb.getKunnr());
-                }
-                if (sapOutb.getKunag() != null && !sapOutb.getKunag().trim().isEmpty()) {
-                kunag = entityManager.find(
-                Customer.class,
-                new CustomerPK(WeighBridgeApp.getApplication().getConfig().getsClient(), sapOutb.getKunag()));
-                sapKunag = SAP2Local.getCustomer(sapOutb.getKunag());
-                }
-                if (sapOutb.getLifnr() != null && !sapOutb.getLifnr().trim().isEmpty()) {
-                lifnr = entityManager.find(
-                Vendor.class,
-                new VendorPK(WeighBridgeApp.getApplication().getConfig().getsClient(), sapOutb.getLifnr()));
-                sapLifnr = SAP2Local.getVendor(sapOutb.getLifnr());
-                // abbr = sapLifnr.getVendorPK().getLifnr();
-                }
-                
-                }
-                setMessage("Lưu dữ liệu D.O xuống CSDL ...");
-                setProgress(3, 1, 4);
-                if (!entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().begin();
-                }
-                //Store Ship to party Info
-                if (sapKunnr != null && kunnr == null) {
-                entityManager.persist(sapKunnr);
-                } else if (sapKunnr != null && kunnr != null) {
-                entityManager.merge(sapKunnr);
-                } else if (sapKunnr == null && kunnr != null) {
-                entityManager.remove(kunnr);
-                }
-                //Store Sold to party Info
-                if (sapKunag != null && kunag == null && !sapOutb.getKunnr().equalsIgnoreCase(sapOutb.getKunag())) {
-                entityManager.persist(sapKunag);
-                } else if (sapKunag != null && kunag != null) {
-                entityManager.merge(sapKunag);
-                } else if (sapKunag == null && kunag != null && !sapOutb.getKunnr().equalsIgnoreCase(sapOutb.getKunag())) {
-                entityManager.remove(kunag);
-                }
-                //Store Vendor Info
-                if (sapLifnr != null && lifnr == null) {
-                entityManager.persist(sapLifnr);
-                } else if (sapLifnr != null && lifnr != null) {
-                entityManager.merge(sapLifnr);
-                } else if (sapLifnr == null && lifnr != null) {
-                entityManager.remove(lifnr);
-                }
-                 *                 
-                if (sapOutb != null && outb == null) {
-                entityManager.persist(sapOutb);
-                outb = sapOutb;
-                validDO = true;
-                } else if (sapOutb != null && outb != null) {
-                entityManager.merge(sapOutb);
-                outb = sapOutb;
-                validDO = true;
-                } else {
-                if (outb != null) {
-                entityManager.remove(outb);
-                outb = null;
-                }
-                validDO = false;
-                String msg = "Số D.O \" " + val[k] + " \" không tồn tại!";
-                setMessage(msg);
-                JOptionPane.showMessageDialog(rootPane, msg);
-                }
-                 * 
-                 */
+
                 if (outb != null) {
                     validDO = true;
                 } else {
@@ -2018,9 +1921,8 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     setMessage(msg);
                     JOptionPane.showMessageDialog(rootPane, msg);
                 }
-                // entityManager.getTransaction().commit();
-                // entityManager.clear();
-//                Check kunnr
+
+                //Check kunnr
                 if (outb != null
                         && !oldKunnr.equals("")
                         && !oldKunnr.equals(outb.getKunnr())) {
@@ -2031,6 +1933,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 } else if (outb != null) {
                     oldKunnr = outb.getKunnr();
                 }
+
 //                Check bien so xe
                 if (outb != null
                         && !oldSoxe.equals("")
@@ -2050,32 +1953,12 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                      * Otherwise, Inward mode.
                      */
                     if (outb.getLfart().equalsIgnoreCase("LF") || outb.getLfart().equalsIgnoreCase("ZTLF")) {
-//                    rbtOutward.setSelected(true);
                         mode = "xuất";
                     } else {
-//                    rbtInward.setSelected(true);
                         mode = "nhập";
                     }
                 }
-                //Check suitable plant from D.O for In/Outward mode against working plant.
-                if (validDO && outb != null) {
-                    String msg = null;
-                    //{-20101203#01 - comment logic to check plant
-                /*
-                    if (((outb.getLfart().equalsIgnoreCase("LF") || outb.getLfart().equalsIgnoreCase("LR")||outb.getLfart().equalsIgnoreCase("ZTLF") || outb.getLfart().equalsIgnoreCase("ZTLR")) && (outb.getWerks() != null && !outb.getWerks().equalsIgnoreCase(WeighBridgeApp.getApplication().getConfig().getwPlant())))
-                    || ((!outb.getLfart().equalsIgnoreCase("LF") && !outb.getLfart().equalsIgnoreCase("LR") && !outb.getLfart().equalsIgnoreCase("ZTLF") && !outb.getLfart().equalsIgnoreCase("ZTLR")) && (outb.getRecvPlant() != null && !outb.getRecvPlant().equalsIgnoreCase(WeighBridgeApp.getApplication().getConfig().getwPlant())))) {
-                    
-                    
-                    msg = "D.O \" " + val + " \" không được phép dùng để " + mode
-                    + " hàng trong Plant \" "
-                    + WeighBridgeApp.getApplication().getConfig().getwPlant() + " \" !";
-                    setMessage(msg);
-                    JOptionPane.showMessageDialog(rootPane, msg);
-                    validDO = false;
-                    outb = null;
-                    } */
-                    //}-20101203#01 - comment logic to check plant
-                }
+
                 //Check if D.O was used already or not???
                 if (validDO && outb != null) {
                     WeightTicket wt = null;
@@ -2133,42 +2016,6 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                         setMessage(msg);
                         JOptionPane.showMessageDialog(rootPane, msg);
                     }
-                    /*       
-                    if (tmpShippoint.indexOf(sp) < 0) 
-                    {                        
-                    ship = false ;
-                    }
-                    if ( Matname.indexOf("XI")>=0 ) 
-                    {                               
-                    if ( ((sp.equals("1208") || sp.equals("141D")) && ( Matname.indexOf("NM FICO") < 0 ) )   
-                    ||    ((sp.equals("1208") || sp.equals("141D")) && ( Matname.indexOf("NMFICO") < 0 ) )
-                    || ( sp.equals("131D")  && ( Matname.indexOf("NM TN") < 0)  ) 
-                    || ( sp.equals("1201")  && ( Matname.indexOf("GC DIC") < 0)  ) 
-                    || ( !sp.equals("1201")  && ( Matname.indexOf("GC DIC") >= 0)  )
-                    || ( sp.equals("1213")  && ( Matname.indexOf("DICBP") < 0)  )  
-                    || ( ! sp.equals("1213")  && ( Matname.indexOf("DICBP") >= 0)  )
-                    || ( ( sp.equals("1209") ||sp.equals("151D") ) && (  Matname.indexOf("NM TN") < 0 )   ) 
-                    
-                    )
-                    ship = false ; 
-                    
-                    }   
-                    if (  ( sp.equals("131D") ) && (  Matname.indexOf("NM TN") >= 0 ) && ( WbID.indexOf("1511")>=0 && mode.indexOf("nh") >= 0 ) && mymode.indexOf("Nhập")>=0 && mymode.indexOf("...") < 0  )
-                    ship = true; 
-                    
-                    if (  ( sp.equals("1213") ) && (  Matname.indexOf("DICBP") >= 0 ) )
-                    ship = true; 
-                    
-                    if (  ( sp.equals("131D") ) && (  Matname.indexOf("NM TN") >= 0 ) && ( WbID.indexOf("1511")>=0 && mode.indexOf("nh") >= 0 ) && mymode.indexOf("Nhập")>=0 && mymode.indexOf("...") < 0  )
-                    ship = true; 
-                    
-                    if (  ( sp.equals("131D") ) && (  Matname.indexOf("NM TN") >= 0 ) && ( WbID.indexOf("1111")>=0 && mode.indexOf("nh") >= 0 ) && mymode.indexOf("Nhập")>=0 && mymode.indexOf("...") < 0  )
-                    ship = true; 
-                    
-                    if (mymode.indexOf("...")>=0)
-                    ship = false;
-                     */
-                    //Modified by Tuan Nguyen at Tafico Jsc 23/12/2014
 
                     float fCount = 0;
                     String pDoNumber = val[k];
@@ -2352,7 +2199,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             newWeightTicket.setKunnr(null);
             if (newWeightTicket.getDeliveryOrderNo() != null && !newWeightTicket.getDeliveryOrderNo().trim().isEmpty()) {
                 String val = newWeightTicket.getDeliveryOrderNo().trim();
-                val = Conversion_Exit.Conv_output_num(val, 10);
+                val = StringUtil.paddingZero(val, 10);
                 newWeightTicket.setDeliveryOrderNo(val);
                 if (outbDel != null) {
                     newWeightTicket.setKunnr(outbDel.getKunnr());
