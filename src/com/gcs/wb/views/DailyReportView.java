@@ -23,6 +23,7 @@ import com.gcs.wb.controller.DailyReportController;
 import com.gcs.wb.jpa.entity.WeightTicket;
 import java.util.HashMap;
 import java.util.Map;
+import net.sf.jasperreports.engine.data.JRTableModelDataSource;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.ResourceMap;
 
@@ -251,7 +252,7 @@ public class DailyReportView extends javax.swing.JInternalFrame {
                 String reportName = null;
                 params = dailyReportController.getParamsReport(dpDateFrom, dpDateTo);
                 reportName = dailyReportController.getReportName();
-                dailyReportController.printReport(params, reportName);
+                dailyReportController.printReport(params, reportName,new JRTableModelDataSource(tabResults.getModel()));
             } catch (Exception ex) {
                 failed(ex);
             }

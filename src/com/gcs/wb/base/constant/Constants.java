@@ -14,6 +14,12 @@ import java.util.regex.Pattern;
  */
 public class Constants {
 
+    public static class Label {
+
+        public static final String LABEL_ALL = "Tất cả";
+        public static final String LABEL_OTHER = "Khác";
+    }
+
     public static class Vehicle {
 
         public static final String STATUS_ACTIVED = "ACTIVED";
@@ -58,7 +64,7 @@ public class Constants {
             "Số P.O"};
         public static final Class[] wtColTypes = new Class[]{
             Integer.class,
-            Integer.class,
+            Long.class,
             String.class,
             String.class,
             String.class,
@@ -193,36 +199,31 @@ public class Constants {
             "T.L Hàng",
             "Số D.O",
             "Số chứng từ SAP",
-            "Hủy",
             "SAP Posted",
             "DVVC",
             "Số P.O"};
-        
         public static final Class[] wtColTypes = new Class[]{
-        Integer.class,
-        Integer.class,
-        String.class,
-        String.class,
-        String.class,
-        String.class,
-        String.class,
-        Date.class,
-        Character.class,
-        String.class,
-        Date.class,
-        BigDecimal.class,
-        Date.class,
-        BigDecimal.class,
-        BigDecimal.class,
-        String.class,
-        String.class,
-        Boolean.class,
-        Boolean.class,
-        String.class,
-        String.class};
-        
+            Integer.class,
+            Integer.class,
+            String.class,
+            String.class,
+            String.class,
+            String.class,
+            String.class,
+            Date.class,
+            Character.class,
+            String.class,
+            Date.class,
+            BigDecimal.class,
+            Date.class,
+            BigDecimal.class,
+            BigDecimal.class,
+            String.class,
+            String.class,
+            Boolean.class,
+            String.class,
+            String.class};
         public static final String[] modesModel = {"Tất cả", "Nhập", "Xuất"};
-        
-        public static final String[] statusModel = {"Tất cả", "Bị hủy", "Hoàn tất"};
+        public static final String[] statusModel = {"Tất cả", "Hoàn tất"};
     }
 }

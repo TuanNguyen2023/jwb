@@ -28,6 +28,7 @@ import com.gcs.wb.controller.WeightTicketReportController;
 import java.util.ArrayList;
 import java.util.Map;
 import javax.swing.JOptionPane;
+import net.sf.jasperreports.engine.data.JRTableModelDataSource;
 import org.apache.log4j.Logger;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.ResourceMap;
@@ -426,7 +427,7 @@ private void cbxModeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:
             try {
                 Map<String, Object> params = weighTicketReportController.getParamReport(cbxTransportAgent, cbxMonth, cbxYear);
                 String reportName = weighTicketReportController.getReportName();
-                weighTicketReportController.printReport(params, reportName);
+                weighTicketReportController.printReport(params, reportName, new JRTableModelDataSource(tabWeightTicket.getModel()));
             } catch (Exception ex) {
                 failed(ex);
             }

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
+import net.sf.jasperreports.engine.data.JRTableModelDataSource;
 
 /**
  *
@@ -36,7 +37,7 @@ public class WeightTicketReportController {
     }
 
     public Map<String, Object> getParamReport(JComboBox cbxTransportAgent, JComboBox cbxMonth, JComboBox cbxYear) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("P_PNAME_RPT", WeighBridgeApp.getApplication().getSapSetting().getNameRpt());
         params.put("P_PADDRESS", WeighBridgeApp.getApplication().getSapSetting().getAddress());
         params.put("P_PPHONE", WeighBridgeApp.getApplication().getSapSetting().getPhone());
@@ -61,7 +62,7 @@ public class WeightTicketReportController {
         return weightTicketReportService.getTransportAgentsModel();
     }
     
-    public void printReport(Map<String, Object> map, String reportName){
-        jreportService.printReport(map, reportName);
+    public void printReport(Map<String, Object> map, String reportName, JRTableModelDataSource data){
+        jreportService.printReportDataSource(map, reportName, data);
     }
 }

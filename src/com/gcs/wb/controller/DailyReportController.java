@@ -15,6 +15,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import net.sf.jasperreports.engine.data.JRTableModelDataSource;
 import org.jdesktop.swingx.JXDatePicker;
 
 /**
@@ -53,8 +54,8 @@ public class DailyReportController {
         return params;
     }
 
-    public void printReport(Map<String, Object> map, String reportName){
-        jreportService.printReport(map, reportName);
+    public void printReport(Map<String, Object> map, String reportName, JRTableModelDataSource data){
+        jreportService.printReportDataSource(map, reportName, data);
     }
     
     public Object[][] handleWtDatas(Object[][] wtDatas, List<WeightTicket> weightTicketList) {
@@ -80,14 +81,14 @@ public class DailyReportController {
             wtDatas[i][4] = weightTicket.getPlateNo();
             wtDatas[i][5] = weightTicket.getTrailerId();
             wtDatas[i][6] = weightTicket.getCreator();
-            wtDatas[i][7] = createdDateTime;
+            wtDatas[i][7] = create_date.getTime();
             wtDatas[i][8] = weightTicket.getRegType();
             wtDatas[i][9] = weightTicket.getRegItemDescription();
             if (weightTicket.getFTime() != null) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(weightTicket.getFTime());
                 String inDateTime = dateFormat.format(calendar.getTime());
-                wtDatas[i][10] = inDateTime;//item.getFTime();
+                wtDatas[i][10] = calendar.getTime();//item.getFTime();
             } else {
                 wtDatas[i][10] = weightTicket.getFTime();
             }
@@ -96,7 +97,7 @@ public class DailyReportController {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(weightTicket.getSTime());
                 String outDateTime = dateFormat.format(calendar.getTime());
-                wtDatas[i][12] = outDateTime;//item.getSTime();
+                wtDatas[i][12] = calendar.getTime();//item.getSTime();
             } else {
                 wtDatas[i][12] = weightTicket.getSTime();
             }
