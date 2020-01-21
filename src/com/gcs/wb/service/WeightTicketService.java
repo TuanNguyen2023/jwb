@@ -21,7 +21,7 @@ import com.gcs.wb.bapi.outbdlv.structure.OutbDeliveryCreateStoStructure;
 import com.gcs.wb.bapi.outbdlv.structure.VbkokStructure;
 import com.gcs.wb.bapi.outbdlv.structure.VbpokStructure;
 import com.gcs.wb.bapi.service.SAPService;
-import com.gcs.wb.base.util.Conversion_Exit;
+import com.gcs.wb.base.util.StringUtil;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.BatchStock;
@@ -269,7 +269,7 @@ public class WeightTicketService {
             return stWT;
         }
         String tempWTID = new Integer(wt.getId()).toString();
-        tempWTID = tempWTID.concat(Conversion_Exit.Conv_output_num(String.valueOf(weightTicket.getSeqDay()), 3));
+        tempWTID = tempWTID.concat(StringUtil.paddingZero(String.valueOf(weightTicket.getSeqDay()), 3));
         stWT = new GoodsMvtWeightTicketStructure(weightTicket.getWplant(),
                 weightTicket.getWbId(),
                 tempWTID);

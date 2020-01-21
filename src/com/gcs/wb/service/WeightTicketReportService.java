@@ -4,7 +4,6 @@
  */
 package com.gcs.wb.service;
 
-import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.Material;
@@ -12,14 +11,10 @@ import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.WeightTicket;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
 import com.gcs.wb.jpa.repositorys.TransportAgentRepository;
-import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
 
 /**
  *
@@ -32,7 +27,7 @@ public class WeightTicketReportService {
     private Object[] wtColNames = Constants.WeightTicketReport.wtColNames;
 
     public List<Character> getModeItemStateChanged(List<Character> modes, int mode) {
-        modes = new ArrayList<Character>();
+        modes = new ArrayList<>();
         switch (mode) {
             case 0:
                 modes.add('I');
@@ -52,8 +47,13 @@ public class WeightTicketReportService {
         DefaultComboBoxModel result = new DefaultComboBoxModel();
         List<Material> materials = materialRepository.getListMaterial();
         Material mat = new Material();
+        mat.setMatnr("-2");
+        mat.setMaktx(Constants.Label.LABEL_ALL);
+        result.addElement(mat);
+
+        mat = new Material();
         mat.setMatnr("-1");
-        mat.setMaktx("Khác");
+        mat.setMaktx(Constants.Label.LABEL_OTHER);
         result.addElement(mat);
 
         for (Material material : materials) {
@@ -62,13 +62,13 @@ public class WeightTicketReportService {
                 result.addElement(material);
             }
         }
-        
+
         return result;
     }
 
     public Object[][] findWeightTickets(Object[][] wtDatas, String month, String year, String tAgent, String matnr, List<Character> modes, int status, String transportAgentName) throws Exception {
         WeightTicketJpaController weightTicketJpaController = new WeightTicketJpaController();
-        List<WeightTicket> weightTickets = weightTicketJpaController.findListWTs(month, year, tAgent, matnr, modes, status == 1, status == 2);
+        List<WeightTicket> weightTickets = weightTicketJpaController.findListWTs(month, year, tAgent, matnr, modes, status == 1);
         wtDatas = new Object[weightTickets.size()][wtColNames.length];
         for (int i = 0; i < weightTickets.size(); i++) {
             WeightTicket item = weightTickets.get(i);
@@ -97,20 +97,24 @@ public class WeightTicketReportService {
             wtDatas[i][14] = item.getGQty();
             wtDatas[i][15] = item.getDeliveryOrderNo();
             wtDatas[i][16] = item.getMatDoc();
-            wtDatas[i][17] = item.isDissolved();
             if (item.isPosted()) {
-                wtDatas[i][18] = true;
+                wtDatas[i][17] = true;
             } else {
-                wtDatas[i][18] = false;
+                wtDatas[i][17] = false;
             }
-            wtDatas[i][19] = transportAgentName;
-            wtDatas[i][20] = item.getEbeln();
+            wtDatas[i][18] = transportAgentName;
+            wtDatas[i][19] = item.getEbeln();
         }
         return wtDatas;
     }
 
     public DefaultComboBoxModel getTransportAgentsModel() {
         List<TransportAgent> transportAgents = transportAgentRepository.getListTransportAgent();
-        return new DefaultComboBoxModel(transportAgents.toArray());
+        DefaultComboBoxModel comboBoxModel = new DefaultComboBoxModel(transportAgents.toArray());
+        TransportAgent transportAgent = new TransportAgent("-2");
+        transportAgent.setName(Constants.Label.LABEL_ALL);
+        comboBoxModel.insertElementAt(transportAgent, 0);
+        comboBoxModel.setSelectedItem(transportAgent);
+        return comboBoxModel;
     }
 }

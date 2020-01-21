@@ -28,36 +28,6 @@ import javax.persistence.Table;
     @NamedQuery(name = "WeightTicket.findByCreatedDateRange", query = "SELECT w FROM WeightTicket w WHERE w.createdDate BETWEEN :from AND :to"),
     @NamedQuery(name = "WeightTicket.findByDeliveryOrderNo", query = "SELECT w FROM WeightTicket w WHERE w.deliveryOrderNo = :deliveryOrderNo"),
     @NamedQuery(name = "WeightTicket.findBySoNiemXa", query = "SELECT w FROM WeightTicket w WHERE w.soNiemXa = :soNiemXa"),
-    @NamedQuery(name = "WeightTicket.findByPlateNoMatnrRegTypeInMonth",
-    query = "SELECT w FROM WeightTicket w "
-    + "WHERE FUNC('YEAR', w.createdDate) = :year "
-    + "  AND FUNC('MONTH', w.createdDate) = :month "
-    + "  AND w.plateNo IN ( SELECT tv.vehicle.plateNo FROM TransportAgentVehicle tv WHERE tv.transportAgent.abbr = :taAbbr ) "
-    + "  AND w.matnrRef = :matnrRef "
-    + "  AND w.regType IN :regType"),
-    @NamedQuery(name = "WeightTicket.findByPlateNoRegTypeInMonth",
-    query = "SELECT w FROM WeightTicket w "
-    + "WHERE FUNC('YEAR', w.createdDate) = :year "
-    + "  AND FUNC('MONTH', w.createdDate) = :month "
-    + "  AND w.plateNo IN ( SELECT tv.vehicle.plateNo FROM TransportAgentVehicle tv WHERE tv.transportAgent.abbr = :taAbbr ) "
-    + "  AND w.matnrRef IS NULL "
-    + "  AND w.regType IN :regType"),
-    @NamedQuery(name = "WeightTicket.findByPlateNoMatnrRegTypeStatus",
-    query = "SELECT w FROM WeightTicket w "
-    + "WHERE FUNC('YEAR', w.createdDate) = :year "
-    + "  AND FUNC('MONTH', w.createdDate) = :month "
-    + "  AND w.plateNo IN ( SELECT tv.vehicle.plateNo FROM TransportAgentVehicle tv WHERE tv.transportAgent.abbr = :taAbbr ) "
-    + "  AND w.matnrRef = :matnrRef "
-    + "  AND w.regType IN :regType "
-    + "  AND w.status = :status"),
-    @NamedQuery(name = "WeightTicket.findByPlateNoRegTypeStatus",
-    query = "SELECT w FROM WeightTicket w "
-    + "WHERE FUNC('YEAR', w.createdDate) = :year "
-    + "  AND FUNC('MONTH', w.createdDate) = :month "
-    + "  AND w.plateNo IN ( SELECT tv.vehicle.plateNo FROM TransportAgentVehicle tv WHERE tv.transportAgent.abbr = :taAbbr ) "
-    + "  AND w.matnrRef IS NULL "
-    + "  AND w.regType IN :regType "
-    + "  AND w.status = :status"),
     @NamedQuery(name = "WeightTicket.findByDateFull",
     query = "SELECT w FROM WeightTicket w "
     + "WHERE w.createdDate BETWEEN :from AND :to"
