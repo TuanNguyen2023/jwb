@@ -11,7 +11,6 @@ import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
@@ -19,7 +18,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Entity
 @Table(name = "time_range")
-@XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "TimeRange.findByMandtWBID", query = "SELECT t FROM TimeRange t WHERE t.timeRangePK.mandt = :mandt AND t.timeRangePK.wbId = :wbId")
 })
