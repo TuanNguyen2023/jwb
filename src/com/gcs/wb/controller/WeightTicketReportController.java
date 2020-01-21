@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
+import net.sf.jasperreports.engine.data.JRTableModelDataSource;
 
 /**
  *
@@ -61,7 +62,7 @@ public class WeightTicketReportController {
         return weightTicketReportService.getTransportAgentsModel();
     }
     
-    public void printReport(Map<String, Object> map, String reportName){
-        jreportService.printReport(map, reportName);
+    public void printReport(Map<String, Object> map, String reportName, JRTableModelDataSource data){
+        jreportService.printReportDataSource(map, reportName, data);
     }
 }

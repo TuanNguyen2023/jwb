@@ -12,7 +12,7 @@
 	<parameter name="P_ID" class="java.lang.String">
 		<parameterDescription><![CDATA[ID Param.]]></parameterDescription>
 	</parameter>
-	<parameter name="P_DAYSEQ" class="java.lang.Integer">
+	<parameter name="P_DAYSEQ" class="java.lang.Long">
 		<parameterDescription><![CDATA[Sequence by day]]></parameterDescription>
 	</parameter>
 	<parameter name="P_REPRINT" class="java.lang.Boolean">

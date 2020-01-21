@@ -58,7 +58,7 @@ public class Constants {
             "Số P.O"};
         public static final Class[] wtColTypes = new Class[]{
             Integer.class,
-            Integer.class,
+            Long.class,
             String.class,
             String.class,
             String.class,

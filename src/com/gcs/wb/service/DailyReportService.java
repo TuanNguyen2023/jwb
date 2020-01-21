@@ -55,14 +55,14 @@ public class DailyReportService {
             wtDatas[i][4] = weightTicket.getPlateNo();
             wtDatas[i][5] = weightTicket.getTrailerId();
             wtDatas[i][6] = weightTicket.getCreator();
-            wtDatas[i][7] = createdDateTime;
+            wtDatas[i][7] = create_date.getTime();
             wtDatas[i][8] = weightTicket.getRegType();
             wtDatas[i][9] = weightTicket.getRegItemDescription();
             if (weightTicket.getFTime() != null) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(weightTicket.getFTime());
                 String inDateTime = dateFormat.format(calendar.getTime());
-                wtDatas[i][10] = inDateTime;//item.getFTime();
+                wtDatas[i][10] = weightTicket.getFTime();//item.getFTime();
             } else {
                 wtDatas[i][10] = weightTicket.getFTime();
             }
@@ -71,7 +71,7 @@ public class DailyReportService {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(weightTicket.getSTime());
                 String outDateTime = dateFormat.format(calendar.getTime());
-                wtDatas[i][12] = outDateTime;//item.getSTime();
+                wtDatas[i][12] = weightTicket.getSTime();//item.getSTime();
             } else {
                 wtDatas[i][12] = weightTicket.getSTime();
             }

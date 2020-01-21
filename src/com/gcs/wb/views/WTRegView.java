@@ -13,8 +13,6 @@ package com.gcs.wb.views;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.base.constant.Constants;
-import com.gcs.wb.jpa.JPAConnector;
-import com.gcs.wb.jpa.JReportConnector;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
@@ -24,24 +22,20 @@ import com.gcs.wb.jpa.entity.Vendor;
 import com.gcs.wb.jpa.entity.WeightTicket;
 import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.base.util.Conversion_Exit;
+import com.gcs.wb.controller.WTRegController;
+import com.gcs.wb.jpa.JPAConnector;
 import com.sap.conn.jco.JCoException;
 import java.awt.Color;
 import java.math.BigDecimal;
-import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import javax.swing.*;
 
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.data.JRTableModelDataSource;
-import net.sf.jasperreports.view.JasperViewer;
 import org.apache.log4j.Logger;
 import org.hibersap.HibersapException;
 import org.jdesktop.application.Action;
@@ -64,10 +58,8 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyEvent;
 import java.util.Date;
-import javax.persistence.EntityManager;
 
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperReport;
+import javax.persistence.EntityManager;
 
 /**
  *
@@ -89,6 +81,8 @@ public class WTRegView extends javax.swing.JInternalFrame {
     VehicleRepository vehicleRepository = new VehicleRepository();
     TransportAgentVehicleRepository transportAgentVehicleRepository = new TransportAgentVehicleRepository();
     SAPService sapService = new SAPService();
+    
+    WTRegController wTRegController = new WTRegController();
 
     public WTRegView() {
         initComponents();
@@ -1471,8 +1465,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     // }
                     if (!selectedRow.isDissolved()) { //+20100112#01 Không cho in khi phiếu đăng tài bị hủy
                         setMessage(resourceMapMsg.getString("msg.rePrinting"));
-                        txtWeightTicketNo.setText(selectedRow.getId()
-                                + String.format("%03d", selectedRow.getSeqDay())); //+20100303
+                        txtWeightTicketNo.setText(selectedRow.getId() + String.format("%03d", selectedRow.getSeqDay())); //+20100303
 
 
                         // tuanna add -- copy ticket ID to clipboard. 28.11.2012 
@@ -1525,23 +1518,9 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                 String kFrom = format.format(dpDateFrom.getDate());
                 String kTo = format.format(dpDateTo.getDate());
-                System.out.println("dpFrom : " + kFrom + " to " + kTo);
-                Map<String, Object> params = new HashMap<String, Object>();
-                params.put("P_PNAME_RPT", WeighBridgeApp.getApplication().getSapSetting().getNameRpt());
-                params.put("P_PADDRESS", WeighBridgeApp.getApplication().getSapSetting().getAddress());
-                params.put("P_PPHONE", WeighBridgeApp.getApplication().getSapSetting().getPhone());
-                params.put("P_PFAX", WeighBridgeApp.getApplication().getSapSetting().getFax());
-                params.put("P_FROM", kFrom);
-                params.put("P_TO", kTo);
-                String reportName = null;
-                if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
-                    reportName = "./rpt/rptBT/WTList.jasper";
-                } else {
-                    reportName = "./rpt/rptPQ/WTList.jasper";
-                }
-                JasperPrint jasperPrint = JasperFillManager.fillReport(reportName, params, new JRTableModelDataSource(tabResults.getModel()));
-                JasperViewer jv = new JasperViewer(jasperPrint, false);
-                jv.setVisible(true);
+                Map<String, Object> params = wTRegController.getPrintReport(kFrom, kTo);
+                String reportName = wTRegController.getReportName();
+                wTRegController.printReport( params, reportName);
             } catch (Exception ex) {
                 failed(ex);
             }
@@ -2588,27 +2567,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
     private void printWT(WeightTicket wt, boolean reprint) throws Exception {
         try {
-            AppConfig config = WeighBridgeApp.getApplication().getConfig();
-            Map<String, Object> map = new HashMap<String, Object>();
-            map.put("P_CLIENT", WeighBridgeApp.getApplication().getConfig().getsClient());
-            map.put("P_WPLANT", WeighBridgeApp.getApplication().getConfig().getwPlant());
-            map.put("P_ID", wt.getId());
-            map.put("P_DAYSEQ", wt.getSeqDay());
-            map.put("P_REPRINT", reprint);
-            map.put("P_ADDRESS", config.getRptId());
-            String reportName = null;
-            if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
-                //reportName = "./rpt/rptBT/RegWT_HP.jasper";
-                reportName = "./rpt/rptBT/RegWT_HP.jrxml";
-            } else {
-                //reportName = "./rpt/rptPQ/RegWT.jasper";
-                reportName = "./rpt/rptPQ/RegWT.jrxml";
-            }
-            Connection connect = JReportConnector.getInstance();
-            JasperReport jasperReport = JasperCompileManager.compileReport(reportName);
-            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, connect);
-            JasperViewer jv = new JasperViewer(jasperPrint, false);
-            jv.setVisible(true);
+            wTRegController.printRegWT(wt, reprint);
         } catch (Exception ex) {
             logger.error(null, ex);
             throw ex;
