@@ -4,22 +4,21 @@
  */
 package com.gcs.wb.base.serials;
 
-import gnu.io.SerialPortEvent;
-import gnu.io.SerialPortEventListener;
+import com.fazecast.jSerialComm.SerialPort;
+import com.fazecast.jSerialComm.SerialPortDataListener;
+import com.fazecast.jSerialComm.SerialPortEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
 import javax.swing.JFormattedTextField;
-import org.apache.log4j.Logger;
 import com.gcs.wb.WeighBridgeApp;
-import javax.swing.JOptionPane;
 
 /**
  * Handles the input coming from the serial port. A new line character
  * is treated as the end of a block in this example.
  * @author Tran-Vu
  */
-public class SerialReaderEventBased implements SerialPortEventListener {
+public class SerialReaderEventBased implements SerialPortDataListener {
 
     private InputStream in;
     private JFormattedTextField control;
@@ -31,6 +30,11 @@ public class SerialReaderEventBased implements SerialPortEventListener {
         this.control = control;
         this.times_delay = WeighBridgeApp.time_delay;
         this.count = 0;
+    }
+
+    @Override
+    public int getListeningEvents() {
+        return SerialPort.LISTENING_EVENT_DATA_AVAILABLE;
     }
 
     public String getWeight(String result) {
@@ -75,7 +79,7 @@ public class SerialReaderEventBased implements SerialPortEventListener {
             result = old_number;
         }
 //        if (WeighBridgeApp.getApplication().getLast().intValue() != 0 && WeighBridgeApp.getApplication().getNow().intValue() != 0) {
-        
+
         if ((Integer.parseInt(result) == 0 || result == null) && !(WeighBridgeApp.getApplication().getNow().doubleValue() < WeighBridgeApp.getApplication().getMax().doubleValue()) && (WeighBridgeApp.getApplication().getNow().doubleValue() != 0)) {
             result = WeighBridgeApp.getApplication().getLast().toString();
             WeighBridgeApp.getApplication().setNow(WeighBridgeApp.getApplication().getLast());
@@ -88,119 +92,59 @@ public class SerialReaderEventBased implements SerialPortEventListener {
     }
 
     @Override
-    public void serialEvent(SerialPortEvent e) {
-        /*
-        //comment out 20101209#01 re-write receiving data from weighing kit
+    public void serialEvent(SerialPortEvent event) {
+        if (event.getEventType() != SerialPort.LISTENING_EVENT_DATA_AVAILABLE) {
+            return;
+        }
+
+        // we get here if data has been received
+        byte[] readBuffer = new byte[20];
         try {
-        byte[] b = new byte[1024];
-        int len = -1;
-        BigInteger ival = BigInteger.ZERO;
-        while ((len = this.in.read(b)) > -1) {
-        String val = new String(b, 0, len);
-        //try{
-        val = val.substring(7, 14);
-        //} catch (Exception ex) {
-        val = val.toString();
-        //}
-        //try {
-        ival = new BigInteger(val);
-        // } catch (Exception ex){
-        ival = BigInteger.ZERO;;
-        // }
-        control.setValue(ival);
-        control.repaint(500);
-        //hau
-        //String msg = ival.toString();
-        //Logger.getLogger(ScaleMettler.class.getName()).error(msg);
-        //JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), msg);
-        //                Logger.getLogger(SerialReaderEventBased.class.getName()).error("control value:"+control.getValue());
-        System.out.println("control value:"+control.getValue());
-        //                Logger.getLogger(SerialReaderEventBased.class.getName()).error("control text:"+control.getText());
-        System.out.println("control text:"+control.getText());
-        }} catch (IndexOutOfBoundsException ex) {
-        //JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), 'out of bound');
-        Logger.getLogger(SerialReaderEventBased.class.getName()).error(null, ex);
-        } catch (IOException ex) {
-        Logger.getLogger(SerialReaderEventBased.class.getName()).error(null, ex);
-        }
-         */    //comment out 20101209#01
-//+{20101209#01 re-write receiving data from weighing kit
+            // read data
+            while (in.available() > 0) {
+                int numBytes = in.read(readBuffer);
+            }
+            // print data
+            String result = new String(readBuffer);
+            //result = result.replaceAll( "[^\\d]", "" );
+            result = this.getWeight(result);
 
-        switch (e.getEventType()) {
-            case SerialPortEvent.BI:
-                break;
-            case SerialPortEvent.OE:
-                break;
-            case SerialPortEvent.FE:
-                break;
-            case SerialPortEvent.PE:
-                break;
-            case SerialPortEvent.CD:
-                break;
-            case SerialPortEvent.CTS:
-                break;
-            case SerialPortEvent.DSR:
-                break;
-            case SerialPortEvent.RI:
-                break;
-            case SerialPortEvent.OUTPUT_BUFFER_EMPTY:
-                break;
-            case SerialPortEvent.DATA_AVAILABLE:
-                // we get here if data has been received
-                byte[] readBuffer = new byte[20];
-                try {
-                    // read data
-                    while (in.available() > 0) {
-                        int numBytes = in.read(readBuffer);
-                    }
-                    // print data
-                    String result = new String(readBuffer);
-                    //result = result.replaceAll( "[^\\d]", "" );
-                    result = this.getWeight(result);
+            BigInteger ival = BigInteger.ZERO;
+            try {
+                ival = new BigInteger(result);
 
-                    BigInteger ival = BigInteger.ZERO;
-                    try {
-                        ival = new BigInteger(result);
+                //System.out.println(WeighBridgeApp.getApplication().getLast());
+            } catch (Exception ex) {
+                ival = BigInteger.ZERO;
+            }
+            //control.setValue(ival);
 
-                        //System.out.println(WeighBridgeApp.getApplication().getLast());
-                    } catch (Exception ex) {
-                        ival = BigInteger.ZERO;
-                    }
-                    //control.setValue(ival);
-
-                    //Times of delay to refresh screen
-                    if (this.count > this.times_delay) {
-                        WeighBridgeApp.getApplication().setLast(WeighBridgeApp.getApplication().getNow());
-                        WeighBridgeApp.getApplication().setNow(ival);
-                        if (WeighBridgeApp.getApplication().getNow().doubleValue() > WeighBridgeApp.getApplication().getMax().doubleValue()) {
-                            WeighBridgeApp.getApplication().setMax(WeighBridgeApp.getApplication().getNow());
-                        }
-                        control.setValue(ival);
-                        control.repaint(500);
-                        //for (int i = 1 ; i <= 1500 ; i++)
-                        // {
-                        // double garbage = Math.PI * Math.PI;
-                        // }
-                        this.count = 0;
-                    } else {
-                        this.count++;
-                    }
-                    //System.out.println("Read: "+result);
-                    //try
-                    //{
-                    //Thread.sleep(500); // do nothing for 1000 miliseconds (1 second)
-                    //}
-                    //catch(InterruptedException ex)
-                    //{
-                    //}
-                } catch (IOException ex) {
+            //Times of delay to refresh screen
+            if (this.count > this.times_delay) {
+                WeighBridgeApp.getApplication().setLast(WeighBridgeApp.getApplication().getNow());
+                WeighBridgeApp.getApplication().setNow(ival);
+                if (WeighBridgeApp.getApplication().getNow().doubleValue() > WeighBridgeApp.getApplication().getMax().doubleValue()) {
+                    WeighBridgeApp.getApplication().setMax(WeighBridgeApp.getApplication().getNow());
                 }
-
-                break;
+                control.setValue(ival);
+                control.repaint(500);
+                //for (int i = 1 ; i <= 1500 ; i++)
+                // {
+                // double garbage = Math.PI * Math.PI;
+                // }
+                this.count = 0;
+            } else {
+                this.count++;
+            }
+            //System.out.println("Read: "+result);
+            //try
+            //{
+            //Thread.sleep(500); // do nothing for 1000 miliseconds (1 second)
+            //}
+            //catch(InterruptedException ex)
+            //{
+            //}
+        } catch (IOException ex) {
         }
-
-//+}20101209#01
-
-
     }
 }

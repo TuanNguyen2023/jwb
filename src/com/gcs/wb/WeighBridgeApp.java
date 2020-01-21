@@ -3,6 +3,7 @@
  */
 package com.gcs.wb;
 
+import com.fazecast.jSerialComm.SerialPortInvalidPortException;
 import com.gcs.wb.base.exceptions.IllegalPortException;
 import com.gcs.wb.base.serials.ScaleMettler;
 import com.gcs.wb.base.serials.SerialComm;
@@ -14,9 +15,6 @@ import com.gcs.wb.views.ConfigView;
 import com.gcs.wb.views.LoginView;
 import com.gcs.wb.views.SettingView;
 import com.gcs.wb.views.WeighBridgeView;
-import gnu.io.NoSuchPortException;
-import gnu.io.PortInUseException;
-import gnu.io.UnsupportedCommOperationException;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.TooManyListenersException;
@@ -165,7 +163,7 @@ public class WeighBridgeApp extends SingleFrameApplication {
         return Application.getInstance(WeighBridgeApp.class);
     }
 
-    public boolean connectWB(String portName, Integer speed, Short dataBits, Short stopBits, Short parity, boolean isMettlerScale, JFormattedTextField control) throws PortInUseException, IllegalPortException, NoSuchPortException, UnsupportedCommOperationException, IOException, TooManyListenersException {
+    public boolean connectWB(String portName, Integer speed, Short dataBits, Short stopBits, Short parity, boolean isMettlerScale, JFormattedTextField control) throws SerialPortInvalidPortException, IllegalPortException, IOException, TooManyListenersException {
 
         boolean connected = false;
 
@@ -184,18 +182,18 @@ public class WeighBridgeApp extends SingleFrameApplication {
                 normScale.connect();
             }
             connected = true;
-        } catch (PortInUseException ex) {
+        } catch (SerialPortInvalidPortException ex) {
             JOptionPane.showMessageDialog(this.getMainFrame(), ex.getMessage(), "Thông báo 1", JOptionPane.WARNING_MESSAGE);
             throw ex;
         } catch (IllegalPortException ex) {
             JOptionPane.showMessageDialog(this.getMainFrame(), ex.getMessage(), "Thông báo 2", JOptionPane.WARNING_MESSAGE);
             throw ex;
-        } catch (NoSuchPortException ex) {
-            JOptionPane.showMessageDialog(this.getMainFrame(), ex.getMessage(), "Thông báo 3", JOptionPane.WARNING_MESSAGE);
-            throw ex;
-        } catch (UnsupportedCommOperationException ex) {
-            JOptionPane.showMessageDialog(this.getMainFrame(), ex.getMessage(), "Thông báo 4", JOptionPane.WARNING_MESSAGE);
-            throw ex;
+//        } catch (NoSuchPortException ex) {
+//            JOptionPane.showMessageDialog(this.getMainFrame(), ex.getMessage(), "Thông báo 3", JOptionPane.WARNING_MESSAGE);
+//            throw ex;
+//        } catch (UnsupportedCommOperationException ex) {
+//            JOptionPane.showMessageDialog(this.getMainFrame(), ex.getMessage(), "Thông báo 4", JOptionPane.WARNING_MESSAGE);
+//            throw ex;
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(this.getMainFrame(), ex.getMessage(), "Thông báo 5", JOptionPane.WARNING_MESSAGE);
             throw ex;

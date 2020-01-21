@@ -4,13 +4,9 @@
  */
 package com.gcs.wb.base.serials;
 
+import com.fazecast.jSerialComm.SerialPort;
+import com.fazecast.jSerialComm.SerialPortInvalidPortException;
 import com.gcs.wb.base.exceptions.IllegalPortException;
-import gnu.io.CommPort;
-import gnu.io.CommPortIdentifier;
-import gnu.io.NoSuchPortException;
-import gnu.io.PortInUseException;
-import gnu.io.SerialPort;
-import gnu.io.UnsupportedCommOperationException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.TooManyListenersException;
@@ -29,9 +25,8 @@ public class SerialComm {
     private Short stopBits = null;
     private Short parity = null;
     private JFormattedTextField control = null;
-    private CommPortIdentifier portIdentifier = null;
-    private CommPort commPort = null;
     private InputStream inStream = null;
+    private SerialPort serialPort = null;
 
     public SerialComm() {
     }
@@ -45,37 +40,26 @@ public class SerialComm {
         this.control = control;
     }
 
-    public void connect() throws PortInUseException, IllegalPortException, NoSuchPortException, UnsupportedCommOperationException, IOException, TooManyListenersException {
-
+    public void connect() throws SerialPortInvalidPortException, IllegalPortException, IOException, TooManyListenersException {
         try {
-            portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
-        } catch (NoSuchPortException ex) {
-            Logger.getLogger(SerialComm.class.getName()).error(ex.getLocalizedMessage(), ex);
+            serialPort = SerialPort.getCommPort(portName);
+        } catch (SerialPortInvalidPortException ex) {
+            Logger.getLogger(SerialPort.class.getName()).error(ex.getLocalizedMessage(), ex);
             throw ex;
         }
-        if (portIdentifier.isCurrentlyOwned()) {
+        if (serialPort.isOpen()) {
             String msg = "Error: Port " + portName + " is currently in use";
-            Logger.getLogger(SerialComm.class.getName()).error(msg);
-            throw new PortInUseException();
+            Logger.getLogger(SerialPort.class.getName()).error(msg);
+            throw new SerialPortInvalidPortException();
         } else {
-
-            commPort = portIdentifier.open(this.getClass().getName() + "_" + commPort, 2000);
-            if (commPort instanceof gnu.io.SerialPort) {
+            serialPort.setComPortParameters(speed, dataBits, stopBits, parity);
+            serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 2000, 0);
+            if (serialPort.openPort()) {
                 try {
-                    SerialPort serialPort = (SerialPort) commPort;
-                    serialPort.setSerialPortParams(speed.intValue(), dataBits.intValue(), stopBits.intValue(), parity.intValue());
                     inStream = serialPort.getInputStream();
-                    //inStream.reset();
-                    serialPort.addEventListener(new SerialReaderEventBased(inStream, control));
-                    serialPort.notifyOnDataAvailable(true);
-                } catch (UnsupportedCommOperationException ex) {
-                    Logger.getLogger(SerialComm.class.getName()).error(null, ex);
-                    throw ex;
-                } catch (IOException ex) {
-                    Logger.getLogger(SerialComm.class.getName()).error(null, ex);
-                    throw ex;
-                } catch (TooManyListenersException ex) {
-                    Logger.getLogger(SerialComm.class.getName()).error(null, ex);
+                    serialPort.addDataListener(new SerialReaderEventBased(inStream, control));
+                } catch (Exception ex) {
+                    Logger.getLogger(SerialPort.class.getName()).error(null, ex);
                     throw ex;
                 }
             } else {
@@ -95,8 +79,8 @@ public class SerialComm {
                 throw ex;
             }
         }
-        if (commPort != null) {
-            commPort.close();
+        if (serialPort != null) {
+            serialPort.closePort();
         }
     }
 }

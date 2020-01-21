@@ -10,13 +10,13 @@
  */
 package com.gcs.wb.views;
 
+import com.fazecast.jSerialComm.SerialPort;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.base.enums.ParityEnum;
 import com.gcs.wb.base.serials.SerialHelper;
 import com.gcs.wb.base.util.Base64_Utils;
 import com.gcs.wb.controller.ConfigController;
-import gnu.io.CommPortIdentifier;
 import java.awt.Color;
 import java.util.HashSet;
 import javax.swing.DefaultComboBoxModel;
@@ -757,9 +757,9 @@ public class ConfigView extends javax.swing.JDialog {
 
     private DefaultComboBoxModel getPortModel() {
         DefaultComboBoxModel result = new DefaultComboBoxModel();
-        HashSet<CommPortIdentifier> ports = SerialHelper.getAvailableSerialPorts();
-        for (CommPortIdentifier port : ports) {
-            result.addElement(port.getName());
+        HashSet<SerialPort> ports = SerialHelper.getAvailableSerialPorts();
+        for (SerialPort port : ports) {
+            result.addElement(port.getSystemPortName());
         }
         return result;
     }

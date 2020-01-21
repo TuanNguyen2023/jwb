@@ -9,7 +9,8 @@
  * Created on 26-11-2009, 14:22:57
  */
 package com.gcs.wb.views;
- import com.gcs.wb.base.util.Base64_Utils;
+
+import com.gcs.wb.base.util.Base64_Utils;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.SAPErrorTransform;
 import com.gcs.wb.bapi.goodsmvt.GoodsMvtDoCreateBapi;
@@ -101,7 +102,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     VariantRepository variantRepository = new VariantRepository();
     BatchStockRepository batchStockRepository = new BatchStockRepository();
     PurchaseOrderRepository purchaseOrderRepository = new PurchaseOrderRepository();
-    
     WeightTicketController weightTicketController = new WeightTicketController();
     SAPService sapService = new SAPService();
     //JPAService jpaService = new JPAService();
@@ -153,7 +153,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         //String client = WeighBridgeApp.getApplication().getConfig().getsClient();
         //List kunnr = this.customerRepository.getListCustomer(client);
         DefaultComboBoxModel result = weightTicketController.getCustomerByMaNdt();
-        
+
         try {
             String pWbId = WeighBridgeApp.getApplication().getConfig().getWbId().trim();
             List sdev = null;// weightTicketRepository.getDev2(pWbId);
@@ -1307,21 +1307,21 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_rbtBridge1ActionPerformed
 
     private void rbtBridge2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtBridge2ActionPerformed
-        /*config = WeighBridgeApp.getApplication().getConfig();
+        config = WeighBridgeApp.getApplication().getConfig();
         try {
-        btnAccept.setEnabled(WeighBridgeApp.getApplication().connectWB(
-        config.getB2Port(),
-        config.getB2Speed(),
-        config.getB2DBits(),
-        config.getB2SBits().shortValue(),
-        config.getB2PC(),
-        config.getB2Mettler(),
-        txfCurScale));
-        setSaveNeeded(isValidated());
+            btnAccept.setEnabled(WeighBridgeApp.getApplication().connectWB(
+                    config.getB2Port(),
+                    config.getB2Speed(),
+                    config.getB2DBits(),
+                    config.getB2SBits().shortValue(),
+                    config.getB2PC(),
+                    config.getB2Mettler(),
+                    txfCurScale));
+            setSaveNeeded(isValidated());
 
         } catch (Exception ex) {
+            java.util.logging.Logger.getLogger(WeightTicketView.class.getName()).log(Level.SEVERE, null, ex);
         }
-         */
     }//GEN-LAST:event_rbtBridge2ActionPerformed
 
     private void btnIScaleResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIScaleResetActionPerformed
@@ -1402,10 +1402,10 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
     private void chkDissolvedItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkDissolvedItemStateChanged
         if (weightTicket != null) {
-       //     chkDissolved
+            //     chkDissolved
             weightTicket.setDissolved(chkDissolved.isSelected());
             if (chkDissolved.isSelected() == true) {
-              //  setSaveNeeded(true);
+                //  setSaveNeeded(true);
                 // Tuanna 0909 2015 
                 setSaveNeeded(false);
             } else {
@@ -1718,21 +1718,21 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             Query qx = (Query) entityManager.createNativeQuery(sql);
             qx.setParameter(1,txtWTNum.getText().toString());
             List wtx = qx.getResultList();
-
+            
             try {
             //  SoNiemXa = wts.get(0).toString();
             //   txtCementDesc.setText(SoNiemXa);
             txtPONum.setText(wtx.get(2).toString());
             weightTicket.setAbbr(wtx.get(3).toString());
-
+            
             }catch(Throwable cause ){
             //    klmax  = -1 ;
             }
-
-
-
+            
+            
+            
             } catch(Throwable cause ){
-
+            
             }
              * 
              */
@@ -1781,7 +1781,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             int count = noneRepository.getCountSingal();
             JOptionPane.showMessageDialog(rootPane, count);
         }
-        
+
         if (weightTicket == null || txfCurScale.getValue() == null || ((Number) txfCurScale.getValue()).intValue() == 0) {
             return null;
         }
@@ -1894,12 +1894,12 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             Material mat_tmp = null;
             Boolean ximang_tmp = false;
             Boolean flag_tmp = true;
-            
+
             // Nhận dạng phiếu cân gỏ tay Hiệp Phước
-         //   weightTicket.setText("ZBD"); 
-            
+            //   weightTicket.setText("ZBD"); 
+
             weightTicket.setText(txtGRText.getText().trim());
-                  
+
             for (int i = 0; i < outbDel_list.size(); i++) {
                 outdel_tmp = outbDel_list.get(i);
                 try {
@@ -1976,7 +1976,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             if (lv_return == JOptionPane.YES_OPTION) {
                 //
                 if (outbDel != null && outbDel.getMatnr() != null
-//                        && outbDel.getMatnr().equalsIgnoreCase(setting.getMatnrPcb40())
+                        //                        && outbDel.getMatnr().equalsIgnoreCase(setting.getMatnrPcb40())
                         && rbtOutward.isSelected() && isStage2()) {
                     //{+20101202#02 check material availability
                     //setMessage("Đang kiểm tra tồn kho trong SAP...");
@@ -2577,8 +2577,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                     setValidPONum(true);
                     rbtPO.setSelected(true);
                     setSubContract(false);
-                    if (rbtOutward.isSelected() && purOrder.getItemCat() == '3' 
-//                            && purOrder.getMaterial().equalsIgnoreCase(setting.getMatnrPcb40())
+                    if (rbtOutward.isSelected() && purOrder.getItemCat() == '3' //                            && purOrder.getMaterial().equalsIgnoreCase(setting.getMatnrPcb40())
                             ) {
                         setSubContract(true);
                     }
@@ -2762,7 +2761,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                         //sapService.syncBatchStocks(lgort, weightTicket.getMatnrRef(), weightTicket.getLgort());
                         weightTicketController.getSyncBatchStocks((SLoc) cbxSLoc.getSelectedItem(), weightTicket);
                         // get data DB
-                        List<BatchStock> batchs =  weightTicketController.getBatchStocks((SLoc) cbxSLoc.getSelectedItem(), weightTicket);
+                        List<BatchStock> batchs = weightTicketController.getBatchStocks((SLoc) cbxSLoc.getSelectedItem(), weightTicket);
                         DefaultComboBoxModel result = new DefaultComboBoxModel();
                         for (BatchStock b : batchs) {
                             if (b.getLvorm() == null || b.getLvorm().toString().trim().isEmpty()) {
@@ -2952,8 +2951,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                 if ((rbtInward.isSelected() && purOrder.getPlant().equalsIgnoreCase(config.getwPlant()))
                         || (rbtOutward.isSelected() && purOrder.getSupplPlnt().equalsIgnoreCase(config.getwPlant()))) {
                     setValidPONum(true);
-                } else if (rbtOutward.isSelected() && purOrder.getItemCat() == '3' 
-//                        && purOrder.getMaterial().equalsIgnoreCase(setting.getMatnrPcb40())
+                } else if (rbtOutward.isSelected() && purOrder.getItemCat() == '3' //                        && purOrder.getMaterial().equalsIgnoreCase(setting.getMatnrPcb40())
                         ) {
 //                    purOrder.setMaterial(setting.getMatnrClinker());
                     purOrder.setShortText("Clinker gia công");
@@ -3640,7 +3638,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             WeighBridgeApp.getApplication().disconnectWB();
             formatter.applyPattern(WeighBridgeApp.DATE_TIME_DISPLAY_FORMAT);
             Date now = null;
-            
+
             formatter.applyPattern(WeighBridgeApp.DATE_TIME_DISPLAY_FORMAT);//      
             now = weightTicketController.getServerTime();
             grbBridge.clearSelection();

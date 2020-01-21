@@ -4,8 +4,8 @@
  */
 package com.gcs.wb.service;
 
+import com.fazecast.jSerialComm.SerialPort;
 import com.gcs.wb.base.serials.SerialHelper;
-import gnu.io.CommPortIdentifier;
 import java.util.HashSet;
 
 import com.gcs.wb.base.enums.ParityEnum;
@@ -28,9 +28,9 @@ public class ConfigService {
 
     public DefaultComboBoxModel getPortModel() {
         DefaultComboBoxModel result = new DefaultComboBoxModel();
-        HashSet<CommPortIdentifier> ports = SerialHelper.getAvailableSerialPorts();
-        for (CommPortIdentifier port : ports) {
-            result.addElement(port.getName());
+        HashSet<SerialPort> ports = SerialHelper.getAvailableSerialPorts();
+        for (SerialPort port : ports) {
+            result.addElement(port.getSystemPortName());
         }
         return result;
     }
