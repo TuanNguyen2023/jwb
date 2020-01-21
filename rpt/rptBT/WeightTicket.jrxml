@@ -11,7 +11,7 @@
 	<parameter name="P_PCB40BAG" class="java.lang.Long"/>
 	<parameter name="P_ADDRESS" class="java.lang.String"/>
 	<queryString>
-	<![CDATA[store_bt_WeightTicket $P{P_ADDRESS},$P{P_MANDT},$P{P_WPlant},$P{P_ID},$P{P_DAYSEQ}]]>
+	<![CDATA[p_store_bt_weight_ticket $P{P_ADDRESS},$P{P_MANDT},$P{P_WPlant},$P{P_ID},$P{P_DAYSEQ}]]>
 	</queryString>
 	<field name="MANDT" class="java.lang.String"/>
 	<field name="ID" class="java.lang.String"/>
@@ -82,7 +82,7 @@
 	<field name="UNIT" class="java.lang.String"/>
 	<field name="MAT_DOC" class="java.lang.String"/>
 	<field name="DOC_YEAR" class="java.lang.Integer"/>
-	<field name="TRANSFERED_POSTING" class="java.lang.Boolean"/>
+	<!--<field name="TRANSFERED_POSTING" class="java.lang.Boolean"/>-->
 	<field name="OFFLINE_MODE" class="java.lang.Boolean"/>
 	<field name="DISSOLVED" class="java.lang.Boolean"/>
 	<field name="POSTED" class="java.lang.Boolean"/>

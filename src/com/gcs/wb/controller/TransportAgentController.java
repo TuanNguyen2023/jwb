@@ -8,9 +8,6 @@ import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.Vehicle;
 import com.gcs.wb.service.TransportAgentService;
 import javax.swing.DefaultListModel;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
 
 /**
  *
@@ -28,7 +25,7 @@ public class TransportAgentController {
         return transportAgentService.getVehiclesModel(transportAgentSelected);
     }
     
-    public void saveVehicle(JTextField txtLicensePlate, TransportAgent transportAgentSelected) {
+    public void saveVehicle(String txtLicensePlate, TransportAgent transportAgentSelected) {
         transportAgentService.saveVehicle(txtLicensePlate, transportAgentSelected);
     }
     
@@ -36,11 +33,7 @@ public class TransportAgentController {
         transportAgentService.vehicleRemoveActionPerformed(transportAgentSelected, vehicleSelected);
     }
     
-    public void prohibitApplyActionPerformed(Vehicle vehicleSelected, JCheckBox chkProhibitVehicle) {
-        transportAgentService.prohibitApplyActionPerformed(vehicleSelected, chkProhibitVehicle);
-    }
-    
-    public boolean validateLicensePlate(JTextField txtLicensePlate, JLabel lblLicensePlate) {
-        return transportAgentService.validateLicensePlate(txtLicensePlate, lblLicensePlate);
+    public void prohibitApplyActionPerformed(Vehicle vehicleSelected, boolean isProhibitVehicle) {
+        transportAgentService.prohibitApplyActionPerformed(vehicleSelected, isProhibitVehicle);
     }
 }

@@ -23,7 +23,6 @@ import com.gcs.wb.bapi.outbdlv.structure.VbpokStructure;
 import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.base.util.StringUtil;
 import com.gcs.wb.jpa.JPAConnector;
-import com.gcs.wb.jpa.JReportConnector;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.BatchStock;
 import com.gcs.wb.jpa.entity.Customer;
@@ -42,10 +41,10 @@ import com.gcs.wb.jpa.repositorys.TimeRangeRepository;
 import com.gcs.wb.jpa.procedures.WeightTicketRepository;
 import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
 import com.gcs.wb.jpa.service.JPAService;
+import com.gcs.wb.jpa.service.JReportService;
 import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.views.WeightTicketView;
 import java.math.BigDecimal;
-import java.sql.Connection;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -61,11 +60,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JRootPane;
 import javax.swing.JTextField;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.view.JasperViewer;
 import org.hibersap.session.Session;
 import org.hibersap.util.DateUtil;
 
@@ -88,7 +82,7 @@ public class WeightTicketService {
     WeightTicketJpaController con = new WeightTicketJpaController();
     SAPService sapService = new SAPService();
     JPAService jpaService = new JPAService();
-    Connection connect = JReportConnector.getInstance();
+    JReportService jreportService = new JReportService();
     PurchaseOrderRepository purchaseOrderRepository = new PurchaseOrderRepository();
 
     public DefaultComboBoxModel getCustomerByMaNdt() {
@@ -223,9 +217,11 @@ public class WeightTicketService {
         }
     }
 
+
     public PurchaseOrder findPurOrder(String poNum) {
         return purchaseOrderRepository.findByPoNumber(poNum);
     }
+
 
     public PurchaseOrder getSapPurOrder(String poNum) throws Exception {
         return sapService.getPurchaseOrder(poNum);
@@ -526,6 +522,7 @@ public class WeightTicketService {
         bapi.setItems(tab);
         return bapi;
     }
+
 
     public Object getGi541MigoBapi(WeightTicket wt, WeightTicket weightTicket, int timeFrom, int timeTo, PurchaseOrder purOrder, JRadioButton rbtOutward) {
         config = WeighBridgeApp.getApplication().getConfig();
@@ -978,11 +975,9 @@ public class WeightTicketService {
                 } else {
                     reportName1 = "./rpt/rptPQ/WeightTicket.jasper";
                 }
-                JasperReport jasperReport = JasperCompileManager.compileReport(reportName1);
 
-                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, connect);
-                JasperViewer jv = new JasperViewer(jasperPrint, false);
-                jv.setVisible(true);
+                jreportService.printReport(map, reportName1);
+
 
             } else {
                 for (int i = 0; i < outbDel_list.size(); i++) {
@@ -1080,16 +1075,16 @@ public class WeightTicketService {
                         path = "./rpt/rptPQ/";
                     }
                     if (rbtMisc.isSelected() || rbtPO.isSelected()) {
-                        reportName = path.concat("WeightTicket.jrxml");
+
+                        reportName = path.concat("WeightTicket.jasper");
                         //reportName = path.concat("WeightTicket.jasper");
                     } else {
-                        reportName = path.concat("WeightTicket_NEW.jrxml");
+
+                        reportName = path.concat("WeightTicket_NEW.jasper");
                         //reportName = path.concat("WeightTicket.jasper");
                     }
-                    JasperReport jasperReport = JasperCompileManager.compileReport(reportName);
-                    JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, connect);
-                    JasperViewer jv = new JasperViewer(jasperPrint, false);
-                    jv.setVisible(true);
+
+                    jreportService.printReport(map, reportName);
                 }
             }
 

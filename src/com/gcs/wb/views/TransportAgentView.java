@@ -11,18 +11,19 @@
 package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
+import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.controller.TransportAgentController;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.Vehicle;
+import java.awt.Color;
 import java.awt.Component;
+import java.util.regex.Matcher;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.ResourceMap;
@@ -302,7 +303,7 @@ private void btnVehicleRemoveActionPerformed(java.awt.event.ActionEvent evt) {//
 
 private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProhibitApplyActionPerformed
     // action prohibit vehicle
-    transportAgentController.prohibitApplyActionPerformed(vehicleSelected, chkProhibitVehicle);
+    transportAgentController.prohibitApplyActionPerformed(vehicleSelected, chkProhibitVehicle.isSelected());
     chkProhibitVehicle.setSelected(false);
     vehicleSelected = null;
     lstVehicle.clearSelection();
@@ -310,7 +311,14 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
 }//GEN-LAST:event_btnProhibitApplyActionPerformed
 
     private boolean validateLicensePlate() {
-        return transportAgentController.validateLicensePlate(txtLicensePlate, lblLicensePlate);
+        boolean isLicensePlate = false;
+        String licensePlateStr = txtLicensePlate.getText().trim();
+
+        Matcher matcher = Constants.TransportAgent.LICENSE_PLATE_PATTERN.matcher(licensePlateStr);
+        isLicensePlate = !licensePlateStr.isEmpty() && matcher.matches();
+        lblLicensePlate.setForeground(isLicensePlate ? Color.black : Color.red);
+
+        return isLicensePlate;
     }
 
     private DefaultListModel getTransportAgentsModel() {
@@ -325,21 +333,13 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
     @Action(enabledProperty = "vehicleCreatable")
     public void saveVehicle() {
 
-        EntityTransaction entityTransaction = entityManager.getTransaction();
-        try {
-            //save vehicle
-            transportAgentController.saveVehicle(txtLicensePlate, transportAgentSelected);
-            setVehicleCreatable(false);
-            vehicleSelected = null;
-            txtLicensePlate.setText("");
-            lstVehicle.clearSelection();
-            lstVehicle.setModel(getVehiclesModel());
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.addPlateNoFalse"));
-
-            entityTransaction.rollback();
-            entityManager.clear();
-        }
+         //save vehicle
+        transportAgentController.saveVehicle(txtLicensePlate.getText().trim(), transportAgentSelected);
+        setVehicleCreatable(false);
+        vehicleSelected = null;
+        txtLicensePlate.setText("");
+        lstVehicle.clearSelection();
+        lstVehicle.setModel(getVehiclesModel());
     }
 
     // <editor-fold defaultstate="collapsed" desc="Form's Properties">

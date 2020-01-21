@@ -20,7 +20,7 @@
 	</parameter>
 	<parameter name="P_ADDRESS" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[store_bt_regwthp $P{P_ADDRESS},$P{P_CLIENT},$P{P_WPLANT},$P{P_ID},$P{P_DAYSEQ}]]>
+		<![CDATA[p_store_bt_reg_wt_hp $P{P_ADDRESS},$P{P_CLIENT},$P{P_WPLANT},$P{P_ID},$P{P_DAYSEQ}]]>
 	</queryString>
 	<field name="MANDT" class="java.lang.String"/>
 	<field name="WPlant" class="java.lang.String"/>

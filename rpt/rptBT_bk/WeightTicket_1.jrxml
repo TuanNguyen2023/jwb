@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Weight Ticket" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true">
 	<property name="ireport.zoom" value="0.9982500000000003"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="42"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="P_MANDT" class="java.lang.String"/>
 	<parameter name="P_WPlant" class="java.lang.String"/>
 	<parameter name="P_ID" class="java.lang.String"/>
@@ -822,7 +822,7 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
-				<text><![CDATA[Bảo vệ]]></text>
+				<text><![CDATA[Khách hàng]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="427" y="194" width="128" height="20"/>

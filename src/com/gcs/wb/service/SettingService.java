@@ -46,16 +46,7 @@ public class SettingService {
         }
     }
 
-    public SAPSetting saveDoInBackground(SAPSetting sapSetting, JTextField txtNameRPT, JTextField txtAddress, JTextField txtPhone, JTextField txtFax, JCheckBox chkPOV) {
-        String tmp = txtNameRPT.getText().trim();
-        sapSetting.setNameRpt(tmp.isEmpty() ? null : tmp);
-        tmp = txtAddress.getText().trim();
-        sapSetting.setAddress(tmp.isEmpty() ? null : tmp);
-        tmp = txtPhone.getText().trim();
-        sapSetting.setPhone(tmp.isEmpty() ? null : tmp);
-        tmp = txtFax.getText().trim();
-        sapSetting.setFax(tmp.isEmpty() ? null : tmp);
-        sapSetting.setCheckPov(chkPOV.isSelected() ? true : false);
+    public SAPSetting saveDoInBackground(SAPSetting sapSetting) {
 
         if (!entityManager.getTransaction().isActive()) {
             entityManager.getTransaction().begin();

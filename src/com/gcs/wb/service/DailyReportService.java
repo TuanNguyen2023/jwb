@@ -21,20 +21,19 @@ import org.jdesktop.swingx.JXDatePicker;
  * @author THANGPT
  */
 public class DailyReportService {
-    
+
     AppConfig appConfig = WeighBridgeApp.getApplication().getConfig();
     WeightTicketJpaController weightTicketJpaController = new WeightTicketJpaController();
-    
     Object[] wtColNames = Constants.DailyReport.wtColNames;
-    
+
     public List<WeightTicket> findByCreateDateRange(JXDatePicker dpDateFrom, JXDatePicker dpDateTo) {
-        
+
         List<WeightTicket> weightTickets = weightTicketJpaController.findByCreatedDateRange(dpDateFrom.getDate(), dpDateTo.getDate());
         return weightTickets;
     }
-    
+
     public Object[][] handleWtDatas(Object[][] wtDatas, List<WeightTicket> weightTicketList) {
-        
+
         wtDatas = new Object[weightTicketList.size()][wtColNames.length];
 
         for (int i = 0; i < weightTicketList.size(); i++) {
@@ -91,7 +90,7 @@ public class DailyReportService {
         }
         return wtDatas;
     }
-    
+
     public String getReportName() {
         String reportName = null;
         if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
@@ -101,8 +100,8 @@ public class DailyReportService {
         }
         return reportName;
     }
-    
-    public Map<String, Object> getParamsReport(JXDatePicker dpDateFrom, JXDatePicker dpDateTo){
+
+    public Map<String, Object> getParamsReport(JXDatePicker dpDateFrom, JXDatePicker dpDateTo) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("P_PNAME_RPT", WeighBridgeApp.getApplication().getSapSetting().getNameRpt());
         params.put("P_PADDRESS", WeighBridgeApp.getApplication().getSapSetting().getAddress());
