@@ -141,6 +141,7 @@ public class WeightTicketService {
         }
         entityManager.merge(weightTicket);
         entityManager.getTransaction().commit();
+        entityManager.clear();
     }
 
     public Date setTimeWeightTicket(String[] time) {

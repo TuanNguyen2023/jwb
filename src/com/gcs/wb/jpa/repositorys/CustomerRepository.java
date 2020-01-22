@@ -26,7 +26,7 @@ public class CustomerRepository {
     }
 
     public Customer findByKunnr(String kunnr) {
-        TypedQuery<Customer> typedQuery = entityManager.createNamedQuery("Customer.findKunnr", Customer.class);
+        TypedQuery<Customer> typedQuery = entityManager.createNamedQuery("Customer.findByKunnr", Customer.class);
         typedQuery.setParameter("kunnr", kunnr);
         List<Customer> customers = typedQuery.getResultList();
         if (customers != null && customers.size() > 0) {
