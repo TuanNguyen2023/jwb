@@ -58,7 +58,6 @@ public class Constants {
             "T.L Hàng",
             "Số DO",
             "Số chứng từ SAP",
-            "Hủy",
             "SAP Posted",
             "DVVC",
             "Số P.O"};
@@ -80,7 +79,6 @@ public class Constants {
             BigDecimal.class,
             String.class,
             String.class,
-            Boolean.class,
             Boolean.class,
             String.class,
             String.class};
