@@ -155,29 +155,8 @@ public class WeightTicketService {
 
     }
 
-    public String readWT(String txt) {
-        List wts = weightTicketRepository.getWeighTicketReg(txt);
-
-        String kq = null;
-        if (wts != null && wts.size() > 0) {
-            kq = wts.get(0).toString();
-        }
-        if (kq != null && kq.length() > 0) {
-            txt = kq.trim();
-        }
-        return txt;
-    }
-
     public String getMsg() {
         return weightTicketJpaRepository.getMsg("6");
-    }
-
-    public List getMaxL(String pBs) {
-        return weightTicketRepository.getMaxL(config.getwPlant().toString().trim(), config.getWbId().toString().trim(), pBs);
-    }
-
-    public List getMaxLLock(String pBs) {
-        return weightTicketRepository.getMaxLLock(config.getwPlant().toString().trim(), config.getWbId().toString().trim(), pBs);
     }
 
     public DefaultComboBoxModel getMaterialList() {
@@ -194,30 +173,13 @@ public class WeightTicketService {
         return result;
     }
 
-    public WeightTicket findWeightTicket(WeightTicket weightTicket, int id, Integer seq) {
-        com.gcs.wb.jpa.repositorys.WeightTicketRepository repository = new com.gcs.wb.jpa.repositorys.WeightTicketRepository();
-        return repository.findByIdSeqDay(id, seq);
+    public WeightTicket findWeightTicket(WeightTicket weightTicket, int id) {
+        return entityManager.find(WeightTicket.class, id);
     }
 
     public String getSoNiemXa(String pWtId) {
         return weightTicketRepository.getSoNiemXa(pWtId);
     }
-
-    public void getTicketIndex(String maphieu, JTextField txtPONum, WeightTicket weightTicket, JRadioButton rbtPO) {
-        String Posto = "";
-        List wtxxx = weightTicketRepository.getTicketIndex(maphieu);
-        if (wtxxx != null) {
-            for (Object obj : wtxxx) {
-                Object[] wt = (Object[]) obj;
-                Posto = wt[2].toString().trim();
-                txtPONum.setText(Posto);
-                weightTicket.setAbbr(wt[3].toString().trim());
-                rbtPO.setSelected(true);
-            }
-
-        }
-    }
-
 
     public PurchaseOrder findPurOrder(String poNum) {
         return purchaseOrderRepository.findByPoNumber(poNum);

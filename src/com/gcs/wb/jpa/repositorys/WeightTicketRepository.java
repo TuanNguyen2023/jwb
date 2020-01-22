@@ -33,7 +33,7 @@ public class WeightTicketRepository {
         query.setParameter("id", id);
         query.setParameter("seqDay", seqDay);
         List<WeightTicket> weightTickets = query.getResultList();
-        if (weightTickets != null) {
+        if (weightTickets != null && weightTickets.size() > 0) {
             weightTicket = weightTickets.get(0);
         }
         return weightTicket;
@@ -42,7 +42,7 @@ public class WeightTicketRepository {
     public WeightTicket findByDeliveryOrderNo(String deliverNumber) {
         WeightTicket weightTicket = new WeightTicket();
         List<WeightTicket> list = getListByDeliveryOrderNo(deliverNumber);
-        if (list != null) {
+        if (list != null && list.size() > 0) {
             weightTicket = list.get(0);
         }
         return weightTicket;

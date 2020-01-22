@@ -64,35 +64,20 @@ public class WeightTicketController {
 
     }
 
-    public String readWT(String txt) {
-        return weightTicketService.readWT(txt);
-    }
-
     public String getMsg(){
         return weightTicketService.getMsg();
-    }
-    
-    public List getMaxL(String pBs){
-        return weightTicketService.getMaxL(pBs);
-    }
-    public List getMaxLLock(String pBs){
-        return weightTicketService.getMaxL(pBs);
     }
     
     public DefaultComboBoxModel getMaterialList() {
         return weightTicketService.getMaterialList();
     }
 
-    public WeightTicket findWeightTicket(WeightTicket weightTicket, int id, Integer seq) {
-        return weightTicketService.findWeightTicket(weightTicket, id, seq);
+    public WeightTicket findWeightTicket(WeightTicket weightTicket, int id) {
+        return weightTicketService.findWeightTicket(weightTicket, id);
     }
 
     public String getSoNiemXa(String pWtId) {
         return weightTicketService.getSoNiemXa(pWtId);
-    }
-
-    public void getTicketIndex(String maphieu, JTextField txtPONum, WeightTicket weightTicket, JRadioButton rbtPO) {
-        weightTicketService.getTicketIndex(maphieu, txtPONum, weightTicket, rbtPO);
     }
 
     public PurchaseOrder findPurOrder(String poNum) {

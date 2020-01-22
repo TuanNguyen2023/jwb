@@ -5,7 +5,6 @@
 package com.gcs.wb.jpa.procedures;
 
 import com.gcs.wb.jpa.JPAConnector;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -21,138 +20,11 @@ public class WeightTicketRepository {
 
     Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
 
-    public List getTicketIndex(String maphieu) {
-        List result = new ArrayList();
-        EntityManager entityManager = JPAConnector.getInstance();
-        EntityTransaction entityTransaction = entityManager.getTransaction();
-        try {
-            if (entityTransaction.isActive()) {
-                entityTransaction.begin();
-            }
-            StoredProcedureQuery query = entityManager.createStoredProcedureQuery("pvc_getTicketIndex");
-            query.registerStoredProcedureParameter("pmaphieu", String.class, ParameterMode.IN);
-            query.setParameter("pmaphieu", maphieu);
-            query.execute();
-            result = query.getResultList();
-            entityTransaction.commit();
-        } catch (Exception e) {
-            logger.error(e.toString());
-            if (entityTransaction.isActive()) {
-                entityTransaction.rollback();
-            }
-        }
-        return result;
-    }
-
-    public List getDev2(String pWbId) {
-        List result = new ArrayList();
-        EntityManager entityManager = JPAConnector.getInstance();
-        EntityTransaction entityTransaction = entityManager.getTransaction();
-        try {
-            if (entityTransaction.isActive()) {
-                entityTransaction.begin();
-            }
-            StoredProcedureQuery query = entityManager.createStoredProcedureQuery("pGetDev2");
-            query.registerStoredProcedureParameter("pWbId", String.class, ParameterMode.IN);
-            query.setParameter("pWbId", pWbId);
-            query.execute();
-            result = query.getResultList();
-            entityTransaction.commit();
-        } catch (Exception e) {
-            logger.error(e.toString());
-            if (entityTransaction.isActive()) {
-                entityTransaction.rollback();
-            }
-        }
-        return result;
-    }
-
-    public List<Object[]> getWeighTicketReg(String pRegId) {
-        List<Object[]> result = new ArrayList();
-        EntityManager entityManager = JPAConnector.getInstance();
-        EntityTransaction entityTransaction = entityManager.getTransaction();
-        try {
-            if (!entityTransaction.isActive()) {
-                entityTransaction.begin();
-            }
-            StoredProcedureQuery query = entityManager.createStoredProcedureQuery("pgetWT_Reg");
-            query.registerStoredProcedureParameter("pRegId", String.class, ParameterMode.IN);
-            query.setParameter("pRegId", pRegId);
-            query.execute();
-            result = query.getResultList();
-            entityTransaction.commit();
-        } catch (Exception e) {
-            logger.error(e.toString());
-            if (entityTransaction.isActive()) {
-                entityTransaction.rollback();
-            }
-        }
-        return result;
-    }
-
-    public List<Object[]> getMaxL(String pPlant, String pWbid, String pBs) {
-        List<Object[]> result = new ArrayList();
-        EntityManager entityManager = JPAConnector.getInstance();
-        EntityTransaction entityTransaction = entityManager.getTransaction();
-        try {
-            if (entityTransaction.isActive()) {
-                entityTransaction.begin();
-            }
-            StoredProcedureQuery query = entityManager.createStoredProcedureQuery("pGetMaxL");
-            query.registerStoredProcedureParameter("pPlant", String.class, ParameterMode.IN);
-            query.registerStoredProcedureParameter("pWbid", String.class, ParameterMode.IN);
-            query.registerStoredProcedureParameter("pBs", String.class, ParameterMode.IN);
-            query.setParameter("pPlant", pPlant);
-            query.setParameter("pWbid", pWbid);
-            query.setParameter("pBs", pBs);
-            query.execute();
-            result = query.getResultList();
-            entityTransaction.commit();
-        } catch (Exception e) {
-            logger.error(e.toString());
-            if (entityTransaction.isActive()) {
-                entityTransaction.rollback();
-            }
-        }
-        return result;
-    }
-
-    public List<Object[]> getMaxLLock(String pPlant, String pWbid, String pBs) {
-        List<Object[]> result = new ArrayList();
-        EntityManager entityManager = JPAConnector.getInstance();
-        EntityTransaction entityTransaction = entityManager.getTransaction();
-        try {
-            if (entityTransaction.isActive()) {
-                entityTransaction.begin();
-            }
-            StoredProcedureQuery query = entityManager.createStoredProcedureQuery("pGetMaxLLock");
-            query.registerStoredProcedureParameter("pPlant", String.class, ParameterMode.IN);
-            query.registerStoredProcedureParameter("pWbid", String.class, ParameterMode.IN);
-            query.registerStoredProcedureParameter("pBs", String.class, ParameterMode.IN);
-            query.setParameter("pPlant", pPlant);
-            query.setParameter("pWbid", pWbid);
-            query.setParameter("pBs", pBs);
-            query.execute();
-            result = query.getResultList();
-            entityTransaction.commit();
-        } catch (Exception e) {
-            logger.error(e.toString());
-            if (entityTransaction.isActive()) {
-                entityTransaction.rollback();
-            }
-        }
-        return result;
-    }
-
     public String getSoNiemXa(String pWtId) {
         String soNiemXa = null;
         EntityManager entityManager = JPAConnector.getInstance();
-        EntityTransaction entityTransaction = entityManager.getTransaction();
         try {
-            if (entityTransaction.isActive()) {
-                entityTransaction.begin();
-            }
-            StoredProcedureQuery query = entityManager.createStoredProcedureQuery("pgetWT_NiemXa");
+            StoredProcedureQuery query = entityManager.createStoredProcedureQuery("p_get_niem_xa");
             query.registerStoredProcedureParameter("pWtId", String.class, ParameterMode.IN);
             query.setParameter("pWtId", pWtId);
             query.execute();
@@ -161,12 +33,8 @@ public class WeightTicketRepository {
                 Object[] firstRow = result.get(0);
                 soNiemXa = firstRow[0].toString();
             }
-            entityTransaction.commit();
         } catch (Exception e) {
             logger.error(e.toString());
-            if (entityTransaction.isActive()) {
-                entityTransaction.rollback();
-            }
         }
         return soNiemXa;
     }

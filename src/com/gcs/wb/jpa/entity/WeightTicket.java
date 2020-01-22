@@ -234,8 +234,14 @@ public class WeightTicket implements Serializable {
     private Date updatedDate;
     @Column(name = "deleted_date")
     private Date deletedDate;
+    @Column(name = "posto")
+    private String posto;
 
     public WeightTicket() {
+    }
+    
+    public WeightTicket(int id) {
+        this.id = id;
     }
 
     public WeightTicket(int id, String mandt, String wplant, int seqDay) {
@@ -717,6 +723,14 @@ public class WeightTicket implements Serializable {
     
     public void setPosted(boolean isPosted) {
         this.status = isPosted ? Constants.WeightTicket.STATUS_POSTED : null;
+    }
+
+    public String getPosto() {
+        return posto;
+    }
+
+    public void setPosto(String posto) {
+        this.posto = posto;
     }
 
     @Override
