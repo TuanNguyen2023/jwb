@@ -1,16 +1,6 @@
 <?xml version="1.1" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JInternalFrameFormInfo">
-  <NonVisualComponents>
-    <Component class="javax.persistence.EntityManager" name="entityManager">
-      <Properties>
-        <Property name="persistenceUnit" type="java.lang.String" value="pu"/>
-      </Properties>
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="WeighBridgeApp.getApplication().getEm()"/>
-      </AuxValues>
-    </Component>
-  </NonVisualComponents>
   <Properties>
     <Property name="closable" type="boolean" value="true"/>
     <Property name="maximizable" type="boolean" value="true"/>
@@ -40,7 +30,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
                   <Component id="pnFilter" alignment="0" max="32767" attributes="0"/>
-                  <Component id="spnResult" alignment="0" pref="638" max="32767" attributes="0"/>
+                  <Component id="spnResult" alignment="0" pref="642" max="32767" attributes="0"/>
                   <Component id="btnPrintReport" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -53,7 +43,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="pnFilter" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
-              <Component id="spnResult" pref="230" max="32767" attributes="0"/>
+              <Component id="spnResult" pref="250" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="btnPrintReport" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
@@ -81,14 +71,14 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="lblFrom" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="dpDateFrom" min="-2" max="-2" attributes="0"/>
+                  <Component id="dpDateFrom" min="-2" pref="160" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="lblTo" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="dpDateTo" min="-2" max="-2" attributes="0"/>
+                  <Component id="dpDateTo" min="-2" pref="160" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="btnFilter" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="198" max="32767" attributes="0"/>
+                  <EmptySpace pref="106" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -122,6 +112,9 @@
             </Property>
             <Property name="name" type="java.lang.String" value="dpDateFrom" noResource="true"/>
           </Properties>
+          <Events>
+            <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="dpDateFromPropertyChange"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lblTo">
           <Properties>
@@ -136,6 +129,10 @@
             </Property>
             <Property name="name" type="java.lang.String" value="dpDateTo" noResource="true"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="dpDateToActionPerformed"/>
+            <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="dpDateToPropertyChange"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnFilter">
           <Properties>

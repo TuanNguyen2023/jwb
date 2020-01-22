@@ -24,7 +24,7 @@ public class DailyReportService {
 
     AppConfig appConfig = WeighBridgeApp.getApplication().getConfig();
     WeightTicketJpaController weightTicketJpaController = new WeightTicketJpaController();
-    Object[] wtColNames = Constants.DailyReport.wtColNames;
+    Object[] wtColNames = Constants.DailyReport.WT_COL_NAMES;
 
     public List<WeightTicket> findByCreateDateRange(JXDatePicker dpDateFrom, JXDatePicker dpDateTo) {
 

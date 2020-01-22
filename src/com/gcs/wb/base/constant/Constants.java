@@ -40,7 +40,7 @@ public class Constants {
 
     public static class DailyReport {
 
-        public static final Object[] wtColNames = new String[]{
+        public static final Object[] WT_COL_NAMES = new String[]{
             "STT",
             "Số đăng tài",
             "Tên tài xế",
@@ -58,11 +58,10 @@ public class Constants {
             "T.L Hàng",
             "Số DO",
             "Số chứng từ SAP",
-            "Hủy",
             "SAP Posted",
             "DVVC",
             "Số P.O"};
-        public static final Class[] wtColTypes = new Class[]{
+        public static final Class[] WT_COL_TYPES = new Class[]{
             Integer.class,
             Long.class,
             String.class,
@@ -80,55 +79,6 @@ public class Constants {
             BigDecimal.class,
             String.class,
             String.class,
-            Boolean.class,
-            Boolean.class,
-            String.class,
-            String.class};
-    }
-
-    public static class WTList {
-
-        public static final Object[] wtCols = new String[]{
-            "STT",
-            "S.Đ.Tài",
-            "Tên tài xế",
-            "CMND/BL",
-            "Số Xe",
-            "Số Rơmoóc",
-            "Người tạo",
-            "Ngày giờ tạo",
-            "Nhập/Xuất(I/O)",
-            "Loại hàng",
-            "Ngày giờ vào",
-            "T.L vào",
-            "Ngày giờ ra",
-            "T.L ra",
-            "T.L Hàng",
-            "Số D.O",
-            "Số chứng từ SAP",
-            "Hủy",
-            "SAP Posted",
-            "Đơn vị vân chuyển",
-            "Số P.O"};
-        public static final Class[] wtTypes = new Class[]{
-            Integer.class,
-            Integer.class,
-            String.class,
-            String.class,
-            String.class,
-            String.class,
-            String.class,
-            Date.class,
-            Character.class,
-            String.class,
-            Date.class,
-            BigDecimal.class,
-            Date.class,
-            BigDecimal.class,
-            BigDecimal.class,
-            String.class,
-            String.class,
-            Boolean.class,
             Boolean.class,
             String.class,
             String.class};
@@ -181,7 +131,7 @@ public class Constants {
 
     public static final class WeightTicketReport {
 
-        public static final Object[] wtColNames = new String[]{
+        public static final Object[] WT_COL_NAMES = new String[]{
             "STT",
             "S.Đ.Tài",
             "Tên tài xế",
@@ -202,7 +152,7 @@ public class Constants {
             "SAP Posted",
             "DVVC",
             "Số P.O"};
-        public static final Class[] wtColTypes = new Class[]{
+        public static final Class[] WT_COL_TYPES = new Class[]{
             Integer.class,
             Integer.class,
             String.class,
@@ -223,7 +173,7 @@ public class Constants {
             Boolean.class,
             String.class,
             String.class};
-        public static final String[] modesModel = {"Tất cả", "Nhập", "Xuất"};
-        public static final String[] statusModel = {"Tất cả", "Hoàn tất"};
+        public static final String[] MODES_MODEL = {"Tất cả", "Nhập", "Xuất"};
+        public static final String[] STATUS_MODEL = {"Tất cả", "Hoàn tất"};
     }
 }

@@ -43,11 +43,11 @@ public class WeightTicketReportView extends javax.swing.JInternalFrame {
     private static Logger logger = Logger.getLogger(WeightTicketReportView.class);
     private boolean[] editable = null;
     private List<Character> modes = null;
-    private String[] modesModel = Constants.WeightTicketReport.modesModel;
-    private String[] statusModel = Constants.WeightTicketReport.statusModel;
+    private String[] modesModel = Constants.WeightTicketReport.MODES_MODEL;
+    private String[] statusModel = Constants.WeightTicketReport.STATUS_MODEL;
     Object[][] wtDatas = null;
-    Object[] wtColNames = Constants.WeightTicketReport.wtColNames;
-    Class[] wtColTypes = Constants.WeightTicketReport.wtColTypes;
+    Object[] wtColNames = Constants.WeightTicketReport.WT_COL_NAMES;
+    Class[] wtColTypes = Constants.WeightTicketReport.WT_COL_TYPES;
     public ResourceMap resourceMapMsg = Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(WeightTicketReportView.class);
     
     /** Creates new form WeightTicketReportView */

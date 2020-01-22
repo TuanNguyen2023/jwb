@@ -24,7 +24,7 @@ public class WeightTicketReportService {
 
     private TransportAgentRepository transportAgentRepository = new TransportAgentRepository();
     private MaterialRepository materialRepository = new MaterialRepository();
-    private Object[] wtColNames = Constants.WeightTicketReport.wtColNames;
+    private Object[] wtColNames = Constants.WeightTicketReport.WT_COL_NAMES;
 
     public List<Character> getModeItemStateChanged(List<Character> modes, int mode) {
         modes = new ArrayList<>();

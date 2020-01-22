@@ -25,7 +25,7 @@ import org.jdesktop.swingx.JXDatePicker;
 public class DailyReportController {
 
     DailyReportService dailyReportService = new DailyReportService();
-    Object[] wtColNames = Constants.DailyReport.wtColNames;
+    Object[] wtColNames = Constants.DailyReport.WT_COL_NAMES;
     AppConfig appConfig = WeighBridgeApp.getApplication().getConfig();
     JReportService jreportService = new JReportService();
 
@@ -105,14 +105,13 @@ public class DailyReportController {
             wtDatas[i][14] = weightTicket.getGQty();
             wtDatas[i][15] = weightTicket.getDeliveryOrderNo();
             wtDatas[i][16] = weightTicket.getMatDoc();
-            wtDatas[i][17] = weightTicket.isDissolved();
             if (weightTicket.isPosted()) {
-                wtDatas[i][18] = true;
+                wtDatas[i][17] = true;
             } else {
-                wtDatas[i][18] = false;
+                wtDatas[i][17] = false;
             }
-            wtDatas[i][19] = weightTicket.getEbeln();
-            wtDatas[i][20] = "";
+            wtDatas[i][18] = weightTicket.getEbeln();
+            wtDatas[i][19] = "";
         }
         return wtDatas;
     }
