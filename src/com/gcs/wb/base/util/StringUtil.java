@@ -24,7 +24,7 @@ public class StringUtil {
     }
 
     public static boolean isEmptyString(String input){
-        return StringUtils.isEmpty(input) && StringUtils.isEmpty(input.trim());
+        return StringUtils.isEmpty(input) || StringUtils.isEmpty(input.trim());
     }
 
     public static boolean isNotEmptyString(String input){
