@@ -3849,7 +3849,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                     weightTicket.setFCreator(WeighBridgeApp.getApplication().getCurrent_user());
                 }
                 weightTicket.setFScale(new BigDecimal(((Number) txfInQty.getValue()).doubleValue()));
-                weightTicket.setFTime((java.sql.Date) now);
+                weightTicket.setFTime(new java.sql.Date(now.getTime()));
                 lblIScale.setForeground(Color.black);
                 OutboundDetail item = null;
                 if (outDetails_lits.size() > 0) {
@@ -3872,7 +3872,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                     weightTicket.setSCreator(WeighBridgeApp.getApplication().getCurrent_user());
                 }
                 weightTicket.setSScale(new BigDecimal(((Number) txfOutQty.getValue()).doubleValue()));
-                weightTicket.setSTime((java.sql.Date) now);
+                weightTicket.setSTime(new java.sql.Date(now.getTime()));
                 lblOScale.setForeground(Color.black);
                 OutboundDetail item = null;
                 double remain = ((Number) txfCurScale.getValue()).doubleValue() - ((Number) txfInQty.getValue()).doubleValue();
