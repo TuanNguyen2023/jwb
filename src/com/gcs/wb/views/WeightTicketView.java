@@ -3800,7 +3800,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
                         if ((lower <= result && result <= upper)) {
                             txfGoodsQty.setValue(result);
-                            weightTicket.setGQty(new BigDecimal(result));
+                            weightTicket.setGQty(new BigDecimal(Double.toString(result)));
                         } else {
                             String msg = null;
                             try {
@@ -3820,14 +3820,14 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                         }
                     } else {
                         txfGoodsQty.setValue(result);
-                        weightTicket.setGQty(new BigDecimal(result));
+                        weightTicket.setGQty(new BigDecimal(Double.toString(result)));
                     }
                 } else if (isSubContract() && weightTicket.getLgort() != null && weightTicket.getCharg() != null) {
                     setMessage(resourceMapMsg.getString("msg.checkIssetWarehouse")); // checking stock --tuanna
                     Double remaining = CheckMatStock(weightTicket.getMatnrRef(), config.getwPlant(), weightTicket.getLgort(), weightTicket.getCharg());
                     if (result <= remaining) {
                         txfGoodsQty.setValue(result);
-                        weightTicket.setGQty(new BigDecimal(result));
+                        weightTicket.setGQty(new BigDecimal(Double.toString(result)));
                     } else {
                         JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.oBiggerWarehouse"));
                         txfOutQty.setValue(null);
@@ -3837,7 +3837,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                     }
                 } else {
                     txfGoodsQty.setValue(result);
-                    weightTicket.setGQty(new BigDecimal(result));
+                    weightTicket.setGQty(new BigDecimal(Double.toString(result)));
                 }
             }
             if (isStage1()) {
