@@ -2487,17 +2487,17 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             }
         } else if (newWeightTicket != null) {
             //Do local check for entered Truck's License Plate
-            Vehicle vehicle = vehicleRepository.findByPlateNo(newWeightTicket.getPlateNo());
+            Vehicle vehicle = vehicleRepository.findByPlateNo(txtPlateNo.getText().trim());
 
             if (vehicle == null) {
                 result = false;
-                JOptionPane.showMessageDialog(rootPane, "Số xe \" " + newWeightTicket.getPlateNo()
+                JOptionPane.showMessageDialog(rootPane, "Số xe \" " + txtPlateNo.getText().trim()
                         + " \" chưa được đăng ký để xuất/nhập hàng!");
             } else {
                 result = true;
                 if (vehicle.isProhibit()) {
                     result = false;
-                    JOptionPane.showMessageDialog(rootPane, "Số xe \" " + newWeightTicket.getPlateNo()
+                    JOptionPane.showMessageDialog(rootPane, "Số xe \" " + txtPlateNo.getText().trim()
                             + " \" đang bị cấm xuất/nhập hàng!");
                 }
 
