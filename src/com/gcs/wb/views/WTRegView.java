@@ -61,6 +61,7 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyEvent;
 import java.util.Date;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 
 /**
  *
@@ -74,6 +75,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
     public double dKldk = 0;
     WTRegRepository wTRegRepository = new WTRegRepository();
     EntityManager entityManager = JPAConnector.getInstance();
+    EntityTransaction entityTransaction = entityManager.getTransaction();
     MaterialRepository materialRepository = new MaterialRepository();
     WeightTicketRepository weightTicketRepository = new WeightTicketRepository();
     CustomerRepository customerRepository = new CustomerRepository();
@@ -1392,14 +1394,12 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     wtData[i][9] = item.getCreator();
                     wtData[i][10] = item.getSeqMonth();
 
-                    Calendar create_date = Calendar.getInstance();
-                    create_date.setTime(item.getCreatedDate());
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                    wtData[i][11] = dateFormat;
-
-                    String hh = item.getCreatedTime().substring(0, 2);
-                    String mm = item.getCreatedTime().substring(3, 5);
-                    String ss = item.getCreatedTime().substring(6, 8);
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");                    
+                    wtData[i][11] = dateFormat.format(item.getCreatedDate());
+                    String time = item.getCreatedTime().replaceAll(":","");
+                    String hh = time.substring(0, 2);
+                    String mm = time.substring(2, 4);
+                    String ss = time.substring(4, 6);
                     wtData[i][12] = hh + ":" + mm + ":" + ss;
                     wtData[i][13] = item.isDissolved();
                     if (item.isPosted()) {
@@ -2112,7 +2112,6 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
         @Override
         protected Object doInBackground() {
-
             WeightTicketJpaController wCon = new WeightTicketJpaController();
             Date now = wCon.getServerDate();
 
@@ -2122,47 +2121,51 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             }
             SimpleDateFormat formatter = new SimpleDateFormat();
             AppConfig sap = WeighBridgeApp.getApplication().getConfig();
-            int seqBDay = wCon.getNewSeqBDay();
-            int seqBMonth = wCon.getNewSeqBMonth();
+            int seqBDay = wCon.getNewSeqBDay() + 1;
+            int seqBMonth = wCon.getNewSeqBMonth() + 1;
 
-            formatter.applyPattern("yyMMddHHmm");
-            String id = formatter.format(now);
+            //formatter.applyPattern("yyMMddHHmm");
+            //String id = formatter.format(now);
 
             formatter.applyPattern("yyyy");
             //   if (entityManager.
-            String sPlant = "";
+            //String sPlant = "";
 
-            sPlant = WeighBridgeApp.getApplication().getConfig().getwPlant().toString();
-            Calendar currdate = Calendar.getInstance();
-            String yearplus = "";
-            int y = 0;
-            String nam = id.substring(0, 2);
-            String pWbId = WeighBridgeApp.getApplication().getConfig().getWbId().trim();
+            // sPlant = WeighBridgeApp.getApplication().getConfig().getwPlant().toString();
+            //Calendar currdate = Calendar.getInstance();
+            //String yearplus = "";
+            //int y = 0;
+            //String nam = id.substring(0, 2);
+            //String pWbId = WeighBridgeApp.getApplication().getConfig().getWbId().trim();
 
-            int iplus = wTRegRepository.getTicketInCre(pWbId);
+            //int iplus = wTRegRepository.getTicketInCre(pWbId);
 
-            y = Integer.parseInt(nam) + iplus;
-            id = Integer.toString(y) + id.substring(2, id.length());
+            //y = Integer.parseInt(nam) + iplus;
+            //id = Integer.toString(y) + id.substring(2, id.length());
             int year = Integer.parseInt(formatter.format(now));
-            String sId = id + String.format("%03d", seqBDay);
-            int iCount = wTRegRepository.checkExist(sId);
-            if (iCount > 0) {
-                seqBDay = seqBDay + iCount;
-            }
+            //String sId = id + String.format("%03d", seqBDay);
+            //int iCount = wTRegRepository.checkExist(sId);
+            //if (iCount > 0) {
+            //    seqBDay = seqBDay + iCount;
+            //}
 //            newWeightTicket.setId(Integer.parseInt(id));
             newWeightTicket.setMandt(sap.getsClient());
-            newWeightTicket.setWplant(sap.getwPlant().toString());
+            newWeightTicket.setWplant(sap.getwPlant());
             newWeightTicket.setSeqDay(seqBDay);
             newWeightTicket.setSeqMonth(seqBMonth);
-            newWeightTicket.setCreatedDate((java.sql.Date) now);
-            formatter.applyPattern("HHmmss");
+            newWeightTicket.setCreatedDate(new java.sql.Date(now.getTime()));
+            formatter.applyPattern("HH:mmss");
             newWeightTicket.setCreatedTime(formatter.format(now));
             newWeightTicket.setCreator(WeighBridgeApp.getApplication().getLogin().getUid());
             newWeightTicket.setOfflineMode(WeighBridgeApp.getApplication().isOfflineMode());
             newWeightTicket.setRegType(rbtNInward.isSelected() ? 'I' : 'O');
+            newWeightTicket.setRegItemDescription(txtNMaterial.getText().trim());
             newWeightTicket.setRegItemQuantity(new BigDecimal(((Number) txtNWeight.getValue()).doubleValue()));
-            newWeightTicket.setWbId(sap.getWbId().toString());
+            newWeightTicket.setWbId(sap.getWbId());
             newWeightTicket.setAbbr(abbr);
+            newWeightTicket.setPlateNo(txtNPlateNo.getText().trim());
+            newWeightTicket.setDriverIdNo(txtNCMNDBL.getText().trim());
+            newWeightTicket.setDriverName(txtNDriverName.getText().trim());
 //            System.out.println(WeighBridgeApp.getApplication().isOfflineMode());
 //            if(WeighBridgeApp.getApplication().isOfflineMode()){
             newWeightTicket.setDocYear(year);
@@ -2210,12 +2213,12 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                             while (n.length() < 3) {
                                 n = zero.concat(n);
                             }
-                            item.setWtId(id + n);
-                            if (!entityManager.getTransaction().isActive()) {
-                                entityManager.getTransaction().begin();
+                            //item.setWtId(id + n);
+                            if (!entityTransaction.isActive()) {
+                                entityTransaction.begin();
                             }
                             entityManager.merge(item);
-                            entityManager.getTransaction().commit();
+                            entityTransaction.commit();
                         }
                     }
                 }
@@ -2224,18 +2227,24 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 newWeightTicket.setCreator(WeighBridgeApp.getApplication().getCurrent_user());
             }
             setMessage(resourceMapMsg.getString("msg.saveData"));
-            if (!entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().begin();
+            try {
+                if (!entityTransaction.isActive()) {
+                    entityTransaction.begin();
+                }
+                entityManager.persist(newWeightTicket);
+            entityTransaction.commit();
+            } catch (Exception ex) {
+                if (entityTransaction.isActive()) {
+                    entityTransaction.rollback();
+                }
+                throw ex;
             }
-            entityManager.persist(newWeightTicket);
-            entityManager.getTransaction().commit();
-
 
 
             try {
                 setMessage(resourceMapMsg.getString("msg.printing"));
-                txtWeightTicketNo.setText(newWeightTicket.getId()
-                        + String.format("%03d", newWeightTicket.getSeqDay())); //+20100303
+                txtWeightTicketNo.setText(newWeightTicket.getId() + "");
+                        //+ String.format("%03d", newWeightTicket.getSeqDay())); //+20100303
 
                 // tuanna -  update tai trong vao phieu can 
                 //  newWeightTicket.get
@@ -2487,17 +2496,17 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             }
         } else if (newWeightTicket != null) {
             //Do local check for entered Truck's License Plate
-            Vehicle vehicle = vehicleRepository.findByPlateNo(txtPlateNo.getText().trim());
+            Vehicle vehicle = vehicleRepository.findByPlateNo(txtNPlateNo.getText().trim());
 
             if (vehicle == null) {
                 result = false;
-                JOptionPane.showMessageDialog(rootPane, "Số xe \" " + txtPlateNo.getText().trim()
+                JOptionPane.showMessageDialog(rootPane, "Số xe \" " + txtNPlateNo.getText().trim()
                         + " \" chưa được đăng ký để xuất/nhập hàng!");
             } else {
                 result = true;
                 if (vehicle.isProhibit()) {
                     result = false;
-                    JOptionPane.showMessageDialog(rootPane, "Số xe \" " + txtPlateNo.getText().trim()
+                    JOptionPane.showMessageDialog(rootPane, "Số xe \" " + txtNPlateNo.getText().trim()
                             + " \" đang bị cấm xuất/nhập hàng!");
                 }
 
@@ -2511,7 +2520,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
 
     private void cleanData() {
-        newWeightTicket = null;
+        newWeightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
         outbDel = null;
         txtNDriverName.setText("");
         txtNCMNDBL.setText("");

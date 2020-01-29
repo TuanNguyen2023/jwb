@@ -55,7 +55,7 @@ public class WeightTicketJpaRepository {
             if (entityManager != null) {
                 EntityTransaction entityTransaction = entityManager.getTransaction();
                 entityTransaction.begin();
-                StoredProcedureQuery query = entityManager.createStoredProcedureQuery("getCountTicketDay");
+                StoredProcedureQuery query = entityManager.createStoredProcedureQuery("p_get_weight_ticket_seq_day");
                 query.registerStoredProcedureParameter("pWplant", String.class, ParameterMode.IN);
                 query.setParameter("pWplant", plant);
                 query.execute();
@@ -79,7 +79,7 @@ public class WeightTicketJpaRepository {
             if (entityManager != null) {
                 EntityTransaction entityTransaction = entityManager.getTransaction();
                 entityTransaction.begin();
-                StoredProcedureQuery query = entityManager.createStoredProcedureQuery("getCountTicketMonth");
+                StoredProcedureQuery query = entityManager.createStoredProcedureQuery("[p_get_weight_ticket_seq_month]");
                 query.registerStoredProcedureParameter("pWplant", String.class, ParameterMode.IN);
                 query.setParameter("pWplant", plant);
                 query.execute();

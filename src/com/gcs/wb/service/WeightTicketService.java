@@ -232,7 +232,7 @@ public class WeightTicketService {
             return stWT;
         }
         String tempWTID = new Integer(wt.getId()).toString();
-        tempWTID = tempWTID.concat(StringUtil.paddingZero(String.valueOf(weightTicket.getSeqDay()), 3));
+        //tempWTID = tempWTID.concat(StringUtil.paddingZero(String.valueOf(weightTicket.getSeqDay()), 3));
         stWT = new GoodsMvtWeightTicketStructure(weightTicket.getWplant(),
                 weightTicket.getWbId(),
                 tempWTID);
