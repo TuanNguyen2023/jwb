@@ -71,10 +71,11 @@ public class WeightTicketReportService {
         List<WeightTicket> weightTickets = weightTicketJpaController.findListWTs(month, year, tAgent, matnr, modes, status == 1);
         wtDatas = new Object[weightTickets.size()][wtColNames.length];
         for (int i = 0; i < weightTickets.size(); i++) {
-            WeightTicket item = weightTickets.get(i);
-            String hh = item.getCreatedTime().substring(0, 2);
-            String mm = item.getCreatedTime().substring(3, 5);
-            String ss = item.getCreatedTime().substring(6, 8);
+            WeightTicket item = weightTickets.get(i);            
+            String time = item.getCreatedTime().replaceAll(":","");
+            String hh = time.substring(0, 2);
+            String mm = time.substring(2, 4);
+            String ss = time.substring(4, 6);
             Calendar create_date = Calendar.getInstance();
             create_date.setTime(item.getCreatedDate());
             create_date.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hh));

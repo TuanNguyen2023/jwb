@@ -64,9 +64,10 @@ public class DailyReportController {
 
         for (int i = 0; i < weightTicketList.size(); i++) {
             WeightTicket weightTicket = weightTicketList.get(i);
-            String hh = weightTicket.getCreatedTime().substring(0, 2);
-            String mm = weightTicket.getCreatedTime().substring(3, 5);
-            String ss = weightTicket.getCreatedTime().substring(6, 8);
+            String time = weightTicket.getCreatedTime().replaceAll(":","");
+            String hh = time.substring(0, 2);
+            String mm = time.substring(2, 4);
+            String ss = time.substring(4, 6);
             Calendar create_date = Calendar.getInstance();
             create_date.setTime(weightTicket.getCreatedDate());
             create_date.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hh));

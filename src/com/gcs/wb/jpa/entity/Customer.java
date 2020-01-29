@@ -34,8 +34,6 @@ public class Customer implements Serializable {
     private int id;
     @Column(name = "mandt")
     private String mandt;
-    @Column(name = "wplant")
-    private String wplant;
     @Column(name = "kunnr", unique = true)
     private String kunnr;
     @Column(name = "name1")
@@ -70,14 +68,6 @@ public class Customer implements Serializable {
 
     public void setMandt(String mandt) {
         this.mandt = mandt;
-    }
-
-    public String getWplant() {
-        return wplant;
-    }
-
-    public void setWplant(String wplant) {
-        this.wplant = wplant;
     }
 
     public String getKunnr() {
@@ -144,7 +134,6 @@ public class Customer implements Serializable {
     public int hashCode() {
         int result = (int) (id ^ (id >>> 31));
         result = 31 * result + (mandt != null ? mandt.hashCode() : 0);
-        result = 31 * result + (wplant != null ? wplant.hashCode() : 0);
         result = 31 * result + (kunnr != null ? kunnr.hashCode() : 0);
         result = 31 * result + (name1 != null ? name1.hashCode() : 0);
         result = 31 * result + (name2 != null ? name2.hashCode() : 0);

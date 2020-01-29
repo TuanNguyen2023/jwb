@@ -37,8 +37,6 @@ public class Vendor implements Serializable {
     private String lifnr;
     @Column(name = "mandt")
     private String mandt;
-    @Column(name = "wplant")
-    private String wplant;
     @Column(name = "name1")
     private String name1;
     @Column(name = "name2")
@@ -79,14 +77,6 @@ public class Vendor implements Serializable {
 
     public void setMandt(String mandt) {
         this.mandt = mandt;
-    }
-
-    public String getWplant() {
-        return wplant;
-    }
-
-    public void setWplant(String wplant) {
-        this.wplant = wplant;
     }
 
     public String getName1() {
@@ -150,7 +140,6 @@ public class Vendor implements Serializable {
         int result = (int) (id ^ (id >>> 31));
         result = 31 * result + (lifnr != null ? lifnr.hashCode() : 0);
         result = 31 * result + (mandt != null ? mandt.hashCode() : 0);
-        result = 31 * result + (wplant != null ? wplant.hashCode() : 0);
         result = 31 * result + (name1 != null ? name1.hashCode() : 0);
         result = 31 * result + (name2 != null ? name2.hashCode() : 0);
         result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
