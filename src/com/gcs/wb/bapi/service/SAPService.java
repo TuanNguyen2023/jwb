@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.swing.DefaultComboBoxModel;
 import org.hibersap.session.Session;
 
@@ -56,6 +57,7 @@ import org.hibersap.session.Session;
 public class SAPService {
     BatchStockRepository batchStockRepository = new BatchStockRepository();
     EntityManager entityManager = JPAConnector.getInstance();
+    EntityTransaction entityTransaction = entityManager.getTransaction();
     JPAService jpaService = new JPAService();
     AppConfig config = WeighBridgeApp.getApplication().getConfig();
     //org.hibersap.session.Session session = WeighBridgeApp.getApplication().getSAPSession();
@@ -91,8 +93,9 @@ public class SAPService {
         }
 
         //sync DB SAP
-        if (!entityManager.getTransaction().isActive()) {
-            entityManager.getTransaction().begin();
+        entityTransaction = entityManager.getTransaction();
+        if (!entityTransaction.isActive()) {
+            entityTransaction.begin();
         }
         //update for remove DB
         for (Material mat : materialsDB) {
@@ -110,7 +113,7 @@ public class SAPService {
                 entityManager.merge(mSap);
             }
         }
-        entityManager.getTransaction().commit();
+        entityTransaction.commit();
         entityManager.clear();
     }
 
@@ -139,9 +142,10 @@ public class SAPService {
             }
         } catch (Exception ex) {
         }
-
-        if (!entityManager.getTransaction().isActive()) {
-            entityManager.getTransaction().begin();
+        
+        entityTransaction = entityManager.getTransaction();
+        if (!entityTransaction.isActive()) {
+            entityTransaction.begin();
         }
         
         // update remove DB
@@ -162,7 +166,7 @@ public class SAPService {
             }
         }
         
-        entityManager.getTransaction().commit();
+        entityTransaction.commit();
         entityManager.clear();
         
         // return data
@@ -195,20 +199,20 @@ public class SAPService {
         if (dos.size() > 0) {
             // <editor-fold defaultstate="collapsed" desc="Fill D.O Data">
             //check do detail exist
-            EntityManager em_check = WeighBridgeApp.getApplication().getEm();
+            entityTransaction = entityManager.getTransaction();
             WeightTicketJpaController con_check = new WeightTicketJpaController();
             List<OutboundDetail> outb_detail_check;
             if (refresh == true) {
                 try {
                     outb_detail_check = con_check.findByMandtDelivNumb(number);
                     if (outb_detail_check.size() > 0) {
-                        em_check.getTransaction().begin();
+                        entityTransaction.begin();
                         
                         for (int i = 0; i < outb_detail_check.size(); i++) {
-                            em_check.remove(outb_detail_check.get(i));
+                            entityManager.remove(outb_detail_check.get(i));
                         }
-                        em_check.getTransaction().commit();
-                        em_check.clear();
+                        entityTransaction.commit();
+                        entityManager.clear();
                     }
                 } catch (Exception ex) {
                     Logger.getLogger(SAPService.class.getName()).log(Level.SEVERE, null, ex);
@@ -280,11 +284,11 @@ public class SAPService {
                 //end set data
                 //save database
                 if (flag_detail == true) {
-                    EntityManager em = WeighBridgeApp.getApplication().getEm();
-                    em.getTransaction().begin();
-                    em.merge(outb_details);
-                    em.getTransaction().commit();
-                    em.clear();
+                    entityTransaction = entityManager.getTransaction();
+                    entityTransaction.begin();
+                    entityManager.merge(outb_details);
+                    entityTransaction.commit();
+                    entityManager.clear();
                 }
                 //end
                 //only get number item dong dau
@@ -296,19 +300,19 @@ public class SAPService {
                     }
                 }
 
-                outb.setErdat((java.sql.Date) doItem.getErdat());
+                outb.setErdat(new java.sql.Date(doItem.getErdat().getTime()));
                 outb.setLfart(doItem.getLfart());
 
-                outb.setWadat((java.sql.Date) doItem.getWadat());
-                outb.setLddat((java.sql.Date) doItem.getLddat());
-                outb.setKodat((java.sql.Date) doItem.getKodat());
+                outb.setWadat(new java.sql.Date(doItem.getWadat().getTime()));
+                outb.setLddat(new java.sql.Date(doItem.getLddat().getTime()));
+                outb.setKodat(new java.sql.Date(doItem.getKodat().getTime()));
                 outb.setLifnr(doItem.getLifnr());
                 outb.setKunnr(doItem.getKunnr());
                 outb.setKunag(doItem.getKunag());
                 outb.setTraty(doItem.getTraty());
                 outb.setTraid(doItem.getTraid());
 
-                outb.setBldat((java.sql.Date) doItem.getBldat());
+                outb.setBldat(new java.sql.Date(doItem.getBldat().getTime()));
                 if(outb.getMatnr() == null || outb.getMatnr().trim().isEmpty()) {
                     outb.setMatnr(doItem.getMatnr());
                 }
@@ -496,8 +500,9 @@ public class SAPService {
         } catch (Exception ex) {
         }
         //sync data
-        if (!entityManager.getTransaction().isActive()) {
-            entityManager.getTransaction().begin();
+        entityTransaction = entityManager.getTransaction();
+        if (!entityTransaction.isActive()) {
+            entityTransaction.begin();
         }
         //case delete
         for(BatchStock b: batchs) {
@@ -516,7 +521,7 @@ public class SAPService {
             }
         }
 
-        entityManager.getTransaction().commit();
+        entityTransaction.commit();
         entityManager.clear();
     }
     
@@ -581,8 +586,9 @@ public class SAPService {
         } catch (Exception ex) {
         }
         // sync data
-        if (!entityManager.getTransaction().isActive()) {
-            entityManager.getTransaction().begin();
+        entityTransaction = entityManager.getTransaction();
+        if (!entityTransaction.isActive()) {
+            entityTransaction.begin();
         }
         // update case delete
         for(SLoc slocD: slocDBs) {
@@ -601,7 +607,7 @@ public class SAPService {
             }
         }
         
-        entityManager.getTransaction().commit();
+        entityTransaction.commit();
         entityManager.clear();
         // set data
         slocDBs = jpaService.getSlocList();

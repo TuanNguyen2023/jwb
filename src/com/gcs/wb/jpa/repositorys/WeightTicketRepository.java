@@ -40,7 +40,7 @@ public class WeightTicketRepository {
     }
 
     public WeightTicket findByDeliveryOrderNo(String deliverNumber) {
-        WeightTicket weightTicket = new WeightTicket();
+        WeightTicket weightTicket = null;
         List<WeightTicket> list = getListByDeliveryOrderNo(deliverNumber);
         if (list != null && list.size() > 0) {
             weightTicket = list.get(0);

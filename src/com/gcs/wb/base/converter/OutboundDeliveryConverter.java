@@ -138,19 +138,19 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
                         flag = false;
                     }
                 }
-                outb.setErdat((java.sql.Date) doItem.getErdat());
+                outb.setErdat(new java.sql.Date(doItem.getErdat().getTime()));
                 outb.setLfart(doItem.getLfart());
                 //autlf
-                outb.setWadat((java.sql.Date) doItem.getWadat());
-                outb.setLddat((java.sql.Date) doItem.getLddat());
-                outb.setKodat((java.sql.Date) doItem.getKodat());
+                outb.setWadat(new java.sql.Date(doItem.getWadat().getTime()));
+                outb.setLddat(new java.sql.Date(doItem.getLddat().getTime()));
+                outb.setKodat(new java.sql.Date(doItem.getKodat().getTime()));
                 //outb.setShipPoint(doItem.getVstel());
                 outb.setLifnr(doItem.getLifnr());
                 outb.setKunnr(doItem.getKunnr());
                 outb.setKunag(doItem.getKunag());
                 outb.setTraty(doItem.getTraty());
                 outb.setTraid(doItem.getTraid());
-                outb.setBldat((java.sql.Date) doItem.getBldat());
+                outb.setBldat(new java.sql.Date(doItem.getBldat().getTime()));
                 if (outb.getMatnr() == null || outb.getMatnr().trim().isEmpty()) {
                     outb.setMatnr(doItem.getMatnr());
                 }

@@ -1510,7 +1510,7 @@ private void txtOutTimeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 // TODO add your handling code here:
     if (txtOutTime.getText().length() == 19) {
         String[] time = txtOutTime.getText().split(" ");
-        weightTicket.setSTime((java.sql.Date) weightTicketController.setTimeWeightTicket(time));
+        weightTicket.setSTime(new java.sql.Date(weightTicketController.setTimeWeightTicket(time).getTime()));
     }
 }//GEN-LAST:event_txtOutTimeKeyReleased
 
@@ -1518,7 +1518,7 @@ private void txtInTimeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
 // TODO add your handling code here:
     if (txtInTime.getText().length() == 19) {
         String[] time = txtInTime.getText().split(" ");
-        weightTicket.setFTime((java.sql.Date) weightTicketController.setTimeWeightTicket(time));
+        weightTicket.setFTime(new java.sql.Date(weightTicketController.setTimeWeightTicket(time).getTime()));
     }
 }//GEN-LAST:event_txtInTimeKeyReleased
 
