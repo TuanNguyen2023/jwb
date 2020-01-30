@@ -14,8 +14,6 @@ import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.base.util.StringUtil;
-import com.gcs.wb.jpa.JPAConnector;
-import com.gcs.wb.jpa.JReportConnector;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
@@ -88,6 +86,9 @@ public class WTRegView extends javax.swing.JInternalFrame {
     WTRegController wTRegController = new WTRegController();
 
     public WTRegView() {
+        newWeightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
+        selectedRow = new com.gcs.wb.jpa.entity.WeightTicket();
+        outbDel = new com.gcs.wb.jpa.entity.OutboundDelivery();
         initComponents();
         weightTicketList = new ArrayList<WeightTicket>();
         ListWeightTicketsTask t = new ListWeightTicketsTask(WeighBridgeApp.getApplication());
@@ -115,10 +116,8 @@ public class WTRegView extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
         bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
+
         rbtRegCatGroup = new javax.swing.ButtonGroup();
-        newWeightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
-        selectedRow = new com.gcs.wb.jpa.entity.WeightTicket();
-        outbDel = new com.gcs.wb.jpa.entity.OutboundDelivery();
         jTextField1 = new javax.swing.JTextField();
         buttonGroup1 = new javax.swing.ButtonGroup();
         pnFilter = new javax.swing.JPanel();
@@ -134,15 +133,13 @@ public class WTRegView extends javax.swing.JInternalFrame {
         cbxHourTo = new javax.swing.JComboBox();
         lblCreator = new javax.swing.JLabel();
         txtCreator = new javax.swing.JTextField();
-        lblStatus = new javax.swing.JLabel();
-        rbtStatusAll = new javax.swing.JRadioButton();
-        rbtStatusPosted = new javax.swing.JRadioButton();
-        rbtStatusDissolved = new javax.swing.JRadioButton();
         lblDriverName = new javax.swing.JLabel();
         txtDriverName = new javax.swing.JTextField();
         lblPlateNo = new javax.swing.JLabel();
         txtPlateNo = new javax.swing.JTextField();
         btnFind = new javax.swing.JButton();
+        lblStatus = new javax.swing.JLabel();
+        cbxStatus = new javax.swing.JComboBox();
         spnResult = new javax.swing.JScrollPane();
         tabResults = new org.jdesktop.swingx.JXTable();
         pnPrintControl = new javax.swing.JPanel();
@@ -177,6 +174,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         btnSave = new javax.swing.JButton();
         lblWeightTicketNo = new javax.swing.JLabel();
         txtWeightTicketNo = new javax.swing.JTextField();
+        btnSo = new javax.swing.JButton();
 
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(WTRegView.class);
         jTextField1.setText(resourceMap.getString("jTextField1.text")); // NOI18N
@@ -188,31 +186,214 @@ public class WTRegView extends javax.swing.JInternalFrame {
         setTitle(resourceMap.getString("Form.title")); // NOI18N
         setName("Form"); // NOI18N
 
-        initFilter(resourceMap);
-        initDateFromLabel(resourceMap);
-        initDateFromCalendar();
-        initDateToLable(resourceMap);
-        initDateToCalendar();
-        initMaterialTypeLabel(resourceMap);
-        initMaterialTypeBox();
-        initHourFromLabel(resourceMap);
-        initHourFromBox();
-        initHourToLabel(resourceMap);
-        initHourToBox();
-        initCreatorLabel(resourceMap);
-        initCreatorInput();
-        initStatusLabel(resourceMap);
-        initStatus(resourceMap);
-        initDriver(resourceMap);
-        initPlate(resourceMap);
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getActionMap(WTRegView.class, this);
-        initFindButton(resourceMap, actionMap);
-        initFilterLayout();
+        pnFilter.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("pnFilter.border.title"))); // NOI18N
+        pnFilter.setMinimumSize(new java.awt.Dimension(12, 35));
+        pnFilter.setName("pnFilter"); // NOI18N
+        pnFilter.setPreferredSize(new java.awt.Dimension(315, 35));
 
-        initResultPanel(resourceMap);
+        lblDateFrom.setText(resourceMap.getString("lblDateFrom.text")); // NOI18N
+        lblDateFrom.setName("lblDateFrom"); // NOI18N
+
+        dpDateFrom.setDate(Calendar.getInstance().getTime());
+        dpDateFrom.setName("dpDateFrom"); // NOI18N
+        dpDateFrom.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dpDateFromActionPerformed(evt);
+            }
+        });
+
+        lblDateTo.setText(resourceMap.getString("lblDateTo.text")); // NOI18N
+        lblDateTo.setName("lblDateTo"); // NOI18N
+
+        dpDateTo.setDate(Calendar.getInstance().getTime());
+        dpDateTo.setName("dpDateTo"); // NOI18N
+
+        lblMaterialType.setLabelFor(cbxMaterialType);
+        lblMaterialType.setText(resourceMap.getString("lblMaterialType.text")); // NOI18N
+        lblMaterialType.setName("lblMaterialType"); // NOI18N
+
+        cbxMaterialType.setModel(getMatsModel());
+        cbxMaterialType.setName("cbxMaterialType"); // NOI18N
+        cbxMaterialType.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(
+                JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof Material) {
+                    Material mat = (Material)value;
+                    setText(mat.getMaktx());
+                    setToolTipText(mat.getMatnr());
+                }
+                return this;
+            }
+        });
+
+        lblHourFrom.setText(resourceMap.getString("lblHourFrom.text")); // NOI18N
+        lblHourFrom.setName("lblHourFrom"); // NOI18N
+
+        cbxHourFrom.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" }));
+        cbxHourFrom.setName("cbxHourFrom"); // NOI18N
+
+        lblHourTo.setText(resourceMap.getString("lblHourTo.text")); // NOI18N
+        lblHourTo.setName("lblHourTo"); // NOI18N
+
+        cbxHourTo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" }));
+        cbxHourTo.setName("cbxHourTo"); // NOI18N
+        cbxHourTo.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbxHourToItemStateChanged(evt);
+            }
+        });
+
+        lblCreator.setLabelFor(txtCreator);
+        lblCreator.setText(resourceMap.getString("lblCreator.text")); // NOI18N
+        lblCreator.setName("lblCreator"); // NOI18N
+
+        txtCreator.setName("txtCreator"); // NOI18N
+
+        lblDriverName.setLabelFor(txtCreator);
+        lblDriverName.setText(resourceMap.getString("lblDriverName.text")); // NOI18N
+        lblDriverName.setName("lblDriverName"); // NOI18N
+
+        txtDriverName.setName("txtDriverName"); // NOI18N
+
+        lblPlateNo.setText(resourceMap.getString("lblPlateNo.text")); // NOI18N
+        lblPlateNo.setName("lblPlateNo"); // NOI18N
+
+        txtPlateNo.setName("txtPlateNo"); // NOI18N
+
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getActionMap(WTRegView.class, this);
+        btnFind.setAction(actionMap.get("listWeightTickets")); // NOI18N
+        btnFind.setText(resourceMap.getString("btnFind.text")); // NOI18N
+        btnFind.setName("btnFind"); // NOI18N
+
+        lblStatus.setText(resourceMap.getString("lblStatus.text")); // NOI18N
+        lblStatus.setName("lblStatus"); // NOI18N
+
+        cbxStatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tất cả", "Hoàn tất" }));
+        cbxStatus.setName("cbxStatus"); // NOI18N
+
+        javax.swing.GroupLayout pnFilterLayout = new javax.swing.GroupLayout(pnFilter);
+        pnFilter.setLayout(pnFilterLayout);
+        pnFilterLayout.setHorizontalGroup(
+            pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnFilterLayout.createSequentialGroup()
+                .addGap(33, 33, 33)
+                .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblDateFrom)
+                    .addComponent(lblDriverName)
+                    .addComponent(lblMaterialType, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblStatus))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(cbxStatus, javax.swing.GroupLayout.Alignment.TRAILING, 0, 178, Short.MAX_VALUE)
+                    .addComponent(dpDateFrom, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
+                    .addComponent(txtDriverName, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
+                    .addComponent(cbxMaterialType, 0, 178, Short.MAX_VALUE))
+                .addGap(31, 31, 31)
+                .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(pnFilterLayout.createSequentialGroup()
+                        .addComponent(lblDateTo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(dpDateTo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(pnFilterLayout.createSequentialGroup()
+                        .addComponent(lblPlateNo)
+                        .addGap(18, 18, 18)
+                        .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnFind, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtPlateNo, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(21, 21, 21)
+                .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnFilterLayout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(lblCreator))
+                    .addComponent(lblHourFrom))
+                .addGap(18, 18, 18)
+                .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(pnFilterLayout.createSequentialGroup()
+                        .addComponent(cbxHourFrom, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblHourTo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cbxHourTo, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtCreator, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(44, 44, 44))
+        );
+        pnFilterLayout.setVerticalGroup(
+            pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnFilterLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnFilterLayout.createSequentialGroup()
+                        .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblHourFrom)
+                            .addComponent(cbxHourTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbxHourFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblHourTo))
+                        .addGap(9, 9, 9)
+                        .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtCreator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblCreator)))
+                    .addGroup(pnFilterLayout.createSequentialGroup()
+                        .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnFilterLayout.createSequentialGroup()
+                                .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lblDateFrom)
+                                    .addComponent(dpDateFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(9, 9, 9)
+                                .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lblDriverName, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtDriverName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(pnFilterLayout.createSequentialGroup()
+                                .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lblDateTo)
+                                    .addComponent(dpDateTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(9, 9, 9)
+                                .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lblPlateNo, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtPlateNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(pnFilterLayout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lblMaterialType)
+                                    .addComponent(cbxMaterialType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(lblStatus)
+                                    .addComponent(cbxStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(pnFilterLayout.createSequentialGroup()
+                                .addGap(21, 21, 21)
+                                .addComponent(btnFind, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                .addContainerGap(61, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        spnResult.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("spnResult.border.title"))); // NOI18N
+        spnResult.setName("spnResult"); // NOI18N
+
+        tabResults.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        tabResults.setEditable(false);
+        tabResults.setName("tabResults"); // NOI18N
+        tabResults.setShowGrid(true);
         spnResult.setViewportView(tabResults);
 
-        initPrintControl(resourceMap, actionMap);
+        pnPrintControl.setName("pnPrintControl"); // NOI18N
+        pnPrintControl.setLayout(new javax.swing.BoxLayout(pnPrintControl, javax.swing.BoxLayout.LINE_AXIS));
+
+        btnReprint.setAction(actionMap.get("reprintRecord")); // NOI18N
+        btnReprint.setText(resourceMap.getString("btnReprint.text")); // NOI18N
+        btnReprint.setName("btnReprint"); // NOI18N
+        pnPrintControl.add(btnReprint);
 
         pnWTicket.setName("pnWTicket"); // NOI18N
         pnWTicket.setLayout(new javax.swing.BoxLayout(pnWTicket, javax.swing.BoxLayout.LINE_AXIS));
@@ -224,9 +405,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         txtNDriverName.setName("txtNDriverName"); // NOI18N
 
-        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, newWeightTicket, org.jdesktop.beansbinding.ELProperty.create("${tenTaiXe}"), txtNDriverName, org.jdesktop.beansbinding.BeanProperty.create("text"));
-        bindingGroup.addBinding(binding);
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txtNDriverName, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txtNDriverName, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
 
         txtNDriverName.addActionListener(new java.awt.event.ActionListener() {
@@ -234,9 +413,9 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 txtNDriverNameActionPerformed(evt);
             }
         });
-        txtNDriverName.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtNDriverNameKeyReleased(evt);
+        txtNDriverName.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtNDriverNameFocusLost(evt);
             }
         });
 
@@ -245,8 +424,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         txtNCMNDBL.setName("txtNCMNDBL"); // NOI18N
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, newWeightTicket, org.jdesktop.beansbinding.ELProperty.create("${cmndBl}"), txtNCMNDBL, org.jdesktop.beansbinding.BeanProperty.create("text"));
-        bindingGroup.addBinding(binding);
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txtNCMNDBL, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
 
@@ -255,9 +432,9 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 txtNCMNDBLActionPerformed(evt);
             }
         });
-        txtNCMNDBL.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtNCMNDBLKeyReleased(evt);
+        txtNCMNDBL.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtNCMNDBLFocusLost(evt);
             }
         });
 
@@ -266,8 +443,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         txtNPlateNo.setName("txtNPlateNo"); // NOI18N
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, newWeightTicket, org.jdesktop.beansbinding.ELProperty.create("${soXe}"), txtNPlateNo, org.jdesktop.beansbinding.BeanProperty.create("text"));
-        bindingGroup.addBinding(binding);
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txtNPlateNo, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
 
@@ -276,9 +451,9 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 txtNPlateNoActionPerformed(evt);
             }
         });
-        txtNPlateNo.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtNPlateNoKeyReleased(evt);
+        txtNPlateNo.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtNPlateNoFocusLost(evt);
             }
         });
 
@@ -287,8 +462,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         txtNTrailerPlate.setName("txtNTrailerPlate"); // NOI18N
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, newWeightTicket, org.jdesktop.beansbinding.ELProperty.create("${soRomooc}"), txtNTrailerPlate, org.jdesktop.beansbinding.BeanProperty.create("text"));
-        bindingGroup.addBinding(binding);
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txtNTrailerPlate, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
 
@@ -297,14 +470,47 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 txtNTrailerPlateActionPerformed(evt);
             }
         });
-        txtNTrailerPlate.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtNTrailerPlateKeyReleased(evt);
-            }
-        });
 
         javax.swing.GroupLayout pnNLeftLayout = new javax.swing.GroupLayout(pnNLeft);
-        initLeftLayout(pnNLeftLayout);
+        pnNLeft.setLayout(pnNLeftLayout);
+        pnNLeftLayout.setHorizontalGroup(
+            pnNLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnNLeftLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnNLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblNTrailerPlate)
+                    .addComponent(lblNDriverName)
+                    .addComponent(lblNCMNDBL)
+                    .addComponent(lblNPlateNo))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnNLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(txtNCMNDBL)
+                    .addComponent(txtNPlateNo)
+                    .addComponent(txtNTrailerPlate)
+                    .addComponent(txtNDriverName, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(60, Short.MAX_VALUE))
+        );
+        pnNLeftLayout.setVerticalGroup(
+            pnNLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnNLeftLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnNLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblNDriverName)
+                    .addComponent(txtNDriverName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnNLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblNCMNDBL)
+                    .addComponent(txtNCMNDBL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnNLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblNPlateNo)
+                    .addComponent(txtNPlateNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnNLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblNTrailerPlate)
+                    .addComponent(txtNTrailerPlate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(18, Short.MAX_VALUE))
+        );
 
         pnWTicket.add(pnNLeft);
 
@@ -342,8 +548,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         txtNMaterial.setName("txtNMaterial"); // NOI18N
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, newWeightTicket, org.jdesktop.beansbinding.ELProperty.create("${regItemText}"), txtNMaterial, org.jdesktop.beansbinding.BeanProperty.create("text"));
-        bindingGroup.addBinding(binding);
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txtNMaterial, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
 
@@ -407,10 +611,13 @@ public class WTRegView extends javax.swing.JInternalFrame {
         lblNWeightUnit.setText(resourceMap.getString("lblNWeightUnit.text")); // NOI18N
         lblNWeightUnit.setName("lblNWeightUnit"); // NOI18N
 
-        initDONumber(resourceMap, actionMap);
+        lblNDONum.setText(resourceMap.getString("lblNDONum.text")); // NOI18N
+        lblNDONum.setName("lblNDONum"); // NOI18N
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, newWeightTicket, org.jdesktop.beansbinding.ELProperty.create("${delivNumb}"), txtNDONum, org.jdesktop.beansbinding.BeanProperty.create("text"));
-        bindingGroup.addBinding(binding);
+        txtNDONum.setEditable(false);
+        txtNDONum.setAction(actionMap.get("checkDO")); // NOI18N
+        txtNDONum.setName("txtNDONum"); // NOI18N
+
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txtNDONum, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
 
@@ -425,23 +632,189 @@ public class WTRegView extends javax.swing.JInternalFrame {
             }
         });
 
-        initCheckDOButton(resourceMap, actionMap);
-        initRightLayout();
+        btnCheckDO.setAction(actionMap.get("checkDO")); // NOI18N
+        btnCheckDO.setText(resourceMap.getString("btnCheckDO.text")); // NOI18N
+        btnCheckDO.setName("btnCheckDO"); // NOI18N
+        btnCheckDO.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCheckDOActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pnNRightLayout = new javax.swing.GroupLayout(pnNRight);
+        pnNRight.setLayout(pnNRightLayout);
+        pnNRightLayout.setHorizontalGroup(
+            pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnNRightLayout.createSequentialGroup()
+                .addGap(34, 34, 34)
+                .addGroup(pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblNDONum)
+                    .addComponent(lblNWeight)
+                    .addComponent(lblNMaterial)
+                    .addComponent(lblNRegCat))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnNRightLayout.createSequentialGroup()
+                        .addComponent(rbtNInward)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(rbtNOutward)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtNMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnNRightLayout.createSequentialGroup()
+                        .addGroup(pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtNDONum)
+                            .addComponent(txtNWeight)
+                            .addComponent(cbxNMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblNWeightUnit)
+                            .addComponent(btnCheckDO, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(47, Short.MAX_VALUE))
+        );
+        pnNRightLayout.setVerticalGroup(
+            pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnNRightLayout.createSequentialGroup()
+                .addContainerGap(14, Short.MAX_VALUE)
+                .addGroup(pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblNRegCat)
+                    .addComponent(rbtNInward)
+                    .addComponent(rbtNOutward)
+                    .addComponent(txtNMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblNMaterial)
+                    .addComponent(cbxNMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblNWeight)
+                    .addComponent(txtNWeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblNWeightUnit))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblNDONum)
+                    .addComponent(txtNDONum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCheckDO))
+                .addContainerGap())
+        );
 
         pnWTicket.add(pnNRight);
 
         pnControl.setName("pnControl"); // NOI18N
 
-        initButtonPanel(resourceMap, actionMap);
-        initWeightTicketNo(resourceMap);
-        initControlLayout();
+        btnNew.setAction(actionMap.get("newRecord")); // NOI18N
+        btnNew.setText(resourceMap.getString("btnNew.text")); // NOI18N
+        btnNew.setName("btnNew"); // NOI18N
+
+        btnClear.setAction(actionMap.get("clearForm")); // NOI18N
+        btnClear.setText(resourceMap.getString("btnClear.text")); // NOI18N
+        btnClear.setName("btnClear"); // NOI18N
+
+        btnMany.setText(resourceMap.getString("btnMany.text")); // NOI18N
+        btnMany.setEnabled(false);
+        btnMany.setName("btnMany"); // NOI18N
+        btnMany.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnManyActionPerformed(evt);
+            }
+        });
+
+        btnSave.setAction(actionMap.get("saveRecord")); // NOI18N
+        btnSave.setText(resourceMap.getString("btnSave.text")); // NOI18N
+        btnSave.setName("btnSave"); // NOI18N
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
+
+        lblWeightTicketNo.setText(resourceMap.getString("lblWeightTicketNo.text")); // NOI18N
+        lblWeightTicketNo.setName("lblWeightTicketNo"); // NOI18N
+
+        txtWeightTicketNo.setEditable(false);
+        txtWeightTicketNo.setAutoscrolls(false);
+        txtWeightTicketNo.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        txtWeightTicketNo.setName("txtWeightTicketNo"); // NOI18N
+
+        btnSo.setText(resourceMap.getString("btnSo.text")); // NOI18N
+        btnSo.setEnabled(false);
+        btnSo.setName("btnSo"); // NOI18N
+        btnSo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSoActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pnControlLayout = new javax.swing.GroupLayout(pnControl);
+        pnControl.setLayout(pnControlLayout);
+        pnControlLayout.setHorizontalGroup(
+            pnControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnControlLayout.createSequentialGroup()
+                .addComponent(btnNew)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnClear)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnMany)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnSo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnSave)
+                .addGap(29, 29, 29)
+                .addComponent(lblWeightTicketNo)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txtWeightTicketNo, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(125, 125, 125))
+        );
+        pnControlLayout.setVerticalGroup(
+            pnControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnControlLayout.createSequentialGroup()
+                .addGap(1, 1, 1)
+                .addGroup(pnControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnNew)
+                    .addComponent(btnClear)
+                    .addComponent(btnMany)
+                    .addComponent(btnSo)
+                    .addComponent(btnSave)
+                    .addComponent(txtWeightTicketNo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblWeightTicketNo)))
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pnFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 915, Short.MAX_VALUE)
+                    .addComponent(spnResult, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 915, Short.MAX_VALUE)
+                    .addComponent(pnPrintControl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 915, Short.MAX_VALUE)
+                    .addComponent(pnWTicket, javax.swing.GroupLayout.DEFAULT_SIZE, 915, Short.MAX_VALUE)
+                    .addComponent(pnControl, javax.swing.GroupLayout.DEFAULT_SIZE, 915, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(pnFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(spnResult, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnPrintControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnWTicket, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(pnControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(43, Short.MAX_VALUE))
+        );
 
         bindingGroup.bind();
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void initDONumber(ResourceMap resourceMap, ActionMap actionMap) {
+    // <editor-fold defaultstate="collapsed" desc="Old Code">
+    /*private void initDONumber(ResourceMap resourceMap, ActionMap actionMap) {
         lblNDONum.setText(resourceMap.getString("lblNDONum.text")); // NOI18N
         lblNDONum.setName("lblNDONum"); // NOI18N
 
@@ -729,16 +1102,9 @@ public class WTRegView extends javax.swing.JInternalFrame {
                             .addComponent(dpDateTo, GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE))
                         .addGap(46, 46, 46)
                         .addGroup(pnFilterLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                            .addComponent(lblMaterialType)
-                            .addComponent(lblStatus))
+                            .addComponent(lblMaterialType))
                         .addGroup(pnFilterLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addGroup(pnFilterLayout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(rbtStatusAll)
-                                .addGap(18, 18, 18)
-                                .addComponent(rbtStatusPosted)
-                                .addGap(18, 18, 18)
-                                .addComponent(rbtStatusDissolved))
+                            .addGroup(pnFilterLayout.createSequentialGroup())
                             .addGroup(pnFilterLayout.createSequentialGroup()
                                 .addGap(9, 9, 9)
                                 .addComponent(cbxMaterialType, GroupLayout.PREFERRED_SIZE, 292, GroupLayout.PREFERRED_SIZE)))))
@@ -771,11 +1137,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                             .addComponent(lblDriverName, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtPlateNo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblPlateNo, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(pnFilterLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(lblStatus)
-                        .addComponent(rbtStatusAll)
-                        .addComponent(rbtStatusPosted, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(rbtStatusDissolved, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(pnFilterLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnFind, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(36, 36, 36))
@@ -801,26 +1163,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
         lblDriverName.setName("lblDriverName"); // NOI18N
 
         txtDriverName.setName("txtDriverName"); // NOI18N
-    }
-
-    private void initStatus(ResourceMap resourceMap) {
-        buttonGroup1.add(rbtStatusAll);
-        rbtStatusAll.setSelected(true);
-        rbtStatusAll.setText(resourceMap.getString("rbtStatusAll.text")); // NOI18N
-        rbtStatusAll.setName("rbtStatusAll"); // NOI18N
-
-        buttonGroup1.add(rbtStatusPosted);
-        rbtStatusPosted.setText(resourceMap.getString("rbtStatusPosted.text")); // NOI18N
-        rbtStatusPosted.setName("rbtStatusPosted"); // NOI18N
-
-        buttonGroup1.add(rbtStatusDissolved);
-        rbtStatusDissolved.setText(resourceMap.getString("rbtStatusDissolved.text")); // NOI18N
-        rbtStatusDissolved.setName("rbtStatusDissolved"); // NOI18N
-    }
-
-    private void initStatusLabel(ResourceMap resourceMap) {
-        lblStatus.setText(resourceMap.getString("lblStatus.text")); // NOI18N
-        lblStatus.setName("lblStatus"); // NOI18N
     }
 
     private void initCreatorInput() {
@@ -912,17 +1254,9 @@ public class WTRegView extends javax.swing.JInternalFrame {
         pnFilter.setMinimumSize(new java.awt.Dimension(12, 35));
         pnFilter.setName("pnFilter"); // NOI18N
         pnFilter.setPreferredSize(new java.awt.Dimension(315, 35));
-    }
-
+    }*/
+// </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Event methods">
-    private void txtNDriverNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNDriverNameKeyReleased
-        setSaveNeeded(isValidated());
-}//GEN-LAST:event_txtNDriverNameKeyReleased
-
-    private void txtNCMNDBLKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNCMNDBLKeyReleased
-        setSaveNeeded(isValidated());
-}//GEN-LAST:event_txtNCMNDBLKeyReleased
-
     private void rbtNInwardItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbtNInwardItemStateChanged
         setSaveNeeded(isValidated());
 }//GEN-LAST:event_rbtNInwardItemStateChanged
@@ -980,18 +1314,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
         }
 }//GEN-LAST:event_txtNDONumKeyReleased
 
-    private void txtNPlateNoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNPlateNoKeyReleased
-        /* if (!evt.isActionKey() && evt.getKeyCode() != KeyEvent.VK_ENTER && evt.getKeyCode() != KeyEvent.VK_ESCAPE) {
-        //-{20110119#01 bo qua viec kiem tra hop le khi nhap so xe
-        //setSaveNeeded(isValidated());
-        //-}20110119#01 bo qua viec kiem tra hop le khi nhap so xe
-        }
-         * 
-         */
-        if (!evt.isActionKey() && evt.getKeyCode() != KeyEvent.VK_ENTER) {
-            setSaveNeeded(isValidated());
-        }
-    }//GEN-LAST:event_txtNPlateNoKeyReleased
     private void txtNPlateNoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNPlateNoActionPerformed
         // TODO add your handling code here:
         setSaveNeeded(isValidated());
@@ -1025,10 +1347,6 @@ private void txtNDONumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
 private void txtNTrailerPlateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNTrailerPlateActionPerformed
 // TODO add your handling code here:
 }//GEN-LAST:event_txtNTrailerPlateActionPerformed
-
-private void txtNTrailerPlateKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNTrailerPlateKeyReleased
-// TODO add your handling code here:
-}//GEN-LAST:event_txtNTrailerPlateKeyReleased
 
 private void cbxHourToItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbxHourToItemStateChanged
 // TODO add your handling code here:
@@ -1127,6 +1445,58 @@ private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST
 private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dpDateFromActionPerformed
 // TODO add your handling code here:
 }//GEN-LAST:event_dpDateFromActionPerformed
+
+private void txtNPlateNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNPlateNoFocusLost
+// TODO add your handling code here:
+    setSaveNeeded(isValidated());
+}//GEN-LAST:event_txtNPlateNoFocusLost
+
+private void txtNDriverNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNDriverNameFocusLost
+// TODO add your handling code here:
+    setSaveNeeded(isValidated());
+}//GEN-LAST:event_txtNDriverNameFocusLost
+
+private void txtNCMNDBLFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNCMNDBLFocusLost
+// TODO add your handling code here:
+    setSaveNeeded(isValidated());
+}//GEN-LAST:event_txtNCMNDBLFocusLost
+
+private void btnSoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSoActionPerformed
+// TODO add your handling code here:
+    // TODO add your handling code here:
+    String soSO = JOptionPane.showInputDialog(this.getRootPane(), "Nhập số Sale Order(SO): ");
+    boolean isNumber = false;
+    if (soSO == null) {
+        isNumber = false;
+    } else if (soSO != null || !soSO.equals("")) {
+        soSO = soSO.trim();
+        for (int i = 0; i < soSO.length(); i++) {
+            if (!Character.isDigit(soSO.charAt(i))) {
+                isNumber = false;
+            } else {
+                isNumber = true;
+            }
+        }
+        if (isNumber && soSO.length() >= 8 && soSO.length() <= 10) {
+            if (txtNDONum.getText().equals("")) {
+                txtNDONum.setText(StringUtil.paddingZero(soSO, 10));
+
+            } else {
+                String inputDO = (soSO.length() == 8) ? StringUtil.paddingZero(soSO, 8) : StringUtil.paddingZero(soSO, 10);
+                // String inputDO2 = StringUtil.paddingZero(soDO, 8);
+                if (txtNDONum.getText().indexOf(inputDO) == -1) {
+                    txtNDONum.setText(txtNDONum.getText() + "-" + inputDO);
+                } else {
+                    JOptionPane.showMessageDialog(this.getRootPane(), resourceMapMsg.getString("msg.duplicateDo"));
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(this.getRootPane(), resourceMapMsg.getString("msg.falseDo"));
+            txtNDONum.setText("");
+        }
+
+    }
+}//GEN-LAST:event_btnSoActionPerformed
     private DefaultComboBoxModel getMatsModel() {
         DefaultComboBoxModel result = new DefaultComboBoxModel();
         List<Material> materials = materialRepository.getListMaterial();
@@ -1229,6 +1599,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         cbxNMaterial.setEditable(true);
         txtNWeight.setEditable(true);
         btnMany.setEnabled(true);
+        btnSo.setEnabled(true);
         btnCheckDO.setEnabled(true);
         btnSave.setEnabled(false);
         // Nha may FICO Hiep Phuoc only 
@@ -1251,6 +1622,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         setClearable(false);
 //        txtSodangtai.setText("");
         btnMany.setEnabled(false);
+        btnSo.setEnabled(false);
         btnCheckDO.setEnabled(false);
         sVendor = "";
         sPO = "";
@@ -1262,6 +1634,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     public Task saveRecord() {
         //+20110119#01
         btnMany.setEnabled(false);
+        btnSo.setEnabled(false);
         btnCheckDO.setEnabled(false);
         btnSave.setEnabled(false);
 
@@ -1287,6 +1660,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
         } else {
             btnMany.setEnabled(true);
+            btnSo.setEnabled(true);
             btnCheckDO.setEnabled(true);
 
             btnSave.setEnabled(true);
@@ -1337,39 +1711,39 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 String fFrom = format.format(dpDateFrom.getDate());
                 String fTo = format.format(dpDateTo.getDate());
                 System.out.println("dpFrom : " + fFrom + " to " + fTo);
-
+System.out.println(cbxStatus.getSelectedIndex());
                 List<WeightTicket> result = null;
                 List<WeightTicket> data = null;
                 if (selecttext.getMatnr().equals("-1")) {
-                    if (rbtStatusDissolved.isSelected()) {
+                    /*if (rbtStatusDissolved.isSelected()) {
                         data = conWTicket.findByDateDissolvedNull(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
                         result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
-                    } else if (rbtStatusPosted.isSelected()) {
+                    } else*/ if (cbxStatus.getSelectedIndex() == 1) {
                         data = conWTicket.findByDatePostedNull(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
                         result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
-                    } else if (rbtStatusAll.isSelected()) {
+                    } else if (cbxStatus.getSelectedIndex() == 0) {
                         data = conWTicket.findByDateAllNull(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
                         result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
                     }
                 } else if (selecttext.getMatnr().equals("-2")) {
-                    if (rbtStatusDissolved.isSelected()) {
+                    /*if (rbtStatusDissolved.isSelected()) {
                         data = conWTicket.findByDateDissolvedNullAll(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
                         result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
-                    } else if (rbtStatusPosted.isSelected()) {
+                    } else*/ if (cbxStatus.getSelectedIndex() == 1) {
                         data = conWTicket.findByDatePostedNullAll(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
                         result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
-                    } else if (rbtStatusAll.isSelected()) {
+                    } else if (cbxStatus.getSelectedIndex() == 0) {
                         data = conWTicket.findByDateAllNullAll(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
                         result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
                     }
                 } else {
-                    if (rbtStatusDissolved.isSelected()) {
+                    /*if (rbtStatusDissolved.isSelected()) {
                         data = conWTicket.findByDateDissolved(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), selecttext.getMatnr(), txtPlateNo.getText().trim());
                         result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
-                    } else if (rbtStatusPosted.isSelected()) {
+                    } else*/ if (cbxStatus.getSelectedIndex() == 1) {
                         data = conWTicket.findByDatePosted(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), selecttext.getMatnr(), txtPlateNo.getText().trim());
                         result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
-                    } else if (rbtStatusAll.isSelected()) {
+                    } else if (cbxStatus.getSelectedIndex() == 0) {
                         data = conWTicket.findByDateAll(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), selecttext.getMatnr(), txtPlateNo.getText().trim());
                         result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
                     }
@@ -1401,11 +1775,10 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                     String mm = time.substring(2, 4);
                     String ss = time.substring(4, 6);
                     wtData[i][12] = hh + ":" + mm + ":" + ss;
-                    wtData[i][13] = item.isDissolved();
                     if (item.isPosted()) {
-                        wtData[i][14] = true;
+                        wtData[i][13] = true;
                     } else {
-                        wtData[i][14] = false;
+                        wtData[i][13] = false;
                     }
                 }
                 setProgress(3, 0, 4);
@@ -2596,11 +2969,13 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private javax.swing.JButton btnNew;
     private javax.swing.JButton btnReprint;
     private javax.swing.JButton btnSave;
+    private javax.swing.JButton btnSo;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox cbxHourFrom;
     private javax.swing.JComboBox cbxHourTo;
     private javax.swing.JComboBox cbxMaterialType;
     private javax.swing.JComboBox cbxNMaterial;
+    private javax.swing.JComboBox cbxStatus;
     private org.jdesktop.swingx.JXDatePicker dpDateFrom;
     private org.jdesktop.swingx.JXDatePicker dpDateTo;
     private javax.swing.JTextField jTextField1;
@@ -2623,8 +2998,6 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private javax.swing.JLabel lblPlateNo;
     private javax.swing.JLabel lblStatus;
     private javax.swing.JLabel lblWeightTicketNo;
-    private com.gcs.wb.jpa.entity.WeightTicket newWeightTicket;
-    private com.gcs.wb.jpa.entity.OutboundDelivery outbDel;
     private javax.swing.JPanel pnControl;
     private javax.swing.JPanel pnFilter;
     private javax.swing.JPanel pnNLeft;
@@ -2634,10 +3007,6 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private javax.swing.JRadioButton rbtNInward;
     private javax.swing.JRadioButton rbtNOutward;
     private javax.swing.ButtonGroup rbtRegCatGroup;
-    private javax.swing.JRadioButton rbtStatusAll;
-    private javax.swing.JRadioButton rbtStatusDissolved;
-    private javax.swing.JRadioButton rbtStatusPosted;
-    private com.gcs.wb.jpa.entity.WeightTicket selectedRow;
     private javax.swing.JScrollPane spnResult;
     private org.jdesktop.swingx.JXTable tabResults;
     private javax.swing.JTextField txtCreator;
@@ -2662,6 +3031,9 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     private String outb_number = null;
     private boolean flag_check = false;
     private String mat_numb = null;
+    private com.gcs.wb.jpa.entity.WeightTicket newWeightTicket;
+    private com.gcs.wb.jpa.entity.OutboundDelivery outbDel;
+    private com.gcs.wb.jpa.entity.WeightTicket selectedRow;
 
     /**
      * Get the value of formValid
@@ -2726,37 +3098,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
     }
     private boolean[] editable = null;
     Object[][] wtData = null;
-    Object[] wtCols = new String[]{
-        "Số tài",
-        "Tên tài xế",
-        "CMND/BL",
-        "B.S Xe",
-        "B.S Rơmoóc",
-        "Nhập/Xuất (I/O)",
-        "Loại hàng đăng ký",
-        "Trọng lượng đăng ký",
-        "Số D.O",
-        "Người tạo",
-        "Số Phiếu trong tháng",
-        "Ngày",
-        "Giờ",
-        "Hủy",
-        "SAP Posted"};
-    Class[] wtTypes = new Class[]{
-        Integer.class,
-        String.class,
-        String.class,
-        String.class,
-        String.class,
-        Character.class,
-        String.class,
-        BigDecimal.class,
-        String.class,
-        String.class,
-        Integer.class,
-        Date.class,
-        String.class,
-        Boolean.class,
-        Boolean.class};
+    Object[] wtCols = Constants.WTRegView.wtCols;
+    Class[] wtTypes = Constants.WTRegView.wtTypes;
     public org.jdesktop.application.ResourceMap resourceMapMsg = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(WTRegView.class);
 }

@@ -107,6 +107,36 @@ public class Constants {
         public static final String MODE_RPT = "MODE_RPT";
         public static final String PROP_FORMEDITABLE = "formEditable";
         public static final String PROP_RBTENABLED = "rbtEnabled";
+        public static final Object[] wtCols = new String[]{
+            "Số tài",
+            "Tên tài xế",
+            "CMND/BL",
+            "B.S Xe",
+            "B.S Rơmoóc",
+            "Nhập/Xuất (I/O)",
+            "Loại hàng đăng ký",
+            "Trọng lượng đăng ký",
+            "Số D.O",
+            "Người tạo",
+            "Số Phiếu trong tháng",
+            "Ngày",
+            "Giờ",
+            "SAP Posted"};
+        public static final Class[] wtTypes = new Class[]{
+            Integer.class,
+            String.class,
+            String.class,
+            String.class,
+            String.class,
+            Character.class,
+            String.class,
+            BigDecimal.class,
+            String.class,
+            String.class,
+            Integer.class,
+            Date.class,
+            String.class,
+            Boolean.class};
     }
 
     public static final class WeightTicketView {

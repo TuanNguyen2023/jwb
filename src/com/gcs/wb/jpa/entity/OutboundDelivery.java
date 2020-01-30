@@ -22,7 +22,7 @@ import javax.persistence.Id;
  * @author thanghl
  */
 @Entity
-@Table(name = "OutboundDelivery")
+@Table(name = "tbl_outbound_delivery")
 @NamedQueries({
     @NamedQuery(name = "OutboundDelivery.findByDeliveryOrderNo", query = "SELECT o FROM OutboundDelivery o WHERE o.deliveryOrderNo LIKE :deliveryOrderNo")
 })
