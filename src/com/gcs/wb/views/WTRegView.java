@@ -60,6 +60,7 @@ import java.awt.event.KeyEvent;
 import java.util.Date;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import org.apache.commons.collections.CollectionUtils;
 
 /**
  *
@@ -1947,7 +1948,7 @@ System.out.println(cbxStatus.getSelectedIndex());
                 startTransaction();
                 syncCustomerByKunnr();
                 syncCustomerByKunag(sapOutb);
-                syncVendor();
+                syncVendor();                
                 syncOutboundDelivery(listDO[index], sapOutb);
                 finishTransaction();
 
@@ -2036,15 +2037,21 @@ System.out.println(cbxStatus.getSelectedIndex());
         }
 
         private void handleDOCheckExist(String doNumber) {
-            List wts1 = wTRegRepository.checkDoExist(doNumber, WeighBridgeApp.getApplication().getConfig().getwPlant());
+            List<Object[]>  wts1 = wTRegRepository.checkDoExist(doNumber, WeighBridgeApp.getApplication().getConfig().getwPlant());
 
-            float fCount = 0;
-            if (wts1 != null) {
-                fCount = Float.parseFloat(wts1.get(0).toString());
-            } else {
-                fCount = 2;
+            boolean isInUsedDO = false;
+            try
+            {
+                if (CollectionUtils.isNotEmpty(wts1))
+                {
+                    isInUsedDO =  Float.parseFloat(wts1.get(0)[0].toString()) > 0;
+                }
             }
-            if (fCount > 0) {
+            catch(Throwable cause){
+                // NOP
+            }
+
+            if (isInUsedDO) {
                 validDO = false;
                 outb = null;
                 String msg = "D.O \" " + doNumber + " \" đã được sử dụng , vui lòng liên hệ NPP hoặc DVKH đổi mã khác. Giao dịch lỗi này của người dùng đã được hệ thống lưu nhật ký";
@@ -2055,15 +2062,16 @@ System.out.println(cbxStatus.getSelectedIndex());
         }
 
         private void handleShippingPointVar(String doNumber, String selectedMode) {
-            int klmax = wTRegRepository.getSPVar(WeighBridgeApp.getApplication().getConfig().getWbId().toString(), ship_point, outb.getMatnr().toString().trim());
-
-            Boolean ship = (klmax <= 0) ? false : true;
-            if (ship == false) {
-                validDO = false;
-                outb = null;
-                String msg = "D.O \" " + doNumber + " \" không được " + selectedMode + " hàng ở điểm nhận hàng này!, vui lòng liên hệ dịch vụ khách hàng Hotline 0919 49 59 69 để được hỗ trợ. ";
-                setMessage(msg);
-                JOptionPane.showMessageDialog(rootPane, msg);
+            if(outb != null) {
+                int klmax = wTRegRepository.getSPVar(WeighBridgeApp.getApplication().getConfig().getWbId(), ship_point, outb.getMatnr().toString().trim());
+                Boolean ship = (klmax <= 0) ? false : true;
+                if (ship == false) {
+                    validDO = false;
+                    outb = null;
+                    String msg = "D.O \" " + doNumber + " \" không được " + selectedMode + " hàng ở điểm nhận hàng này!, vui lòng liên hệ dịch vụ khách hàng Hotline 0919 49 59 69 để được hỗ trợ. ";
+                    setMessage(msg);
+                    JOptionPane.showMessageDialog(rootPane, msg);
+                }
             }
         }
 
@@ -2073,7 +2081,7 @@ System.out.println(cbxStatus.getSelectedIndex());
                 String selectedMode = getSelectedMode();
                 handleUnselectedMode(selectedMode);
                 handleDOCheckExist(doNumber);
-                handleShippingPointVar(doNumber, selectedMode);
+                //handleShippingPointVar(doNumber, selectedMode);
             }
         }
 
@@ -2150,6 +2158,7 @@ System.out.println(cbxStatus.getSelectedIndex());
                 outb = sapOutb;
                 validDO = true;
             } else if (sapOutb != null && outb != null) {
+                sapOutb.setId(outb.getId());
                 entityManager.merge(sapOutb);
                 outb = sapOutb;
                 validDO = true;
@@ -2166,13 +2175,14 @@ System.out.println(cbxStatus.getSelectedIndex());
         }
 
         private void finishTransaction() {
-            entityManager.getTransaction().commit();
+            entityTransaction.commit();
             entityManager.clear();
         }
 
         private void startTransaction() {
-            if (!entityManager.getTransaction().isActive()) {
-                entityManager.getTransaction().begin();
+            entityTransaction = entityManager.getTransaction();
+            if (!entityTransaction.isActive()) {
+                entityTransaction.begin();
             }
         }
 
@@ -2181,6 +2191,7 @@ System.out.println(cbxStatus.getSelectedIndex());
             if (sapLifnr != null && lifnr == null) {
                 entityManager.persist(sapLifnr);
             } else if (sapLifnr != null && lifnr != null) {
+                sapLifnr.setId(lifnr.getId());
                 entityManager.merge(sapLifnr);
             } else if (sapLifnr == null && lifnr != null) {
                 entityManager.remove(lifnr);
@@ -2192,6 +2203,7 @@ System.out.println(cbxStatus.getSelectedIndex());
             if (sapKunag != null && kunag == null && !sapOutb.getKunnr().equalsIgnoreCase(sapOutb.getKunag())) {
                 entityManager.persist(sapKunag);
             } else if (sapKunag != null && kunag != null) {
+                sapKunag.setId(kunag.getId());
                 entityManager.merge(sapKunag);
             } else if (sapKunag == null && kunag != null && !sapOutb.getKunnr().equalsIgnoreCase(sapOutb.getKunag())) {
                 entityManager.remove(kunag);
@@ -2203,6 +2215,7 @@ System.out.println(cbxStatus.getSelectedIndex());
             if (sapKunnr != null && kunnr == null) {
                 entityManager.persist(sapKunnr);
             } else if (sapKunnr != null && kunnr != null) {
+                sapKunnr.setId(kunnr.getId());
                 entityManager.merge(sapKunnr);
             } else if (sapKunnr == null && kunnr != null) {
                 entityManager.remove(kunnr);
@@ -2534,7 +2547,7 @@ System.out.println(cbxStatus.getSelectedIndex());
             newWeightTicket.setOfflineMode(WeighBridgeApp.getApplication().isOfflineMode());
             newWeightTicket.setRegType(rbtNInward.isSelected() ? 'I' : 'O');
             newWeightTicket.setRegItemDescription(txtNMaterial.getText().trim());
-            newWeightTicket.setRegItemQuantity(new BigDecimal(((Number) txtNWeight.getValue()).doubleValue()));
+            newWeightTicket.setRegItemQuantity(BigDecimal.valueOf(Double.valueOf(txtNWeight.getValue().toString())));
             newWeightTicket.setWbId(sap.getWbId());
             newWeightTicket.setAbbr(abbr);
             newWeightTicket.setPlateNo(txtNPlateNo.getText().trim());
@@ -2566,7 +2579,7 @@ System.out.println(cbxStatus.getSelectedIndex());
             //+20100113#01
             //set du lieu cho do detail
             List<OutboundDetail> detail = new ArrayList<OutboundDetail>();
-            OutboundDetail item = null;
+            OutboundDetail item = null;          
             if (WeighBridgeApp.getApplication().isOfflineMode() && !txtNDONum.getText().equals("")) {
                 newWeightTicket.setDeliveryOrderNo(txtNDONum.getText());
             } else if (!WeighBridgeApp.getApplication().isOfflineMode()) {
@@ -2588,11 +2601,13 @@ System.out.println(cbxStatus.getSelectedIndex());
                                 n = zero.concat(n);
                             }
                             //item.setWtId(id + n);
+                            entityTransaction = entityManager.getTransaction();
                             if (!entityTransaction.isActive()) {
                                 entityTransaction.begin();
                             }
                             entityManager.merge(item);
                             entityTransaction.commit();
+                            entityManager.clear();
                         }
                     }
                 }
@@ -2602,11 +2617,13 @@ System.out.println(cbxStatus.getSelectedIndex());
             }
             setMessage(resourceMapMsg.getString("msg.saveData"));
             try {
+                entityTransaction = entityManager.getTransaction();
                 if (!entityTransaction.isActive()) {
                     entityTransaction.begin();
                 }
                 entityManager.persist(newWeightTicket);
-            entityTransaction.commit();
+                entityTransaction.commit();
+                entityManager.clear();
             } catch (Exception ex) {
                 if (entityTransaction.isActive()) {
                     entityTransaction.rollback();
@@ -2642,7 +2659,8 @@ System.out.println(cbxStatus.getSelectedIndex());
 
         @Override
         protected void failed(Throwable cause) {
-            entityManager.getTransaction().rollback();
+            entityTransaction = entityManager.getTransaction();
+            entityTransaction.rollback();
             setSaveNeeded(true);
         }
 
@@ -2656,19 +2674,21 @@ System.out.println(cbxStatus.getSelectedIndex());
             setRbtEnabled(false);
             setClearable(false);
             setSaveNeeded(false);
+            entityTransaction = entityManager.getTransaction();
             if (flag_revert) {
                 List<WeightTicket> wt = weightTicketRepository.getListByDeliveryOrderNo(outb_number);
                 WeightTicket item = null;
                 for (int i = 0; i < wt.size() - 1; i++) {
                     item = wt.get(i);
-                    item.setPosted(false);
-                    if (!entityManager.getTransaction().isActive()) {
-                        entityManager.getTransaction().begin();
+                    item.setPosted(false);                    
+                    if (!entityTransaction.isActive()) {
+                        entityTransaction.begin();
                     }
                     entityManager.persist(item);
-                    entityManager.getTransaction().commit();
+                    entityTransaction.commit();
                 }
             }
+            entityManager.clear();
         }
     }
 // </editor-fold>
@@ -2707,36 +2727,39 @@ System.out.println(cbxStatus.getSelectedIndex());
         firePropertyChange("saveNeeded", old, isSaveNeeded());
     }
 
-    public boolean isValidated() {
-        boolean bDriName = false, bCMNDBL = false, bLicPlate = false,
-                bRegCat = false, bRegITxt = false, bRegIQty = false,
-                bResult = false;
-        bDriName = !(txtNDriverName.getText() == null || txtNDriverName.getText().trim().isEmpty());
-        if (bDriName) {
+    private boolean validateDriver() {
+        boolean isValid = !(txtNDriverName.getText() == null || txtNDriverName.getText().trim().isEmpty());
+        if (isValid) {
             lblNDriverName.setForeground(Color.black);
         } else {
             lblNDriverName.setForeground(Color.red);
         }
-        bCMNDBL = !(txtNCMNDBL.getText() == null || txtNCMNDBL.getText().trim().isEmpty() || txtNCMNDBL.getText().trim().length() > 9);
-        if (bCMNDBL) {
+
+        return isValid;
+    }
+
+    private boolean validateDriverNoId() {
+        boolean isValid = !(txtNCMNDBL.getText() == null || txtNCMNDBL.getText().trim().isEmpty() || txtNCMNDBL.getText().trim().length() > 9);
+        if (isValid) {
             lblNCMNDBL.setForeground(Color.black);
         } else {
             lblNCMNDBL.setForeground(Color.red);
         }
-        Matcher m = Constants.WTRegView.patLicPlate.matcher(txtNPlateNo.getText().trim());
-        Matcher m_new = Constants.WTRegView.patLicPlatenew.matcher(txtNPlateNo.getText().trim());
 
-        bLicPlate = !(txtNPlateNo.getText().trim().isEmpty());// || !(m.matches() || m_new.matches()));
-        // 
+        return isValid;
+    }
 
-        if (bLicPlate) {
+    private boolean validatePlate() {
+        boolean isValid = !(txtNPlateNo.getText().trim().isEmpty());
+        if (isValid) {
             if (txtNDONum.getText().trim().isEmpty() || outbDel == null) {
-                bLicPlate = checkLicPlate(null, null);
+                isValid = checkLicPlate(null, null);
             } else {
-                bLicPlate = checkLicPlate(outbDel.getLfart(), outbDel.getTraid());
+                isValid = checkLicPlate(outbDel.getLfart(), outbDel.getTraid());
             }
         }
-        if (bLicPlate && rbtNInward.isSelected()) {
+
+        if (isValid && rbtNInward.isSelected()) {
             if (outbDel != null) {
                 String soXe_tmp = txtNPlateNo.getText().trim();
                 int indexRomooc = -1;
@@ -2761,40 +2784,64 @@ System.out.println(cbxStatus.getSelectedIndex());
 
             }
         }
-        if (bLicPlate) {
+
+        if (isValid) {
             lblNPlateNo.setForeground(Color.black);
         } else {
             lblNPlateNo.setForeground(Color.red);
         }
-        bRegCat = rbtNInward.isSelected() || rbtNOutward.isSelected();
-        if (bRegCat) {
+
+        return isValid;
+    }
+
+    private boolean validateRegisteredCategory() {
+        boolean isValid = rbtNInward.isSelected() || rbtNOutward.isSelected();
+        if (isValid) {
             lblNRegCat.setForeground(Color.black);
         } else {
             lblNRegCat.setForeground(Color.red);
         }
-        bRegITxt = !(txtNMaterial.getText() == null || txtNMaterial.getText().trim().isEmpty());
-        if (bRegITxt) {
+        return isValid;
+    }
+
+    private boolean validateMaterial() {
+        boolean isValid = !(txtNMaterial.getText() == null || txtNMaterial.getText().trim().isEmpty());
+        if (isValid) {
             lblNMaterial.setForeground(Color.black);
         } else {
             lblNMaterial.setForeground(Color.red);
         }
-        bRegIQty = !(txtNWeight.getText().isEmpty() || Double.parseDouble(txtNWeight.getText()) <= 0d);
-        if (bRegIQty) {
+        return isValid;
+    }
+
+    private boolean validateQuantity() {
+        boolean isValid = !(txtNWeight.getText().isEmpty() || Double.parseDouble(txtNWeight.getText()) <= 0d);
+        if (isValid) {
             lblNWeight.setForeground(Color.black);
         } else {
             lblNWeight.setForeground(Color.red);
         }
 
-        bResult = bDriName && bCMNDBL && bLicPlate && bRegCat && bRegITxt && bRegIQty;
-        setFormValid(bResult);
-//        return bResult && validDO;
-        boolean r;
-        if (txtNDONum.getText() != null || !txtNDONum.getText().equals("")) {
-            r = bResult && validDO && flag_check;
+        return isValid;
+    }
+
+    public boolean isValidated() {
+        boolean isValidDriverName = validateDriver();
+        boolean isValidDriverNoId = validateDriverNoId();
+        boolean isValidPlateNo = validatePlate();
+        boolean isValidRegisteredCategory = validateRegisteredCategory();
+        boolean isValidRegisteredMaterial = validateMaterial();
+        boolean isValidRegisteredQuantity = validateQuantity();
+        boolean result = isValidDriverName && isValidDriverNoId && isValidPlateNo && isValidRegisteredCategory && isValidRegisteredMaterial && isValidRegisteredQuantity;
+        setFormValid(result);
+
+        boolean isValid;
+        if (StringUtil.isNotEmptyString(txtNDONum.getText())) {
+            isValid = result && validDO && flag_check;
         } else {
-            r = bResult && validDO;
+            isValid = result && validDO;
         }
-        return r;
+        return isValid;
     }
 
     private void printWT(WeightTicket wt, boolean reprint) throws Exception {

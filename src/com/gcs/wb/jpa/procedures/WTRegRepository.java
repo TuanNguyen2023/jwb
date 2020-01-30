@@ -49,7 +49,7 @@ public class WTRegRepository {
             if (entityManager != null) {
                 EntityTransaction entityTransaction = entityManager.getTransaction();
                 entityTransaction.begin();
-                StoredProcedureQuery query = entityManager.createStoredProcedureQuery("pCheckDOExist");
+                StoredProcedureQuery query = entityManager.createStoredProcedureQuery("p_check_delivery_order_no_exist");
                 query.registerStoredProcedureParameter("pDoNumber", String.class, ParameterMode.IN);
                 query.registerStoredProcedureParameter("pWplant", String.class, ParameterMode.IN);
                 query.setParameter("pDoNumber", pDoNumber);
@@ -72,7 +72,7 @@ public class WTRegRepository {
             if (entityManager != null) {
                 EntityTransaction entityTransaction = entityManager.getTransaction();
                 entityTransaction.begin();
-                StoredProcedureQuery query = entityManager.createStoredProcedureQuery("pGetSPVar");
+                StoredProcedureQuery query = entityManager.createStoredProcedureQuery("p_get_spvar");
                 query.registerStoredProcedureParameter("pwbid", String.class, ParameterMode.IN);
                 query.registerStoredProcedureParameter("pspid", String.class, ParameterMode.IN);
                 query.registerStoredProcedureParameter("pmatid", String.class, ParameterMode.IN);
@@ -124,7 +124,7 @@ public class WTRegRepository {
             if (entityManager != null) {
                 EntityTransaction entityTransaction = entityManager.getTransaction();
                 entityTransaction.begin();
-                StoredProcedureQuery query = entityManager.createStoredProcedureQuery("pCheckExist");
+                StoredProcedureQuery query = entityManager.createStoredProcedureQuery("p_check_weight_ticket_exist");
                 query.registerStoredProcedureParameter("pWT", String.class, ParameterMode.IN);
                 query.setParameter("pWT", pWT);
                 query.execute();
@@ -148,7 +148,7 @@ public class WTRegRepository {
             if (entityManager != null) {
                 EntityTransaction entityTransaction = entityManager.getTransaction();
                 entityTransaction.begin();
-                StoredProcedureQuery query = entityManager.createStoredProcedureQuery("pCheckExist");
+                StoredProcedureQuery query = entityManager.createStoredProcedureQuery("p_check_weight_ticket_exist");
                 query.registerStoredProcedureParameter("pRegId", String.class, ParameterMode.IN);
                 query.registerStoredProcedureParameter("pWT", String.class, ParameterMode.IN);
                 query.setParameter("pRegId", pWT);

@@ -53,7 +53,7 @@ public class JPAService {
     public List<Material> getListMaterial() {
         List<Material> materials = new ArrayList<Material>();
         TypedQuery<Material> tMaterial =
-                entityManager.createQuery("SELECT m FROM Material m WHERE m.materialPK.wplant = :wplant order by m.materialPK.matnr asc", Material.class);
+                entityManager.createQuery("SELECT m FROM Material m WHERE m.wplant = :wplant order by m.matnr asc", Material.class);
         tMaterial.setParameter("wplant", config.getwPlant());
         materials = tMaterial.getResultList();
         return materials;
