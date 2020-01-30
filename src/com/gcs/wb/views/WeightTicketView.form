@@ -1138,15 +1138,9 @@
         </Component>
         <Component class="javax.swing.JComboBox" name="cbxReason">
           <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor" postCode="cbxReason.setRenderer(new DefaultListCellRenderer() {&#xa;           @Override&#xa;           public Component getListCellRendererComponent(&#xa;                   JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {&#xa;               super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);&#xa;               if (value instanceof Reason) {&#xa;                   Reason r = (Reason)value;&#xa;                   setText(r.getGrtxt());&#xa;               }&#xa;               return this;&#xa;           }&#xa;       });">
-              <Connection code="getReasonModel()" type="code"/>
-            </Property>
             <Property name="enabled" type="boolean" value="false"/>
             <Property name="name" type="java.lang.String" value="cbxReason" noResource="true"/>
           </Properties>
-          <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbxReasonItemStateChanged"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lblCementDesc">
           <Properties>

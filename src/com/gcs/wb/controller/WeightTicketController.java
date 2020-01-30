@@ -11,7 +11,6 @@ import com.gcs.wb.jpa.entity.OutboundDelivery;
 import com.gcs.wb.jpa.entity.OutboundDeliveryDetail;
 import com.gcs.wb.jpa.entity.PurchaseOrder;
 import com.gcs.wb.jpa.entity.SLoc;
-import com.gcs.wb.jpa.entity.TimeRange;
 import com.gcs.wb.jpa.entity.WeightTicket;
 import com.gcs.wb.service.WeightTicketService;
 import java.util.Date;
@@ -19,7 +18,6 @@ import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JRadioButton;
 import javax.swing.JRootPane;
-import javax.swing.JTextField;
 import org.hibersap.session.Session;
 
 /**
@@ -32,10 +30,6 @@ public class WeightTicketController {
 
     public DefaultComboBoxModel getCustomerByMaNdt() {
         return weightTicketService.getCustomerByMaNdt();
-    }
-
-    public TimeRange getTime() {
-        return weightTicketService.getTime();
     }
 
     public List<BatchStock> getBatchStocks(SLoc selSloc, WeightTicket weightTicket) {

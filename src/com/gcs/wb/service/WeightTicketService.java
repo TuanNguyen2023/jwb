@@ -21,7 +21,6 @@ import com.gcs.wb.bapi.outbdlv.structure.OutbDeliveryCreateStoStructure;
 import com.gcs.wb.bapi.outbdlv.structure.VbkokStructure;
 import com.gcs.wb.bapi.outbdlv.structure.VbpokStructure;
 import com.gcs.wb.bapi.service.SAPService;
-import com.gcs.wb.base.util.StringUtil;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.BatchStock;
@@ -32,14 +31,11 @@ import com.gcs.wb.jpa.entity.OutboundDeliveryDetail;
 import com.gcs.wb.jpa.entity.PurchaseOrder;
 import com.gcs.wb.jpa.entity.PurchaseOrderDetail;
 import com.gcs.wb.jpa.entity.SLoc;
-import com.gcs.wb.jpa.entity.TimeRange;
 import com.gcs.wb.jpa.entity.WeightTicket;
 import com.gcs.wb.jpa.entity.WeightTicketDetail;
 import com.gcs.wb.jpa.procedures.WeightTicketJpaRepository;
 import com.gcs.wb.jpa.repositorys.BatchStockRepository;
 import com.gcs.wb.jpa.repositorys.CustomerRepository;
-import com.gcs.wb.jpa.repositorys.SignalsRepository;
-import com.gcs.wb.jpa.repositorys.TimeRangeRepository;
 import com.gcs.wb.jpa.procedures.WeightTicketRepository;
 import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
 import com.gcs.wb.jpa.service.JPAService;
@@ -61,7 +57,6 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JRootPane;
-import javax.swing.JTextField;
 import org.hibersap.session.Session;
 import org.hibersap.util.DateUtil;
 
@@ -73,11 +68,9 @@ public class WeightTicketService {
 
     WeightTicketRepository weightTicketRepository = new WeightTicketRepository();
     BatchStockRepository batchStocksRepository = new BatchStockRepository();
-    TimeRangeRepository timeRangeRepository = new TimeRangeRepository();
     private AppConfig config = null;
     public HashMap hmMsg = new HashMap();
     CustomerRepository customerRepository = new CustomerRepository();
-    SignalsRepository noneRepository = new SignalsRepository();
     WeightTicketJpaRepository weightTicketJpaRepository = new WeightTicketJpaRepository();
     EntityManager entityManager = JPAConnector.getInstance();
     String client = WeighBridgeApp.getApplication().getConfig().getsClient();
@@ -97,10 +90,6 @@ public class WeightTicketService {
             }
         }
         return result;
-    }
-
-    public TimeRange getTime() {
-        return timeRangeRepository.findByMandtWbId(client, WeighBridgeApp.getApplication().getConfig().getWbId());
     }
 
     public List<BatchStock> getBatchStocks(SLoc selSloc, WeightTicket weightTicket) {

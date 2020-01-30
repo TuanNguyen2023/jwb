@@ -25,14 +25,10 @@ import com.gcs.wb.jpa.entity.OutboundDeliveryDetail;
 import com.gcs.wb.jpa.entity.BatchStock;
 import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.Material;
-import com.gcs.wb.jpa.entity.MovementPK;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
 import com.gcs.wb.jpa.entity.PurchaseOrder;
-import com.gcs.wb.jpa.entity.Reason;
-import com.gcs.wb.jpa.entity.ReasonPK;
 import com.gcs.wb.jpa.entity.SAPSetting;
 import com.gcs.wb.jpa.entity.SLoc;
-import com.gcs.wb.jpa.entity.TimeRange;
 import com.gcs.wb.jpa.entity.User;
 import com.gcs.wb.jpa.entity.Vendor;
 import com.gcs.wb.jpa.entity.WeightTicket;
@@ -65,8 +61,6 @@ import com.gcs.wb.jpa.procedures.WeightTicketJpaRepository;
 import com.gcs.wb.jpa.procedures.WeightTicketRepository;
 import com.gcs.wb.jpa.repositorys.BatchStockRepository;
 import com.gcs.wb.jpa.repositorys.CustomerRepository;
-import com.gcs.wb.jpa.repositorys.SignalsRepository;
-import com.gcs.wb.jpa.repositorys.TimeRangeRepository;
 import com.gcs.wb.controller.WeightTicketController;
 import com.gcs.wb.jpa.entity.PurchaseOrderDetail;
 import com.gcs.wb.jpa.entity.WeightTicketDetail;
@@ -96,7 +90,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     private AppConfig config = WeighBridgeApp.getApplication().getConfig();
     private final SAPSetting sapSetting;
     private final User login;
-    SignalsRepository noneRepository = new SignalsRepository();
     VendorRepository vendorRepository = new VendorRepository();
     EntityManager entityManager = JPAConnector.getInstance();
     CustomerRepository customerRepository = new CustomerRepository();
@@ -892,27 +885,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
         lblReason.setText(resourceMap.getString("lblReason.text")); // NOI18N
         lblReason.setName("lblReason"); // NOI18N
-
-        cbxReason.setModel(getReasonModel());
-        cbxReason.setRenderer(new DefaultListCellRenderer() {
-            @Override
-            public Component getListCellRendererComponent(
-                JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if (value instanceof Reason) {
-                    Reason r = (Reason)value;
-                    setText(r.getGrtxt());
-                }
-                return this;
-            }
-        });
         cbxReason.setEnabled(false);
         cbxReason.setName("cbxReason"); // NOI18N
-        cbxReason.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cbxReasonItemStateChanged(evt);
-            }
-        });
 
         lblCementDesc.setText(resourceMap.getString("lblCementDesc.text")); // NOI18N
         lblCementDesc.setName("lblCementDesc"); // NOI18N
@@ -1360,15 +1334,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         setSaveNeeded(isValidated());
     }//GEN-LAST:event_cbxSLocItemStateChanged
 
-    private void cbxReasonItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbxReasonItemStateChanged
-        if (cbxReason.getSelectedIndex() == -1) {
-            return;
-        }
-        Reason r = (Reason) cbxReason.getSelectedItem();
-        weightTicket.setMoveReas(r.getReasonPK().getGrund());
-        setSaveNeeded(isValidated());
-    }//GEN-LAST:event_cbxReasonItemStateChanged
-
     private void txtGRTextKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtGRTextKeyReleased
         if (weightTicket != null) {
             weightTicket.setText(txtGRText.getText().trim());
@@ -1780,12 +1745,6 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         if (!last.equals(now)) {
             JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.weighStability"));
             return null;
-        }
-        boolean fCheckSignal = false;
-        boolean fOk = false;
-        if (fCheckSignal == true) {
-            int count = noneRepository.getCountSingal();
-            JOptionPane.showMessageDialog(rootPane, count);
         }
 
         if (weightTicket == null || txfCurScale.getValue() == null || ((Number) txfCurScale.getValue()).intValue() == 0) {
@@ -2693,12 +2652,6 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                     cbxSLoc.setSelectedItem(sloc);
                 } else {
                     cbxSLoc.setSelectedIndex(-1);
-                }
-                if (weightTicket.getMoveType() != null && weightTicket.getMoveType().equalsIgnoreCase("101") && weightTicket.getMoveReas() != null && !weightTicket.getMoveReas().trim().isEmpty()) {
-                    Reason reason = entityManager.find(Reason.class, new ReasonPK(config.getsClient(), "101", weightTicket.getMoveReas()));
-                    if (reason != null) {
-                        cbxReason.setSelectedItem(reason);
-                    }
                 }
                 txtGRText.setText(weightTicket.getText());
 
@@ -3984,11 +3937,6 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
     private Object getPgmVl02nBapi(WeightTicket wt, OutboundDelivery outbDel) {
         return weightTicketController.getPgmVl02nBapi(wt, outbDel, weightTicket, timeFrom, timeTo, outDetails_lits);
-    }
-
-    private DefaultComboBoxModel getReasonModel() {
-//        return weightTicketController.getReasonModel();
-        return new DefaultComboBoxModel();
     }
 
     private void printWT(WeightTicket wt, boolean reprint) {
