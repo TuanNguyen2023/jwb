@@ -12,7 +12,7 @@ import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
 import com.gcs.wb.jpa.entity.Variant;
 import com.gcs.wb.jpa.entity.WeightTicket;
-import com.gcs.wb.jpa.entity.OutboundDetail;
+import com.gcs.wb.jpa.entity.OutboundDeliveryDetail;
 
 
 import com.gcs.wb.jpa.procedures.WeightTicketJpaRepository;
@@ -181,7 +181,8 @@ public class WeightTicketJpaController {
 
     public List<WeightTicket> findListWTs(String month, String year, String tagent, String matnr, List<Character> modes, boolean isPosted) throws Exception {
         String query = "SELECT w FROM WeightTicket w "
-                + "WHERE FUNC('YEAR', w.createdDate) = :year "
+                + " LEFT JOIN WeightTicketDetail wd ON wd.weightTicketId = w.id"
+                + " WHERE FUNC('YEAR', w.createdDate) = :year "
                 + " AND FUNC('MONTH', w.createdDate) = :month "
                 + " AND w.regType IN :regType ";
 
@@ -191,9 +192,9 @@ public class WeightTicketJpaController {
 
         if (!matnr.equalsIgnoreCase("-2")) {
             if (!matnr.equalsIgnoreCase("-1")) {
-                query += " AND w.matnrRef = :matnrRef ";
+                query += " AND wd.matnrRef = :matnrRef ";
             } else {
-                query += " AND w.matnrRef IS NULL ";
+                query += " AND wd.matnrRef IS NULL ";
             }
         }
 
@@ -238,20 +239,20 @@ public class WeightTicketJpaController {
         return variantRepository.findByParam(param);
     }
 
-    public List<OutboundDetail> findByMandtDelivNumb(String deliv_numb) throws Exception {
+    public List<OutboundDeliveryDetail> findByMandtDelivNumb(String deliv_numb) throws Exception {
         String devNumber = "%" + deliv_numb + "%";
         OutboundDetailRepository repo = new OutboundDetailRepository();
         return repo.findByDeliveryOrderNo(devNumber);
 
     }
 
-    public List<OutboundDetail> findByMandtDelivNumbItem(String deliv_numb, String item) throws Exception {
+    public List<OutboundDeliveryDetail> findByMandtDelivNumbItem(String deliv_numb, String item) throws Exception {
         OutboundDetailRepository repository = new OutboundDetailRepository();
-        List<OutboundDetail> result = repository.findByDeliveryOrderNoAndDeliveryOrderItem(deliv_numb, item);
+        List<OutboundDeliveryDetail> result = repository.findByDeliveryOrderNoAndDeliveryOrderItem(deliv_numb, item);
         return result;
     }
 
-    public List<OutboundDetail> findByMandtWTID(String wt_id) throws Exception {
+    public List<OutboundDeliveryDetail> findByMandtWTID(String wt_id) throws Exception {
         String client = WeighBridgeApp.getApplication().getConfig().getsClient();
         OutboundDetailRepository repository = new OutboundDetailRepository();
         return repository.findByWtId(wt_id);

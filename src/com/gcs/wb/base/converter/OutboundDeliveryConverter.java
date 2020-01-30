@@ -10,7 +10,7 @@ import com.gcs.wb.bapi.helper.SAP2Local;
 import com.gcs.wb.bapi.helper.structure.DoGetDetailStructure;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
-import com.gcs.wb.jpa.entity.OutboundDetail;
+import com.gcs.wb.jpa.entity.OutboundDeliveryDetail;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.logging.Level;
@@ -31,7 +31,7 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
     @Override
     public OutboundDelivery convertsHasParameter(DoGetDetailBapi from, String val, boolean refresh) throws Exception {
         OutboundDelivery outb = null;
-        OutboundDetail outb_details = null;
+        OutboundDeliveryDetail outb_details = null;
         String item_cat = "";
         String item_num = null;
         String item_num_free = null;
@@ -44,7 +44,7 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
         if (dos.size() > 0) {
             EntityManager em_check = WeighBridgeApp.getApplication().getEm();
             WeightTicketJpaController con_check = new WeightTicketJpaController();
-            List<OutboundDetail> outb_detail_check;
+            List<OutboundDeliveryDetail> outb_detail_check;
             if (refresh == true) {
                 try {
                     outb_detail_check = con_check.findByMandtDelivNumb(val);
@@ -69,7 +69,7 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
                     if (outb_detail_check.size() > 0) {
                         outb_details = outb_detail_check.get(0);
                     } else {
-                        outb_details = new OutboundDetail(val, doItem.getPosnr().substring(4, 5));
+                        outb_details = new OutboundDeliveryDetail(val, doItem.getPosnr().substring(4, 5));
                     }
                 } catch (Exception ex) {
                     Logger.getLogger(SAP2Local.class.getName()).log(Level.SEVERE, null, ex);

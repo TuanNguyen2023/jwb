@@ -50,10 +50,10 @@ public class SAPSetting implements Serializable {
     private Date updatedDate;
     @Column(name = "deleted_date")
     private Date deletedDate;
-    @Column(name = "mandt")
+    @Column(name = "mandt", unique = true)
     private String mandt;
-    @Column(name = "wplant")
-    private String wplan;
+    @Column(name = "wplant", unique = true)
+    private String wplant;
 
     public SAPSetting() {
     }
@@ -150,12 +150,12 @@ public class SAPSetting implements Serializable {
         this.mandt = mandt;
     }
 
-    public String getWplan() {
-        return wplan;
+    public String getWplant() {
+        return wplant;
     }
 
-    public void setWplan(String wplan) {
-        this.wplan = wplan;
+    public void setWplant(String wplant) {
+        this.wplant = wplant;
     }
     
     @Override
@@ -177,7 +177,7 @@ public class SAPSetting implements Serializable {
         if (updatedDate != null ? !updatedDate.equals(that.updatedDate) : that.updatedDate != null) return false;
         if (deletedDate != null ? !deletedDate.equals(that.deletedDate) : that.deletedDate != null) return false;
         if (mandt != null ? !mandt.equals(that.mandt) : that.mandt != null) return false;
-        if (wplan != null ? !wplan.equals(that.wplan) : that.wplan != null) return false;
+        if (wplant != null ? !wplant.equals(that.wplant) : that.wplant != null) return false;
 
         return true;
     }
@@ -196,7 +196,7 @@ public class SAPSetting implements Serializable {
         result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
         result = 31 * result + (deletedDate != null ? deletedDate.hashCode() : 0);
         result = 31 * result + (mandt != null ? mandt.hashCode() : 0);
-        result = 31 * result + (wplan != null ? wplan.hashCode() : 0);
+        result = 31 * result + (wplant != null ? wplant.hashCode() : 0);
         return result;
     }
 

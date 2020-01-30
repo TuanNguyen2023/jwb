@@ -8,13 +8,17 @@ import com.gcs.wb.base.constant.Constants;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 /**
@@ -26,98 +30,109 @@ import javax.persistence.Table;
 @NamedQueries({
     @NamedQuery(name = "WeightTicket.findAll", query = "SELECT w FROM WeightTicket w"),
     @NamedQuery(name = "WeightTicket.findByCreatedDateRange", query = "SELECT w FROM WeightTicket w WHERE w.createdDate BETWEEN :from AND :to"),
-    @NamedQuery(name = "WeightTicket.findByDeliveryOrderNo", query = "SELECT w FROM WeightTicket w WHERE w.deliveryOrderNo = :deliveryOrderNo"),
+    @NamedQuery(name = "WeightTicket.findByDeliveryOrderNo",
+            query = "SELECT w FROM WeightTicket w "
+            + " LEFT JOIN WeightTicketDetail wd ON wd.weightTicketId = w.id"
+            + " WHERE wd.deliveryOrderNo = :deliveryOrderNo"),
     @NamedQuery(name = "WeightTicket.findBySoNiemXa", query = "SELECT w FROM WeightTicket w WHERE w.soNiemXa = :soNiemXa"),
     @NamedQuery(name = "WeightTicket.findByDateFull",
-    query = "SELECT w FROM WeightTicket w "
-    + "WHERE w.createdDate BETWEEN :from AND :to"
-    + "  AND w.creator LIKE :creator"
-    + "  AND w.driverName LIKE :driverName"
-    + "  AND w.plateNo LIKE :plateNo"
-    + "  AND w.matnrRef = :loaihang"),
+            query = "SELECT w FROM WeightTicket w "
+            + " LEFT JOIN WeightTicketDetail wd ON wd.weightTicketId = w.id "
+            + " WHERE w.createdDate BETWEEN :from AND :to"
+            + "  AND w.creator LIKE :creator"
+            + "  AND w.driverName LIKE :driverName"
+            + "  AND w.plateNo LIKE :plateNo"
+            + "  AND wd.matnrRef = :loaihang"),
     @NamedQuery(name = "WeightTicket.findByDateNull",
-    query = "SELECT w FROM WeightTicket w "
-    + "WHERE w.createdDate BETWEEN :from AND :to"
-    + "  AND w.creator LIKE :creator"
-    + "  AND w.driverName LIKE :driverName"
-    + "  AND w.plateNo LIKE :plateNo"
-    + "  AND w.matnrRef IS NULL"),
+            query = "SELECT w FROM WeightTicket w "
+            + " LEFT JOIN WeightTicketDetail wd ON wd.weightTicketId = w.id "
+            + " WHERE w.createdDate BETWEEN :from AND :to"
+            + "  AND w.creator LIKE :creator"
+            + "  AND w.driverName LIKE :driverName"
+            + "  AND w.plateNo LIKE :plateNo"
+            + "  AND wd.matnrRef IS NULL"),
     @NamedQuery(name = "WeightTicket.findByDateNullAll",
-    query = "SELECT w FROM WeightTicket w "
-    + "WHERE w.createdDate BETWEEN :from AND :to"
-    + "  AND w.creator LIKE :creator"
-    + "  AND w.plateNo LIKE :plateNo"
-    + "  AND w.driverName LIKE :driverName"),
+            query = "SELECT w FROM WeightTicket w "
+            + "WHERE w.createdDate BETWEEN :from AND :to"
+            + "  AND w.creator LIKE :creator"
+            + "  AND w.plateNo LIKE :plateNo"
+            + "  AND w.driverName LIKE :driverName"),
     @NamedQuery(name = "WeightTicket.findByDateDissolved",
-    query = "SELECT w FROM WeightTicket w "
-    + "WHERE w.createdDate BETWEEN :from AND :to"
-    + "  AND w.creator LIKE :creator"
-    + "  AND w.driverName LIKE :driverName"
-    + "  AND w.plateNo LIKE :plateNo"
-    + "  AND w.matnrRef = :loaihang"
-    + "  AND w.status = '" + Constants.WeightTicket.STATUS_DISSOLVED + "'"),
+            query = "SELECT w FROM WeightTicket w "
+            + " LEFT JOIN WeightTicketDetail wd ON wd.weightTicketId = w.id "
+            + " WHERE w.createdDate BETWEEN :from AND :to"
+            + "  AND w.creator LIKE :creator"
+            + "  AND w.driverName LIKE :driverName"
+            + "  AND w.plateNo LIKE :plateNo"
+            + "  AND wd.matnrRef = :loaihang"
+            + "  AND w.status = '" + Constants.WeightTicket.STATUS_DISSOLVED + "'"),
     @NamedQuery(name = "WeightTicket.findByDateDissolvedNull",
-    query = "SELECT w FROM WeightTicket w "
-    + "WHERE w.createdDate BETWEEN :from AND :to"
-    + "  AND w.creator LIKE :creator"
-    + "  AND w.driverName LIKE :driverName"
-    + "  AND w.plateNo LIKE :plateNo"
-    + "  AND w.matnrRef IS NULL"
-    + "  AND w.status = '" + Constants.WeightTicket.STATUS_DISSOLVED + "'"),
+            query = "SELECT w FROM WeightTicket w "
+            + " LEFT JOIN WeightTicketDetail wd ON wd.weightTicketId = w.id "
+            + " WHERE w.createdDate BETWEEN :from AND :to"
+            + "  AND w.creator LIKE :creator"
+            + "  AND w.driverName LIKE :driverName"
+            + "  AND w.plateNo LIKE :plateNo"
+            + "  AND wd.matnrRef IS NULL"
+            + "  AND w.status = '" + Constants.WeightTicket.STATUS_DISSOLVED + "'"),
     @NamedQuery(name = "WeightTicket.findByDateDissolvedNullAll",
-    query = "SELECT w FROM WeightTicket w "
-    + "WHERE w.createdDate BETWEEN :from AND :to"
-    + "  AND w.creator LIKE :creator"
-    + "  AND w.driverName LIKE :driverName"
-    + "  AND w.plateNo LIKE :plateNo"
-    + "  AND w.status = '" + Constants.WeightTicket.STATUS_DISSOLVED + "'"),
+            query = "SELECT w FROM WeightTicket w "
+            + "WHERE w.createdDate BETWEEN :from AND :to"
+            + "  AND w.creator LIKE :creator"
+            + "  AND w.driverName LIKE :driverName"
+            + "  AND w.plateNo LIKE :plateNo"
+            + "  AND w.status = '" + Constants.WeightTicket.STATUS_DISSOLVED + "'"),
     @NamedQuery(name = "WeightTicket.findByDatePosted",
-    query = "SELECT w FROM WeightTicket w "
-    + "WHERE w.createdDate BETWEEN :from AND :to"
-    + "  AND w.creator LIKE :creator"
-    + "  AND w.driverName LIKE :driverName"
-    + "  AND w.matnrRef = :loaihang"
-    + "  AND w.plateNo LIKE :plateNo"
-    + "  AND w.status = '" + Constants.WeightTicket.STATUS_POSTED + "'"),
+            query = "SELECT w FROM WeightTicket w "
+            + " LEFT JOIN WeightTicketDetail wd ON wd.weightTicketId = w.id "
+            + " WHERE w.createdDate BETWEEN :from AND :to"
+            + "  AND w.creator LIKE :creator"
+            + "  AND w.driverName LIKE :driverName"
+            + "  AND wd.matnrRef = :loaihang"
+            + "  AND w.plateNo LIKE :plateNo"
+            + "  AND w.status = '" + Constants.WeightTicket.STATUS_POSTED + "'"),
     @NamedQuery(name = "WeightTicket.findByDatePostedNull",
-    query = "SELECT w FROM WeightTicket w "
-    + "WHERE w.createdDate BETWEEN :from AND :to"
-    + "  AND w.creator LIKE :creator"
-    + "  AND w.driverName LIKE :driverName"
-    + "  AND w.plateNo LIKE :plateNo"
-    + "  AND w.matnrRef IS NULL"
-    + "  AND w.status = '" + Constants.WeightTicket.STATUS_POSTED + "'"),
+            query = "SELECT w FROM WeightTicket w "
+            + " LEFT JOIN WeightTicketDetail wd ON wd.weightTicketId = w.id "
+            + " WHERE w.createdDate BETWEEN :from AND :to"
+            + "  AND w.creator LIKE :creator"
+            + "  AND w.driverName LIKE :driverName"
+            + "  AND w.plateNo LIKE :plateNo"
+            + "  AND wd.matnrRef IS NULL"
+            + "  AND w.status = '" + Constants.WeightTicket.STATUS_POSTED + "'"),
     @NamedQuery(name = "WeightTicket.findByDatePostedNullAll",
-    query = "SELECT w FROM WeightTicket w "
-    + "WHERE w.createdDate BETWEEN :from AND :to"
-    + "  AND w.creator LIKE :creator"
-    + "  AND w.driverName LIKE :driverName"
-    + "  AND w.plateNo LIKE :plateNo"
-    + "  AND w.status = '" + Constants.WeightTicket.STATUS_POSTED + "'"),
+            query = "SELECT w FROM WeightTicket w "
+            + "WHERE w.createdDate BETWEEN :from AND :to"
+            + "  AND w.creator LIKE :creator"
+            + "  AND w.driverName LIKE :driverName"
+            + "  AND w.plateNo LIKE :plateNo"
+            + "  AND w.status = '" + Constants.WeightTicket.STATUS_POSTED + "'"),
     @NamedQuery(name = "WeightTicket.findByDateAll",
-    query = "SELECT w FROM WeightTicket w "
-    + "WHERE w.createdDate BETWEEN :from AND :to"
-    + "  AND w.creator LIKE :creator"
-    + "  AND w.driverName LIKE :driverName"
-    + "  AND w.plateNo LIKE :plateNo"
-    + "  AND w.matnrRef = :loaihang"),
+            query = "SELECT w FROM WeightTicket w "
+            + " LEFT JOIN WeightTicketDetail wd ON wd.weightTicketId = w.id "
+            + " WHERE w.createdDate BETWEEN :from AND :to"
+            + "  AND w.creator LIKE :creator"
+            + "  AND w.driverName LIKE :driverName"
+            + "  AND w.plateNo LIKE :plateNo"
+            + "  AND wd.matnrRef = :loaihang"),
     @NamedQuery(name = "WeightTicket.findByDateAllNull",
-    query = "SELECT w FROM WeightTicket w "
-    + "WHERE w.createdDate BETWEEN :from AND :to"
-    + "  AND w.creator LIKE :creator"
-    + "  AND w.driverName LIKE :driverName"
-    + "  AND w.plateNo LIKE :plateNo"
-    + "  AND w.matnrRef IS NULL"),
+            query = "SELECT w FROM WeightTicket w "
+            + " LEFT JOIN WeightTicketDetail wd ON wd.weightTicketId = w.id "
+            + " WHERE w.createdDate BETWEEN :from AND :to"
+            + "  AND w.creator LIKE :creator"
+            + "  AND w.driverName LIKE :driverName"
+            + "  AND w.plateNo LIKE :plateNo"
+            + "  AND wd.matnrRef IS NULL"),
     @NamedQuery(name = "WeightTicket.findByDateAllNullAll",
-    query = "SELECT w FROM WeightTicket w "
-    + "WHERE w.createdDate BETWEEN :from AND :to"
-    + "  AND w.creator LIKE :creator"
-    + "  AND w.plateNo LIKE :plateNo"
-    + "  AND w.driverName LIKE :driverName"),
+            query = "SELECT w FROM WeightTicket w "
+            + "WHERE w.createdDate BETWEEN :from AND :to"
+            + "  AND w.creator LIKE :creator"
+            + "  AND w.plateNo LIKE :plateNo"
+            + "  AND w.driverName LIKE :driverName"),
     @NamedQuery(name = "WeightTicket.findByIdSeqDay",
-    query = "SELECT w FROM WeightTicket w "
-    + "WHERE w.id = :id"
-    + "  AND w.seqDay = :seqDay")
+            query = "SELECT w FROM WeightTicket w "
+            + "WHERE w.id = :id"
+            + "  AND w.seqDay = :seqDay")
 })
 public class WeightTicket implements Serializable {
 
@@ -126,9 +141,9 @@ public class WeightTicket implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
-    @Column(name = "mandt")
+    @Column(name = "mandt", unique = true)
     private String mandt;
-    @Column(name = "wplant")
+    @Column(name = "wplant", unique = true)
     private String wplant;
     @Column(name = "seq_day")
     private int seqDay;
@@ -144,30 +159,6 @@ public class WeightTicket implements Serializable {
     private String trailerId;
     @Column(name = "reg_type")
     private Character regType;
-    @Column(name = "reg_item_description")
-    private String regItemDescription;
-    @Column(name = "reg_item_quantity")
-    private BigDecimal regItemQuantity;
-    @Column(name = "delivery_order_no")
-    private String deliveryOrderNo;
-    @Column(name = "status")
-    private String status;
-    @Column(name = "so_niem_xa")
-    private String soNiemXa;
-    @Column(name = "offline_mode")
-    private Boolean offlineMode;
-    @Column(name = "f_scale")
-    private BigDecimal fScale;
-    @Column(name = "f_time")
-    private Date fTime;
-    @Column(name = "s_scale")
-    private BigDecimal sScale;
-    @Column(name = "s_time")
-    private Date sTime;
-    @Column(name = "mat_doc")
-    private String matDoc;
-    @Column(name = "ebeln")
-    private String ebeln;
     @Column(name = "abbr")
     private String abbr;
     @Column(name = "wb_id")
@@ -178,10 +169,10 @@ public class WeightTicket implements Serializable {
     private String lgort;
     @Column(name = "charg")
     private String charg;
-    @Column(name = "item")
-    private String item;
-    @Column(name = "matnr_ref")
-    private String matnrRef;
+    @Column(name = "load_vendor")
+    private String loadVendor;
+    @Column(name = "trans_vendor")
+    private String transVendor;
     @Column(name = "no_more_gr")
     private Character noMoreGr;
     @Column(name = "move_type")
@@ -190,22 +181,22 @@ public class WeightTicket implements Serializable {
     private String moveReas;
     @Column(name = "text")
     private String text;
-    @Column(name = "mvt_ind")
-    private Character mvtInd;
-    @Column(name = "lichn")
-    private String lichn;
+    @Column(name = "so_niem_xa")
+    private String soNiemXa;
+    @Column(name = "f_scale")
+    private BigDecimal fScale;
+    @Column(name = "f_time")
+    private Date fTime;
+    @Column(name = "s_scale")
+    private BigDecimal sScale;
+    @Column(name = "s_time")
+    private Date sTime;
     @Column(name = "f_creator")
     private String fCreator;
     @Column(name = "s_creator")
     private String sCreator;
     @Column(name = "g_qty")
     private BigDecimal gQty;
-    @Column(name = "unit")
-    private String unit;
-    @Column(name = "doc_year")
-    private Integer docYear;
-    @Column(name = "recv_matnr")
-    private String recvMatnr;
     @Column(name = "recv_plant")
     private String recvPlant;
     @Column(name = "recv_lgort")
@@ -214,18 +205,14 @@ public class WeightTicket implements Serializable {
     private String recvCharg;
     @Column(name = "recv_po")
     private String recvPo;
-    @Column(name = "pp_procord")
-    private String ppProcord;
-    @Column(name = "pp_procordcnf")
-    private String ppProcordcnf;
-    @Column(name = "pp_procordcnfcnt")
-    private String ppProcordcnfcnt;
-    @Column(name = "kunnr")
-    private String kunnr;
     @Column(name = "manual")
     private Character manual;
     @Column(name = "wt_id")
     private String wtId;
+    @Column(name = "offline_mode")
+    private Boolean offlineMode;
+    @Column(name = "status")
+    private String status;
     @Column(name = "created_time")
     private String createdTime;
     @Column(name = "created_date")
@@ -236,10 +223,14 @@ public class WeightTicket implements Serializable {
     private Date deletedDate;
     @Column(name = "posto")
     private String posto;
+    
+    @OneToMany
+    @JoinColumn(name = "weight_ticket_detail")
+    private List<WeightTicketDetail> weightTicketDetails;
 
     public WeightTicket() {
     }
-    
+
     public WeightTicket(int id) {
         this.id = id;
     }
@@ -263,12 +254,10 @@ public class WeightTicket implements Serializable {
         this.driverIdNo = driverIdNo;
         this.plateNo = plateNo;
         this.regType = regType;
-        this.regItemDescription = regItemDescription;
-        this.regItemQuantity = regItemQuantity;
         this.createdDate = createdDate;
         this.createdTime = createdTime;
     }
-    
+
     public int getId() {
         return id;
     }
@@ -276,7 +265,7 @@ public class WeightTicket implements Serializable {
     public void setId(int id) {
         this.id = id;
     }
-    
+
     public String getMandt() {
         return mandt;
     }
@@ -349,30 +338,6 @@ public class WeightTicket implements Serializable {
         this.regType = regType;
     }
 
-    public String getRegItemDescription() {
-        return regItemDescription;
-    }
-
-    public void setRegItemDescription(String regItemDescription) {
-        this.regItemDescription = regItemDescription;
-    }
-
-    public BigDecimal getRegItemQuantity() {
-        return regItemQuantity;
-    }
-
-    public void setRegItemQuantity(BigDecimal regItemQuantity) {
-        this.regItemQuantity = regItemQuantity;
-    }
-
-    public String getDeliveryOrderNo() {
-        return deliveryOrderNo;
-    }
-
-    public void setDeliveryOrderNo(String deliveryOrderNo) {
-        this.deliveryOrderNo = deliveryOrderNo;
-    }
-
     public String getStatus() {
         return status;
     }
@@ -429,22 +394,6 @@ public class WeightTicket implements Serializable {
         this.sTime = sTime;
     }
 
-    public String getMatDoc() {
-        return matDoc;
-    }
-
-    public void setMatDoc(String matDoc) {
-        this.matDoc = matDoc;
-    }
-
-    public String getEbeln() {
-        return ebeln;
-    }
-
-    public void setEbeln(String ebeln) {
-        this.ebeln = ebeln;
-    }
-
     public String getAbbr() {
         return abbr;
     }
@@ -485,22 +434,6 @@ public class WeightTicket implements Serializable {
         this.charg = charg;
     }
 
-    public String getItem() {
-        return item;
-    }
-
-    public void setItem(String item) {
-        this.item = item;
-    }
-
-    public String getMatnrRef() {
-        return matnrRef;
-    }
-
-    public void setMatnrRef(String matnrRef) {
-        this.matnrRef = matnrRef;
-    }
-
     public Character getNoMoreGr() {
         return noMoreGr;
     }
@@ -533,22 +466,6 @@ public class WeightTicket implements Serializable {
         this.text = text;
     }
 
-    public Character getMvtInd() {
-        return mvtInd;
-    }
-
-    public void setMvtInd(Character mvtInd) {
-        this.mvtInd = mvtInd;
-    }
-
-    public String getLichn() {
-        return lichn;
-    }
-
-    public void setLichn(String lichn) {
-        this.lichn = lichn;
-    }
-
     public String getFCreator() {
         return fCreator;
     }
@@ -571,30 +488,6 @@ public class WeightTicket implements Serializable {
 
     public void setGQty(BigDecimal gQty) {
         this.gQty = gQty;
-    }
-
-    public String getUnit() {
-        return unit;
-    }
-
-    public void setUnit(String unit) {
-        this.unit = unit;
-    }
-
-    public Integer getDocYear() {
-        return docYear;
-    }
-
-    public void setDocYear(Integer docYear) {
-        this.docYear = docYear;
-    }
-
-    public String getRecvMatnr() {
-        return recvMatnr;
-    }
-
-    public void setRecvMatnr(String recvMatnr) {
-        this.recvMatnr = recvMatnr;
     }
 
     public String getRecvPlant() {
@@ -627,38 +520,6 @@ public class WeightTicket implements Serializable {
 
     public void setRecvPo(String recvPo) {
         this.recvPo = recvPo;
-    }
-
-    public String getPpProcord() {
-        return ppProcord;
-    }
-
-    public void setPpProcord(String ppProcord) {
-        this.ppProcord = ppProcord;
-    }
-
-    public String getPpProcordcnf() {
-        return ppProcordcnf;
-    }
-
-    public void setPpProcordcnf(String ppProcordcnf) {
-        this.ppProcordcnf = ppProcordcnf;
-    }
-
-    public String getPpProcordcnfcnt() {
-        return ppProcordcnfcnt;
-    }
-
-    public void setPpProcordcnfcnt(String ppProcordcnfcnt) {
-        this.ppProcordcnfcnt = ppProcordcnfcnt;
-    }
-
-    public String getKunnr() {
-        return kunnr;
-    }
-
-    public void setKunnr(String kunnr) {
-        this.kunnr = kunnr;
     }
 
     public Character getManual() {
@@ -708,19 +569,19 @@ public class WeightTicket implements Serializable {
     public void setDeletedDate(Date deletedDate) {
         this.deletedDate = deletedDate;
     }
-    
+
     public boolean isDissolved() {
         return Constants.WeightTicket.STATUS_DISSOLVED.equals(status);
     }
-    
+
     public void setDissolved(boolean isDissolved) {
         this.status = isDissolved ? Constants.WeightTicket.STATUS_DISSOLVED : null;
     }
-    
+
     public boolean isPosted() {
         return Constants.WeightTicket.STATUS_POSTED.equals(status);
     }
-    
+
     public void setPosted(boolean isPosted) {
         this.status = isPosted ? Constants.WeightTicket.STATUS_POSTED : null;
     }
@@ -733,72 +594,151 @@ public class WeightTicket implements Serializable {
         this.posto = posto;
     }
 
+    public List<WeightTicketDetail> getWeightTicketDetails() {
+        return weightTicketDetails;
+    }
+
+    public void setWeightTicketDetails(List<WeightTicketDetail> weightTicketDetails) {
+        this.weightTicketDetails = weightTicketDetails;
+    }
+    
+    public WeightTicketDetail getWeightTicketDetail() {
+        if (!(weightTicketDetails != null && weightTicketDetails.size() > 0)) {
+            weightTicketDetails = new ArrayList<>();
+            weightTicketDetails.add(new WeightTicketDetail());
+        }
+        
+        return weightTicketDetails.get(0);
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         WeightTicket that = (WeightTicket) o;
 
-        if (id != that.id) return false;
-        if (mandt != null ? !mandt.equals(that.mandt) : that.mandt != null) return false;
-        if (wplant != null ? !wplant.equals(that.wplant) : that.wplant != null) return false;
-        if (seqDay != that.seqDay) return false;
-        if (seqMonth != that.seqMonth) return false;
-        if (driverName != null ? !driverName.equals(that.driverName) : that.driverName != null) return false;
-        if (driverIdNo != null ? !driverIdNo.equals(that.driverIdNo) : that.driverIdNo != null) return false;
-        if (plateNo != null ? !plateNo.equals(that.plateNo) : that.plateNo != null) return false;
-        if (trailerId != null ? !trailerId.equals(that.trailerId) : that.trailerId != null) return false;
-        if (regType != null ? !regType.equals(that.regType) : that.regType != null) return false;
-        if (regItemDescription != null ? !regItemDescription.equals(that.regItemDescription) : that.regItemDescription != null)
+        if (id != that.id) {
             return false;
-        if (regItemQuantity != null ? !regItemQuantity.equals(that.regItemQuantity) : that.regItemQuantity != null)
+        }
+        if (mandt != null ? !mandt.equals(that.mandt) : that.mandt != null) {
             return false;
-        if (deliveryOrderNo != null ? !deliveryOrderNo.equals(that.deliveryOrderNo) : that.deliveryOrderNo != null)
+        }
+        if (wplant != null ? !wplant.equals(that.wplant) : that.wplant != null) {
             return false;
-        if (status != null ? !status.equals(that.status) : that.status != null) return false;
-        if (soNiemXa != null ? !soNiemXa.equals(that.soNiemXa) : that.soNiemXa != null) return false;
-        if (offlineMode != null ? !offlineMode.equals(that.offlineMode) : that.offlineMode != null) return false;
-        if (fScale != null ? !fScale.equals(that.fScale) : that.fScale != null) return false;
-        if (fTime != null ? !fTime.equals(that.fTime) : that.fTime != null) return false;
-        if (sScale != null ? !sScale.equals(that.sScale) : that.sScale != null) return false;
-        if (sTime != null ? !sTime.equals(that.sTime) : that.sTime != null) return false;
-        if (matDoc != null ? !matDoc.equals(that.matDoc) : that.matDoc != null) return false;
-        if (ebeln != null ? !ebeln.equals(that.ebeln) : that.ebeln != null) return false;
-        if (abbr != null ? !abbr.equals(that.abbr) : that.abbr != null) return false;
-        if (wbId != null ? !wbId.equals(that.wbId) : that.wbId != null) return false;
-        if (creator != null ? !creator.equals(that.creator) : that.creator != null) return false;
-        if (lgort != null ? !lgort.equals(that.lgort) : that.lgort != null) return false;
-        if (charg != null ? !charg.equals(that.charg) : that.charg != null) return false;
-        if (item != null ? !item.equals(that.item) : that.item != null) return false;
-        if (matnrRef != null ? !matnrRef.equals(that.matnrRef) : that.matnrRef != null) return false;
-        if (noMoreGr != null ? !noMoreGr.equals(that.noMoreGr) : that.noMoreGr != null) return false;
-        if (moveType != null ? !moveType.equals(that.moveType) : that.moveType != null) return false;
-        if (moveReas != null ? !moveReas.equals(that.moveReas) : that.moveReas != null) return false;
-        if (text != null ? !text.equals(that.text) : that.text != null) return false;
-        if (mvtInd != null ? !mvtInd.equals(that.mvtInd) : that.mvtInd != null) return false;
-        if (lichn != null ? !lichn.equals(that.lichn) : that.lichn != null) return false;
-        if (fCreator != null ? !fCreator.equals(that.fCreator) : that.fCreator != null) return false;
-        if (sCreator != null ? !sCreator.equals(that.sCreator) : that.sCreator != null) return false;
-        if (gQty != null ? !gQty.equals(that.gQty) : that.gQty != null) return false;
-        if (unit != null ? !unit.equals(that.unit) : that.unit != null) return false;
-        if (docYear != null ? !docYear.equals(that.docYear) : that.docYear != null) return false;
-        if (recvMatnr != null ? !recvMatnr.equals(that.recvMatnr) : that.recvMatnr != null) return false;
-        if (recvPlant != null ? !recvPlant.equals(that.recvPlant) : that.recvPlant != null) return false;
-        if (recvLgort != null ? !recvLgort.equals(that.recvLgort) : that.recvLgort != null) return false;
-        if (recvCharg != null ? !recvCharg.equals(that.recvCharg) : that.recvCharg != null) return false;
-        if (recvPo != null ? !recvPo.equals(that.recvPo) : that.recvPo != null) return false;
-        if (ppProcord != null ? !ppProcord.equals(that.ppProcord) : that.ppProcord != null) return false;
-        if (ppProcordcnf != null ? !ppProcordcnf.equals(that.ppProcordcnf) : that.ppProcordcnf != null) return false;
-        if (ppProcordcnfcnt != null ? !ppProcordcnfcnt.equals(that.ppProcordcnfcnt) : that.ppProcordcnfcnt != null)
+        }
+        if (seqDay != that.seqDay) {
             return false;
-        if (kunnr != null ? !kunnr.equals(that.kunnr) : that.kunnr != null) return false;
-        if (manual != null ? !manual.equals(that.manual) : that.manual != null) return false;
-        if (wtId != null ? !wtId.equals(that.wtId) : that.wtId != null) return false;
-        if (createdTime != null ? !createdTime.equals(that.createdTime) : that.createdTime != null) return false;
-        if (createdDate != null ? !createdDate.equals(that.createdDate) : that.createdDate != null) return false;
-        if (updatedDate != null ? !updatedDate.equals(that.updatedDate) : that.updatedDate != null) return false;
-        if (deletedDate != null ? !deletedDate.equals(that.deletedDate) : that.deletedDate != null) return false;
+        }
+        if (seqMonth != that.seqMonth) {
+            return false;
+        }
+        if (driverName != null ? !driverName.equals(that.driverName) : that.driverName != null) {
+            return false;
+        }
+        if (driverIdNo != null ? !driverIdNo.equals(that.driverIdNo) : that.driverIdNo != null) {
+            return false;
+        }
+        if (plateNo != null ? !plateNo.equals(that.plateNo) : that.plateNo != null) {
+            return false;
+        }
+        if (trailerId != null ? !trailerId.equals(that.trailerId) : that.trailerId != null) {
+            return false;
+        }
+        if (regType != null ? !regType.equals(that.regType) : that.regType != null) {
+            return false;
+        }
+        if (status != null ? !status.equals(that.status) : that.status != null) {
+            return false;
+        }
+        if (soNiemXa != null ? !soNiemXa.equals(that.soNiemXa) : that.soNiemXa != null) {
+            return false;
+        }
+        if (offlineMode != null ? !offlineMode.equals(that.offlineMode) : that.offlineMode != null) {
+            return false;
+        }
+        if (fScale != null ? !fScale.equals(that.fScale) : that.fScale != null) {
+            return false;
+        }
+        if (fTime != null ? !fTime.equals(that.fTime) : that.fTime != null) {
+            return false;
+        }
+        if (sScale != null ? !sScale.equals(that.sScale) : that.sScale != null) {
+            return false;
+        }
+        if (sTime != null ? !sTime.equals(that.sTime) : that.sTime != null) {
+            return false;
+        }
+        if (abbr != null ? !abbr.equals(that.abbr) : that.abbr != null) {
+            return false;
+        }
+        if (wbId != null ? !wbId.equals(that.wbId) : that.wbId != null) {
+            return false;
+        }
+        if (creator != null ? !creator.equals(that.creator) : that.creator != null) {
+            return false;
+        }
+        if (lgort != null ? !lgort.equals(that.lgort) : that.lgort != null) {
+            return false;
+        }
+        if (charg != null ? !charg.equals(that.charg) : that.charg != null) {
+            return false;
+        }
+        if (noMoreGr != null ? !noMoreGr.equals(that.noMoreGr) : that.noMoreGr != null) {
+            return false;
+        }
+        if (moveType != null ? !moveType.equals(that.moveType) : that.moveType != null) {
+            return false;
+        }
+        if (moveReas != null ? !moveReas.equals(that.moveReas) : that.moveReas != null) {
+            return false;
+        }
+        if (text != null ? !text.equals(that.text) : that.text != null) {
+            return false;
+        }
+        if (fCreator != null ? !fCreator.equals(that.fCreator) : that.fCreator != null) {
+            return false;
+        }
+        if (sCreator != null ? !sCreator.equals(that.sCreator) : that.sCreator != null) {
+            return false;
+        }
+        if (gQty != null ? !gQty.equals(that.gQty) : that.gQty != null) {
+            return false;
+        }
+        if (recvPlant != null ? !recvPlant.equals(that.recvPlant) : that.recvPlant != null) {
+            return false;
+        }
+        if (recvLgort != null ? !recvLgort.equals(that.recvLgort) : that.recvLgort != null) {
+            return false;
+        }
+        if (recvCharg != null ? !recvCharg.equals(that.recvCharg) : that.recvCharg != null) {
+            return false;
+        }
+        if (recvPo != null ? !recvPo.equals(that.recvPo) : that.recvPo != null) {
+            return false;
+        }
+        if (manual != null ? !manual.equals(that.manual) : that.manual != null) {
+            return false;
+        }
+        if (wtId != null ? !wtId.equals(that.wtId) : that.wtId != null) {
+            return false;
+        }
+        if (createdTime != null ? !createdTime.equals(that.createdTime) : that.createdTime != null) {
+            return false;
+        }
+        if (createdDate != null ? !createdDate.equals(that.createdDate) : that.createdDate != null) {
+            return false;
+        }
+        if (updatedDate != null ? !updatedDate.equals(that.updatedDate) : that.updatedDate != null) {
+            return false;
+        }
+        if (deletedDate != null ? !deletedDate.equals(that.deletedDate) : that.deletedDate != null) {
+            return false;
+        }
 
         return true;
     }
@@ -815,9 +755,6 @@ public class WeightTicket implements Serializable {
         result = 31 * result + (plateNo != null ? plateNo.hashCode() : 0);
         result = 31 * result + (trailerId != null ? trailerId.hashCode() : 0);
         result = 31 * result + (regType != null ? regType.hashCode() : 0);
-        result = 31 * result + (regItemDescription != null ? regItemDescription.hashCode() : 0);
-        result = 31 * result + (regItemQuantity != null ? regItemQuantity.hashCode() : 0);
-        result = 31 * result + (deliveryOrderNo != null ? deliveryOrderNo.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
         result = 31 * result + (soNiemXa != null ? soNiemXa.hashCode() : 0);
         result = 31 * result + (offlineMode != null ? offlineMode.hashCode() : 0);
@@ -825,35 +762,22 @@ public class WeightTicket implements Serializable {
         result = 31 * result + (fTime != null ? fTime.hashCode() : 0);
         result = 31 * result + (sScale != null ? sScale.hashCode() : 0);
         result = 31 * result + (sTime != null ? sTime.hashCode() : 0);
-        result = 31 * result + (matDoc != null ? matDoc.hashCode() : 0);
-        result = 31 * result + (ebeln != null ? ebeln.hashCode() : 0);
         result = 31 * result + (abbr != null ? abbr.hashCode() : 0);
         result = 31 * result + (wbId != null ? wbId.hashCode() : 0);
         result = 31 * result + (creator != null ? creator.hashCode() : 0);
         result = 31 * result + (lgort != null ? lgort.hashCode() : 0);
         result = 31 * result + (charg != null ? charg.hashCode() : 0);
-        result = 31 * result + (item != null ? item.hashCode() : 0);
-        result = 31 * result + (matnrRef != null ? matnrRef.hashCode() : 0);
         result = 31 * result + (noMoreGr != null ? noMoreGr.hashCode() : 0);
         result = 31 * result + (moveType != null ? moveType.hashCode() : 0);
         result = 31 * result + (moveReas != null ? moveReas.hashCode() : 0);
         result = 31 * result + (text != null ? text.hashCode() : 0);
-        result = 31 * result + (mvtInd != null ? mvtInd.hashCode() : 0);
-        result = 31 * result + (lichn != null ? lichn.hashCode() : 0);
         result = 31 * result + (fCreator != null ? fCreator.hashCode() : 0);
         result = 31 * result + (sCreator != null ? sCreator.hashCode() : 0);
         result = 31 * result + (gQty != null ? gQty.hashCode() : 0);
-        result = 31 * result + (unit != null ? unit.hashCode() : 0);
-        result = 31 * result + (docYear != null ? docYear.hashCode() : 0);
-        result = 31 * result + (recvMatnr != null ? recvMatnr.hashCode() : 0);
         result = 31 * result + (recvPlant != null ? recvPlant.hashCode() : 0);
         result = 31 * result + (recvLgort != null ? recvLgort.hashCode() : 0);
         result = 31 * result + (recvCharg != null ? recvCharg.hashCode() : 0);
         result = 31 * result + (recvPo != null ? recvPo.hashCode() : 0);
-        result = 31 * result + (ppProcord != null ? ppProcord.hashCode() : 0);
-        result = 31 * result + (ppProcordcnf != null ? ppProcordcnf.hashCode() : 0);
-        result = 31 * result + (ppProcordcnfcnt != null ? ppProcordcnfcnt.hashCode() : 0);
-        result = 31 * result + (kunnr != null ? kunnr.hashCode() : 0);
         result = 31 * result + (manual != null ? manual.hashCode() : 0);
         result = 31 * result + (wtId != null ? wtId.hashCode() : 0);
         result = 31 * result + (createdTime != null ? createdTime.hashCode() : 0);

@@ -22,20 +22,20 @@ import javax.persistence.Table;
  * @author thangtp.nr
  */
 @Entity
-@Table(name = "tbl_outbound_detail")
+@Table(name = "tbl_outbound_delivery_detail")
 @NamedQueries({
-    @NamedQuery(name = "OutboundDetail.findByDeliveryOrderNoAndDeliveryOrderItem",
-    query = "SELECT o FROM OutboundDetail o WHERE"
+    @NamedQuery(name = "OutboundDeliveryDetail.findByDeliveryOrderNoAndDeliveryOrderItem",
+    query = "SELECT o FROM OutboundDeliveryDetail o WHERE"
     + " o.deliveryOrderNo LIKE :deliveryOrderNo"
     + " AND o.deliveryOrderItem = :deliveryOrderItem order by o.freeItem desc"),
-    @NamedQuery(name = "OutboundDetail.findByDeliveryOrderNo",
-    query = "SELECT o FROM OutboundDetail o WHERE"
+    @NamedQuery(name = "OutboundDeliveryDetail.findByDeliveryOrderNo",
+    query = "SELECT o FROM OutboundDeliveryDetail o WHERE"
     + " o.deliveryOrderNo LIKE :deliveryOrderNo order by o.freeItem desc"),
-    @NamedQuery(name = "OutboundDetail.findByWtId",
-    query = "SELECT o FROM OutboundDetail o WHERE"
+    @NamedQuery(name = "OutboundDeliveryDetail.findByWtId",
+    query = "SELECT o FROM OutboundDeliveryDetail o WHERE"
     + " o.wtId LIKE :wtId order by o.freeItem desc")
 })
-public class OutboundDetail implements Serializable {
+public class OutboundDeliveryDetail implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -87,19 +87,17 @@ public class OutboundDetail implements Serializable {
     private Date updatedDate;
     @Column(name = "deleted_date")
     private Date deletedDate;
-    @Column(name = "mandt")
+    @Column(name = "mandt", unique = true)
     private String mandt;
-    @Column(name = "wplant")
-    private String wplant;
 
-    public OutboundDetail() {
+    public OutboundDeliveryDetail() {
     }
     
-    public OutboundDetail(String deliveryOrderNo) {
+    public OutboundDeliveryDetail(String deliveryOrderNo) {
         this.deliveryOrderNo = deliveryOrderNo;
     }
     
-    public OutboundDetail(String deliveryOrderNo, String deliveryOrderItem) {
+    public OutboundDeliveryDetail(String deliveryOrderNo, String deliveryOrderItem) {
         this.deliveryOrderNo = deliveryOrderNo;
         this.deliveryOrderItem = deliveryOrderItem;
     }
@@ -110,14 +108,6 @@ public class OutboundDetail implements Serializable {
 
     public void setMandt(String mandt) {
         this.mandt = mandt;
-    }
-
-    public String getWplant() {
-        return wplant;
-    }
-
-    public void setWplant(String wplant) {
-        this.wplant = wplant;
     }
     
     public String getArktx() {
@@ -325,7 +315,7 @@ public class OutboundDetail implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        OutboundDetail that = (OutboundDetail) o;
+        OutboundDeliveryDetail that = (OutboundDeliveryDetail) o;
 
         if (deliveryOrderItem != null ? !deliveryOrderItem.equals(that.deliveryOrderItem) : that.deliveryOrderItem != null) return false;
         if (deliveryOrderNo != null ? !deliveryOrderNo.equals(that.deliveryOrderNo) : that.deliveryOrderNo != null) return false;
@@ -359,7 +349,6 @@ public class OutboundDetail implements Serializable {
         result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
         result = 31 * result + (deletedDate != null ? deletedDate.hashCode() : 0);
         result = 31 * result + (mandt != null ? mandt.hashCode() : 0);
-        result = 31 * result + (wplant != null ? wplant.hashCode() : 0);
         
         return result;
 

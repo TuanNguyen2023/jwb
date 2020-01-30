@@ -5,7 +5,7 @@
 package com.gcs.wb.jpa.repositorys;
 
 import com.gcs.wb.jpa.JPAConnector;
-import com.gcs.wb.jpa.entity.OutboundDetail;
+import com.gcs.wb.jpa.entity.OutboundDeliveryDetail;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -21,11 +21,11 @@ public class OutboundDetailRepository {
     EntityManager entityManager = JPAConnector.getInstance();
     Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
 
-    public List<OutboundDetail> findByDeliveryOrderNo(String deliv_numb) {
+    public List<OutboundDeliveryDetail> findByDeliveryOrderNo(String deliv_numb) {
 
-        List<OutboundDetail> result = new ArrayList<OutboundDetail>();
+        List<OutboundDeliveryDetail> result = new ArrayList<OutboundDeliveryDetail>();
         try {
-            TypedQuery<OutboundDetail> nq = entityManager.createNamedQuery("OutboundDetail.findByDeliveryOrderNo", OutboundDetail.class);
+            TypedQuery<OutboundDeliveryDetail> nq = entityManager.createNamedQuery("OutboundDeliveryDetail.findByDeliveryOrderNo", OutboundDeliveryDetail.class);
             nq.setParameter("deliveryOrderNo", "%" + deliv_numb + "%");
             result = nq.getResultList();
         } catch (Exception ex) {
@@ -34,10 +34,10 @@ public class OutboundDetailRepository {
         return result;
     }
 
-    public List<OutboundDetail> findByDeliveryOrderNoAndDeliveryOrderItem(String deliv_numb, String item) {
-        List<OutboundDetail> result = new ArrayList<OutboundDetail>();
+    public List<OutboundDeliveryDetail> findByDeliveryOrderNoAndDeliveryOrderItem(String deliv_numb, String item) {
+        List<OutboundDeliveryDetail> result = new ArrayList<OutboundDeliveryDetail>();
         try {
-            TypedQuery<OutboundDetail> nq = entityManager.createNamedQuery("OutboundDetail.findByDeliveryOrderNoAndDeliveryOrderItem", OutboundDetail.class);
+            TypedQuery<OutboundDeliveryDetail> nq = entityManager.createNamedQuery("OutboundDeliveryDetail.findByDeliveryOrderNoAndDeliveryOrderItem", OutboundDeliveryDetail.class);
             nq.setParameter("deliveryOrderNo", "%" + deliv_numb + "%");
             nq.setParameter("deliveryOrderItem", item);
             result = nq.getResultList();
@@ -47,10 +47,10 @@ public class OutboundDetailRepository {
         return result;
     }
 
-    public List<OutboundDetail> findByWtId(String wt_id) {
-        List<OutboundDetail> result = new ArrayList<OutboundDetail>();
+    public List<OutboundDeliveryDetail> findByWtId(String wt_id) {
+        List<OutboundDeliveryDetail> result = new ArrayList<OutboundDeliveryDetail>();
         try {
-            TypedQuery<OutboundDetail> nq = entityManager.createNamedQuery("OutboundDetail.findByWtId", OutboundDetail.class);
+            TypedQuery<OutboundDeliveryDetail> nq = entityManager.createNamedQuery("OutboundDeliveryDetail.findByWtId", OutboundDeliveryDetail.class);
             nq.setParameter("wtId", "%" + wt_id + "%");
             result = nq.getResultList();
         } catch (Exception ex) {

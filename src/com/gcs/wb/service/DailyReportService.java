@@ -8,6 +8,7 @@ import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.WeightTicket;
+import com.gcs.wb.jpa.entity.WeightTicketDetail;
 import com.gcs.wb.model.AppConfig;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -38,6 +39,7 @@ public class DailyReportService {
 
         for (int i = 0; i < weightTicketList.size(); i++) {
             WeightTicket weightTicket = weightTicketList.get(i);
+            WeightTicketDetail weightTicketDetail = weightTicket.getWeightTicketDetail();
             String hh = weightTicket.getCreatedTime().substring(0, 2);
             String mm = weightTicket.getCreatedTime().substring(3, 5);
             String ss = weightTicket.getCreatedTime().substring(6, 8);
@@ -57,7 +59,7 @@ public class DailyReportService {
             wtDatas[i][6] = weightTicket.getCreator();
             wtDatas[i][7] = create_date.getTime();
             wtDatas[i][8] = weightTicket.getRegType();
-            wtDatas[i][9] = weightTicket.getRegItemDescription();
+            wtDatas[i][9] = weightTicketDetail.getRegItemDescription();
             if (weightTicket.getFTime() != null) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(weightTicket.getFTime());
@@ -77,15 +79,15 @@ public class DailyReportService {
             }
             wtDatas[i][13] = weightTicket.getSScale() == null ? weightTicket.getSScale() : weightTicket.getSScale().doubleValue() / 1000d;
             wtDatas[i][14] = weightTicket.getGQty();
-            wtDatas[i][15] = weightTicket.getDeliveryOrderNo();
-            wtDatas[i][16] = weightTicket.getMatDoc();
+            wtDatas[i][15] = weightTicketDetail.getDeliveryOrderNo();
+            wtDatas[i][16] = weightTicketDetail.getMatDoc();
             wtDatas[i][17] = weightTicket.isDissolved();
             if (weightTicket.isPosted()) {
                 wtDatas[i][18] = true;
             } else {
                 wtDatas[i][18] = false;
             }
-            wtDatas[i][19] = weightTicket.getEbeln();
+            wtDatas[i][19] = weightTicketDetail.getEbeln();
             wtDatas[i][20] = "";
         }
         return wtDatas;

@@ -33,9 +33,9 @@ public class Material implements Serializable {
     private int id;
     @Column(name = "matnr", unique = true)
     private String matnr;
-    @Column(name = "mandt")
+    @Column(name = "mandt", unique = true)
     private String mandt;
-    @Column(name = "wplant")
+    @Column(name = "wplant", unique = true)
     private String wplant;
     @Column(name = "maktx")
     private String maktx;

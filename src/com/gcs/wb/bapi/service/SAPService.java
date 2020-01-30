@@ -25,6 +25,7 @@ import com.gcs.wb.bapi.helper.structure.PoGetDetailItemStructure;
 import com.gcs.wb.bapi.helper.structure.SLocsGetListStructure;
 import com.gcs.wb.bapi.helper.structure.TransportagentGetListStructure;
 import com.gcs.wb.bapi.helper.structure.VendorGetDetailStructure;
+import com.gcs.wb.base.converter.PurOrderConverter;
 import com.gcs.wb.base.converter.TransportAgentsConverter;
 import com.gcs.wb.base.util.StringUtil;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
@@ -32,7 +33,7 @@ import com.gcs.wb.jpa.entity.BatchStock;
 import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
-import com.gcs.wb.jpa.entity.OutboundDetail;
+import com.gcs.wb.jpa.entity.OutboundDeliveryDetail;
 import com.gcs.wb.jpa.entity.PurchaseOrder;
 import com.gcs.wb.jpa.entity.SLoc;
 import com.gcs.wb.jpa.entity.TransportAgent;
@@ -179,7 +180,7 @@ public class SAPService {
      */
     public OutboundDelivery getOutboundDelivery(String number, boolean refresh) {
         OutboundDelivery outb = null;
-        OutboundDetail outb_details = null;
+        OutboundDeliveryDetail outb_details = null;
         String item_cat = "";
         String item_num = null;
         String item_num_free = null;
@@ -197,7 +198,7 @@ public class SAPService {
             //check do detail exist
             EntityManager em_check = WeighBridgeApp.getApplication().getEm();
             WeightTicketJpaController con_check = new WeightTicketJpaController();
-            List<OutboundDetail> outb_detail_check;
+            List<OutboundDeliveryDetail> outb_detail_check;
             if (refresh == true) {
                 try {
                     outb_detail_check = con_check.findByMandtDelivNumb(number);
@@ -224,7 +225,7 @@ public class SAPService {
                     if (outb_detail_check.size() > 0) {
                         outb_details = outb_detail_check.get(0);
                     } else {
-                        outb_details = new OutboundDetail(number, doItem.getPosnr().substring(4, 5));
+                        outb_details = new OutboundDeliveryDetail(number, doItem.getPosnr().substring(4, 5));
                     }
                 } catch (Exception ex) {
                     Logger.getLogger(SAPService.class.getName()).log(Level.SEVERE, null, ex);
@@ -372,101 +373,11 @@ public class SAPService {
      * @throws Exception 
      */
     public PurchaseOrder getPurchaseOrder(String poNum) throws Exception {
-        String item_num = null;
-        String item_num_free = null;
-        boolean flag_free = true;
-        boolean flag = true;
-        BigDecimal item_qty = BigDecimal.ZERO;
-        BigDecimal item_qty_free = BigDecimal.ZERO;
-        PurchaseOrder result = null;
         PoGetDetailBapi bPO = new PoGetDetailBapi();
         bPO.setPURCHASEORDER(poNum);
         session.execute(bPO);
-        PoGetDetailHeaderStructure header = bPO.getPoHeader();
-        List<PoGetDetailItemStructure> items = bPO.getPoItems();
-        if (items.size() == 2 && !items.get(0).getMATERIAL().equalsIgnoreCase(items.get(1).getMATERIAL())) {
-            throw new Exception("Không hỗ trợ P.O số: " + poNum + "!");
-        }
-
-        result = new PurchaseOrder(config.getsClient(), poNum);
-        result.setDocType(header.getDOC_TYPE());
-        result.setDeleteInd(header.getDELETE_IND() == null || header.getDELETE_IND().trim().isEmpty() ? ' ' : header.getDELETE_IND().charAt(0));
-        result.setStatus(header.getSTATUS() == null || header.getSTATUS().trim().isEmpty() ? ' ' : header.getSTATUS().charAt(0));
-        result.setCreatDate(header.getCREAT_DATE());
-        result.setVendor(header.getVENDOR());
-        result.setSupplVend(header.getSUPPL_VEND());
-        result.setCustomer(header.getCUSTOMER());
-        result.setSupplPlnt(header.getSUPPL_PLNT());
-        result.setPoRelInd(header.getPO_REL_IND() == null || header.getPO_REL_IND().trim().isEmpty() ? ' ' : header.getPO_REL_IND().charAt(0));
-        result.setRelStatus(header.getREL_STATUS());
-        for (int i = 0; i < items.size(); i++) {
-            PoGetDetailItemStructure item = items.get(i);
-            if (item.getFREE_ITEM() == null || item.getFREE_ITEM().trim().isEmpty()) {
-                if (flag == true) {
-                    item_num = item.getPO_ITEM();
-                    flag = false;
-                }
-                result.setIDeleteInd(item.getDELETE_IND() == null || item.getDELETE_IND().trim().isEmpty() ? ' ' : item.getDELETE_IND().charAt(0));
-                result.setShortText(item.getSHORT_TEXT());
-                result.setMaterial(item.getMATERIAL());
-                result.setPlant(item.getPLANT());
-                result.setStgeLoc(item.getSTGE_LOC());
-                result.setVendMat(item.getVEND_MAT());
-                item_qty = item_qty.add(item.getQUANTITY());
-                result.setPoUnit(item.getPO_UNIT());
-                result.setPoUnitIso(item.getPO_UNIT_ISO());
-                result.setQualInsp(item.getQUAL_INSP() == null || item.getQUAL_INSP().trim().isEmpty() ? ' ' : item.getQUAL_INSP().charAt(0));
-                result.setOverDlvTol(item.getOVER_DLV_TOL());
-                result.setUnlimitedDlv(item.getUNLIMITED_DLV() == null || item.getUNLIMITED_DLV().trim().isEmpty() ? ' ' : item.getUNLIMITED_DLV().charAt(0));
-                result.setValType(item.getVAL_TYPE());
-                result.setNoMoreGr(item.getNO_MORE_GR() == null || item.getNO_MORE_GR().trim().isEmpty() ? ' ' : item.getNO_MORE_GR().charAt(0));
-                result.setFinalInv(item.getFINAL_INV() == null || item.getFINAL_INV().trim().isEmpty() ? ' ' : item.getFINAL_INV().charAt(0));
-                result.setItemCat(item.getITEM_CAT() == null || item.getITEM_CAT().trim().isEmpty() ? ' ' : item.getITEM_CAT().charAt(0));
-                result.setGrInd(item.getGR_IND() == null || item.getGR_IND().trim().isEmpty() ? ' ' : item.getGR_IND().charAt(0));
-                result.setGrNonVal(item.getGR_NON_VAL() == null || item.getGR_NON_VAL().trim().isEmpty() ? ' ' : item.getGR_NON_VAL().charAt(0));
-                result.setDelivCompl(item.getDELIV_COMPL() == null || item.getDELIV_COMPL().trim().isEmpty() ? ' ' : item.getDELIV_COMPL().charAt(0));
-                result.setPartDeliv(item.getPART_DELIV() == null || item.getPART_DELIV().trim().isEmpty() ? ' ' : item.getPART_DELIV().charAt(0));
-            } else {
-                if (flag_free == true) {
-                    item_num_free = item.getPO_ITEM();
-                    flag_free = false;
-                }
-                result.setIfDeleteInd(item.getDELETE_IND() == null || item.getDELETE_IND().trim().isEmpty() ? ' ' : item.getDELETE_IND().charAt(0));
-                item_qty_free = item_qty_free.add(item.getQUANTITY());
-                result.setItemFreeCat(item.getITEM_CAT() == null || item.getITEM_CAT().trim().isEmpty() ? ' ' : item.getITEM_CAT().charAt(0));
-                result.setShortText(item.getSHORT_TEXT());
-                result.setMaterial(item.getMATERIAL());
-                result.setPlant(item.getPLANT());
-                result.setStgeLoc(item.getSTGE_LOC());
-                result.setVendMat(item.getVEND_MAT());
-                result.setPoUnit(item.getPO_UNIT());
-                result.setPoUnitIso(item.getPO_UNIT_ISO());
-                result.setQualInsp(item.getQUAL_INSP() == null || item.getQUAL_INSP().trim().isEmpty() ? ' ' : item.getQUAL_INSP().charAt(0));
-                result.setOverDlvTol(item.getOVER_DLV_TOL());
-                result.setUnlimitedDlv(item.getUNLIMITED_DLV() == null || item.getUNLIMITED_DLV().trim().isEmpty() ? ' ' : item.getUNLIMITED_DLV().charAt(0));
-                result.setValType(item.getVAL_TYPE());
-                result.setNoMoreGr(item.getNO_MORE_GR() == null || item.getNO_MORE_GR().trim().isEmpty() ? ' ' : item.getNO_MORE_GR().charAt(0));
-                result.setFinalInv(item.getFINAL_INV() == null || item.getFINAL_INV().trim().isEmpty() ? ' ' : item.getFINAL_INV().charAt(0));
-                result.setGrInd(item.getGR_IND() == null || item.getGR_IND().trim().isEmpty() ? ' ' : item.getGR_IND().charAt(0));
-                result.setGrNonVal(item.getGR_NON_VAL() == null || item.getGR_NON_VAL().trim().isEmpty() ? ' ' : item.getGR_NON_VAL().charAt(0));
-                result.setDelivCompl(item.getDELIV_COMPL() == null || item.getDELIV_COMPL().trim().isEmpty() ? ' ' : item.getDELIV_COMPL().charAt(0));
-                result.setPartDeliv(item.getPART_DELIV() == null || item.getPART_DELIV().trim().isEmpty() ? ' ' : item.getPART_DELIV().charAt(0));
-            }
-        }
-        result.setPoItem(item_num);
-        result.setPoItemFree(item_num_free);
-        result.setQuantity(item_qty);
-        result.setQuantityFree(item_qty_free);
-        //neu chi co free goods
-        if (result.getPoItem() == null) {
-            if (result.getPoItemFree() != null) {
-                result.setPoItem(result.getPoItemFree());
-                result.setQuantity(result.getQuantityFree());
-                result.setPoItemFree(null);
-                result.setQuantityFree(null);
-            }
-        }
-        return result;
+        PurOrderConverter purOrderConverter = new PurOrderConverter();
+        return purOrderConverter.convertHasParameter(bPO, poNum);
     }
     
     /**
