@@ -305,7 +305,7 @@ public class LoginView extends javax.swing.JDialog {
             WeighBridgeApp.getApplication().setLogin(loginController.getUser());
             WeighBridgeApp.getApplication().setOfflineMode(loginController.isOfflineMode());
             WeighBridgeApp.getApplication().setSapSetting(loginController.getSapSetting());
-            WeighBridgeApp.getApplication().getConfig().setModeNormal(loginController.isOfflineMode());
+            WeighBridgeApp.getApplication().getConfig().setModeNormal(!loginController.isOfflineMode());
             setVisible(false);
         }
 

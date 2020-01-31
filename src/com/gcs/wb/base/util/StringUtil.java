@@ -30,4 +30,12 @@ public class StringUtil {
     public static boolean isNotEmptyString(String input){
         return !isEmptyString(input);
     }
+
+    public static boolean hasLengthInRange(String str, int start, int end) {
+        return isNotEmptyString(str) && str.length() >= start && str.length() <= end;
+    }
+
+    public static boolean contains(String source, String dest) {
+        return isNotEmptyString(source) && isNotEmptyString(dest) && source.indexOf(dest) != -1;
+    }
 }

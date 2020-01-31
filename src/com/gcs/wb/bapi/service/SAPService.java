@@ -67,7 +67,7 @@ public class SAPService {
 
     EntityManager entityManager = JPAConnector.getInstance();
     EntityTransaction entityTransaction = entityManager.getTransaction();
-    
+
     LookupMaterialService lookupMaterialService = new LookupMaterialService();
     BatchStockRepository batchStockRepository = new BatchStockRepository();
     BatchStockRepository batchStocksRepository = new BatchStockRepository();
@@ -75,12 +75,12 @@ public class SAPService {
     SLocRepository sLocRepository = new SLocRepository();
     TransportAgentRepository transportAgentRepository = new TransportAgentRepository();
     TransportAgentVehicleRepository transportAgentVehicleRepository = new TransportAgentVehicleRepository();
-    
+
     AppConfig config = WeighBridgeApp.getApplication().getConfig();
-    
+
     private JFrame mainFrame = WeighBridgeApp.getApplication().getMainFrame();
     public ResourceMap resourceMapMsg = Application.getInstance(WeighBridgeApp.class).getContext().getResourceMap(TransportAgentView.class);
-    
+
     Session session = WeighBridgeApp.getApplication().getSAPSession();
 
     /**
@@ -198,7 +198,7 @@ public class SAPService {
         session.execute(bapiDO);
         OutboundDeliveryConverter outboundDeliveryConverter = new OutboundDeliveryConverter();
         return outboundDeliveryConverter.convertsHasParameter(bapiDO, number, refresh);
-        
+
     }
 
     /**
@@ -213,7 +213,7 @@ public class SAPService {
         session.execute(bPO);
         PurchaseOrderConverter purchaseOrderConverter = new PurchaseOrderConverter();
         return purchaseOrderConverter.convertHasParameter(bPO, poNum);
-        
+
     }
     
     /**
@@ -293,169 +293,83 @@ public class SAPService {
         VendorGetDetailStructure strucVendor = bapiCust.getEsLfa1();
         VendorConverter vendorConverter = new VendorConverter();
         return vendorConverter.convert(strucVendor);
-        
+
     }
 
     public DefaultComboBoxModel getSlocModel() {
         List<SLoc> slocDBs = new ArrayList<>();
-        // get data DB
         slocDBs = sLocRepository.getListSLoc();
 
-        // get data SAP
-        SLocsGetListBapi bSloc = new SLocsGetListBapi(config.getsClient(), config.getwPlant());
-        List<SLoc> slocSaps = new ArrayList<>();
-        try {
-            session.execute(bSloc);
-            List<SLocsGetListStructure> tdSLocs = bSloc.getTdSLocs();
-            for (SLocsGetListStructure s : tdSLocs) {
-                SLoc sloc = new SLoc(s.getLgort());
-                sloc.setLgobe(s.getLgobe());
-                slocSaps.add(sloc);
-            }
-        } catch (Exception ex) {
-        }
-        // sync data
-        entityTransaction = entityManager.getTransaction();
-        if (!entityTransaction.isActive()) {
-            entityTransaction.begin();
-        }
-        // update case delete
-        for (SLoc slocD : slocDBs) {
-            if (slocSaps.indexOf(slocD) == -1) {
-                entityManager.remove(slocD);
-            }
-        }
-        // update case persit/merge
-        for (SLoc sloc : slocSaps) {
-            int index = slocDBs.indexOf(sloc);
-            if (index == -1) {
-                entityManager.persist(sloc);
-            } else {
-                sloc.setId(slocDBs.get(index).getId());
-                entityManager.merge(sloc);
-            }
-        }
-
-        entityTransaction.commit();
-        entityManager.clear();
-        // set data
-        slocDBs = sLocRepository.getListSLoc();
         if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
-            return new DefaultComboBoxModel(slocDBs.toArray());
-        } else {
+            // get data SAP
+            SLocsGetListBapi bSloc = new SLocsGetListBapi(config.getsClient(), config.getwPlant());
+            List<SLoc> slocSaps = new ArrayList<>();
+            try {
+                session.execute(bSloc);
+                List<SLocsGetListStructure> tdSLocs = bSloc.getTdSLocs();
+                for (SLocsGetListStructure s : tdSLocs) {
+                    SLoc sloc = new SLoc(s.getLgort());
+                    sloc.setLgobe(s.getLgobe());
+                    slocSaps.add(sloc);
+                }
+            }
+            catch (Exception ex) {
+                // NOP
+            }
 
-            //filter sloc theo user
-            String[] sloc1 = WeighBridgeApp.getApplication().getSloc().split("-");
-            List<SLoc> result = new ArrayList<>();
-            if (sloc1.length > 0) {
-                SLoc item = null;
-
-                for (int i = 0; i < slocDBs.size(); i++) {
-                    item = slocDBs.get(i);
-                    for (int j = 0; j < sloc1.length; j++) {
-                        if (item.getLgort().equals(sloc1[j])) {
-                            result.add(item);
-                        }
-                    }
+             // sync data
+            entityTransaction = entityManager.getTransaction();
+            if (!entityTransaction.isActive()) {
+                entityTransaction.begin();
+            }
+            // update case delete
+            for(SLoc slocD: slocDBs) {
+                if(slocSaps.indexOf(slocD) == -1) {
+                    entityManager.remove(slocD);
+                }
+            }
+            // update case persit/merge
+            for(SLoc sloc: slocSaps) {
+                int index = slocDBs.indexOf(sloc);
+                if (index == -1) {
+                    entityManager.persist(sloc);
+                } else {
+                    sloc.setId(slocDBs.get(index).getId());
+                    entityManager.merge(sloc);
                 }
             }
 
-            return new DefaultComboBoxModel(result.toArray());
+            entityTransaction.commit();
+            entityManager.clear();
+            slocDBs = sLocRepository.getListSLoc();
         }
-    }
 
+        return new DefaultComboBoxModel(slocDBs.toArray());
+    }
+    
     public List<TransportAgent> getTransportAgentList() {
         List<TransportAgent> result = new ArrayList<>();
         // get data DB
         List<TransportAgent> transportDBs = new ArrayList<>();
         transportDBs = transportAgentRepository.getListTransportAgent();
-        // get data SAP
-        TransportagentGetListBapi bapi = new TransportagentGetListBapi();
-        bapi.setIvEkorg(config.getwPlant());
-        List<TransportAgent> transportSaps = new ArrayList<>();
-        try {
-            session.execute(bapi);
-            List<TransportagentGetListStructure> transports = bapi.getEtVendor();
-            TransportAgentsConverter transportAgentsConverter = new TransportAgentsConverter();
-            transportSaps = transportAgentsConverter.convert(transports);
-            //sync SAP <=> DB
-            
-            /**
-             * sync DVVC
-             * @param transportDBs
-             * @param transportSaps 
-             */
-            // delete data DB not exist SAP
-            for (TransportAgent transportAgent : transportDBs) {
-                if (transportSaps.indexOf(transportAgent) == -1) {
-                    // delete in table Vehicle
-                    List<TransportAgentVehicle> transportAgentVehicles = transportAgentVehicleRepository.findByTransportAgentId(transportAgent.getId());
-
-                    if (!entityTransaction.isActive()) {
-                        entityTransaction.begin();
-                    }
-
-                    try {
-                        for (TransportAgentVehicle transportAgentVehicle : transportAgentVehicles) {
-                            entityManager.remove(transportAgentVehicle);
-                        }
-                    } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.deleteVehicleFalse"));
-                        entityTransaction.rollback();
-                        continue;
-                    }
-
-                    // delete dvvc
-                    try {
-                        if (!entityManager.contains(transportAgent)) {
-                            transportAgent = entityManager.merge(transportAgent);
-                        }
-                        entityManager.remove(transportAgent);
-                    } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.deleteProviderFalse"));
-                        entityTransaction.rollback();
-                        continue;
-                    }
-
-                    entityTransaction.commit();
-                    entityManager.clear();
-                }
-            }
-
+        if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
+            // get data SAP
+            TransportagentGetListBapi bapi = new TransportagentGetListBapi();
+            bapi.setIvEkorg(config.getwPlant());
+            List<TransportAgent> transportSaps = new ArrayList<>();
             try {
-                if (!entityTransaction.isActive()) {
-                    entityTransaction.begin();
-                }
-                // update dara SAP -> DB
-                for (TransportAgent transportAgentSAP : transportSaps) {
-                    int index = transportDBs.indexOf(transportAgentSAP);
-                    if (index == -1) {
-                        entityManager.persist(transportAgentSAP);
-                    } else {
-                        transportAgentSAP.setId(transportDBs.get(index).getId());
-                        entityManager.merge(transportAgentSAP);
-                    }
-                }
-
-                entityTransaction.commit();
-                entityManager.clear();
-
+                session.execute(bapi);
+                List<TransportagentGetListStructure> transports = bapi.getEtVendor();
+                TransportAgentsConverter transportAgentsConverter = new TransportAgentsConverter();
+                transportSaps = transportAgentsConverter.convert(transports);
+                //sync SAP <=> DB
+                jpaService.syncTransportAgent(transportDBs, transportSaps);
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.syncProviderFalse"));
-                if (entityTransaction.isActive()) {
-                    entityTransaction.rollback();
-                }
+                // to do
             }
-        } catch (Exception ex) {
-            // to do
         }
-        // end get data SAP
-
-
         // return data
-        result = transportAgentRepository.getListTransportAgent();
-
-        return result;
+        return transportAgentRepository.getListTransportAgent();
     }
 
     /**

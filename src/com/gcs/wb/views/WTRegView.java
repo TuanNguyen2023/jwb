@@ -13,6 +13,8 @@ package com.gcs.wb.views;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.base.constant.Constants;
+import com.gcs.wb.base.enums.MaterialEnum;
+import com.gcs.wb.base.enums.StatusEnum;
 import com.gcs.wb.base.util.StringUtil;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.Customer;
@@ -33,13 +35,11 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-import java.util.regex.Matcher;
 import javax.swing.*;
 
 import org.apache.log4j.Logger;
 import org.hibersap.HibersapException;
 import org.jdesktop.application.Action;
-import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.Task;
 import java.awt.Component;
 
@@ -62,13 +62,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import org.apache.commons.collections.CollectionUtils;
 
-/**
- *
- * @author vunguyent
- */
 public class WTRegView extends javax.swing.JInternalFrame {
-
-    /** Creates new form WTRegView */
     public String sVendor = "";
     public String sPO = "";
     public double dKldk = 0;
@@ -814,689 +808,198 @@ public class WTRegView extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     // <editor-fold defaultstate="collapsed" desc="Old Code">
-    /*private void initDONumber(ResourceMap resourceMap, ActionMap actionMap) {
-        lblNDONum.setText(resourceMap.getString("lblNDONum.text")); // NOI18N
-        lblNDONum.setName("lblNDONum"); // NOI18N
-
-        txtNDONum.setEditable(false);
-        txtNDONum.setAction(actionMap.get("checkDO")); // NOI18N
-        txtNDONum.setName("txtNDONum"); // NOI18N
-    }
-
-    private void initCheckDOButton(ResourceMap resourceMap, ActionMap actionMap) {
-        btnCheckDO.setAction(actionMap.get("checkDO")); // NOI18N
-        btnCheckDO.setText(resourceMap.getString("btnCheckDO.text")); // NOI18N
-        btnCheckDO.setName("btnCheckDO"); // NOI18N
-        btnCheckDO.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCheckDOActionPerformed(evt);
-            }
-        });
-    }
-
-    private void initButtonPanel(ResourceMap resourceMap, ActionMap actionMap) {
-        btnNew.setAction(actionMap.get("newRecord")); // NOI18N
-        btnNew.setText(resourceMap.getString("btnNew.text")); // NOI18N
-        btnNew.setName("btnNew"); // NOI18N
-
-        btnClear.setAction(actionMap.get("clearForm")); // NOI18N
-        btnClear.setText(resourceMap.getString("btnClear.text")); // NOI18N
-        btnClear.setName("btnClear"); // NOI18N
-
-        btnMany.setText(resourceMap.getString("btnMany.text")); // NOI18N
-        btnMany.setEnabled(false);
-        btnMany.setName("btnMany"); // NOI18N
-        btnMany.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnManyActionPerformed(evt);
-            }
-        });
-
-        btnSave.setAction(actionMap.get("saveRecord")); // NOI18N
-        btnSave.setText(resourceMap.getString("btnSave.text")); // NOI18N
-        btnSave.setName("btnSave"); // NOI18N
-        btnSave.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSaveActionPerformed(evt);
-            }
-        });
-    }
-
-    private void initWeightTicketNo(ResourceMap resourceMap) {
-        lblWeightTicketNo.setText(resourceMap.getString("lblWeightTicketNo.text")); // NOI18N
-        lblWeightTicketNo.setName("lblWeightTicketNo"); // NOI18N
-
-        txtWeightTicketNo.setEditable(false);
-        txtWeightTicketNo.setAutoscrolls(false);
-        txtWeightTicketNo.setBorder(BorderFactory.createEtchedBorder());
-        txtWeightTicketNo.setName("txtWeightTicketNo"); // NOI18N
-    }
-
-    private void initControlLayout() {
-        GroupLayout pnControlLayout = new GroupLayout(pnControl);
-        pnControl.setLayout(pnControlLayout);
-        pnControlLayout.setHorizontalGroup(
-            pnControlLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(pnControlLayout.createSequentialGroup()
-                .addComponent(btnNew)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnClear)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnMany)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnSave)
-                .addGap(82, 82, 82)
-                .addComponent(lblWeightTicketNo)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtWeightTicketNo, GroupLayout.PREFERRED_SIZE, 303, GroupLayout.PREFERRED_SIZE)
-                .addGap(127, 127, 127))
-        );
-        pnControlLayout.setVerticalGroup(
-            pnControlLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(pnControlLayout.createSequentialGroup()
-                .addGap(1, 1, 1)
-                .addGroup(pnControlLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnNew)
-                    .addComponent(btnClear)
-                    .addComponent(btnMany)
-                    .addComponent(btnSave)))
-            .addGroup(pnControlLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                .addComponent(txtWeightTicketNo, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
-                .addComponent(lblWeightTicketNo))
-        );
-
-        GroupLayout layout = new GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(pnFilter, GroupLayout.DEFAULT_SIZE, 909, Short.MAX_VALUE)
-                    .addComponent(spnResult, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 909, Short.MAX_VALUE)
-                    .addComponent(pnPrintControl, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 909, Short.MAX_VALUE)
-                    .addComponent(pnWTicket, GroupLayout.DEFAULT_SIZE, 909, Short.MAX_VALUE)
-                    .addComponent(pnControl, GroupLayout.DEFAULT_SIZE, 909, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(pnFilter, GroupLayout.PREFERRED_SIZE, 198, GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(spnResult, GroupLayout.PREFERRED_SIZE, 241, GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnPrintControl, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnWTicket, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(pnControl, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(24, Short.MAX_VALUE))
-        );
-    }
-
-    private void initRightLayout() {
-        GroupLayout pnNRightLayout = new GroupLayout(pnNRight);
-        pnNRight.setLayout(pnNRightLayout);
-        pnNRightLayout.setHorizontalGroup(
-            pnNRightLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(pnNRightLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnNRightLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblNDONum)
-                    .addComponent(lblNWeight)
-                    .addComponent(lblNMaterial)
-                    .addComponent(lblNRegCat))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(pnNRightLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addGroup(pnNRightLayout.createSequentialGroup()
-                        .addComponent(rbtNInward)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(rbtNOutward)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtNMaterial, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnNRightLayout.createSequentialGroup()
-                        .addComponent(txtNWeight, GroupLayout.PREFERRED_SIZE, 108, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblNWeightUnit))
-                    .addGroup(pnNRightLayout.createSequentialGroup()
-                        .addComponent(txtNDONum, GroupLayout.PREFERRED_SIZE, 177, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnCheckDO, GroupLayout.PREFERRED_SIZE, 73, GroupLayout.PREFERRED_SIZE))
-                    .addComponent(cbxNMaterial, 0, 340, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        pnNRightLayout.setVerticalGroup(
-            pnNRightLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(pnNRightLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnNRightLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblNRegCat)
-                    .addComponent(rbtNInward)
-                    .addComponent(rbtNOutward)
-                    .addComponent(txtNMaterial, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnNRightLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblNMaterial)
-                    .addComponent(cbxNMaterial, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnNRightLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblNWeight)
-                    .addComponent(txtNWeight, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblNWeightUnit))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnNRightLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblNDONum)
-                    .addComponent(txtNDONum, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCheckDO))
-                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-    }
-
-    private void initLeftLayout(GroupLayout pnNLeftLayout) {
-        pnNLeft.setLayout(pnNLeftLayout);
-        pnNLeftLayout.setHorizontalGroup(
-            pnNLeftLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(pnNLeftLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnNLeftLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblNTrailerPlate)
-                    .addComponent(lblNDriverName)
-                    .addComponent(lblNCMNDBL)
-                    .addComponent(lblNPlateNo))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnNLeftLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtNPlateNo, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtNTrailerPlate, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtNDriverName, GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
-                    .addComponent(txtNCMNDBL))
-                .addContainerGap(36, Short.MAX_VALUE))
-        );
-        pnNLeftLayout.setVerticalGroup(
-            pnNLeftLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(pnNLeftLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnNLeftLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblNDriverName)
-                    .addComponent(txtNDriverName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnNLeftLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(lblNCMNDBL)
-                    .addComponent(txtNCMNDBL, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnNLeftLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(txtNPlateNo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblNPlateNo))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnNLeftLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblNTrailerPlate)
-                    .addComponent(txtNTrailerPlate, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(18, Short.MAX_VALUE))
-        );
-    }
-
-    private void initPrintControl(ResourceMap resourceMap, ActionMap actionMap) {
-        pnPrintControl.setName("pnPrintControl"); // NOI18N
-        pnPrintControl.setLayout(new BoxLayout(pnPrintControl, BoxLayout.LINE_AXIS));
-
-        btnReprint.setAction(actionMap.get("reprintRecord")); // NOI18N
-        btnReprint.setText(resourceMap.getString("btnReprint.text")); // NOI18N
-        btnReprint.setName("btnReprint"); // NOI18N
-        pnPrintControl.add(btnReprint);
-    }
-
-    private void initResultPanel(ResourceMap resourceMap) {
-        spnResult.setBorder(BorderFactory.createTitledBorder(resourceMap.getString("spnResult.border.title"))); // NOI18N
-        spnResult.setName("spnResult"); // NOI18N
-
-        tabResults.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {},
-                {},
-                {},
-                {}
-            },
-            new String [] {
-
-            }
-        ));
-        tabResults.setEditable(false);
-        tabResults.setName("tabResults"); // NOI18N
-        tabResults.setShowGrid(true);
-    }
-
-    private void initFilterLayout() {
-        GroupLayout pnFilterLayout = new GroupLayout(pnFilter);
-        pnFilter.setLayout(pnFilterLayout);
-        pnFilterLayout.setHorizontalGroup(
-            pnFilterLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(GroupLayout.Alignment.TRAILING, pnFilterLayout.createSequentialGroup()
-                .addGap(33, 33, 33)
-                .addGroup(pnFilterLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(lblHourFrom)
-                    .addComponent(lblDriverName)
-                    .addComponent(lblDateFrom))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(pnFilterLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(btnFind, GroupLayout.PREFERRED_SIZE, 76, GroupLayout.PREFERRED_SIZE)
-                    .addGroup(pnFilterLayout.createSequentialGroup()
-                        .addGroup(pnFilterLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                            .addComponent(dpDateFrom, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(pnFilterLayout.createSequentialGroup()
-                                .addComponent(cbxHourFrom, GroupLayout.PREFERRED_SIZE, 52, GroupLayout.PREFERRED_SIZE)
-                                .addGap(14, 14, 14)
-                                .addComponent(lblHourTo)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbxHourTo, GroupLayout.PREFERRED_SIZE, 54, GroupLayout.PREFERRED_SIZE))
-                            .addComponent(txtDriverName))
-                        .addGap(36, 36, 36)
-                        .addGroup(pnFilterLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                            .addComponent(lblCreator)
-                            .addComponent(lblPlateNo)
-                            .addComponent(lblDateTo))
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(pnFilterLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtPlateNo, GroupLayout.Alignment.TRAILING)
-                            .addComponent(txtCreator)
-                            .addComponent(dpDateTo, GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE))
-                        .addGap(46, 46, 46)
-                        .addGroup(pnFilterLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                            .addComponent(lblMaterialType))
-                        .addGroup(pnFilterLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addGroup(pnFilterLayout.createSequentialGroup())
-                            .addGroup(pnFilterLayout.createSequentialGroup()
-                                .addGap(9, 9, 9)
-                                .addComponent(cbxMaterialType, GroupLayout.PREFERRED_SIZE, 292, GroupLayout.PREFERRED_SIZE)))))
-                .addGap(27, 27, 27))
-        );
-        pnFilterLayout.setVerticalGroup(
-            pnFilterLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addGroup(pnFilterLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnFilterLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(dpDateTo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblDateFrom)
-                    .addComponent(lblDateTo)
-                    .addComponent(dpDateFrom, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbxMaterialType, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblMaterialType))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(pnFilterLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addGroup(pnFilterLayout.createSequentialGroup()
-                        .addGroup(pnFilterLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                            .addComponent(cbxHourFrom, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cbxHourTo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblHourFrom)
-                            .addComponent(txtCreator, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblCreator)
-                            .addComponent(lblHourTo))
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(pnFilterLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtDriverName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblDriverName, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtPlateNo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblPlateNo, GroupLayout.PREFERRED_SIZE, 20, GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(pnFilterLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnFind, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(36, 36, 36))
-        );
-    }
-
-    private void initFindButton(ResourceMap resourceMap, ActionMap actionMap) {
-        btnFind.setAction(actionMap.get("listWeightTickets")); // NOI18N
-        btnFind.setText(resourceMap.getString("btnFind.text")); // NOI18N
-        btnFind.setName("btnFind"); // NOI18N
-    }
-
-    private void initPlate(ResourceMap resourceMap) {
-        lblPlateNo.setText(resourceMap.getString("lblPlateNo.text")); // NOI18N
-        lblPlateNo.setName("lblPlateNo"); // NOI18N
-
-        txtPlateNo.setName("txtPlateNo"); // NOI18N
-    }
-
-    private void initDriver(ResourceMap resourceMap) {
-        lblDriverName.setLabelFor(txtCreator);
-        lblDriverName.setText(resourceMap.getString("lblDriverName.text")); // NOI18N
-        lblDriverName.setName("lblDriverName"); // NOI18N
-
-        txtDriverName.setName("txtDriverName"); // NOI18N
-    }
-
-    private void initCreatorInput() {
-        txtCreator.setName("txtCreator"); // NOI18N
-    }
-
-    private void initCreatorLabel(ResourceMap resourceMap) {
-        lblCreator.setLabelFor(txtCreator);
-        lblCreator.setText(resourceMap.getString("lblCreator.text")); // NOI18N
-        lblCreator.setName("lblCreator"); // NOI18N
-    }
-
-    private void initHourToBox() {
-        cbxHourTo.setModel(new DefaultComboBoxModel(new String[] { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" }));
-        cbxHourTo.setName("cbxHourTo"); // NOI18N
-        cbxHourTo.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cbxHourToItemStateChanged(evt);
-            }
-        });
-    }
-
-    private void initHourToLabel(ResourceMap resourceMap) {
-        lblHourTo.setText(resourceMap.getString("lblHourTo.text")); // NOI18N
-        lblHourTo.setName("lblHourTo"); // NOI18N
-    }
-
-    private void initHourFromBox() {
-        cbxHourFrom.setModel(new DefaultComboBoxModel(new String[] { "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23" }));
-        cbxHourFrom.setName("cbxHourFrom"); // NOI18N
-    }
-
-    private void initHourFromLabel(ResourceMap resourceMap) {
-        lblHourFrom.setText(resourceMap.getString("lblHourFrom.text")); // NOI18N
-        lblHourFrom.setName("lblHourFrom"); // NOI18N
-    }
-
-    private void initMaterialTypeBox() {
-        cbxMaterialType.setModel(getMatsModel());
-        cbxMaterialType.setName("cbxMaterialType"); // NOI18N
-        cbxMaterialType.setRenderer(new DefaultListCellRenderer() {
-            @Override
-            public Component getListCellRendererComponent(
-                JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if (value instanceof Material) {
-                    Material mat = (Material)value;
-                    setText(mat.getMaktx());
-                    setToolTipText(mat.getMatnr());
-                }
-                return this;
-            }
-        });
-    }
-
-    private void initMaterialTypeLabel(ResourceMap resourceMap) {
-        lblMaterialType.setLabelFor(cbxMaterialType);
-        lblMaterialType.setText(resourceMap.getString("lblMaterialType.text")); // NOI18N
-        lblMaterialType.setName("lblMaterialType"); // NOI18N
-    }
-
-    private void initDateToCalendar() {
-        dpDateTo.setDate(Calendar.getInstance().getTime());
-        dpDateTo.setName("dpDateTo"); // NOI18N
-    }
-
-    private void initDateToLable(ResourceMap resourceMap) {
-        lblDateTo.setText(resourceMap.getString("lblDateTo.text")); // NOI18N
-        lblDateTo.setName("lblDateTo"); // NOI18N
-    }
-
-    private void initDateFromCalendar() {
-        dpDateFrom.setDate(Calendar.getInstance().getTime());
-        dpDateFrom.setName("dpDateFrom"); // NOI18N
-        dpDateFrom.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                dpDateFromActionPerformed(evt);
-            }
-        });
-    }
-
-    private void initDateFromLabel(ResourceMap resourceMap) {
-        lblDateFrom.setText(resourceMap.getString("lblDateFrom.text")); // NOI18N
-        lblDateFrom.setName("lblDateFrom"); // NOI18N
-    }
-
-    private void initFilter(ResourceMap resourceMap) {
-        pnFilter.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("pnFilter.border.title"))); // NOI18N
-        pnFilter.setMinimumSize(new java.awt.Dimension(12, 35));
-        pnFilter.setName("pnFilter"); // NOI18N
-        pnFilter.setPreferredSize(new java.awt.Dimension(315, 35));
-    }*/
 // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Event methods">
     private void rbtNInwardItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbtNInwardItemStateChanged
         setSaveNeeded(isValidated());
-}//GEN-LAST:event_rbtNInwardItemStateChanged
+    }//GEN-LAST:event_rbtNInwardItemStateChanged
 
     private void rbtNOutwardItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbtNOutwardItemStateChanged
         setSaveNeeded(isValidated());
-}//GEN-LAST:event_rbtNOutwardItemStateChanged
+    }//GEN-LAST:event_rbtNOutwardItemStateChanged
 
     private void txtNMaterialKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNMaterialKeyReleased
         setSaveNeeded(isValidated());
-}//GEN-LAST:event_txtNMaterialKeyReleased
+    }//GEN-LAST:event_txtNMaterialKeyReleased
 
     private void txtNWeightKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNWeightKeyReleased
         setSaveNeeded(isValidated());
-}//GEN-LAST:event_txtNWeightKeyReleased
+    }//GEN-LAST:event_txtNWeightKeyReleased
 
     private void txtNDONumKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNDONumKeyReleased
         if (WeighBridgeApp.getApplication().isOfflineMode()) {
             return;
-        } else {
-            if (txtNDONum.getText().trim() == null) {
-                return;
-            }
-            String valDO = txtNDONum.getText().trim();
-            //val = StringUtil.paddingZero(val, 10); //+20100112#01 conversion number output
-            if (valDO.length() == 0 || (validDO && valDO.length() >= 7 && validDO && valDO.length() <= 10)) {
-                if ((evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) || (evt.isShiftDown() && evt.getKeyCode() == KeyEvent.VK_INSERT)) {
-                    validDO = false;
-                    txtNDONum.setForeground(Color.red);
-                } else {
-                    txtNDONum.setForeground(Color.black);
-                }
-            } else {
+        }
+
+        if (txtNDONum.getText().trim() == null) {
+            return;
+        }
+        int DOLength = txtNDONum.getText().trim().length();
+        if (DOLength == 0 || (validDO && DOLength >= 7 && validDO && DOLength <= 10)) {
+            if ((evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) || (evt.isShiftDown() && evt.getKeyCode() == KeyEvent.VK_INSERT)) {
                 validDO = false;
                 txtNDONum.setForeground(Color.red);
-            }
-            if (valDO.length() == 0) {
-                validDO = true;
-                setRbtEnabled(true);
             } else {
-//            setRbtEnabled(false);
+                txtNDONum.setForeground(Color.black);
             }
-            if (valDO.length() != 0) {
-                txtNMaterial.setEditable(false);
-                txtNWeight.setEditable(false);
-            } else {
-                txtNMaterial.setEditable(true);
-                txtNWeight.setEditable(true);
-            }
-            //setSaveNeeded(isValidated() && validDO);
-//        setSaveNeeded(validDO);
-            if (validDO) {
-                setSaveNeeded(isValidated());
-            }
+        } else {
+            validDO = false;
+            txtNDONum.setForeground(Color.red);
         }
-}//GEN-LAST:event_txtNDONumKeyReleased
+
+        if (DOLength == 0) {
+            validDO = true;
+            setRbtEnabled(true);
+            txtNMaterial.setEditable(true);
+            txtNWeight.setEditable(true);
+        } else {
+            txtNMaterial.setEditable(false);
+            txtNWeight.setEditable(false);
+        }
+
+        if (validDO) {
+            setSaveNeeded(isValidated());
+        }
+    }//GEN-LAST:event_txtNDONumKeyReleased
 
     private void txtNPlateNoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNPlateNoActionPerformed
-        // TODO add your handling code here:
         setSaveNeeded(isValidated());
     }//GEN-LAST:event_txtNPlateNoActionPerformed
 
-private void txtNDriverNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNDriverNameActionPerformed
-// TODO add your handling code here:
-    setSaveNeeded(isValidated());
-}//GEN-LAST:event_txtNDriverNameActionPerformed
+    private void txtNDriverNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNDriverNameActionPerformed
+        setSaveNeeded(isValidated());
+    }//GEN-LAST:event_txtNDriverNameActionPerformed
 
-private void txtNCMNDBLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNCMNDBLActionPerformed
-// TODO add your handling code here:
-    setSaveNeeded(isValidated());
-}//GEN-LAST:event_txtNCMNDBLActionPerformed
+    private void txtNCMNDBLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNCMNDBLActionPerformed
+        setSaveNeeded(isValidated());
+    }//GEN-LAST:event_txtNCMNDBLActionPerformed
 
-private void txtNMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNMaterialActionPerformed
-// TODO add your handling code here:
-    setSaveNeeded(isValidated());
-}//GEN-LAST:event_txtNMaterialActionPerformed
+    private void txtNMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNMaterialActionPerformed
+        setSaveNeeded(isValidated());
+    }//GEN-LAST:event_txtNMaterialActionPerformed
 
-private void txtNWeightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNWeightActionPerformed
-// TODO add your handling code here:
-    setSaveNeeded(isValidated());
-}//GEN-LAST:event_txtNWeightActionPerformed
+    private void txtNWeightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNWeightActionPerformed
+        setSaveNeeded(isValidated());
+    }//GEN-LAST:event_txtNWeightActionPerformed
 
-private void txtNDONumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNDONumActionPerformed
-// TODO add your handling code here:
-    setSaveNeeded(isValidated());
-}//GEN-LAST:event_txtNDONumActionPerformed
+    private void txtNDONumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNDONumActionPerformed
+        setSaveNeeded(isValidated());
+    }//GEN-LAST:event_txtNDONumActionPerformed
 
-private void txtNTrailerPlateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNTrailerPlateActionPerformed
-// TODO add your handling code here:
-}//GEN-LAST:event_txtNTrailerPlateActionPerformed
+    private void txtNTrailerPlateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNTrailerPlateActionPerformed
+    }//GEN-LAST:event_txtNTrailerPlateActionPerformed
 
-private void cbxHourToItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbxHourToItemStateChanged
-// TODO add your handling code here:
-    if (cbxHourTo.getSelectedIndex() < cbxHourFrom.getSelectedIndex()) {
-        cbxHourTo.setSelectedIndex(cbxHourFrom.getSelectedIndex());
-    }
-}//GEN-LAST:event_cbxHourToItemStateChanged
-
-private void cbxNMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxNMaterialActionPerformed
-// TODO add your handling code here:
-
-    txtNMaterial.setText(cbxNMaterial.getSelectedItem().toString());
-
-    setSaveNeeded(isValidated());
-}//GEN-LAST:event_cbxNMaterialActionPerformed
-
-private void cbxNMaterialItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbxNMaterialItemStateChanged
-// TODO add your handling code here:
-
-    txtNMaterial.setText(cbxNMaterial.getSelectedItem().toString());
-    setSaveNeeded(isValidated());
-}//GEN-LAST:event_cbxNMaterialItemStateChanged
-
-private void cbxNMaterialKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cbxNMaterialKeyReleased
-// TODO add your handling code here:
-    txtNMaterial.setText(cbxNMaterial.getSelectedItem().toString());
-    setSaveNeeded(isValidated());
-}//GEN-LAST:event_cbxNMaterialKeyReleased
-
-private void btnManyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManyActionPerformed
-// TODO add your handling code here:
-    String soDO = JOptionPane.showInputDialog(this.getRootPane(), "Nhập số Delivery Order(DO): ");
-    boolean isNumber = false;
-    if (soDO == null) {
-        isNumber = false;
-    } else if (soDO != null || !soDO.equals("")) {
-        soDO = soDO.trim();
-        for (int i = 0; i < soDO.length(); i++) {
-            if (!Character.isDigit(soDO.charAt(i))) {
-                isNumber = false;
-            } else {
-                isNumber = true;
-            }
+    private void cbxHourToItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbxHourToItemStateChanged
+        if (cbxHourTo.getSelectedIndex() < cbxHourFrom.getSelectedIndex()) {
+            cbxHourTo.setSelectedIndex(cbxHourFrom.getSelectedIndex());
         }
-        if (isNumber && soDO.length() >= 8 && soDO.length() <= 10) {
-            if (txtNDONum.getText().equals("")) {
-                txtNDONum.setText(StringUtil.paddingZero(soDO, 10));
+    }//GEN-LAST:event_cbxHourToItemStateChanged
 
-            } else {
-                String inputDO = (soDO.length() == 8) ? StringUtil.paddingZero(soDO, 8) : StringUtil.paddingZero(soDO, 10);
-                // String inputDO2 = StringUtil.paddingZero(soDO, 8);
-                if (txtNDONum.getText().indexOf(inputDO) == -1) {
-                    txtNDONum.setText(txtNDONum.getText() + "-" + inputDO);
-                } else {
-                    JOptionPane.showMessageDialog(this.getRootPane(), resourceMapMsg.getString("msg.duplicateDo"));
+    private void cbxNMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxNMaterialActionPerformed
+        txtNMaterial.setText(cbxNMaterial.getSelectedItem().toString());
+        setSaveNeeded(isValidated());
+    }//GEN-LAST:event_cbxNMaterialActionPerformed
+
+    private void cbxNMaterialItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbxNMaterialItemStateChanged
+        txtNMaterial.setText(cbxNMaterial.getSelectedItem().toString());
+        setSaveNeeded(isValidated());
+    }//GEN-LAST:event_cbxNMaterialItemStateChanged
+
+    private void cbxNMaterialKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cbxNMaterialKeyReleased
+        txtNMaterial.setText(cbxNMaterial.getSelectedItem().toString());
+        setSaveNeeded(isValidated());
+    }//GEN-LAST:event_cbxNMaterialKeyReleased
+
+    private void btnManyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManyActionPerformed
+        String soDO = JOptionPane.showInputDialog(this.getRootPane(), "Nhập số Delivery Order(DO): ");
+        boolean isNumber = true;
+        if (StringUtil.isNotEmptyString(soDO)) {
+            soDO = soDO.trim();
+            for (int i = 0; i < soDO.length(); i++) {
+                if (!Character.isDigit(soDO.charAt(i))) {
+                    isNumber = false;
+                    break;
                 }
             }
-        } else {
-            JOptionPane.showMessageDialog(this.getRootPane(), resourceMapMsg.getString("msg.falseDo"));
-            txtNDONum.setText("");
-        }
 
-    }
-}//GEN-LAST:event_btnManyActionPerformed
-
-private void btnCheckDOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCheckDOActionPerformed
-// TODO add your handling code here:
-    //  txtLicPlate = 
-
-
-    //if (!CheckTaiTrong( ) ) 
-    //    return ; 
-
-    setSaveNeeded(isValidated());
-    flag_check = true;
-}//GEN-LAST:event_btnCheckDOActionPerformed
-
-    private int iMessage(String messg) {
-        int answer = 0;
-        answer = JOptionPane.showConfirmDialog(this.getRootPane(), messg,
-                JOptionPane.MESSAGE_PROPERTY,
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE);
-        if (answer == JOptionPane.NO_OPTION) {
-            return answer;
-        }
-
-        return 1;
-    }
-
-private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-    // if (!CheckTaiTrong( ) ) 
-    //        return ; 
-}//GEN-LAST:event_btnSaveActionPerformed
-
-private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dpDateFromActionPerformed
-// TODO add your handling code here:
-}//GEN-LAST:event_dpDateFromActionPerformed
-
-private void txtNPlateNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNPlateNoFocusLost
-// TODO add your handling code here:
-    setSaveNeeded(isValidated());
-}//GEN-LAST:event_txtNPlateNoFocusLost
-
-private void txtNDriverNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNDriverNameFocusLost
-// TODO add your handling code here:
-    setSaveNeeded(isValidated());
-}//GEN-LAST:event_txtNDriverNameFocusLost
-
-private void txtNCMNDBLFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNCMNDBLFocusLost
-// TODO add your handling code here:
-    setSaveNeeded(isValidated());
-}//GEN-LAST:event_txtNCMNDBLFocusLost
-
-private void btnSoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSoActionPerformed
-// TODO add your handling code here:
-    // TODO add your handling code here:
-    String soSO = JOptionPane.showInputDialog(this.getRootPane(), "Nhập số Sale Order(SO): ");
-    boolean isNumber = false;
-    if (soSO == null) {
-        isNumber = false;
-    } else if (soSO != null || !soSO.equals("")) {
-        soSO = soSO.trim();
-        for (int i = 0; i < soSO.length(); i++) {
-            if (!Character.isDigit(soSO.charAt(i))) {
-                isNumber = false;
-            } else {
-                isNumber = true;
-            }
-        }
-        if (isNumber && soSO.length() >= 8 && soSO.length() <= 10) {
-            if (txtNDONum.getText().equals("")) {
-                txtNDONum.setText(StringUtil.paddingZero(soSO, 10));
-
-            } else {
-                String inputDO = (soSO.length() == 8) ? StringUtil.paddingZero(soSO, 8) : StringUtil.paddingZero(soSO, 10);
-                // String inputDO2 = StringUtil.paddingZero(soDO, 8);
-                if (txtNDONum.getText().indexOf(inputDO) == -1) {
-                    txtNDONum.setText(txtNDONum.getText() + "-" + inputDO);
+            if (isNumber && StringUtil.hasLengthInRange(soDO, 8, 10)) {
+                if (txtNDONum.getText().equals("")) {
+                    txtNDONum.setText(StringUtil.paddingZero(soDO, 10));
                 } else {
-                    JOptionPane.showMessageDialog(this.getRootPane(), resourceMapMsg.getString("msg.duplicateDo"));
+                    String inputDO = (soDO.length() == 8) ? StringUtil.paddingZero(soDO, 8) : StringUtil.paddingZero(soDO, 10);
+                    if (!StringUtil.contains(txtNDONum.getText(), inputDO)) {
+                        txtNDONum.setText(txtNDONum.getText() + "-" + inputDO);
+                    } else {
+                        JOptionPane.showMessageDialog(this.getRootPane(), resourceMapMsg.getString("msg.duplicateDo"));
+                    }
+                }
+            } else {
+                JOptionPane.showMessageDialog(this.getRootPane(), resourceMapMsg.getString("msg.falseDo"));
+                txtNDONum.setText("");
+            }
+
+        }
+    }//GEN-LAST:event_btnManyActionPerformed
+
+    private void btnCheckDOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCheckDOActionPerformed
+        setSaveNeeded(isValidated());
+        flag_check = true;
+    }//GEN-LAST:event_btnCheckDOActionPerformed
+
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dpDateFromActionPerformed
+    }//GEN-LAST:event_dpDateFromActionPerformed
+
+    private void txtNPlateNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNPlateNoFocusLost
+        setSaveNeeded(isValidated());
+    }//GEN-LAST:event_txtNPlateNoFocusLost
+
+    private void txtNDriverNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNDriverNameFocusLost
+        setSaveNeeded(isValidated());
+    }//GEN-LAST:event_txtNDriverNameFocusLost
+
+    private void txtNCMNDBLFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNCMNDBLFocusLost
+        setSaveNeeded(isValidated());
+    }//GEN-LAST:event_txtNCMNDBLFocusLost
+
+    private void btnSoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSoActionPerformed
+        String soSO = JOptionPane.showInputDialog(this.getRootPane(), "Nhập số Sale Order(SO): ");
+        boolean isNumber = false;
+        if (soSO == null) {
+            isNumber = false;
+        } else if (soSO != null || !soSO.equals("")) {
+            soSO = soSO.trim();
+            for (int i = 0; i < soSO.length(); i++) {
+                if (!Character.isDigit(soSO.charAt(i))) {
+                    isNumber = false;
+                } else {
+                    isNumber = true;
                 }
             }
-        } else {
-            JOptionPane.showMessageDialog(this.getRootPane(), resourceMapMsg.getString("msg.falseDo"));
-            txtNDONum.setText("");
-        }
+            if (isNumber && soSO.length() >= 8 && soSO.length() <= 10) {
+                if (txtNDONum.getText().equals("")) {
+                    txtNDONum.setText(StringUtil.paddingZero(soSO, 10));
 
-    }
-}//GEN-LAST:event_btnSoActionPerformed
+                } else {
+                    String inputDO = (soSO.length() == 8) ? StringUtil.paddingZero(soSO, 8) : StringUtil.paddingZero(soSO, 10);
+                    // String inputDO2 = StringUtil.paddingZero(soDO, 8);
+                    if (txtNDONum.getText().indexOf(inputDO) == -1) {
+                        txtNDONum.setText(txtNDONum.getText() + "-" + inputDO);
+                    } else {
+                        JOptionPane.showMessageDialog(this.getRootPane(), resourceMapMsg.getString("msg.duplicateDo"));
+                    }
+                }
+            } else {
+                JOptionPane.showMessageDialog(this.getRootPane(), resourceMapMsg.getString("msg.falseDo"));
+                txtNDONum.setText("");
+            }
+
+        }
+    }//GEN-LAST:event_btnSoActionPerformed
+
     private DefaultComboBoxModel getMatsModel() {
         DefaultComboBoxModel result = new DefaultComboBoxModel();
         List<Material> materials = materialRepository.getListMaterial();
@@ -1546,29 +1049,17 @@ private void btnSoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
 
     @Action(block = Task.BlockingScope.ACTION)
     public Task checkDO() {
-
-        // upper & trim  -- tuanna add 28.11.fc2012 
         txtNPlateNo.setText(txtNPlateNo.getText().trim().toUpperCase());
         txtNDriverName.setText(txtNDriverName.getText().trim().toUpperCase());
         txtNCMNDBL.setText(txtNCMNDBL.getText().trim().toUpperCase());
-        // End add  
-
-        // Fix bug đơn hàng sai mã vật tư - 01/04/2013 
-
-        // end fix
-
 
         if (WeighBridgeApp.getApplication().isOfflineMode()) {
             return new CheckDOOFFTask(WeighBridgeApp.getApplication());
-            //setSaveNeeded(isValidated() && validDO);
-            //return null;
         } else {
             String val[] = txtNDONum.getText().trim().split("-");
             for (int i = 0; i < val.length; i++) {
                 if (val[i].length() > 0) {
-                    //+20100106 convert DO number to SAP format
                     val[i] = StringUtil.paddingZero(val[i], 10);
-                    //+20100106 convert DO number to SAP format
                     return new CheckDOTask(WeighBridgeApp.getApplication());
                 } else if (val[i].length() == 0) {
                     lblNDONum.setForeground(Color.black);
@@ -1594,7 +1085,6 @@ private void btnSoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         setClearable(true);
         setSaveNeeded(isValidated());
         txtWeightTicketNo.setText("");
-        //txtRegId.setText("");
         txtNMaterial.setEditable(true);
         cbxNMaterial.setEditable(true);
         txtNWeight.setEditable(true);
@@ -1602,14 +1092,6 @@ private void btnSoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         btnSo.setEnabled(true);
         btnCheckDO.setEnabled(true);
         btnSave.setEnabled(false);
-        // Nha may FICO Hiep Phuoc only 
-        if (WeighBridgeApp.getApplication().getConfig().getwPlant().contentEquals("1411")) {
-            rbtNOutward.setSelected(true);
-            rbtNInward.setEnabled(false);
-        }
-
-
-
     }
 
     @Action(enabledProperty = "clearable")
@@ -1620,7 +1102,6 @@ private void btnSoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         setRbtEnabled(false);
         setSaveNeeded(false);
         setClearable(false);
-//        txtSodangtai.setText("");
         btnMany.setEnabled(false);
         btnSo.setEnabled(false);
         btnCheckDO.setEnabled(false);
@@ -1632,7 +1113,6 @@ private void btnSoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
 
     @Action(enabledProperty = "saveNeeded")
     public Task saveRecord() {
-        //+20110119#01
         btnMany.setEnabled(false);
         btnSo.setEnabled(false);
         btnCheckDO.setEnabled(false);
@@ -1641,34 +1121,27 @@ private void btnSoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
         if (!(isValidated() && validDO)) {
             return null;
         }
-        //+20110119#01
-
-        int answer = -1;
-        if (txtNDONum.getText().trim().isEmpty() || txtNDONum.getText() == null) {
+        int answer = JOptionPane.YES_OPTION;
+        if (StringUtil.isEmptyString(txtNDONum.getText())) {
             answer = JOptionPane.showConfirmDialog(
                     this.getRootPane(),
                     "Bạn có muốn tiếp lục lưu phiếu đăng tài không có số D.O ?",
                     JOptionPane.OPTIONS_PROPERTY,
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE);
-        } else {
-            answer = JOptionPane.YES_OPTION;
         }
+
         if (answer == JOptionPane.YES_OPTION) {
             btnSave.setEnabled(false);
-            return new SaveRecordTask(WeighBridgeApp.getApplication());
+            return new SaveWeightTicketTask(WeighBridgeApp.getApplication());
 
         } else {
             btnMany.setEnabled(true);
             btnSo.setEnabled(true);
             btnCheckDO.setEnabled(true);
-
             btnSave.setEnabled(true);
             return null;
-
-
         }
-
     }
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Task Classes">
@@ -1676,10 +1149,70 @@ private void btnSoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
     private class ListWeightTicketsTask extends org.jdesktop.application.Task<Object, Void> {
 
         ListWeightTicketsTask(org.jdesktop.application.Application app) {
-            // Runs on the EDT.  Copy GUI state that
-            // doInBackground() depends on from parameters
-            // to ListWeightTicketsTask fields, here.
             super(app);
+        }
+
+        private List<WeightTicket> getWeightTicketWithOtherType(WeightTicketJpaController conWTicket, String from, String to) throws Exception {
+            List<WeightTicket> data = null;
+            if (cbxStatus.getSelectedIndex() == StatusEnum.POSTED.VALUE) {
+                data = conWTicket.findByDatePostedNull(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
+            } else if (cbxStatus.getSelectedIndex() == StatusEnum.ALL.VALUE) {
+                data = conWTicket.findByDateAllNull(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
+            }
+
+            return filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
+        }
+
+        private List<WeightTicket> getWeightTicketWithAllType(WeightTicketJpaController conWTicket, String from, String to) throws Exception {
+            List<WeightTicket> data = null;
+            if (cbxStatus.getSelectedIndex() == StatusEnum.POSTED.VALUE) {
+                data = conWTicket.findByDatePostedNullAll(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
+            } else if (cbxStatus.getSelectedIndex() == StatusEnum.ALL.VALUE) {
+                data = conWTicket.findByDateAllNullAll(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
+            }
+
+            return filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
+        }
+
+        private List<WeightTicket> getWeightTicketWithSelectedType(WeightTicketJpaController conWTicket, String from, String to, String matnr) throws Exception {
+            List<WeightTicket> data = null;
+            if (cbxStatus.getSelectedIndex() == StatusEnum.POSTED.VALUE) {
+                data = conWTicket.findByDatePosted(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), matnr, txtPlateNo.getText().trim());
+            } else if (cbxStatus.getSelectedIndex() == StatusEnum.ALL.VALUE) {
+                data = conWTicket.findByDateAll(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), matnr, txtPlateNo.getText().trim());
+            }
+
+            return filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
+        }
+
+        private void setWeightTicketData() {
+            for (int index = 0; index < weightTicketList.size(); index++) {
+                WeightTicket item = weightTicketList.get(index);
+                wtData[index][0] = item.getSeqDay();
+                wtData[index][1] = item.getDriverName();
+                wtData[index][2] = item.getDriverIdNo();
+                wtData[index][3] = item.getPlateNo();
+                wtData[index][4] = item.getTrailerId();
+                wtData[index][5] = item.getRegType();
+                wtData[index][6] = item.getRegItemDescription();
+                wtData[index][7] = item.getRegItemQuantity();
+                wtData[index][8] = item.getDeliveryOrderNo();
+                wtData[index][9] = item.getCreator();
+                wtData[index][10] = item.getSeqMonth();
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                wtData[index][11] = dateFormat.format(item.getCreatedDate());
+                String time = item.getCreatedTime().replaceAll(":","");
+                String hh = time.substring(0, 2);
+                String mm = time.substring(2, 4);
+                String ss = time.substring(4, 6);
+                wtData[index][12] = hh + ":" + mm + ":" + ss;
+                if (item.isPosted()) {
+                    wtData[index][13] = true;
+                } else {
+                    wtData[index][13] = false;
+                }
+            }
         }
 
         @SuppressWarnings("unchecked")
@@ -1691,62 +1224,21 @@ private void btnSoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:e
 
                 setProgress(1, 0, 4);
                 setMessage(resourceMapMsg.getString("msg.getData"));
-                AppConfig config = WeighBridgeApp.getApplication().getConfig();
-                //Tuanna add to protected data as folowing IT security policy -- 20/05/2013         
-                int days = (int) ((dpDateTo.getDate().getTime() - dpDateFrom.getDate().getTime()) / (1000 * 60 * 60 * 24));
-//                Date Now = new Date();
-//                int days2 = (int) ((Now.getTime() - dpDateTo.getDate().getTime()) / (1000 * 60 * 60 * 24));
-//                if ( days >1 || days2 > 1 || 1>1 )   
-//                {
-//                    JOptionPane.showMessageDialog(rootPane, "Thông báo ! Yêu cầu truy vấn dữ liệu vượt khoảng thời gian cho phép."  );
-//                      return null; 
-//                }                    
-                //End add 
 
                 WeightTicketJpaController conWTicket = new WeightTicketJpaController();
-                //filter modified by hoangvv
                 Object[] select = cbxMaterialType.getSelectedObjects();
-                com.gcs.wb.jpa.entity.Material selecttext = (com.gcs.wb.jpa.entity.Material) select[0];
+                com.gcs.wb.jpa.entity.Material material = (com.gcs.wb.jpa.entity.Material) select[0];
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                 String fFrom = format.format(dpDateFrom.getDate());
                 String fTo = format.format(dpDateTo.getDate());
-                System.out.println("dpFrom : " + fFrom + " to " + fTo);
-System.out.println(cbxStatus.getSelectedIndex());
-                List<WeightTicket> result = null;
-                List<WeightTicket> data = null;
-                if (selecttext.getMatnr().equals("-1")) {
-                    /*if (rbtStatusDissolved.isSelected()) {
-                        data = conWTicket.findByDateDissolvedNull(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
-                        result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
-                    } else*/ if (cbxStatus.getSelectedIndex() == 1) {
-                        data = conWTicket.findByDatePostedNull(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
-                        result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
-                    } else if (cbxStatus.getSelectedIndex() == 0) {
-                        data = conWTicket.findByDateAllNull(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
-                        result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
-                    }
-                } else if (selecttext.getMatnr().equals("-2")) {
-                    /*if (rbtStatusDissolved.isSelected()) {
-                        data = conWTicket.findByDateDissolvedNullAll(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
-                        result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
-                    } else*/ if (cbxStatus.getSelectedIndex() == 1) {
-                        data = conWTicket.findByDatePostedNullAll(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
-                        result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
-                    } else if (cbxStatus.getSelectedIndex() == 0) {
-                        data = conWTicket.findByDateAllNullAll(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
-                        result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
-                    }
+                List<WeightTicket> result;
+
+                if (material.getMatnr().equals(MaterialEnum.OTHER.VALUE)) {
+                    result = getWeightTicketWithOtherType(conWTicket, fFrom, fTo);
+                } else if (material.getMatnr().equals(MaterialEnum.ALL.VALUE)) {
+                    result = getWeightTicketWithAllType(conWTicket, fFrom, fTo);
                 } else {
-                    /*if (rbtStatusDissolved.isSelected()) {
-                        data = conWTicket.findByDateDissolved(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), selecttext.getMatnr(), txtPlateNo.getText().trim());
-                        result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
-                    } else*/ if (cbxStatus.getSelectedIndex() == 1) {
-                        data = conWTicket.findByDatePosted(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), selecttext.getMatnr(), txtPlateNo.getText().trim());
-                        result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
-                    } else if (cbxStatus.getSelectedIndex() == 0) {
-                        data = conWTicket.findByDateAll(fFrom, fTo, txtCreator.getText().trim(), txtDriverName.getText().trim(), selecttext.getMatnr(), txtPlateNo.getText().trim());
-                        result = filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
-                    }
+                    result = getWeightTicketWithSelectedType(conWTicket, fFrom, fTo, material.getMatnr());
                 }
 
                 setProgress(2, 0, 4);
@@ -1754,33 +1246,8 @@ System.out.println(cbxStatus.getSelectedIndex());
                 weightTicketList.addAll(result);
                 wtData = new Object[weightTicketList.size()][wtCols.length];
 
-                for (int i = 0; i < weightTicketList.size(); i++) {
-                    WeightTicket item = weightTicketList.get(i);
-                    wtData[i][0] = item.getSeqDay();
-                    wtData[i][1] = item.getDriverName();
-                    wtData[i][2] = item.getDriverIdNo();
-                    wtData[i][3] = item.getPlateNo();
-                    wtData[i][4] = item.getTrailerId();
-                    wtData[i][5] = item.getRegType();
-                    wtData[i][6] = item.getRegItemDescription();
-                    wtData[i][7] = item.getRegItemQuantity();
-                    wtData[i][8] = item.getDeliveryOrderNo();
-                    wtData[i][9] = item.getCreator();
-                    wtData[i][10] = item.getSeqMonth();
+                setWeightTicketData();
 
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");                    
-                    wtData[i][11] = dateFormat.format(item.getCreatedDate());
-                    String time = item.getCreatedTime().replaceAll(":","");
-                    String hh = time.substring(0, 2);
-                    String mm = time.substring(2, 4);
-                    String ss = time.substring(4, 6);
-                    wtData[i][12] = hh + ":" + mm + ":" + ss;
-                    if (item.isPosted()) {
-                        wtData[i][13] = true;
-                    } else {
-                        wtData[i][13] = false;
-                    }
-                }
                 setProgress(3, 0, 4);
                 editable = new boolean[wtCols.length];
                 for (int i = 0; i < editable.length; i++) {
@@ -1790,13 +1257,11 @@ System.out.println(cbxStatus.getSelectedIndex());
             } catch (Exception ex) {
                 failed(ex);
             }
-            return null; // return your result
+            return null;
         }
 
         @Override
         protected void succeeded(Object result) {
-            // Runs on the EDT.  Update the GUI based on
-            // the result computed by doInBackground().
         }
 
         @Override
@@ -1806,7 +1271,6 @@ System.out.println(cbxStatus.getSelectedIndex());
 
             setCreatable(true);
             setFormEditable(false);
-//            setRbtEnabled(false);
             setClearable(false);
             setSaveNeeded(false);
             clearForm();
@@ -1822,9 +1286,6 @@ System.out.println(cbxStatus.getSelectedIndex());
     private class ReprintRecordTask extends org.jdesktop.application.Task<Object, Void> {
 
         ReprintRecordTask(org.jdesktop.application.Application app) {
-            // Runs on the EDT.  Copy GUI state that
-            // doInBackground() depends on from parameters
-            // to ReprintRecordTask fields, here.
             super(app);
         }
 
@@ -1833,32 +1294,21 @@ System.out.println(cbxStatus.getSelectedIndex());
             selectedRow = weightTicketList.get(tabResults.convertRowIndexToModel(tabResults.getSelectedRow()));
             if (selectedRow != null) {
                 try {
-                    // if (selectedRow.isDissolved() == null)
-                    //  {
-                    //      selectedRow.setDissolved(false);
-                    // }
-                    if (!selectedRow.isDissolved()) { //+20100112#01 Không cho in khi phiếu đăng tài bị hủy
+                    if (!selectedRow.isDissolved()) {
                         setMessage(resourceMapMsg.getString("msg.rePrinting"));
                         txtWeightTicketNo.setText(selectedRow.getId() + "");
-                                //+ String.format("%03d", selectedRow.getSeqDay())); //+20100303
-
-
-                        // tuanna add -- copy ticket ID to clipboard. 28.11.2012 
-
                         StringSelection stringSelection = new StringSelection(txtWeightTicketNo.getText());
                         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                         clipboard.setContents(stringSelection, null);
-
-                        // End add. 
                         printWT(selectedRow, true);
-                    } else { //+20100112#01  Không cho in khi phiếu đăng tài bị hủy
+                    } else {
                         setMessage(resourceMapMsg.getString("msg.ticketDestroy"));
-                    } //+20100112#01  Không cho in khi phiếu đăng tài bị hủy
+                    }
                 } catch (Exception ex) {
                     failed(ex);
                 }
             }
-            return null;  // return your result
+            return null;
         }
 
         @Override
@@ -1868,8 +1318,6 @@ System.out.println(cbxStatus.getSelectedIndex());
 
         @Override
         protected void succeeded(Object result) {
-            // Runs on the EDT.  Update the GUI based on
-            // the result computed by doInBackground().
         }
 
         @Override
@@ -1881,9 +1329,6 @@ System.out.println(cbxStatus.getSelectedIndex());
     private class PrintReportTask extends org.jdesktop.application.Task<Object, Void> {
 
         PrintReportTask(org.jdesktop.application.Application app) {
-            // Runs on the EDT.  Copy GUI state that
-            // doInBackground() depends on from parameters
-            // to PrintReportTask fields, here.
             super(app);
         }
 
@@ -1899,7 +1344,7 @@ System.out.println(cbxStatus.getSelectedIndex());
             } catch (Exception ex) {
                 failed(ex);
             }
-            return null;  // return your result
+            return null;
         }
 
         @Override
@@ -2037,7 +1482,6 @@ System.out.println(cbxStatus.getSelectedIndex());
 
         private void handleDOCheckExist(String doNumber) {
             List<Object[]>  wts1 = wTRegRepository.checkDoExist(doNumber, WeighBridgeApp.getApplication().getConfig().getwPlant());
-
             boolean isInUsedDO = false;
             try
             {
@@ -2080,6 +1524,7 @@ System.out.println(cbxStatus.getSelectedIndex());
                 String selectedMode = getSelectedMode();
                 handleUnselectedMode(selectedMode);
                 handleDOCheckExist(doNumber);
+                // TODO uncomment for Shipping Point Handling if new req.
                 //handleShippingPointVar(doNumber, selectedMode);
             }
         }
@@ -2186,7 +1631,6 @@ System.out.println(cbxStatus.getSelectedIndex());
         }
 
         private void syncVendor() {
-            //Store Vendor Info
             if (sapLifnr != null && lifnr == null) {
                 entityManager.persist(sapLifnr);
             } else if (sapLifnr != null && lifnr != null) {
@@ -2198,7 +1642,6 @@ System.out.println(cbxStatus.getSelectedIndex());
         }
 
         private void syncCustomerByKunag(OutboundDelivery sapOutb) {
-            //Store Sold to party Info
             if (sapKunag != null && kunag == null && !sapOutb.getKunnr().equalsIgnoreCase(sapOutb.getKunag())) {
                 entityManager.persist(sapKunag);
             } else if (sapKunag != null && kunag != null) {
@@ -2210,7 +1653,6 @@ System.out.println(cbxStatus.getSelectedIndex());
         }
 
         private void syncCustomerByKunnr() {
-            //Store Ship to party Info
             if (sapKunnr != null && kunnr == null) {
                 entityManager.persist(sapKunnr);
             } else if (sapKunnr != null && kunnr != null) {
@@ -2268,197 +1710,221 @@ System.out.println(cbxStatus.getSelectedIndex());
             outbDel = null;
         }
 
+        private void setStep(int step, String msg) {
+            if (StringUtil.isNotEmptyString(msg)) {
+                setMessage(msg);
+            }
+            setProgress(step, 1, 4);
+        }
+
+        private String checkKunnr(String oldKunnr) {
+            //Check kunnr
+            if (outb != null
+                    && !oldKunnr.equals("")
+                    && !oldKunnr.equals(outb.getKunnr())) {
+                validDO = false;
+                String msg = resourceMapMsg.getString("msg.notDuplicateCode");
+                setMessage(msg);
+                JOptionPane.showMessageDialog(rootPane, msg);
+            } else if (outb != null) {
+                oldKunnr = outb.getKunnr();
+            }
+
+            return oldKunnr;
+        }
+
+        private String checkPlate(String oldSoxe) {
+            if (outb != null
+                    && !oldSoxe.equals("")
+                    && !oldSoxe.equals(outb.getTraid())) {
+                validDO = false;
+                String msg = resourceMapMsg.getString("msg.notDuplicateLicensePlate");
+                setMessage(msg);
+                JOptionPane.showMessageDialog(rootPane, msg);
+            } else if (outb != null) {
+                oldSoxe = outb.getTraid();
+            }
+
+            return oldSoxe;
+        }
+
+        private void setMode() {
+            if (validDO && outb != null) {
+                if (outb.getLfart().equalsIgnoreCase("LF") || outb.getLfart().equalsIgnoreCase("ZTLF")) {
+                    mode = "xuất";
+                } else {
+                    mode = "nhập";
+                }
+            }
+        }
+
+        private void checkDOInUsed(String doNumber) {
+            if (validDO && outb != null) {
+                WeightTicket wt = null;
+                String delivNumb = outb.getDeliveryOrderNo();
+                wt = weightTicketRepository.findByDeliveryOrderNo(delivNumb);
+
+                if (wt != null && !wt.isDissolved()) {
+                    validDO = false;
+                    outb = null;
+                    String msg = "D.O \" " + doNumber + " \" đã được dùng để " + mode + " hàng, vui lòng tự  kiểm tra trước khi liên hệ đường dây nóng Dịch vụ khách hàng 0919 49 59 69 ";
+                    setMessage(msg);
+                    JOptionPane.showMessageDialog(rootPane, msg);
+                } else {
+                    flag_revert = true;
+                    outb_number = outb.getDeliveryOrderNo().toString().trim();
+                }
+            }
+        }
+
+        private String getSelectedMode() {
+            String selectedMode = "";
+            if (rbtNInward.isSelected()) {
+                selectedMode = "Nhập";
+            }
+
+            if (rbtNOutward.isSelected()) {
+                selectedMode = "Xuất";
+            }
+
+            return selectedMode;
+        }
+
+        private void handleUnselectedMode(String selectedMode) {
+            if (StringUtil.isEmptyString(selectedMode)) {
+                String msg = resourceMapMsg.getString("msg.plzChooseIO");
+                setMessage(msg);
+                JOptionPane.showMessageDialog(rootPane, msg);
+            }
+        }
+
+        private void handleDOCheckExist(String doNumber) {
+            List<Object[]>  wts1 = wTRegRepository.checkDoExist(doNumber, WeighBridgeApp.getApplication().getConfig().getwPlant());
+            boolean isInUsedDO = false;
+            try
+            {
+                if (CollectionUtils.isNotEmpty(wts1))
+                {
+                    isInUsedDO =  Float.parseFloat(wts1.get(0)[0].toString()) > 0;
+                }
+            }
+            catch(Throwable cause){
+                // NOP
+            }
+
+            if (isInUsedDO) {
+                validDO = false;
+                outb = null;
+                String msg = "D.O \" " + doNumber + " \" đã được sử dụng , vui lòng liên hệ NPP hoặc DVKH đổi mã khác. Giao dịch lỗi này của người dùng đã được hệ thống lưu nhật ký";
+                setMessage(msg);
+                JOptionPane.showMessageDialog(rootPane, msg);
+            }
+
+        }
+
+        private void handleShippingPointVar(String doNumber, String selectedMode) {
+            if(outb != null) {
+                int klmax = wTRegRepository.getSPVar(WeighBridgeApp.getApplication().getConfig().getWbId(), ship_point, outb.getMatnr().toString().trim());
+                Boolean ship = (klmax <= 0) ? false : true;
+                if (ship == false) {
+                    validDO = false;
+                    outb = null;
+                    String msg = "D.O \" " + doNumber + " \" không được " + selectedMode + " hàng ở điểm nhận hàng này!, vui lòng liên hệ dịch vụ khách hàng Hotline 0919 49 59 69 để được hỗ trợ. ";
+                    setMessage(msg);
+                    JOptionPane.showMessageDialog(rootPane, msg);
+                }
+            }
+        }
+
+        private void checkShippingPoint(String doNumber) {
+            if (validDO && outb != null) {
+                ship_point = outb.getShipPoint();
+                String selectedMode = getSelectedMode();
+                handleUnselectedMode(selectedMode);
+                handleDOCheckExist(doNumber);
+                // TODO uncomment for Shipping Point Handling if new req.
+                //handleShippingPointVar(doNumber, selectedMode);
+            }
+        }
+
+        private void setMaterialNumber() {
+            if (validDO && outb != null) {
+                mat_numb = outb.getMatnr().trim();
+            }
+        }
+
+        private void updateWeightTicket() {
+            if (validDO && outb != null) {
+                newWeightTicket.setItem(outb.getDeliveryItem());
+                newWeightTicket.setMatnrRef(outb.getMatnr());
+                newWeightTicket.setRegItemDescription(outb.getArktx());
+                newWeightTicket.setUnit(outb.getVrkme());
+                newWeightTicket.setKunnr(outb.getKunnr());
+                txtNMaterial.setText(outb.getArktx());
+                cbxNMaterial.setSelectedItem(outb.getArktx());
+                BigDecimal regqty = BigDecimal.ZERO;
+                List<OutboundDetail> detail = new ArrayList<OutboundDetail>();
+                OutboundDetail item = null;
+                String[] do_list = txtNDONum.getText().trim().split("-");
+                for (int i = 0; i < do_list.length; i++) {
+                    String doNum = do_list[i];
+                    WeightTicketJpaController conWTicket = new WeightTicketJpaController();
+                    try {
+                        detail = conWTicket.findByMandtDelivNumb(doNum);
+                    } catch (Exception ex) {
+                        java.util.logging.Logger.getLogger(WTRegView.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    for (int j = 0; j < detail.size(); j++) {
+                        item = detail.get(j);
+                        regqty = regqty.add(item.getLfimg());
+                    }
+                }
+                txtNWeight.setValue(regqty.doubleValue());
+                outbDel = outb;
+            }
+        }
+
+        private void checkValidDO(String doNumber) {
+            if (outb != null) {
+                validDO = true;
+            } else {
+                validDO = false;
+                String msg = "Số D.O \" " + doNumber + " \" không tồn tại!";
+                setMessage(msg);
+                JOptionPane.showMessageDialog(rootPane, msg);
+            }
+        }
+
         @Override
         protected Object doInBackground() {
             String oldKunnr = "";
             String oldSoxe = "";
-            String[] val = txtNDONum.getText().trim().split("-");
-            for (int k = 0; k < val.length; k++) {
-                setMessage(resourceMapMsg.getString("msg.checkDOInDb"));
-                setProgress(1, 1, 4);
-                val[k] = StringUtil.paddingZero(val[k], 10);
+            String[] listDO = txtNDONum.getText().trim().split("-");
+            for (int index = 0; index < listDO.length; index++) {
+                setStep(1, resourceMapMsg.getString("msg.checkDOInDB"));
+                listDO[index] = StringUtil.paddingZero(listDO[index], 10);
 
-                outb = outboundDeliveryRepository.findByDeliveryOrderNo(val[k]);
+                outb = outboundDeliveryRepository.findByDeliveryOrderNo(listDO[index]);
 
-                if (outb != null) {
-                    validDO = true;
-                } else {
-                    validDO = false;
-                    String msg = "Số D.O \" " + val[k] + " \" không tồn tại!";
-                    setMessage(msg);
-                    JOptionPane.showMessageDialog(rootPane, msg);
-                }
+                checkValidDO(listDO[index]);
 
-                //Check kunnr
-                if (outb != null
-                        && !oldKunnr.equals("")
-                        && !oldKunnr.equals(outb.getKunnr())) {
-                    validDO = false;
-                    String msg = resourceMapMsg.getString("msg.notDuplicateCode");
-                    setMessage(msg);
-                    JOptionPane.showMessageDialog(rootPane, msg);
-                } else if (outb != null) {
-                    oldKunnr = outb.getKunnr();
-                }
+                oldKunnr = checkKunnr(oldKunnr);
+                oldSoxe = checkPlate(oldSoxe);
 
-//                Check bien so xe
-                if (outb != null
-                        && !oldSoxe.equals("")
-                        && !oldSoxe.equals(outb.getTraid())) {
-                    validDO = false;
-                    String msg = resourceMapMsg.getString("msg.notDuplicateLicensePlate");
-                    setMessage(msg);
-                    JOptionPane.showMessageDialog(rootPane, msg);
-                } else if (outb != null) {
-                    oldSoxe = outb.getTraid();
-                }
+                setMode();
 
-                //Set Mode
-                if (validDO && outb != null) {
-                    /**
-                     * At this screen, if enter D.O type LF => Outward mode
-                     * Otherwise, Inward mode.
-                     */
-                    if (outb.getLfart().equalsIgnoreCase("LF") || outb.getLfart().equalsIgnoreCase("ZTLF")) {
-                        mode = "xuất";
-                    } else {
-                        mode = "nhập";
-                    }
-                }
+                checkDOInUsed(listDO[index]);
 
-                //Check if D.O was used already or not???
-                if (validDO && outb != null) {
-                    WeightTicket wt = null;
-                    String delivNumb = outb.getDeliveryOrderNo();
-                    wt = weightTicketRepository.findByDeliveryOrderNo(delivNumb);
-                    String Lfart;
-                    try {
-                        Lfart = outb.getLfart();
+                checkShippingPoint(listDO[index]);
 
-                    } catch (Exception ex) {
-                    }
+                setMaterialNumber();
 
-                    if (wt != null && !wt.isDissolved()) {
-                        validDO = false;
-                        outb = null;
-                        String msg = "D.O \" " + val[k] + " \" đã được dùng để " + mode + " hàng, vui lòng tự  kiểm tra trước khi liên hệ đường dây nóng Dịch vụ khách hàng 0919 49 59 69 ";
-                        setMessage(msg);
-                        JOptionPane.showMessageDialog(rootPane, msg);
-                    } else {
-                        flag_revert = true;
-                        outb_number = outb.getDeliveryOrderNo().toString().trim();
-                    }
-                }
-//<< 20120712#01 - check shipping point -------
+                updateWeightTicket();
 
-
-                if (validDO && outb != null) {
-                    // Tạm thời sử dụng đầu tây ninh
-                    //ship_point = "(?i).*" + outb.getShipPoint() + "*";
-                    // if (WeighBridgeApp.getApplication().getConfig().getShId().toString().matches(ship_point)){
-                    //--------- Tuấn sửa ngày 050812  ------------------    
-                    ship_point = outb.getShipPoint();
-                    String tmpShippoint = WeighBridgeApp.getApplication().getConfig().getShId().toString();
-                    String WbID = WeighBridgeApp.getApplication().getConfig().getWbId().toString();
-
-                    String Matname = outb.getArktx().toUpperCase();
-
-                    String sp = ship_point.toString();
-                    Boolean ship = true;
-                    //--------- Tuấn sửa ngày 04.04.2013  ------------------ 
-                    //-- Checking SALE ORDER wrong material - plant 
-
-                    String mymode = "";
-
-                    if (rbtNInward.isSelected() == true) {
-                        mymode = "Nhập";
-                    } else if (rbtNOutward.isSelected() == true) {
-                        mymode = "Xuất";
-                    } else {
-                        mymode = "...";
-                    }
-
-                    if (mymode.indexOf("...") >= 0) {
-                        String msg = resourceMapMsg.getString("msg.plzChooseIO");
-                        setMessage(msg);
-                        JOptionPane.showMessageDialog(rootPane, msg);
-                    }
-
-                    float fCount = 0;
-                    String pDoNumber = val[k];
-                    String pWplant = WeighBridgeApp.getApplication().getConfig().getwPlant();
-                    List wts1 = wTRegRepository.checkDoExist(pDoNumber, pWplant);
-                    try {
-                        fCount = Float.parseFloat(wts1.get(0).toString());
-                    } catch (Throwable cause) {
-                        fCount = 2;
-                    }
-
-                    if (fCount > 0) {
-                        validDO = false;
-                        outb = null;
-                        String msg = "D.O \" " + val[k] + " \" đã được sử dụng , vui lòng liên hệ NPP hoặc DVKH đổi mã khác. Giao dịch lỗi này của người dùng đã được hệ thống lưu nhật ký";
-                        setMessage(msg);
-                        JOptionPane.showMessageDialog(rootPane, msg);
-                    }
-                    int klmax = -1;
-                    int temp = wTRegRepository.getSPVar(WbID, sp, outb.getMatnr().toString().trim());
-                    if (temp > 0) {
-                        klmax = temp;
-                    }
-                    ship = (klmax <= 0) ? false : true;
-                    if (ship == false) {
-                        validDO = false;
-                        outb = null;
-                        String msg = "D.O \" " + val[k] + " \" không được " + mymode + " hàng ở điểm nhận hàng này!, vui lòng liên hệ dịch vụ khách hàng Hotline 0919 49 59 69 để được hỗ trợ. ";
-                        setMessage(msg);
-                        JOptionPane.showMessageDialog(rootPane, msg);
-                    }
-                }
-
-                //  -------------------------------------------->> 
-                //20121217
-                if (validDO && outb != null) {
-                    mat_numb = outb.getMatnr().trim();
-                }
-                //end 20121217
-                if (validDO && outb != null) {
-                    newWeightTicket.setItem(outb.getDeliveryItem());
-                    newWeightTicket.setMatnrRef(outb.getMatnr());
-                    newWeightTicket.setRegItemDescription(outb.getArktx());
-                    newWeightTicket.setUnit(outb.getVrkme());
-                    newWeightTicket.setKunnr(outb.getKunnr());
-                    txtNMaterial.setText(outb.getArktx());
-                    cbxNMaterial.setSelectedItem(outb.getArktx());
-                    BigDecimal regqty = BigDecimal.ZERO;
-                    List<OutboundDetail> detail = new ArrayList<OutboundDetail>();
-                    OutboundDetail item = null;
-                    String[] do_list = txtNDONum.getText().trim().split("-");
-                    for (int i = 0; i < do_list.length; i++) {
-                        String doNum = do_list[i];
-                        WeightTicketJpaController conWTicket = new WeightTicketJpaController();
-                        try {
-                            detail = conWTicket.findByMandtDelivNumb(doNum);
-                        } catch (Exception ex) {
-                            java.util.logging.Logger.getLogger(WTRegView.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                        for (int j = 0; j < detail.size(); j++) {
-                            item = detail.get(j);
-                            regqty = regqty.add(item.getLfimg());
-                        }
-                    }
-//                if (outb.getFreeQty() != null) {
-//                    regqty = outb.getLfimg().add(outb.getFreeQty());
-//                } else {
-//                    regqty = outb.getLfimg();
-//                }
-                    txtNWeight.setValue(regqty.doubleValue());
-                    outbDel = outb;
-                }
                 setProgress(4, 1, 4);
                 continue;
-//                return null;  // return your result
             }
+
             return null;
         }
 
@@ -2474,23 +1940,12 @@ System.out.println(cbxStatus.getSelectedIndex());
 
         @Override
         protected void finished() {
-//            if (validDO) {
-//                lblDelNum.setForeground(Color.black);
-//            } else {
-//                lblDelNum.setForeground(Color.red);
-//            }
-////            setRbtEnabled(!validDO);
-//            setSaveNeeded(isValidated() && validDO);
         }
     }
 
-    private class SaveRecordTask extends org.jdesktop.application.Task<Object, Void> {
+    private class SaveWeightTicketTask extends org.jdesktop.application.Task<Object, Void> {
 
-        SaveRecordTask(org.jdesktop.application.Application app) {
-            // Runs on the EDT.  Copy GUI state that
-            // doInBackground() depends on from parameters
-            // to SaveRecordTask fields, here.
-
+        SaveWeightTicketTask(org.jdesktop.application.Application app) {
             super(app);
             setSaveNeeded(false);
             setClearable(false);
@@ -2510,31 +1965,9 @@ System.out.println(cbxStatus.getSelectedIndex());
             int seqBDay = wCon.getNewSeqBDay() + 1;
             int seqBMonth = wCon.getNewSeqBMonth() + 1;
 
-            //formatter.applyPattern("yyMMddHHmm");
-            //String id = formatter.format(now);
-
             formatter.applyPattern("yyyy");
-            //   if (entityManager.
-            //String sPlant = "";
 
-            // sPlant = WeighBridgeApp.getApplication().getConfig().getwPlant().toString();
-            //Calendar currdate = Calendar.getInstance();
-            //String yearplus = "";
-            //int y = 0;
-            //String nam = id.substring(0, 2);
-            //String pWbId = WeighBridgeApp.getApplication().getConfig().getWbId().trim();
-
-            //int iplus = wTRegRepository.getTicketInCre(pWbId);
-
-            //y = Integer.parseInt(nam) + iplus;
-            //id = Integer.toString(y) + id.substring(2, id.length());
             int year = Integer.parseInt(formatter.format(now));
-            //String sId = id + String.format("%03d", seqBDay);
-            //int iCount = wTRegRepository.checkExist(sId);
-            //if (iCount > 0) {
-            //    seqBDay = seqBDay + iCount;
-            //}
-//            newWeightTicket.setId(Integer.parseInt(id));
             newWeightTicket.setMandt(sap.getsClient());
             newWeightTicket.setWplant(sap.getwPlant());
             newWeightTicket.setSeqDay(seqBDay);
@@ -2552,12 +1985,9 @@ System.out.println(cbxStatus.getSelectedIndex());
             newWeightTicket.setPlateNo(txtNPlateNo.getText().trim());
             newWeightTicket.setDriverIdNo(txtNCMNDBL.getText().trim());
             newWeightTicket.setDriverName(txtNDriverName.getText().trim());
-//            System.out.println(WeighBridgeApp.getApplication().isOfflineMode());
-//            if(WeighBridgeApp.getApplication().isOfflineMode()){
             newWeightTicket.setDocYear(year);
             newWeightTicket.setPosted(false);
             newWeightTicket.setTrailerId(txtNTrailerPlate.getText().trim());
-//            }
             if (newWeightTicket.getDeliveryOrderNo() != null && newWeightTicket.getDeliveryOrderNo().trim().isEmpty()) {
                 newWeightTicket.setDeliveryOrderNo(null);
                 newWeightTicket.setItem(null);
@@ -2565,7 +1995,6 @@ System.out.println(cbxStatus.getSelectedIndex());
                 newWeightTicket.setRegItemDescription(txtNMaterial.getText().trim());
                 newWeightTicket.setUnit(null);
             }
-            //+20100113#01
             newWeightTicket.setKunnr(null);
             if (newWeightTicket.getDeliveryOrderNo() != null && !newWeightTicket.getDeliveryOrderNo().trim().isEmpty()) {
                 String val = newWeightTicket.getDeliveryOrderNo().trim();
@@ -2575,8 +2004,6 @@ System.out.println(cbxStatus.getSelectedIndex());
                     newWeightTicket.setKunnr(outbDel.getKunnr());
                 }
             }
-            //+20100113#01
-            //set du lieu cho do detail
             List<OutboundDetail> detail = new ArrayList<OutboundDetail>();
             OutboundDetail item = null;          
             if (WeighBridgeApp.getApplication().isOfflineMode() && !txtNDONum.getText().equals("")) {
@@ -2634,17 +2061,7 @@ System.out.println(cbxStatus.getSelectedIndex());
             try {
                 setMessage(resourceMapMsg.getString("msg.printing"));
                 txtWeightTicketNo.setText(newWeightTicket.getId() + "");
-                        //+ String.format("%03d", newWeightTicket.getSeqDay())); //+20100303
-
-                // tuanna -  update tai trong vao phieu can 
-                //  newWeightTicket.get
-                //  con  = null ; 
-
-
                 printWT(newWeightTicket, false);
-
-                // tuanna add -- copy ticket ID to clipboard. 28.11.2012 
-
                 StringSelection stringSelection = new StringSelection(txtWeightTicketNo.getText());
                 Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                 clipboard.setContents(stringSelection, null);
@@ -2653,7 +2070,7 @@ System.out.println(cbxStatus.getSelectedIndex());
             }
             ListWeightTicketsTask t = new ListWeightTicketsTask(this.getApplication());
             t.execute();
-            return null;  // return your result
+            return null;
         }
 
         @Override
@@ -2752,9 +2169,9 @@ System.out.println(cbxStatus.getSelectedIndex());
         boolean isValid = !(txtNPlateNo.getText().trim().isEmpty());
         if (isValid) {
             if (txtNDONum.getText().trim().isEmpty() || outbDel == null) {
-                isValid = checkLicPlate(null, null);
+                isValid = validateLicensePlate(null, null);
             } else {
-                isValid = checkLicPlate(outbDel.getLfart(), outbDel.getTraid());
+                isValid = validateLicensePlate(outbDel.getLfart(), outbDel.getTraid());
             }
         }
 
@@ -2852,30 +2269,21 @@ System.out.println(cbxStatus.getSelectedIndex());
         }
     }
 
-    private boolean checkLicPlate(String lfart, String traid) {
+    private boolean validateLicensePlate(String lfart, String traid) {
         boolean result = false;
-        //if (lfart != null && ( lfart.equalsIgnoreCase("LF") || lfart.equalsIgnoreCase("ZTLF") ) ) {
         if (lfart != null && traid != null && (lfart.equalsIgnoreCase("ZTLF") || lfart.equalsIgnoreCase("NL"))) {
             String txt = traid;
-            String doLicPlate = null;
+            String doLicPlate;
             int idx1 = txt.indexOf("|");
             int idx2 = txt.indexOf("\\");
             if (idx1 >= 0 || idx2 >= 0) {
                 int splitPos = idx1 < 0 ? idx2 : idx1;
                 int bIdx = splitPos - 8;
-                int eIdx = -1;
                 if (bIdx < 0) {
                     bIdx = 0;
                 }
                 doLicPlate = txt.substring(bIdx, splitPos);
                 splitPos++;
-                eIdx = splitPos + 8;
-                if (eIdx >= txt.length()) {
-                    eIdx = txt.length() - 1;
-                }
-                if (splitPos < eIdx) {
-//                            outb.setSoRomooc(txt.substring(splitPos, eIdx));
-                }
             } else {
                 int countSpace = 0;
                 int[] pos = new int[3];
@@ -2890,19 +2298,11 @@ System.out.println(cbxStatus.getSelectedIndex());
                 if (countSpace == 3) {
                     int splitPos = pos[1];
                     int bIdx = splitPos - 8;
-                    int eIdx = -1;
                     if (bIdx < 0) {
                         bIdx = 0;
                     }
                     doLicPlate = txt.substring(bIdx, splitPos);
                     splitPos++;
-                    eIdx = splitPos + 8;
-                    if (eIdx >= txt.length()) {
-                        eIdx = txt.length() - 1;
-                    }
-                    if (splitPos < eIdx) {
-//                        outb.setSoRomooc(txt.substring(splitPos, eIdx));
-                    }
                 } else {
                     doLicPlate = traid;
                 }
@@ -2915,9 +2315,7 @@ System.out.println(cbxStatus.getSelectedIndex());
                         + "\" không khớp với số được đăng ký trong D.O: " + doLicPlate);
             }
         } else if (newWeightTicket != null) {
-            //Do local check for entered Truck's License Plate
             Vehicle vehicle = vehicleRepository.findByPlateNo(txtNPlateNo.getText().trim());
-
             if (vehicle == null) {
                 result = false;
                 JOptionPane.showMessageDialog(rootPane, "Số xe \" " + txtNPlateNo.getText().trim()
@@ -2965,45 +2363,21 @@ System.out.println(cbxStatus.getSelectedIndex());
         validDO = true;
     }
 
-    private List<WeightTicket> filterHours(List<WeightTicket> data, String timefrom, String timeto) {
-        List<WeightTicket> result = new ArrayList<WeightTicket>();
-        int n1 = Integer.parseInt(timefrom);
-        double n2 = Integer.parseInt(timeto) + 0.99;
+    private List<WeightTicket> filterHours(List<WeightTicket> data, String timeFrom, String timeTo) {
+        List<WeightTicket> result = new ArrayList<>();
+        int startTime = Integer.parseInt(timeFrom);
+        double endTime = Integer.parseInt(timeTo) + 0.99;
         if (!data.isEmpty()) {
-            for (int i = 0; i < data.size(); i++) {
-                WeightTicket item = null;
-                item = data.get(i);
-
-                String ct = item.getCreatedTime();
-//                System.out.println(ct);
-                Character c0 = ct.charAt(0);
-                Character c1 = ct.charAt(1);
-                String ct1 = c0.toString().concat(c1.toString());
-                int cTime = Integer.parseInt(ct1);
-//                System.out.println(cTime);
-                if (cTime >= n1 && cTime <= n2) {
-                    if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
-                        result.add(item);
-                    } else {
-                        //filter sloc
-                        String[] sloc_item = WeighBridgeApp.getApplication().getSloc().split("-");
-                        if (sloc_item.length > 0) {
-                            for (int j = 0; j < sloc_item.length; j++) {
-                                String current_sloc = sloc_item[j].toString().trim();
-                                if (item.getLgort() == null) {
-                                    result.add(item);
-                                    break;
-                                } else if (item.getLgort().equals(current_sloc)) {
-                                    result.add(item);
-                                }
-                            }
-                        }
-
-                    }
-
+            for (int index = 0; index < data.size(); index++) {
+                WeightTicket item = data.get(index);
+                int createTime = Integer.parseInt(item.getCreatedTime().substring(0, 2));
+                if (startTime <= createTime && createTime <= endTime) 
+                {
+                    result.add(item);
                 }
             }
         }
+        
         return result;
     }
     // </editor-fold>
