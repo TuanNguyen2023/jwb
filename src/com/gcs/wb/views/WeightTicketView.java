@@ -1354,7 +1354,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
     private void rbtMiscItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbtMiscItemStateChanged
         if (!rbtMisc.isSelected()) {
-            String regItemDescription = weightTicket.getWeightTicketDetail().getRegItemDescription();
+            String regItemDescription = weightTicket != null ? weightTicket.getWeightTicketDetail().getRegItemDescription() : null;
             if (weightTicket != null && (regItemDescription != null && !regItemDescription.trim().isEmpty())) {
                 txtRegItem.setText(regItemDescription);
             } else if (purOrder != null) {
@@ -2400,7 +2400,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 //                        java.util.logging.Logger.getLogger(WeightTicketView.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     if (od == null && weightTicketDetail.getEbeln() != null) {
-                        od = sapService.getOutboundDelivery(weightTicketDetail.getDeliveryOrderNo(), false);
+                        od = sapService.getOutboundDelivery(weightTicketDetail.getDeliveryOrderNo());
                         if (od != null) {
                             if (!entityManager.getTransaction().isActive()) {
                                 entityManager.getTransaction().begin();
@@ -2466,7 +2466,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                             java.util.logging.Logger.getLogger(WeightTicketView.class.getName()).log(Level.SEVERE, null, ex);
                         }
                         if (!WeighBridgeApp.getApplication().isOfflineMode()) { //HLD18++offline
-                            OutboundDelivery sapOutbDel = sapService.getOutboundDelivery(do_list[i], false);
+                            OutboundDelivery sapOutbDel = sapService.getOutboundDelivery(do_list[i]);
                             if (sapOutbDel != null && outbDel == null) {
                                 if (!entityManager.getTransaction().isActive()) {
                                     entityManager.getTransaction().begin();
@@ -2475,6 +2475,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                                 entityManager.getTransaction().commit();
                                 entityManager.clear();
                             } else if (sapOutbDel != null && outbDel != null) {
+                                sapOutbDel.setId(outbDel.getId());
                                 sapOutbDel.setPosted(outbDel.isPosted());
                                 sapOutbDel.setMatDoc(outbDel.getMatDoc());
                                 if (!entityManager.getTransaction().isActive()) {
@@ -3100,7 +3101,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
                                 // <editor-fold defaultstate="collapsed" desc="Update D.O from SAP to DB">
                                 if (outbDel != null) {
-                                    OutboundDelivery sapOutb = sapService.getOutboundDelivery(outbDel.getDeliveryOrderNo(), false);
+                                    OutboundDelivery sapOutb = sapService.getOutboundDelivery(outbDel.getDeliveryOrderNo());
                                     Customer kunnr = null, sapKunnr = null, kunag = null, sapKunag = null;
                                     Vendor lifnr = null, sapLifnr = null;
                                     if (sapOutb != null) {
@@ -3386,7 +3387,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
                                     // <editor-fold defaultstate="collapsed" desc="Update D.O from SAP to DB">
                                     if (outbDel != null) {
-                                        OutboundDelivery sapOutb = sapService.getOutboundDelivery(outbDel.getDeliveryOrderNo(), false);
+                                        OutboundDelivery sapOutb = sapService.getOutboundDelivery(outbDel.getDeliveryOrderNo());
                                         Customer kunnr = null, sapKunnr = null, kunag = null, sapKunag = null;
                                         Vendor lifnr = null, sapLifnr = null;
                                         if (sapOutb != null) {
@@ -3692,7 +3693,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
                     if (vari != null) {
 
-                        if (!vari.getValue().equals("")) {
+                        if (vari.getValue() != null && !vari.getValue().isEmpty()) {
                             valu = Double.parseDouble(vari.getValue());
                         }
 
@@ -3703,12 +3704,12 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                             txfGoodsQty.setValue(result);
                             weightTicket.setGQty(new BigDecimal(Double.toString(result)));
                         } else {
-                            String msg = null;
-                            try {
-                                msg = weightTicketController.getMsg();
-                            } catch (Exception ex) {
-                                msg = resourceMapMsg.getString("msg.massOrderOutLimit");
-                            }
+                            String msg = "";
+//                            try {
+//                                msg = weightTicketController.getMsg();
+//                            } catch (Exception ex) {
+//                                msg = resourceMapMsg.getString("msg.massOrderOutLimit");
+//                            }
                             JOptionPane.showMessageDialog(rootPane, msg); //variant mesage --> Tuanna
                             txfOutQty.setValue(null);
                             txtOutTime.setText(null);

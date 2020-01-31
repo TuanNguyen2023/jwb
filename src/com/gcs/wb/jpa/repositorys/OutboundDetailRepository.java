@@ -23,7 +23,7 @@ public class OutboundDetailRepository {
 
     public List<OutboundDeliveryDetail> findByDeliveryOrderNo(String deliv_numb) {
 
-        List<OutboundDeliveryDetail> result = new ArrayList<OutboundDeliveryDetail>();
+        List<OutboundDeliveryDetail> result = new ArrayList<>();
         try {
             TypedQuery<OutboundDeliveryDetail> nq = entityManager.createNamedQuery("OutboundDeliveryDetail.findByDeliveryOrderNo", OutboundDeliveryDetail.class);
             nq.setParameter("deliveryOrderNo", "%" + deliv_numb + "%");
@@ -35,7 +35,7 @@ public class OutboundDetailRepository {
     }
 
     public List<OutboundDeliveryDetail> findByDeliveryOrderNoAndDeliveryOrderItem(String deliv_numb, String item) {
-        List<OutboundDeliveryDetail> result = new ArrayList<OutboundDeliveryDetail>();
+        List<OutboundDeliveryDetail> result = new ArrayList<>();
         try {
             TypedQuery<OutboundDeliveryDetail> nq = entityManager.createNamedQuery("OutboundDeliveryDetail.findByDeliveryOrderNoAndDeliveryOrderItem", OutboundDeliveryDetail.class);
             nq.setParameter("deliveryOrderNo", "%" + deliv_numb + "%");
@@ -48,7 +48,7 @@ public class OutboundDetailRepository {
     }
 
     public List<OutboundDeliveryDetail> findByWtId(String wt_id) {
-        List<OutboundDeliveryDetail> result = new ArrayList<OutboundDeliveryDetail>();
+        List<OutboundDeliveryDetail> result = new ArrayList<>();
         try {
             TypedQuery<OutboundDeliveryDetail> nq = entityManager.createNamedQuery("OutboundDeliveryDetail.findByWtId", OutboundDeliveryDetail.class);
             nq.setParameter("wtId", "%" + wt_id + "%");

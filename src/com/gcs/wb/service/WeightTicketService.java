@@ -68,7 +68,7 @@ public class WeightTicketService {
 
     WeightTicketRepository weightTicketRepository = new WeightTicketRepository();
     BatchStockRepository batchStocksRepository = new BatchStockRepository();
-    private AppConfig config = null;
+    private AppConfig config = WeighBridgeApp.getApplication().getConfig();
     public HashMap hmMsg = new HashMap();
     CustomerRepository customerRepository = new CustomerRepository();
     WeightTicketJpaRepository weightTicketJpaRepository = new WeightTicketJpaRepository();

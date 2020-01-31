@@ -21,7 +21,7 @@ public class VariantRepository {
     EntityManager entityManager = JPAConnector.getInstance();
 
     public Variant findByParam(String param) {
-        Variant result = new Variant();
+        Variant result = null;
         try {
             TypedQuery<Variant> query = entityManager.createNamedQuery("Variant.findByParam", Variant.class);
             query.setParameter("param", param);

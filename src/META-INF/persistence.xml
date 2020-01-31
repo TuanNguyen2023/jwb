@@ -4,7 +4,7 @@
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>com.gcs.wb.jpa.entity.Customer</class>
     <class>com.gcs.wb.jpa.entity.User</class>
-    <class>com.gcs.wb.jpa.entity.BatchStocks</class>
+    <class>com.gcs.wb.jpa.entity.BatchStock</class>
     <class>com.gcs.wb.jpa.entity.Vendor</class>
     <class>com.gcs.wb.jpa.entity.Material</class>
     <class>com.gcs.wb.jpa.entity.WeightTicket</class>

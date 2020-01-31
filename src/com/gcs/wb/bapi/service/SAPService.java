@@ -56,6 +56,7 @@ import org.hibersap.session.Session;
  * @author HANGTT
  */
 public class SAPService {
+
     BatchStockRepository batchStockRepository = new BatchStockRepository();
     EntityManager entityManager = JPAConnector.getInstance();
     EntityTransaction entityTransaction = entityManager.getTransaction();
@@ -78,7 +79,7 @@ public class SAPService {
         try {
             session.execute(bapi);
             List<MaterialGetListStructure> mats = bapi.getEtMaterial();
-            
+
             for (MaterialGetListStructure mat : mats) {
                 if (config.getwPlant().toString().equalsIgnoreCase(mat.getWerks())) {
                     Material m = null;
@@ -148,14 +149,14 @@ public class SAPService {
         if (!entityTransaction.isActive()) {
             entityTransaction.begin();
         }
-        
+
         // update remove DB
         for (Vendor ven : vendorDBs) {
             if (venSaps.indexOf(ven) == -1) {
                 entityManager.remove(ven);
             }
         }
-        
+
         // update SAP - DB
         for (Vendor venSap : venSaps) {
             int index = vendorDBs.indexOf(venSap);
@@ -166,13 +167,13 @@ public class SAPService {
                 entityManager.merge(venSap);
             }
         }
-        
+
         entityTransaction.commit();
         entityManager.clear();
-        
+
         // return data
         vendorDBs = jpaService.getVendorList();
-        
+
         return new DefaultComboBoxModel(vendorDBs.toArray());
     }
 
@@ -182,15 +183,14 @@ public class SAPService {
      * @param refresh
      * @return 
      */
-    public OutboundDelivery getOutboundDelivery(String number, boolean refresh) {
-        OutboundDelivery outb = null;
-        OutboundDeliveryDetail outb_details = null;
+    public OutboundDelivery getOutboundDelivery(String number) {
+        OutboundDelivery outboundDelivery = null;
+        OutboundDeliveryDetail outboundDeliveryDetail = null;
         String item_cat = "";
         String item_num = null;
         String item_num_free = null;
         boolean flag_free = true;
         boolean flag = true;
-        boolean flag_detail = true;
         BigDecimal item_qty = BigDecimal.ZERO;
         BigDecimal item_qty_free = BigDecimal.ZERO;
         DoGetDetailBapi bapiDO = new DoGetDetailBapi();
@@ -203,58 +203,37 @@ public class SAPService {
             entityTransaction = entityManager.getTransaction();
             WeightTicketJpaController con_check = new WeightTicketJpaController();
             List<OutboundDeliveryDetail> outb_detail_check;
-            if (refresh == true) {
-                try {
-                    outb_detail_check = con_check.findByMandtDelivNumb(number);
-                    if (outb_detail_check.size() > 0) {
-                        entityTransaction.begin();
-                        
-                        for (int i = 0; i < outb_detail_check.size(); i++) {
-                            entityManager.remove(outb_detail_check.get(i));
-                        }
-                        entityTransaction.commit();
-                        entityManager.clear();
-                    }
-                } catch (Exception ex) {
-                    Logger.getLogger(SAPService.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
             //end check
-            outb = new OutboundDelivery(number);
-            outb.setShipPoint(bapiDO.getEs_vstel());
+            outboundDelivery = new OutboundDelivery(number);
+            outboundDelivery.setMandt(config.getsClient());
+            outboundDelivery.setShipPoint(bapiDO.getEs_vstel());
             for (int i = 0; i < dos.size(); i++) {
                 DoGetDetailStructure doItem = dos.get(i);
                 try {
                     outb_detail_check = con_check.findByMandtDelivNumbItem(number, doItem.getPosnr().substring(4, 5));
                     if (outb_detail_check.size() > 0) {
-                        outb_details = outb_detail_check.get(0);
+                        outboundDeliveryDetail = outb_detail_check.get(0);
                     } else {
-                        outb_details = new OutboundDeliveryDetail(number, doItem.getPosnr().substring(4, 5));
+                        outboundDeliveryDetail = new OutboundDeliveryDetail(number, doItem.getPosnr().substring(4, 5));
                     }
                 } catch (Exception ex) {
                     Logger.getLogger(SAPService.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 // free goods processing
                 item_cat = doItem.getPstyv();
-                //set DO number cho details
-                if (flag_detail == true) {
-                }
-                //end set
                 if (item_cat.equals("ZTNN")) {
-                    outb.setDeliveryItemFree(doItem.getPosnr());
-                    outb.setMatnrFree(doItem.getMatnr());
+                    outboundDelivery.setDeliveryItemFree(doItem.getPosnr());
+                    outboundDelivery.setMatnrFree(doItem.getMatnr());
                     //set data cho details free goods
-                    if (flag_detail == true) {
-                        outb_details.setFreeItem('X');
-                        outb_details.setLfimg(doItem.getLfimg());
-                        outb_details.setMeins(doItem.getMeins());
-                        String split[] = doItem.getArktx().split("-");
-                        outb_details.setArktx(split[0].toString());
-                        outb_details.setMatnr(doItem.getMatnr());
-                        outb_details.setVgbel(doItem.getVgbel());
-                        outb_details.setBzirk(bapiDO.getEs_bzirk());
-                        outb_details.setBztxt(bapiDO.getEs_text());
-                    }
+                    outboundDeliveryDetail.setFreeItem('X');
+                    outboundDeliveryDetail.setLfimg(doItem.getLfimg());
+                    outboundDeliveryDetail.setMeins(doItem.getMeins());
+                    String split[] = doItem.getArktx().split("-");
+                    outboundDeliveryDetail.setArktx(split[0].toString());
+                    outboundDeliveryDetail.setMatnr(doItem.getMatnr());
+                    outboundDeliveryDetail.setVgbel(doItem.getVgbel());
+                    outboundDeliveryDetail.setBzirk(bapiDO.getEs_bzirk());
+                    outboundDeliveryDetail.setBztxt(bapiDO.getEs_text());
                     //end set data
                     if (flag_free) {
                         item_num_free = doItem.getPosnr();
@@ -264,34 +243,27 @@ public class SAPService {
 //                    continue;
                 }
 
-                outb.setDeliveryItem(doItem.getPosnr()); //Get position
+                outboundDelivery.setDeliveryItem(doItem.getPosnr()); //Get position
                 //set data out details hang thuong
-                if (flag_detail == true) {
-                    outb_details.setLfimg(doItem.getLfimg());
+                outboundDeliveryDetail.setLfimg(doItem.getLfimg());
 
-                    if ((!outb_details.isPosted())
-                            || (outb_details.getLfimg() == null)
-                            || (outb_details.getLfimg().equals(BigDecimal.ZERO))) {
-                        outb_details.setLfimg(doItem.getLfimg());
-                    }
-                    outb_details.setMeins(doItem.getMeins());
-                    String split[] = doItem.getArktx().split("-");
-                    outb_details.setArktx(split[0].toString());
-                    outb_details.setMatnr(doItem.getMatnr());
-                    outb_details.setVgbel(doItem.getVgbel());
-                    outb_details.setBzirk(bapiDO.getEs_bzirk());
-                    outb_details.setBztxt(bapiDO.getEs_text());
+                if ((!outboundDeliveryDetail.isPosted())
+                        || (outboundDeliveryDetail.getLfimg() == null)
+                        || (outboundDeliveryDetail.getLfimg().equals(BigDecimal.ZERO))) {
+                    outboundDeliveryDetail.setLfimg(doItem.getLfimg());
                 }
+                outboundDeliveryDetail.setMeins(doItem.getMeins());
+                String split[] = doItem.getArktx().split("-");
+                outboundDeliveryDetail.setArktx(split[0].toString());
+                outboundDeliveryDetail.setMatnr(doItem.getMatnr());
+                outboundDeliveryDetail.setVgbel(doItem.getVgbel());
+                outboundDeliveryDetail.setBzirk(bapiDO.getEs_bzirk());
+                outboundDeliveryDetail.setBztxt(bapiDO.getEs_text());
+                outboundDeliveryDetail.setMandt(config.getsClient());
+
+                outboundDelivery.addOutboundDeliveryDetail(outboundDeliveryDetail);
                 //end set data
-                //save database
-                if (flag_detail == true) {
-                    entityTransaction = entityManager.getTransaction();
-                    entityTransaction.begin();
-                    entityManager.merge(outb_details);
-                    entityTransaction.commit();
-                    entityManager.clear();
-                }
-                //end
+
                 //only get number item dong dau
                 if (!item_cat.equals("ZTNN")) {
                     item_qty = item_qty.add(doItem.getLfimg());
@@ -301,73 +273,112 @@ public class SAPService {
                     }
                 }
 
-                outb.setErdat(new java.sql.Date(doItem.getErdat().getTime()));
-                outb.setLfart(doItem.getLfart());
+                outboundDelivery.setErdat(new java.sql.Date(doItem.getErdat().getTime()));
+                outboundDelivery.setLfart(doItem.getLfart());
 
-                outb.setWadat(new java.sql.Date(doItem.getWadat().getTime()));
-                outb.setLddat(new java.sql.Date(doItem.getLddat().getTime()));
-                outb.setKodat(new java.sql.Date(doItem.getKodat().getTime()));
-                outb.setLifnr(doItem.getLifnr());
-                outb.setKunnr(doItem.getKunnr());
-                outb.setKunag(doItem.getKunag());
-                outb.setTraty(doItem.getTraty());
-                outb.setTraid(doItem.getTraid());
+                outboundDelivery.setWadat(new java.sql.Date(doItem.getWadat().getTime()));
+                outboundDelivery.setLddat(new java.sql.Date(doItem.getLddat().getTime()));
+                outboundDelivery.setKodat(new java.sql.Date(doItem.getKodat().getTime()));
+                outboundDelivery.setLifnr(doItem.getLifnr());
+                outboundDelivery.setKunnr(doItem.getKunnr());
+                outboundDelivery.setKunag(doItem.getKunag());
+                outboundDelivery.setTraty(doItem.getTraty());
+                outboundDelivery.setTraid(doItem.getTraid());
 
-                outb.setBldat(new java.sql.Date(doItem.getBldat().getTime()));
-                if(outb.getMatnr() == null || outb.getMatnr().trim().isEmpty()) {
-                    outb.setMatnr(doItem.getMatnr());
+                outboundDelivery.setBldat(new java.sql.Date(doItem.getBldat().getTime()));
+                if (outboundDelivery.getMatnr() == null || outboundDelivery.getMatnr().trim().isEmpty()) {
+                    outboundDelivery.setMatnr(doItem.getMatnr());
                 }
-                outb.setWerks(doItem.getWerks());
-                outb.setLgort(doItem.getLgort());
-                outb.setCharg(doItem.getCharg());
-                outb.setLichn(doItem.getLichn());
-                outb.setMeins(doItem.getMeins());
-                outb.setVrkme(doItem.getVrkme());
-                outb.setUebtk(doItem.getUebtk() == null || doItem.getUebtk().trim().isEmpty() ? ' ' : 'X');
-                outb.setUebto(doItem.getUebto());
-                outb.setUntto(doItem.getUntto());
-                outb.setArktx(doItem.getArktx());
-                outb.setVgbel(doItem.getVgbel());
-                outb.setVgpos(doItem.getVgpos());
-                outb.setBwart(doItem.getBwart());
-                outb.setBwtar(doItem.getBwtar());
-                if (outb.getBwtar() == null || outb.getBwtar().trim().isEmpty()) {
-                    outb.setBwtar("PURC");
+                outboundDelivery.setWerks(doItem.getWerks());
+                outboundDelivery.setLgort(doItem.getLgort());
+                outboundDelivery.setCharg(doItem.getCharg());
+                outboundDelivery.setLichn(doItem.getLichn());
+                outboundDelivery.setMeins(doItem.getMeins());
+                outboundDelivery.setVrkme(doItem.getVrkme());
+                outboundDelivery.setUebtk(doItem.getUebtk() == null || doItem.getUebtk().trim().isEmpty() ? ' ' : 'X');
+                outboundDelivery.setUebto(doItem.getUebto());
+                outboundDelivery.setUntto(doItem.getUntto());
+                outboundDelivery.setArktx(doItem.getArktx());
+                outboundDelivery.setVgbel(doItem.getVgbel());
+                outboundDelivery.setVgpos(doItem.getVgpos());
+                outboundDelivery.setBwart(doItem.getBwart());
+                outboundDelivery.setBwtar(doItem.getBwtar());
+                if (outboundDelivery.getBwtar() == null || outboundDelivery.getBwtar().trim().isEmpty()) {
+                    outboundDelivery.setBwtar("PURC");
                 }
-                outb.setRecvPlant(doItem.getRecv_plant());
-                outb.setKoquk(doItem.getKoquk() == null || doItem.getKoquk().trim().isEmpty() || doItem.getKoquk().trim().charAt(0) != 'C' ? ' ' : 'X');
-                outb.setKostk(doItem.getKostk() == null || doItem.getKostk().trim().isEmpty() || doItem.getKostk().trim().charAt(0) != 'C' ? ' ' : 'X');
-                outb.setWbstk(doItem.getWbstk() == null || doItem.getWbstk().trim().isEmpty() || doItem.getWbstk().trim().charAt(0) != 'C' ? ' ' : 'X');
+                outboundDelivery.setRecvPlant(doItem.getRecv_plant());
+                outboundDelivery.setKoquk(doItem.getKoquk() == null || doItem.getKoquk().trim().isEmpty() || doItem.getKoquk().trim().charAt(0) != 'C' ? ' ' : 'X');
+                outboundDelivery.setKostk(doItem.getKostk() == null || doItem.getKostk().trim().isEmpty() || doItem.getKostk().trim().charAt(0) != 'C' ? ' ' : 'X');
+                outboundDelivery.setWbstk(doItem.getWbstk() == null || doItem.getWbstk().trim().isEmpty() || doItem.getWbstk().trim().charAt(0) != 'C' ? ' ' : 'X');
 //            }
                 if (item_cat.equals("ZTNN")) {
-                    outb.setFreeQty(item_qty_free);
+                    outboundDelivery.setFreeQty(item_qty_free);
                 }
-                outb.setLfimg(item_qty);
+                outboundDelivery.setLfimg(item_qty);
             }
             //set lai item number thanh number dau tien
 
-            if (outb.getDeliveryItem() != null) {
-                if (!outb.getDeliveryItem().equals(item_num)) {
-                    outb.setDeliveryItem(item_num);
+            if (outboundDelivery.getDeliveryItem() != null) {
+                if (!outboundDelivery.getDeliveryItem().equals(item_num)) {
+                    outboundDelivery.setDeliveryItem(item_num);
                 }
             }
             if (item_num_free != null) {
 
-                if (!outb.getDeliveryItemFree().equals(item_num_free)) {
-                    outb.setDeliveryItemFree(item_num_free);
+                if (!outboundDelivery.getDeliveryItemFree().equals(item_num_free)) {
+                    outboundDelivery.setDeliveryItemFree(item_num_free);
                 }
             }
             //th chi co hang free goods
 
-            if (outb.getDeliveryItem() == null) {
-                outb.setDeliveryItem(outb.getDeliveryItemFree());
-                outb.setLfimg(outb.getFreeQty());
-                outb.setDeliveryItemFree(null);
-                outb.setFreeQty(null);
+            if (outboundDelivery.getDeliveryItem() == null) {
+                outboundDelivery.setDeliveryItem(outboundDelivery.getDeliveryItemFree());
+                outboundDelivery.setLfimg(outboundDelivery.getFreeQty());
+                outboundDelivery.setDeliveryItemFree(null);
+                outboundDelivery.setFreeQty(null);
+            }
+        }
+
+        return outboundDelivery;
+    }
+
+    public boolean syncOutboundDelivery(OutboundDelivery sapOutboundDelivery, OutboundDelivery outboundDelivery, String deliveryNum) {
+        WeightTicketJpaController con_check = new WeightTicketJpaController();
+        
+        boolean result = false;
+        if (!entityTransaction.isActive()) {
+            entityTransaction.begin();
+        }
+
+        try {
+            if (sapOutboundDelivery != null && outboundDelivery == null) {
+                entityManager.persist(sapOutboundDelivery);
+                outboundDelivery = sapOutboundDelivery;
+                result = true;
+            } else if (sapOutboundDelivery != null && outboundDelivery != null) {
+                sapOutboundDelivery.setId(outboundDelivery.getId());
+                entityManager.merge(sapOutboundDelivery);
+                outboundDelivery = sapOutboundDelivery;
+                result = true;
+            } else {
+                if (outboundDelivery != null) {
+                    entityManager.remove(outboundDelivery);
+                    outboundDelivery = null;
+                }
+                result = false;
             }
 
+            entityTransaction.commit();
+            entityManager.clear();
+        } catch (Exception ex) {
+            if (entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
+            Logger.getLogger(SAPService.class.getName()).log(Level.SEVERE, null, ex);
+            result = false;
         }
-        return outb;
+
+        return result;
     }
 
     /**
@@ -456,7 +467,7 @@ public class SAPService {
         }
         return result;
     }
-    
+
     /**
      * get data Vendor detail
      * @param lifnr
@@ -477,7 +488,7 @@ public class SAPService {
         }
         return result;
     }
-    
+
     public DefaultComboBoxModel getSlocModel() {
         // get data DB
         List<SLoc> slocDBs = jpaService.getSlocList();
@@ -519,7 +530,7 @@ public class SAPService {
                 entityManager.merge(sloc);
             }
         }
-        
+
         entityTransaction.commit();
         entityManager.clear();
         // set data
@@ -547,7 +558,7 @@ public class SAPService {
             return new DefaultComboBoxModel(result.toArray());
         }
     }
-    
+
     public List<TransportAgent> getTransportAgentList() {
         List<TransportAgent> result = new ArrayList<>();
         // get data DB
@@ -575,7 +586,7 @@ public class SAPService {
 
         return result;
     }
-    
+
     /**
      * get detail Material
      * @param matnr

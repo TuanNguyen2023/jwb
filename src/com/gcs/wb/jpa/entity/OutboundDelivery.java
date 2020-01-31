@@ -8,6 +8,9 @@ import com.gcs.wb.base.constant.Constants;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
@@ -16,6 +19,8 @@ import javax.persistence.Table;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 
 /**
  *
@@ -119,6 +124,10 @@ public class OutboundDelivery implements Serializable {
     private Date updatedDate;
     @Column(name = "deleted_date")
     private Date deletedDate;
+    
+    @OneToMany(mappedBy = "outboundDelivery", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "outbound_delivery_id")
+    private List<OutboundDeliveryDetail> outboundDeliveryDetails = new ArrayList<>();
 
     public OutboundDelivery() {
     }
@@ -491,6 +500,29 @@ public class OutboundDelivery implements Serializable {
     public void setPosted(boolean isPosted) {
         this.status = isPosted ? Constants.WeightTicket.STATUS_POSTED : null;
     }
+    
+    public List<OutboundDeliveryDetail> getOutboundDeliveryDetails() {
+        return outboundDeliveryDetails;
+    }
+
+    public void setOutboundDeliveryDetails(List<OutboundDeliveryDetail> outboundDeliveryDetails) {
+        this.outboundDeliveryDetails = outboundDeliveryDetails;
+    }
+
+    public OutboundDeliveryDetail getOutboundDeliveryDetail() {
+        if (outboundDeliveryDetails.isEmpty()) {
+            OutboundDeliveryDetail outboundDeliveryDetail = new OutboundDeliveryDetail();
+            outboundDeliveryDetail.setOutboundDelivery(this);
+            outboundDeliveryDetails.add(outboundDeliveryDetail);
+        }
+
+        return outboundDeliveryDetails.get(0);
+    }
+    
+    public void addOutboundDeliveryDetail(OutboundDeliveryDetail outboundDeliveryDetail) {
+        outboundDeliveryDetail.setOutboundDelivery(this);
+        outboundDeliveryDetails.add(outboundDeliveryDetail);
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -555,6 +587,6 @@ public class OutboundDelivery implements Serializable {
 
     @Override
     public String toString() {
-        return "com.gcs.wb.jpa.entity.OutbDel[id=" + id + "]";
+        return "com.gcs.wb.jpa.entity.OutboundDelivery[id=" + id + "]";
     }
 }

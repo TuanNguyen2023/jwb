@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
- /*
+/*
  * WTRegView.java
  *
  * Created on 10-04-2010, 10:06:26
@@ -62,6 +62,7 @@ import javax.persistence.EntityTransaction;
 import org.apache.commons.collections.CollectionUtils;
 
 public class WTRegView extends javax.swing.JInternalFrame {
+
     public String sVendor = "";
     public String sPO = "";
     public double dKldk = 0;
@@ -76,7 +77,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
     VehicleRepository vehicleRepository = new VehicleRepository();
     TransportAgentVehicleRepository transportAgentVehicleRepository = new TransportAgentVehicleRepository();
     SAPService sapService = new SAPService();
-
     WTRegController wTRegController = new WTRegController();
 
     public WTRegView() {
@@ -84,7 +84,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         selectedRow = new com.gcs.wb.jpa.entity.WeightTicket();
         outbDel = new com.gcs.wb.jpa.entity.OutboundDelivery();
         initComponents();
-        weightTicketList = new ArrayList<WeightTicket>();
+        weightTicketList = new ArrayList<>();
         ListWeightTicketsTask t = new ListWeightTicketsTask(WeighBridgeApp.getApplication());
         t.execute();
 
@@ -946,7 +946,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
         flag_check = true;
     }//GEN-LAST:event_btnCheckDOActionPerformed
 
-
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
     }//GEN-LAST:event_btnSaveActionPerformed
 
@@ -1007,7 +1006,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         mat.setMatnr("-2");
         mat.setMaktx("Tất cả");
         result.addElement(mat);
-        
+
         mat = new Material();
         mat.setMatnr("-1");
         mat.setMaktx("Khác");
@@ -1340,6 +1339,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
     }
 
     private class CheckDOTask extends org.jdesktop.application.Task<Object, Void> {
+
         private OutboundDelivery outb = null;
         private String mode = null;
         private Customer kunnr = null;
@@ -1366,7 +1366,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 outb = outboundDeliveryRepository.findByDeliveryOrderNo(listDO[index]);
 
                 setStep(2, resourceMapMsg.getString("checkDOInSap"));
-                OutboundDelivery sapOutb = sapService.getOutboundDelivery(listDO[index], true);
+                OutboundDelivery sapOutb = sapService.getOutboundDelivery(listDO[index]);
                 if (sapOutb != null) {
                     fetchCustomerByKunnr(sapOutb);
                     fetchCustomerByKunag(sapOutb);
@@ -1425,7 +1425,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 txtNMaterial.setText(outb.getArktx());
                 cbxNMaterial.setSelectedItem(outb.getArktx());
                 BigDecimal regqty = BigDecimal.ZERO;
-                List<OutboundDeliveryDetail> detail = new ArrayList<OutboundDeliveryDetail>();
+                List<OutboundDeliveryDetail> detail = new ArrayList<>();
                 OutboundDeliveryDetail item = null;
                 String[] do_list = txtNDONum.getText().trim().split("-");
                 for (int i = 0; i < do_list.length; i++) {
@@ -1439,6 +1439,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                     for (int j = 0; j < detail.size(); j++) {
                         item = detail.get(j);
                         regqty = regqty.add(item.getLfimg());
+                        weightTicketDetail.setDeliveryOrderNo(doNum);
                     }
                 }
                 txtNWeight.setValue(regqty.doubleValue());
@@ -1468,17 +1469,14 @@ public class WTRegView extends javax.swing.JInternalFrame {
         }
 
         private void handleDOCheckExist(String doNumber) {
-            List<Object[]>  wts1 = wTRegRepository.checkDoExist(doNumber, WeighBridgeApp.getApplication().getConfig().getwPlant());
+            List<Object[]> wts1 = wTRegRepository.checkDoExist(doNumber, WeighBridgeApp.getApplication().getConfig().getwPlant());
 
             boolean isInUsedDO = false;
-            try
-            {
-                if (CollectionUtils.isNotEmpty(wts1))
-                {
-                    isInUsedDO =  Float.parseFloat(wts1.get(0)[0].toString()) > 0;
+            try {
+                if (CollectionUtils.isNotEmpty(wts1)) {
+                    isInUsedDO = Float.parseFloat(wts1.get(0)[0].toString()) > 0;
                 }
-            }
-            catch(Throwable cause){
+            } catch (Throwable cause) {
                 // NOP
             }
 
@@ -1493,7 +1491,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         }
 
         private void handleShippingPointVar(String doNumber, String selectedMode) {
-            if(outb != null) {
+            if (outb != null) {
                 int klmax = wTRegRepository.getSPVar(WeighBridgeApp.getApplication().getConfig().getWbId(), ship_point, outb.getMatnr().toString().trim());
                 Boolean ship = (klmax <= 0) ? false : true;
                 if (ship == false) {
@@ -1584,31 +1582,20 @@ public class WTRegView extends javax.swing.JInternalFrame {
             return oldKunnr;
         }
 
-        private void syncOutboundDelivery(String val, OutboundDelivery sapOutb) {
-            if (sapOutb != null && outb == null) {
-                entityManager.persist(sapOutb);
-                outb = sapOutb;
-                validDO = true;
-            } else if (sapOutb != null && outb != null) {
-                sapOutb.setId(outb.getId());
-                entityManager.merge(sapOutb);
-                outb = sapOutb;
-                validDO = true;
-            } else {
-                if (outb != null) {
-                    entityManager.remove(outb);
-                    outb = null;
-                }
-                validDO = false;
-                String msg = "Số D.O \" " + val + " \" không tồn tại!";
+        private void syncOutboundDelivery(String deliveryNum, OutboundDelivery sapOutb) {
+            validDO = sapService.syncOutboundDelivery(sapOutb, outb, deliveryNum);
+            if (!validDO) {
+                String msg = "Số D.O \" " + deliveryNum + " \" không tồn tại!";
                 setMessage(msg);
                 JOptionPane.showMessageDialog(rootPane, msg);
             }
         }
 
         private void finishTransaction() {
-            entityTransaction.commit();
-            entityManager.clear();
+            if (entityTransaction.isActive()) {
+                entityTransaction.commit();
+                entityManager.clear();
+            }
         }
 
         private void startTransaction() {
@@ -1683,6 +1670,10 @@ public class WTRegView extends javax.swing.JInternalFrame {
             }
             logger.error(null, cause);
             JOptionPane.showMessageDialog(rootPane, cause.getMessage());
+
+            if (entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
         }
 
         @Override
@@ -1854,7 +1845,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                     txtNMaterial.setText(outb.getArktx());
                     cbxNMaterial.setSelectedItem(outb.getArktx());
                     BigDecimal regqty = BigDecimal.ZERO;
-                    List<OutboundDeliveryDetail> detail = new ArrayList<OutboundDeliveryDetail>();
+                    List<OutboundDeliveryDetail> detail = new ArrayList<>();
                     OutboundDeliveryDetail item = null;
                     String[] do_list = txtNDONum.getText().trim().split("-");
                     for (int i = 0; i < do_list.length; i++) {
@@ -1964,7 +1955,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                     weightTicketDetail.setKunnr(outbDel.getKunnr());
                 }
             }
-            List<OutboundDeliveryDetail> detail = new ArrayList<OutboundDeliveryDetail>();
+            List<OutboundDeliveryDetail> detail = new ArrayList<>();
             OutboundDeliveryDetail item = null;
             if (WeighBridgeApp.getApplication().isOfflineMode() && !txtNDONum.getText().equals("")) {
                 weightTicketDetail.setDeliveryOrderNo(txtNDONum.getText());
@@ -2321,7 +2312,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
     }
 
     private List<WeightTicket> filterHours(List<WeightTicket> data, String timefrom, String timeto) {
-        List<WeightTicket> result = new ArrayList<WeightTicket>();
+        List<WeightTicket> result = new ArrayList<>();
         int n1 = Integer.parseInt(timefrom);
         double n2 = Integer.parseInt(timeto) + 0.99;
         if (!data.isEmpty()) {

@@ -13,6 +13,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -50,7 +52,7 @@ public class OutboundDeliveryDetail implements Serializable {
     @Column(name = "arktx")
     private String arktx;
     @Column(name = "lfimg")
-    private BigDecimal lfimg;//
+    private BigDecimal lfimg;
     @Column(name = "meins")
     private String meins;
     @Column(name = "vgbel")
@@ -64,17 +66,17 @@ public class OutboundDeliveryDetail implements Serializable {
     @Column(name = "doc_year")
     private String docYear;
     @Column(name = "in_scale")
-    private BigDecimal inScale;//
+    private BigDecimal inScale;
     @Column(name = "out_scale")
-    private BigDecimal outScale;//
+    private BigDecimal outScale;
     @Column(name = "goods_qty")
-    private BigDecimal goodsQty;//
+    private BigDecimal goodsQty;
     @Column(name = "bzirk")
     private String bzirk;
     @Column(name = "bztxt")
     private String bztxt;
     @Column(name = "lfimg_ori")
-    private BigDecimal lfimg_ori;//
+    private BigDecimal lfimg_ori;
     @Column(name = "s_time")
     private Date sTime;
     @Column(name = "f_time")
@@ -89,6 +91,9 @@ public class OutboundDeliveryDetail implements Serializable {
     private Date deletedDate;
     @Column(name = "mandt", unique = true)
     private String mandt;
+    @ManyToOne
+    @JoinColumn(name = "outbound_delivery_id")
+    private OutboundDelivery outboundDelivery;
 
     public OutboundDeliveryDetail() {
     }
@@ -308,6 +313,14 @@ public class OutboundDeliveryDetail implements Serializable {
     
     public void setPosted(boolean isPosted) {
         this.status = isPosted ? Constants.WeightTicket.STATUS_POSTED : null;
+    }
+
+    public OutboundDelivery getOutboundDelivery() {
+        return outboundDelivery;
+    }
+
+    public void setOutboundDelivery(OutboundDelivery outboundDelivery) {
+        this.outboundDelivery = outboundDelivery;
     }
 
     @Override
