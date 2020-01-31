@@ -83,32 +83,33 @@ public class LoginController {
             sapSetting = sapSettingRepository.getSAPSetting();
 
             Session session = loginService.getSapSession(credentials);
-            boolean sap_flag = true;
-            try {
-                if (appConfig.isCheckVersionWB()) {
-                    loginService.checkVersionWB(session);
-                }
-                session.execute(userGetDetailBapi);  //Login
-            } catch (Exception ex) {
-                sap_flag = false;
-                if (user != null && !user.getPassword().equals(password)) {
-                    throw new Exception("Authenticated Failed!!!");
-                } else if (ex.getCause() instanceof JCoException) {
-                    jcoException = (JCoException) ex.getCause();
-                    if (jcoException.getGroup() == JCoException.JCO_ERROR_LOGON_FAILURE) {
-                        throw new Exception("Login Failed!!!");
+            boolean onlineMode = WeighBridgeApp.getApplication().getConfig().getModeNormal();
+            if(onlineMode) {
+                try {
+                    if (appConfig.isCheckVersionWB()) {
+                        loginService.checkVersionWB(session);
+                    }
+                    session.execute(userGetDetailBapi);  //Login
+                } catch (Exception ex) {
+                    onlineMode = false;
+                    if (user != null && !user.getPassword().equals(password)) {
+                        throw new Exception("Authenticated Failed!!!");
+                    } else if (ex.getCause() instanceof JCoException) {
+                        jcoException = (JCoException) ex.getCause();
+                        if (jcoException.getGroup() == JCoException.JCO_ERROR_LOGON_FAILURE) {
+                            throw new Exception("Login Failed!!!");
+                        }
                     }
                 }
             }
 
-            //set offline mode
-            offlineMode = !sap_flag;
-            if (sap_flag == true) {
+            if (onlineMode) {
                 UserGetDetailAddrStructure userGetDetailAddrStructure = userGetDetailBapi.getAddress();
                 String roles = loginService.getRoles(userGetDetailBapi);
 
                 loginService.asyncUser(session, userGetDetailAddrStructure, roles, user, username, password);
             }
+            offlineMode = !onlineMode;
         } catch (Exception ex) {
             throw ex;
         }
