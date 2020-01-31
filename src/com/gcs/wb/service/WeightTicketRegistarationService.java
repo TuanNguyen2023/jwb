@@ -5,7 +5,7 @@
 package com.gcs.wb.service;
 
 import com.gcs.wb.WeighBridgeApp;
-import com.gcs.wb.bapi.helper.SAP2Local;
+import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.Customer;
@@ -29,12 +29,13 @@ import org.jdesktop.swingx.JXDatePicker;
  *
  * @author THANGPT
  */
-public class WTRegService {
+public class WeightTicketRegistarationService {
 
     WeightTicketJpaController conWTicket = new WeightTicketJpaController();
     EntityManager entityManager = JPAConnector.getInstance();
     CustomerRepository customerRepository = new CustomerRepository();
     VendorRepository vendorRepository = new VendorRepository();
+    SAPService sAPService = new SAPService();
 
     public List<WeightTicket> listWeightTicketsDoInBackground(JXDatePicker dpFrom, JXDatePicker dpTo, JComboBox cbxType, JComboBox cbxTimeFrom, JComboBox cbxTimeTo, JTextField txtNguoitao, JRadioButton rbtDissolved, JRadioButton rbtPosted, JRadioButton rbtStateAll, JTextField txtTaixe, JTextField txtBienSo) throws Exception {
         AppConfig config = WeighBridgeApp.getApplication().getConfig();
@@ -172,15 +173,15 @@ public class WTRegService {
         if (sapOutb != null) {
             if (sapOutb.getKunnr() != null && !sapOutb.getKunnr().trim().isEmpty()) {
                 customer = customerRepository.findByKunnr(sapOutb.getKunnr());
-                sapKunnr = SAP2Local.getCustomer(sapOutb.getKunnr());
+                sapKunnr = sAPService.getCustomer(sapOutb.getKunnr());
             }
             if (sapOutb.getKunag() != null && !sapOutb.getKunag().trim().isEmpty()) {
                 kunag = customerRepository.findByKunnr(sapOutb.getKunag());
-                sapKunag = SAP2Local.getCustomer(sapOutb.getKunag());
+                sapKunag = sAPService.getCustomer(sapOutb.getKunag());
             }
             if (sapOutb.getLifnr() != null && !sapOutb.getLifnr().trim().isEmpty()) {
                 lifnr = vendorRepository.findByLifnr(sapOutb.getLifnr());
-                sapLifnr = SAP2Local.getVendor(sapOutb.getLifnr());
+                sapLifnr = sAPService.getVendor(sapOutb.getLifnr());
                 // abbr = sapLifnr.getVendorPK().getLifnr();
             }
 

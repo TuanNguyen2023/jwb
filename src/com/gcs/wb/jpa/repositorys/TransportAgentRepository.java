@@ -20,6 +20,10 @@ public class TransportAgentRepository {
 
     EntityManager entityManager = JPAConnector.getInstance();
 
+    /**
+     * get list DVVC
+     * @return 
+     */
     public List<TransportAgent> getListTransportAgent() {
         TypedQuery<TransportAgent> typedQuery = entityManager.createNamedQuery("TransportAgent.findAll", TransportAgent.class);
         return typedQuery.getResultList();

@@ -18,6 +18,11 @@ public class VendorRepository {
 
     EntityManager entityManager = JPAConnector.getInstance();
 
+    /**
+     * 
+     * Get data for "Vendor boc xep/van chuyen"
+     * @return 
+     */
     public List<Vendor> getListVendor() {
         TypedQuery<Vendor> typedQuery = entityManager.createNamedQuery("Vendor.findAll", Vendor.class);
         return typedQuery.getResultList();

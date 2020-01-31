@@ -25,14 +25,12 @@ import com.gcs.wb.jpa.entity.OutboundDetail;
 import com.gcs.wb.jpa.entity.BatchStock;
 import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.Material;
-import com.gcs.wb.jpa.entity.MovementPK;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
 import com.gcs.wb.jpa.entity.PurchaseOrder;
 import com.gcs.wb.jpa.entity.Reason;
 import com.gcs.wb.jpa.entity.ReasonPK;
 import com.gcs.wb.jpa.entity.SAPSetting;
 import com.gcs.wb.jpa.entity.SLoc;
-import com.gcs.wb.jpa.entity.TimeRange;
 import com.gcs.wb.jpa.entity.User;
 import com.gcs.wb.jpa.entity.Vendor;
 import com.gcs.wb.jpa.entity.WeightTicket;
@@ -61,18 +59,14 @@ import org.jdesktop.application.Task;
 
 import javax.persistence.EntityManager;
 import com.gcs.wb.jpa.entity.Variant;
-import com.gcs.wb.jpa.procedures.WeightTicketJpaRepository;
-import com.gcs.wb.jpa.procedures.WeightTicketRepository;
 import com.gcs.wb.jpa.repositorys.BatchStockRepository;
 import com.gcs.wb.jpa.repositorys.CustomerRepository;
 import com.gcs.wb.jpa.repositorys.SignalsRepository;
-import com.gcs.wb.jpa.repositorys.TimeRangeRepository;
 import com.gcs.wb.controller.WeightTicketController;
 import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
 import com.gcs.wb.jpa.repositorys.SLocRepository;
 import com.gcs.wb.jpa.repositorys.VariantRepository;
 import com.gcs.wb.jpa.repositorys.VendorRepository;
-import com.gcs.wb.jpa.service.JPAService;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -103,8 +97,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     BatchStockRepository batchStockRepository = new BatchStockRepository();
     PurchaseOrderRepository purchaseOrderRepository = new PurchaseOrderRepository();
     WeightTicketController weightTicketController = new WeightTicketController();
+    
     SAPService sapService = new SAPService();
-    //JPAService jpaService = new JPAService();
 
     public WeightTicketView() {
         initComponents();
@@ -2381,7 +2375,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         }
         
         @Override
-        protected Object doInBackground() {
+        protected Object doInBackground() throws Exception {
             weightTicket = weightTicketController.findWeightTicket(weightTicket, id);
             if (weightTicket == null) {
                 failed(new Exception("Không có phiếu cân số: " + txtWTNum.getText()));
@@ -2862,7 +2856,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             setProgress(1, 0, 3);
             
             try {
-                sapPurOrder = weightTicketController.getSapPurOrder(poNum);
+                sapPurOrder = sapService.getPurchaseOrder(poNum);
             } catch (Exception ex) {
                 failed(ex);
             }

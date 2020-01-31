@@ -9,6 +9,7 @@ import com.gcs.wb.bapi.helper.PoGetDetailBapi;
 import com.gcs.wb.bapi.helper.structure.PoGetDetailHeaderStructure;
 import com.gcs.wb.bapi.helper.structure.PoGetDetailItemStructure;
 import com.gcs.wb.jpa.entity.PurchaseOrder;
+import com.gcs.wb.model.AppConfig;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -16,8 +17,10 @@ import java.util.List;
  *
  * @author THANGPT
  */
-public class PurOrderConverter extends AbstractThrowableParamConverter<PoGetDetailBapi, PurchaseOrder, Exception> {
+public class PurchaseOrderConverter extends AbstractThrowableParamConverter<PoGetDetailBapi, PurchaseOrder, Exception> {
 
+    AppConfig config = WeighBridgeApp.getApplication().getConfig();
+    
     @Override
     public PurchaseOrder convertHasParameter(PoGetDetailBapi from, String val) throws Exception {
         String item_num = null;
@@ -33,7 +36,7 @@ public class PurOrderConverter extends AbstractThrowableParamConverter<PoGetDeta
             throw new Exception("Không hỗ trợ P.O số: " + val + "!");
         }
 
-        result = new PurchaseOrder(WeighBridgeApp.getApplication().getConfig().getsClient(), val);
+        result = new PurchaseOrder(config.getsClient(), val);
         result.setDocType(header.getDOC_TYPE());
         result.setDeleteInd(header.getDELETE_IND() == null || header.getDELETE_IND().trim().isEmpty() ? ' ' : header.getDELETE_IND().charAt(0));
         result.setStatus(header.getSTATUS() == null || header.getSTATUS().trim().isEmpty() ? ' ' : header.getSTATUS().charAt(0));

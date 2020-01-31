@@ -19,7 +19,7 @@ public class MaterialsV1Converter extends AbstractThrowableConverter<List<MatLoo
     
     @Override
     public List<Material> convert(List<MatLookupStructure> fromList){
-        List<Material> toList = new ArrayList<Material>();
+        List<Material> toList = new ArrayList<>();
         AppConfig config = WeighBridgeApp.getApplication().getConfig();
         for (MatLookupStructure mat : fromList) {
             Material m = null;

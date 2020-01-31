@@ -6,6 +6,7 @@ package com.gcs.wb.controller;
 
 import com.gcs.wb.bapi.goodsmvt.structure.GoodsMvtWeightTicketStructure;
 import com.gcs.wb.jpa.entity.BatchStock;
+import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
 import com.gcs.wb.jpa.entity.OutboundDetail;
@@ -19,7 +20,6 @@ import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JRadioButton;
 import javax.swing.JRootPane;
-import javax.swing.JTextField;
 import org.hibersap.session.Session;
 
 /**
@@ -83,11 +83,7 @@ public class WeightTicketController {
     public PurchaseOrder findPurOrder(String poNum) {
         return weightTicketService.findPurOrder(poNum);
     }
-
-    public PurchaseOrder getSapPurOrder(String poNum) throws Exception {
-        return weightTicketService.getSapPurOrder(poNum);
-    }
-
+    
     public void revertCompletedDO(List<String> completedDOs, List<OutboundDetail> OutbDetailsV2, List<OutboundDelivery> outbDels, WeightTicket weightTicket, List<OutboundDetail> outDetails_lits, Session sapSession) {
         weightTicketService.revertCompletedDO(completedDOs, OutbDetailsV2, outbDels, weightTicket, outDetails_lits, sapSession);
     }
@@ -132,13 +128,10 @@ public class WeightTicketController {
     public Object getPgmVl02nBapi(WeightTicket wt, OutboundDelivery outbDel, WeightTicket weightTicket, int timeFrom, int timeTo, List<OutboundDetail> outDetails_lits) {
         return weightTicketService.getPgmVl02nBapi(wt, outbDel, weightTicket, timeFrom, timeTo, outDetails_lits);
     }
-
-//    public DefaultComboBoxModel getReasonModel() {
-//        return weightTicketService.getReasonModel();
-//    }
     
     public void printWT(WeightTicket wt, boolean reprint, String ximang, List<OutboundDelivery> outbDel_list, List<OutboundDetail> outDetails_lits,
             OutboundDelivery outbDel, JRadioButton rbtMisc, JRadioButton rbtPO, boolean isStage1, JRootPane rootPane) {
         weightTicketService.printWT(wt, reprint, ximang, outbDel_list, outDetails_lits, outbDel, rbtMisc, rbtPO, isStage1, rootPane);
     }
+    
 }
