@@ -55,6 +55,7 @@ import org.hibersap.session.Session;
  * @author HANGTT
  */
 public class SAPService {
+
     BatchStockRepository batchStockRepository = new BatchStockRepository();
     EntityManager entityManager = JPAConnector.getInstance();
     JPAService jpaService = new JPAService();
@@ -66,17 +67,17 @@ public class SAPService {
      * sync Material
      */
     public void syncMaterialMaster() {
-        List<Material> result = new ArrayList<Material>();
+        List<Material> result = new ArrayList<>();
         //get data from DB
-        List<Material> materialsDB = new ArrayList<Material>();
+        List<Material> materialsDB = new ArrayList<>();
         materialsDB = jpaService.getListMaterial();
         // get data SAP
-        List<Material> matsSap = new ArrayList<Material>();
+        List<Material> matsSap = new ArrayList<>();
         MaterialGetListBapi bapi = new MaterialGetListBapi();
         try {
             session.execute(bapi);
             List<MaterialGetListStructure> mats = bapi.getEtMaterial();
-            
+
             for (MaterialGetListStructure mat : mats) {
                 if (config.getwPlant().toString().equalsIgnoreCase(mat.getWerks())) {
                     Material m = null;
@@ -119,17 +120,17 @@ public class SAPService {
      * sync Vendor
      */
     public DefaultComboBoxModel getVendorList() {
-        List<Vendor> vendorDBs = new ArrayList<Vendor>();
+        List<Vendor> vendorDBs = new ArrayList<>();
         vendorDBs = jpaService.getVendorList();
 
         TransportagentGetListBapi bapi = new TransportagentGetListBapi();
         bapi.setIvEkorg(config.getwPlant());
-        List<Vendor> venSaps = new ArrayList<Vendor>();
+        List<Vendor> venSaps = new ArrayList<>();
         try {
             session.execute(bapi);
 
             List<TransportagentGetListStructure> etVendors = bapi.getEtVendor();
-            
+
             for (TransportagentGetListStructure vens : etVendors) {
                 Vendor ven = new Vendor();
                 ven.setMandt(config.getsClient());
@@ -144,14 +145,14 @@ public class SAPService {
         if (!entityManager.getTransaction().isActive()) {
             entityManager.getTransaction().begin();
         }
-        
+
         // update remove DB
         for (Vendor ven : vendorDBs) {
             if (venSaps.indexOf(ven) == -1) {
                 entityManager.remove(ven);
             }
         }
-        
+
         // update SAP - DB
         for (Vendor venSap : venSaps) {
             int index = vendorDBs.indexOf(venSap);
@@ -162,13 +163,13 @@ public class SAPService {
                 entityManager.merge(venSap);
             }
         }
-        
+
         entityManager.getTransaction().commit();
         entityManager.clear();
-        
+
         // return data
         vendorDBs = jpaService.getVendorList();
-        
+
         return new DefaultComboBoxModel(vendorDBs.toArray());
     }
 
@@ -204,7 +205,7 @@ public class SAPService {
                     outb_detail_check = con_check.findByMandtDelivNumb(number);
                     if (outb_detail_check.size() > 0) {
                         em_check.getTransaction().begin();
-                        
+
                         for (int i = 0; i < outb_detail_check.size(); i++) {
                             em_check.remove(outb_detail_check.get(i));
                         }
@@ -310,7 +311,7 @@ public class SAPService {
                 outb.setTraid(doItem.getTraid());
 
                 outb.setBldat((java.sql.Date) doItem.getBldat());
-                if(outb.getMatnr() == null || outb.getMatnr().trim().isEmpty()) {
+                if (outb.getMatnr() == null || outb.getMatnr().trim().isEmpty()) {
                     outb.setMatnr(doItem.getMatnr());
                 }
                 outb.setWerks(doItem.getWerks());
@@ -379,7 +380,7 @@ public class SAPService {
         PurOrderConverter purOrderConverter = new PurOrderConverter();
         return purOrderConverter.convertHasParameter(bPO, poNum);
     }
-    
+
     /**
      * sync Batch Stocks
      * @param lgortSloc
@@ -391,7 +392,7 @@ public class SAPService {
         List<BatchStock> batchs = jpaService.getBatchStocks(config.getwPlant(), lgortSloc, matnr);
         // get data SAP
         BatchStocksGetListBapi bBatch = new BatchStocksGetListBapi();
-        List<BatchStock> batchStockSaps = new ArrayList<BatchStock>();
+        List<BatchStock> batchStockSaps = new ArrayList<>();
         bBatch.setIdMandt(config.getsClient());
         bBatch.setIdWerks(config.getwPlant());
         bBatch.setIdLgort(lgortSloc);
@@ -411,8 +412,8 @@ public class SAPService {
             entityManager.getTransaction().begin();
         }
         //case delete
-        for(BatchStock b: batchs) {
-            if(batchStockSaps.indexOf(b) == -1) {
+        for (BatchStock b : batchs) {
+            if (batchStockSaps.indexOf(b) == -1) {
                 entityManager.remove(b);
             }
         }
@@ -430,7 +431,7 @@ public class SAPService {
         entityManager.getTransaction().commit();
         entityManager.clear();
     }
-    
+
     /**
      * get data Customer detail
      * @param kunnr
@@ -451,7 +452,7 @@ public class SAPService {
         }
         return result;
     }
-    
+
     /**
      * get data Vendor detail
      * @param lifnr
@@ -472,23 +473,23 @@ public class SAPService {
         }
         return result;
     }
-    
-    public DefaultComboBoxModel getSlocModel() {
-        List<SLoc> slocDBs = new ArrayList<SLoc>();
-        // get data DB
-        slocDBs = jpaService.getSlocList();
 
+    public DefaultComboBoxModel getSlocModel() {
+        // get data DB
+        List<SLoc> slocDBs = jpaService.getSlocList();
+        String mandt = config.getsClient();
+        String wplant = config.getwPlant();
         // get data SAP
-        SLocsGetListBapi bSloc = new SLocsGetListBapi(config.getsClient(), config.getwPlant());
-        List<SLoc> slocSaps = new ArrayList<SLoc>();
+        SLocsGetListBapi bSloc = new SLocsGetListBapi(mandt, wplant);
+        List<SLoc> slocSaps = new ArrayList<>();
         try {
             session.execute(bSloc);
             List<SLocsGetListStructure> tdSLocs = bSloc.getTdSLocs();
             for (SLocsGetListStructure s : tdSLocs) {
-            SLoc sloc = new SLoc(s.getLgort());
-            sloc.setLgobe(s.getLgobe());
-            slocSaps.add(sloc);
-        }
+                SLoc sloc = new SLoc(s.getLgort());
+                sloc.setLgobe(s.getLgobe());
+                slocSaps.add(sloc);
+            }
         } catch (Exception ex) {
         }
         // sync data
@@ -496,14 +497,16 @@ public class SAPService {
             entityManager.getTransaction().begin();
         }
         // update case delete
-        for(SLoc slocD: slocDBs) {
-            if(slocSaps.indexOf(slocD) == -1) {
+        for (SLoc slocD : slocDBs) {
+            if (slocSaps.indexOf(slocD) == -1) {
                 entityManager.remove(slocD);
             }
         }
         // update case persit/merge
-        for(SLoc sloc: slocSaps) {
+        for (SLoc sloc : slocSaps) {
             int index = slocDBs.indexOf(sloc);
+            sloc.setMandt(mandt);
+            sloc.setWplant(wplant);
             if (index == -1) {
                 entityManager.persist(sloc);
             } else {
@@ -511,7 +514,7 @@ public class SAPService {
                 entityManager.merge(sloc);
             }
         }
-        
+
         entityManager.getTransaction().commit();
         entityManager.clear();
         // set data
@@ -522,7 +525,7 @@ public class SAPService {
 
             //filter sloc theo user
             String[] sloc1 = WeighBridgeApp.getApplication().getSloc().split("-");
-            List<SLoc> result = new ArrayList<SLoc>();
+            List<SLoc> result = new ArrayList<>();
             if (sloc1.length > 0) {
                 SLoc item = null;
 
@@ -539,16 +542,16 @@ public class SAPService {
             return new DefaultComboBoxModel(result.toArray());
         }
     }
-    
+
     public List<TransportAgent> getTransportAgentList() {
-        List<TransportAgent> result = new ArrayList<TransportAgent>();
+        List<TransportAgent> result = new ArrayList<>();
         // get data DB
-        List<TransportAgent> transportDBs = new ArrayList<TransportAgent>();
+        List<TransportAgent> transportDBs = new ArrayList<>();
         transportDBs = jpaService.getTransportAgent();
         // get data SAP
         TransportagentGetListBapi bapi = new TransportagentGetListBapi();
         bapi.setIvEkorg(config.getwPlant());
-        List<TransportAgent> transportSaps = new ArrayList<TransportAgent>();
+        List<TransportAgent> transportSaps = new ArrayList<>();
         try {
             session.execute(bapi);
             List<TransportagentGetListStructure> transports = bapi.getEtVendor();
@@ -567,7 +570,7 @@ public class SAPService {
 
         return result;
     }
-    
+
     /**
      * get detail Material
      * @param matnr
@@ -593,5 +596,4 @@ public class SAPService {
         }
         return result;
     }
-
 }

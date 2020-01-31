@@ -12,6 +12,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -87,8 +89,6 @@ public class PurchaseOrderDetail implements Serializable {
     private Character delivCompl;
     @Column(name = "part_deliv")
     private Character partDeliv;
-    @Column(name = "purchase_order_id")
-    private int purchaseOrderId;
     @Column(name = "created_date")
     @Temporal(TemporalType.DATE)
     private Date createdDate;
@@ -98,6 +98,10 @@ public class PurchaseOrderDetail implements Serializable {
     @Column(name = "deleted_date")
     @Temporal(TemporalType.DATE)
     private Date deletedDate;
+    
+    @ManyToOne
+    @JoinColumn(name = "purchase_order_id")
+    private PurchaseOrder purchaseOrder;
 
     public PurchaseOrderDetail() {
     }
@@ -314,12 +318,12 @@ public class PurchaseOrderDetail implements Serializable {
         return partDeliv;
     }
 
-    public int getPurchaseOrderId() {
-        return purchaseOrderId;
+    public PurchaseOrder getPurchaseOrder() {
+        return purchaseOrder;
     }
 
-    public void setPurchaseOrderId(int purchaseOrderId) {
-        this.purchaseOrderId = purchaseOrderId;
+    public void setPurchaseOrder(PurchaseOrder purchaseOrder) {
+        this.purchaseOrder = purchaseOrder;
     }
 
     public void setPartDeliv(Character partDeliv) {
@@ -391,7 +395,6 @@ public class PurchaseOrderDetail implements Serializable {
         result = 31 * result + (grNonVal != null ? grNonVal.hashCode() : 0);
         result = 31 * result + (delivCompl != null ? delivCompl.hashCode() : 0);
         result = 31 * result + (partDeliv != null ? partDeliv.hashCode() : 0);
-        result = 31 * result + (int) (purchaseOrderId ^ (purchaseOrderId >>> 31));
         result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
         result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
         result = 31 * result + (deletedDate != null ? deletedDate.hashCode() : 0);

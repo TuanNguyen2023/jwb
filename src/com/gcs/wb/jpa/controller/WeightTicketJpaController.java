@@ -181,7 +181,7 @@ public class WeightTicketJpaController {
 
     public List<WeightTicket> findListWTs(String month, String year, String tagent, String matnr, List<Character> modes, boolean isPosted) throws Exception {
         String query = "SELECT w FROM WeightTicket w "
-                + " LEFT JOIN WeightTicketDetail wd ON wd.weightTicketId = w.id"
+                + " , IN(w.weightTicketDetails) wd"
                 + " WHERE FUNC('YEAR', w.createdDate) = :year "
                 + " AND FUNC('MONTH', w.createdDate) = :month "
                 + " AND w.regType IN :regType ";

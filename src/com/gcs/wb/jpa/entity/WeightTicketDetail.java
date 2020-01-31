@@ -13,6 +13,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -75,8 +77,9 @@ public class WeightTicketDetail implements Serializable {
     private Date updatedDate;
     @Column(name = "deleted_date")
     private Date deletedDate;
-    @Column(name = "weight_ticket_id")
-    private int weightTicketId;
+    @ManyToOne
+    @JoinColumn(name = "weight_ticket_id")
+    private WeightTicket weightTicket;
 
     public WeightTicketDetail() {
     }
@@ -277,12 +280,12 @@ public class WeightTicketDetail implements Serializable {
         this.status = isPosted ? Constants.WeightTicket.STATUS_POSTED : null;
     }
 
-    public int getWeightTicketId() {
-        return weightTicketId;
+    public WeightTicket getWeightTicket() {
+        return weightTicket;
     }
 
-    public void setWeightTicketId(int weightTicketId) {
-        this.weightTicketId = weightTicketId;
+    public void setWeightTicket(WeightTicket weightTicket) {
+        this.weightTicket = weightTicket;
     }
 
     @Override

@@ -5,8 +5,10 @@
 package com.gcs.wb.jpa.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -71,10 +73,9 @@ public class PurchaseOrder implements Serializable {
     @Column(name = "deleted_date")
     @Temporal(TemporalType.DATE)
     private Date deletedDate;
-    
-    @OneToMany
+    @OneToMany(mappedBy = "purchaseOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "purchase_order_id")
-    private List<PurchaseOrderDetail> purchaseOrderDetails;
+    private List<PurchaseOrderDetail> purchaseOrderDetails = new ArrayList<>();
 
     public PurchaseOrder() {
     }
@@ -219,23 +220,31 @@ public class PurchaseOrder implements Serializable {
     public void setPurchaseOrderDetails(List<PurchaseOrderDetail> purchaseOrderDetails) {
         this.purchaseOrderDetails = purchaseOrderDetails;
     }
-    
+
     public PurchaseOrderDetail getPurchaseOrderDetail() {
-        if (purchaseOrderDetails != null && purchaseOrderDetails.size() > 0) {
-            return purchaseOrderDetails.get(0);
+        if (purchaseOrderDetails.isEmpty()) {
+            PurchaseOrderDetail purchaseOrderDetail = new PurchaseOrderDetail();
+            purchaseOrderDetail.setPurchaseOrder(this);
+            purchaseOrderDetails.add(purchaseOrderDetail);
         }
-        return new PurchaseOrderDetail();
+        return purchaseOrderDetails.get(0);
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         PurchaseOrder that = (PurchaseOrder) o;
 
-        if (poNumber != null ? !poNumber.equals(that.poNumber) : that.poNumber != null) return false;
-        
+        if (poNumber != null ? !poNumber.equals(that.poNumber) : that.poNumber != null) {
+            return false;
+        }
+
         return true;
     }
 

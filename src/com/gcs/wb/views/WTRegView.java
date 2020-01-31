@@ -2148,7 +2148,7 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
             newWeightTicket.setSeqDay(seqBDay);
             newWeightTicket.setSeqMonth(seqBMonth);
             newWeightTicket.setCreatedDate(new java.sql.Date(now.getTime()));
-            formatter.applyPattern("HH:mmss");
+            formatter.applyPattern("HH:mm:ss");
             newWeightTicket.setCreatedTime(formatter.format(now));
             newWeightTicket.setCreator(WeighBridgeApp.getApplication().getLogin().getUid());
             newWeightTicket.setOfflineMode(WeighBridgeApp.getApplication().isOfflineMode());
@@ -2258,7 +2258,9 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
         @Override
         protected void failed(Throwable cause) {
-            entityManager.getTransaction().rollback();
+            if (entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
             setSaveNeeded(true);
         }
 
@@ -2278,11 +2280,11 @@ private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 for (int i = 0; i < wt.size() - 1; i++) {
                     item = wt.get(i);
                     item.setPosted(false);
-                    if (!entityManager.getTransaction().isActive()) {
-                        entityManager.getTransaction().begin();
+                    if (!entityTransaction.isActive()) {
+                        entityTransaction.begin();
                     }
                     entityManager.persist(item);
-                    entityManager.getTransaction().commit();
+                    entityTransaction.commit();
                 }
             }
         }
