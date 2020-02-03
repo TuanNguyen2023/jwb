@@ -1185,36 +1185,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
             return filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
         }
 
-        private void setWeightTicketData() {
-            for (int index = 0; index < weightTicketList.size(); index++) {
-                WeightTicket item = weightTicketList.get(index);
-                wtData[index][0] = item.getSeqDay();
-                wtData[index][1] = item.getDriverName();
-                wtData[index][2] = item.getDriverIdNo();
-                wtData[index][3] = item.getPlateNo();
-                wtData[index][4] = item.getTrailerId();
-                wtData[index][5] = item.getRegType();
-                wtData[index][6] = item.getRegItemDescription();
-                wtData[index][7] = item.getRegItemQuantity();
-                wtData[index][8] = item.getDeliveryOrderNo();
-                wtData[index][9] = item.getCreator();
-                wtData[index][10] = item.getSeqMonth();
-
-                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                wtData[index][11] = dateFormat.format(item.getCreatedDate());
-                String time = item.getCreatedTime().replaceAll(":","");
-                String hh = time.substring(0, 2);
-                String mm = time.substring(2, 4);
-                String ss = time.substring(4, 6);
-                wtData[index][12] = hh + ":" + mm + ":" + ss;
-                if (item.isPosted()) {
-                    wtData[index][13] = true;
-                } else {
-                    wtData[index][13] = false;
-                }
-            }
-        }
-
         @SuppressWarnings("unchecked")
         @Override
         protected Object doInBackground() {
