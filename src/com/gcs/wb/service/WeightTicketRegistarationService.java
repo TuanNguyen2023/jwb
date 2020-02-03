@@ -7,22 +7,36 @@ package com.gcs.wb.service;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.jpa.JPAConnector;
-import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.Customer;
+import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
+import com.gcs.wb.jpa.entity.OutboundDetail;
+import com.gcs.wb.jpa.entity.TransportAgentVehicle;
+import com.gcs.wb.jpa.entity.Vehicle;
 import com.gcs.wb.jpa.entity.Vendor;
 import com.gcs.wb.jpa.entity.WeightTicket;
+import com.gcs.wb.jpa.repositorys.WeightTicketRegistarationRepository;
 import com.gcs.wb.jpa.repositorys.CustomerRepository;
+import com.gcs.wb.jpa.repositorys.MaterialRepository;
+import com.gcs.wb.jpa.repositorys.OutboundDeliveryRepository;
+import com.gcs.wb.jpa.repositorys.OutboundDetailRepository;
+import com.gcs.wb.jpa.repositorys.TransportAgentVehicleRepository;
+import com.gcs.wb.jpa.repositorys.VehicleRepository;
 import com.gcs.wb.jpa.repositorys.VendorRepository;
+import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import com.gcs.wb.model.AppConfig;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.ParameterMode;
+import javax.persistence.StoredProcedureQuery;
 import javax.swing.JComboBox;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import org.apache.log4j.Logger;
 import org.jdesktop.swingx.JXDatePicker;
 
 /**
@@ -31,11 +45,21 @@ import org.jdesktop.swingx.JXDatePicker;
  */
 public class WeightTicketRegistarationService {
 
-    WeightTicketJpaController conWTicket = new WeightTicketJpaController();
     EntityManager entityManager = JPAConnector.getInstance();
     CustomerRepository customerRepository = new CustomerRepository();
     VendorRepository vendorRepository = new VendorRepository();
+    WeightTicketRegistarationRepository wTRegRepository = new WeightTicketRegistarationRepository();
+    MaterialRepository materialRepository = new MaterialRepository();
+    WeightTicketRepository weightTicketRepository = new WeightTicketRepository();
+    OutboundDeliveryRepository outboundDeliveryRepository = new OutboundDeliveryRepository();
+    VehicleRepository vehicleRepository = new VehicleRepository();
+    TransportAgentVehicleRepository transportAgentVehicleRepository = new TransportAgentVehicleRepository();
+
+    AppConfig appConfig = WeighBridgeApp.getApplication().getConfig();
+
     SAPService sAPService = new SAPService();
+
+    Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
 
     public List<WeightTicket> listWeightTicketsDoInBackground(JXDatePicker dpFrom, JXDatePicker dpTo, JComboBox cbxType, JComboBox cbxTimeFrom, JComboBox cbxTimeTo, JTextField txtNguoitao, JRadioButton rbtDissolved, JRadioButton rbtPosted, JRadioButton rbtStateAll, JTextField txtTaixe, JTextField txtBienSo) throws Exception {
         AppConfig config = WeighBridgeApp.getApplication().getConfig();
@@ -48,46 +72,45 @@ public class WeightTicketRegistarationService {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         String fFrom = format.format(dpFrom.getDate());
         String fTo = format.format(dpTo.getDate());
-        System.out.println("dpFrom : " + fFrom + " to " + fTo);
 
-        List<WeightTicket> result = conWTicket.findByDateFull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMatnr(), txtBienSo.getText().trim());
-        List<WeightTicket> data = conWTicket.findByDateFull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMatnr(), txtBienSo.getText().trim());
+        List<WeightTicket> result = findByDateFull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMatnr(), txtBienSo.getText().trim());
+        List<WeightTicket> data = findByDateFull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMatnr(), txtBienSo.getText().trim());
         result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
         if (selecttext.getMaktx().equals("Linh tinh")) {
-            data = conWTicket.findByDateNull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
+            data = findByDateNull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
             result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
             if (rbtDissolved.isSelected()) {
-                data = conWTicket.findByDateDissolvedNull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
+                data = findByDateDissolvedNull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
                 result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
             } else if (rbtPosted.isSelected()) {
-                data = conWTicket.findByDatePostedNull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
+                data = findByDatePostedNull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
                 result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
             } else if (rbtStateAll.isSelected()) {
-                data = conWTicket.findByDateAllNull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
+                data = findByDateAllNull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
                 result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
             }
         } else if (selecttext.getMaktx().equals("Tất cả")) {
-            data = conWTicket.findByDateNullAll(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
+            data = findByDateNullAll(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
             result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
             if (rbtDissolved.isSelected()) {
-                data = conWTicket.findByDateDissolvedNullAll(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
+                data = findByDateDissolvedNullAll(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
                 result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
             } else if (rbtPosted.isSelected()) {
-                data = conWTicket.findByDatePostedNullAll(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
+                data = findByDatePostedNullAll(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
                 result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
             } else if (rbtStateAll.isSelected()) {
-                data = conWTicket.findByDateAllNullAll(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
+                data = findByDateAllNullAll(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
                 result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
             }
         } else {
             if (rbtDissolved.isSelected()) {
-                data = conWTicket.findByDateDissolved(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMatnr(), txtBienSo.getText().trim());
+                data = findByDateDissolved(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMatnr(), txtBienSo.getText().trim());
                 result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
             } else if (rbtPosted.isSelected()) {
-                data = conWTicket.findByDatePosted(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMatnr(), txtBienSo.getText().trim());
+                data = findByDatePosted(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMatnr(), txtBienSo.getText().trim());
                 result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
             } else if (rbtStateAll.isSelected()) {
-                data = conWTicket.findByDateAll(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMatnr(), txtBienSo.getText().trim());
+                data = findByDateAll(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMatnr(), txtBienSo.getText().trim());
                 result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
             }
         }
@@ -95,7 +118,7 @@ public class WeightTicketRegistarationService {
     }
 
     private List<WeightTicket> filterHours(List<WeightTicket> data, String timefrom, String timeto) {
-        List<WeightTicket> result = new ArrayList<WeightTicket>();
+        List<WeightTicket> result = new ArrayList<>();
         int n1 = Integer.parseInt(timefrom);
         double n2 = Integer.parseInt(timeto) + 0.99;
         if (!data.isEmpty()) {
@@ -168,7 +191,7 @@ public class WeightTicketRegistarationService {
         }
         return wtData;
     }
-    
+
     public void hanldeCheckDOOutbDel(OutboundDelivery sapOutb, Customer customer, Customer kunag, Vendor lifnr, Customer sapKunnr, Customer sapKunag, Vendor sapLifnr) {
         if (sapOutb != null) {
             if (sapOutb.getKunnr() != null && !sapOutb.getKunnr().trim().isEmpty()) {
@@ -186,5 +209,180 @@ public class WeightTicketRegistarationService {
             }
 
         }
+    }
+
+    public List<Object[]> checkExistDO(String doNumber) {
+        return wTRegRepository.checkDoExist(doNumber, appConfig.getwPlant());
+    }
+
+    public int shippingPointVar(String shipPoint, String Matnr) {
+        return wTRegRepository.getSPVar(appConfig.getWbId(), shipPoint, Matnr);
+    }
+
+    public List<Material> getListMaterial() {
+        return materialRepository.getListMaterial();
+    }
+
+    public WeightTicket findByDeliveryOrderNo(String doNumber) {
+        return weightTicketRepository.findByDeliveryOrderNo(doNumber);
+    }
+
+    public List<WeightTicket> getListByDeliveryOrderNo(String outbNumber) {
+        return weightTicketRepository.getListByDeliveryOrderNo(outbNumber);
+    }
+
+    public Customer findByKunnr(String kunag) {
+        return customerRepository.findByKunnr(kunag);
+    }
+
+    public Vendor findByLifnr(String lifnr) {
+        return vendorRepository.findByLifnr(lifnr);
+    }
+
+    public OutboundDelivery findByDeliveryOrderNumber(String deliveryOrderNo) {
+        return outboundDeliveryRepository.findByDeliveryOrderNo(deliveryOrderNo);
+    }
+
+    public Vehicle findByPlateNo(String plateNo) {
+        return vehicleRepository.findByPlateNo(plateNo);
+    }
+
+    public List<TransportAgentVehicle> findByVehicleId(int vehicleId) {
+        return transportAgentVehicleRepository.findByVehicleId(vehicleId);
+    }
+
+    public List<WeightTicket> findByDateFull(String sfrom, String sto, String creator, String taixe, String loaihang, String bienso) throws Exception {
+        java.sql.Date from = java.sql.Date.valueOf(sfrom);
+        java.sql.Date to = java.sql.Date.valueOf(sto);
+        return weightTicketRepository.findByDateFull(from, to, creator, taixe, loaihang, bienso);
+    }
+
+    public List<WeightTicket> findByDateNull(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
+        java.sql.Date from = java.sql.Date.valueOf(sfrom);
+        java.sql.Date to = java.sql.Date.valueOf(sto);
+        return weightTicketRepository.findByDateNull(from, to, creator, taixe, bienso);
+    }
+
+    public List<WeightTicket> findByDateNullAll(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
+        java.sql.Date from = java.sql.Date.valueOf(sfrom);
+        java.sql.Date to = java.sql.Date.valueOf(sto);
+        return weightTicketRepository.findByDateNullAll(from, to, creator, taixe, bienso);
+    }
+
+    public List<WeightTicket> findByDateDissolved(String sfrom, String sto,
+            String creator, String taixe,
+            String loaihang, String bienso) throws Exception {
+        java.sql.Date from = java.sql.Date.valueOf(sfrom);
+        java.sql.Date to = java.sql.Date.valueOf(sto);
+        return weightTicketRepository.findByDateDissolved(from, to, creator, taixe, loaihang, bienso);
+    }
+
+    public List<WeightTicket> findByDateDissolvedNull(String sfrom, String sto,
+            String creator, String taixe,
+            String bienso) throws Exception {
+        java.sql.Date from = java.sql.Date.valueOf(sfrom);
+        java.sql.Date to = java.sql.Date.valueOf(sto);
+        return weightTicketRepository.findByDateDissolvedNull(from, to, creator, taixe, bienso);
+    }
+
+    public List<WeightTicket> findByDateDissolvedNullAll(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
+        java.sql.Date from = java.sql.Date.valueOf(sfrom);
+        java.sql.Date to = java.sql.Date.valueOf(sto);
+        return weightTicketRepository.findByDateDissolvedNullAll(from, to, creator, taixe, bienso);
+    }
+
+    public List<WeightTicket> findByDatePosted(String sfrom, String sto, String creator, String taixe, String loaihang, String bienso) throws Exception {
+        java.sql.Date from = java.sql.Date.valueOf(sfrom);
+        java.sql.Date to = java.sql.Date.valueOf(sto);
+        return weightTicketRepository.findByDatePosted(from, to, creator, taixe, loaihang, bienso);
+    }
+
+    public List<WeightTicket> findByDatePostedNull(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
+        java.sql.Date from = java.sql.Date.valueOf(sfrom);
+        java.sql.Date to = java.sql.Date.valueOf(sto);
+        return weightTicketRepository.findByDatePostedNull(from, to, creator, taixe, bienso);
+    }
+
+    public List<WeightTicket> findByDatePostedNullAll(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
+        java.sql.Date from = java.sql.Date.valueOf(sfrom);
+        java.sql.Date to = java.sql.Date.valueOf(sto);
+        return weightTicketRepository.findByDatePostedNullAll(from, to, creator, taixe, bienso);
+    }
+
+    public List<WeightTicket> findByDateAll(String sfrom, String sto, String creator, String taixe, String loaihang, String bienso) throws Exception {
+        WeightTicketRepository repository = new WeightTicketRepository();
+        java.sql.Date from = java.sql.Date.valueOf(sfrom);
+        java.sql.Date to = java.sql.Date.valueOf(sto);
+        return repository.findByDateAll(from, to, creator, taixe, loaihang, bienso);
+    }
+
+    public List<WeightTicket> findByDateAllNull(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
+        WeightTicketRepository repository = new WeightTicketRepository();
+        java.sql.Date from = java.sql.Date.valueOf(sfrom);
+        java.sql.Date to = java.sql.Date.valueOf(sto);
+        return repository.findByDateAllNull(from, to, creator, taixe, bienso);
+    }
+
+    public int getCountTicketMonth(String plant) {
+        int count = 0;
+        try {
+            EntityManager entityManager = JPAConnector.getInstance();
+            if (entityManager != null) {
+                EntityTransaction entityTransaction = entityManager.getTransaction();
+                entityTransaction.begin();
+                StoredProcedureQuery query = entityManager.createStoredProcedureQuery("[p_get_weight_ticket_seq_month]");
+                query.registerStoredProcedureParameter("pWplant", String.class, ParameterMode.IN);
+                query.setParameter("pWplant", plant);
+                query.execute();
+                List<Object[]> list = query.getResultList();
+                if (list != null && list.size() > 0) {
+                    Object[] firstRow = list.get(0);
+                    count = Integer.parseInt(firstRow[0].toString());
+                }
+                entityTransaction.commit();
+            }
+        } catch (NumberFormatException e) {
+            logger.error(e.toString());
+
+        }
+        return count;
+    }
+
+    public int getCountTicketDay(String plant) {
+        int count = 0;
+        try {
+            EntityManager entityManager = JPAConnector.getInstance();
+            if (entityManager != null) {
+                EntityTransaction entityTransaction = entityManager.getTransaction();
+                entityTransaction.begin();
+                StoredProcedureQuery query = entityManager.createStoredProcedureQuery("p_get_weight_ticket_seq_day");
+                query.registerStoredProcedureParameter("pWplant", String.class, ParameterMode.IN);
+                query.setParameter("pWplant", plant);
+                query.execute();
+                List<Object[]> list = query.getResultList();
+                if (list != null && list.size() > 0) {
+                    Object[] firstRow = list.get(0);
+                    count = Integer.parseInt(firstRow[0].toString());
+                }
+                entityTransaction.commit();
+            }
+        } catch (NumberFormatException e) {
+            logger.error(e.toString());
+        }
+        return count;
+    }
+
+    public List<WeightTicket> findByDateAllNullAll(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
+        WeightTicketRepository repository = new WeightTicketRepository();
+        java.sql.Date from = java.sql.Date.valueOf(sfrom);
+        java.sql.Date to = java.sql.Date.valueOf(sto);
+        return repository.findByDateAllNullAll(from, to, creator, taixe, bienso);
+    }
+
+    public List<OutboundDetail> findByMandtDelivNumb(String deliv_numb) throws Exception {
+        String devNumber = "%" + deliv_numb + "%";
+        OutboundDetailRepository repo = new OutboundDetailRepository();
+        return repo.findByDeliveryOrderNo(devNumber);
+
     }
 }

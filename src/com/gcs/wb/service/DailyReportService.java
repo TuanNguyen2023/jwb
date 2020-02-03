@@ -6,11 +6,12 @@ package com.gcs.wb.service;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.base.constant.Constants;
-import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.WeightTicket;
+import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import com.gcs.wb.model.AppConfig;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,12 +24,11 @@ import org.jdesktop.swingx.JXDatePicker;
 public class DailyReportService {
 
     AppConfig appConfig = WeighBridgeApp.getApplication().getConfig();
-    WeightTicketJpaController weightTicketJpaController = new WeightTicketJpaController();
     Object[] wtColNames = Constants.DailyReport.WT_COL_NAMES;
 
     public List<WeightTicket> findByCreateDateRange(JXDatePicker dpDateFrom, JXDatePicker dpDateTo) {
 
-        List<WeightTicket> weightTickets = weightTicketJpaController.findByCreatedDateRange(dpDateFrom.getDate(), dpDateTo.getDate());
+        List<WeightTicket> weightTickets = findByCreatedDateRange(dpDateFrom.getDate(), dpDateTo.getDate());
         return weightTickets;
     }
 
@@ -110,5 +110,12 @@ public class DailyReportService {
         params.put("P_FROM", dpDateFrom.getDate());
         params.put("P_TO", dpDateTo.getDate());
         return params;
+    }
+
+    public List<WeightTicket> findByCreatedDateRange(Date sfrom, Date sto) {
+        WeightTicketRepository repository = new WeightTicketRepository();
+        java.sql.Date from = new java.sql.Date(sfrom.getTime());
+        java.sql.Date to = new java.sql.Date(sto.getTime());
+        return repository.findByCreatedDateRange(from, to);
     }
 }

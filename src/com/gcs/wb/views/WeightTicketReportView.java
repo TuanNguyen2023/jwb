@@ -40,11 +40,11 @@ import org.jdesktop.application.ResourceMap;
 public class WeightTicketReportView extends javax.swing.JInternalFrame {
 
     public WeightTicketReportController weighTicketReportController = new WeightTicketReportController();
-    private static Logger logger = Logger.getLogger(WeightTicketReportView.class);
+    private static final Logger logger = Logger.getLogger(WeightTicketReportView.class);
     private boolean[] editable = null;
     private List<Character> modes = null;
-    private String[] modesModel = Constants.WeightTicketReport.MODES_MODEL;
-    private String[] statusModel = Constants.WeightTicketReport.STATUS_MODEL;
+    private final String[] modesModel = Constants.WeightTicketReport.MODES_MODEL;
+    private final String[] statusModel = Constants.WeightTicketReport.STATUS_MODEL;
     Object[][] wtDatas = null;
     Object[] wtColNames = Constants.WeightTicketReport.WT_COL_NAMES;
     Class[] wtColTypes = Constants.WeightTicketReport.WT_COL_TYPES;

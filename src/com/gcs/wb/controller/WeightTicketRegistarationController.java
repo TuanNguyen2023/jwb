@@ -5,20 +5,30 @@
 package com.gcs.wb.controller;
 
 import com.gcs.wb.WeighBridgeApp;
+import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.jpa.entity.Customer;
+import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
+import com.gcs.wb.jpa.entity.OutboundDetail;
+import com.gcs.wb.jpa.entity.TransportAgentVehicle;
+import com.gcs.wb.jpa.entity.Vehicle;
 import com.gcs.wb.jpa.entity.Vendor;
 import com.gcs.wb.jpa.entity.WeightTicket;
+import com.gcs.wb.jpa.repositorys.OutboundDetailRepository;
+import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import com.gcs.wb.jpa.service.JReportService;
 import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.service.WeightTicketRegistarationService;
-import com.gcs.wb.service.WeightTicketService;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.log4j.Logger;
 import org.jdesktop.swingx.JXDatePicker;
 
 /**
@@ -27,9 +37,9 @@ import org.jdesktop.swingx.JXDatePicker;
  */
 public class WeightTicketRegistarationController {
 
-    private WeightTicketRegistarationService wTRegService = new WeightTicketRegistarationService();
-    private WeightTicketService weightTicketService = new WeightTicketService();
+    WeightTicketRegistarationService wTRegService = new WeightTicketRegistarationService();
     JReportService jreportService = new JReportService();
+    private final Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
 
     public List<WeightTicket> listWeightTicketsDoInBackground(JXDatePicker dpFrom, JXDatePicker dpTo, JComboBox cbxType, JComboBox cbxTimeFrom, JComboBox cbxTimeTo, JTextField txtNguoitao, JRadioButton rbtDissolved, JRadioButton rbtPosted, JRadioButton rbtStateAll, JTextField txtTaixe, JTextField txtBienSo) throws Exception {
         return wTRegService.listWeightTicketsDoInBackground(dpFrom, dpTo, cbxType, cbxTimeFrom, cbxTimeTo, txtNguoitao, rbtDissolved, rbtPosted, rbtStateAll, txtTaixe, txtBienSo);
@@ -50,7 +60,7 @@ public class WeightTicketRegistarationController {
     }
 
     public Map<String, Object> getPrintReport(String kFrom, String kTo) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("P_PNAME_RPT", WeighBridgeApp.getApplication().getSapSetting().getNameRpt());
         params.put("P_PADDRESS", WeighBridgeApp.getApplication().getSapSetting().getAddress());
         params.put("P_PPHONE", WeighBridgeApp.getApplication().getSapSetting().getPhone());
@@ -70,8 +80,8 @@ public class WeightTicketRegistarationController {
 
     public void printRegWT(WeightTicket wt, boolean reprint) {
         AppConfig config = WeighBridgeApp.getApplication().getConfig();
-        
-        Map<String, Object> map = new HashMap<String, Object>();
+
+        Map<String, Object> map = new HashMap<>();
         map.put("P_CLIENT", WeighBridgeApp.getApplication().getConfig().getsClient());
         map.put("P_WPLANT", WeighBridgeApp.getApplication().getConfig().getwPlant());
         map.put("P_ID", wt.getId());
@@ -87,5 +97,135 @@ public class WeightTicketRegistarationController {
             reportName = "./rpt/rptPQ/RegWT.jasper";
         }
         jreportService.printReport(map, reportName);
+    }
+
+    public boolean checkExistDO(String doNumber) {
+        List<Object[]> wts1 = wTRegService.checkExistDO(doNumber);
+        boolean isInUsedDO = false;
+        try {
+            if (CollectionUtils.isNotEmpty(wts1)) {
+                isInUsedDO = Float.parseFloat(wts1.get(0)[0].toString()) > 0;
+            }
+        } catch (Throwable cause) {
+            // NOP
+        }
+        return isInUsedDO;
+    }
+
+    public int shippingPointVar(String shipPoint, String Matnr) {
+        return wTRegService.shippingPointVar(shipPoint, Matnr);
+    }
+
+    public DefaultComboBoxModel getListMaterial() {
+
+        List<Material> materials = wTRegService.getListMaterial();
+        DefaultComboBoxModel result = new DefaultComboBoxModel();
+        for (Material material : materials) {
+            if (result.getIndexOf(material) < 0 && material.getMatnr() != null
+                    && material.getMaktx() != null && !material.getMaktx().isEmpty()) {
+                result.addElement(material.getMaktx());
+            }
+        }
+        return result;
+    }
+
+    public DefaultComboBoxModel getMatsModel() {
+        DefaultComboBoxModel result = new DefaultComboBoxModel();
+        List<Material> materials = wTRegService.getListMaterial();
+        Material mat = new Material();
+        mat.setMatnr("-2");
+        mat.setMaktx(Constants.Label.LABEL_ALL);
+        result.addElement(mat);
+
+        mat = new Material();
+        mat.setMatnr("-1");
+        mat.setMaktx(Constants.Label.LABEL_OTHER);
+        result.addElement(mat);
+        for (Material material : materials) {
+            if (result.getIndexOf(material) < 0) {
+                result.addElement(material);
+            }
+        }
+        return result;
+    }
+
+    public WeightTicket findByDeliveryOrderNo(String doNumber) {
+        return wTRegService.findByDeliveryOrderNo(doNumber);
+    }
+
+    public List<WeightTicket> getListByDeliveryOrderNo(String outbNumber) {
+        return wTRegService.getListByDeliveryOrderNo(outbNumber);
+    }
+
+    public Customer findByKunnr(String kunag) {
+        return wTRegService.findByKunnr(kunag);
+    }
+
+    public Vendor findByLifnr(String lifnr) {
+        return wTRegService.findByLifnr(lifnr);
+    }
+
+    public OutboundDelivery findByDeliveryOrderNumber(String deliveryOrderNo) {
+        return wTRegService.findByDeliveryOrderNumber(deliveryOrderNo);
+    }
+
+    public Vehicle findByPlateNo(String plateNo) {
+        return wTRegService.findByPlateNo(plateNo);
+    }
+
+    public List<TransportAgentVehicle> findByVehicleId(int vehicleId) {
+        return wTRegService.findByVehicleId(vehicleId);
+    }
+
+    public List<WeightTicket> findByDatePostedNull(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
+        return wTRegService.findByDatePostedNull(sfrom, sto, creator, taixe, bienso);
+    }
+
+    public List<WeightTicket> findByDatePostedNullAll(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
+        return wTRegService.findByDatePostedNullAll(sfrom, sto, creator, taixe, bienso);
+    }
+
+    public List<WeightTicket> findByDatePosted(String sfrom, String sto, String creator, String taixe, String loaihang, String bienso) throws Exception {
+        return wTRegService.findByDatePosted(sfrom, sto, creator, taixe, loaihang, bienso);
+    }
+
+    public List<WeightTicket> findByDateAll(String sfrom, String sto, String creator, String taixe, String loaihang, String bienso) throws Exception {
+        return wTRegService.findByDateAll(sfrom, sto, creator, taixe, loaihang, bienso);
+    }
+
+    public List<WeightTicket> findByDateAllNull(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
+
+        return wTRegService.findByDateAllNull(sfrom, sto, creator, taixe, bienso);
+    }
+
+    public Date getServerDate() {
+        Date date = null;
+        try {
+            date = new Date();
+        } catch (Exception ex) {
+            logger.error(null, ex);
+        }
+        return date;
+    }
+
+    public int getNewSeqBMonth() {
+        String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
+        int count = wTRegService.getCountTicketMonth(plant);
+        return count;
+    }
+
+    public int getNewSeqBDay() {
+        String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
+        int count = wTRegService.getCountTicketDay(plant);
+        return count;
+    }
+
+    public List<WeightTicket> findByDateAllNullAll(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
+        return wTRegService.findByDateAllNullAll(sfrom, sto, creator, taixe, bienso);
+    }
+
+    public List<OutboundDetail> findByMandtDelivNumb(String deliv_numb) throws Exception {
+        return wTRegService.findByMandtDelivNumb(deliv_numb);
+
     }
 }

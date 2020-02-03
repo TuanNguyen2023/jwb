@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.gcs.wb.jpa.procedures;
+package com.gcs.wb.jpa.repositorys;
 
 import com.gcs.wb.jpa.JPAConnector;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
  *
  * @author dinhhn.vr
  */
-public class WTRegRepository {
+public class WeightTicketRegistarationRepository {
 
     Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
 

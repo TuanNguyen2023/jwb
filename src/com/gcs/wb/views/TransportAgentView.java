@@ -13,16 +13,13 @@ package com.gcs.wb.views;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.controller.TransportAgentController;
-import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.Vehicle;
 import java.awt.Color;
 import java.awt.Component;
 import java.util.regex.Matcher;
-import javax.persistence.EntityManager;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
-import javax.swing.JFrame;
 import javax.swing.JList;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Application;
@@ -34,11 +31,8 @@ import org.jdesktop.application.ResourceMap;
  */
 public class TransportAgentView extends javax.swing.JInternalFrame {
 
-    private EntityManager entityManager = JPAConnector.getInstance();
-    
     public TransportAgentController transportAgentController = new TransportAgentController();
     private boolean vehicleCreatable = false;
-    private JFrame mainFrame = WeighBridgeApp.getApplication().getMainFrame();
     public ResourceMap resourceMapMsg = Application.getInstance(WeighBridgeApp.class).getContext().getResourceMap(TransportAgentView.class);
 
     /** Creates new form TransportAgentView */

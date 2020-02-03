@@ -8,9 +8,9 @@ import com.gcs.wb.bapi.helper.DoGetDetailBapi;
 import com.gcs.wb.bapi.helper.structure.DoGetDetailStructure;
 import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.jpa.JPAConnector;
-import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
 import com.gcs.wb.jpa.entity.OutboundDetail;
+import com.gcs.wb.jpa.repositorys.OutboundDetailRepository;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.logging.Level;
@@ -26,7 +26,7 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
 
     EntityManager entityManager = JPAConnector.getInstance();
     EntityTransaction entityTransaction = entityManager.getTransaction();
-    
+
     @Override
     public OutboundDelivery convertHasParameter(DoGetDetailBapi from, String val) throws Exception {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -49,14 +49,13 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
             // <editor-fold defaultstate="collapsed" desc="Fill D.O Data">
             //check do detail exist
             entityTransaction = entityManager.getTransaction();
-            WeightTicketJpaController con_check = new WeightTicketJpaController();
             List<OutboundDetail> outb_detail_check;
             if (refresh == true) {
                 try {
-                    outb_detail_check = con_check.findByMandtDelivNumb(val);
+                    outb_detail_check = findByMandtDelivNumb(val);
                     if (outb_detail_check.size() > 0) {
                         entityTransaction.begin();
-                        
+
                         for (int i = 0; i < outb_detail_check.size(); i++) {
                             entityManager.remove(outb_detail_check.get(i));
                         }
@@ -73,7 +72,7 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
             for (int i = 0; i < dos.size(); i++) {
                 DoGetDetailStructure doItem = dos.get(i);
                 try {
-                    outb_detail_check = con_check.findByMandtDelivNumbItem(val, doItem.getPosnr().substring(4, 5));
+                    outb_detail_check = findByMandtDelivNumbItem(val, doItem.getPosnr().substring(4, 5));
                     if (outb_detail_check.size() > 0) {
                         outb_details = outb_detail_check.get(0);
                     } else {
@@ -162,7 +161,7 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
                 outb.setTraid(doItem.getTraid());
 
                 outb.setBldat(new java.sql.Date(doItem.getBldat().getTime()));
-                if(outb.getMatnr() == null || outb.getMatnr().trim().isEmpty()) {
+                if (outb.getMatnr() == null || outb.getMatnr().trim().isEmpty()) {
                     outb.setMatnr(doItem.getMatnr());
                 }
                 outb.setWerks(doItem.getWerks());
@@ -216,5 +215,18 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
 
         }
         return outb;
+    }
+
+    public List<OutboundDetail> findByMandtDelivNumbItem(String deliv_numb, String item) throws Exception {
+        OutboundDetailRepository repository = new OutboundDetailRepository();
+        List<OutboundDetail> result = repository.findByDeliveryOrderNoAndDeliveryOrderItem(deliv_numb, item);
+        return result;
+    }
+
+    public List<OutboundDetail> findByMandtDelivNumb(String deliv_numb) throws Exception {
+        String devNumber = "%" + deliv_numb + "%";
+        OutboundDetailRepository repo = new OutboundDetailRepository();
+        return repo.findByDeliveryOrderNo(devNumber);
+
     }
 }

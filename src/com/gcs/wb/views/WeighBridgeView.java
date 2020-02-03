@@ -44,7 +44,7 @@ public class WeighBridgeView extends FrameView {
 
     private final SAPSetting sapSetting;
     private final User login;
-    private WeighBridgeController weighBridgeController = new WeighBridgeController();
+    private final WeighBridgeController weighBridgeController = new WeighBridgeController();
 
     public WeighBridgeView(SingleFrameApplication app) {
         super(app);
@@ -512,9 +512,10 @@ public class WeighBridgeView extends FrameView {
     }
 
     private void weighBridgeViewWindowClosing() {
+        ResourceMap resourceMap = getResourceMap();
         int answer = JOptionPane.showConfirmDialog(
                 this.getRootPane(),
-                "Thoát khỏi chương trình cân?",
+                resourceMap.getString("msg.outApplication"),
                 JOptionPane.OPTIONS_PROPERTY,
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE);

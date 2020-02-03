@@ -12,19 +12,8 @@ import com.gcs.wb.bapi.goodsmvt.structure.GoodsMvtHeaderStructure;
 import com.gcs.wb.bapi.goodsmvt.structure.GoodsMvtItemDoStructure;
 import com.gcs.wb.bapi.goodsmvt.structure.GoodsMvtItemPoStructure;
 import com.gcs.wb.bapi.goodsmvt.structure.GoodsMvtWeightTicketStructure;
-import com.gcs.wb.bapi.helper.BatchStocksGetListBapi;
-import com.gcs.wb.bapi.helper.CustomerGetDetailBapi;
-import com.gcs.wb.bapi.helper.DoGetDetailBapi;
 import com.gcs.wb.bapi.helper.MatAvailableBapi;
-import com.gcs.wb.bapi.helper.PoGetDetailBapi;
-import com.gcs.wb.bapi.helper.TransportagentGetListBapi;
-import com.gcs.wb.bapi.helper.structure.BatchStocksStructure;
-import com.gcs.wb.bapi.helper.structure.CustomerGetDetailStructure;
-import com.gcs.wb.bapi.helper.structure.DoGetDetailStructure;
 import com.gcs.wb.bapi.helper.structure.MatAvailableStructure;
-import com.gcs.wb.bapi.helper.structure.PoGetDetailHeaderStructure;
-import com.gcs.wb.bapi.helper.structure.PoGetDetailItemStructure;
-import com.gcs.wb.bapi.helper.structure.TransportagentGetListStructure;
 import com.gcs.wb.bapi.outbdlv.DOCreate2PGIBapi;
 import com.gcs.wb.bapi.outbdlv.DORevertBapi;
 import com.gcs.wb.bapi.outbdlv.WsDeliveryUpdateBapi;
@@ -32,9 +21,9 @@ import com.gcs.wb.bapi.outbdlv.structure.OutbDeliveryCreateStoStructure;
 import com.gcs.wb.bapi.outbdlv.structure.VbkokStructure;
 import com.gcs.wb.bapi.outbdlv.structure.VbpokStructure;
 import com.gcs.wb.bapi.service.SAPService;
-import com.gcs.wb.base.util.StringUtil;
+import com.gcs.wb.base.util.Base64_Utils;
 import com.gcs.wb.jpa.JPAConnector;
-import com.gcs.wb.jpa.controller.WeightTicketJpaController;
+import com.gcs.wb.jpa.OrsJpaConnector;
 import com.gcs.wb.jpa.entity.BatchStock;
 import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.Material;
@@ -43,16 +32,19 @@ import com.gcs.wb.jpa.entity.OutboundDetail;
 import com.gcs.wb.jpa.entity.PurchaseOrder;
 import com.gcs.wb.jpa.entity.SLoc;
 import com.gcs.wb.jpa.entity.TimeRange;
-import com.gcs.wb.jpa.entity.Vendor;
+import com.gcs.wb.jpa.entity.Variant;
 import com.gcs.wb.jpa.entity.WeightTicket;
-import com.gcs.wb.jpa.procedures.WeightTicketJpaRepository;
 import com.gcs.wb.jpa.repositorys.BatchStockRepository;
 import com.gcs.wb.jpa.repositorys.CustomerRepository;
+import com.gcs.wb.jpa.repositorys.MaterialRepository;
+import com.gcs.wb.jpa.repositorys.OutboundDeliveryRepository;
 import com.gcs.wb.jpa.repositorys.SignalsRepository;
 import com.gcs.wb.jpa.repositorys.TimeRangeRepository;
-import com.gcs.wb.jpa.procedures.WeightTicketRepository;
 import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
+import com.gcs.wb.jpa.repositorys.SLocRepository;
+import com.gcs.wb.jpa.repositorys.VariantRepository;
 import com.gcs.wb.jpa.repositorys.VendorRepository;
+import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import com.gcs.wb.jpa.service.JReportService;
 import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.views.WeightTicketView;
@@ -65,14 +57,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.ParameterMode;
+import javax.persistence.StoredProcedureQuery;
 import javax.persistence.TypedQuery;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JRootPane;
+import org.apache.log4j.Logger;
 import org.hibersap.session.Session;
 import org.hibersap.util.DateUtil;
 
@@ -88,18 +82,19 @@ public class WeightTicketService {
     VendorRepository vendorRepository = new VendorRepository();
     CustomerRepository customerRepository = new CustomerRepository();
     SignalsRepository noneRepository = new SignalsRepository();
-    WeightTicketJpaRepository weightTicketJpaRepository = new WeightTicketJpaRepository();
     BatchStockRepository batchStockRepository = new BatchStockRepository();
+    SLocRepository sLocRepository = new SLocRepository();
+    VariantRepository variantRepository = new VariantRepository();
     private AppConfig config = null;
     public HashMap hmMsg = new HashMap();
     EntityManager entityManager = JPAConnector.getInstance();
     String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-    WeightTicketJpaController con = new WeightTicketJpaController();
     SAPService sapService = new SAPService();
     JReportService jreportService = new JReportService();
     PurchaseOrderRepository purchaseOrderRepository = new PurchaseOrderRepository();
     EntityTransaction entityTransaction = entityManager.getTransaction();
     Session session = WeighBridgeApp.getApplication().getSAPSession();
+    private final Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
 
     public DefaultComboBoxModel getCustomerByMaNdt() {
         List<Customer> customers = this.customerRepository.getListCustomer();
@@ -172,7 +167,7 @@ public class WeightTicketService {
     }
 
     public String getMsg() {
-        return weightTicketJpaRepository.getMsg("6");
+        return getMsg("6");
     }
 
     public DefaultComboBoxModel getMaterialList() {
@@ -304,7 +299,7 @@ public class WeightTicketService {
         Date now = null;
 
         try {
-            Object rs = con.get_server_time();
+            Object rs = new Date();
 
             if (rs instanceof Timestamp) {
                 Timestamp time1 = (Timestamp) rs;
@@ -320,7 +315,7 @@ public class WeightTicketService {
     }
 
     public Material checkPOSTO(PurchaseOrder purOrder) throws Exception {
-        return con.CheckPOSTO(purOrder.getMaterial());
+        return CheckPOSTO(purOrder.getMaterial());
     }
 
     public Double CheckMatStock(String matnr, String plant, String sloc, String batch) {
@@ -906,7 +901,6 @@ public class WeightTicketService {
 
                 jreportService.printReport(map, reportName1);
 
-
             } else {
                 for (int i = 0; i < outbDel_list.size(); i++) {
                     item = outbDel_list.get(i);
@@ -1020,5 +1014,116 @@ public class WeightTicketService {
             JOptionPane.showMessageDialog(rootPane, ex);
         }
     }
-    
+
+    public int getCountSingal() {
+        return noneRepository.getCountSingal();
+    }
+
+    public SLoc findByLgort(String lgort) {
+        return sLocRepository.findByLgort(lgort);
+    }
+
+    public Variant findByParam(String param) {
+        return variantRepository.findByParam(param);
+    }
+
+    public BatchStock findByWerksLgortMatnrCharg(String werks, String lgort, String matnr, String charg) {
+        return batchStockRepository.findByWerksLgortMatnrCharg(werks, lgort, matnr, charg);
+    }
+
+    public PurchaseOrder findByPoNumber(String poNumber) {
+        return purchaseOrderRepository.findByPoNumber(poNumber);
+    }
+
+    public AppConfig getDev(String wbid) {
+        wbid = wbid.trim().toUpperCase();
+        AppConfig config = WeighBridgeApp.getApplication().getConfig();
+        try {
+            List sdev = getOrgDev2(wbid);
+            if (sdev != null) {
+                for (Object obj : sdev) {
+                    Object[] wt = (Object[]) obj;
+                    String sport = Base64_Utils.decodeNTimes(wt[3].toString());
+                    Integer brate = Integer.parseInt(Base64_Utils.decodeNTimes(wt[4].toString()));
+                    Short databit = Short.parseShort(Base64_Utils.decodeNTimes(wt[5].toString()));
+                    Short Parity = Short.parseShort(Base64_Utils.decodeNTimes(wt[6].toString()));
+                    Short stopbit = Short.parseShort(Base64_Utils.decodeNTimes(wt[7].toString()));
+                    String iMettler = Base64_Utils.decodeNTimes(wt[8].toString());
+                    Boolean bMettler = false;
+                    if (iMettler.indexOf("1") >= 0) {
+                        bMettler = true;
+                    } else if (iMettler.indexOf("0") >= 0) {
+                        bMettler = false;
+                    }
+                    config.setB1Port(sport);
+                    config.setB1Speed(brate);
+                    config.setB1DBits(databit);
+                    config.setB1PC(Parity);
+                    config.setB1SBits(Float.parseFloat(stopbit.toString()));
+                    config.setB1Mettler(bMettler);
+                    break;
+                }
+            }
+        } catch (NumberFormatException ex) {
+            logger.error(ex.toString());
+        }
+        return config;
+    }
+
+    public Material CheckPOSTO(String matnr) throws Exception {
+        Material material = new Material();
+        MaterialRepository repository = new MaterialRepository();
+        material = repository.CheckPOSTO(matnr);
+        return material;
+    }
+
+    public OutboundDelivery findByMandtOutDel(String delnum) throws Exception {
+        OutboundDeliveryRepository repository = new OutboundDeliveryRepository();
+        return repository.findByDeliveryOrderNo(delnum);
+    }
+
+    public List<Object[]> getOrgDev2(String pWbId) {
+        List<Object[]> list = new ArrayList<>();
+        try {
+            EntityManager entityManager = OrsJpaConnector.getInstance();
+            if (entityManager != null) {
+                EntityTransaction entityTransaction = entityManager.getTransaction();
+                entityTransaction.begin();
+                StoredProcedureQuery query = entityManager.createStoredProcedureQuery("pGetDev2");
+                query.registerStoredProcedureParameter("pWbId", String.class, ParameterMode.IN);
+                query.setParameter("pWbId", pWbId);
+                query.execute();
+                list = query.getResultList();
+                entityManager.getTransaction().commit();
+            }
+        } catch (Exception e) {
+            logger.error(e.toString());
+        }
+        return list;
+    }
+
+    public String getMsg(String pid) {
+        String msg = null;
+        try {
+            EntityManager entityManager = JPAConnector.getInstance();
+            if (entityManager != null) {
+                EntityTransaction entityTransaction = entityManager.getTransaction();
+                entityTransaction.begin();
+                StoredProcedureQuery query = entityManager.createStoredProcedureQuery("pgetmsg");
+                query.registerStoredProcedureParameter("pid", String.class, ParameterMode.IN);
+                query.setParameter("pid", pid);
+                query.execute();
+                List<Object[]> list = query.getResultList();
+                if (list != null && list.size() > 0) {
+                    Object[] firstRow = list.get(0);
+                    msg = firstRow[0].toString();
+                }
+                entityManager.getTransaction().commit();
+            }
+        } catch (Exception e) {
+            logger.error(e.toString());
+
+        }
+        return msg;
+    }
 }

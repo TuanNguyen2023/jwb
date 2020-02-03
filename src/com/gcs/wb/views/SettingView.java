@@ -37,7 +37,7 @@ public class SettingView extends javax.swing.JDialog {
     private boolean isPhoneValid = true;
     private boolean isFaxValid = true;
     
-    private SettingController controller = new SettingController();
+    SettingController controller = new SettingController();
 
     /** Creates new form SettingView */
     public SettingView(java.awt.Frame parent) {

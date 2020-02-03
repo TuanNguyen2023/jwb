@@ -6,14 +6,15 @@ package com.gcs.wb.controller;
 
 import com.gcs.wb.bapi.goodsmvt.structure.GoodsMvtWeightTicketStructure;
 import com.gcs.wb.jpa.entity.BatchStock;
-import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
 import com.gcs.wb.jpa.entity.OutboundDetail;
 import com.gcs.wb.jpa.entity.PurchaseOrder;
 import com.gcs.wb.jpa.entity.SLoc;
 import com.gcs.wb.jpa.entity.TimeRange;
+import com.gcs.wb.jpa.entity.Variant;
 import com.gcs.wb.jpa.entity.WeightTicket;
+import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.service.WeightTicketService;
 import java.util.Date;
 import java.util.List;
@@ -28,7 +29,7 @@ import org.hibersap.session.Session;
  */
 public class WeightTicketController {
 
-    private WeightTicketService weightTicketService = new WeightTicketService();
+    WeightTicketService weightTicketService = new WeightTicketService();
 
     public DefaultComboBoxModel getCustomerByMaNdt() {
         return weightTicketService.getCustomerByMaNdt();
@@ -134,4 +135,35 @@ public class WeightTicketController {
         weightTicketService.printWT(wt, reprint, ximang, outbDel_list, outDetails_lits, outbDel, rbtMisc, rbtPO, isStage1, rootPane);
     }
     
+    public int getCountSingal() {
+        return weightTicketService.getCountSingal();
+    }
+    
+    public SLoc findByLgort(String lgort) {
+        return weightTicketService.findByLgort(lgort);
+    }
+    
+    public Variant findByParam(String param) {
+        return weightTicketService.findByParam(param);
+    }
+    
+    public BatchStock findByWerksLgortMatnrCharg(String werks, String lgort, String matnr, String charg){
+        return weightTicketService.findByWerksLgortMatnrCharg(werks, lgort, matnr, charg);
+    }
+    
+    public PurchaseOrder findByPoNumber(String poNumber) {
+        return weightTicketService.findByPoNumber(poNumber);
+    }
+    
+    public AppConfig getDev(String wbid) {
+        return weightTicketService.getDev(wbid);
+    }
+    
+    public Material CheckPOSTO(String matnr) throws Exception {
+        return weightTicketService.CheckPOSTO(matnr);
+    }
+    
+    public OutboundDelivery findByMandtOutDel(String delnum) throws Exception {
+        return weightTicketService.findByMandtOutDel(delnum);
+    }
 }

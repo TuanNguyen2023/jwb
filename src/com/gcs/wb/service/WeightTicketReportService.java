@@ -5,12 +5,12 @@
 package com.gcs.wb.service;
 
 import com.gcs.wb.base.constant.Constants;
-import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.WeightTicket;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
 import com.gcs.wb.jpa.repositorys.TransportAgentRepository;
+import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -67,8 +67,7 @@ public class WeightTicketReportService {
     }
 
     public Object[][] findWeightTickets(Object[][] wtDatas, String month, String year, String tAgent, String matnr, List<Character> modes, int status, String transportAgentName) throws Exception {
-        WeightTicketJpaController weightTicketJpaController = new WeightTicketJpaController();
-        List<WeightTicket> weightTickets = weightTicketJpaController.findListWTs(month, year, tAgent, matnr, modes, status == 1);
+        List<WeightTicket> weightTickets = findListWeightTicket(month, year, tAgent, matnr, modes, status == 1);
         wtDatas = new Object[weightTickets.size()][wtColNames.length];
         for (int i = 0; i < weightTickets.size(); i++) {
             WeightTicket item = weightTickets.get(i);            
@@ -117,5 +116,12 @@ public class WeightTicketReportService {
         comboBoxModel.insertElementAt(transportAgent, 0);
         comboBoxModel.setSelectedItem(transportAgent);
         return comboBoxModel;
+    }
+    
+    
+
+    public List<WeightTicket> findListWeightTicket(String month, String year, String tagent, String matnr, List<Character> modes, boolean isPosted) throws Exception {
+        WeightTicketRepository repository = new WeightTicketRepository();
+        return repository.findListWeightTicket(month, year, tagent, matnr, modes, isPosted);
     }
 }

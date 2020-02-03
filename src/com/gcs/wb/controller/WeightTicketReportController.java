@@ -7,6 +7,7 @@ package com.gcs.wb.controller;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.service.JReportService;
+import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.service.WeightTicketReportService;
 import java.util.HashMap;
 import java.util.List;

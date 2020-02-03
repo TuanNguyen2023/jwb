@@ -777,7 +777,7 @@ public class ConfigView extends javax.swing.JDialog {
     }
 
     private EnumComboBoxModel getParityModel() {
-        return new EnumComboBoxModel<ParityEnum>(ParityEnum.class);
+        return new EnumComboBoxModel<>(ParityEnum.class);
     }
 
     private boolean validateForm() {
