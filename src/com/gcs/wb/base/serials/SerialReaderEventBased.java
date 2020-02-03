@@ -28,7 +28,7 @@ public class SerialReaderEventBased implements SerialPortDataListener {
     public SerialReaderEventBased(InputStream in, JFormattedTextField control) throws IOException {
         this.in = in;
         this.control = control;
-        this.times_delay = WeighBridgeApp.time_delay;
+        this.times_delay = WeighBridgeApp.TIME_DELAY;
         this.count = 0;
     }
 

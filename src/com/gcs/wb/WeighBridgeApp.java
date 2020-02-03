@@ -7,9 +7,10 @@ import com.fazecast.jSerialComm.SerialPortInvalidPortException;
 import com.gcs.wb.base.exceptions.IllegalPortException;
 import com.gcs.wb.base.serials.ScaleMettler;
 import com.gcs.wb.base.serials.SerialComm;
-import com.gcs.wb.jpa.DataSources;
+import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.SAPSetting;
 import com.gcs.wb.jpa.entity.User;
+import com.gcs.wb.jpa.repositorys.ConfigurationRepository;
 import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.views.ConfigView;
 import com.gcs.wb.views.LoginView;
@@ -18,14 +19,10 @@ import com.gcs.wb.views.WeighBridgeView;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.TooManyListenersException;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import org.apache.log4j.Logger;
 import org.hibersap.session.Credentials;
 import org.hibersap.session.Session;
 import org.jdesktop.application.Application;
@@ -40,15 +37,13 @@ public class WeighBridgeApp extends SingleFrameApplication {
     private LoginView vLogin = null;
     private WeighBridgeView vMain = null;
     private SettingView vSetting = null;
-    private ConfigView vConfig = null;
+    private ConfigView configView = null;
     private AppConfig config = null;
     private SAPSetting sapSetting = null;
     private User login = null;
     /**Working in Offline mode(SAP Server is not connectable)*/
     private boolean offlineMode = false;
     private boolean authenticated = false;
-    private EntityManagerFactory emf = null;
-    private EntityManager em = null;
     private Session _SAPSession = null;
     /**HiberSAP credential object*/
     private Credentials credentials = null;
@@ -60,11 +55,10 @@ public class WeighBridgeApp extends SingleFrameApplication {
     public static final String DATE_ID_FORMAT = "yyyyMMdd";
     public static final String DATE_HOUR_ID_FORMAT = "yyMMddHHmm";
     public static final String HOUR_ID_FORMAT = "HHmmss";
-    private static Logger logger = Logger.getLogger(WeighBridgeApp.class);
     private BigInteger last = BigInteger.ZERO;
     private BigInteger now = BigInteger.ZERO;
     private BigInteger max = BigInteger.ZERO;
-    public static final int time_delay = 4;
+    public static final int TIME_DELAY = 4;
     private String sloc = null;
     private String current_user_name = null;
     private String current_user = null;
@@ -77,28 +71,31 @@ public class WeighBridgeApp extends SingleFrameApplication {
     @Override
     protected void startup() {
         config = new AppConfig();
+        if (config.isHasDatabaseConfig()) {
+            try {
+                // check database connection
+                JPAConnector.getInstance();
+                
+                // get config in database
+                ConfigurationRepository configurationRepository = new ConfigurationRepository();
+                config.setConfiguration(configurationRepository.getConfiguration());
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this.getMainFrame(), ex);
+            }
+        }
+
         if (!config.isFullyConfigured()) {
-            vConfig = new ConfigView(this.getMainFrame());
-            show(vConfig);
-            if (!vConfig.isShowing()) {
+            configView = new ConfigView(this.getMainFrame());
+            show(configView);
+            if (!configView.isShowing()) {
                 if (!config.isFullyConfigured()) {
-                    vConfig.dispose();
-                    vConfig = null;
+                    configView.dispose();
+                    configView = null;
                     exit();
                 }
             }
         }
-        try {
-            if (emf == null || !emf.isOpen()) {
-                emf = Persistence.createEntityManagerFactory("JWeighBridgePU", DataSources.getJweighbridgeProperties());
-            }
-            if (em == null || !em.isOpen()) {
-                em = getEmf().createEntityManager();
-            }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this.getMainFrame(), ex);
-            this.exit();
-        }
+
         vLogin = new LoginView(this.getMainFrame());
         show(vLogin);
         if (!vLogin.isShowing()) {
@@ -132,12 +129,6 @@ public class WeighBridgeApp extends SingleFrameApplication {
 
     @Override
     protected void shutdown() {
-        if (em != null && em.isOpen()) {
-            em.close();
-        }
-        if (emf != null && emf.isOpen()) {
-            emf.close();
-        }
         if (_SAPSession != null && !_SAPSession.isClosed()) {
             _SAPSession.close();
         }
@@ -235,6 +226,7 @@ public class WeighBridgeApp extends SingleFrameApplication {
 
     /**
      * Main method launching the application.
+     * @param args
      */
     public static void main(String[] args) {
         launch(WeighBridgeApp.class, args);
@@ -320,20 +312,6 @@ public class WeighBridgeApp extends SingleFrameApplication {
      */
     public Credentials getCredentials() {
         return credentials;
-    }
-
-    /**
-     * @return the emf
-     */
-    public EntityManagerFactory getEmf() {
-        return emf;
-    }
-
-    /**
-     * @return the em
-     */
-    public EntityManager getEm() {
-        return em;
     }
 
     /**

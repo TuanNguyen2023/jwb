@@ -14,6 +14,13 @@ import java.util.regex.Pattern;
  */
 public class Constants {
 
+    public static class Configuration {
+
+        public static final String FILE_NAME = "application.properties";
+        public static final int WEIGHT_LIMIT = 60;
+        public static final boolean MODE_NORMAL = true;
+    }
+
     public static class Label {
 
         public static final String LABEL_ALL = "Tất cả";
@@ -207,8 +214,8 @@ public class Constants {
         public static final String[] STATUS_MODEL = {"Tất cả", "Hoàn tất"};
     }
 
-    public static final class LookupMaterial{
-        
+    public static final class LookupMaterial {
+
         public static final Object[] wtCols = new String[]{
             "Mã vật tư",
             "Loại vật tư"};

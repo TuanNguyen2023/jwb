@@ -166,8 +166,8 @@ public class ConfigService {
         config.setWbId(Base64_Utils.decodeNTimes(wbId));
         config.setDbHost(Base64_Utils.decodeNTimes(dbHost));
         config.setDbName(Base64_Utils.decodeNTimes(dbName));
-        config.setDbUsr(Base64_Utils.decodeNTimes(dbUsr));
-        config.setDbPwd(Base64_Utils.decodeNTimes(dbPwd));
+        config.setDbUsername(Base64_Utils.decodeNTimes(dbUsr));
+        config.setDbPassword(Base64_Utils.decodeNTimes(dbPwd));
 
         String sHost = txtHost.getText();
         sHost = sHost == null || sHost.trim().length() == 0 ? "" : sHost;
@@ -253,8 +253,8 @@ public class ConfigService {
         txtWBID.setText(Base64_Utils.encodeNTimes(config.getWbId()));
         txtDBHost.setText(Base64_Utils.encodeNTimes(config.getDbHost()));
         txtDBName.setText(Base64_Utils.encodeNTimes(config.getDbName()));
-        txtDBUsr.setText(Base64_Utils.encodeNTimes(config.getDbUsr()));
-        txtDBPwd.setText(Base64_Utils.encodeNTimes(config.getDbPwd()));
+        txtDBUsr.setText(Base64_Utils.encodeNTimes(config.getDbUsername()));
+        txtDBPwd.setText(Base64_Utils.encodeNTimes(config.getDbPassword()));
 
         txtHost.setText(Base64_Utils.encodeNTimes(config.getsHost()));
         txfSNo.setValue(Base64_Utils.encodeNTimes(config.getsNumber()));

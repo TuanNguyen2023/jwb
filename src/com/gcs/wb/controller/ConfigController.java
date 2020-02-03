@@ -6,8 +6,11 @@ package com.gcs.wb.controller;
 
 import com.gcs.wb.base.enums.ParityEnum;
 import com.gcs.wb.base.util.Base64_Utils;
+import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.service.ConfigService;
+import java.math.BigDecimal;
+import java.util.Date;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 
@@ -27,38 +30,44 @@ public class ConfigController {
         if (config == null) {
             config = new AppConfig();
         }
-        config.setWbId(Base64_Utils.decodeNTimes(wbId));
         config.setDbHost(Base64_Utils.decodeNTimes(dbHost));
         config.setDbName(Base64_Utils.decodeNTimes(dbName));
-        config.setDbUsr(Base64_Utils.decodeNTimes(dbUsr));
-        config.setDbPwd(Base64_Utils.decodeNTimes(dbPwd));
-        config.setsHost(Base64_Utils.decodeNTimes(sHost));
-        config.setsRoute(Base64_Utils.decodeNTimes(sRoute));
-        config.setsNumber(Base64_Utils.decodeNTimes(sNo));
-        config.setsClient(Base64_Utils.decodeNTimes(sDClient));
+        config.setDbUsername(Base64_Utils.decodeNTimes(dbUsr));
+        config.setDbPassword(Base64_Utils.decodeNTimes(dbPwd));
+        
+        Configuration configuration = config.getConfiguration();
+        if (configuration == null) {
+            configuration = new Configuration();
+        } else {
+            configuration.setUpdatedDate(new Date());
+        }
+        
+        configuration.setSapHost(Base64_Utils.decodeNTimes(sHost));
+        configuration.setSapRouteString(Base64_Utils.decodeNTimes(sRoute));
+        configuration.setSapSystemNumber(Base64_Utils.decodeNTimes(sNo));
+        configuration.setSapClient(Base64_Utils.decodeNTimes(sDClient));
+        
+        configuration.setWkPlant(Base64_Utils.decodeNTimes(wPlant));
+        configuration.setWbId(Base64_Utils.decodeNTimes(wbId));
 
-        config.setB1Port((String) port1);
-        config.setB1Speed(speed1);
-        config.setB1DBits(port1 == null ? null : (Short) cbxDataBits1.getSelectedItem());
-        
-        config.setB1SBits(port1 == null ? null : sbit1);
-        config.setB1PC(port1 == null ? null : (new Integer(((ParityEnum) cbxPControl1.getSelectedItem()).ordinal())).shortValue());
-        config.setB1Mettler(port1 == null ? null : chbMettler1.isSelected());
+        configuration.setWb1Port((String) port1);
+        configuration.setWb1BaudRate(speed1);
+        configuration.setWb1DataBit(port1 == null ? null : (Short) cbxDataBits1.getSelectedItem());
+        configuration.setWb1StopBit(port1 == null ? null : new BigDecimal(sbit1));
+        configuration.setWb1ParityControl(port1 == null ? null : (new Integer(((ParityEnum) cbxPControl1.getSelectedItem()).ordinal())).shortValue());
+        configuration.setWb1Mettler(port1 == null ? null : chbMettler1.isSelected());
 
-        
-        config.setB2Port((String) port2);
-        config.setB2Speed(speed2);
-        config.setB2DBits(port2 == null ? null : (Short) cbxDataBits2.getSelectedItem());
-        
-        config.setB2SBits(port2 == null ? null : sbit2);
-        config.setB2PC(port2 == null ? null : (new Integer(((ParityEnum) cbxPControl2.getSelectedItem()).ordinal())).shortValue());
-        config.setB2Mettler(port2 == null ? null : chbMettler2.isSelected());
-        config.setwPlant(Base64_Utils.decodeNTimes(wPlant));
+        configuration.setWb2Port((String) port2);
+        configuration.setWb2BaudRate(speed2);
+        configuration.setWb2DataBit(port2 == null ? null : (Short) cbxDataBits2.getSelectedItem());
+        configuration.setWb2StopBit(port2 == null ? null : new BigDecimal(sbit2));
+        configuration.setWb2ParityControl(port2 == null ? null : (new Integer(((ParityEnum) cbxPControl2.getSelectedItem()).ordinal())).shortValue());
+        configuration.setWb2Mettler(port2 == null ? null : chbMettler2.isSelected());
 
         return config;
     }
     
-    public ParityEnum getPlControl(AppConfig config, Short getBPC) {
+    public ParityEnum getPlControl(AppConfig config, int getBPC) {
         
         ParityEnum p1Control = null;
 
