@@ -11,7 +11,7 @@
 package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
-import com.gcs.wb.bapi.helper.SAP2Local;
+import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.jpa.entity.SLoc;
 import com.gcs.wb.jpa.repositorys.SLocRepository;
 import java.awt.Color;
@@ -29,7 +29,8 @@ import org.jdesktop.application.Action;
  */
 public class RecvSlocView extends javax.swing.JDialog {
     SLocRepository sLocRepository = new SLocRepository();
-
+    SAPService sAPService = new SAPService();
+    
     /** Creates new form RecvSlocView */
     public RecvSlocView(java.awt.Frame parent, String recv_lgort, String ref_po) {
         super(parent);
@@ -82,7 +83,7 @@ public class RecvSlocView extends javax.swing.JDialog {
         lblRecvSloc.setText(resourceMap.getString("lblRecvSloc.text")); // NOI18N
         lblRecvSloc.setName("lblRecvSloc"); // NOI18N
 
-        cbxRecvSloc.setModel(SAP2Local.getSlocModel(config, entityManager));
+        cbxRecvSloc.setModel(sAPService.getSlocModel());
         cbxRecvSloc.setRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(

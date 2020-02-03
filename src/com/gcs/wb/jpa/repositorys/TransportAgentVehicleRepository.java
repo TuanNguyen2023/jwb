@@ -18,13 +18,18 @@ public class TransportAgentVehicleRepository {
 
     EntityManager entityManager = JPAConnector.getInstance();
 
+    /**
+     * get list BS Xe
+     * @param id
+     * @return 
+     */
     public List<TransportAgentVehicle> findByTransportAgentId(int transportAgentId) {
         TypedQuery<TransportAgentVehicle> typedQuery = entityManager.createNamedQuery("TransportAgentVehicle.findByTransportAgentId", TransportAgentVehicle.class);
         typedQuery.setParameter("transportAgentId", transportAgentId);
 
         return typedQuery.getResultList();
     }
-    
+
     public List<TransportAgentVehicle> findByVehicleId(int vehicleId) {
         TypedQuery<TransportAgentVehicle> typedQuery = entityManager.createNamedQuery("TransportAgentVehicle.findByVehicleId", TransportAgentVehicle.class);
         typedQuery.setParameter("vehicleId", vehicleId);

@@ -6,6 +6,7 @@ package com.gcs.wb.controller;
 
 import com.gcs.wb.bapi.goodsmvt.structure.GoodsMvtWeightTicketStructure;
 import com.gcs.wb.jpa.entity.BatchStock;
+import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
 import com.gcs.wb.jpa.entity.OutboundDeliveryDetail;

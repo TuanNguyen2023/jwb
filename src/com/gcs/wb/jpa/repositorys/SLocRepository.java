@@ -18,6 +18,10 @@ public class SLocRepository {
 
     EntityManager entityManager = JPAConnector.getInstance();
 
+    /**
+     * get list "Kho"
+     * @return 
+     */
     public List<SLoc> getListSLoc() {
         TypedQuery<SLoc> typedQuery = entityManager.createNamedQuery("SLoc.findAll", SLoc.class);
         return typedQuery.getResultList();

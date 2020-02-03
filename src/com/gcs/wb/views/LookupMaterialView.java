@@ -11,27 +11,34 @@
 package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
-import com.gcs.wb.bapi.helper.SAP2Local;
 import com.gcs.wb.bapi.service.SAPService;
+import com.gcs.wb.base.constant.Constants;
+import com.gcs.wb.controller.LookupMaterialController;
 import com.gcs.wb.jpa.entity.Material;
 import java.util.ArrayList;
 import org.hibersap.session.Session;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
-import javax.persistence.EntityManager;
-import com.gcs.wb.jpa.JPAConnector;
-import com.gcs.wb.jpa.service.JPAService;
 
 /**
  *
- * @author vunguyent
+ * @author thangpt
  */
-public class LookupMatView extends javax.swing.JDialog {
-    EntityManager entityManager = JPAConnector.getInstance();
-    JPAService jpaService = new JPAService();
+public class LookupMaterialView extends javax.swing.JDialog {
+    
+    LookupMaterialController lookupMaterialController= new LookupMaterialController();
     SAPService sapService = new SAPService();
+    
+    private Material fMaterial = null;
+    private boolean[] editable = null;
+    Object[][] wtData = null;
+    Object[] wtCols = Constants.LookupMaterial.wtCols;
+    Class[] wtTypes = Constants.LookupMaterial.wtTypes;
+    private java.util.List<Material> materials;
+    private Material selectedRow;
+    
     /** Creates new form LookupMatView */
-    public LookupMatView(java.awt.Frame parent) {
+    public LookupMaterialView(java.awt.Frame parent) {
         super(parent);
         initComponents();
     }
@@ -45,7 +52,6 @@ public class LookupMatView extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        config = WeighBridgeApp.getApplication().getConfig();
         pnContent = new javax.swing.JPanel();
         pnFilter = new javax.swing.JPanel();
         lblMatDesc = new javax.swing.JLabel();
@@ -57,7 +63,7 @@ public class LookupMatView extends javax.swing.JDialog {
         btnSelect = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(LookupMatView.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(LookupMaterialView.class);
         setTitle(resourceMap.getString("Form.title")); // NOI18N
         setModal(true);
         setName("Form"); // NOI18N
@@ -73,7 +79,7 @@ public class LookupMatView extends javax.swing.JDialog {
         txtMatDesc.setText(resourceMap.getString("txtMatDesc.text")); // NOI18N
         txtMatDesc.setName("txtMatDesc"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getActionMap(LookupMatView.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getActionMap(LookupMaterialView.class, this);
         btnLookup.setAction(actionMap.get("lookupMat")); // NOI18N
         btnLookup.setText(resourceMap.getString("btnLookup.text")); // NOI18N
         btnLookup.setName("btnLookup"); // NOI18N
@@ -116,7 +122,7 @@ public class LookupMatView extends javax.swing.JDialog {
         pnResult.setLayout(pnResultLayout);
         pnResultLayout.setHorizontalGroup(
             pnResultLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 460, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 464, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnResultLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btnSelect))
@@ -191,7 +197,7 @@ public class LookupMatView extends javax.swing.JDialog {
             super(app);
             sapSession = WeighBridgeApp.getApplication().getSAPSession();
             if (materials == null) {
-                materials = new ArrayList<Material>();
+                materials = new ArrayList<>();
             }
         }
 
@@ -201,7 +207,7 @@ public class LookupMatView extends javax.swing.JDialog {
             // sync SAP-DB material
             sapService.syncMaterialMaster();
             // get data Vat tu
-            materials.addAll(jpaService.getListMaterialByDesc(txtMatDesc.getText().trim()));
+            materials.addAll(lookupMaterialController.getListMaterialByDesc(txtMatDesc.getText().trim()));
             wtData = new Object[materials.size()][wtCols.length];
             for (int i = 0; i < materials.size(); i++) {
                 Material mat = materials.get(i);
@@ -240,21 +246,9 @@ public class LookupMatView extends javax.swing.JDialog {
     public void setfMaterial(Material fMaterial) {
         this.fMaterial = fMaterial;
     }
-    private Material fMaterial = null;
-    private boolean[] editable = null;
-    Object[][] wtData = null;
-    Object[] wtCols = new String[]{
-        "Mã vật tư",
-        "Loại vật tư"};
-    Class[] wtTypes = new Class[]{
-        String.class,
-        String.class};
-    private java.util.List<Material> materials;
-    private Material selectedRow;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLookup;
     private javax.swing.JButton btnSelect;
-    private com.gcs.wb.model.AppConfig config;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblMatDesc;
     private javax.swing.JPanel pnContent;

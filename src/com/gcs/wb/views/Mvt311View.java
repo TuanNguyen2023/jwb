@@ -180,7 +180,7 @@ public class Mvt311View extends javax.swing.JDialog {
 
     @Action
     public void lookupMat() {
-        LookupMatView lmat = new LookupMatView(WeighBridgeApp.getApplication().getMainFrame());
+        LookupMaterialView lmat = new LookupMaterialView(WeighBridgeApp.getApplication().getMainFrame());
         lmat.setLocationRelativeTo(WeighBridgeApp.getApplication().getMainFrame());
         WeighBridgeApp.getApplication().show(lmat);
         if (!lmat.isShowing()) {

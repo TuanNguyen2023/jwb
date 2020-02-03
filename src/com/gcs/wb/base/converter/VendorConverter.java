@@ -12,6 +12,7 @@ import com.gcs.wb.jpa.entity.Vendor;
  * @author THANGPT
  */
 public class VendorConverter extends AbstractThrowableConverter<VendorGetDetailStructure, Vendor, Exception>{
+    
     @Override
     public Vendor convert(VendorGetDetailStructure from){
         Vendor to = null;

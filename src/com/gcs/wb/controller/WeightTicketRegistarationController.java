@@ -11,8 +11,8 @@ import com.gcs.wb.jpa.entity.Vendor;
 import com.gcs.wb.jpa.entity.WeightTicket;
 import com.gcs.wb.jpa.service.JReportService;
 import com.gcs.wb.model.AppConfig;
-import com.gcs.wb.service.WTRegService;
-import java.text.SimpleDateFormat;
+import com.gcs.wb.service.WeightTicketRegistarationService;
+import com.gcs.wb.service.WeightTicketService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,9 +25,10 @@ import org.jdesktop.swingx.JXDatePicker;
  *
  * @author THANGPT
  */
-public class WTRegController {
+public class WeightTicketRegistarationController {
 
-    private WTRegService wTRegService = new WTRegService();
+    private WeightTicketRegistarationService wTRegService = new WeightTicketRegistarationService();
+    private WeightTicketService weightTicketService = new WeightTicketService();
     JReportService jreportService = new JReportService();
 
     public List<WeightTicket> listWeightTicketsDoInBackground(JXDatePicker dpFrom, JXDatePicker dpTo, JComboBox cbxType, JComboBox cbxTimeFrom, JComboBox cbxTimeTo, JTextField txtNguoitao, JRadioButton rbtDissolved, JRadioButton rbtPosted, JRadioButton rbtStateAll, JTextField txtTaixe, JTextField txtBienSo) throws Exception {

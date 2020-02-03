@@ -18,8 +18,7 @@ import java.util.List;
  *
  * @author THANGPT
  */
-public class PurOrderConverter extends AbstractThrowableParamConverter<PoGetDetailBapi, PurchaseOrder, Exception> {
-
+public class PurchaseOrderConverter extends AbstractThrowableParamConverter<PoGetDetailBapi, PurchaseOrder, Exception> {
     @Override
     public PurchaseOrder convertHasParameter(PoGetDetailBapi from, String poNum) throws Exception {
         BigDecimal item_qty = BigDecimal.ZERO;
@@ -31,7 +30,6 @@ public class PurOrderConverter extends AbstractThrowableParamConverter<PoGetDeta
         }
 
         List<PurchaseOrderDetail> purchaseOrderDetails = new ArrayList<>();
-
         PurchaseOrder result = new PurchaseOrder(WeighBridgeApp.getApplication().getConfig().getsClient(), poNum);
         result.setDocType(header.getDOC_TYPE());
         result.setDeleteInd(header.getDELETE_IND() == null || header.getDELETE_IND().trim().isEmpty() ? ' ' : header.getDELETE_IND().charAt(0));

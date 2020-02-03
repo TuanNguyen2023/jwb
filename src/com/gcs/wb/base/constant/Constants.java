@@ -206,4 +206,14 @@ public class Constants {
         public static final String[] MODES_MODEL = {"Tất cả", "Nhập", "Xuất"};
         public static final String[] STATUS_MODEL = {"Tất cả", "Hoàn tất"};
     }
+
+    public static final class LookupMaterial{
+        
+        public static final Object[] wtCols = new String[]{
+            "Mã vật tư",
+            "Loại vật tư"};
+        public static final Class[] wtTypes = new Class[]{
+            String.class,
+            String.class};
+    }
 }
