@@ -17,6 +17,7 @@ import com.gcs.wb.bapi.helper.PoGetDetailBapi;
 import com.gcs.wb.bapi.helper.SLocsGetListBapi;
 import com.gcs.wb.bapi.helper.VendorGetDetailBapi;
 import com.gcs.wb.bapi.helper.structure.CustomerGetDetailStructure;
+import com.gcs.wb.bapi.helper.structure.DoGetDetailStructure;
 import com.gcs.wb.bapi.helper.structure.MatGetDetailStructure;
 import com.gcs.wb.bapi.helper.structure.MaterialGetListStructure;
 import com.gcs.wb.bapi.helper.structure.SLocsGetListStructure;
@@ -25,11 +26,11 @@ import com.gcs.wb.bapi.helper.structure.VendorGetDetailStructure;
 import com.gcs.wb.base.converter.CustomerConverter;
 import com.gcs.wb.base.converter.MaterialConverter;
 import com.gcs.wb.base.converter.MaterialsV2Converter;
-import com.gcs.wb.base.converter.OutboundDeliveryConverter;
 import com.gcs.wb.base.converter.PurchaseOrderConverter;
 import com.gcs.wb.base.converter.TransportAgentsConverter;
 import com.gcs.wb.base.converter.VendorConverter;
 import com.gcs.wb.base.util.StringUtil;
+import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.BatchStock;
 import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.Material;
@@ -48,8 +49,11 @@ import com.gcs.wb.jpa.repositorys.VendorRepository;
 import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.service.LookupMaterialService;
 import com.gcs.wb.views.TransportAgentView;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.swing.DefaultComboBoxModel;
@@ -69,8 +73,6 @@ public class SAPService {
     EntityTransaction entityTransaction = entityManager.getTransaction();
 
     LookupMaterialService lookupMaterialService = new LookupMaterialService();
-    BatchStockRepository batchStockRepository = new BatchStockRepository();
-    BatchStockRepository batchStocksRepository = new BatchStockRepository();
     VendorRepository vendorRepository = new VendorRepository();
     SLocRepository sLocRepository = new SLocRepository();
     TransportAgentRepository transportAgentRepository = new TransportAgentRepository();
@@ -263,7 +265,7 @@ public class SAPService {
                 }
                 outboundDeliveryDetail.setMeins(doItem.getMeins());
                 String split[] = doItem.getArktx().split("-");
-                outboundDeliveryDetail.setArktx(split[0].toString());
+                outboundDeliveryDetail.setArktx(split[0]);
                 outboundDeliveryDetail.setMatnr(doItem.getMatnr());
                 outboundDeliveryDetail.setVgbel(doItem.getVgbel());
                 outboundDeliveryDetail.setBzirk(bapiDO.getEs_bzirk());
@@ -413,7 +415,7 @@ public class SAPService {
      */
     public void syncBatchStocks(String lgortSloc, String matnr, String lgortWT) {
         // get data DB
-        List<BatchStock> batchs = batchStocksRepository.getListBatchStock(config.getwPlant(), lgortSloc, matnr);
+        List<BatchStock> batchs = batchStockRepository.getListBatchStock(config.getwPlant(), lgortSloc, matnr);
         // get data SAP
         BatchStocksGetListBapi bBatch = new BatchStocksGetListBapi();
         List<BatchStock> batchStockSaps = new ArrayList<>();

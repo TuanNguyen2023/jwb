@@ -4012,7 +4012,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                 bMB1B = true;
             }
             
-            if (rbtMvt311.isSelected() && (weightTicket.getRecvLgort() == null || weightTicket.getRecvMatnr() == null)) {
+            if (rbtMvt311.isSelected() && (weightTicket.getRecvLgort() == null || weightTicket.getWeightTicketDetail().getRecvMatnr() == null)) {
                 rbtMvt311.setForeground(Color.red);
                 bMvt311 = false;
             } else {
