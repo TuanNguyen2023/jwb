@@ -13,6 +13,7 @@ import com.gcs.wb.bapi.helper.constants.PlantGeDetailConstants;
 import com.gcs.wb.bapi.helper.structure.UserGetDetailAGRStructure;
 import com.gcs.wb.bapi.helper.structure.UserGetDetailAddrStructure;
 import com.gcs.wb.jpa.JPAConnector;
+import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.jpa.entity.SAPSetting;
 import com.gcs.wb.jpa.entity.User;
 import com.gcs.wb.jpa.repositorys.SAPSettingRepository;
@@ -36,6 +37,7 @@ public class LoginService {
     private EntityManager entityManager = JPAConnector.getInstance();
     private EntityTransaction entityTransaction = entityManager.getTransaction();
     private AppConfig appConfig = WeighBridgeApp.getApplication().getConfig();
+    private Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
     private SAPSettingRepository sapSettingRepository = new SAPSettingRepository();
     private SAPSetting sapSetting = sapSettingRepository.getSAPSetting();
 
@@ -93,15 +95,15 @@ public class LoginService {
             if (user == null) {
                 updateUser = false;
                 if (sapSetting == null) {
-                    PlantGetDetailBapi plantGetDetailBapi = new PlantGetDetailBapi(appConfig.getsClient(), appConfig.getwPlant().toString());
+                    PlantGetDetailBapi plantGetDetailBapi = new PlantGetDetailBapi(configuration.getSapClient(), configuration.getWkPlant());
                     session.execute(plantGetDetailBapi);
                     HashMap vals = plantGetDetailBapi.getEsPlant();
 
                     sapSetting = new SAPSetting();
                     sapSetting.setName1((String) vals.get(PlantGeDetailConstants.NAME1));
                     sapSetting.setName2((String) vals.get(PlantGeDetailConstants.NAME2));
-                    sapSetting.setMandt(appConfig.getsClient().toString());
-                    sapSetting.setWplan(appConfig.getwPlant().toString());
+                    sapSetting.setMandt(configuration.getSapClient());
+                    sapSetting.setWplan(configuration.getWkPlant());
                     entityManager.persist(sapSetting);
                 }
                 user = new User(username, password);
@@ -112,8 +114,8 @@ public class LoginService {
             user.setLang(userGetDetailAddrStructure.getLang().length() == 0 ? ' ' : userGetDetailAddrStructure.getLang().charAt(0));
             user.setLangIso(userGetDetailAddrStructure.getLangISO());
             user.setPassword(password);
-            user.setMandt(appConfig.getsClient().toString());
-            user.setWplan(appConfig.getwPlant().toString());
+            user.setMandt(configuration.getSapClient());
+            user.setWplan(configuration.getWkPlant());
             if (roles != null) {
                 user.setRoles(roles);
             }

@@ -26,6 +26,7 @@ import com.gcs.wb.jpa.entity.WeightTicket;
 import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.controller.WeightTicketRegistarationController;
 import com.gcs.wb.jpa.JPAConnector;
+import com.gcs.wb.jpa.entity.Configuration;
 import com.sap.conn.jco.JCoException;
 import java.awt.Color;
 import java.math.BigDecimal;
@@ -77,6 +78,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
     VehicleRepository vehicleRepository = new VehicleRepository();
     TransportAgentVehicleRepository transportAgentVehicleRepository = new TransportAgentVehicleRepository();
     SAPService sapService = new SAPService();
+    Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration(); 
 
     WeightTicketRegistarationController weightTicketRegistarationController = new WeightTicketRegistarationController();
 
@@ -1481,7 +1483,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         }
 
         private void handleDOCheckExist(String doNumber) {
-            List<Object[]>  wts1 = wTRegRepository.checkDoExist(doNumber, WeighBridgeApp.getApplication().getConfig().getwPlant());
+            List<Object[]>  wts1 = wTRegRepository.checkDoExist(doNumber, configuration.getWkPlant());
             boolean isInUsedDO = false;
             try
             {
@@ -1506,7 +1508,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         private void handleShippingPointVar(String doNumber, String selectedMode) {
             if(outb != null) {
-                int klmax = wTRegRepository.getSPVar(WeighBridgeApp.getApplication().getConfig().getWbId(), ship_point, outb.getMatnr().toString().trim());
+                int klmax = wTRegRepository.getSPVar(configuration.getWbId(), ship_point, outb.getMatnr().toString().trim());
                 Boolean ship = (klmax <= 0) ? false : true;
                 if (ship == false) {
                     validDO = false;
@@ -1534,8 +1536,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 WeightTicket wt = null;
                 String delivNumb = outb.getDeliveryOrderNo();
                 wt = weightTicketRepository.findByDeliveryOrderNo(delivNumb);
-                String wplant = "";
-                wplant = WeighBridgeApp.getApplication().getConfig().getwPlant().toString();
+                String wplant = configuration.getWkPlant();
                 String sDoType = "LF,LR,NL,ZTLF,ZTLR";
                 String Lfart = "";
                 try {
@@ -1799,7 +1800,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         }
 
         private void handleDOCheckExist(String doNumber) {
-            List<Object[]>  wts1 = wTRegRepository.checkDoExist(doNumber, WeighBridgeApp.getApplication().getConfig().getwPlant());
+            List<Object[]>  wts1 = wTRegRepository.checkDoExist(doNumber, configuration.getWkPlant());
             boolean isInUsedDO = false;
             try
             {
@@ -1824,7 +1825,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         private void handleShippingPointVar(String doNumber, String selectedMode) {
             if(outb != null) {
-                int klmax = wTRegRepository.getSPVar(WeighBridgeApp.getApplication().getConfig().getWbId(), ship_point, outb.getMatnr().toString().trim());
+                int klmax = wTRegRepository.getSPVar(configuration.getWbId(), ship_point, outb.getMatnr().toString().trim());
                 Boolean ship = (klmax <= 0) ? false : true;
                 if (ship == false) {
                     validDO = false;
@@ -1961,15 +1962,14 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
             }
             SimpleDateFormat formatter = new SimpleDateFormat();
-            AppConfig sap = WeighBridgeApp.getApplication().getConfig();
             int seqBDay = wCon.getNewSeqBDay() + 1;
             int seqBMonth = wCon.getNewSeqBMonth() + 1;
 
             formatter.applyPattern("yyyy");
 
             int year = Integer.parseInt(formatter.format(now));
-            newWeightTicket.setMandt(sap.getsClient());
-            newWeightTicket.setWplant(sap.getwPlant());
+            newWeightTicket.setMandt(configuration.getSapClient());
+            newWeightTicket.setWplant(configuration.getWkPlant());
             newWeightTicket.setSeqDay(seqBDay);
             newWeightTicket.setSeqMonth(seqBMonth);
             newWeightTicket.setCreatedDate(new java.sql.Date(now.getTime()));
@@ -1980,7 +1980,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
             newWeightTicket.setRegType(rbtNInward.isSelected() ? 'I' : 'O');
             newWeightTicket.setRegItemDescription(txtNMaterial.getText().trim());
             newWeightTicket.setRegItemQuantity(BigDecimal.valueOf(Double.valueOf(txtNWeight.getValue().toString())));
-            newWeightTicket.setWbId(sap.getWbId());
+            newWeightTicket.setWbId(configuration.getWbId());
             newWeightTicket.setAbbr(abbr);
             newWeightTicket.setPlateNo(txtNPlateNo.getText().trim());
             newWeightTicket.setDriverIdNo(txtNCMNDBL.getText().trim());
@@ -2038,7 +2038,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                     }
                 }
             }
-            if (!WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
+            if (!configuration.isModeNormal()) {
                 newWeightTicket.setCreator(WeighBridgeApp.getApplication().getCurrent_user());
             }
             setMessage(resourceMapMsg.getString("msg.saveData"));

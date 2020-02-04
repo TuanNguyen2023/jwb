@@ -60,8 +60,6 @@ public class Mvt311View extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        entityManager = java.beans.Beans.isDesignTime() ? null : WeighBridgeApp.getApplication().getEm();
-        if(entityManager != null ) entityManager.clear();
         pnContent = new javax.swing.JPanel();
         lblRecvSloc = new javax.swing.JLabel();
         cbxRecvSloc = new javax.swing.JComboBox();
@@ -152,7 +150,7 @@ public class Mvt311View extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(pnContent, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(253, Short.MAX_VALUE)
+                .addContainerGap(257, Short.MAX_VALUE)
                 .addComponent(btnSelect)
                 .addContainerGap())
         );
@@ -224,7 +222,6 @@ public class Mvt311View extends javax.swing.JDialog {
     private javax.swing.JButton btnLookup;
     private javax.swing.JButton btnSelect;
     private javax.swing.JComboBox cbxRecvSloc;
-    private javax.persistence.EntityManager entityManager;
     private javax.swing.JLabel lblMatnr;
     private javax.swing.JLabel lblRecvSloc;
     private javax.swing.JPanel pnContent;

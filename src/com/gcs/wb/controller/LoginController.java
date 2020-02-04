@@ -7,6 +7,7 @@ package com.gcs.wb.controller;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.helper.UserGetDetailBapi;
 import com.gcs.wb.bapi.helper.structure.UserGetDetailAddrStructure;
+import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.jpa.entity.SAPSetting;
 import com.gcs.wb.jpa.entity.User;
 import com.gcs.wb.jpa.repositorys.SAPSettingRepository;
@@ -26,6 +27,7 @@ public class LoginController {
     private UserRepository userRepository;
     private SAPSettingRepository sapSettingRepository;
     private AppConfig appConfig;
+    private Configuration configuration;
     private Credentials credentials = null;
     private SAPSetting sapSetting = null;
     private User user = null;
@@ -42,15 +44,11 @@ public class LoginController {
         sapSettingRepository = new SAPSettingRepository();
 
         appConfig = WeighBridgeApp.getApplication().getConfig();
-        lclient = appConfig.getsClient();
-        lplant = appConfig.getwPlant().toString();
-        if (appConfig.getModeNormal()) {
-            this.username = username;
-            this.password = password;
-        } else {
-            this.username = appConfig.getUsrName();
-            this.password = appConfig.getPsswrd();
-        }
+        configuration = appConfig.getConfiguration();
+        lclient = configuration.getSapClient();
+        lplant = configuration.getWkPlant();
+        this.username = username;
+        this.password = password;
 
         credentials = new Credentials();
         credentials.setClient(lclient);
@@ -83,12 +81,10 @@ public class LoginController {
             sapSetting = sapSettingRepository.getSAPSetting();
 
             Session session = loginService.getSapSession(credentials);
-            boolean onlineMode = WeighBridgeApp.getApplication().getConfig().getModeNormal();
+            boolean onlineMode = configuration.isModeNormal();
             if(onlineMode) {
                 try {
-                    if (appConfig.isCheckVersionWB()) {
-                        loginService.checkVersionWB(session);
-                    }
+                    loginService.checkVersionWB(session);
                     session.execute(userGetDetailBapi);  //Login
                 } catch (Exception ex) {
                     onlineMode = false;

@@ -6,8 +6,8 @@ package com.gcs.wb.service;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.jpa.JPAConnector;
+import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.jpa.entity.Material;
-import com.gcs.wb.model.AppConfig;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -22,7 +22,7 @@ import org.hibersap.session.Session;
 public class LookupMaterialService {
 
     EntityManager entityManager = JPAConnector.getInstance();
-    AppConfig config = WeighBridgeApp.getApplication().getConfig();
+    Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
     Session session = WeighBridgeApp.getApplication().getSAPSession();
     EntityTransaction entityTransaction = entityManager.getTransaction();
 
@@ -32,12 +32,10 @@ public class LookupMaterialService {
      * @return 
      */
     public List<Material> getListMaterial() {
-        List<Material> materials = new ArrayList<>();
         TypedQuery<Material> tMaterial =
                 entityManager.createQuery("SELECT m FROM Material m WHERE m.wplant = :wplant order by m.matnr asc", Material.class);
-        tMaterial.setParameter("wplant", config.getwPlant());
-        materials = tMaterial.getResultList();
-        return materials;
+        tMaterial.setParameter("wplant", configuration.getWkPlant());
+        return tMaterial.getResultList();
     }
 
     /**

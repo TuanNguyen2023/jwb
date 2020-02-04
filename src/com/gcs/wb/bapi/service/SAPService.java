@@ -31,6 +31,7 @@ import com.gcs.wb.base.converter.TransportAgentsConverter;
 import com.gcs.wb.base.converter.VendorConverter;
 import com.gcs.wb.base.util.StringUtil;
 import com.gcs.wb.jpa.entity.BatchStock;
+import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
@@ -77,6 +78,7 @@ public class SAPService {
     TransportAgentVehicleRepository transportAgentVehicleRepository = new TransportAgentVehicleRepository();
 
     AppConfig config = WeighBridgeApp.getApplication().getConfig();
+    Configuration configuration = config.getConfiguration();
 
     private JFrame mainFrame = WeighBridgeApp.getApplication().getMainFrame();
     public ResourceMap resourceMapMsg = Application.getInstance(WeighBridgeApp.class).getContext().getResourceMap(TransportAgentView.class);
@@ -136,7 +138,7 @@ public class SAPService {
         vendorDBs = vendorRepository.getListVendor();
 
         TransportagentGetListBapi bapi = new TransportagentGetListBapi();
-        bapi.setIvEkorg(config.getwPlant());
+        bapi.setIvEkorg(configuration.getWkPlant());
         List<Vendor> venSaps = new ArrayList<>();
         try {
             session.execute(bapi);
@@ -145,7 +147,7 @@ public class SAPService {
             
             for (TransportagentGetListStructure vens : etVendors) {
                 Vendor ven = new Vendor();
-                ven.setMandt(config.getsClient());
+                ven.setMandt(configuration.getSapClient());
                 ven.setLifnr(vens.getLifnr());
                 ven.setName1(vens.getName1());
                 ven.setName2(vens.getName2());
@@ -224,19 +226,19 @@ public class SAPService {
      */
     public void syncBatchStocks(String lgortSloc, String matnr, String lgortWT) {
         // get data DB
-        List<BatchStock> batchs = batchStocksRepository.getListBatchStock(config.getwPlant(), lgortSloc, matnr);
+        List<BatchStock> batchs = batchStocksRepository.getListBatchStock(configuration.getWkPlant(), lgortSloc, matnr);
         // get data SAP
         BatchStocksGetListBapi bBatch = new BatchStocksGetListBapi();
         List<BatchStock> batchStockSaps = new ArrayList<>();
-        bBatch.setIdMandt(config.getsClient());
-        bBatch.setIdWerks(config.getwPlant());
+        bBatch.setIdMandt(configuration.getSapClient());
+        bBatch.setIdWerks(configuration.getWkPlant());
         bBatch.setIdLgort(lgortSloc);
         bBatch.setIdMatnr(matnr);
         try {
             session.execute(bBatch);
             List<BatchStocksStructure> bBatchStocks = bBatch.getBatchStocks();
             for (BatchStocksStructure b : bBatchStocks) {
-                BatchStock bs = batchStockRepository.findByWerksLgortMatnrCharg(config.getwPlant(), b.getLgort(), b.getMatnr(), b.getCharg());
+                BatchStock bs = batchStockRepository.findByWerksLgortMatnrCharg(configuration.getWkPlant(), b.getLgort(), b.getMatnr(), b.getCharg());
                 bs.setLvorm(b.getLvorm() == null || b.getLvorm().trim().isEmpty() ? ' ' : b.getLvorm().charAt(0));
                 batchStockSaps.add(bs);
             }
@@ -297,12 +299,11 @@ public class SAPService {
     }
 
     public DefaultComboBoxModel getSlocModel() {
-        List<SLoc> slocDBs = new ArrayList<>();
-        slocDBs = sLocRepository.getListSLoc();
+        List<SLoc> slocDBs = sLocRepository.getListSLoc();
 
-        if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
+        if (configuration.isModeNormal()) {
             // get data SAP
-            SLocsGetListBapi bSloc = new SLocsGetListBapi(config.getsClient(), config.getwPlant());
+            SLocsGetListBapi bSloc = new SLocsGetListBapi(configuration.getSapClient(), configuration.getWkPlant());
             List<SLoc> slocSaps = new ArrayList<>();
             try {
                 session.execute(bSloc);
@@ -352,10 +353,10 @@ public class SAPService {
         // get data DB
         List<TransportAgent> transportDBs = new ArrayList<>();
         transportDBs = transportAgentRepository.getListTransportAgent();
-        if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
+        if (configuration.isModeNormal()) {
             // get data SAP
             TransportagentGetListBapi bapi = new TransportagentGetListBapi();
-            bapi.setIvEkorg(config.getwPlant());
+            bapi.setIvEkorg(configuration.getWkPlant());
             List<TransportAgent> transportSaps = new ArrayList<>();
             try {
                 session.execute(bapi);

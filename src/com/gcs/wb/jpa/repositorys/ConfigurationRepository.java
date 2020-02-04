@@ -7,7 +7,9 @@ package com.gcs.wb.jpa.repositorys;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.Configuration;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.TypedQuery;
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.log4j.Logger;
 
 /**
@@ -24,5 +26,24 @@ public class ConfigurationRepository {
         typedQuery.setFirstResult(0);
         typedQuery.setMaxResults(1);
         return typedQuery.getSingleResult();
+    }
+
+    public void saveConfiguration(Configuration configuration) throws ConfigurationException {
+        EntityTransaction entityTransaction = entityManager.getTransaction();
+        if (!entityTransaction.isActive()) {
+            entityTransaction.begin();
+        }
+
+        try {
+            entityManager.merge(configuration);
+
+            entityTransaction.commit();
+            entityManager.clear();
+        } catch (Exception ex) {
+            if (entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
+            throw new ConfigurationException(ex);
+        }
     }
 }

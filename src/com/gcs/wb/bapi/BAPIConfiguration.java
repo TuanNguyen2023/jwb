@@ -33,6 +33,7 @@ import com.gcs.wb.bapi.outbdlv.WsDeliveryUpdateBapi;
 import com.gcs.wb.bapi.text.TextCreateBapi;
 import com.gcs.wb.bapi.text.TextReadBapi;
 import com.gcs.wb.bapi.text.TextSaveBapi;
+import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.model.AppConfig;
 import com.sap.conn.jco.ext.DestinationDataProvider;
 import org.hibersap.configuration.AnnotationConfiguration;
@@ -56,19 +57,20 @@ public class BAPIConfiguration {
     public static SessionManager getSessionManager(AppConfig config, Credentials credential) {
         SessionManager sessionManager = null;
         SessionManagerConfig sessionConfig = new SessionManagerConfig("tafico");
+        Configuration configuration = config.getConfiguration();
 
         sessionConfig.setContext(JCoContext.class.getName());
-        sessionConfig.setProperty(DestinationDataProvider.JCO_ASHOST, config.getsHost());
-        if (config.getGWHost() != null && !config.getGWHost().isEmpty()) {
-            sessionConfig.setProperty(DestinationDataProvider.JCO_GWHOST, config.getGWHost());
+        sessionConfig.setProperty(DestinationDataProvider.JCO_ASHOST, configuration.getSapGwHost());
+        if (configuration.getSapGwHost() != null && !configuration.getSapGwHost().isEmpty()) {
+            sessionConfig.setProperty(DestinationDataProvider.JCO_GWHOST, configuration.getSapGwHost());
         }        
-        sessionConfig.setProperty(DestinationDataProvider.JCO_SYSNR, config.getsNumber().toString());
-        sessionConfig.setProperty(DestinationDataProvider.JCO_CLIENT, config.getsClient());
+        sessionConfig.setProperty(DestinationDataProvider.JCO_SYSNR, configuration.getSapSystemNumber().toString());
+        sessionConfig.setProperty(DestinationDataProvider.JCO_CLIENT, configuration.getSapClient());
         sessionConfig.setProperty(DestinationDataProvider.JCO_USER, credential.getUser());
         sessionConfig.setProperty(DestinationDataProvider.JCO_PASSWD, credential.getPassword());
 //        sessionConfig.setProperty(DestinationDataProvider.JCO_LANG, "EN");
-        if (config.getsRoute() != null && !config.getsRoute().isEmpty()) {
-            sessionConfig.setProperty(DestinationDataProvider.JCO_SAPROUTER, config.getsRoute());
+        if (configuration.getSapRouteString() != null && !configuration.getSapRouteString().isEmpty()) {
+            sessionConfig.setProperty(DestinationDataProvider.JCO_SAPROUTER, configuration.getSapRouteString());
         }
 
         sessionConfig.addAnnotatedClass(TextCreateBapi.class);
@@ -101,8 +103,8 @@ public class BAPIConfiguration {
         sessionConfig.addAnnotatedClass(TransportagentGetListBapi.class);
         sessionConfig.addAnnotatedClass(MaterialGetListBapi.class);
         
-        AnnotationConfiguration configuration = new AnnotationConfiguration(sessionConfig);
-        sessionManager = configuration.buildSessionManager();
+        AnnotationConfiguration conf = new AnnotationConfiguration(sessionConfig);
+        sessionManager = conf.buildSessionManager();
         return sessionManager;
     }
 }

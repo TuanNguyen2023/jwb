@@ -29,7 +29,9 @@ import java.text.SimpleDateFormat;
 import javax.persistence.TypedQuery;
 import org.apache.log4j.Logger;
 import com.gcs.wb.base.util.Base64_Utils;
+import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.model.AppConfig;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -41,6 +43,7 @@ public class WeightTicketJpaController {
     WeightTicketJpaRepository weightTicketJpaRepository = new WeightTicketJpaRepository();
     private EntityManager entityManager = JPAConnector.getInstance();
     private Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
+    Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
 
     public List<WeightTicket> findWeightTicketEntities() throws Exception {
         return findWeightTicketEntities(true, -1, -1);
@@ -81,25 +84,25 @@ public class WeightTicketJpaController {
     }
 
     public List<WeightTicket> findByDateFull(String sfrom, String sto, String creator, String taixe, String loaihang, String bienso) throws Exception {
-        java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
-        System.out.println(" hic " + sfrom.toString());
-        java.sql.Date to = java.sql.Date.valueOf(sto.toString());
+        java.sql.Date from = java.sql.Date.valueOf(sfrom);
+        System.out.println(" hic " + sfrom);
+        java.sql.Date to = java.sql.Date.valueOf(sto);
         WeightTicketRepository repository = new WeightTicketRepository();
         return repository.findByDateFull(from, to, creator, taixe, loaihang, bienso);
     }
 
     public List<WeightTicket> findByDateNull(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
         WeightTicketRepository repository = new WeightTicketRepository();
-        java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
-        java.sql.Date to = java.sql.Date.valueOf(sto.toString());
+        java.sql.Date from = java.sql.Date.valueOf(sfrom);
+        java.sql.Date to = java.sql.Date.valueOf(sto);
         return repository.findByDateNull(from, to, creator, taixe, bienso);
 
     }
 
     public List<WeightTicket> findByDateNullAll(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
         WeightTicketRepository repository = new WeightTicketRepository();
-        java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
-        java.sql.Date to = java.sql.Date.valueOf(sto.toString());
+        java.sql.Date from = java.sql.Date.valueOf(sfrom);
+        java.sql.Date to = java.sql.Date.valueOf(sto);
         return repository.findByDateNullAll(from, to, creator, taixe, bienso);
     }
 
@@ -107,8 +110,8 @@ public class WeightTicketJpaController {
             String creator, String taixe,
             String loaihang, String bienso) throws Exception {
         WeightTicketRepository repository = new WeightTicketRepository();
-        java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
-        java.sql.Date to = java.sql.Date.valueOf(sto.toString());
+        java.sql.Date from = java.sql.Date.valueOf(sfrom);
+        java.sql.Date to = java.sql.Date.valueOf(sto);
         return repository.findByDateDissolved(from, to, creator, taixe, loaihang, bienso);
     }
 
@@ -116,38 +119,38 @@ public class WeightTicketJpaController {
             String creator, String taixe,
             String bienso) throws Exception {
         WeightTicketRepository repository = new WeightTicketRepository();
-        java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
-        java.sql.Date to = java.sql.Date.valueOf(sto.toString());
+        java.sql.Date from = java.sql.Date.valueOf(sfrom);
+        java.sql.Date to = java.sql.Date.valueOf(sto);
         return repository.findByDateDissolvedNull(from, to, creator, taixe, bienso);
     }
 
     public List<WeightTicket> findByDateDissolvedNullAll(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
         WeightTicketRepository repository = new WeightTicketRepository();
-        java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
-        java.sql.Date to = java.sql.Date.valueOf(sto.toString());
+        java.sql.Date from = java.sql.Date.valueOf(sfrom);
+        java.sql.Date to = java.sql.Date.valueOf(sto);
         return repository.findByDateDissolvedNullAll(from, to, creator, taixe, bienso);
 
     }
 
     public List<WeightTicket> findByDatePosted(String sfrom, String sto, String creator, String taixe, String loaihang, String bienso) throws Exception {
         WeightTicketRepository repository = new WeightTicketRepository();
-        java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
-        java.sql.Date to = java.sql.Date.valueOf(sto.toString());
+        java.sql.Date from = java.sql.Date.valueOf(sfrom);
+        java.sql.Date to = java.sql.Date.valueOf(sto);
         return repository.findByDatePosted(from, to, creator, taixe, loaihang, bienso);
 
     }
 
     public List<WeightTicket> findByDatePostedNull(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
         WeightTicketRepository repository = new WeightTicketRepository();
-        java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
-        java.sql.Date to = java.sql.Date.valueOf(sto.toString());
+        java.sql.Date from = java.sql.Date.valueOf(sfrom);
+        java.sql.Date to = java.sql.Date.valueOf(sto);
         return repository.findByDatePostedNull(from, to, creator, taixe, bienso);
     }
 
     public List<WeightTicket> findByDatePostedNullAll(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
         WeightTicketRepository repository = new WeightTicketRepository();
-        java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
-        java.sql.Date to = java.sql.Date.valueOf(sto.toString());
+        java.sql.Date from = java.sql.Date.valueOf(sfrom);
+        java.sql.Date to = java.sql.Date.valueOf(sto);
         return repository.findByDatePostedNullAll(from, to, creator, taixe, bienso);
     }
 
@@ -159,23 +162,23 @@ public class WeightTicketJpaController {
 
     public List<WeightTicket> findByDateAll(String sfrom, String sto, String creator, String taixe, String loaihang, String bienso) throws Exception {
         WeightTicketRepository repository = new WeightTicketRepository();
-        java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
-        java.sql.Date to = java.sql.Date.valueOf(sto.toString());
+        java.sql.Date from = java.sql.Date.valueOf(sfrom);
+        java.sql.Date to = java.sql.Date.valueOf(sto);
         return repository.findByDateAll(from, to, creator, taixe, loaihang, bienso);
 
     }
 
     public List<WeightTicket> findByDateAllNull(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
         WeightTicketRepository repository = new WeightTicketRepository();
-        java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
-        java.sql.Date to = java.sql.Date.valueOf(sto.toString());
+        java.sql.Date from = java.sql.Date.valueOf(sfrom);
+        java.sql.Date to = java.sql.Date.valueOf(sto);
         return repository.findByDateAllNull(from, to, creator, taixe, bienso);
     }
 
     public List<WeightTicket> findByDateAllNullAll(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
         WeightTicketRepository repository = new WeightTicketRepository();
-        java.sql.Date from = java.sql.Date.valueOf(sfrom.toString());
-        java.sql.Date to = java.sql.Date.valueOf(sto.toString());
+        java.sql.Date from = java.sql.Date.valueOf(sfrom);
+        java.sql.Date to = java.sql.Date.valueOf(sto);
         return repository.findByDateAllNullAll(from, to, creator, taixe, bienso);
     }
 
@@ -222,13 +225,13 @@ public class WeightTicketJpaController {
     }
 
     public int getNewSeqBDay() {
-        String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
+        String plant = configuration.getWkPlant();
         int count = weightTicketJpaRepository.getCountTicketDay(plant);
         return count;
     }
 
     public int getNewSeqBMonth() {
-        String plant = WeighBridgeApp.getApplication().getConfig().getwPlant();
+        String plant = configuration.getWkPlant();
         int count = weightTicketJpaRepository.getCountTicketMonth(plant);
         return count;
     }
@@ -252,24 +255,19 @@ public class WeightTicketJpaController {
     }
 
     public List<OutboundDetail> findByMandtWTID(String wt_id) throws Exception {
-        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
         OutboundDetailRepository repository = new OutboundDetailRepository();
         return repository.findByWtId(wt_id);
     }
 
     public OutboundDelivery findByMandtOutDel(String delnum) throws Exception {
-
-        String client = WeighBridgeApp.getApplication().getConfig().getsClient();
         OutboundDeliveryRepository repository = new OutboundDeliveryRepository();
         return repository.findByDeliveryOrderNo(delnum);
 
     }
 
     public Material CheckPOSTO(String matnr) throws Exception {
-        Material material = new Material();
         MaterialRepository repository = new MaterialRepository();
-        material = repository.CheckPOSTO(matnr);
-        return material;
+        return repository.CheckPOSTO(matnr);
     }
 
     public Object get_server_time() throws Exception {
@@ -288,8 +286,7 @@ public class WeightTicketJpaController {
 
     public AppConfig getDev(String wbid) {
         wbid = wbid.trim().toUpperCase();
-        AppConfig config = null;
-        config = WeighBridgeApp.getApplication().getConfig();
+        AppConfig config = WeighBridgeApp.getApplication().getConfig();
         try {
             List sdev = weightTicketJpaRepository.getOrgDev2(wbid);
             if (sdev != null) {
@@ -299,20 +296,20 @@ public class WeightTicketJpaController {
                     Integer brate = Integer.parseInt(Base64_Utils.decodeNTimes(wt[4].toString()));
                     Short databit = Short.parseShort(Base64_Utils.decodeNTimes(wt[5].toString()));
                     Short Parity = Short.parseShort(Base64_Utils.decodeNTimes(wt[6].toString()));
-                    Short stopbit = Short.parseShort(Base64_Utils.decodeNTimes(wt[7].toString()));
+                    BigDecimal stopbit = new BigDecimal(Base64_Utils.decodeNTimes(wt[7].toString()));
                     String iMettler = Base64_Utils.decodeNTimes(wt[8].toString());
                     Boolean bMettler = false;
-                    if (iMettler.indexOf("1") >= 0) {
+                    if (iMettler.contains("1")) {
                         bMettler = true;
-                    } else if (iMettler.indexOf("0") >= 0) {
+                    } else if (iMettler.contains("0")) {
                         bMettler = false;
                     }
-                    config.setB1Port(sport);
-                    config.setB1Speed(brate);
-                    config.setB1DBits(databit);
-                    config.setB1PC(Parity);
-                    config.setB1SBits(Float.parseFloat(stopbit.toString()));
-                    config.setB1Mettler(bMettler);
+                    configuration.setWb1Port(sport);
+                    configuration.setWb1BaudRate(brate);
+                    configuration.setWb1DataBit(databit);
+                    configuration.setWb1StopBit(stopbit);
+                    configuration.setWb1ParityControl(Parity);
+                    configuration.setWb1Mettler(bMettler);
                     break;
                 }
             }

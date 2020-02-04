@@ -82,6 +82,8 @@ public class Configuration implements Serializable {
     private int weightLimit = Constants.Configuration.WEIGHT_LIMIT;
     @Column(name = "mode_normal")
     private boolean modeNormal = Constants.Configuration.MODE_NORMAL;
+    @Column(name = "rpt_id")
+    private String rptId = Constants.Configuration.RPT_ID;
 
     @Column(name = "created_date")
     @Temporal(javax.persistence.TemporalType.DATE)
@@ -269,6 +271,14 @@ public class Configuration implements Serializable {
         this.modeNormal = modeNormal;
     }
 
+    public String getRptId() {
+        return rptId;
+    }
+
+    public void setRptId(String rptId) {
+        this.rptId = rptId;
+    }
+
     public Date getCreatedDate() {
         return createdDate;
     }
@@ -323,6 +333,7 @@ public class Configuration implements Serializable {
         hash = 97 * hash + Objects.hashCode(this.wb2Mettler);
         hash = 97 * hash + this.weightLimit;
         hash = 97 * hash + (this.modeNormal ? 1 : 0);
+        hash = 97 * hash + Objects.hashCode(this.rptId);
         hash = 97 * hash + Objects.hashCode(this.createdDate);
         hash = 97 * hash + Objects.hashCode(this.updatedDate);
         return hash;

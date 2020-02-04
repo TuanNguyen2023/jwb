@@ -6,8 +6,8 @@ package com.gcs.wb.base.converter;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.helper.structure.MatLookupStructure;
+import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.jpa.entity.Material;
-import com.gcs.wb.model.AppConfig;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,13 +20,13 @@ public class MaterialsV1Converter extends AbstractThrowableConverter<List<MatLoo
     @Override
     public List<Material> convert(List<MatLookupStructure> fromList){
         List<Material> toList = new ArrayList<>();
-        AppConfig config = WeighBridgeApp.getApplication().getConfig();
+        Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
         for (MatLookupStructure mat : fromList) {
-            Material m = null;
-            if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
-                m = new Material(config.getsClient(), config.getwPlant(), mat.getMaterial());
+            Material m;
+            if (configuration.isModeNormal()) {
+                m = new Material(configuration.getSapClient(), configuration.getWkPlant(), mat.getMaterial());
             } else {
-                m = new Material(config.getsClient(), mat.getMaterial());
+                m = new Material(configuration.getSapClient(), mat.getMaterial());
             }
             m.setMaktx(mat.getDesc());
             m.setMaktg(m.getMaktx().toUpperCase());

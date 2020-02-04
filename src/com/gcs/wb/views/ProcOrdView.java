@@ -16,6 +16,8 @@ import com.gcs.wb.jpa.entity.Variant;
 import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.base.constant.Constants;
+import com.gcs.wb.jpa.JPAConnector;
+import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.jpa.repositorys.VariantRepository;
 import javax.persistence.EntityManager;
 
@@ -127,11 +129,11 @@ public class ProcOrdView extends javax.swing.JDialog {
         firePropertyChange(Constants.ProcOrdView.PROP_PROCORD, oldProcOrd, procOrd);
         //Save production order
         Variant vari = new Variant();
-        EntityManager entityManager = java.beans.Beans.isDesignTime() ? null : WeighBridgeApp.getApplication().getEm();
-        AppConfig lconfig = WeighBridgeApp.getApplication().getConfig();
+        EntityManager entityManager = JPAConnector.getInstance();
+        Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
         try {
-            vari.setMandt(lconfig.getsClient().toString());
-            vari.setWplant(lconfig.getwPlant().toString());
+            vari.setMandt(configuration.getSapClient().toString());
+            vari.setWplant(configuration.getWkPlant().toString());
             vari.setParam("PROCESS_ORDER");
             vari.setValue(procOrd);
 

@@ -5,6 +5,7 @@
 package com.gcs.wb.controller;
 
 import com.gcs.wb.WeighBridgeApp;
+import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
 import com.gcs.wb.jpa.entity.Vendor;
@@ -30,6 +31,7 @@ public class WeightTicketRegistarationController {
     private WeightTicketRegistarationService wTRegService = new WeightTicketRegistarationService();
     private WeightTicketService weightTicketService = new WeightTicketService();
     JReportService jreportService = new JReportService();
+    Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
 
     public List<WeightTicket> listWeightTicketsDoInBackground(JXDatePicker dpFrom, JXDatePicker dpTo, JComboBox cbxType, JComboBox cbxTimeFrom, JComboBox cbxTimeTo, JTextField txtNguoitao, JRadioButton rbtDissolved, JRadioButton rbtPosted, JRadioButton rbtStateAll, JTextField txtTaixe, JTextField txtBienSo) throws Exception {
         return wTRegService.listWeightTicketsDoInBackground(dpFrom, dpTo, cbxType, cbxTimeFrom, cbxTimeTo, txtNguoitao, rbtDissolved, rbtPosted, rbtStateAll, txtTaixe, txtBienSo);
@@ -41,7 +43,7 @@ public class WeightTicketRegistarationController {
 
     public String getReportName() {
         String reportName = null;
-        if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
+        if (configuration.isModeNormal()) {
             reportName = "./rpt/rptBT/WTList.jasper";
         } else {
             reportName = "./rpt/rptPQ/WTList.jasper";
@@ -50,7 +52,7 @@ public class WeightTicketRegistarationController {
     }
 
     public Map<String, Object> getPrintReport(String kFrom, String kTo) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("P_PNAME_RPT", WeighBridgeApp.getApplication().getSapSetting().getNameRpt());
         params.put("P_PADDRESS", WeighBridgeApp.getApplication().getSapSetting().getAddress());
         params.put("P_PPHONE", WeighBridgeApp.getApplication().getSapSetting().getPhone());
@@ -69,17 +71,15 @@ public class WeightTicketRegistarationController {
     }
 
     public void printRegWT(WeightTicket wt, boolean reprint) {
-        AppConfig config = WeighBridgeApp.getApplication().getConfig();
-        
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("P_CLIENT", WeighBridgeApp.getApplication().getConfig().getsClient());
-        map.put("P_WPLANT", WeighBridgeApp.getApplication().getConfig().getwPlant());
+        Map<String, Object> map = new HashMap<>();
+        map.put("P_CLIENT", configuration.getSapClient());
+        map.put("P_WPLANT", configuration.getWkPlant());
         map.put("P_ID", wt.getId());
         map.put("P_DAYSEQ", wt.getSeqDay());
         map.put("P_REPRINT", reprint);
-        map.put("P_ADDRESS", config.getRptId());
-        String reportName = null;
-        if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
+        map.put("P_ADDRESS", configuration.getRptId());
+        String reportName;
+        if (configuration.isModeNormal()) {
             //reportName = "./rpt/rptBT/RegWT_HP.jasper";
             reportName = "./rpt/rptBT/RegWT_HP.jasper";
         } else {

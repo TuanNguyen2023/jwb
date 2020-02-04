@@ -36,6 +36,7 @@ import com.gcs.wb.base.util.StringUtil;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.BatchStock;
+import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
@@ -54,7 +55,6 @@ import com.gcs.wb.jpa.procedures.WeightTicketRepository;
 import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
 import com.gcs.wb.jpa.repositorys.VendorRepository;
 import com.gcs.wb.jpa.service.JReportService;
-import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.views.WeightTicketView;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -90,10 +90,10 @@ public class WeightTicketService {
     SignalsRepository noneRepository = new SignalsRepository();
     WeightTicketJpaRepository weightTicketJpaRepository = new WeightTicketJpaRepository();
     BatchStockRepository batchStockRepository = new BatchStockRepository();
-    private AppConfig config = null;
+    Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
     public HashMap hmMsg = new HashMap();
     EntityManager entityManager = JPAConnector.getInstance();
-    String client = WeighBridgeApp.getApplication().getConfig().getsClient();
+    String client = configuration.getSapClient();
     WeightTicketJpaController con = new WeightTicketJpaController();
     SAPService sapService = new SAPService();
     JReportService jreportService = new JReportService();
@@ -114,11 +114,11 @@ public class WeightTicketService {
     }
 
     public TimeRange getTime() {
-        return timeRangeRepository.findByMandtWbId(client, WeighBridgeApp.getApplication().getConfig().getWbId());
+        return timeRangeRepository.findByMandtWbId(client, configuration.getWbId());
     }
 
     public List<BatchStock> getBatchStocks(SLoc selSloc, WeightTicket weightTicket) {
-        return batchStocksRepository.getListBatchStock(config.getwPlant(),
+        return batchStocksRepository.getListBatchStock(configuration.getWkPlant(),
                 selSloc.getLgort(), weightTicket.getMatnrRef());
     }
 
@@ -131,9 +131,9 @@ public class WeightTicketService {
         for (BatchStock b : batchs) {
             if (b.getLvorm() == null || b.getLvorm().toString().trim().isEmpty()) {
                 // Fillter BATCH not contain "-" by Tuanna -10.01.2013 
-                if (WeighBridgeApp.getApplication().getConfig().getwPlant().indexOf("1311") >= 0) {
+                if (configuration.getWkPlant().contains("1311")) {
                     result.addElement(b.getCharg());
-                } else if (b.getCharg().indexOf("-") < 0) {
+                } else if (!b.getCharg().contains("-")) {
                     result.addElement(b.getCharg());
                 }
             }
@@ -176,11 +176,10 @@ public class WeightTicketService {
     }
 
     public DefaultComboBoxModel getMaterialList() {
-        List<Material> materials = null;
         //get data from DB
-        TypedQuery<Material> tMaterial = entityManager.createQuery("SELECT m FROM Material m WHERE m.materialPK.wplant = :wplant order by m.materialPK.matnr asc", Material.class);
-        tMaterial.setParameter("wplant", config.getwPlant());
-        materials = tMaterial.getResultList();
+        TypedQuery<Material> tMaterial = entityManager.createQuery("SELECT m FROM Material m WHERE m.wplant = :wplant order by m.matnr asc", Material.class);
+        tMaterial.setParameter("wplant", configuration.getWkPlant());
+        List<Material> materials = tMaterial.getResultList();
 
         DefaultComboBoxModel result = new DefaultComboBoxModel();
         for (Material m : materials) {
@@ -345,7 +344,6 @@ public class WeightTicketService {
         if (outbDel != null) {
             doNum = outbDel.getDeliveryOrderNo();
         }
-        config = WeighBridgeApp.getApplication().getConfig();
         String plateCombine = wt.getPlateNo();
         if (wt.getTrailerId() != null && !wt.getTrailerId().trim().isEmpty()) {
             plateCombine += wt.getTrailerId();
@@ -363,7 +361,7 @@ public class WeightTicketService {
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(wt.getSTime());
-        Date stime = null;
+        Date stime;
         if (timeFrom <= cal.get(Calendar.HOUR_OF_DAY) && cal.get(Calendar.HOUR_OF_DAY) <= (timeTo - 1)) {
             cal.add(Calendar.DATE, -1);
             stime = cal.getTime();
@@ -388,10 +386,10 @@ public class WeightTicketService {
         }
 
         GoodsMvtItemDoStructure tab_wa = new GoodsMvtItemDoStructure();
-        List<GoodsMvtItemDoStructure> tab = new ArrayList<GoodsMvtItemDoStructure>();
+        List<GoodsMvtItemDoStructure> tab = new ArrayList<>();
 
         //get do details for current do
-        OutboundDetail item = null;
+        OutboundDetail item;
         BigDecimal kl = BigDecimal.ZERO;
         BigDecimal kl_km = BigDecimal.ZERO;
         BigDecimal kl_total = BigDecimal.ZERO;
@@ -416,7 +414,7 @@ public class WeightTicketService {
         tab_wa.setDeliv_item(wt.getItem());
         tab_wa.setDeliv_item_to_search(wt.getItem());
         tab_wa.setMove_type("101");
-        tab_wa.setPlant(config.getwPlant());
+        tab_wa.setPlant(configuration.getWkPlant());
         tab_wa.setStge_loc(wt.getLgort());
         tab_wa.setBatch(wt.getCharg());
         tab_wa.setGr_rcpt(wt.getSCreator());
@@ -442,7 +440,6 @@ public class WeightTicketService {
     }
 
     public Object getGrPoMigoBapi(WeightTicket wt, WeightTicket weightTicket, int timeFrom, int timeTo) {
-        config = WeighBridgeApp.getApplication().getConfig();
         String plateCombine = wt.getPlateNo();
         if (wt.getTrailerId() != null && !wt.getTrailerId().trim().isEmpty()) {
             plateCombine += wt.getTrailerId();
@@ -456,8 +453,7 @@ public class WeightTicketService {
         bapi.setWeightticket(stWT);
         Calendar cal = Calendar.getInstance();
         cal.setTime(wt.getSTime());
-        Date stime = null;
-
+        Date stime;
         if (timeFrom <= cal.get(Calendar.HOUR_OF_DAY) && cal.get(Calendar.HOUR_OF_DAY) <= (timeTo - 1)) {
             cal.add(Calendar.DATE, -1);
             stime = cal.getTime();
@@ -470,13 +466,13 @@ public class WeightTicketService {
         header.setBillOfLading(plateCombine);
         header.setGrGiSlipNo(wt.getDriverIdNo());
 
-        List<GoodsMvtItemPoStructure> tab = new ArrayList<GoodsMvtItemPoStructure>();
+        List<GoodsMvtItemPoStructure> tab = new ArrayList<>();
         GoodsMvtItemPoStructure tab_wa = new GoodsMvtItemPoStructure();
 
         tab_wa.setPo_number(wt.getEbeln());
         tab_wa.setPo_item(wt.getItem());
         tab_wa.setMove_type("101");
-        tab_wa.setPlant(config.getwPlant());
+        tab_wa.setPlant(configuration.getWkPlant());
         tab_wa.setStge_loc(wt.getLgort());
         tab_wa.setBatch(wt.getCharg());
         tab_wa.setGr_rcpt(wt.getSCreator());
@@ -498,7 +494,6 @@ public class WeightTicketService {
     }
 
     public Object getGi541MigoBapi(WeightTicket wt, WeightTicket weightTicket, int timeFrom, int timeTo, PurchaseOrder purOrder, JRadioButton rbtOutward) {
-        config = WeighBridgeApp.getApplication().getConfig();
         String plateCombine = wt.getPlateNo();
         if (wt.getTrailerId() != null && !wt.getTrailerId().trim().isEmpty()) {
             plateCombine += wt.getTrailerId();
@@ -510,7 +505,7 @@ public class WeightTicketService {
         bapi.setWeightticket(stWT);
         Calendar cal = Calendar.getInstance();
         cal.setTime(wt.getSTime());
-        Date stime = null;
+        Date stime;
         if (timeFrom <= cal.get(Calendar.HOUR_OF_DAY) && cal.get(Calendar.HOUR_OF_DAY) <= (timeTo - 1) && rbtOutward.isSelected()) {
             cal.add(Calendar.DATE, -1);
             stime = cal.getTime();
@@ -522,11 +517,11 @@ public class WeightTicketService {
         header.setBillOfLading(plateCombine);
         header.setGrGiSlipNo(wt.getDriverIdNo());
 
-        List<GoodsMvtItemPoStructure> tab = new ArrayList<GoodsMvtItemPoStructure>();
+        List<GoodsMvtItemPoStructure> tab = new ArrayList<>();
         GoodsMvtItemPoStructure tab_wa = new GoodsMvtItemPoStructure();
 
         tab_wa.setMaterial(wt.getMatnrRef());
-        tab_wa.setPlant(config.getwPlant());
+        tab_wa.setPlant(configuration.getWkPlant());
         tab_wa.setStge_loc(wt.getLgort());
         tab_wa.setMove_type("541");
         tab_wa.setMvt_ind(null);
@@ -547,9 +542,8 @@ public class WeightTicketService {
     }
 
     public Object getGiMB1BBapi(WeightTicket wt, WeightTicket weightTicket, int timeFrom, int timeTo, JRadioButton rbtOutward) {
-        config = WeighBridgeApp.getApplication().getConfig();
         String vendorNo = null;
-        String headertxt = null;
+        String headertxt;
         String plateCombine = wt.getPlateNo();
         if (wt.getTrailerId() != null && !wt.getTrailerId().trim().isEmpty()) {
             plateCombine += wt.getTrailerId();
@@ -561,7 +555,7 @@ public class WeightTicketService {
         bapi.setWeightticket(stWT);
         Calendar cal = Calendar.getInstance();
         cal.setTime(wt.getSTime());
-        Date stime = null;
+        Date stime;
         if (timeFrom <= cal.get(Calendar.HOUR_OF_DAY) && cal.get(Calendar.HOUR_OF_DAY) <= (timeTo - 1) && rbtOutward.isSelected()) {
             cal.add(Calendar.DATE, -1);
             stime = cal.getTime();
@@ -580,11 +574,11 @@ public class WeightTicketService {
 
         header.setHeaderText(headertxt);
 
-        List<GoodsMvtItemPoStructure> tab = new ArrayList<GoodsMvtItemPoStructure>();
+        List<GoodsMvtItemPoStructure> tab = new ArrayList<>();
         GoodsMvtItemPoStructure tab_wa = new GoodsMvtItemPoStructure();
 
         tab_wa.setMaterial(wt.getMatnrRef());
-        tab_wa.setPlant(config.getwPlant());
+        tab_wa.setPlant(configuration.getWkPlant());
         tab_wa.setStge_loc(wt.getLgort());
         tab_wa.setBatch(wt.getCharg());
         tab_wa.setMove_type(wt.getMoveType());
@@ -611,7 +605,6 @@ public class WeightTicketService {
         if (outbDel != null) {
             doNum = outbDel.getDeliveryOrderNo();
         }
-        config = WeighBridgeApp.getApplication().getConfig();
         DOCreate2PGIBapi bapi = new DOCreate2PGIBapi();
 
         String plateCombine = wt.getPlateNo();
@@ -633,8 +626,7 @@ public class WeightTicketService {
         //modify lui ngay
         Calendar cal = Calendar.getInstance();
         cal.setTime(wt.getSTime());
-        Date stime = null;
-
+        Date stime;
         if (timeFrom <= cal.get(Calendar.HOUR_OF_DAY) && cal.get(Calendar.HOUR_OF_DAY) <= (timeTo - 1)) {
             cal.add(Calendar.DATE, -1);
             stime = cal.getTime();
@@ -653,7 +645,7 @@ public class WeightTicketService {
         bapi.setVbkok_wa(wa);
 
         //get do details for current do
-        OutboundDetail item = null;
+        OutboundDetail item;
         BigDecimal kl = BigDecimal.ZERO;
         BigDecimal kl_km = BigDecimal.ZERO;
         BigDecimal kl_total = BigDecimal.ZERO;
@@ -684,7 +676,7 @@ public class WeightTicketService {
 
         GoodsMvtWeightTicketStructure stWT = fillWTStructure(weightTicket, outbDel, outDetails_lits, weightTicket);
         bapi.setWeightticket(stWT);
-        List<VbpokStructure> tab = new ArrayList<VbpokStructure>();
+        List<VbpokStructure> tab = new ArrayList<>();
         VbpokStructure tab_wa = new VbpokStructure();
         if (outbDel == null) {
             tab_wa.setVbeln_vl(wt.getDeliveryOrderNo());
@@ -695,7 +687,7 @@ public class WeightTicketService {
         tab_wa.setVbeln(tab_wa.getVbeln_vl());
         tab_wa.setPosnn(tab_wa.getPosnr_vl());
         tab_wa.setMatnr(wt.getMatnrRef());
-        tab_wa.setWerks(config.getwPlant());
+        tab_wa.setWerks(configuration.getWkPlant());
         tab_wa.setLgort(wt.getLgort());
         tab_wa.setCharg(wt.getCharg());
         tab_wa.setLianp("X");
@@ -719,7 +711,6 @@ public class WeightTicketService {
         if (outbDel != null) {
             doNum = outbDel.getDeliveryOrderNo();
         }
-        config = WeighBridgeApp.getApplication().getConfig();
         String plateCombine = wt.getPlateNo();
         if (wt.getTrailerId() != null && !wt.getTrailerId().trim().isEmpty()) {
             plateCombine += "|" + wt.getTrailerId();
@@ -733,7 +724,7 @@ public class WeightTicketService {
         bapi.setUpdate_picking("X");
 
         //get do details for current do
-        OutboundDetail item = null;
+        OutboundDetail item;
         BigDecimal kl = BigDecimal.ZERO;
         BigDecimal kl_km = BigDecimal.ZERO;
         BigDecimal kl_total = BigDecimal.ZERO;
@@ -771,7 +762,7 @@ public class WeightTicketService {
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(wt.getSTime());
-        Date stime = null;
+        Date stime;
 
         if (timeFrom <= cal.get(Calendar.HOUR_OF_DAY) && cal.get(Calendar.HOUR_OF_DAY) <= (timeTo - 1)) {
             cal.add(Calendar.DATE, -1);
@@ -790,7 +781,7 @@ public class WeightTicketService {
         wa.setLifex(wt.getDriverName());
         bapi.setVbkok_wa(wa);
 
-        List<VbpokStructure> tab = new ArrayList<VbpokStructure>();
+        List<VbpokStructure> tab = new ArrayList<>();
         VbpokStructure tab_wa = new VbpokStructure();
         if (outbDel == null) {
             tab_wa.setVbeln_vl(wt.getDeliveryOrderNo());
@@ -801,7 +792,7 @@ public class WeightTicketService {
         tab_wa.setVbeln(tab_wa.getVbeln_vl());
         tab_wa.setPosnn(tab_wa.getPosnr_vl());
         tab_wa.setMatnr(wt.getMatnrRef());
-        tab_wa.setWerks(config.getwPlant());
+        tab_wa.setWerks(configuration.getWkPlant());
         tab_wa.setLgort(wt.getLgort());
         tab_wa.setCharg(wt.getCharg());
         tab_wa.setLianp("X");
@@ -834,7 +825,7 @@ public class WeightTicketService {
         tab.add(tab_wa);
 
         VbpokStructure tab_wa_f = new VbpokStructure();
-        tab_wa_f.setWerks(config.getwPlant());
+        tab_wa_f.setWerks(configuration.getWkPlant());
         tab_wa_f.setLgort(wt.getLgort());
         tab_wa_f.setCharg(wt.getCharg());
         tab_wa_f.setLianp("X");
@@ -861,19 +852,18 @@ public class WeightTicketService {
 
     public void printWT(WeightTicket wt, boolean reprint, String ximang, List<OutboundDelivery> outbDel_list, List<OutboundDetail> outDetails_lits,
             OutboundDelivery outbDel, JRadioButton rbtMisc, JRadioButton rbtPO, boolean isStage1, JRootPane rootPane) {
-        config = WeighBridgeApp.getApplication().getConfig();
-        OutboundDelivery item = null;
+        OutboundDelivery item;
         try {
-            Map<String, Object> map = new HashMap<String, Object>();
+            Map<String, Object> map = new HashMap<>();
             Long bags = null;
             if (outbDel_list == null || outbDel_list.isEmpty() || rbtMisc.isSelected() || rbtPO.isSelected()) {
                 // can posto xi mang 
-                map.put("P_MANDT", WeighBridgeApp.getApplication().getConfig().getsClient());
-                map.put("P_WPlant", WeighBridgeApp.getApplication().getConfig().getwPlant());
+                map.put("P_MANDT", configuration.getSapClient());
+                map.put("P_WPlant", configuration.getWkPlant());
                 map.put("P_ID", wt.getId());
                 map.put("P_DAYSEQ", wt.getSeqDay());
                 map.put("P_REPRINT", reprint);
-                map.put("P_ADDRESS", config.getRptId());
+                map.put("P_ADDRESS", configuration.getRptId());
                 if (!wt.isDissolved()) {
                     Double tmp;
 
@@ -898,7 +888,7 @@ public class WeightTicketService {
                     }
                 }
                 String reportName1 = "";
-                if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
+                if (configuration.isModeNormal()) {
                     reportName1 = "./rpt/rptBT/WeightTicket.jasper";
                 } else {
                     reportName1 = "./rpt/rptPQ/WeightTicket.jasper";
@@ -927,12 +917,12 @@ public class WeightTicketService {
                     if (wt.getFScale() != null) {
                         outbDel = item;
                     }
-                    map.put("P_MANDT", WeighBridgeApp.getApplication().getConfig().getsClient());
-                    map.put("P_WPlant", WeighBridgeApp.getApplication().getConfig().getwPlant());
+                    map.put("P_MANDT", configuration.getSapClient());
+                    map.put("P_WPlant", configuration.getWkPlant());
                     map.put("P_ID", wt.getId());
                     map.put("P_DAYSEQ", wt.getSeqDay());
                     map.put("P_REPRINT", reprint);
-                    map.put("P_ADDRESS", config.getRptId());
+                    map.put("P_ADDRESS", configuration.getRptId());
                     map.put("P_DEL_NUM", outbDel.getDeliveryOrderNo());
                     if (wt.getSScale() != null) {
                         BigDecimal n_1000 = new BigDecimal(1000);
@@ -997,7 +987,7 @@ public class WeightTicketService {
 
                     String reportName = null;
                     String path = "";
-                    if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
+                    if (configuration.isModeNormal()) {
                         path = "./rpt/rptBT/";  // ->> DO cai nay ne e
                     } else {
                         path = "./rpt/rptPQ/";

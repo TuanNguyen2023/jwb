@@ -63,6 +63,7 @@ import com.gcs.wb.jpa.repositorys.BatchStockRepository;
 import com.gcs.wb.jpa.repositorys.CustomerRepository;
 import com.gcs.wb.jpa.repositorys.SignalsRepository;
 import com.gcs.wb.controller.WeightTicketController;
+import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
 import com.gcs.wb.jpa.repositorys.SLocRepository;
 import com.gcs.wb.jpa.repositorys.VariantRepository;
@@ -86,6 +87,7 @@ import java.util.*;
 public class WeightTicketView extends javax.swing.JInternalFrame {
     
     private AppConfig config = WeighBridgeApp.getApplication().getConfig();
+    Configuration configuration = config.getConfiguration();
     private final SAPSetting sapSetting;
     private final User login;
     SignalsRepository noneRepository = new SignalsRepository();
@@ -121,8 +123,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             }
         });
         
-        setBridge1(config.getB1Port() != null);
-        setBridge2(config.getB2Port() != null);
+        setBridge1(configuration.getWb1Port() != null);
+        setBridge2(configuration.getWb2Port() != null);
         
         formatter = new SimpleDateFormat();
         cbxSLoc.setSelectedIndex(-1);
@@ -149,7 +151,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         DefaultComboBoxModel result = weightTicketController.getCustomerByMaNdt();
         
         try {
-            String pWbId = WeighBridgeApp.getApplication().getConfig().getWbId().trim();
+            String pWbId = configuration.getWbId().trim();
             List sdev = null;// weightTicketRepository.getDev2(pWbId);
             if (sdev != null) {
                 for (Object obj : sdev) {
@@ -1274,15 +1276,16 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         // config = WeighBridgeApp.getApplication().getConfig();
         WeightTicketJpaController con = new WeightTicketJpaController();
         try {
-            config = con.getDev(WeighBridgeApp.getApplication().getConfig().getWbId());
+            config = con.getDev(configuration.getWbId());
+            configuration = config.getConfiguration();
             
             btnAccept.setEnabled(WeighBridgeApp.getApplication().connectWB(
-                    config.getB1Port(), //string
-                    config.getB1Speed(), //int 
-                    config.getB1DBits(), //short 
-                    config.getB1SBits().shortValue(), //short 
-                    config.getB1PC(), //short
-                    config.getB1Mettler(),
+                    configuration.getWb1Port(), //string
+                    configuration.getWb1BaudRate(), //int 
+                    configuration.getWb1DataBit().shortValue(), //short 
+                    configuration.getWb1StopBit().shortValue(), //short 
+                    configuration.getWb1ParityControl().shortValue(), //short
+                    configuration.getWb1Mettler(),
                     txfCurScale));
             
             setSaveNeeded(isValidated());
@@ -1297,14 +1300,15 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
     private void rbtBridge2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtBridge2ActionPerformed
         config = WeighBridgeApp.getApplication().getConfig();
+        configuration = config.getConfiguration();
         try {
             btnAccept.setEnabled(WeighBridgeApp.getApplication().connectWB(
-                    config.getB2Port(),
-                    config.getB2Speed(),
-                    config.getB2DBits(),
-                    config.getB2SBits().shortValue(),
-                    config.getB2PC(),
-                    config.getB2Mettler(),
+                    configuration.getWb2Port(), //string
+                    configuration.getWb2BaudRate(), //int 
+                    configuration.getWb2DataBit().shortValue(), //short 
+                    configuration.getWb2StopBit().shortValue(), //short 
+                    configuration.getWb2ParityControl().shortValue(), //short
+                    configuration.getWb2Mettler(),
                     txfCurScale));
             setSaveNeeded(isValidated());
             
@@ -1604,7 +1608,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                 } else {
                     weightTicket.setRecvPo(null);
                 }
-                weightTicket.setRecvPlant(config.getwPlant());
+                weightTicket.setRecvPlant(configuration.getWkPlant());
                 weightTicket.setRecvCharg(weightTicket.getCharg());
 //                weightTicket.setRecvMatnr(setting.getMatnrClinker());
 //                weightTicket.setMatnrRef(setting.getMatnrClinker());
@@ -1662,7 +1666,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                     weightTicket.setMatnrRef(null);
 //                    weightTicket.setRegItemDescription(null);
                 }
-                weightTicket.setRecvPlant(config.getwPlant());
+                weightTicket.setRecvPlant(configuration.getWkPlant());
                 weightTicket.setRecvCharg(weightTicket.getCharg());
                 weightTicket.setUnit("TON");
                 weightTicket.setMoveType("311");
@@ -1916,7 +1920,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             //Set require input ghi chu if process is GI Cement for POSTO.
             //Modified by Tuanna 08/04/2013
             //        boolean bGhichu = true  ; 
-            String wplant = WeighBridgeApp.getApplication().getConfig().getwPlant().toString();
+            String wplant = configuration.getWkPlant();
             try {
                 //  msg = cmes.getMsg("2");
                 msg = resourceMapMsg.getString("msg.errorNote");
@@ -1961,7 +1965,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                     //{+20101202#02 check material availability
                     //setMessage("Đang kiểm tra tồn kho trong SAP...");
                     //Double result = (Double) txfGoodsQty.getValue();
-                    //Double remaining = CheckMatStock(weightTicket.getMatnrRef(), config.getwPlant(), weightTicket.getLgort(), "");
+                    //Double remaining = CheckMatStock(weightTicket.getMatnrRef(), configuration.getWkPlant(), weightTicket.getLgort(), "");
                     Double result = (double) 1;
                     Double remaining = (double) 0;
                     
@@ -2480,7 +2484,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                     outDetails_lits.clear();
                     for (int i = 0; i < do_list.length; i++) {
                         try {
-                            //outbDel = entityManager.find(OutboundDelivery.class, new OutbDelPK(config.getsClient(), do_list[i]));
+                            //outbDel = entityManager.find(OutboundDelivery.class, new OutbDelPK(configuration.getSapClient(), do_list[i]));
                             outbDel = con.findByMandtOutDel(do_list[i]);
                         } catch (Exception ex) {
                             java.util.logging.Logger.getLogger(WeightTicketView.class.getName()).log(Level.SEVERE, null, ex);
@@ -2673,7 +2677,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                     cbxSLoc.setSelectedIndex(-1);
                 }
                 if (weightTicket.getMoveType() != null && weightTicket.getMoveType().equalsIgnoreCase("101") && weightTicket.getMoveReas() != null && !weightTicket.getMoveReas().trim().isEmpty()) {
-                    Reason reason = entityManager.find(Reason.class, new ReasonPK(config.getsClient(), "101", weightTicket.getMoveReas()));
+                    Reason reason = entityManager.find(Reason.class, new ReasonPK(configuration.getSapClient(), "101", weightTicket.getMoveReas()));
                     if (reason != null) {
                         cbxReason.setSelectedItem(reason);
                     }
@@ -2730,9 +2734,9 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                     String lgort = ((SLoc) cbxSLoc.getSelectedItem()).getLgort();
                     BatchStock batch = null;
                     if (weightTicket.getCharg() != null && !weightTicket.getCharg().trim().isEmpty()) {
-                        batch = batchStockRepository.findByWerksLgortMatnrCharg(config.getwPlant(), lgort, weightTicket.getMatnrRef(), weightTicket.getCharg());
+                        batch = batchStockRepository.findByWerksLgortMatnrCharg(configuration.getWkPlant(), lgort, weightTicket.getMatnrRef(), weightTicket.getCharg());
                     } else if (!isWithoutDO() && outbDel.getCharg() != null && !outbDel.getCharg().trim().isEmpty()) {
-                        batch = batchStockRepository.findByWerksLgortMatnrCharg(config.getwPlant(), lgort, weightTicket.getMatnrRef(), outbDel.getCharg());
+                        batch = batchStockRepository.findByWerksLgortMatnrCharg(configuration.getWkPlant(), lgort, weightTicket.getMatnrRef(), outbDel.getCharg());
                     }
                     if (cbxBatch.getModel().getSize() == 0) {
                         // sync data
@@ -2924,8 +2928,8 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             }
             if (isValidPONum()) {
                 setSubContract(false);
-                if ((rbtInward.isSelected() && purOrder.getPlant().equalsIgnoreCase(config.getwPlant()))
-                        || (rbtOutward.isSelected() && purOrder.getSupplPlnt().equalsIgnoreCase(config.getwPlant()))) {
+                if ((rbtInward.isSelected() && purOrder.getPlant().equalsIgnoreCase(configuration.getWkPlant()))
+                        || (rbtOutward.isSelected() && purOrder.getSupplPlnt().equalsIgnoreCase(configuration.getWkPlant()))) {
                     setValidPONum(true);
                 } else if (rbtOutward.isSelected() && purOrder.getItemCat() == '3' //                        && purOrder.getMaterial().equalsIgnoreCase(setting.getMatnrPcb40())
                         ) {
@@ -3585,7 +3589,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             lblBatch.setForeground(Color.black);
             if (isSubContract() && txfGoodsQty.getValue() != null) {
                 setMessage(resourceMapMsg.getString("msg.checkIssetWarehouse"));
-                Double remaining = CheckMatStock(weightTicket.getMatnrRef(), config.getwPlant(), weightTicket.getLgort(), weightTicket.getCharg());
+                Double remaining = CheckMatStock(weightTicket.getMatnrRef(), configuration.getWkPlant(), weightTicket.getLgort(), weightTicket.getCharg());
                 if (weightTicket.getGQty().doubleValue() > remaining) {
                     JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.oBiggerWarehouse"));
                     txfOutQty.setValue(null);
@@ -3657,10 +3661,10 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                     txfGoodsQty.setValue(null);
                     weightTicket.setGQty(null);
                     return null;
-                } else if (config.getLimitWeight() > 0
-                        && result > config.getLimitWeight()) {
+                } else if (configuration.getWeightLimit() > 0
+                        && result > configuration.getWeightLimit()) {
                     JOptionPane.showMessageDialog(rootPane, "K.L hàng không được vượt quá "
-                            + config.getLimitWeight() + " tấn!");
+                            + configuration.getWeightLimit() + " tấn!");
                     txfOutQty.setValue(null);
                     txfGoodsQty.setValue(null);
                     weightTicket.setGQty(null);
@@ -3743,7 +3747,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                     }
                 } else if (isSubContract() && weightTicket.getLgort() != null && weightTicket.getCharg() != null) {
                     setMessage(resourceMapMsg.getString("msg.checkIssetWarehouse")); // checking stock --tuanna
-                    Double remaining = CheckMatStock(weightTicket.getMatnrRef(), config.getwPlant(), weightTicket.getLgort(), weightTicket.getCharg());
+                    Double remaining = CheckMatStock(weightTicket.getMatnrRef(), configuration.getWkPlant(), weightTicket.getLgort(), weightTicket.getCharg());
                     if (result <= remaining) {
                         txfGoodsQty.setValue(result);
                         weightTicket.setGQty(new BigDecimal(Double.toString(result)));
@@ -3762,7 +3766,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             if (isStage1()) {
                 txfInQty.setValue(txfCurScale.getValue());
                 txtInTime.setText(formatter.format(now));
-                if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
+                if (configuration.isModeNormal()) {
                     weightTicket.setFCreator(WeighBridgeApp.getApplication().getLogin().getUid());
                 } else {
                     weightTicket.setFCreator(WeighBridgeApp.getApplication().getCurrent_user());
@@ -3785,7 +3789,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             } else if (isStage2()) {
                 txfOutQty.setValue(txfCurScale.getValue());
                 txtOutTime.setText(formatter.format(now));
-                if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
+                if (configuration.isModeNormal()) {
                     weightTicket.setSCreator(WeighBridgeApp.getApplication().getLogin().getUid());
                 } else {
                     weightTicket.setSCreator(WeighBridgeApp.getApplication().getCurrent_user());

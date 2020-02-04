@@ -7,6 +7,7 @@ package com.gcs.wb.model;
 import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.base.util.Base64_Utils;
 import com.gcs.wb.jpa.entity.Configuration;
+import com.gcs.wb.jpa.repositorys.ConfigurationRepository;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
@@ -200,6 +201,11 @@ public class AppConfig {
     }
 
     public void save() throws ConfigurationException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        // save to application.properties
+        config.save();
+        
+        // save to db
+        ConfigurationRepository configurationRepository = new ConfigurationRepository();
+        configurationRepository.saveConfiguration(configuration);
     }
 }

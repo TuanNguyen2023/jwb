@@ -26,6 +26,7 @@ import javax.swing.table.DefaultTableModel;
 import org.hibersap.session.Credentials;
 import org.hibersap.session.Session;
 import org.jdesktop.application.Application;
+import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
 
 /**
@@ -80,7 +81,8 @@ public class WeighBridgeApp extends SingleFrameApplication {
                 ConfigurationRepository configurationRepository = new ConfigurationRepository();
                 config.setConfiguration(configurationRepository.getConfiguration());
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this.getMainFrame(), ex);
+                ResourceMap resourceMap = Application.getInstance(this.getClass()).getContext().getResourceMap(ConfigView.class);
+                JOptionPane.showMessageDialog(this.getMainFrame(), resourceMap.getString("msg.errorDbConnectionFail"), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
 
@@ -129,6 +131,8 @@ public class WeighBridgeApp extends SingleFrameApplication {
 
     @Override
     protected void shutdown() {
+        JPAConnector.close();
+
         if (_SAPSession != null && !_SAPSession.isClosed()) {
             _SAPSession.close();
         }

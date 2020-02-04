@@ -5,13 +5,17 @@
 package com.gcs.wb.service;
 
 import com.fazecast.jSerialComm.SerialPort;
+import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.base.serials.SerialHelper;
 import java.util.HashSet;
 
 import com.gcs.wb.base.enums.ParityEnum;
 import com.gcs.wb.base.util.Base64_Utils;
+import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.model.AppConfig;
 import java.awt.Color;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -152,7 +156,10 @@ public class ConfigService {
             , JComboBox cbxStopBits2, JComboBox cbxPControl2, JCheckBox chbMettler2, JTextField txtPlant) {
         if (config == null) {
             config = new AppConfig();
+            config.setConfiguration(new Configuration());
         }
+        Configuration configuration = config.getConfiguration();
+        
         String wbId = txtWBID.getText();
         wbId = wbId == null || wbId.trim().length() == 0 ? "" : wbId.trim();
         String dbHost = txtDBHost.getText();
@@ -163,7 +170,7 @@ public class ConfigService {
         dbUsr = dbUsr == null || dbUsr.trim().length() == 0 ? "" : dbUsr.trim();
         String dbPwd = new String(txtDBPwd.getPassword());
         dbPwd = dbPwd == null || dbPwd.trim().length() == 0 ? "" : dbPwd.trim();
-        config.setWbId(Base64_Utils.decodeNTimes(wbId));
+        configuration.setWbId(Base64_Utils.decodeNTimes(wbId));
         config.setDbHost(Base64_Utils.decodeNTimes(dbHost));
         config.setDbName(Base64_Utils.decodeNTimes(dbName));
         config.setDbUsername(Base64_Utils.decodeNTimes(dbUsr));
@@ -177,10 +184,10 @@ public class ConfigService {
                 || txfSNo.getValue().toString().trim().length() == 0 ? "" : txfSNo.getValue().toString().trim();
         String sDClient = txfDClient.getValue() == null || txfDClient.getValue().toString() == null
                 || txfDClient.getValue().toString().trim().length() == 0 ? "" : txfDClient.getValue().toString().trim();
-        config.setsHost(Base64_Utils.decodeNTimes(sHost));
-        config.setsRoute(Base64_Utils.decodeNTimes(sRoute));
-        config.setsNumber(Base64_Utils.decodeNTimes(sNo));
-        config.setsClient(Base64_Utils.decodeNTimes(sDClient));
+        configuration.setSapHost(Base64_Utils.decodeNTimes(sHost));
+        configuration.setSapRouteString(Base64_Utils.decodeNTimes(sRoute));
+        configuration.setSapSystemNumber(Base64_Utils.decodeNTimes(sNo));
+        configuration.setSapClient(Base64_Utils.decodeNTimes(sDClient));
 
         Object port1 = cbxPort1.getSelectedItem();
         port1 = port1 == null || port1.toString().trim().length() == 0 ? null : port1.toString().trim();
@@ -200,15 +207,15 @@ public class ConfigService {
         } else if (cbxSpeed1.getSelectedItem() == null) {
             speed1 = Integer.valueOf(String.valueOf(cbxSpeed1.getEditor().getItem()));
         }
-        config.setB1Port((String) port1);
-        config.setB1Speed(speed1);
-        config.setB1DBits(port1 == null ? null : (Short) cbxDataBits1.getSelectedItem());
+        configuration.setWb1Port((String) port1);
+        configuration.setWb1BaudRate(speed1);
+        configuration.setWb1DataBit(port1 == null ? null : (Short) cbxDataBits1.getSelectedItem());
         Float sbit1 = 0f;
         sbit1 = (Float) cbxStopBits1.getSelectedItem();
         sbit1 = (sbit1 == 1.5f ? sbit1 * 2f : sbit1);
-        config.setB1SBits(port1 == null ? null : sbit1);
-        config.setB1PC(port1 == null ? null : (new Integer(((ParityEnum) cbxPControl1.getSelectedItem()).ordinal())).shortValue());
-        config.setB1Mettler(port1 == null ? null : chbMettler1.isSelected());
+        configuration.setWb1StopBit(port1 == null ? null : new BigDecimal(sbit1));
+        configuration.setWb1ParityControl(port1 == null ? null : (new Integer(((ParityEnum) cbxPControl1.getSelectedItem()).ordinal())).shortValue());
+        configuration.setWb1Mettler(port1 == null ? null : chbMettler1.isSelected());
 
         Object port2 = cbxPort2.getSelectedItem();
         port2 = port2 == null || port2.toString().trim().length() == 0 ? null : port2.toString().trim();
@@ -228,19 +235,19 @@ public class ConfigService {
         } else if (cbxSpeed2.getSelectedItem() == null) {
             speed2 = Integer.valueOf(String.valueOf(cbxSpeed2.getEditor().getItem()));
         }
-        config.setB2Port((String) port2);
-        config.setB2Speed(speed2);
-        config.setB2DBits(port2 == null ? null : (Short) cbxDataBits2.getSelectedItem());
+        configuration.setWb2Port((String) port2);
+        configuration.setWb2BaudRate(speed2);
+        configuration.setWb2DataBit(port2 == null ? null : (Short) cbxDataBits2.getSelectedItem());
         Float sbit2 = 0f;
         sbit2 = (Float) cbxStopBits2.getSelectedItem();
         sbit2 = (sbit2 == 1.5f ? sbit2 * 2f : sbit2);
-        config.setB2SBits(port2 == null ? null : sbit2);
-        config.setB2PC(port2 == null ? null : (new Integer(((ParityEnum) cbxPControl2.getSelectedItem()).ordinal())).shortValue());
-        config.setB2Mettler(port2 == null ? null : chbMettler2.isSelected());
+        configuration.setWb2StopBit(port2 == null ? null : new BigDecimal(sbit2));
+        configuration.setWb2ParityControl(port2 == null ? null : (new Integer(((ParityEnum) cbxPControl2.getSelectedItem()).ordinal())).shortValue());
+        configuration.setWb2Mettler(port2 == null ? null : chbMettler2.isSelected());
 
         String wPlant = txtPlant.getText();
         wPlant = wPlant == null || wPlant.trim().isEmpty() ? "" : wPlant;
-        config.setwPlant(Base64_Utils.decodeNTimes(wPlant));
+        configuration.setWkPlant(Base64_Utils.decodeNTimes(wPlant));
 
         return config;
     }
@@ -250,20 +257,21 @@ public class ConfigService {
             JComboBox cbxPort1, JComboBox cbxPort2, JComboBox cbxSpeed1, JComboBox cbxSpeed2,
             JComboBox cbxDataBits1, JComboBox cbxDataBits2, JComboBox cbxStopBits1
             ,JComboBox cbxPControl1, JCheckBox chbMettler1, JComboBox cbxStopBits2, JComboBox cbxPControl2, JCheckBox chbMettler2, JTextField txtPlant){
-        txtWBID.setText(Base64_Utils.encodeNTimes(config.getWbId()));
+        Configuration configuration = config.getConfiguration();
+        txtWBID.setText(Base64_Utils.encodeNTimes(configuration.getWbId()));
         txtDBHost.setText(Base64_Utils.encodeNTimes(config.getDbHost()));
         txtDBName.setText(Base64_Utils.encodeNTimes(config.getDbName()));
         txtDBUsr.setText(Base64_Utils.encodeNTimes(config.getDbUsername()));
         txtDBPwd.setText(Base64_Utils.encodeNTimes(config.getDbPassword()));
 
-        txtHost.setText(Base64_Utils.encodeNTimes(config.getsHost()));
-        txfSNo.setValue(Base64_Utils.encodeNTimes(config.getsNumber()));
-        txtRString.setText(Base64_Utils.encodeNTimes(config.getsRoute()));
-        txfDClient.setValue(Base64_Utils.encodeNTimes(config.getsClient()));
-        txtPlant.setText(Base64_Utils.encodeNTimes(config.getwPlant()));
+        txtHost.setText(Base64_Utils.encodeNTimes(configuration.getSapHost()));
+        txfSNo.setValue(Base64_Utils.encodeNTimes(configuration.getSapSystemNumber()));
+        txtRString.setText(Base64_Utils.encodeNTimes(configuration.getSapRouteString()));
+        txfDClient.setValue(Base64_Utils.encodeNTimes(configuration.getSapClient()));
+        txtPlant.setText(Base64_Utils.encodeNTimes(configuration.getWkPlant()));
 
         DefaultComboBoxModel port1Model = getPortModel();
-        String port1 = config.getB1Port();
+        String port1 = configuration.getWb1Port();
         if (port1Model.getIndexOf(port1) < 0) {
             port1Model.addElement(port1);
             cbxPort1.setModel(port1Model);
@@ -271,17 +279,17 @@ public class ConfigService {
         cbxPort1.setSelectedItem(port1);
 
         DefaultComboBoxModel speed1Model = getSpeedModel();
-        Integer speed1 = config.getB1Speed();
+        Integer speed1 = configuration.getWb1BaudRate();
         if (speed1Model.getIndexOf(speed1) < 0) {
             speed1Model.addElement(speed1);
             cbxSpeed1.setModel(speed1Model);
         }
         cbxSpeed1.setSelectedItem(speed1);
 
-        Short dbit1 = config.getB1DBits();
+        int dbit1 = configuration.getWb1DataBit();
         cbxDataBits1.setSelectedItem(dbit1);
 
-        Float sbit1 = config.getB1SBits();
+        Float sbit1 = configuration.getWb1StopBit().floatValue();
         if (sbit1 != null && sbit1 == 3f) {
             sbit1 = sbit1 / 2f;
         }
@@ -289,7 +297,7 @@ public class ConfigService {
 
         ParityEnum p1Control = null;
 
-        switch (config.getB1PC()) {
+        switch (configuration.getWb1ParityControl()) {
             case 0:
                 p1Control = ParityEnum.NONE;
                 break;
@@ -307,10 +315,10 @@ public class ConfigService {
                 break;
         }
         cbxPControl1.setSelectedItem(p1Control);
-        chbMettler1.setSelected(config.getB1Mettler() == null ? false : config.getB1Mettler());
+        chbMettler1.setSelected(configuration.getWb1Mettler()== null ? false : configuration.getWb1Mettler());
 
         DefaultComboBoxModel port2Model = getPortModel();
-        String port2 = config.getB2Port();
+        String port2 = configuration.getWb2Port();
         if (port2Model.getIndexOf(port2) < 0) {
             port2Model.addElement(port2);
             cbxPort2.setModel(port2Model);
@@ -318,24 +326,24 @@ public class ConfigService {
         cbxPort2.setSelectedItem(port2);
 
         DefaultComboBoxModel speed2Model = getSpeedModel();
-        Integer speed2 = config.getB2Speed();
+        Integer speed2 = configuration.getWb2BaudRate();
         if (speed2Model.getIndexOf(speed2) < 0) {
             speed2Model.addElement(speed2);
             cbxSpeed2.setModel(speed2Model);
         }
         cbxSpeed2.setSelectedItem(speed2);
 
-        Short dbit2 = new Short(config.getB2DBits().shortValue());
+        int dbit2 = configuration.getWb2DataBit();
         cbxDataBits2.setSelectedItem(dbit2);
 
-        Float sbit2 = new Float(config.getB2SBits().shortValue());
+        Float sbit2 = configuration.getWb2StopBit().floatValue();
         if (sbit2 != null && sbit2 == 3f) {
             sbit2 = sbit2 / 2f;
         }
         cbxStopBits2.setSelectedItem(sbit2);
 
         ParityEnum p2Control = null;
-        switch (config.getB2PC()) {
+        switch (configuration.getWb2ParityControl()) {
             case 0:
                 p2Control = ParityEnum.NONE;
                 break;
@@ -353,7 +361,7 @@ public class ConfigService {
                 break;
         }
         cbxPControl2.setSelectedItem(p2Control);
-        chbMettler2.setSelected(config.getB2Mettler() == null ? false : config.getB2Mettler());
+        chbMettler2.setSelected(configuration.getWb2Mettler()== null ? false : configuration.getWb2Mettler());
     }
     
     public DefaultComboBoxModel getSpeedModel() {

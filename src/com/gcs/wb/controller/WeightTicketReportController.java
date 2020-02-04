@@ -49,8 +49,8 @@ public class WeightTicketReportController {
     }
 
     public String getReportName() {
-        String reportName = null;
-        if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
+        String reportName;
+        if (WeighBridgeApp.getApplication().getConfig().getConfiguration().isModeNormal()) {
             reportName = "./rpt/rptBT/WTList.jasper";
         } else {
             reportName = "./rpt/rptPQ/WTList.jasper";

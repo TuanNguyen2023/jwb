@@ -1,14 +1,6 @@
 <?xml version="1.1" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
-  <NonVisualComponents>
-    <Component class="javax.persistence.EntityManager" name="entityManager">
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="java.beans.Beans.isDesignTime() ? null : WeighBridgeApp.getApplication().getEm()"/>
-        <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="if(entityManager != null ) entityManager.clear();"/>
-      </AuxValues>
-    </Component>
-  </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="2"/>
     <Property name="modal" type="boolean" value="true"/>
@@ -35,7 +27,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Component id="pnContent" alignment="0" pref="324" max="32767" attributes="0"/>
           <Group type="102" alignment="1" attributes="0">
-              <EmptySpace pref="253" max="32767" attributes="0"/>
+              <EmptySpace pref="257" max="32767" attributes="0"/>
               <Component id="btnSelect" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>

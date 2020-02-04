@@ -10,7 +10,6 @@
  */
 package com.gcs.wb.views;
 
-import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.jpa.entity.SLoc;
 import com.gcs.wb.jpa.repositorys.SLocRepository;
@@ -59,9 +58,6 @@ public class RecvSlocView extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        config = WeighBridgeApp.getApplication().getConfig();
-        entityManager = java.beans.Beans.isDesignTime() ? null : WeighBridgeApp.getApplication().getEm();
-        if(entityManager != null ) entityManager.clear();
         pnContent = new javax.swing.JPanel();
         lblRecvSloc = new javax.swing.JLabel();
         cbxRecvSloc = new javax.swing.JComboBox();
@@ -259,8 +255,6 @@ public class RecvSlocView extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSelect;
     private javax.swing.JComboBox cbxRecvSloc;
-    private com.gcs.wb.model.AppConfig config;
-    private javax.persistence.EntityManager entityManager;
     private javax.swing.JLabel lblPONumber;
     private javax.swing.JLabel lblRecvSloc;
     private javax.swing.JPanel pnContent;

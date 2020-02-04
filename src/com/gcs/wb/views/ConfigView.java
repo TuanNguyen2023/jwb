@@ -17,18 +17,18 @@ import com.gcs.wb.base.enums.ParityEnum;
 import com.gcs.wb.base.serials.SerialHelper;
 import com.gcs.wb.base.util.Base64_Utils;
 import com.gcs.wb.controller.ConfigController;
+import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.Configuration;
 import java.awt.Color;
-import java.math.BigDecimal;
 import java.util.HashSet;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.jdesktop.application.Action;
+import org.jdesktop.application.Application;
+import org.jdesktop.application.ResourceMap;
+import org.jdesktop.application.Task;
 import org.jdesktop.swingx.combobox.EnumComboBoxModel;
 
 /**
@@ -38,9 +38,10 @@ import org.jdesktop.swingx.combobox.EnumComboBoxModel;
 public class ConfigView extends javax.swing.JDialog {
 
     private AppConfig config = null;
-    private boolean standAlone;
-    private boolean editable = false;
+    private boolean validFormDB = false;
+    private boolean validForm = false;
     public ConfigController configController = new ConfigController();
+    ResourceMap resourceMap = Application.getInstance(WeighBridgeApp.class).getContext().getResourceMap(ConfigView.class);
 
     // <editor-fold defaultstate="collapsed" desc="Class Constructors">
     /**
@@ -52,7 +53,6 @@ public class ConfigView extends javax.swing.JDialog {
         super(parent);
         initComponents();
         initController();
-        standAlone = false;
     }
     // </editor-fold>
 
@@ -76,6 +76,7 @@ public class ConfigView extends javax.swing.JDialog {
         lblDBPwd = new javax.swing.JLabel();
         txtDBPwd = new javax.swing.JPasswordField();
         btnCheckDbConnection = new javax.swing.JButton();
+        iconLoading = new org.jdesktop.swingx.JXBusyLabel();
         pnSAPConfig = new javax.swing.JPanel();
         lblHost = new javax.swing.JLabel();
         txtHost = new javax.swing.JTextField();
@@ -173,13 +174,14 @@ public class ConfigView extends javax.swing.JDialog {
             }
         });
 
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getActionMap(ConfigView.class, this);
+        btnCheckDbConnection.setAction(actionMap.get("checkDbConnection")); // NOI18N
         btnCheckDbConnection.setText(resourceMap.getString("btnCheckDbConnection.text")); // NOI18N
         btnCheckDbConnection.setName("btnCheckDbConnection"); // NOI18N
-        btnCheckDbConnection.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCheckDbConnectionActionPerformed(evt);
-            }
-        });
+
+        iconLoading.setBusy(true);
+        iconLoading.setDirection(org.jdesktop.swingx.JXBusyLabel.Direction.RIGHT);
+        iconLoading.setName("iconLoading"); // NOI18N
 
         javax.swing.GroupLayout pnMySQLConLayout = new javax.swing.GroupLayout(pnMySQLCon);
         pnMySQLCon.setLayout(pnMySQLConLayout);
@@ -192,7 +194,10 @@ public class ConfigView extends javax.swing.JDialog {
                     .addComponent(lblDBHost, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnMySQLConLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnCheckDbConnection)
+                    .addGroup(pnMySQLConLayout.createSequentialGroup()
+                        .addComponent(btnCheckDbConnection)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(iconLoading, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnMySQLConLayout.createSequentialGroup()
                         .addGroup(pnMySQLConLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtDBUsr, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
@@ -222,7 +227,9 @@ public class ConfigView extends javax.swing.JDialog {
                     .addComponent(txtDBPwd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblDBPwd))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnCheckDbConnection)
+                .addGroup(pnMySQLConLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCheckDbConnection)
+                    .addComponent(iconLoading, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -589,7 +596,6 @@ public class ConfigView extends javax.swing.JDialog {
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getActionMap(ConfigView.class, this);
         btnSave.setAction(actionMap.get("saveConfig")); // NOI18N
         btnSave.setText(resourceMap.getString("btnSave.text")); // NOI18N
         btnSave.setMaximumSize(new java.awt.Dimension(85, 23));
@@ -638,14 +644,6 @@ public class ConfigView extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
     // </editor-fold>
     // <editor-fold defaultstate="expaned" desc="Event Handlers">
-
-    /**
-     * @return the standAlone
-     */
-    public boolean isStandAlone() {
-        return standAlone;
-    }
-
     private void txtRStringKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRStringKeyReleased
         validateForm();
     }//GEN-LAST:event_txtRStringKeyReleased
@@ -699,19 +697,19 @@ public class ConfigView extends javax.swing.JDialog {
     }//GEN-LAST:event_txfDClientKeyReleased
 
     private void txtDBHostKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDBHostKeyReleased
-        validateForm();
+        validateFormDB();
     }//GEN-LAST:event_txtDBHostKeyReleased
 
     private void txtDBNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDBNameKeyReleased
-        validateForm();
+        validateFormDB();
     }//GEN-LAST:event_txtDBNameKeyReleased
 
     private void txtDBUsrKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDBUsrKeyReleased
-        validateForm();
+        validateFormDB();
     }//GEN-LAST:event_txtDBUsrKeyReleased
 
     private void txtDBPwdKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDBPwdKeyReleased
-        validateForm();
+        validateFormDB();
     }//GEN-LAST:event_txtDBPwdKeyReleased
 
     private void txtHostKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtHostKeyReleased
@@ -722,17 +720,45 @@ public class ConfigView extends javax.swing.JDialog {
         validateForm();
     }//GEN-LAST:event_txtPlantKeyReleased
 
-private void btnCheckDbConnectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCheckDbConnectionActionPerformed
-// TODO add your handling code here:
-}//GEN-LAST:event_btnCheckDbConnectionActionPerformed
+    private void setFormEditable(boolean editable) {
+        txtHost.setEnabled(editable);
+        txtRString.setEnabled(editable);
+        txfSNo.setEnabled(editable);
+        txfDClient.setEnabled(editable);
+
+        txtPlant.setEnabled(editable);
+        txtWBID.setEnabled(editable);
+
+        cbxPort1.setEnabled(editable);
+        cbxSpeed1.setEnabled(editable);
+        cbxDataBits1.setEnabled(editable);
+        cbxStopBits1.setEnabled(editable);
+        cbxPControl1.setEnabled(editable);
+        chbMettler1.setEnabled(editable);
+
+        cbxPort2.setEnabled(editable);
+        cbxSpeed2.setEnabled(editable);
+        cbxDataBits2.setEnabled(editable);
+        cbxStopBits2.setEnabled(editable);
+        cbxPControl2.setEnabled(editable);
+        chbMettler2.setEnabled(editable);
+
+        if (!editable) {
+            btnSave.setEnabled(false);
+        } else {
+            validateForm();
+        }
+    }
 
     private void initController() {
-        editable = btnSave.isEnabled();
         config = WeighBridgeApp.getApplication().getConfig();
         if (config != null) {
             objBinding();
+            validateFormDB();
             validateForm();
         }
+
+        iconLoading.setVisible(false);
     }
 
     private DefaultComboBoxModel getPortModel() {
@@ -757,19 +783,11 @@ private void btnCheckDbConnectionActionPerformed(java.awt.event.ActionEvent evt)
     }
 
     private EnumComboBoxModel getParityModel() {
-        return new EnumComboBoxModel<ParityEnum>(ParityEnum.class);
+        return new EnumComboBoxModel<>(ParityEnum.class);
     }
 
-    private boolean validateForm() {
-        boolean //DB Checks
-                bDBHost = false, bDBName = false, bDBUsr = false, bDBPwd = false,
-                //SAP Checks
-                bSHost = false, bSNo = false, bSClient = false,
-                //Bridge 1 Checks,
-                bCOM1 = false, bSpeed1 = false,
-                //Bridge 1 Checks,
-                bCOM2 = false, bSpeed2 = false,
-                bWPlant = false;
+    private void validateFormDB() {
+        boolean bDBHost, bDBName, bDBUsr, bDBPwd;
 
         bDBHost = !(txtDBHost.getText().trim().length() == 0);
         if (bDBHost) {
@@ -798,6 +816,19 @@ private void btnCheckDbConnectionActionPerformed(java.awt.event.ActionEvent evt)
         } else {
             lblDBPwd.setForeground(Color.RED);
         }
+
+        validFormDB = bDBHost && bDBName && bDBUsr && bDBPwd;
+        btnCheckDbConnection.setEnabled(validFormDB);
+    }
+
+    private void validateForm() {
+        boolean //SAP Checks
+                bSHost, bSNo, bSClient,
+                //Bridge 1 Checks,
+                bCOM1, bSpeed1,
+                //Bridge 1 Checks,
+                bCOM2, bSpeed2,
+                bWPlant;
 
         bSHost = !(txtHost.getText().trim().length() == 0);
         if (bSHost) {// && checkString(txtHost.getText().trim())) {
@@ -857,10 +888,10 @@ private void btnCheckDbConnectionActionPerformed(java.awt.event.ActionEvent evt)
 
         boolean bB1 = bCOM1 && bSpeed1, bB2 = bCOM2 && bSpeed2;
 
-        return (bDBHost && bDBName && bDBUsr && bDBPwd
-                && bSHost && bSNo && bSClient
+        validForm = (bSHost && bSNo && bSClient
                 && (bB1 || bB2)
                 && bWPlant);
+        btnSave.setEnabled(validForm);
     }
 
     private AppConfig objMapping() {
@@ -947,6 +978,7 @@ private void btnCheckDbConnectionActionPerformed(java.awt.event.ActionEvent evt)
         txtDBPwd.setText(Base64_Utils.encodeNTimes(config.getDbPassword()));
 
         Configuration configuration = config.getConfiguration();
+        setFormEditable(configuration != null);
         if (configuration != null) {
             txtHost.setText(Base64_Utils.encodeNTimes(configuration.getSapHost()));
             txfSNo.setValue(Base64_Utils.encodeNTimes(configuration.getSapSystemNumber()));
@@ -1022,7 +1054,7 @@ private void btnCheckDbConnectionActionPerformed(java.awt.event.ActionEvent evt)
     public void saveConfig() {
         boolean error = false;
         StringBuilder msg = new StringBuilder();
-        if (!validateForm()) {
+        if (!validForm) {
             return;
         }
         objMapping();
@@ -1036,12 +1068,7 @@ private void btnCheckDbConnectionActionPerformed(java.awt.event.ActionEvent evt)
             }
         }
         if (!error) {
-            if (standAlone) {
-                System.exit(0);
-            } else {
-                WeighBridgeApp.getApplication().setConfig(new AppConfig());
-                dispose();
-            }
+            WeighBridgeApp.getApplication().setConfig(new AppConfig());
             dispose();
         } else {
             JOptionPane.showMessageDialog(this, msg.toString(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -1049,8 +1076,44 @@ private void btnCheckDbConnectionActionPerformed(java.awt.event.ActionEvent evt)
     }
 
     @Action
-    public void clearForm() {
+    public Task checkDbConnection() {
+        return new CheckDbConnectionTask(Application.getInstance(WeighBridgeApp.class));
     }
+
+    private class CheckDbConnectionTask extends Task<Object, Void> {
+
+        CheckDbConnectionTask(Application app) {
+            super(app);
+            iconLoading.setVisible(true);
+            btnCheckDbConnection.setEnabled(false);
+            
+            config.setDbHost(txtDBHost.getText().trim());
+            config.setDbName(txtDBName.getText().trim());
+            config.setDbUsername(txtDBUsr.getText().trim());
+            config.setDbPassword(new String(txtDBPwd.getPassword()).trim());
+        }
+
+        @Override
+        protected Object doInBackground() {
+            try {
+                JPAConnector.close();
+                JPAConnector.getInstance();
+                setFormEditable(true);
+            } catch (Exception ex) {
+                setFormEditable(false);
+                JOptionPane.showMessageDialog(ConfigView.this, resourceMap.getString("msg.errorDbConnectionFail"), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void succeeded(Object result) {
+            iconLoading.setVisible(false);
+            btnCheckDbConnection.setEnabled(true);
+        }
+    }
+
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Variables declaration">
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1068,6 +1131,7 @@ private void btnCheckDbConnectionActionPerformed(java.awt.event.ActionEvent evt)
     private javax.swing.JComboBox cbxStopBits2;
     private javax.swing.JCheckBox chbMettler1;
     private javax.swing.JCheckBox chbMettler2;
+    private org.jdesktop.swingx.JXBusyLabel iconLoading;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel lblDBHost;
     private javax.swing.JLabel lblDBName;

@@ -579,7 +579,7 @@ public class WeighBridgeView extends FrameView {
                 Map<String, Object> map = new HashMap<String, Object>();
                 map.put("MANDT", WeighBridgeApp.getApplication().getCredentials().getClient());
                 String reportName = null;
-                if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
+                if (WeighBridgeApp.getApplication().getConfig().getConfiguration().isModeNormal()) {
                     reportName = "./rpt/rptBT/WNotesList.jrxml";
                 } else {
                     reportName = "./rpt/rptPQ/WNotesList.jrxml";

@@ -19,6 +19,7 @@ public class Constants {
         public static final String FILE_NAME = "application.properties";
         public static final int WEIGHT_LIMIT = 60;
         public static final boolean MODE_NORMAL = true;
+        public static final String RPT_ID = "";
     }
 
     public static class Label {

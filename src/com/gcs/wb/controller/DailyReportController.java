@@ -6,9 +6,9 @@ package com.gcs.wb.controller;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.base.constant.Constants;
+import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.jpa.entity.WeightTicket;
 import com.gcs.wb.jpa.service.JReportService;
-import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.service.DailyReportService;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -26,7 +26,7 @@ public class DailyReportController {
 
     DailyReportService dailyReportService = new DailyReportService();
     Object[] wtColNames = Constants.DailyReport.WT_COL_NAMES;
-    AppConfig appConfig = WeighBridgeApp.getApplication().getConfig();
+    Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
     JReportService jreportService = new JReportService();
 
     public List<WeightTicket> findByCreateDateRange(JXDatePicker dpDateFrom, JXDatePicker dpDateTo) {
@@ -34,8 +34,8 @@ public class DailyReportController {
     }
 
     public String getReportName() {
-        String reportName = null;
-        if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
+        String reportName;
+        if (configuration.isModeNormal()) {
             reportName = "./rpt/rptBT/WTList.jasper";
         } else {
             reportName = "./rpt/rptPQ/WTList.jasper";
@@ -44,7 +44,7 @@ public class DailyReportController {
     }
 
     public Map<String, Object> getParamsReport(JXDatePicker dpDateFrom, JXDatePicker dpDateTo) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("P_PNAME_RPT", WeighBridgeApp.getApplication().getSapSetting().getNameRpt());
         params.put("P_PADDRESS", WeighBridgeApp.getApplication().getSapSetting().getAddress());
         params.put("P_PPHONE", WeighBridgeApp.getApplication().getSapSetting().getPhone());

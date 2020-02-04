@@ -37,7 +37,7 @@ public class AppConfig {
             getGWHost();
             getsNumber();
             getsClient();
-            getsRoute();
+            getSapRouteString();
             getB1Port();
             getB1Speed();
             getB1DBits();
@@ -424,7 +424,7 @@ public class AppConfig {
      * SAP Route string
      * @return the sRoute
      */
-    public String getsRoute() {
+    public String getSapRouteString() {
         sRoute = new String(Base64.decodeBase64(config.getString(SAP_RS, "")));
         return sRoute;
     }

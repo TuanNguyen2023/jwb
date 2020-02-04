@@ -7,8 +7,8 @@ package com.gcs.wb.service;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
+import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.jpa.entity.WeightTicket;
-import com.gcs.wb.model.AppConfig;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -22,7 +22,7 @@ import org.jdesktop.swingx.JXDatePicker;
  */
 public class DailyReportService {
 
-    AppConfig appConfig = WeighBridgeApp.getApplication().getConfig();
+    Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
     WeightTicketJpaController weightTicketJpaController = new WeightTicketJpaController();
     Object[] wtColNames = Constants.DailyReport.WT_COL_NAMES;
 
@@ -93,7 +93,7 @@ public class DailyReportService {
 
     public String getReportName() {
         String reportName = null;
-        if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
+        if (configuration.isModeNormal()) {
             reportName = "./rpt/rptBT/WTList.jasper";
         } else {
             reportName = "./rpt/rptPQ/WTList.jasper";

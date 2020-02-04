@@ -23,7 +23,7 @@ public class DataSources {
         sbURL.append(appConf.getDbHost());
         sbURL.append("/");
         sbURL.append(appConf.getDbName());
-        Map<String, String> properties = new HashMap<String, String>();
+        Map<String, String> properties = new HashMap<>();
         properties.put(PersistenceUnitProperties.JDBC_DRIVER, "com.microsoft.sqlserver.jdbc.SQLServerDriver");
         properties.put(PersistenceUnitProperties.JDBC_URL, "jdbc:sqlserver://172.16.20.181:1433;databaseName=ors");
         properties.put(PersistenceUnitProperties.JDBC_USER, appConf.getDbUsername());
@@ -36,11 +36,11 @@ public class DataSources {
         StringBuilder sbURL = new StringBuilder();
         sbURL.append("jdbc:sqlserver://");
         sbURL.append(appConf.getDbHost());
-        sbURL.append("/");
+        sbURL.append(";databaseName=");
         sbURL.append(appConf.getDbName());
-        Map<String, String> properties = new HashMap<String, String>();
+        Map<String, String> properties = new HashMap<>();
         properties.put(PersistenceUnitProperties.JDBC_DRIVER, "com.microsoft.sqlserver.jdbc.SQLServerDriver");
-        properties.put(PersistenceUnitProperties.JDBC_URL, "jdbc:sqlserver://172.16.20.181:1433;databaseName=plant");
+        properties.put(PersistenceUnitProperties.JDBC_URL, sbURL.toString());
         properties.put(PersistenceUnitProperties.JDBC_USER, appConf.getDbUsername());
         properties.put(PersistenceUnitProperties.JDBC_PASSWORD, appConf.getDbPassword());
         return properties;

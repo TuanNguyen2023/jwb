@@ -8,6 +8,7 @@ import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.controller.WeightTicketJpaController;
+import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
 import com.gcs.wb.jpa.entity.Vendor;
@@ -36,6 +37,7 @@ public class WeightTicketRegistarationService {
     CustomerRepository customerRepository = new CustomerRepository();
     VendorRepository vendorRepository = new VendorRepository();
     SAPService sAPService = new SAPService();
+    Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
 
     public List<WeightTicket> listWeightTicketsDoInBackground(JXDatePicker dpFrom, JXDatePicker dpTo, JComboBox cbxType, JComboBox cbxTimeFrom, JComboBox cbxTimeTo, JTextField txtNguoitao, JRadioButton rbtDissolved, JRadioButton rbtPosted, JRadioButton rbtStateAll, JTextField txtTaixe, JTextField txtBienSo) throws Exception {
         AppConfig config = WeighBridgeApp.getApplication().getConfig();
@@ -95,13 +97,12 @@ public class WeightTicketRegistarationService {
     }
 
     private List<WeightTicket> filterHours(List<WeightTicket> data, String timefrom, String timeto) {
-        List<WeightTicket> result = new ArrayList<WeightTicket>();
+        List<WeightTicket> result = new ArrayList<>();
         int n1 = Integer.parseInt(timefrom);
         double n2 = Integer.parseInt(timeto) + 0.99;
         if (!data.isEmpty()) {
             for (int i = 0; i < data.size(); i++) {
-                WeightTicket item = null;
-                item = data.get(i);
+                WeightTicket item = data.get(i);
 
                 String ct = item.getCreatedTime();
                 Character c0 = ct.charAt(0);
@@ -109,7 +110,7 @@ public class WeightTicketRegistarationService {
                 String ct1 = c0.toString().concat(c1.toString());
                 int cTime = Integer.parseInt(ct1);
                 if (cTime >= n1 && cTime <= n2) {
-                    if (WeighBridgeApp.getApplication().getConfig().getModeNormal()) {
+                    if (configuration.isModeNormal()) {
                         result.add(item);
                     } else {
                         //filter sloc
@@ -137,7 +138,7 @@ public class WeightTicketRegistarationService {
     public Object[][] handleWtData(String getMode, Object[][] wtData, List<WeightTicket> weightTicketList, AppConfig config, Object[] wtCols, String sVendor) {
         for (int i = 0; i < weightTicketList.size(); i++) {
             WeightTicket item = weightTicketList.get(i);
-            if (!item.getMandt().equalsIgnoreCase(config.getsClient()) && !item.getWplant().equalsIgnoreCase(config.getwPlant().toString())) {
+            if (!item.getMandt().equalsIgnoreCase(configuration.getSapClient()) && !item.getWplant().equalsIgnoreCase(configuration.getWkPlant())) {
                 continue;
             }
             wtData[i][0] = item.getSeqDay();

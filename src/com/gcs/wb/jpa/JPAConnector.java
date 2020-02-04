@@ -15,6 +15,7 @@ import javax.persistence.Persistence;
 public class JPAConnector {
 
     private static EntityManager instance = null;
+    private static EntityManagerFactory entityManagerFactory = null;
 
     private JPAConnector() {
     }
@@ -23,10 +24,19 @@ public class JPAConnector {
         if (instance != null) {
             return instance;
         } else {
-            EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("JWeighBridgePU",
+            entityManagerFactory = Persistence.createEntityManagerFactory("JWeighBridgePU",
                     DataSources.getJweighbridgeProperties());
             instance = entityManagerFactory.createEntityManager();
             return instance;
+        }
+    }
+
+    public static void close() {
+        if (instance != null) {
+            instance.close();
+            entityManagerFactory.close();
+
+            instance = null;
         }
     }
 }
