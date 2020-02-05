@@ -16,51 +16,29 @@ import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.base.enums.MaterialEnum;
 import com.gcs.wb.base.enums.StatusEnum;
 import com.gcs.wb.base.util.StringUtil;
-import com.gcs.wb.jpa.entity.Customer;
-import com.gcs.wb.jpa.entity.OutboundDelivery;
-import com.gcs.wb.jpa.entity.Vehicle;
-import com.gcs.wb.jpa.entity.TransportAgentVehicle;
-import com.gcs.wb.jpa.entity.Vendor;
-import com.gcs.wb.jpa.entity.WeightTicket;
-import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.controller.WeightTicketRegistarationController;
 import com.gcs.wb.jpa.JPAConnector;
+import com.gcs.wb.jpa.entity.*;
+import com.gcs.wb.model.AppConfig;
 import com.sap.conn.jco.JCoException;
-import java.awt.Color;
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import javax.swing.*;
-
 import org.apache.log4j.Logger;
 import org.hibersap.HibersapException;
 import org.jdesktop.application.Action;
+import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.Task;
-import java.awt.Component;
 
-import com.gcs.wb.jpa.entity.Material;
-import com.gcs.wb.jpa.entity.OutboundDeliveryDetail;
-import com.gcs.wb.jpa.entity.WeightTicketDetail;
-import com.gcs.wb.jpa.procedures.WTRegRepository;
-import com.gcs.wb.jpa.repositorys.CustomerRepository;
-import com.gcs.wb.jpa.repositorys.MaterialRepository;
-import com.gcs.wb.jpa.repositorys.OutboundDeliveryRepository;
-import com.gcs.wb.jpa.repositorys.TransportAgentVehicleRepository;
-import com.gcs.wb.jpa.repositorys.VehicleRepository;
-import com.gcs.wb.jpa.repositorys.VendorRepository;
-import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
-import java.awt.Toolkit;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyEvent;
-import java.util.Date;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import org.jdesktop.application.ResourceMap;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.List;
+import java.util.logging.Level;
 
 public class WTRegView extends javax.swing.JInternalFrame {
     public String sVendor = "";
@@ -1573,9 +1551,22 @@ public class WTRegView extends javax.swing.JInternalFrame {
             return oldKunnr;
         }
 
-        private void syncOutboundDelivery(String deliveryNum, OutboundDelivery sapOutb) {
-            validDO = sapService.syncOutboundDelivery(sapOutb, outb, deliveryNum);
-            if (!validDO) {
+        private void syncOutboundDelivery(String val, OutboundDelivery sapOutb) {
+            if (sapOutb != null && outb == null) {
+                entityManager.persist(sapOutb);
+                outb = sapOutb;
+                validDO = true;
+            } else if (sapOutb != null && outb != null) {
+                sapOutb.setId(outb.getId());
+                entityManager.merge(sapOutb);
+                outb = sapOutb;
+                validDO = true;
+            } else {
+                if (outb != null) {
+                    entityManager.remove(outb);
+                    outb = null;
+                }
+                validDO = false;
                 String msg = resourceMapMsg.getString("msg.dONotExitst", val);
                 setMessage(msg);
                 JOptionPane.showMessageDialog(rootPane, msg);

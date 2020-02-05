@@ -7,16 +7,9 @@ package com.gcs.wb.service;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.jpa.JPAConnector;
-import com.gcs.wb.jpa.entity.Customer;
-import com.gcs.wb.jpa.entity.Material;
-import com.gcs.wb.jpa.entity.OutboundDelivery;
-import com.gcs.wb.jpa.entity.OutboundDetail;
-import com.gcs.wb.jpa.entity.TransportAgentVehicle;
-import com.gcs.wb.jpa.entity.Vehicle;
-import com.gcs.wb.jpa.entity.Vendor;
-import com.gcs.wb.jpa.entity.WeightTicket;
+import com.gcs.wb.jpa.entity.*;
+import com.gcs.wb.jpa.entity.OutboundDeliveryDetail;
 import com.gcs.wb.jpa.repositorys.WeightTicketRegistarationRepository;
-import com.gcs.wb.jpa.entity.WeightTicketDetail;
 import com.gcs.wb.jpa.repositorys.CustomerRepository;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
 import com.gcs.wb.jpa.repositorys.OutboundDeliveryRepository;
@@ -381,7 +374,7 @@ public class WeightTicketRegistarationService {
         return repository.findByDateAllNullAll(from, to, creator, taixe, bienso);
     }
 
-    public List<OutboundDetail> findByMandtDelivNumb(String deliv_numb) throws Exception {
+    public List<OutboundDeliveryDetail> findByMandtDelivNumb(String deliv_numb) throws Exception {
         String devNumber = "%" + deliv_numb + "%";
         OutboundDetailRepository repo = new OutboundDetailRepository();
         return repo.findByDeliveryOrderNo(devNumber);

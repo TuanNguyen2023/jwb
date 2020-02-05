@@ -11,7 +11,6 @@
 package com.gcs.wb.views;
 
 import com.fazecast.jSerialComm.SerialPortInvalidPortException;
-import com.gcs.wb.base.util.Base64_Utils;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.SAPErrorTransform;
 import com.gcs.wb.bapi.goodsmvt.GoodsMvtDoCreateBapi;
@@ -22,64 +21,38 @@ import com.gcs.wb.bapi.outbdlv.WsDeliveryUpdateBapi;
 import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.base.exceptions.IllegalPortException;
-import com.gcs.wb.jpa.JPAConnector;
-import com.gcs.wb.jpa.controller.WeightTicketJpaController;
-import com.gcs.wb.jpa.entity.OutboundDeliveryDetail;
-import com.gcs.wb.jpa.entity.BatchStock;
-import com.gcs.wb.jpa.entity.Customer;
-import com.gcs.wb.jpa.entity.Material;
-import com.gcs.wb.jpa.entity.OutboundDelivery;
-import com.gcs.wb.jpa.entity.PurchaseOrder;
-import com.gcs.wb.jpa.entity.SAPSetting;
-import com.gcs.wb.jpa.entity.SLoc;
-import com.gcs.wb.jpa.entity.User;
-import com.gcs.wb.jpa.entity.Vendor;
-import com.gcs.wb.jpa.entity.WeightTicket;
+import com.gcs.wb.base.util.Base64_Utils;
 import com.gcs.wb.base.util.RegexFormatter;
+import com.gcs.wb.controller.WeightTicketController;
+import com.gcs.wb.controller.WeightTicketRegistarationController;
+import com.gcs.wb.jpa.JPAConnector;
+import com.gcs.wb.jpa.entity.*;
+import com.gcs.wb.jpa.repositorys.VendorRepository;
 import com.gcs.wb.model.AppConfig;
 import com.sap.conn.jco.JCoException;
-import java.awt.Color;
-import java.awt.Component;
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.logging.Level;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.BadLocationException;
 import org.apache.log4j.Logger;
 import org.hibersap.HibersapException;
 import org.hibersap.SapException;
 import org.hibersap.session.Session;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Application;
+import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.Task;
 
 import javax.persistence.EntityManager;
-import com.gcs.wb.jpa.entity.Variant;
-import com.gcs.wb.jpa.repositorys.BatchStockRepository;
-import com.gcs.wb.jpa.repositorys.CustomerRepository;
-import com.gcs.wb.controller.WeightTicketController;
-import com.gcs.wb.controller.WeightTicketRegistarationController;
-import com.gcs.wb.jpa.entity.PurchaseOrderDetail;
-import com.gcs.wb.jpa.entity.WeightTicketDetail;
-import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
-import com.gcs.wb.jpa.repositorys.SLocRepository;
-import com.gcs.wb.jpa.repositorys.VariantRepository;
-import com.gcs.wb.jpa.repositorys.VendorRepository;
-import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.BadLocationException;
+import java.awt.*;
+import java.awt.datatransfer.*;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.awt.datatransfer.StringSelection;
+import java.text.SimpleDateFormat;
 import java.util.*;
-import org.jdesktop.application.ResourceMap;
+import java.util.List;
+import java.util.logging.Level;
 
 /*
  *
@@ -96,7 +69,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     private BigDecimal remain_qty_goods = BigDecimal.ZERO;
     private BigDecimal total_qty_free = BigDecimal.ZERO;
     private List<OutboundDelivery> outbDel_list = new ArrayList<OutboundDelivery>();
-    private List<OutboundDeliveryDetail> outDetails_lits = new ArrayList<OutboundDetail>();
+    private List<OutboundDeliveryDetail> outDetails_lits = new ArrayList<>();
     private String wt_ID = null;
     private boolean flag_fail = false;
     private int timeFrom = 0;
@@ -2529,7 +2502,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                 }
                 if (weightTicketDetail.getEbeln() != null && !weightTicketDetail.getEbeln().trim().isEmpty()) {
 
-                    purOrder = purchaseOrderRepository.findByPoNumber(weightTicketDetail.getEbeln());
+                    purOrder = weightTicketController.findByPoNumber(weightTicketDetail.getEbeln());
                     txtPONum.setText(weightTicketDetail.getEbeln());
                     setValidPONum(true);
                     rbtPO.setSelected(true);
