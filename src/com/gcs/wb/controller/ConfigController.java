@@ -30,10 +30,10 @@ public class ConfigController {
         if (config == null) {
             config = new AppConfig();
         }
-        config.setDbHost(Base64_Utils.decodeNTimes(dbHost));
-        config.setDbName(Base64_Utils.decodeNTimes(dbName));
-        config.setDbUsername(Base64_Utils.decodeNTimes(dbUsr));
-        config.setDbPassword(Base64_Utils.decodeNTimes(dbPwd));
+        config.setDbHost(dbHost);
+        config.setDbName(dbName);
+        config.setDbUsername(dbUsr);
+        config.setDbPassword(dbPwd);
         
         Configuration configuration = config.getConfiguration();
         if (configuration == null) {
@@ -42,13 +42,14 @@ public class ConfigController {
             configuration.setUpdatedDate(new Date());
         }
         
-        configuration.setSapHost(Base64_Utils.decodeNTimes(sHost));
-        configuration.setSapRouteString(Base64_Utils.decodeNTimes(sRoute));
-        configuration.setSapSystemNumber(Base64_Utils.decodeNTimes(sNo));
-        configuration.setSapClient(Base64_Utils.decodeNTimes(sDClient));
+        configuration.setSapHost(sHost);
+        configuration.setSapGwHost(sHost);
+        configuration.setSapRouteString(sRoute);
+        configuration.setSapSystemNumber(sNo);
+        configuration.setSapClient(sDClient);
         
-        configuration.setWkPlant(Base64_Utils.decodeNTimes(wPlant));
-        configuration.setWbId(Base64_Utils.decodeNTimes(wbId));
+        configuration.setWkPlant(wPlant);
+        configuration.setWbId(wbId);
 
         configuration.setWb1Port((String) port1);
         configuration.setWb1BaudRate(speed1);
@@ -64,6 +65,7 @@ public class ConfigController {
         configuration.setWb2ParityControl(port2 == null ? null : (new Integer(((ParityEnum) cbxPControl2.getSelectedItem()).ordinal())).shortValue());
         configuration.setWb2Mettler(port2 == null ? null : chbMettler2.isSelected());
 
+        config.setConfiguration(configuration);
         return config;
     }
     

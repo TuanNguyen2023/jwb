@@ -30,6 +30,10 @@ public class JPAConnector {
             return instance;
         }
     }
+    
+    public static boolean isOpen() {
+        return instance != null;
+    }
 
     public static void close() {
         if (instance != null) {

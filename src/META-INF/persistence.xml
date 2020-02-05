@@ -23,6 +23,7 @@
     <class>com.gcs.wb.jpa.entity.OutboundDelivery</class>
     <class>com.gcs.wb.jpa.entity.OutboundDetail</class>
     <class>com.gcs.wb.jpa.entity.PurchaseOrder</class>
+    <class>com.gcs.wb.jpa.entity.Configuration</class>
     <properties>
       <property name="eclipselink.logging.level.sql" value="FINE"/>
       <property name="hibernate.show_sql" value="true"/>

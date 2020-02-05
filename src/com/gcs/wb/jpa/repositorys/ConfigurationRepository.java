@@ -6,6 +6,7 @@ package com.gcs.wb.jpa.repositorys;
 
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.Configuration;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.TypedQuery;
@@ -23,9 +24,12 @@ public class ConfigurationRepository {
 
     public Configuration getConfiguration() {
         TypedQuery<Configuration> typedQuery = entityManager.createNamedQuery("Configuration.findAll", Configuration.class);
-        typedQuery.setFirstResult(0);
-        typedQuery.setMaxResults(1);
-        return typedQuery.getSingleResult();
+        List<Configuration> configurations = typedQuery.getResultList();
+        if (configurations != null && configurations.size() > 0) {
+            return configurations.get(0);
+        }
+        
+        return null;
     }
 
     public void saveConfiguration(Configuration configuration) throws ConfigurationException {

@@ -698,18 +698,22 @@ public class ConfigView extends javax.swing.JDialog {
 
     private void txtDBHostKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDBHostKeyReleased
         validateFormDB();
+        setFormEditable(false);
     }//GEN-LAST:event_txtDBHostKeyReleased
 
     private void txtDBNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDBNameKeyReleased
         validateFormDB();
+        setFormEditable(false);
     }//GEN-LAST:event_txtDBNameKeyReleased
 
     private void txtDBUsrKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDBUsrKeyReleased
         validateFormDB();
+        setFormEditable(false);
     }//GEN-LAST:event_txtDBUsrKeyReleased
 
     private void txtDBPwdKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDBPwdKeyReleased
         validateFormDB();
+        setFormEditable(false);
     }//GEN-LAST:event_txtDBPwdKeyReleased
 
     private void txtHostKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtHostKeyReleased
@@ -899,27 +903,25 @@ public class ConfigView extends javax.swing.JDialog {
             config = WeighBridgeApp.getApplication().getConfig();
         }
         String wbId = txtWBID.getText();
-        wbId = wbId == null || wbId.trim().length() == 0 ? "" : wbId.trim();
+        wbId = wbId.trim().length() == 0 ? "" : wbId.trim();
         String dbHost = txtDBHost.getText();
-        dbHost = dbHost == null || dbHost.trim().length() == 0 ? "" : dbHost.trim();
+        dbHost = dbHost.trim().length() == 0 ? "" : dbHost.trim();
         String dbName = txtDBName.getText();
-        dbName = dbName == null || dbName.trim().length() == 0 ? "" : dbName.trim();
+        dbName = dbName.trim().length() == 0 ? "" : dbName.trim();
         String dbUsr = txtDBUsr.getText();
-        dbUsr = dbUsr == null || dbUsr.trim().length() == 0 ? "" : dbUsr.trim();
+        dbUsr = dbUsr.trim().length() == 0 ? "" : dbUsr.trim();
         String dbPwd = new String(txtDBPwd.getPassword());
         dbPwd = dbPwd.trim().length() == 0 ? "" : dbPwd.trim();
 
         String sHost = txtHost.getText();
-        sHost = sHost == null || sHost.trim().length() == 0 ? "" : sHost;
+        sHost = sHost.trim().length() == 0 ? "" : sHost;
         String sRoute = txtRString.getText();
-        sRoute = sRoute == null || sRoute.trim().length() == 0 ? "" : sRoute;
-        String sNo = txfSNo.getValue() == null || txfSNo.getValue().toString() == null
-                || txfSNo.getValue().toString().trim().length() == 0 ? "" : txfSNo.getValue().toString().trim();
-        String sDClient = txfDClient.getValue() == null || txfDClient.getValue().toString() == null
-                || txfDClient.getValue().toString().trim().length() == 0 ? "" : txfDClient.getValue().toString().trim();
+        sRoute = sRoute.trim().length() == 0 ? "" : sRoute;
+        String sNo = txfSNo.getText().trim().length() == 0 ? "" : txfSNo.getText().trim();
+        String sDClient = txfDClient.getText().trim().length() == 0 ? "" : txfDClient.getText().trim();
 
         Object port1 = cbxPort1.getSelectedItem();
-        port1 = port1 == null || port1.toString().trim().length() == 0 ? null : port1.toString().trim();
+        port1 = port1.toString().trim().length() == 0 ? null : port1.toString().trim();
         Integer speed1 = 0;
         if (port1 == null) {
             speed1 = null;
@@ -942,7 +944,7 @@ public class ConfigView extends javax.swing.JDialog {
         sbit1 = (sbit1 == 1.5f ? sbit1 * 2f : sbit1);
 
         Object port2 = cbxPort2.getSelectedItem();
-        port2 = port2 == null || port2.toString().trim().length() == 0 ? null : port2.toString().trim();
+        port2 = port2.toString().trim().length() == 0 ? null : port2.toString().trim();
         Integer speed2 = 0;
         if (port2 == null) {
             speed2 = null;
@@ -972,21 +974,22 @@ public class ConfigView extends javax.swing.JDialog {
     }
 
     private void objBinding() {
-        txtDBHost.setText(Base64_Utils.encodeNTimes(config.getDbHost()));
-        txtDBName.setText(Base64_Utils.encodeNTimes(config.getDbName()));
-        txtDBUsr.setText(Base64_Utils.encodeNTimes(config.getDbUsername()));
-        txtDBPwd.setText(Base64_Utils.encodeNTimes(config.getDbPassword()));
+        setFormEditable(JPAConnector.isOpen());
+        
+        txtDBHost.setText(config.getDbHost());
+        txtDBName.setText(config.getDbName());
+        txtDBUsr.setText(config.getDbUsername());
+        txtDBPwd.setText(config.getDbPassword());
 
         Configuration configuration = config.getConfiguration();
-        setFormEditable(configuration != null);
         if (configuration != null) {
-            txtHost.setText(Base64_Utils.encodeNTimes(configuration.getSapHost()));
-            txfSNo.setValue(Base64_Utils.encodeNTimes(configuration.getSapSystemNumber()));
-            txtRString.setText(Base64_Utils.encodeNTimes(configuration.getSapRouteString()));
-            txfDClient.setValue(Base64_Utils.encodeNTimes(configuration.getSapClient()));
+            txtHost.setText(configuration.getSapHost());
+            txfSNo.setValue(configuration.getSapSystemNumber());
+            txtRString.setText(configuration.getSapRouteString());
+            txfDClient.setValue(configuration.getSapClient());
 
-            txtPlant.setText(Base64_Utils.encodeNTimes(configuration.getWkPlant()));
-            txtWBID.setText(Base64_Utils.encodeNTimes(configuration.getWbId()));
+            txtPlant.setText(configuration.getWkPlant());
+            txtWBID.setText(configuration.getWbId());
 
             DefaultComboBoxModel port1Model = getPortModel();
             String port1 = configuration.getWb1Port();
@@ -1068,7 +1071,6 @@ public class ConfigView extends javax.swing.JDialog {
             }
         }
         if (!error) {
-            WeighBridgeApp.getApplication().setConfig(new AppConfig());
             dispose();
         } else {
             JOptionPane.showMessageDialog(this, msg.toString(), "Error", JOptionPane.ERROR_MESSAGE);
