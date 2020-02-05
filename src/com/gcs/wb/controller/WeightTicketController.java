@@ -11,7 +11,6 @@ import com.gcs.wb.jpa.entity.OutboundDelivery;
 import com.gcs.wb.jpa.entity.OutboundDeliveryDetail;
 import com.gcs.wb.jpa.entity.PurchaseOrder;
 import com.gcs.wb.jpa.entity.SLoc;
-import com.gcs.wb.jpa.entity.TimeRange;
 import com.gcs.wb.jpa.entity.Variant;
 import com.gcs.wb.jpa.entity.WeightTicket;
 import com.gcs.wb.model.AppConfig;
@@ -135,9 +134,9 @@ public class WeightTicketController {
         weightTicketService.printWT(wt, reprint, ximang, outbDel_list, outDetails_lits, outbDel, rbtMisc, rbtPO, isStage1, rootPane);
     }
 
-    public int getCountSingal() {
-        return weightTicketService.getCountSingal();
-    }
+//    public int getCountSingal() {
+//        return weightTicketService.getCountSingal();
+//    }
 
     public SLoc findByLgort(String lgort) {
         return weightTicketService.findByLgort(lgort);
@@ -159,11 +158,11 @@ public class WeightTicketController {
         return weightTicketService.getDev(wbid);
     }
 
-    public Material CheckPOSTO(String matnr) throws Exception {
+    public Material checkPOSTO(String matnr) throws Exception {
         return weightTicketService.CheckPOSTO(matnr);
     }
 
-    public OutboundDelivery findByMandtOutDel(String delnum) throws Exception {
+    public OutboundDelivery findByMandtOutDel(String delnum) throws Exception{
         return weightTicketService.findByMandtOutDel(delnum);
     }
 }

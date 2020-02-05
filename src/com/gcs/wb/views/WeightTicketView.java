@@ -1743,7 +1743,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                 Material m = null;
                 PurchaseOrderDetail purchaseOrderDetail = purOrder.getPurchaseOrderDetail();
                 try {
-                    m = weightTicketController.CheckPOSTO(purchaseOrderDetail.getMaterial());
+                    m = weightTicketController.checkPOSTO(purchaseOrderDetail.getMaterial());
                 } catch (Exception ex) {
                     java.util.logging.Logger.getLogger(WeightTicketView.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -1840,7 +1840,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             for (int i = 0; i < outbDel_list.size(); i++) {
                 outdel_tmp = outbDel_list.get(i);
                 try {
-                    mat_tmp = weightTicketController.CheckPOSTO(outdel_tmp.getMatnr());
+                    mat_tmp = weightTicketController.checkPOSTO(outdel_tmp.getMatnr());
 
 //                    ximang_tmp = mat_tmp.getBag();
                 } catch (Exception ex) {
@@ -2367,7 +2367,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                     // OutboundDelivery od = null; //HLD18--
                     List<OutboundDeliveryDetail> odt = null;
                     try {
-                        od = weightTicketController.findByMandtOutDel(OutboundDeliveryDetail.getDeliveryOrderNo());
+                        od = weightTicketController.findByMandtOutDel(weightTicketDetail.getDeliveryOrderNo());
                     } catch (Exception ex) {
 //                        java.util.logging.Logger.getLogger(WeightTicketView.class.getName()).log(Level.SEVERE, null, ex);
                     }

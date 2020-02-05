@@ -988,9 +988,9 @@ public class WeightTicketService {
         }
     }
 
-    public int getCountSingal() {
-        return noneRepository.getCountSingal();
-    }
+//    public int getCountSingal() {
+//        return noneRepository.getCountSingal();
+//    }
 
     public SLoc findByLgort(String lgort) {
         return sLocRepository.findByLgort(lgort);

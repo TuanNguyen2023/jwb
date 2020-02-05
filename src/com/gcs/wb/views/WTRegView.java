@@ -1551,23 +1551,10 @@ public class WTRegView extends javax.swing.JInternalFrame {
             return oldKunnr;
         }
 
-        private void syncOutboundDelivery(String val, OutboundDelivery sapOutb) {
-            if (sapOutb != null && outb == null) {
-                entityManager.persist(sapOutb);
-                outb = sapOutb;
-                validDO = true;
-            } else if (sapOutb != null && outb != null) {
-                sapOutb.setId(outb.getId());
-                entityManager.merge(sapOutb);
-                outb = sapOutb;
-                validDO = true;
-            } else {
-                if (outb != null) {
-                    entityManager.remove(outb);
-                    outb = null;
-                }
-                validDO = false;
-                String msg = resourceMapMsg.getString("msg.dONotExitst", val);
+        private void syncOutboundDelivery(String deliveryNum, OutboundDelivery sapOutb) {
+            validDO = sapService.syncOutboundDelivery(sapOutb, outb, deliveryNum);
+            if (!validDO) {
+                String msg = resourceMapMsg.getString("msg.dONotExitst", deliveryNum);
                 setMessage(msg);
                 JOptionPane.showMessageDialog(rootPane, msg);
             }

@@ -49,6 +49,8 @@ import com.gcs.wb.service.LookupMaterialService;
 import com.gcs.wb.views.TransportAgentView;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.swing.DefaultComboBoxModel;
@@ -63,7 +65,6 @@ import org.jdesktop.application.ResourceMap;
  * @author HANGTT
  */
 public class SAPService {
-
 
     EntityManager entityManager = JPAConnector.getInstance();
     EntityTransaction entityTransaction = entityManager.getTransaction();
@@ -142,7 +143,7 @@ public class SAPService {
             session.execute(bapi);
 
             List<TransportagentGetListStructure> etVendors = bapi.getEtVendor();
-            
+
             for (TransportagentGetListStructure vens : etVendors) {
                 Vendor ven = new Vendor();
                 ven.setMandt(config.getsClient());
@@ -153,19 +154,19 @@ public class SAPService {
             }
         } catch (Exception ex) {
         }
-        
+
         entityTransaction = entityManager.getTransaction();
         if (!entityTransaction.isActive()) {
             entityTransaction.begin();
         }
-        
+
         // update remove DB
         for (Vendor ven : vendorDBs) {
             if (venSaps.indexOf(ven) == -1) {
                 entityManager.remove(ven);
             }
         }
-        
+
         // update SAP - DB
         for (Vendor venSap : venSaps) {
             int index = vendorDBs.indexOf(venSap);
@@ -176,36 +177,37 @@ public class SAPService {
                 entityManager.merge(venSap);
             }
         }
-        
+
         entityTransaction.commit();
         entityManager.clear();
-        
+
         // return data
         vendorDBs = vendorRepository.getListVendor();
-        
+
         return new DefaultComboBoxModel(vendorDBs.toArray());
     }
 
     /**
      * get Outbound Delivery follow DO number
+     *
      * @param number
      * @param refresh
-     * @return 
+     * @return
      */
-    public OutboundDelivery getOutboundDelivery(String number, boolean refresh) throws Exception {
+    public OutboundDelivery getOutboundDelivery(String number) throws Exception {
         DoGetDetailBapi bapiDO = new DoGetDetailBapi();
         bapiDO.setId_do(StringUtil.paddingZero(number, 10));
         session.execute(bapiDO);
         OutboundDeliveryConverter outboundDeliveryConverter = new OutboundDeliveryConverter();
-        return outboundDeliveryConverter.convertsHasParameter(bapiDO, number, refresh);
-
+        return outboundDeliveryConverter.convertHasParameter(bapiDO, number);
     }
 
     /**
      * get purchase order follow PO
+     *
      * @param poNum
      * @return
-     * @throws Exception 
+     * @throws Exception
      */
     public PurchaseOrder getPurchaseOrder(String poNum) throws Exception {
         PoGetDetailBapi bPO = new PoGetDetailBapi();
@@ -215,12 +217,13 @@ public class SAPService {
         return purchaseOrderConverter.convertHasParameter(bPO, poNum);
 
     }
-    
+
     /**
      * sync Batch Stocks
+     *
      * @param lgortSloc
      * @param matnr
-     * @param lgortWT 
+     * @param lgortWT
      */
     public void syncBatchStocks(String lgortSloc, String matnr, String lgortWT) {
         // get data DB
@@ -267,11 +270,12 @@ public class SAPService {
         entityTransaction.commit();
         entityManager.clear();
     }
-    
+
     /**
      * get data Customer detail
+     *
      * @param kunnr
-     * @return 
+     * @return
      */
     public Customer getCustomer(String kunnr) {
         CustomerGetDetailBapi bapiCust = new CustomerGetDetailBapi();
@@ -284,8 +288,9 @@ public class SAPService {
 
     /**
      * get data Vendor detail
+     *
      * @param lifnr
-     * @return 
+     * @return
      */
     public Vendor getVendor(String lifnr) {
         VendorGetDetailBapi bapiCust = new VendorGetDetailBapi();
@@ -314,24 +319,23 @@ public class SAPService {
                     sloc.setLgobe(s.getLgobe());
                     slocSaps.add(sloc);
                 }
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 // NOP
             }
 
-             // sync data
+            // sync data
             entityTransaction = entityManager.getTransaction();
             if (!entityTransaction.isActive()) {
                 entityTransaction.begin();
             }
             // update case delete
-            for(SLoc slocD: slocDBs) {
-                if(slocSaps.indexOf(slocD) == -1) {
+            for (SLoc slocD : slocDBs) {
+                if (slocSaps.indexOf(slocD) == -1) {
                     entityManager.remove(slocD);
                 }
             }
             // update case persit/merge
-            for(SLoc sloc: slocSaps) {
+            for (SLoc sloc : slocSaps) {
                 sloc.setMandt(mandt);
                 sloc.setWplant(wplant);
                 int index = slocDBs.indexOf(sloc);
@@ -350,7 +354,7 @@ public class SAPService {
 
         return new DefaultComboBoxModel(slocDBs.toArray());
     }
-    
+
     public List<TransportAgent> getTransportAgentList() {
         List<TransportAgent> result = new ArrayList<>();
         // get data DB
@@ -369,6 +373,7 @@ public class SAPService {
                 //sync SAP <=> DB
                 /**
                  * sync DVVC
+                 *
                  * @param transportDBs
                  * @param transportSaps
                  */
@@ -443,8 +448,9 @@ public class SAPService {
 
     /**
      * get detail Material
+     *
      * @param matnr
-     * @return 
+     * @return
      */
     public Material getMaterialDetail(String matnr) {
         Material result = null;
@@ -458,6 +464,44 @@ public class SAPService {
         } catch (Exception e) {
             return null;
         }
+        return result;
+    }
+
+    public boolean syncOutboundDelivery(OutboundDelivery sapOutboundDelivery, OutboundDelivery outboundDelivery, String deliveryNum) {
+
+        boolean result = false;
+        if (!entityTransaction.isActive()) {
+            entityTransaction.begin();
+        }
+
+        try {
+            if (sapOutboundDelivery != null && outboundDelivery == null) {
+                entityManager.persist(sapOutboundDelivery);
+                outboundDelivery = sapOutboundDelivery;
+                result = true;
+            } else if (sapOutboundDelivery != null && outboundDelivery != null) {
+                sapOutboundDelivery.setId(outboundDelivery.getId());
+                entityManager.merge(sapOutboundDelivery);
+                outboundDelivery = sapOutboundDelivery;
+                result = true;
+            } else {
+                if (outboundDelivery != null) {
+                    entityManager.remove(outboundDelivery);
+                    outboundDelivery = null;
+                }
+                result = false;
+            }
+
+            entityTransaction.commit();
+            entityManager.clear();
+        } catch (Exception ex) {
+            if (entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
+            Logger.getLogger(SAPService.class.getName()).log(Level.SEVERE, null, ex);
+            result = false;
+        }
+
         return result;
     }
 }
