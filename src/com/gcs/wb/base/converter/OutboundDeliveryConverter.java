@@ -9,7 +9,7 @@ import com.gcs.wb.bapi.helper.structure.DoGetDetailStructure;
 import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
-import com.gcs.wb.jpa.entity.OutboundDetail;
+import com.gcs.wb.jpa.entity.OutboundDeliveryDetail;
 import com.gcs.wb.jpa.repositorys.OutboundDetailRepository;
 import java.math.BigDecimal;
 import java.util.List;
@@ -26,7 +26,7 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
 
     EntityManager entityManager = JPAConnector.getInstance();
     EntityTransaction entityTransaction = entityManager.getTransaction();
-
+    
     @Override
     public OutboundDelivery convertHasParameter(DoGetDetailBapi from, String val) throws Exception {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -35,7 +35,7 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
     @Override
     public OutboundDelivery convertsHasParameter(DoGetDetailBapi from, String val, boolean refresh) throws Exception {
         OutboundDelivery outb = null;
-        OutboundDetail outb_details = null;
+        OutboundDeliveryDetail outb_details = null;
         String item_cat = "";
         String item_num = null;
         String item_num_free = null;
@@ -49,13 +49,13 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
             // <editor-fold defaultstate="collapsed" desc="Fill D.O Data">
             //check do detail exist
             entityTransaction = entityManager.getTransaction();
-            List<OutboundDetail> outb_detail_check;
+            List<OutboundDeliveryDetail> outb_detail_check;
             if (refresh == true) {
                 try {
                     outb_detail_check = findByMandtDelivNumb(val);
                     if (outb_detail_check.size() > 0) {
                         entityTransaction.begin();
-
+                        
                         for (int i = 0; i < outb_detail_check.size(); i++) {
                             entityManager.remove(outb_detail_check.get(i));
                         }
@@ -76,7 +76,7 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
                     if (outb_detail_check.size() > 0) {
                         outb_details = outb_detail_check.get(0);
                     } else {
-                        outb_details = new OutboundDetail(val, doItem.getPosnr().substring(4, 5));
+                        outb_details = new OutboundDeliveryDetail(val, doItem.getPosnr().substring(4, 5));
                     }
                 } catch (Exception ex) {
                     Logger.getLogger(SAPService.class.getName()).log(Level.SEVERE, null, ex);

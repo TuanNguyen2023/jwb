@@ -16,6 +16,7 @@ import com.gcs.wb.jpa.entity.Vehicle;
 import com.gcs.wb.jpa.entity.Vendor;
 import com.gcs.wb.jpa.entity.WeightTicket;
 import com.gcs.wb.jpa.repositorys.WeightTicketRegistarationRepository;
+import com.gcs.wb.jpa.entity.WeightTicketDetail;
 import com.gcs.wb.jpa.repositorys.CustomerRepository;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
 import com.gcs.wb.jpa.repositorys.OutboundDeliveryRepository;
@@ -160,6 +161,7 @@ public class WeightTicketRegistarationService {
     public Object[][] handleWtData(String getMode, Object[][] wtData, List<WeightTicket> weightTicketList, AppConfig config, Object[] wtCols, String sVendor) {
         for (int i = 0; i < weightTicketList.size(); i++) {
             WeightTicket item = weightTicketList.get(i);
+            WeightTicketDetail weightTicketDetail = item.getWeightTicketDetail();
             if (!item.getMandt().equalsIgnoreCase(config.getsClient()) && !item.getWplant().equalsIgnoreCase(config.getwPlant().toString())) {
                 continue;
             }
@@ -169,9 +171,9 @@ public class WeightTicketRegistarationService {
             wtData[i][3] = item.getPlateNo();
             wtData[i][4] = item.getTrailerId();
             wtData[i][5] = item.getRegType();
-            wtData[i][6] = item.getRegItemDescription();
-            wtData[i][7] = item.getRegItemQuantity();
-            wtData[i][8] = item.getDeliveryOrderNo();
+            wtData[i][6] = weightTicketDetail.getRegItemDescription();
+            wtData[i][7] = weightTicketDetail.getRegItemQuantity();
+            wtData[i][8] = weightTicketDetail.getDeliveryOrderNo();
             wtData[i][9] = item.getCreator();
             wtData[i][10] = item.getSeqMonth();
             wtData[i][11] = item.getCreatedDate();

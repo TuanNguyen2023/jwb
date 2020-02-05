@@ -35,7 +35,7 @@ public class BatchStock implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
-    @Column(name = "mandt")
+    @Column(name = "mandt", unique = true)
     private String mandt;
     @Column(name = "werks", unique = true)
     private String werks;

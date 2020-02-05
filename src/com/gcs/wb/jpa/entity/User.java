@@ -50,10 +50,10 @@ public class User implements Serializable {
     private Date updatedDate;
     @Column(name = "deleted_date")
     private Date deletedDate;
-    @Column(name = "mandt")
+    @Column(name = "mandt", unique = true)
     private String mandt;
-    @Column(name = "wplant")
-    private String wplan;
+    @Column(name = "wplant", unique = true)
+    private String wplant;
 
     public User() {
     }
@@ -159,12 +159,12 @@ public class User implements Serializable {
         this.mandt = mandt;
     }
 
-    public String getWplan() {
-        return wplan;
+    public String getWplant() {
+        return wplant;
     }
 
-    public void setWplan(String wplan) {
-        this.wplan = wplan;
+    public void setWplant(String wplant) {
+        this.wplant = wplant;
     }
     
     @Override
@@ -186,7 +186,7 @@ public class User implements Serializable {
         if (updatedDate != null ? !updatedDate.equals(user.updatedDate) : user.updatedDate != null) return false;
         if (deletedDate != null ? !deletedDate.equals(user.deletedDate) : user.deletedDate != null) return false;
         if (mandt != null ? !mandt.equals(user.mandt) : user.mandt != null) return false;
-        if (wplan != null ? !wplan.equals(user.wplan) : user.wplan != null) return false;
+        if (wplant != null ? !wplant.equals(user.wplant) : user.wplant != null) return false;
         
         return true;
     }
@@ -205,7 +205,7 @@ public class User implements Serializable {
         result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
         result = 31 * result + (deletedDate != null ? deletedDate.hashCode() : 0);
         result = 31 * result + (mandt != null ? mandt.hashCode() : 0);
-        result = 31 * result + (wplan != null ? wplan.hashCode() : 0);
+        result = 31 * result + (wplant != null ? wplant.hashCode() : 0);
         return result;
     }
 

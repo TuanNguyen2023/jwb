@@ -13,6 +13,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -22,20 +24,20 @@ import javax.persistence.Table;
  * @author thangtp.nr
  */
 @Entity
-@Table(name = "tbl_outbound_detail")
+@Table(name = "tbl_outbound_delivery_detail")
 @NamedQueries({
-    @NamedQuery(name = "OutboundDetail.findByDeliveryOrderNoAndDeliveryOrderItem",
-    query = "SELECT o FROM OutboundDetail o WHERE"
+    @NamedQuery(name = "OutboundDeliveryDetail.findByDeliveryOrderNoAndDeliveryOrderItem",
+    query = "SELECT o FROM OutboundDeliveryDetail o WHERE"
     + " o.deliveryOrderNo LIKE :deliveryOrderNo"
     + " AND o.deliveryOrderItem = :deliveryOrderItem order by o.freeItem desc"),
-    @NamedQuery(name = "OutboundDetail.findByDeliveryOrderNo",
-    query = "SELECT o FROM OutboundDetail o WHERE"
+    @NamedQuery(name = "OutboundDeliveryDetail.findByDeliveryOrderNo",
+    query = "SELECT o FROM OutboundDeliveryDetail o WHERE"
     + " o.deliveryOrderNo LIKE :deliveryOrderNo order by o.freeItem desc"),
-    @NamedQuery(name = "OutboundDetail.findByWtId",
-    query = "SELECT o FROM OutboundDetail o WHERE"
+    @NamedQuery(name = "OutboundDeliveryDetail.findByWtId",
+    query = "SELECT o FROM OutboundDeliveryDetail o WHERE"
     + " o.wtId LIKE :wtId order by o.freeItem desc")
 })
-public class OutboundDetail implements Serializable {
+public class OutboundDeliveryDetail implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,7 +52,7 @@ public class OutboundDetail implements Serializable {
     @Column(name = "arktx")
     private String arktx;
     @Column(name = "lfimg")
-    private BigDecimal lfimg;//
+    private BigDecimal lfimg;
     @Column(name = "meins")
     private String meins;
     @Column(name = "vgbel")
@@ -64,17 +66,17 @@ public class OutboundDetail implements Serializable {
     @Column(name = "doc_year")
     private String docYear;
     @Column(name = "in_scale")
-    private BigDecimal inScale;//
+    private BigDecimal inScale;
     @Column(name = "out_scale")
-    private BigDecimal outScale;//
+    private BigDecimal outScale;
     @Column(name = "goods_qty")
-    private BigDecimal goodsQty;//
+    private BigDecimal goodsQty;
     @Column(name = "bzirk")
     private String bzirk;
     @Column(name = "bztxt")
     private String bztxt;
     @Column(name = "lfimg_ori")
-    private BigDecimal lfimg_ori;//
+    private BigDecimal lfimg_ori;
     @Column(name = "s_time")
     private Date sTime;
     @Column(name = "f_time")
@@ -87,19 +89,20 @@ public class OutboundDetail implements Serializable {
     private Date updatedDate;
     @Column(name = "deleted_date")
     private Date deletedDate;
-    @Column(name = "mandt")
+    @Column(name = "mandt", unique = true)
     private String mandt;
-    @Column(name = "wplant")
-    private String wplant;
+    @ManyToOne
+    @JoinColumn(name = "outbound_delivery_id")
+    private OutboundDelivery outboundDelivery;
 
-    public OutboundDetail() {
+    public OutboundDeliveryDetail() {
     }
     
-    public OutboundDetail(String deliveryOrderNo) {
+    public OutboundDeliveryDetail(String deliveryOrderNo) {
         this.deliveryOrderNo = deliveryOrderNo;
     }
     
-    public OutboundDetail(String deliveryOrderNo, String deliveryOrderItem) {
+    public OutboundDeliveryDetail(String deliveryOrderNo, String deliveryOrderItem) {
         this.deliveryOrderNo = deliveryOrderNo;
         this.deliveryOrderItem = deliveryOrderItem;
     }
@@ -110,14 +113,6 @@ public class OutboundDetail implements Serializable {
 
     public void setMandt(String mandt) {
         this.mandt = mandt;
-    }
-
-    public String getWplant() {
-        return wplant;
-    }
-
-    public void setWplant(String wplant) {
-        this.wplant = wplant;
     }
     
     public String getArktx() {
@@ -320,12 +315,20 @@ public class OutboundDetail implements Serializable {
         this.status = isPosted ? Constants.WeightTicket.STATUS_POSTED : null;
     }
 
+    public OutboundDelivery getOutboundDelivery() {
+        return outboundDelivery;
+    }
+
+    public void setOutboundDelivery(OutboundDelivery outboundDelivery) {
+        this.outboundDelivery = outboundDelivery;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        OutboundDetail that = (OutboundDetail) o;
+        OutboundDeliveryDetail that = (OutboundDeliveryDetail) o;
 
         if (deliveryOrderItem != null ? !deliveryOrderItem.equals(that.deliveryOrderItem) : that.deliveryOrderItem != null) return false;
         if (deliveryOrderNo != null ? !deliveryOrderNo.equals(that.deliveryOrderNo) : that.deliveryOrderNo != null) return false;
@@ -359,7 +362,6 @@ public class OutboundDetail implements Serializable {
         result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
         result = 31 * result + (deletedDate != null ? deletedDate.hashCode() : 0);
         result = 31 * result + (mandt != null ? mandt.hashCode() : 0);
-        result = 31 * result + (wplant != null ? wplant.hashCode() : 0);
         
         return result;
 

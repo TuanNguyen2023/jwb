@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
- /*
+/*
  * WTRegView.java
  *
  * Created on 10-04-2010, 10:06:26
@@ -43,7 +43,16 @@ import org.jdesktop.application.Task;
 import java.awt.Component;
 
 import com.gcs.wb.jpa.entity.Material;
-import com.gcs.wb.jpa.entity.OutboundDetail;
+import com.gcs.wb.jpa.entity.OutboundDeliveryDetail;
+import com.gcs.wb.jpa.entity.WeightTicketDetail;
+import com.gcs.wb.jpa.procedures.WTRegRepository;
+import com.gcs.wb.jpa.repositorys.CustomerRepository;
+import com.gcs.wb.jpa.repositorys.MaterialRepository;
+import com.gcs.wb.jpa.repositorys.OutboundDeliveryRepository;
+import com.gcs.wb.jpa.repositorys.TransportAgentVehicleRepository;
+import com.gcs.wb.jpa.repositorys.VehicleRepository;
+import com.gcs.wb.jpa.repositorys.VendorRepository;
+import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -54,7 +63,6 @@ import javax.persistence.EntityTransaction;
 import org.jdesktop.application.ResourceMap;
 
 public class WTRegView extends javax.swing.JInternalFrame {
-
     public String sVendor = "";
     public String sPO = "";
     public double dKldk = 0;
@@ -1164,31 +1172,32 @@ public class WTRegView extends javax.swing.JInternalFrame {
         }
 
         private void setWeightTicketData() {
-            for (int index = 0; index < weightTicketList.size(); index++) {
-                WeightTicket item = weightTicketList.get(index);
-                wtData[index][0] = item.getSeqDay();
-                wtData[index][1] = item.getDriverName();
-                wtData[index][2] = item.getDriverIdNo();
-                wtData[index][3] = item.getPlateNo();
-                wtData[index][4] = item.getTrailerId();
-                wtData[index][5] = item.getRegType();
-                wtData[index][6] = item.getRegItemDescription();
-                wtData[index][7] = item.getRegItemQuantity();
-                wtData[index][8] = item.getDeliveryOrderNo();
-                wtData[index][9] = item.getCreator();
-                wtData[index][10] = item.getSeqMonth();
+            for (int i = 0; i < weightTicketList.size(); i++) {
+                WeightTicket item = weightTicketList.get(i);
+                WeightTicketDetail weightTicketDetail = item.getWeightTicketDetail();
+                wtData[i][0] = item.getSeqDay();
+                wtData[i][1] = item.getDriverName();
+                wtData[i][2] = item.getDriverIdNo();
+                wtData[i][3] = item.getPlateNo();
+                wtData[i][4] = item.getTrailerId();
+                wtData[i][5] = item.getRegType();
+                wtData[i][6] = weightTicketDetail.getRegItemDescription();
+                wtData[i][7] = weightTicketDetail.getRegItemQuantity();
+                wtData[i][8] = weightTicketDetail.getDeliveryOrderNo();
+                wtData[i][9] = item.getCreator();
+                wtData[i][10] = item.getSeqMonth();
 
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                wtData[index][11] = dateFormat.format(item.getCreatedDate());
+                wtData[i][11] = dateFormat.format(item.getCreatedDate());
                 String time = item.getCreatedTime().replaceAll(":", "");
                 String hh = time.substring(0, 2);
                 String mm = time.substring(2, 4);
                 String ss = time.substring(4, 6);
-                wtData[index][12] = hh + ":" + mm + ":" + ss;
+                wtData[i][12] = hh + ":" + mm + ":" + ss;
                 if (item.isPosted()) {
-                    wtData[index][13] = true;
+                    wtData[i][13] = true;
                 } else {
-                    wtData[index][13] = false;
+                    wtData[i][13] = false;
                 }
             }
         }
@@ -1332,7 +1341,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
     }
 
     private class CheckDOTask extends org.jdesktop.application.Task<Object, Void> {
-
         private OutboundDelivery outb = null;
         private String mode = null;
         private Customer kunnr = null;
@@ -1359,7 +1367,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 outb = weightTicketRegistarationController.findByDeliveryOrderNumber(listDO[index]);
 
                 setStep(2, resourceMapMsg.getString("checkDOInSap"));
-                OutboundDelivery sapOutb = sapService.getOutboundDelivery(listDO[index], true);
+                OutboundDelivery sapOutb = sapService.getOutboundDelivery(listDO[index]);
                 if (sapOutb != null) {
                     fetchCustomerByKunnr(sapOutb);
                     fetchCustomerByKunag(sapOutb);
@@ -1408,16 +1416,18 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         private void updateWeightTicket() {
             if (validDO && outb != null) {
-                newWeightTicket.setItem(outb.getDeliveryItem());
-                newWeightTicket.setMatnrRef(outb.getMatnr());
-                newWeightTicket.setRegItemDescription(outb.getArktx());
-                newWeightTicket.setUnit(outb.getVrkme());
-                newWeightTicket.setKunnr(outb.getKunnr());
+                WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
+                weightTicketDetail.setItem(outb.getDeliveryItem());
+                weightTicketDetail.setMatnrRef(outb.getMatnr());
+                weightTicketDetail.setRegItemDescription(outb.getArktx());
+                weightTicketDetail.setUnit(outb.getVrkme());
+                weightTicketDetail.setKunnr(outb.getKunnr());
+
                 txtNMaterial.setText(outb.getArktx());
                 cbxNMaterial.setSelectedItem(outb.getArktx());
                 BigDecimal regqty = BigDecimal.ZERO;
-                List<OutboundDetail> detail = new ArrayList<>();
-                OutboundDetail item = null;
+                List<OutboundDeliveryDetail> detail = new ArrayList<>();
+                OutboundDeliveryDetail item = null;
                 String[] do_list = txtNDONum.getText().trim().split("-");
                 for (int i = 0; i < do_list.length; i++) {
                     String doNum = do_list[i];
@@ -1429,6 +1439,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                     for (int j = 0; j < detail.size(); j++) {
                         item = detail.get(j);
                         regqty = regqty.add(item.getLfimg());
+                        weightTicketDetail.setDeliveryOrderNo(doNum);
                     }
                 }
                 txtNWeight.setValue(regqty.doubleValue());
@@ -1562,22 +1573,9 @@ public class WTRegView extends javax.swing.JInternalFrame {
             return oldKunnr;
         }
 
-        private void syncOutboundDelivery(String val, OutboundDelivery sapOutb) {
-            if (sapOutb != null && outb == null) {
-                entityManager.persist(sapOutb);
-                outb = sapOutb;
-                validDO = true;
-            } else if (sapOutb != null && outb != null) {
-                sapOutb.setId(outb.getId());
-                entityManager.merge(sapOutb);
-                outb = sapOutb;
-                validDO = true;
-            } else {
-                if (outb != null) {
-                    entityManager.remove(outb);
-                    outb = null;
-                }
-                validDO = false;
+        private void syncOutboundDelivery(String deliveryNum, OutboundDelivery sapOutb) {
+            validDO = sapService.syncOutboundDelivery(sapOutb, outb, deliveryNum);
+            if (!validDO) {
                 String msg = resourceMapMsg.getString("msg.dONotExitst", val);
                 setMessage(msg);
                 JOptionPane.showMessageDialog(rootPane, msg);
@@ -1585,8 +1583,10 @@ public class WTRegView extends javax.swing.JInternalFrame {
         }
 
         private void finishTransaction() {
-            entityTransaction.commit();
-            entityManager.clear();
+            if (entityTransaction.isActive()) {
+                entityTransaction.commit();
+                entityManager.clear();
+            }
         }
 
         private void startTransaction() {
@@ -1658,6 +1658,10 @@ public class WTRegView extends javax.swing.JInternalFrame {
             }
             logger.error(null, cause);
             JOptionPane.showMessageDialog(rootPane, cause.getMessage());
+
+            if (entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
         }
 
         @Override
@@ -1811,16 +1815,17 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         private void updateWeightTicket() {
             if (validDO && outb != null) {
-                newWeightTicket.setItem(outb.getDeliveryItem());
-                newWeightTicket.setMatnrRef(outb.getMatnr());
-                newWeightTicket.setRegItemDescription(outb.getArktx());
-                newWeightTicket.setUnit(outb.getVrkme());
-                newWeightTicket.setKunnr(outb.getKunnr());
+                WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
+                weightTicketDetail.setItem(outb.getDeliveryItem());
+                weightTicketDetail.setMatnrRef(outb.getMatnr());
+                weightTicketDetail.setRegItemDescription(outb.getArktx());
+                weightTicketDetail.setUnit(outb.getVrkme());
+                weightTicketDetail.setKunnr(outb.getKunnr());
                 txtNMaterial.setText(outb.getArktx());
                 cbxNMaterial.setSelectedItem(outb.getArktx());
                 BigDecimal regqty = BigDecimal.ZERO;
-                List<OutboundDetail> detail = new ArrayList<>();
-                OutboundDetail item = null;
+                List<OutboundDeliveryDetail> detail = new ArrayList<>();
+                OutboundDeliveryDetail item = null;
                 String[] do_list = txtNDONum.getText().trim().split("-");
                 for (int i = 0; i < do_list.length; i++) {
                     String doNum = do_list[i];
@@ -1922,46 +1927,47 @@ public class WTRegView extends javax.swing.JInternalFrame {
             formatter.applyPattern("yyyy");
 
             int year = Integer.parseInt(formatter.format(now));
+            WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
             newWeightTicket.setMandt(sap.getsClient());
             newWeightTicket.setWplant(sap.getwPlant());
             newWeightTicket.setSeqDay(seqBDay);
             newWeightTicket.setSeqMonth(seqBMonth);
             newWeightTicket.setCreatedDate(new java.sql.Date(now.getTime()));
-            formatter.applyPattern("HH:mmss");
+            formatter.applyPattern("HH:mm:ss");
             newWeightTicket.setCreatedTime(formatter.format(now));
             newWeightTicket.setCreator(WeighBridgeApp.getApplication().getLogin().getUid());
             newWeightTicket.setOfflineMode(WeighBridgeApp.getApplication().isOfflineMode());
             newWeightTicket.setRegType(rbtNInward.isSelected() ? 'I' : 'O');
-            newWeightTicket.setRegItemDescription(txtNMaterial.getText().trim());
-            newWeightTicket.setRegItemQuantity(BigDecimal.valueOf(Double.valueOf(txtNWeight.getValue().toString())));
+            weightTicketDetail.setRegItemDescription(txtNMaterial.getText().trim());
+            weightTicketDetail.setRegItemQuantity(BigDecimal.valueOf(Double.valueOf(txtNWeight.getValue().toString())));
             newWeightTicket.setWbId(sap.getWbId());
             newWeightTicket.setAbbr(abbr);
             newWeightTicket.setPlateNo(txtNPlateNo.getText().trim());
             newWeightTicket.setDriverIdNo(txtNCMNDBL.getText().trim());
             newWeightTicket.setDriverName(txtNDriverName.getText().trim());
-            newWeightTicket.setDocYear(year);
+            weightTicketDetail.setDocYear(year);
             newWeightTicket.setPosted(false);
             newWeightTicket.setTrailerId(txtNTrailerPlate.getText().trim());
-            if (newWeightTicket.getDeliveryOrderNo() != null && newWeightTicket.getDeliveryOrderNo().trim().isEmpty()) {
-                newWeightTicket.setDeliveryOrderNo(null);
-                newWeightTicket.setItem(null);
-                newWeightTicket.setMatnrRef(null);
-                newWeightTicket.setRegItemDescription(txtNMaterial.getText().trim());
-                newWeightTicket.setUnit(null);
+            if (weightTicketDetail.getDeliveryOrderNo() != null && weightTicketDetail.getDeliveryOrderNo().trim().isEmpty()) {
+                weightTicketDetail.setDeliveryOrderNo(null);
+                weightTicketDetail.setItem(null);
+                weightTicketDetail.setMatnrRef(null);
+                weightTicketDetail.setRegItemDescription(txtNMaterial.getText().trim());
+                weightTicketDetail.setUnit(null);
             }
-            newWeightTicket.setKunnr(null);
-            if (newWeightTicket.getDeliveryOrderNo() != null && !newWeightTicket.getDeliveryOrderNo().trim().isEmpty()) {
-                String val = newWeightTicket.getDeliveryOrderNo().trim();
+            weightTicketDetail.setKunnr(null);
+            if (weightTicketDetail.getDeliveryOrderNo() != null && !weightTicketDetail.getDeliveryOrderNo().trim().isEmpty()) {
+                String val = weightTicketDetail.getDeliveryOrderNo().trim();
                 val = StringUtil.paddingZero(val, 10);
-                newWeightTicket.setDeliveryOrderNo(val);
+                weightTicketDetail.setDeliveryOrderNo(val);
                 if (outbDel != null) {
-                    newWeightTicket.setKunnr(outbDel.getKunnr());
+                    weightTicketDetail.setKunnr(outbDel.getKunnr());
                 }
             }
-            List<OutboundDetail> detail = new ArrayList<>();
-            OutboundDetail item = null;
+            List<OutboundDeliveryDetail> detail = new ArrayList<>();
+            OutboundDeliveryDetail item = null;
             if (WeighBridgeApp.getApplication().isOfflineMode() && !txtNDONum.getText().equals("")) {
-                newWeightTicket.setDeliveryOrderNo(txtNDONum.getText());
+                weightTicketDetail.setDeliveryOrderNo(txtNDONum.getText());
             } else if (!WeighBridgeApp.getApplication().isOfflineMode()) {
                 if (!txtNDONum.getText().equals("")) {
                     String[] do_list = txtNDONum.getText().trim().split("-");
@@ -1980,7 +1986,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
                                 n = zero.concat(n);
                             }
                             //item.setWtId(id + n);
-                            entityTransaction = entityManager.getTransaction();
                             if (!entityTransaction.isActive()) {
                                 entityTransaction.begin();
                             }
@@ -1996,7 +2001,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
             }
             setMessage(resourceMapMsg.getString("msg.saveData"));
             try {
-                entityTransaction = entityManager.getTransaction();
                 if (!entityTransaction.isActive()) {
                     entityTransaction.begin();
                 }
@@ -2027,8 +2031,9 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         @Override
         protected void failed(Throwable cause) {
-            entityTransaction = entityManager.getTransaction();
-            entityTransaction.rollback();
+            if (entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
             setSaveNeeded(true);
         }
 
@@ -2042,7 +2047,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
             setRbtEnabled(false);
             setClearable(false);
             setSaveNeeded(false);
-            entityTransaction = entityManager.getTransaction();
             if (flag_revert) {
                 List<WeightTicket> wt = weightTicketRegistarationController.getListByDeliveryOrderNo(outb_number);
                 WeightTicket item = null;
@@ -2320,12 +2324,13 @@ public class WTRegView extends javax.swing.JInternalFrame {
             for (int index = 0; index < data.size(); index++) {
                 WeightTicket item = data.get(index);
                 int createTime = Integer.parseInt(item.getCreatedTime().substring(0, 2));
-                if (startTime <= createTime && createTime <= endTime) {
+                if (startTime <= createTime && createTime <= endTime)
+                {
                     result.add(item);
                 }
             }
         }
-
+        
         return result;
     }
     // </editor-fold>

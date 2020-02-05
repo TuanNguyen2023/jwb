@@ -28,18 +28,22 @@ import com.gcs.wb.jpa.entity.BatchStock;
 import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
-import com.gcs.wb.jpa.entity.OutboundDetail;
+import com.gcs.wb.jpa.entity.OutboundDeliveryDetail;
 import com.gcs.wb.jpa.entity.PurchaseOrder;
+import com.gcs.wb.jpa.entity.PurchaseOrderDetail;
 import com.gcs.wb.jpa.entity.SLoc;
 import com.gcs.wb.jpa.entity.TimeRange;
 import com.gcs.wb.jpa.entity.Variant;
 import com.gcs.wb.jpa.entity.WeightTicket;
+import com.gcs.wb.jpa.entity.WeightTicketDetail;
+import com.gcs.wb.jpa.procedures.WeightTicketJpaRepository;
 import com.gcs.wb.jpa.repositorys.BatchStockRepository;
 import com.gcs.wb.jpa.repositorys.CustomerRepository;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
 import com.gcs.wb.jpa.repositorys.OutboundDeliveryRepository;
 import com.gcs.wb.jpa.repositorys.SignalsRepository;
 import com.gcs.wb.jpa.repositorys.TimeRangeRepository;
+import com.gcs.wb.jpa.procedures.WeightTicketRepository;
 import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
 import com.gcs.wb.jpa.repositorys.SLocRepository;
 import com.gcs.wb.jpa.repositorys.VariantRepository;
@@ -78,10 +82,11 @@ public class WeightTicketService {
 
     WeightTicketRepository weightTicketRepository = new WeightTicketRepository();
     BatchStockRepository batchStocksRepository = new BatchStockRepository();
-    TimeRangeRepository timeRangeRepository = new TimeRangeRepository();
+    private AppConfig config = WeighBridgeApp.getApplication().getConfig();
+    public HashMap hmMsg = new HashMap();
     VendorRepository vendorRepository = new VendorRepository();
     CustomerRepository customerRepository = new CustomerRepository();
-    SignalsRepository noneRepository = new SignalsRepository();
+    WeightTicketJpaRepository weightTicketJpaRepository = new WeightTicketJpaRepository();
     BatchStockRepository batchStockRepository = new BatchStockRepository();
     SLocRepository sLocRepository = new SLocRepository();
     VariantRepository variantRepository = new VariantRepository();
@@ -108,17 +113,13 @@ public class WeightTicketService {
         return result;
     }
 
-    public TimeRange getTime() {
-        return timeRangeRepository.findByMandtWbId(client, WeighBridgeApp.getApplication().getConfig().getWbId());
-    }
-
     public List<BatchStock> getBatchStocks(SLoc selSloc, WeightTicket weightTicket) {
         return batchStocksRepository.getListBatchStock(config.getwPlant(),
-                selSloc.getLgort(), weightTicket.getMatnrRef());
+                selSloc.getLgort(), weightTicket.getWeightTicketDetail().getMatnrRef());
     }
 
     public void getSyncBatchStocks(SLoc selSloc, WeightTicket weightTicket) {
-        sapService.syncBatchStocks(selSloc.getLgort(), weightTicket.getMatnrRef(), weightTicket.getLgort());
+        sapService.syncBatchStocks(selSloc.getLgort(), weightTicket.getWeightTicketDetail().getMatnrRef(), weightTicket.getLgort());
     }
 
     public DefaultComboBoxModel setCbxBatch(List<BatchStock> batchs) {
@@ -196,7 +197,12 @@ public class WeightTicketService {
         return purchaseOrderRepository.findByPoNumber(poNum);
     }
 
-    public void revertCompletedDO(List<String> completedDOs, List<OutboundDetail> OutbDetailsV2, List<OutboundDelivery> outbDels, WeightTicket weightTicket, List<OutboundDetail> outDetails_lits, Session sapSession) {
+
+    public PurchaseOrder getSapPurOrder(String poNum) throws Exception {
+        return sapService.getPurchaseOrder(poNum);
+    }
+
+    public void revertCompletedDO(List<String> completedDOs, List<OutboundDeliveryDetail> OutbDetailsV2, List<OutboundDelivery> outbDels, WeightTicket weightTicket, List<OutboundDeliveryDetail> outDetails_lits, Session sapSession) {
         DORevertBapi bapi = null;
         for (String item : completedDOs) {
             bapi = new DORevertBapi(item);
@@ -217,7 +223,7 @@ public class WeightTicketService {
             entityManager.getTransaction().begin();
         }
         if (OutbDetailsV2 != null) {
-            for (OutboundDetail outbDetail : OutbDetailsV2) {
+            for (OutboundDeliveryDetail outbDetail : OutbDetailsV2) {
                 outbDetail.setPosted(false);
                 entityManager.merge(outbDetail);
             }
@@ -232,7 +238,7 @@ public class WeightTicketService {
     }
 
     public GoodsMvtWeightTicketStructure fillWTStructure(WeightTicket wt,
-            OutboundDelivery od, List<OutboundDetail> od_v2_list, WeightTicket weightTicket) {
+            OutboundDelivery od, List<OutboundDeliveryDetail> od_v2_list, WeightTicket weightTicket) {
         GoodsMvtWeightTicketStructure stWT = null;
         if (wt == null) {
             return stWT;
@@ -243,9 +249,9 @@ public class WeightTicketService {
                 weightTicket.getWbId(),
                 tempWTID);
 //          outb_details_v2
-        OutboundDetail od_v2 = null;
+        OutboundDeliveryDetail od_v2 = null;
         if (od != null && od_v2_list != null) {
-            for (OutboundDetail od_v2_tmp : od_v2_list) {
+            for (OutboundDeliveryDetail od_v2_tmp : od_v2_list) {
                 if (od_v2_tmp.getDeliveryOrderNo() != null
                         && od_v2_tmp.getDeliveryOrderNo().equals(od.getDeliveryOrderNo())) {
                     od_v2 = od_v2_tmp;
@@ -254,8 +260,10 @@ public class WeightTicketService {
             }
         }
 
+        WeightTicketDetail weightTicketDetail = wt.getWeightTicketDetail();
+
         stWT.setCAT_TYPE(String.valueOf(wt.getRegType()));
-        stWT.setDO_WT(wt.getDeliveryOrderNo());
+        stWT.setDO_WT(weightTicketDetail.getDeliveryOrderNo());
         stWT.setDO_NUMBER(od != null
                 && od.getDeliveryOrderNo() != null
                 ? od.getDeliveryOrderNo() : "");
@@ -266,18 +274,18 @@ public class WeightTicketService {
         stWT.setFTIME(wt.getFTime());
         stWT.setGQTY_WT(wt.getGQty());
         stWT.setGQTY(wt.getGQty());
-        stWT.setKUNNR(wt.getKunnr());
+        stWT.setKUNNR(weightTicketDetail.getKunnr());
         stWT.setLIFNR(wt.getAbbr());
-        stWT.setMATID(wt.getMatnrRef());
-        stWT.setMATNAME(wt.getRegItemDescription());
+        stWT.setMATID(weightTicketDetail.getMatnrRef());
+        stWT.setMATNAME(weightTicketDetail.getRegItemDescription());
         stWT.setMVT_TYPE(wt.getMoveType());
         if ((stWT.getMVT_TYPE() == null || stWT.getMVT_TYPE().isEmpty())
                 && od != null && od.getBwart() != null) {
             stWT.setMVT_TYPE(od.getBwart());
         }
         stWT.setNTEXT(wt.getText());
-        stWT.setPO_NUMBER(wt.getEbeln());
-        stWT.setREGQTY_WT(wt.getRegItemQuantity());
+        stWT.setPO_NUMBER(weightTicketDetail.getEbeln());
+        stWT.setREGQTY_WT(weightTicketDetail.getRegItemQuantity());
         stWT.setREGQTY(od != null ? od.getLfimg() : BigDecimal.ZERO);
         stWT.setSALEDT(od_v2 != null ? od_v2.getBzirk() : "");
         stWT.setSDATE(wt.getSTime());
@@ -286,7 +294,7 @@ public class WeightTicketService {
         stWT.setSSCALE(wt.getSScale());
         stWT.setSTIME(wt.getSTime());
         stWT.setTRANSID(wt.getPlateNo());
-        stWT.setUNIT(wt.getUnit());
+        stWT.setUNIT(weightTicketDetail.getUnit());
         stWT.setUSERNAME(wt.getSCreator());
         stWT.setVTYPE(od != null ? od.getBwtar() : "");
         stWT.setBatch(od != null ? od.getCharg() : "");
@@ -315,7 +323,8 @@ public class WeightTicketService {
     }
 
     public Material checkPOSTO(PurchaseOrder purOrder) throws Exception {
-        return CheckPOSTO(purOrder.getMaterial());
+        PurchaseOrderDetail purchaseOrderDetail = purOrder.getPurchaseOrderDetail();
+        return CheckPOSTO(purchaseOrderDetail.getMaterial());
     }
 
     public Double CheckMatStock(String matnr, String plant, String sloc, String batch) {
@@ -335,7 +344,7 @@ public class WeightTicketService {
         return remaining;
     }
 
-    public Object getGrDoMigoBapi(WeightTicket wt, WeightTicket weightTicket, OutboundDelivery outbDel, List<OutboundDetail> outDetails_lits, int timeFrom, int timeTo) {
+    public Object getGrDoMigoBapi(WeightTicket wt, WeightTicket weightTicket, OutboundDelivery outbDel, List<OutboundDeliveryDetail> outDetails_lits, int timeFrom, int timeTo) {
         String doNum = null;
         if (outbDel != null) {
             doNum = outbDel.getDeliveryOrderNo();
@@ -369,15 +378,16 @@ public class WeightTicketService {
         header.setPstngDate(DateUtil.stripTime(stime));
         // >> end of modified      
 
+        WeightTicketDetail weightTicketDetail = wt.getWeightTicketDetail();
         if (outbDel == null) {
-            header.setRefDocNo(wt.getDeliveryOrderNo());
+            header.setRefDocNo(weightTicketDetail.getDeliveryOrderNo());
         } else {
             header.setRefDocNo(doNum);
         }
         header.setBillOfLading(plateCombine);
         header.setGrGiSlipNo(wt.getDriverIdNo());
         if (outbDel == null) {
-            header.setHeaderText(wt.getDeliveryOrderNo());
+            header.setHeaderText(weightTicketDetail.getDeliveryOrderNo());
         } else {
             header.setHeaderText(doNum);
         }
@@ -386,7 +396,7 @@ public class WeightTicketService {
         List<GoodsMvtItemDoStructure> tab = new ArrayList<GoodsMvtItemDoStructure>();
 
         //get do details for current do
-        OutboundDetail item = null;
+        OutboundDeliveryDetail item = null;
         BigDecimal kl = BigDecimal.ZERO;
         BigDecimal kl_km = BigDecimal.ZERO;
         BigDecimal kl_total = BigDecimal.ZERO;
@@ -402,14 +412,14 @@ public class WeightTicketService {
         }
         kl_total = kl.add(kl_km);
         if (outbDel == null) {
-            tab_wa.setDeliv_numb(wt.getDeliveryOrderNo());
-            tab_wa.setDeliv_numb_to_search(wt.getDeliveryOrderNo());
+            tab_wa.setDeliv_numb(weightTicketDetail.getDeliveryOrderNo());
+            tab_wa.setDeliv_numb_to_search(weightTicketDetail.getDeliveryOrderNo());
         } else {
             tab_wa.setDeliv_numb(doNum);
             tab_wa.setDeliv_numb_to_search(doNum);
         }
-        tab_wa.setDeliv_item(wt.getItem());
-        tab_wa.setDeliv_item_to_search(wt.getItem());
+        tab_wa.setDeliv_item(weightTicketDetail.getItem());
+        tab_wa.setDeliv_item_to_search(weightTicketDetail.getItem());
         tab_wa.setMove_type("101");
         tab_wa.setPlant(config.getwPlant());
         tab_wa.setStge_loc(wt.getLgort());
@@ -420,7 +430,7 @@ public class WeightTicketService {
         } else {
             tab_wa.setEntry_qnt(kl_total);
         }
-        tab_wa.setEntry_uom(wt.getUnit());
+        tab_wa.setEntry_uom(weightTicketDetail.getUnit());
 //        tab_wa.setEntry_uom_iso(wt.getUnit());
         if (wt.getNoMoreGr() != null && wt.getNoMoreGr() == '2') {
             tab_wa.setNo_more_gr("X");
@@ -467,16 +477,16 @@ public class WeightTicketService {
 
         List<GoodsMvtItemPoStructure> tab = new ArrayList<GoodsMvtItemPoStructure>();
         GoodsMvtItemPoStructure tab_wa = new GoodsMvtItemPoStructure();
-
-        tab_wa.setPo_number(wt.getEbeln());
-        tab_wa.setPo_item(wt.getItem());
+        WeightTicketDetail weightTicketDetail = wt.getWeightTicketDetail();
+        tab_wa.setPo_number(weightTicketDetail.getEbeln());
+        tab_wa.setPo_item(weightTicketDetail.getItem());
         tab_wa.setMove_type("101");
         tab_wa.setPlant(config.getwPlant());
         tab_wa.setStge_loc(wt.getLgort());
         tab_wa.setBatch(wt.getCharg());
         tab_wa.setGr_rcpt(wt.getSCreator());
         tab_wa.setEntry_qnt(wt.getGQty());
-        tab_wa.setEntry_uom(wt.getUnit());
+        tab_wa.setEntry_uom(weightTicketDetail.getUnit());
 
         if (wt.getNoMoreGr() != null && wt.getNoMoreGr() == '2') {
             tab_wa.setNo_more_gr("X");
@@ -520,14 +530,15 @@ public class WeightTicketService {
         List<GoodsMvtItemPoStructure> tab = new ArrayList<GoodsMvtItemPoStructure>();
         GoodsMvtItemPoStructure tab_wa = new GoodsMvtItemPoStructure();
 
-        tab_wa.setMaterial(wt.getMatnrRef());
+        WeightTicketDetail weightTicketDetail = wt.getWeightTicketDetail();
+        tab_wa.setMaterial(weightTicketDetail.getMatnrRef());
         tab_wa.setPlant(config.getwPlant());
         tab_wa.setStge_loc(wt.getLgort());
         tab_wa.setMove_type("541");
         tab_wa.setMvt_ind(null);
         tab_wa.setEntry_qnt(wt.getGQty());
 
-        tab_wa.setEntry_uom(wt.getUnit());
+        tab_wa.setEntry_uom(weightTicketDetail.getUnit());
         tab_wa.setBatch(wt.getCharg());
         tab_wa.setVendor(purOrder.getVendor());
 
@@ -577,17 +588,17 @@ public class WeightTicketService {
 
         List<GoodsMvtItemPoStructure> tab = new ArrayList<GoodsMvtItemPoStructure>();
         GoodsMvtItemPoStructure tab_wa = new GoodsMvtItemPoStructure();
-
-        tab_wa.setMaterial(wt.getMatnrRef());
+        WeightTicketDetail weightTicketDetail = wt.getWeightTicketDetail();
+        tab_wa.setMaterial(weightTicketDetail.getMatnrRef());
         tab_wa.setPlant(config.getwPlant());
         tab_wa.setStge_loc(wt.getLgort());
         tab_wa.setBatch(wt.getCharg());
         tab_wa.setMove_type(wt.getMoveType());
         tab_wa.setMvt_ind(null);
         tab_wa.setEntry_qnt(wt.getGQty());
-        tab_wa.setEntry_uom(wt.getUnit());
+        tab_wa.setEntry_uom(weightTicketDetail.getUnit());
 
-        tab_wa.setMoveMat(wt.getRecvMatnr());
+        tab_wa.setMoveMat(weightTicketDetail.getRecvMatnr());
         tab_wa.setMovePlant(wt.getRecvPlant());
         tab_wa.setMoveSLoc(wt.getRecvLgort());
         tab_wa.setMoveBatch(wt.getRecvCharg());
@@ -601,21 +612,21 @@ public class WeightTicketService {
         return bapi;
     }
 
-    public Object getDoCreate2PGI(WeightTicket wt, OutboundDelivery outbDel, WeightTicket weightTicket, int timeFrom, int timeTo, List<OutboundDetail> outDetails_lits) {
+    public Object getDoCreate2PGI(WeightTicket wt, OutboundDelivery outbDel, WeightTicket weightTicket, int timeFrom, int timeTo, List<OutboundDeliveryDetail> outDetails_lits) {
         String doNum = null;
         if (outbDel != null) {
             doNum = outbDel.getDeliveryOrderNo();
         }
         config = WeighBridgeApp.getApplication().getConfig();
         DOCreate2PGIBapi bapi = new DOCreate2PGIBapi();
-
+        WeightTicketDetail weightTicketDetail = wt.getWeightTicketDetail();
         String plateCombine = wt.getPlateNo();
         if (wt.getTrailerId() != null && !wt.getTrailerId().trim().isEmpty()) {
             plateCombine += "|" + wt.getTrailerId();
         }
         VbkokStructure wa = new VbkokStructure();
         if (outbDel == null) {
-            wa.setVbeln_vl(wt.getDeliveryOrderNo());
+            wa.setVbeln_vl(weightTicketDetail.getDeliveryOrderNo());
         } else {
             wa.setVbeln_vl(doNum);
         }
@@ -648,7 +659,7 @@ public class WeightTicketService {
         bapi.setVbkok_wa(wa);
 
         //get do details for current do
-        OutboundDetail item = null;
+        OutboundDeliveryDetail item = null;
         BigDecimal kl = BigDecimal.ZERO;
         BigDecimal kl_km = BigDecimal.ZERO;
         BigDecimal kl_total = BigDecimal.ZERO;
@@ -666,14 +677,14 @@ public class WeightTicketService {
 
         List<OutbDeliveryCreateStoStructure> _StockTransItems = new ArrayList<OutbDeliveryCreateStoStructure>();
         if (wt.getRegType() == 'O'
-                && wt.getRegItemDescription() != null
-                && wt.getRegItemDescription().toLowerCase().indexOf("bao") >= 0
-                && wt.getMatnrRef() != null) {
-            _StockTransItems.add(new OutbDeliveryCreateStoStructure(wt.getEbeln(), wt.getItem(), wt.getRegItemQuantity(), wt.getUnit()));
+                && weightTicketDetail.getRegItemDescription() != null
+                && weightTicketDetail.getRegItemDescription().toLowerCase().indexOf("bao") >= 0
+                && weightTicketDetail.getMatnrRef() != null) {
+            _StockTransItems.add(new OutbDeliveryCreateStoStructure(weightTicketDetail.getEbeln(), weightTicketDetail.getItem(), weightTicketDetail.getRegItemQuantity(), weightTicketDetail.getUnit()));
         } else if (outbDel == null) {
-            _StockTransItems.add(new OutbDeliveryCreateStoStructure(wt.getEbeln(), wt.getItem(), wt.getGQty(), wt.getUnit()));
+            _StockTransItems.add(new OutbDeliveryCreateStoStructure(weightTicketDetail.getEbeln(), weightTicketDetail.getItem(), wt.getGQty(), weightTicketDetail.getUnit()));
         } else {
-            _StockTransItems.add(new OutbDeliveryCreateStoStructure(wt.getEbeln(), wt.getItem(), kl_total, wt.getUnit()));
+            _StockTransItems.add(new OutbDeliveryCreateStoStructure(weightTicketDetail.getEbeln(), weightTicketDetail.getItem(), kl_total, weightTicketDetail.getUnit()));
         }
         bapi.setStockTransItems(_StockTransItems);
 
@@ -682,14 +693,14 @@ public class WeightTicketService {
         List<VbpokStructure> tab = new ArrayList<VbpokStructure>();
         VbpokStructure tab_wa = new VbpokStructure();
         if (outbDel == null) {
-            tab_wa.setVbeln_vl(wt.getDeliveryOrderNo());
+            tab_wa.setVbeln_vl(weightTicketDetail.getDeliveryOrderNo());
         } else {
             tab_wa.setVbeln_vl(doNum);
         }
-        tab_wa.setPosnr_vl(wt.getItem());
+        tab_wa.setPosnr_vl(weightTicketDetail.getItem());
         tab_wa.setVbeln(tab_wa.getVbeln_vl());
         tab_wa.setPosnn(tab_wa.getPosnr_vl());
-        tab_wa.setMatnr(wt.getMatnrRef());
+        tab_wa.setMatnr(weightTicketDetail.getMatnrRef());
         tab_wa.setWerks(config.getwPlant());
         tab_wa.setLgort(wt.getLgort());
         tab_wa.setCharg(wt.getCharg());
@@ -701,15 +712,15 @@ public class WeightTicketService {
             tab_wa.setPikmg(kl_total);
             tab_wa.setLfimg(kl_total);
         }
-        tab_wa.setVrkme(wt.getUnit());
-        tab_wa.setMeins(wt.getUnit());
+        tab_wa.setVrkme(weightTicketDetail.getUnit());
+        tab_wa.setMeins(weightTicketDetail.getUnit());
         tab.add(tab_wa);
         bapi.setVbpok_tab(tab);
 
         return bapi;
     }
 
-    public Object getPgmVl02nBapi(WeightTicket wt, OutboundDelivery outbDel, WeightTicket weightTicket, int timeFrom, int timeTo, List<OutboundDetail> outDetails_lits) {
+    public Object getPgmVl02nBapi(WeightTicket wt, OutboundDelivery outbDel, WeightTicket weightTicket, int timeFrom, int timeTo, List<OutboundDeliveryDetail> outDetails_lits) {
         String doNum = null;
         if (outbDel != null) {
             doNum = outbDel.getDeliveryOrderNo();
@@ -720,15 +731,16 @@ public class WeightTicketService {
             plateCombine += "|" + wt.getTrailerId();
         }
         WsDeliveryUpdateBapi bapi = new WsDeliveryUpdateBapi();
+        WeightTicketDetail weightTicketDetail = wt.getWeightTicketDetail();
         if (outbDel == null) {
-            bapi.setDelivery(wt.getDeliveryOrderNo());
+            bapi.setDelivery(weightTicketDetail.getDeliveryOrderNo());
         } else {
             bapi.setDelivery(doNum);
         }
         bapi.setUpdate_picking("X");
 
         //get do details for current do
-        OutboundDetail item = null;
+        OutboundDeliveryDetail item = null;
         BigDecimal kl = BigDecimal.ZERO;
         BigDecimal kl_km = BigDecimal.ZERO;
         BigDecimal kl_total = BigDecimal.ZERO;
@@ -744,8 +756,8 @@ public class WeightTicketService {
         }
         kl_total = kl.add(kl_km);
 
-        if (wt.getPpProcord() != null && wt.getPpProcord().length() == 12) {
-            bapi.setProc_ord_id(wt.getPpProcord());
+        if (weightTicketDetail.getPpProcord() != null && weightTicketDetail.getPpProcord().length() == 12) {
+            bapi.setProc_ord_id(weightTicketDetail.getPpProcord());
             if (outbDel == null) {
                 bapi.setYield(wt.getGQty());
             } else {
@@ -755,7 +767,7 @@ public class WeightTicketService {
         bapi.setYield(kl_total);
         VbkokStructure wa = new VbkokStructure();
         if (outbDel == null) {
-            wa.setVbeln_vl(wt.getDeliveryOrderNo());
+            wa.setVbeln_vl(weightTicketDetail.getDeliveryOrderNo());
         } else {
             wa.setVbeln_vl(doNum);
         }
@@ -788,14 +800,14 @@ public class WeightTicketService {
         List<VbpokStructure> tab = new ArrayList<VbpokStructure>();
         VbpokStructure tab_wa = new VbpokStructure();
         if (outbDel == null) {
-            tab_wa.setVbeln_vl(wt.getDeliveryOrderNo());
+            tab_wa.setVbeln_vl(weightTicketDetail.getDeliveryOrderNo());
         } else {
             tab_wa.setVbeln_vl(doNum);
         }
-        tab_wa.setPosnr_vl(wt.getItem());
+        tab_wa.setPosnr_vl(weightTicketDetail.getItem());
         tab_wa.setVbeln(tab_wa.getVbeln_vl());
         tab_wa.setPosnn(tab_wa.getPosnr_vl());
-        tab_wa.setMatnr(wt.getMatnrRef());
+        tab_wa.setMatnr(weightTicketDetail.getMatnrRef());
         tab_wa.setWerks(config.getwPlant());
         tab_wa.setLgort(wt.getLgort());
         tab_wa.setCharg(wt.getCharg());
@@ -824,7 +836,7 @@ public class WeightTicketService {
         stWT.setGQTY(tab_wa.getLfimg());
         bapi.setWeightticket(stWT);
 
-        tab_wa.setVrkme(wt.getUnit());
+        tab_wa.setVrkme(weightTicketDetail.getUnit());
         tab_wa.setMeins(outbDel.getMeins());
         tab.add(tab_wa);
 
@@ -833,12 +845,12 @@ public class WeightTicketService {
         tab_wa_f.setLgort(wt.getLgort());
         tab_wa_f.setCharg(wt.getCharg());
         tab_wa_f.setLianp("X");
-        tab_wa_f.setVrkme(wt.getUnit());
+        tab_wa_f.setVrkme(weightTicketDetail.getUnit());
         tab_wa_f.setMeins(outbDel.getMeins());
 
         if (outbDel.getDeliveryItemFree() != null && (outbDel.getDeliveryItemFree() == null ? "" != null : !outbDel.getDeliveryItemFree().equals(""))) {
             if (outbDel == null) {
-                tab_wa_f.setVbeln_vl(wt.getDeliveryOrderNo());
+                tab_wa_f.setVbeln_vl(weightTicketDetail.getDeliveryOrderNo());
             } else {
                 tab_wa_f.setVbeln_vl(doNum);
             }
@@ -854,7 +866,7 @@ public class WeightTicketService {
         return bapi;
     }
 
-    public void printWT(WeightTicket wt, boolean reprint, String ximang, List<OutboundDelivery> outbDel_list, List<OutboundDetail> outDetails_lits,
+    public void printWT(WeightTicket wt, boolean reprint, String ximang, List<OutboundDelivery> outbDel_list, List<OutboundDeliveryDetail> outDetails_lits,
             OutboundDelivery outbDel, JRadioButton rbtMisc, JRadioButton rbtPO, boolean isStage1, JRootPane rootPane) {
         config = WeighBridgeApp.getApplication().getConfig();
         OutboundDelivery item = null;
@@ -869,22 +881,24 @@ public class WeightTicketService {
                 map.put("P_DAYSEQ", wt.getSeqDay());
                 map.put("P_REPRINT", reprint);
                 map.put("P_ADDRESS", config.getRptId());
+
+                WeightTicketDetail weightTicketDetail = wt.getWeightTicketDetail();
                 if (!wt.isDissolved()) {
                     Double tmp;
 
-                    if (wt.getMatnrRef() != null && wt.getMatnrRef().equalsIgnoreCase("000000101130400008")) // Tuanna - for bag 40K 27.04.2013
+                    if (weightTicketDetail.getMatnrRef() != null && weightTicketDetail.getMatnrRef().equalsIgnoreCase("000000101130400008")) // Tuanna - for bag 40K 27.04.2013
                     {
-                        tmp = ((wt.getRegItemQuantity().doubleValue()) * 1000d) / 40d;
+                        tmp = ((weightTicketDetail.getRegItemQuantity().doubleValue()) * 1000d) / 40d;
                     } else {
-                        tmp = ((wt.getRegItemQuantity().doubleValue()) * 1000d) / 50d;
+                        tmp = ((weightTicketDetail.getRegItemQuantity().doubleValue()) * 1000d) / 50d;
                     }
 
-                    if ((tmp == null || tmp == 0) && wt.getRegItemQuantity() != null) {
-                        if (wt.getMatnrRef() != null && wt.getMatnrRef().equalsIgnoreCase("000000101130400008")) // Tuanna - for bag 40K 27.04.2013                           
+                    if ((tmp == null || tmp == 0) && weightTicketDetail.getRegItemQuantity() != null) {
+                        if (weightTicketDetail.getMatnrRef() != null && weightTicketDetail.getMatnrRef().equalsIgnoreCase("000000101130400008")) // Tuanna - for bag 40K 27.04.2013
                         {
-                            tmp = ((wt.getRegItemQuantity().doubleValue()) * 1000d) / 40d;
+                            tmp = ((weightTicketDetail.getRegItemQuantity().doubleValue()) * 1000d) / 40d;
                         } else {
-                            tmp = ((wt.getRegItemQuantity().doubleValue()) * 1000d) / 50d;
+                            tmp = ((weightTicketDetail.getRegItemQuantity().doubleValue()) * 1000d) / 50d;
                         }
                     }
                     bags = Math.round(tmp);
@@ -904,7 +918,7 @@ public class WeightTicketService {
             } else {
                 for (int i = 0; i < outbDel_list.size(); i++) {
                     item = outbDel_list.get(i);
-                    OutboundDetail out_detail = null;
+                    OutboundDeliveryDetail out_detail = null;
                     BigDecimal sscale = BigDecimal.ZERO;
                     BigDecimal gqty = BigDecimal.ZERO;
                     BigDecimal lfimg_ori = BigDecimal.ZERO;

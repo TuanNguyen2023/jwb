@@ -35,7 +35,7 @@ public class Vendor implements Serializable {
     private int id;
     @Column(name = "lifnr", unique = true)
     private String lifnr;
-    @Column(name = "mandt")
+    @Column(name = "mandt", unique = true)
     private String mandt;
     @Column(name = "name1")
     private String name1;

@@ -21,7 +21,7 @@ public class OutboundDeliveryRepository {
     Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
 
     public OutboundDelivery findByDeliveryOrderNo(String deliveryOrderNo) {
-        OutboundDelivery outbDel = new OutboundDelivery();
+        OutboundDelivery outbDel = null;
         try {
             TypedQuery<OutboundDelivery> nq = entityManager.createNamedQuery("OutboundDelivery.findByDeliveryOrderNo", OutboundDelivery.class);
             nq.setParameter("deliveryOrderNo", "%" + deliveryOrderNo + "%");

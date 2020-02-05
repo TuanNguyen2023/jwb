@@ -34,9 +34,9 @@ public class SLoc implements Serializable {
     private int id;
     @Column(name = "lgort", unique = true)
     private String lgort;
-    @Column(name = "mandt")
+    @Column(name = "mandt", unique = true)
     private String mandt;
-    @Column(name = "wplant")
+    @Column(name = "wplant", unique = true)
     private String wplant;
     @Column(name = "lgobe")
     private String lgobe;

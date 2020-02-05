@@ -32,9 +32,9 @@ public class Variant implements Serializable {
     private int id;
     @Column(name = "param", unique = true)
     private String param;
-    @Column(name = "mandt")
+    @Column(name = "mandt", unique = true)
     private String mandt;
-    @Column(name = "wplant")
+    @Column(name = "wplant", unique = true)
     private String wplant;
     @Column(name = "value")
     private String value;
