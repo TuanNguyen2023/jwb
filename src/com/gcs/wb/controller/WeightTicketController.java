@@ -154,10 +154,6 @@ public class WeightTicketController {
         return weightTicketService.findByPoNumber(poNumber);
     }
 
-    public AppConfig getDev(String wbid) {
-        return weightTicketService.getDev(wbid);
-    }
-
     public Material checkPOSTO(String matnr) throws Exception {
         return weightTicketService.CheckPOSTO(matnr);
     }
