@@ -2330,10 +2330,8 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
                     rbtOutward.setSelected(true);
                 }
-                String pWtId = txtWTNum.getText().trim();
-                String SoNiemXa = weightTicketController.getSoNiemXa(pWtId);
                 String Posto = "";
-                txtCementDesc.setText(SoNiemXa);
+                txtCementDesc.setText(weightTicket.getSoNiemXa());
                 if (weightTicket.getPosto() != null) {
                     txtPONum.setText(weightTicket.getPosto());
                     rbtPO.setSelected(true);
@@ -2620,7 +2618,6 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                 txtGRText.setText(weightTicket.getText());
 
                 txtDelNum.setText(weightTicketDetail.getDeliveryOrderNo());
-                txtCementDesc.setText(SoNiemXa);
                 if (weightTicket.getNoMoreGr() != null && weightTicket.getNoMoreGr() == '2') {
                     cbxCompleted.setSelectedIndex(1);
                 } else {

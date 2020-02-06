@@ -308,25 +308,6 @@ public class WeightTicketRepository {
         return list;
     }
     
-    public String getSoNiemXa(String pWtId) {
-        String soNiemXa = null;
-        EntityManager entityManager = JPAConnector.getInstance();
-        try {
-            StoredProcedureQuery query = entityManager.createStoredProcedureQuery("p_get_niem_xa");
-            query.registerStoredProcedureParameter("pWtId", String.class, ParameterMode.IN);
-            query.setParameter("pWtId", pWtId);
-            query.execute();
-            List<Object[]> result = query.getResultList();
-            if (result != null && (result.size() > 0)) {
-                Object[] firstRow = result.get(0);
-                soNiemXa = firstRow[0].toString();
-            }
-        } catch (Exception e) {
-            logger.error(e.toString());
-        }
-        return soNiemXa;
-    }
-    
     public List<WeightTicket> findListWeightTicket(String month, String year, String tagent, String matnr, List<Character> modes, boolean isPosted) throws Exception {
         String query = "SELECT w FROM WeightTicket w "
                 + "WHERE FUNC('YEAR', w.createdDate) = :year "
