@@ -115,7 +115,7 @@ public class Constants {
         public static final String MODE_RPT = "MODE_RPT";
         public static final String PROP_FORMEDITABLE = "formEditable";
         public static final String PROP_RBTENABLED = "rbtEnabled";
-        public static final Object[] wtCols = new String[]{
+        public static final Object[] WEIGHTTICKET_COLUMS = new String[]{
             "Số tài",
             "Tên tài xế",
             "CMND/BL",
@@ -130,7 +130,7 @@ public class Constants {
             "Ngày",
             "Giờ",
             "SAP Posted"};
-        public static final Class[] wtTypes = new Class[]{
+        public static final Class[] WEIGHTTICKET_TYPES = new Class[]{
             Integer.class,
             String.class,
             String.class,
@@ -145,6 +145,14 @@ public class Constants {
             Date.class,
             String.class,
             Boolean.class};
+        
+        public static final String INPUT_LOWCASE="nhập";
+        public static final String OUTPUT_LOWCASE="xuất";
+        
+        public static final String INPUT="Nhập";
+        public static final String OUTPUT="Xuất";
+        
+        public static final String DO_TYPES ="LF,LR,NL,ZTLF,ZTLR";
     }
 
     public static final class WeightTicketView {
@@ -165,6 +173,10 @@ public class Constants {
         public static final String PROP_MATERIALAVAILABLE = "materialAvailable";
         public static final String PROP_MATAVAILSTOCKS = "matAvailStocks";
         public static final String PROP_MVT311 = "mvt311";
+        
+        public static final String PROCESS_ORDER_CF="PROCESS_ORDER_CF";
+        
+        public static final String ITEM_DESCRIPTION = "Clinker gia công";
     }
 
     public static final class WeightTicketReport {
@@ -217,10 +229,10 @@ public class Constants {
 
     public static final class LookupMaterial {
 
-        public static final Object[] wtCols = new String[]{
+        public static final Object[] WEIGHTTICKET_COLUMS = new String[]{
             "Mã vật tư",
             "Loại vật tư"};
-        public static final Class[] wtTypes = new Class[]{
+        public static final Class[] WEIGHTTICKET_TYPES = new Class[]{
             String.class,
             String.class};
     }

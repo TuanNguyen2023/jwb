@@ -103,7 +103,7 @@ public class LoginService {
                     sapSetting.setName1((String) vals.get(PlantGeDetailConstants.NAME1));
                     sapSetting.setName2((String) vals.get(PlantGeDetailConstants.NAME2));
                     sapSetting.setMandt(configuration.getSapClient());
-                    sapSetting.setWplan(configuration.getWkPlant());
+                    sapSetting.setWplant(configuration.getWkPlant());
                     entityManager.persist(sapSetting);
                 }
                 user = new User(username, password);
@@ -115,7 +115,7 @@ public class LoginService {
             user.setLangIso(userGetDetailAddrStructure.getLangISO());
             user.setPassword(password);
             user.setMandt(configuration.getSapClient());
-            user.setWplan(configuration.getWkPlant());
+            user.setWplant(configuration.getWkPlant());
             if (roles != null) {
                 user.setRoles(roles);
             }

@@ -20,7 +20,7 @@ import javax.swing.JComboBox;
  */
 public class ConfigController {
 
-    private ConfigService configService = new ConfigService();
+    private final ConfigService configService = new ConfigService();
     
     public AppConfig objMapping(AppConfig config, String wbId, String dbHost, String dbName, String dbUsr, String dbPwd,
             String sHost, String sRoute, String sNo, String sDClient, Integer speed1, Object port1, Float sbit1,

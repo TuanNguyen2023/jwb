@@ -16,18 +16,19 @@ import com.gcs.wb.views.ConfigView;
 import com.gcs.wb.views.LoginView;
 import com.gcs.wb.views.SettingView;
 import com.gcs.wb.views.WeighBridgeView;
-import java.io.IOException;
-import java.math.BigInteger;
-import java.util.TooManyListenersException;
 import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 import org.hibersap.session.Credentials;
 import org.hibersap.session.Session;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
+
+import javax.swing.table.DefaultTableModel;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.util.TooManyListenersException;
 
 /**
  * The main class of the application.

@@ -32,8 +32,8 @@ public class LookupMaterialView extends javax.swing.JDialog {
     private Material fMaterial = null;
     private boolean[] editable = null;
     Object[][] wtData = null;
-    Object[] wtCols = Constants.LookupMaterial.wtCols;
-    Class[] wtTypes = Constants.LookupMaterial.wtTypes;
+    Object[] wtCols = Constants.LookupMaterial.WEIGHTTICKET_COLUMS;
+    Class[] wtTypes = Constants.LookupMaterial.WEIGHTTICKET_TYPES;
     private java.util.List<Material> materials;
     private Material selectedRow;
     

@@ -38,6 +38,7 @@ public class DailyReportView extends javax.swing.JInternalFrame {
     private final DateFromToValidator dateFromToValidator = new DateFromToValidator();
     private List<WeightTicket> weightTicketList = null;
     private boolean[] editable = null;
+    public static final String SDATE = "date";
     Object[][] wtDatas = null;
     Object[] wtColNames = Constants.DailyReport.WT_COL_NAMES;
     Class[] wtColTypes = Constants.DailyReport.WT_COL_TYPES;
@@ -197,13 +198,13 @@ public class DailyReportView extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
 private void dpDateToPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_dpDateToPropertyChange
-    if ("date".equals(evt.getPropertyName())) {
+    if (SDATE.equals(evt.getPropertyName())) {
         validateFilterForm();
     }
 }//GEN-LAST:event_dpDateToPropertyChange
 
 private void dpDateFromPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_dpDateFromPropertyChange
-    if ("date".equals(evt.getPropertyName())) {
+    if (SDATE.equals(evt.getPropertyName())) {
         validateFilterForm();
     }
 }//GEN-LAST:event_dpDateFromPropertyChange

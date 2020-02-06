@@ -3,26 +3,22 @@
   <persistence-unit name="JWeighBridgePU" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>com.gcs.wb.jpa.entity.Customer</class>
-    <class>com.gcs.wb.jpa.entity.Movement</class>
     <class>com.gcs.wb.jpa.entity.User</class>
-    <class>com.gcs.wb.jpa.entity.DocFlow</class>
-    <class>com.gcs.wb.jpa.entity.BatchStocks</class>
+    <class>com.gcs.wb.jpa.entity.BatchStock</class>
     <class>com.gcs.wb.jpa.entity.Vendor</class>
     <class>com.gcs.wb.jpa.entity.Material</class>
-    <class>com.gcs.wb.jpa.entity.Reason</class>
     <class>com.gcs.wb.jpa.entity.WeightTicket</class>
+    <class>com.gcs.wb.jpa.entity.WeightTicketDetail</class>
     <class>com.gcs.wb.jpa.entity.SAPSetting</class>
-    <class>com.gcs.wb.jpa.entity.Unit</class>
     <class>com.gcs.wb.jpa.entity.SLoc</class>
     <class>com.gcs.wb.jpa.entity.TransportAgent</class>
     <class>com.gcs.wb.jpa.entity.Vehicle</class>
     <class>com.gcs.wb.jpa.entity.Variant</class>
-    <class>com.gcs.wb.jpa.entity.VehicleValid</class>
-    <class>com.gcs.wb.jpa.entity.TimeRange</class>
     <class>com.gcs.wb.jpa.entity.TransportAgentVehicle</class>
     <class>com.gcs.wb.jpa.entity.OutboundDelivery</class>
-    <class>com.gcs.wb.jpa.entity.OutboundDetail</class>
+    <class>com.gcs.wb.jpa.entity.OutboundDeliveryDetail</class>
     <class>com.gcs.wb.jpa.entity.PurchaseOrder</class>
+    <class>com.gcs.wb.jpa.entity.PurchaseOrderDetail</class>
     <class>com.gcs.wb.jpa.entity.Configuration</class>
     <properties>
       <property name="eclipselink.logging.level.sql" value="FINE"/>

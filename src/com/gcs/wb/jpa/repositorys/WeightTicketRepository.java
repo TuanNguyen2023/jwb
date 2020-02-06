@@ -4,12 +4,15 @@
  */
 package com.gcs.wb.jpa.repositorys;
 
+import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.WeightTicket;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.ParameterMode;
+import javax.persistence.StoredProcedureQuery;
 import javax.persistence.TypedQuery;
 import org.apache.log4j.Logger;
 
@@ -303,5 +306,62 @@ public class WeightTicketRepository {
             logger.error(null, ex);
         }
         return list;
+    }
+    
+    public String getSoNiemXa(String pWtId) {
+        String soNiemXa = null;
+        EntityManager entityManager = JPAConnector.getInstance();
+        try {
+            StoredProcedureQuery query = entityManager.createStoredProcedureQuery("p_get_niem_xa");
+            query.registerStoredProcedureParameter("pWtId", String.class, ParameterMode.IN);
+            query.setParameter("pWtId", pWtId);
+            query.execute();
+            List<Object[]> result = query.getResultList();
+            if (result != null && (result.size() > 0)) {
+                Object[] firstRow = result.get(0);
+                soNiemXa = firstRow[0].toString();
+            }
+        } catch (Exception e) {
+            logger.error(e.toString());
+        }
+        return soNiemXa;
+    }
+    
+    public List<WeightTicket> findListWeightTicket(String month, String year, String tagent, String matnr, List<Character> modes, boolean isPosted) throws Exception {
+        String query = "SELECT w FROM WeightTicket w "
+                + "WHERE FUNC('YEAR', w.createdDate) = :year "
+                + " AND FUNC('MONTH', w.createdDate) = :month "
+                + " AND w.regType IN :regType ";
+        if (!tagent.equalsIgnoreCase("-2")) {
+            query += " AND w.plateNo IN ( SELECT tv.vehicle.plateNo FROM TransportAgentVehicle tv WHERE tv.transportAgent.abbr = :taAbbr ) ";
+        }
+        if (!matnr.equalsIgnoreCase("-2")) {
+            if (!matnr.equalsIgnoreCase("-1")) {
+                query += " AND w.matnrRef = :matnrRef ";
+            } else {
+                query += " AND w.matnrRef IS NULL ";
+            }
+        }
+        if (isPosted) {
+            query += " AND w.status = '" + Constants.WeightTicket.STATUS_POSTED + "' ";
+        }
+        try {
+            TypedQuery<WeightTicket> nq = entityManager.createQuery(query, WeightTicket.class);
+            nq.setParameter("year", Integer.parseInt(year));
+            nq.setParameter("month", Integer.parseInt(month));
+            if (!tagent.equalsIgnoreCase("-2")) {
+                nq.setParameter("taAbbr", tagent);
+            }
+
+            if (!matnr.equalsIgnoreCase("-1") && !matnr.equalsIgnoreCase("-2")) {
+                nq.setParameter("matnrRef", matnr);
+            }
+
+            nq.setParameter("regType", modes);
+            return nq.getResultList();
+        } catch (NumberFormatException ex) {
+            logger.error(null, ex);
+            throw ex;
+        }
     }
 }

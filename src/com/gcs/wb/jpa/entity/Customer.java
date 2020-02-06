@@ -32,7 +32,7 @@ public class Customer implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
-    @Column(name = "mandt")
+    @Column(name = "mandt", unique = true)
     private String mandt;
     @Column(name = "kunnr", unique = true)
     private String kunnr;

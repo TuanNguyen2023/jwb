@@ -5,12 +5,13 @@
 package com.gcs.wb.service;
 
 import com.gcs.wb.base.constant.Constants;
-import com.gcs.wb.jpa.controller.WeightTicketJpaController;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.WeightTicket;
+import com.gcs.wb.jpa.entity.WeightTicketDetail;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
 import com.gcs.wb.jpa.repositorys.TransportAgentRepository;
+import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -67,11 +68,11 @@ public class WeightTicketReportService {
     }
 
     public Object[][] findWeightTickets(Object[][] wtDatas, String month, String year, String tAgent, String matnr, List<Character> modes, int status, String transportAgentName) throws Exception {
-        WeightTicketJpaController weightTicketJpaController = new WeightTicketJpaController();
-        List<WeightTicket> weightTickets = weightTicketJpaController.findListWTs(month, year, tAgent, matnr, modes, status == 1);
+        List<WeightTicket> weightTickets = findListWeightTicket(month, year, tAgent, matnr, modes, status == 1);
         wtDatas = new Object[weightTickets.size()][wtColNames.length];
         for (int i = 0; i < weightTickets.size(); i++) {
-            WeightTicket item = weightTickets.get(i);            
+            WeightTicket item = weightTickets.get(i);   
+            WeightTicketDetail weightTicketDetail = item.getWeightTicketDetail();
             String time = item.getCreatedTime().replaceAll(":","");
             String hh = time.substring(0, 2);
             String mm = time.substring(2, 4);
@@ -90,21 +91,21 @@ public class WeightTicketReportService {
             wtDatas[i][6] = item.getCreator();
             wtDatas[i][7] = create_date.getTime();
             wtDatas[i][8] = item.getRegType();
-            wtDatas[i][9] = item.getRegItemDescription();
+            wtDatas[i][9] = weightTicketDetail.getRegItemDescription();
             wtDatas[i][10] = item.getFTime();
             wtDatas[i][11] = item.getFScale() == null ? item.getFScale() : item.getFScale().doubleValue() / 1000d;
             wtDatas[i][12] = item.getSTime();
             wtDatas[i][13] = item.getSScale() == null ? item.getSScale() : item.getSScale().doubleValue() / 1000d;
             wtDatas[i][14] = item.getGQty();
-            wtDatas[i][15] = item.getDeliveryOrderNo();
-            wtDatas[i][16] = item.getMatDoc();
+            wtDatas[i][15] = weightTicketDetail.getDeliveryOrderNo();
+            wtDatas[i][16] = weightTicketDetail.getMatDoc();
             if (item.isPosted()) {
                 wtDatas[i][17] = true;
             } else {
                 wtDatas[i][17] = false;
             }
             wtDatas[i][18] = transportAgentName;
-            wtDatas[i][19] = item.getEbeln();
+            wtDatas[i][19] = weightTicketDetail.getEbeln();
         }
         return wtDatas;
     }
@@ -117,5 +118,12 @@ public class WeightTicketReportService {
         comboBoxModel.insertElementAt(transportAgent, 0);
         comboBoxModel.setSelectedItem(transportAgent);
         return comboBoxModel;
+    }
+    
+    
+
+    public List<WeightTicket> findListWeightTicket(String month, String year, String tagent, String matnr, List<Character> modes, boolean isPosted) throws Exception {
+        WeightTicketRepository repository = new WeightTicketRepository();
+        return repository.findListWeightTicket(month, year, tagent, matnr, modes, isPosted);
     }
 }
