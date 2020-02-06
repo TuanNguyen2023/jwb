@@ -15,10 +15,10 @@ import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.base.enums.ParityEnum;
 import com.gcs.wb.base.serials.SerialHelper;
-import com.gcs.wb.base.util.Base64_Utils;
 import com.gcs.wb.controller.ConfigController;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.Configuration;
+import com.gcs.wb.jpa.repositorys.ConfigurationRepository;
 import java.awt.Color;
 import java.util.HashSet;
 import javax.swing.DefaultComboBoxModel;
@@ -975,7 +975,7 @@ public class ConfigView extends javax.swing.JDialog {
 
     private void objBinding() {
         setFormEditable(JPAConnector.isOpen());
-        
+
         txtDBHost.setText(config.getDbHost());
         txtDBName.setText(config.getDbName());
         txtDBUsr.setText(config.getDbUsername());
@@ -1088,7 +1088,7 @@ public class ConfigView extends javax.swing.JDialog {
             super(app);
             iconLoading.setVisible(true);
             btnCheckDbConnection.setEnabled(false);
-            
+
             config.setDbHost(txtDBHost.getText().trim());
             config.setDbName(txtDBName.getText().trim());
             config.setDbUsername(txtDBUsr.getText().trim());
@@ -1100,7 +1100,12 @@ public class ConfigView extends javax.swing.JDialog {
             try {
                 JPAConnector.close();
                 JPAConnector.getInstance();
-                setFormEditable(true);
+
+                // get config in database
+                ConfigurationRepository configurationRepository = new ConfigurationRepository();
+                config.setConfiguration(configurationRepository.getConfiguration());
+
+                objBinding();
             } catch (Exception ex) {
                 setFormEditable(false);
                 JOptionPane.showMessageDialog(ConfigView.this, resourceMap.getString("msg.errorDbConnectionFail"), "Error", JOptionPane.ERROR_MESSAGE);
