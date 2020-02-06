@@ -48,8 +48,6 @@ public class SAPSetting implements Serializable {
     private Date createdDate;
     @Column(name = "updated_date")
     private Date updatedDate;
-    @Column(name = "deleted_date")
-    private Date deletedDate;
     @Column(name = "mandt", unique = true)
     private String mandt;
     @Column(name = "wplant", unique = true)
@@ -138,10 +136,6 @@ public class SAPSetting implements Serializable {
         this.updatedDate = updated_date;
     }
 
-    public Date getDeletedDate() {
-        return deletedDate;
-    }
-
     public String getMandt() {
         return mandt;
     }
@@ -175,7 +169,6 @@ public class SAPSetting implements Serializable {
         if (checkPov != null ? !checkPov.equals(that.checkPov) : that.checkPov != null) return false;
         if (createdDate != null ? !createdDate.equals(that.createdDate) : that.createdDate != null) return false;
         if (updatedDate != null ? !updatedDate.equals(that.updatedDate) : that.updatedDate != null) return false;
-        if (deletedDate != null ? !deletedDate.equals(that.deletedDate) : that.deletedDate != null) return false;
         if (mandt != null ? !mandt.equals(that.mandt) : that.mandt != null) return false;
         if (wplant != null ? !wplant.equals(that.wplant) : that.wplant != null) return false;
 
@@ -194,7 +187,6 @@ public class SAPSetting implements Serializable {
         result = 31 * result + (checkPov != null ? checkPov.hashCode() : 0);
         result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
         result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
-        result = 31 * result + (deletedDate != null ? deletedDate.hashCode() : 0);
         result = 31 * result + (mandt != null ? mandt.hashCode() : 0);
         result = 31 * result + (wplant != null ? wplant.hashCode() : 0);
         return result;

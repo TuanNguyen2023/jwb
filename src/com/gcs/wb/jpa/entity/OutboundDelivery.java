@@ -122,8 +122,6 @@ public class OutboundDelivery implements Serializable {
     private Date createdDate;
     @Column(name = "updated_date")
     private Date updatedDate;
-    @Column(name = "deleted_date")
-    private Date deletedDate;
     
     @OneToMany(mappedBy = "outboundDelivery", cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "outbound_delivery_id")
@@ -187,14 +185,6 @@ public class OutboundDelivery implements Serializable {
 
     public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
-    }
-
-    public Date getDeletedDate() {
-        return deletedDate;
-    }
-
-    public void setDeletedDate(Date deletedDate) {
-        this.deletedDate = deletedDate;
     }
 
     public String getDeliveryItem() {
@@ -581,7 +571,6 @@ public class OutboundDelivery implements Serializable {
         result = 31 * result + (status != null ? status.hashCode() : 0);
         result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
         result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
-        result = 31 * result + (deletedDate != null ? deletedDate.hashCode() : 0);
         return result;
     }
 

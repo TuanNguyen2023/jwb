@@ -87,8 +87,6 @@ public class OutboundDeliveryDetail implements Serializable {
     private Date createdDate;
     @Column(name = "updated_date")
     private Date updatedDate;
-    @Column(name = "deleted_date")
-    private Date deletedDate;
     @Column(name = "mandt", unique = true)
     private String mandt;
     @ManyToOne
@@ -145,14 +143,6 @@ public class OutboundDeliveryDetail implements Serializable {
 
     public void setCreatedDate(Date createdDate) {
         this.createdDate = createdDate;
-    }
-
-    public Date getDeletedDate() {
-        return deletedDate;
-    }
-
-    public void setDeletedDate(Date deletedDate) {
-        this.deletedDate = deletedDate;
     }
 
     public String getDeliveryOrderItem() {
@@ -360,7 +350,6 @@ public class OutboundDeliveryDetail implements Serializable {
         result = 31 * result + (status != null ? status.hashCode() : 0);
         result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
         result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
-        result = 31 * result + (deletedDate != null ? deletedDate.hashCode() : 0);
         result = 31 * result + (mandt != null ? mandt.hashCode() : 0);
         
         return result;

@@ -40,8 +40,6 @@ public class TransportAgent implements Serializable {
     private Date createdDate;
     @Column(name = "updated_date")
     private Date updatedDate;
-    @Column(name = "deleted_date")
-    private Date deletedDate;
 
     public TransportAgent() {
     }
@@ -96,14 +94,6 @@ public class TransportAgent implements Serializable {
 
     public void setUpdatedDate(Date updatedDate) {
         this.updatedDate = updatedDate;
-    }
-
-    public Date getDeletedDate() {
-        return deletedDate;
-    }
-
-    public void setDeletedDate(Date deletedDate) {
-        this.deletedDate = deletedDate;
     }
 
     @Override

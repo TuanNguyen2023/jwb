@@ -70,9 +70,6 @@ public class PurchaseOrder implements Serializable {
     @Column(name = "updated_date")
     @Temporal(TemporalType.DATE)
     private Date updatedDate;
-    @Column(name = "deleted_date")
-    @Temporal(TemporalType.DATE)
-    private Date deletedDate;
     @OneToMany(mappedBy = "purchaseOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "purchase_order_id")
     private List<PurchaseOrderDetail> purchaseOrderDetails = new ArrayList<>();
@@ -205,14 +202,6 @@ public class PurchaseOrder implements Serializable {
         this.updatedDate = updatedDate;
     }
 
-    public Date getDeletedDate() {
-        return deletedDate;
-    }
-
-    public void setDeletedDate(Date deletedDate) {
-        this.deletedDate = deletedDate;
-    }
-
     public List<PurchaseOrderDetail> getPurchaseOrderDetails() {
         return purchaseOrderDetails;
     }
@@ -265,7 +254,6 @@ public class PurchaseOrder implements Serializable {
         result = 31 * result + (relStatus != null ? relStatus.hashCode() : 0);
         result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
         result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
-        result = 31 * result + (deletedDate != null ? deletedDate.hashCode() : 0);
         return result;
     }
 
