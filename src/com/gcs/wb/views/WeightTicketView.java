@@ -115,11 +115,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         cbxReason.setSelectedIndex(-1);
         rbtMvt311.setVisible(true);
         rbtMb1b.setVisible(false);
-        boolean flag = true; // tram can , true -- giao nhan  file   
-        boolean flagAdmin = true;  // false normal , true -> SCM admin 
-        txfCurScale.setEditable(flag);
-        txtInTime.setEditable(flagAdmin);
-        txtOutTime.setEditable(flagAdmin);
+        txfCurScale.setEditable(true);
+        txtInTime.setEditable(true);
+        txtOutTime.setEditable(true);
         sapSetting = WeighBridgeApp.getApplication().getSapSetting();
         login = WeighBridgeApp.getApplication().getLogin();
         entityManager.clear();
