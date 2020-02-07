@@ -45,15 +45,15 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
     private static final Logger logger = Logger.getLogger(WTRegView.class);
     private final List<WeightTicket> weightTicketList;
-    private boolean validDO = true;
+    private boolean isValidDO = true;
     private boolean formValid;
     private String abbr;
-    private boolean flag_revert = false;
-    private String outb_number = null;
-    private boolean flag_check = false;
+    private boolean isNeedToRevert = false;
+    private String outboundDONumber = null;
+    private boolean isHasCheck = false;
     private com.gcs.wb.jpa.entity.WeightTicket newWeightTicket;
-    private com.gcs.wb.jpa.entity.OutboundDelivery outbDel;
-    private com.gcs.wb.jpa.entity.WeightTicket selectedRow;
+    private com.gcs.wb.jpa.entity.OutboundDelivery outboundDelivery;
+    private com.gcs.wb.jpa.entity.WeightTicket selectedWeightTicket;
     private boolean[] editable = null;
     Object[][] wtData = null;
     Object[] wtCols = Constants.WTRegView.WEIGHTTICKET_COLUMS;
@@ -62,8 +62,8 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
     public WTRegView() {
         newWeightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
-        selectedRow = new com.gcs.wb.jpa.entity.WeightTicket();
-        outbDel = new com.gcs.wb.jpa.entity.OutboundDelivery();
+        selectedWeightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
+        outboundDelivery = new com.gcs.wb.jpa.entity.OutboundDelivery();
         weightTicketList = new ArrayList<>();
         initComponents();
 
@@ -808,20 +808,20 @@ public class WTRegView extends javax.swing.JInternalFrame {
             return;
         }
         int DOLength = txtNDONum.getText().trim().length();
-        if (DOLength == 0 || (validDO && DOLength >= 7 && validDO && DOLength <= 10)) {
+        if (DOLength == 0 || (isValidDO && DOLength >= 7 && isValidDO && DOLength <= 10)) {
             if ((evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) || (evt.isShiftDown() && evt.getKeyCode() == KeyEvent.VK_INSERT)) {
-                validDO = false;
+                isValidDO = false;
                 txtNDONum.setForeground(Color.red);
             } else {
                 txtNDONum.setForeground(Color.black);
             }
         } else {
-            validDO = false;
+            isValidDO = false;
             txtNDONum.setForeground(Color.red);
         }
 
         if (DOLength == 0) {
-            validDO = true;
+            isValidDO = true;
             setRbtEnabled(true);
             txtNMaterial.setEditable(true);
             txtNWeight.setEditable(true);
@@ -830,7 +830,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
             txtNWeight.setEditable(false);
         }
 
-        if (validDO) {
+        if (isValidDO) {
             setSaveNeeded(isValidated());
         }
     }//GEN-LAST:event_txtNDONumKeyReleased
@@ -916,7 +916,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
     private void btnCheckDOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCheckDOActionPerformed
         setSaveNeeded(isValidated());
-        flag_check = true;
+        isHasCheck = true;
     }//GEN-LAST:event_btnCheckDOActionPerformed
 
 
@@ -1018,13 +1018,13 @@ public class WTRegView extends javax.swing.JInternalFrame {
                     return new CheckDOTask(WeighBridgeApp.getApplication());
                 } else if (val[i].length() == 0) {
                     lblNDONum.setForeground(Color.black);
-                    validDO = true;
-                    setSaveNeeded(isValidated() && validDO);
+                    isValidDO = true;
+                    setSaveNeeded(isValidated() && isValidDO);
                     return null;
                 } else {
                     lblNDONum.setForeground(Color.red);
-                    validDO = false;
-                    setSaveNeeded(isValidated() && validDO);
+                    isValidDO = false;
+                    setSaveNeeded(isValidated() && isValidDO);
                 }
                 continue;
             }
@@ -1069,7 +1069,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         btnCheckDO.setEnabled(false);
         btnSave.setEnabled(false);
 
-        if (!(isValidated() && validDO)) {
+        if (!(isValidated() && isValidDO)) {
             return null;
         }
         int answer = JOptionPane.YES_OPTION;
@@ -1242,16 +1242,16 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         @Override
         protected Object doInBackground() {
-            selectedRow = weightTicketList.get(tabResults.convertRowIndexToModel(tabResults.getSelectedRow()));
-            if (selectedRow != null) {
+            selectedWeightTicket = weightTicketList.get(tabResults.convertRowIndexToModel(tabResults.getSelectedRow()));
+            if (selectedWeightTicket != null) {
                 try {
-                    if (!selectedRow.isDissolved()) {
+                    if (!selectedWeightTicket.isDissolved()) {
                         setMessage(resourceMapMsg.getString("msg.rePrinting"));
-                        txtWeightTicketNo.setText(selectedRow.getId() + "");
+                        txtWeightTicketNo.setText(selectedWeightTicket.getId() + "");
                         StringSelection stringSelection = new StringSelection(txtWeightTicketNo.getText());
                         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                         clipboard.setContents(stringSelection, null);
-                        printWT(selectedRow, true);
+                        printWT(selectedWeightTicket, true);
                     } else {
                         setMessage(resourceMapMsg.getString("msg.ticketDestroy"));
                     }
@@ -1306,13 +1306,13 @@ public class WTRegView extends javax.swing.JInternalFrame {
     }
 
     private class CheckDOTask extends org.jdesktop.application.Task<Object, Void> {
-        private OutboundDelivery outb = null;
+        private OutboundDelivery localOutboundDelivery = null;
         private String mode = null;
         private String ship_point = null;
 
         CheckDOTask(org.jdesktop.application.Application app) {
             super(app);
-            outbDel = null;
+            outboundDelivery = null;
         }
 
         @Override
@@ -1323,14 +1323,14 @@ public class WTRegView extends javax.swing.JInternalFrame {
             for (int index = 0; index < listDO.length; index++) {
                 setStep(1, resourceMapMsg.getString("msg.checkDOInDB"));
                 listDO[index] = StringUtil.paddingZero(listDO[index], 10);
-                outb = weightTicketRegistarationController.findByDeliveryOrderNumber(listDO[index]);
+                localOutboundDelivery = weightTicketRegistarationController.findByDeliveryOrderNumber(listDO[index]);
 
                 setStep(2, resourceMapMsg.getString("checkDOInSap"));
-                OutboundDelivery sapOutb = sapService.getOutboundDelivery(listDO[index]);
+                OutboundDelivery sapOutboundDelivery = sapService.getOutboundDelivery(listDO[index]);
 
                 setStep(3, resourceMapMsg.getString("msg.saveDataToDb"));
                 startTransaction();
-                syncOutboundDelivery(listDO[index], sapOutb);
+                syncOutboundDelivery(listDO[index], sapOutboundDelivery);
                 finishTransaction();
 
                 oldKunnr = checkKunnr(oldKunnr);
@@ -1358,16 +1358,16 @@ public class WTRegView extends javax.swing.JInternalFrame {
         }
 
         private void updateWeightTicket() {
-            if (validDO && outb != null) {
+            if (isValidDO && localOutboundDelivery != null) {
                 WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
-                weightTicketDetail.setItem(outb.getDeliveryItem());
-                weightTicketDetail.setMatnrRef(outb.getMatnr());
-                weightTicketDetail.setRegItemDescription(outb.getArktx());
-                weightTicketDetail.setUnit(outb.getVrkme());
-                weightTicketDetail.setKunnr(outb.getKunnr());
+                weightTicketDetail.setItem(localOutboundDelivery.getDeliveryItem());
+                weightTicketDetail.setMatnrRef(localOutboundDelivery.getMatnr());
+                weightTicketDetail.setRegItemDescription(localOutboundDelivery.getArktx());
+                weightTicketDetail.setUnit(localOutboundDelivery.getVrkme());
+                weightTicketDetail.setKunnr(localOutboundDelivery.getKunnr());
 
-                txtNMaterial.setText(outb.getArktx());
-                cbxNMaterial.setSelectedItem(outb.getArktx());
+                txtNMaterial.setText(localOutboundDelivery.getArktx());
+                cbxNMaterial.setSelectedItem(localOutboundDelivery.getArktx());
                 BigDecimal regqty = BigDecimal.ZERO;
                 List<OutboundDeliveryDetail> detail = new ArrayList<>();
                 OutboundDeliveryDetail item = null;
@@ -1386,7 +1386,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                     }
                 }
                 txtNWeight.setValue(regqty.doubleValue());
-                outbDel = outb;
+                outboundDelivery = localOutboundDelivery;
             }
         }
 
@@ -1415,8 +1415,8 @@ public class WTRegView extends javax.swing.JInternalFrame {
             boolean isInUsedDO = false;
             isInUsedDO = weightTicketRegistarationController.checkExistDO(doNumber);
             if (isInUsedDO) {
-                validDO = false;
-                outb = null;
+                isValidDO = false;
+                localOutboundDelivery = null;
                 String msg = resourceMapMsg.getString("msg.checkExistDO", doNumber);
                 setMessage(msg);
                 JOptionPane.showMessageDialog(rootPane, msg);
@@ -1425,12 +1425,12 @@ public class WTRegView extends javax.swing.JInternalFrame {
         }
 
         private void handleShippingPointVar(String doNumber, String selectedMode) {
-            if (outb != null) {
-                int klmax = weightTicketRegistarationController.shippingPointVar(ship_point, outb.getMatnr().toString().trim());
+            if (localOutboundDelivery != null) {
+                int klmax = weightTicketRegistarationController.shippingPointVar(ship_point, localOutboundDelivery.getMatnr().toString().trim());
                 Boolean ship = (klmax <= 0) ? false : true;
                 if (ship == false) {
-                    validDO = false;
-                    outb = null;
+                    isValidDO = false;
+                    localOutboundDelivery = null;
                     String msg = resourceMapMsg.getString("msg.shippingPointVar", doNumber, selectedMode);
                     setMessage(msg);
                     JOptionPane.showMessageDialog(rootPane, msg);
@@ -1439,8 +1439,8 @@ public class WTRegView extends javax.swing.JInternalFrame {
         }
 
         private void checkShippingPoint(String doNumber) {
-            if (validDO && outb != null) {
-                ship_point = outb.getShipPoint();
+            if (isValidDO && localOutboundDelivery != null) {
+                ship_point = localOutboundDelivery.getShipPoint();
                 String selectedMode = getSelectedMode();
                 handleUnselectedMode(selectedMode);
                 handleDOCheckExist(doNumber);
@@ -1450,37 +1450,37 @@ public class WTRegView extends javax.swing.JInternalFrame {
         }
 
         private void checkDOInUsed(String doNumber) {
-            if (validDO && outb != null) {
+            if (isValidDO && localOutboundDelivery != null) {
                 WeightTicket wt = null;
-                String delivNumb = outb.getDeliveryOrderNo();
+                String delivNumb = localOutboundDelivery.getDeliveryOrderNo();
                 wt = weightTicketRegistarationController.findByDeliveryOrderNo(delivNumb);
                 String wplant = "";
                 wplant = configuration.getWkPlant();
                 String sDoType = Constants.WTRegView.DO_TYPES;
                 String Lfart = "";
                 try {
-                    Lfart = outb.getLfart();
+                    Lfart = localOutboundDelivery.getLfart();
 
                 } catch (Exception ex) {
                 }
 
-                if ((sDoType.indexOf(Lfart) >= 0 && outb.getWbstk() == 'X' && outb.getWerks().toString().equalsIgnoreCase(wplant))
+                if ((sDoType.indexOf(Lfart) >= 0 && localOutboundDelivery.getWbstk() == 'X' && localOutboundDelivery.getWerks().toString().equalsIgnoreCase(wplant))
                         || (wt != null && !wt.isDissolved())) {
-                    validDO = false;
-                    outb = null;
+                    isValidDO = false;
+                    localOutboundDelivery = null;
                     String msg = resourceMapMsg.getString("msg.typeDO", doNumber, mode);
                     setMessage(msg);
                     JOptionPane.showMessageDialog(rootPane, msg);
                 } else {
-                    flag_revert = true;
-                    outb_number = outb.getDeliveryOrderNo().toString().trim();
+                    isNeedToRevert = true;
+                    outboundDONumber = localOutboundDelivery.getDeliveryOrderNo().toString().trim();
                 }
             }
         }
 
         private void setMode() {
-            if (validDO && outb != null) {
-                if (outb.getLfart().equalsIgnoreCase("LF") || outb.getLfart().equalsIgnoreCase("ZTLF")) {
+            if (isValidDO && localOutboundDelivery != null) {
+                if (localOutboundDelivery.getLfart().equalsIgnoreCase("LF") || localOutboundDelivery.getLfart().equalsIgnoreCase("ZTLF")) {
                     mode = Constants.WTRegView.OUTPUT_LOWCASE;
                 } else {
                     mode = Constants.WTRegView.INPUT_LOWCASE;
@@ -1489,36 +1489,36 @@ public class WTRegView extends javax.swing.JInternalFrame {
         }
 
         private String checkPlate(String oldSoxe) {
-            if (outb != null
+            if (localOutboundDelivery != null
                     && !oldSoxe.equals("")
-                    && !oldSoxe.equals(outb.getTraid())) {
-                validDO = false;
+                    && !oldSoxe.equals(localOutboundDelivery.getTraid())) {
+                isValidDO = false;
                 String msg = resourceMapMsg.getString("msg.notDuplicateLicensePlate");
                 setMessage(msg);
                 JOptionPane.showMessageDialog(rootPane, msg);
-            } else if (outb != null) {
-                oldSoxe = outb.getTraid();
+            } else if (localOutboundDelivery != null) {
+                oldSoxe = localOutboundDelivery.getTraid();
             }
             return oldSoxe;
         }
 
         private String checkKunnr(String oldKunnr) {
-            if (outb != null
+            if (localOutboundDelivery != null
                     && !oldKunnr.equals("")
-                    && !oldKunnr.equals(outb.getKunnr())) {
-                validDO = false;
+                    && !oldKunnr.equals(localOutboundDelivery.getKunnr())) {
+                isValidDO = false;
                 String msg = resourceMapMsg.getString("msg.notDuplicateCode");
                 setMessage(msg);
                 JOptionPane.showMessageDialog(rootPane, msg);
-            } else if (outb != null) {
-                oldKunnr = outb.getKunnr();
+            } else if (localOutboundDelivery != null) {
+                oldKunnr = localOutboundDelivery.getKunnr();
             }
             return oldKunnr;
         }
 
         private void syncOutboundDelivery(String deliveryNum, OutboundDelivery sapOutb) {
-            validDO = sapService.syncOutboundDelivery(sapOutb, outb, deliveryNum);
-            if (!validDO) {
+            isValidDO = sapService.syncOutboundDelivery(sapOutb, localOutboundDelivery, deliveryNum);
+            if (!isValidDO) {
                 String msg = resourceMapMsg.getString("msg.dONotExitst", deliveryNum);
                 setMessage(msg);
                 JOptionPane.showMessageDialog(rootPane, msg);
@@ -1541,7 +1541,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         @Override
         protected void failed(Throwable cause) {
-            validDO = false;
+            isValidDO = false;
             if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
                 cause = cause.getCause();
             }
@@ -1566,7 +1566,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         CheckDOOFFTask(org.jdesktop.application.Application app) {
             super(app);
-            outbDel = null;
+            outboundDelivery = null;
         }
 
         private void setStep(int step, String msg) {
@@ -1581,7 +1581,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
             if (outb != null
                     && !oldKunnr.equals("")
                     && !oldKunnr.equals(outb.getKunnr())) {
-                validDO = false;
+                isValidDO = false;
                 String msg = resourceMapMsg.getString("msg.notDuplicateCode");
                 setMessage(msg);
                 JOptionPane.showMessageDialog(rootPane, msg);
@@ -1596,7 +1596,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
             if (outb != null
                     && !oldSoxe.equals("")
                     && !oldSoxe.equals(outb.getTraid())) {
-                validDO = false;
+                isValidDO = false;
                 String msg = resourceMapMsg.getString("msg.notDuplicateLicensePlate");
                 setMessage(msg);
                 JOptionPane.showMessageDialog(rootPane, msg);
@@ -1608,7 +1608,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         }
 
         private void setMode() {
-            if (validDO && outb != null) {
+            if (isValidDO && outb != null) {
                 if (outb.getLfart().equalsIgnoreCase("LF") || outb.getLfart().equalsIgnoreCase("ZTLF")) {
                     mode = Constants.WTRegView.OUTPUT_LOWCASE;
                 } else {
@@ -1618,20 +1618,20 @@ public class WTRegView extends javax.swing.JInternalFrame {
         }
 
         private void checkDOInUsed(String doNumber) {
-            if (validDO && outb != null) {
+            if (isValidDO && outb != null) {
                 WeightTicket wt;
                 String delivNumb = outb.getDeliveryOrderNo();
                 wt = weightTicketRegistarationController.findByDeliveryOrderNo(delivNumb);
 
                 if (wt != null && !wt.isDissolved()) {
-                    validDO = false;
+                    isValidDO = false;
                     outb = null;
                     String msg = resourceMapMsg.getString("msg.typeDO", doNumber, mode);
                     setMessage(msg);
                     JOptionPane.showMessageDialog(rootPane, msg);
                 } else {
-                    flag_revert = true;
-                    outb_number = outb.getDeliveryOrderNo().trim();
+                    isNeedToRevert = true;
+                    outboundDONumber = outb.getDeliveryOrderNo().trim();
                 }
             }
         }
@@ -1662,7 +1662,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
             isInUsedDO = weightTicketRegistarationController.checkExistDO(doNumber);
 
             if (isInUsedDO) {
-                validDO = false;
+                isValidDO = false;
                 outb = null;
                 String msg = resourceMapMsg.getString("msg.checkExistDO", doNumber);
                 setMessage(msg);
@@ -1676,7 +1676,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 int klmax = weightTicketRegistarationController.shippingPointVar(ship_point, outb.getMatnr().toString().trim());
                 Boolean ship = (klmax <= 0) ? false : true;
                 if (ship == false) {
-                    validDO = false;
+                    isValidDO = false;
                     outb = null;
                     String msg = resourceMapMsg.getString("msg.shippingPointVar", doNumber, selectedMode);
                     setMessage(msg);
@@ -1686,7 +1686,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         }
 
         private void checkShippingPoint(String doNumber) {
-            if (validDO && outb != null) {
+            if (isValidDO && outb != null) {
                 ship_point = outb.getShipPoint();
                 String selectedMode = getSelectedMode();
                 handleUnselectedMode(selectedMode);
@@ -1697,7 +1697,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         }
 
         private void updateWeightTicket() {
-            if (validDO && outb != null) {
+            if (isValidDO && outb != null) {
                 WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
                 weightTicketDetail.setItem(outb.getDeliveryItem());
                 weightTicketDetail.setMatnrRef(outb.getMatnr());
@@ -1723,15 +1723,15 @@ public class WTRegView extends javax.swing.JInternalFrame {
                     }
                 }
                 txtNWeight.setValue(regqty.doubleValue());
-                outbDel = outb;
+                outboundDelivery = outb;
             }
         }
 
         private void checkValidDO(String doNumber) {
             if (outb != null) {
-                validDO = true;
+                isValidDO = true;
             } else {
-                validDO = false;
+                isValidDO = false;
                 String msg = resourceMapMsg.getString("msg.dONotExitst", doNumber);
                 setMessage(msg);
                 JOptionPane.showMessageDialog(rootPane, msg);
@@ -1771,7 +1771,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         @Override
         protected void failed(Throwable cause) {
-            validDO = false;
+            isValidDO = false;
             if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
                 cause = cause.getCause();
             }
@@ -1841,8 +1841,8 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 String val = weightTicketDetail.getDeliveryOrderNo().trim();
                 val = StringUtil.paddingZero(val, 10);
                 weightTicketDetail.setDeliveryOrderNo(val);
-                if (outbDel != null) {
-                    weightTicketDetail.setKunnr(outbDel.getKunnr());
+                if (outboundDelivery != null) {
+                    weightTicketDetail.setKunnr(outboundDelivery.getKunnr());
                 }
             }
             List<OutboundDeliveryDetail> detail = new ArrayList<>();
@@ -1928,8 +1928,8 @@ public class WTRegView extends javax.swing.JInternalFrame {
             setRbtEnabled(false);
             setClearable(false);
             setSaveNeeded(false);
-            if (flag_revert) {
-                List<WeightTicket> wt = weightTicketRegistarationController.getListByDeliveryOrderNo(outb_number);
+            if (isNeedToRevert) {
+                List<WeightTicket> wt = weightTicketRegistarationController.getListByDeliveryOrderNo(outboundDONumber);
                 WeightTicket item = null;
                 for (int i = 0; i < wt.size() - 1; i++) {
                     item = wt.get(i);
@@ -2005,27 +2005,27 @@ public class WTRegView extends javax.swing.JInternalFrame {
     private boolean validatePlate() {
         boolean isValid = !(txtNPlateNo.getText().trim().isEmpty());
         if (isValid) {
-            if (txtNDONum.getText().trim().isEmpty() || outbDel == null) {
+            if (txtNDONum.getText().trim().isEmpty() || outboundDelivery == null) {
                 isValid = validateLicensePlate(null, null);
             } else {
-                isValid = validateLicensePlate(outbDel.getLfart(), outbDel.getTraid());
+                isValid = validateLicensePlate(outboundDelivery.getLfart(), outboundDelivery.getTraid());
             }
         }
 
         if (isValid && rbtNInward.isSelected()) {
-            if (outbDel != null) {
+            if (outboundDelivery != null) {
                 String soXe_tmp = txtNPlateNo.getText().trim();
                 int indexRomooc = -1;
-                if (outbDel.getTraid() != null && !outbDel.getTraid().equals("")) {
-                    indexRomooc = outbDel.getTraid().indexOf("|");
+                if (outboundDelivery.getTraid() != null && !outboundDelivery.getTraid().equals("")) {
+                    indexRomooc = outboundDelivery.getTraid().indexOf("|");
                     if (indexRomooc >= 0) {
                         soXe_tmp = soXe_tmp.concat("|").concat(txtNTrailerPlate.getText().trim());
                     }
                 }
-                if (!soXe_tmp.equals(outbDel.getTraid().trim())) {
-                    if (outbDel.getTraid() != null
+                if (!soXe_tmp.equals(outboundDelivery.getTraid().trim())) {
+                    if (outboundDelivery.getTraid() != null
                             && indexRomooc >= 0
-                            && indexRomooc != (outbDel.getTraid().trim().length() - 1)
+                            && indexRomooc != (outboundDelivery.getTraid().trim().length() - 1)
                             && txtNTrailerPlate.getText().trim().equals("")) {
                         JOptionPane.showMessageDialog(rootPane,
                                 resourceMapMsg.getString("msg.plzInputRomoc"));
@@ -2090,9 +2090,9 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         boolean isValid;
         if (StringUtil.isNotEmptyString(txtNDONum.getText())) {
-            isValid = result && validDO && flag_check;
+            isValid = result && isValidDO && isHasCheck;
         } else {
-            isValid = result && validDO;
+            isValid = result && isValidDO;
         }
         return isValid;
     }
@@ -2173,7 +2173,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
     private void cleanData() {
         newWeightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
-        outbDel = null;
+        outboundDelivery = null;
         txtNDriverName.setText("");
         txtNCMNDBL.setText("");
         txtNPlateNo.setText("");
@@ -2194,7 +2194,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         lblNMaterial.setForeground(Color.black);
         lblNWeight.setForeground(Color.black);
         lblNDONum.setForeground(Color.black);
-        validDO = true;
+        isValidDO = true;
     }
 
     private List<WeightTicket> filterHours(List<WeightTicket> data, String timeFrom, String timeTo) {
