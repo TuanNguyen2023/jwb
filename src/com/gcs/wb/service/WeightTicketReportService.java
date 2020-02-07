@@ -12,6 +12,7 @@ import com.gcs.wb.jpa.entity.WeightTicketDetail;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
 import com.gcs.wb.jpa.repositorys.TransportAgentRepository;
 import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -82,6 +83,8 @@ public class WeightTicketReportService {
             create_date.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hh));
             create_date.set(Calendar.MINUTE, Integer.valueOf(mm));
             create_date.set(Calendar.SECOND, Integer.valueOf(ss));
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            String createdDateTime = dateFormat.format(create_date.getTime());
             wtDatas[i][0] = i + 1;// item.getSeqByMonth();
             wtDatas[i][1] = item.getSeqDay();
             wtDatas[i][2] = item.getDriverName();
@@ -89,12 +92,20 @@ public class WeightTicketReportService {
             wtDatas[i][4] = item.getPlateNo();
             wtDatas[i][5] = item.getTrailerId();
             wtDatas[i][6] = item.getCreator();
-            wtDatas[i][7] = create_date.getTime();
+            wtDatas[i][7] = createdDateTime;
             wtDatas[i][8] = item.getRegType();
             wtDatas[i][9] = weightTicketDetail.getRegItemDescription();
-            wtDatas[i][10] = item.getFTime();
+            if (item.getFTime() != null) {
+                wtDatas[i][10] = dateFormat.format(item.getFTime());
+            } else {
+                wtDatas[i][10] = item.getFTime();
+            }
             wtDatas[i][11] = item.getFScale() == null ? item.getFScale() : item.getFScale().doubleValue() / 1000d;
-            wtDatas[i][12] = item.getSTime();
+            if (item.getFTime() != null) {
+                wtDatas[i][12] = dateFormat.format(item.getFTime());
+            } else {
+                wtDatas[i][12] = item.getFTime();
+            }
             wtDatas[i][13] = item.getSScale() == null ? item.getSScale() : item.getSScale().doubleValue() / 1000d;
             wtDatas[i][14] = item.getGQty();
             wtDatas[i][15] = weightTicketDetail.getDeliveryOrderNo();

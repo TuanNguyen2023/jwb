@@ -11,7 +11,7 @@
 	<parameter name="P_PCB40BAG" class="java.lang.Long"/>
 	<parameter name="P_ADDRESS" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[p_online_weight_ticket $P{P_ADDRESS},$P{P_MANDT},$P{P_WPlant},$P{P_ID},$P{P_DAYSEQ}]]>
+		<![CDATA[p_report_online_weight_ticket $P{P_ADDRESS},$P{P_MANDT},$P{P_WPlant},$P{P_ID},$P{P_DAYSEQ}]]>
 	</queryString>
 	<field name="MANDT" class="java.lang.String"/>
 	<field name="ID" class="java.lang.String"/>

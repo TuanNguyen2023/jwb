@@ -62,8 +62,6 @@ public class WeighBridgeApp extends SingleFrameApplication {
     private BigInteger max = BigInteger.ZERO;
     public static final int TIME_DELAY = 4;
     private String sloc = null;
-    private String current_user_name = null;
-    private String current_user = null;
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Methods override Area">
@@ -374,34 +372,6 @@ public class WeighBridgeApp extends SingleFrameApplication {
      */
     public void setSloc(String sloc) {
         this.sloc = sloc;
-    }
-
-    /**
-     * @return the current_user_name
-     */
-    public String getCurrent_user_name() {
-        return current_user_name;
-    }
-
-    /**
-     * @param current_user_name the current_user_name to set
-     */
-    public void setCurrent_user_name(String current_user_name) {
-        this.current_user_name = current_user_name;
-    }
-
-    /**
-     * @return the current_user
-     */
-    public String getCurrent_user() {
-        return current_user;
-    }
-
-    /**
-     * @param current_user the current_user to set
-     */
-    public void setCurrent_user(String current_user) {
-        this.current_user = current_user;
     }
 
     /**

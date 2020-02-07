@@ -1457,7 +1457,7 @@ private void txtOutTimeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 // TODO add your handling code here:
     if (txtOutTime.getText().length() == 19) {
         String[] time = txtOutTime.getText().split(" ");
-        weightTicket.setSTime(new java.sql.Date(weightTicketController.setTimeWeightTicket(time).getTime()));
+        weightTicket.setSTime(weightTicketController.setTimeWeightTicket(time));
     }
 }//GEN-LAST:event_txtOutTimeKeyReleased
 
@@ -1465,7 +1465,7 @@ private void txtInTimeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
 // TODO add your handling code here:
     if (txtInTime.getText().length() == 19) {
         String[] time = txtInTime.getText().split(" ");
-        weightTicket.setFTime(new java.sql.Date(weightTicketController.setTimeWeightTicket(time).getTime()));
+        weightTicket.setFTime(weightTicketController.setTimeWeightTicket(time));
     }
 }//GEN-LAST:event_txtInTimeKeyReleased
 
@@ -2961,6 +2961,9 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             if (!entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().begin();
             }
+            Date now = new Date();
+            weightTicket.setUpdatedDate(now);
+            weightTicket.getWeightTicketDetail().setUpdatedDate(now);
             entityManager.merge(weightTicket);
             OutboundDelivery outbDel = null;
             List<String> completedDO = new ArrayList<>();
@@ -3553,11 +3556,8 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         @Override
         protected Object doInBackground() throws Exception {
             WeighBridgeApp.getApplication().disconnectWB();
-            formatter.applyPattern(WeighBridgeApp.DATE_TIME_DISPLAY_FORMAT);
-            Date now = null;
-
-            formatter.applyPattern(WeighBridgeApp.DATE_TIME_DISPLAY_FORMAT);//      
-            now = weightTicketController.getServerTime();
+            formatter.applyPattern(WeighBridgeApp.DATE_TIME_DISPLAY_FORMAT); 
+            Date now = weightTicketController.getServerTime();
             grbBridge.clearSelection();
             btnAccept.setEnabled(false);
             if (isStage1()) {
@@ -3705,15 +3705,11 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             if (isStage1()) {
                 txfInQty.setValue(txfCurScale.getValue());
                 txtInTime.setText(formatter.format(now));
-                if (configuration.isModeNormal()) {
-                    weightTicket.setFCreator(WeighBridgeApp.getApplication().getLogin().getUid());
-                } else {
-                    weightTicket.setFCreator(WeighBridgeApp.getApplication().getCurrent_user());
-                }
+                weightTicket.setFCreator(WeighBridgeApp.getApplication().getLogin().getUid());
                 weightTicket.setFScale(new BigDecimal(((Number) txfInQty.getValue()).doubleValue()));
-                weightTicket.setFTime(new java.sql.Date(now.getTime()));
+                weightTicket.setFTime(now);
                 lblIScale.setForeground(Color.black);
-                OutboundDeliveryDetail item = null;
+                OutboundDeliveryDetail item;
                 if (outDetails_lits.size() > 0) {
                     for (int i = 0; i < outDetails_lits.size(); i++) {
                         item = outDetails_lits.get(i);
@@ -3728,15 +3724,11 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             } else if (isStage2()) {
                 txfOutQty.setValue(txfCurScale.getValue());
                 txtOutTime.setText(formatter.format(now));
-                if (configuration.isModeNormal()) {
-                    weightTicket.setSCreator(WeighBridgeApp.getApplication().getLogin().getUid());
-                } else {
-                    weightTicket.setSCreator(WeighBridgeApp.getApplication().getCurrent_user());
-                }
+                weightTicket.setSCreator(WeighBridgeApp.getApplication().getLogin().getUid());
                 weightTicket.setSScale(new BigDecimal(((Number) txfOutQty.getValue()).doubleValue()));
-                weightTicket.setSTime(new java.sql.Date(now.getTime()));
+                weightTicket.setSTime(now);
                 lblOScale.setForeground(Color.black);
-                OutboundDeliveryDetail item = null;
+                OutboundDeliveryDetail item;
                 double remain = ((Number) txfCurScale.getValue()).doubleValue() - ((Number) txfInQty.getValue()).doubleValue();
                 if (remain < 0) {
                     remain = remain * 1;
