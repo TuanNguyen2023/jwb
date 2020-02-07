@@ -104,6 +104,13 @@ public class Constants {
         public static final Pattern LICENSE_PLATE_PATTERN = Pattern.compile("^(\\d{2}[A-Z]-\\d{4})|(\\d{2}[A-Z]-\\d{3}.\\d{2})$");
     }
 
+    public static final class ComboBox {
+
+        public static final int UNSELECTED = -1;
+        public static final int FIRST_INDEX = 0;
+        public static final int SECOND_INDEX = 1;
+    }
+
     public static final class WTRegView {
 
         private WTRegView() {

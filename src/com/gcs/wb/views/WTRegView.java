@@ -3,11 +3,6 @@
  * and open the template in the editor.
  */
 
-/*
- * WTRegView.java
- *
- * Created on 10-04-2010, 10:06:26
- */
 package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
@@ -41,17 +36,12 @@ import java.util.List;
 import java.util.logging.Level;
 
 public class WTRegView extends javax.swing.JInternalFrame {
-    public String sVendor = "";
-    public String sPO = "";
-    public double dKldk = 0;
-
     EntityManager entityManager = JPAConnector.getInstance();
     EntityTransaction entityTransaction = entityManager.getTransaction();
-
     SAPService sapService = new SAPService();
     Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration(); 
-
     WeightTicketRegistarationController weightTicketRegistarationController = new WeightTicketRegistarationController();
+    public ResourceMap resourceMapMsg = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(WTRegView.class);
 
     private static final Logger logger = Logger.getLogger(WTRegView.class);
     private final List<WeightTicket> weightTicketList;
@@ -61,7 +51,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
     private boolean flag_revert = false;
     private String outb_number = null;
     private boolean flag_check = false;
-    private String mat_numb = null;
     private com.gcs.wb.jpa.entity.WeightTicket newWeightTicket;
     private com.gcs.wb.jpa.entity.OutboundDelivery outbDel;
     private com.gcs.wb.jpa.entity.WeightTicket selectedRow;
@@ -69,15 +58,16 @@ public class WTRegView extends javax.swing.JInternalFrame {
     Object[][] wtData = null;
     Object[] wtCols = Constants.WTRegView.WEIGHTTICKET_COLUMS;
     Class[] wtTypes = Constants.WTRegView.WEIGHTTICKET_TYPES;
-    public ResourceMap resourceMapMsg = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(WTRegView.class);
+
 
     public WTRegView() {
         newWeightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
         selectedRow = new com.gcs.wb.jpa.entity.WeightTicket();
         outbDel = new com.gcs.wb.jpa.entity.OutboundDelivery();
-        initComponents();
         weightTicketList = new ArrayList<>();
-        ListWeightTicketsTask t = new ListWeightTicketsTask(WeighBridgeApp.getApplication());
+        initComponents();
+
+        SearchWeightTicketTask t = new SearchWeightTicketTask(WeighBridgeApp.getApplication());
         t.execute();
 
         cbxHourTo.setSelectedIndex(23);
@@ -241,7 +231,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         txtPlateNo.setName("txtPlateNo"); // NOI18N
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getActionMap(WTRegView.class, this);
-        btnFind.setAction(actionMap.get("listWeightTickets")); // NOI18N
+        btnFind.setAction(actionMap.get("searchWeightTickets")); // NOI18N
         btnFind.setText(resourceMap.getString("btnFind.text")); // NOI18N
         btnFind.setName("btnFind"); // NOI18N
 
@@ -988,9 +978,9 @@ public class WTRegView extends javax.swing.JInternalFrame {
     }
 
     @Action(block = Task.BlockingScope.ACTION)
-    public Task listWeightTickets() {
+    public Task searchWeightTickets() {
 
-        return new ListWeightTicketsTask(WeighBridgeApp.getApplication());
+        return new SearchWeightTicketTask(WeighBridgeApp.getApplication());
     }
 
     @Action(block = Task.BlockingScope.ACTION)
@@ -998,7 +988,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         if (tabResults.getSelectedRow() == -1) {
             return null;
         } else {
-            return new ReprintRecordTask(WeighBridgeApp.getApplication());
+            return new ReprintTask(WeighBridgeApp.getApplication());
         }
     }
 
@@ -1070,10 +1060,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
         btnMany.setEnabled(false);
         btnSo.setEnabled(false);
         btnCheckDO.setEnabled(false);
-        sVendor = "";
-        sPO = "";
-        dKldk = 0;
-
     }
 
     @Action(enabledProperty = "saveNeeded")
@@ -1111,9 +1097,9 @@ public class WTRegView extends javax.swing.JInternalFrame {
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Task Classes">
 
-    private class ListWeightTicketsTask extends org.jdesktop.application.Task<Object, Void> {
+    private class SearchWeightTicketTask extends org.jdesktop.application.Task<Object, Void> {
 
-        ListWeightTicketsTask(org.jdesktop.application.Application app) {
+        SearchWeightTicketTask(org.jdesktop.application.Application app) {
             super(app);
         }
 
@@ -1194,16 +1180,16 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 Object[] select = cbxMaterialType.getSelectedObjects();
                 com.gcs.wb.jpa.entity.Material material = (com.gcs.wb.jpa.entity.Material) select[0];
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                String fFrom = format.format(dpDateFrom.getDate());
-                String fTo = format.format(dpDateTo.getDate());
+                String from = format.format(dpDateFrom.getDate());
+                String to = format.format(dpDateTo.getDate());
                 List<WeightTicket> result;
 
                 if (material.getMatnr().equals(MaterialEnum.OTHER.VALUE)) {
-                    result = getWeightTicketWithOtherType(fFrom, fTo);
+                    result = getWeightTicketWithOtherType(from, to);
                 } else if (material.getMatnr().equals(MaterialEnum.ALL.VALUE)) {
-                    result = getWeightTicketWithAllType(fFrom, fTo);
+                    result = getWeightTicketWithAllType(from, to);
                 } else {
-                    result = getWeightTicketWithSelectedType(fFrom, fTo, material.getMatnr());
+                    result = getWeightTicketWithSelectedType(from, to, material.getMatnr());
                 }
 
                 setProgress(2, 0, 4);
@@ -1248,9 +1234,9 @@ public class WTRegView extends javax.swing.JInternalFrame {
         }
     }
 
-    private class ReprintRecordTask extends org.jdesktop.application.Task<Object, Void> {
+    private class ReprintTask extends org.jdesktop.application.Task<Object, Void> {
 
-        ReprintRecordTask(org.jdesktop.application.Application app) {
+        ReprintTask(org.jdesktop.application.Application app) {
             super(app);
         }
 
@@ -1301,9 +1287,9 @@ public class WTRegView extends javax.swing.JInternalFrame {
         protected Object doInBackground() {
             try {
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                String kFrom = format.format(dpDateFrom.getDate());
-                String kTo = format.format(dpDateTo.getDate());
-                Map<String, Object> params = weightTicketRegistarationController.getPrintReport(kFrom, kTo);
+                String from = format.format(dpDateFrom.getDate());
+                String to = format.format(dpDateTo.getDate());
+                Map<String, Object> params = weightTicketRegistarationController.getPrintReport(from, to);
                 String reportName = weightTicketRegistarationController.getReportName();
                 weightTicketRegistarationController.printReport(params, reportName);
             } catch (Exception ex) {
@@ -1322,12 +1308,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
     private class CheckDOTask extends org.jdesktop.application.Task<Object, Void> {
         private OutboundDelivery outb = null;
         private String mode = null;
-        private Customer kunnr = null;
-        private Customer kunag = null;
-        private Vendor lifnr = null;
-        private Customer sapKunnr = null;
-        private Customer sapKunag = null;
-        private Vendor sapLifnr = null;
         private String ship_point = null;
 
         CheckDOTask(org.jdesktop.application.Application app) {
@@ -1347,17 +1327,9 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
                 setStep(2, resourceMapMsg.getString("checkDOInSap"));
                 OutboundDelivery sapOutb = sapService.getOutboundDelivery(listDO[index]);
-                if (sapOutb != null) {
-                    fetchCustomerByKunnr(sapOutb);
-                    fetchCustomerByKunag(sapOutb);
-                    fetchVendor(sapOutb);
-                }
 
                 setStep(3, resourceMapMsg.getString("msg.saveDataToDb"));
                 startTransaction();
-                syncCustomerByKunnr();
-                syncCustomerByKunag(sapOutb);
-                syncVendor();
                 syncOutboundDelivery(listDO[index], sapOutb);
                 finishTransaction();
 
@@ -1369,8 +1341,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 checkDOInUsed(listDO[index]);
                 checkShippingPoint(listDO[index]);
 
-                setMaterialNumber();
-
                 updateWeightTicket();
 
                 setStep(4, null);
@@ -1378,12 +1348,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
             }
 
             return null;
-        }
-
-        private void setMaterialNumber() {
-            if (validDO && outb != null) {
-                mat_numb = outb.getMatnr().trim();
-            }
         }
 
         private void setStep(int step, String msg) {
@@ -1575,60 +1539,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
             }
         }
 
-        private void syncVendor() {
-            if (sapLifnr != null && lifnr == null) {
-                entityManager.persist(sapLifnr);
-            } else if (sapLifnr != null && lifnr != null) {
-                sapLifnr.setId(lifnr.getId());
-                entityManager.merge(sapLifnr);
-            } else if (sapLifnr == null && lifnr != null) {
-                entityManager.remove(lifnr);
-            }
-        }
-
-        private void syncCustomerByKunag(OutboundDelivery sapOutb) {
-            if (sapKunag != null && kunag == null && !sapOutb.getKunnr().equalsIgnoreCase(sapOutb.getKunag())) {
-                entityManager.persist(sapKunag);
-            } else if (sapKunag != null && kunag != null) {
-                sapKunag.setId(kunag.getId());
-                entityManager.merge(sapKunag);
-            } else if (sapKunag == null && kunag != null && !sapOutb.getKunnr().equalsIgnoreCase(sapOutb.getKunag())) {
-                entityManager.remove(kunag);
-            }
-        }
-
-        private void syncCustomerByKunnr() {
-            if (sapKunnr != null && kunnr == null) {
-                entityManager.persist(sapKunnr);
-            } else if (sapKunnr != null && kunnr != null) {
-                sapKunnr.setId(kunnr.getId());
-                entityManager.merge(sapKunnr);
-            } else if (sapKunnr == null && kunnr != null) {
-                entityManager.remove(kunnr);
-            }
-        }
-
-        private void fetchVendor(OutboundDelivery sapOutb) {
-            if (StringUtil.isNotEmptyString(sapOutb.getLifnr())) {
-                lifnr = weightTicketRegistarationController.findByLifnr(sapOutb.getLifnr());
-                sapLifnr = sapService.getVendor(sapOutb.getLifnr());
-            }
-        }
-
-        private void fetchCustomerByKunag(OutboundDelivery sapOutb) {
-            if (StringUtil.isNotEmptyString(sapOutb.getKunag())) {
-                kunag = weightTicketRegistarationController.findByKunnr(sapOutb.getKunag());
-                sapKunag = sapService.getCustomer(sapOutb.getKunag());
-            }
-        }
-
-        private void fetchCustomerByKunnr(OutboundDelivery sapOutb) {
-            if (StringUtil.isNotEmptyString(sapOutb.getKunnr())) {
-                kunnr = weightTicketRegistarationController.findByKunnr(sapOutb.getKunnr());
-                sapKunnr = sapService.getCustomer(sapOutb.getKunnr());
-            }
-        }
-
         @Override
         protected void failed(Throwable cause) {
             validDO = false;
@@ -1709,7 +1619,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         private void checkDOInUsed(String doNumber) {
             if (validDO && outb != null) {
-                WeightTicket wt = null;
+                WeightTicket wt;
                 String delivNumb = outb.getDeliveryOrderNo();
                 wt = weightTicketRegistarationController.findByDeliveryOrderNo(delivNumb);
 
@@ -1786,12 +1696,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
             }
         }
 
-        private void setMaterialNumber() {
-            if (validDO && outb != null) {
-                mat_numb = outb.getMatnr().trim();
-            }
-        }
-
         private void updateWeightTicket() {
             if (validDO && outb != null) {
                 WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
@@ -1855,8 +1759,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 checkDOInUsed(listDO[index]);
 
                 checkShippingPoint(listDO[index]);
-
-                setMaterialNumber();
 
                 updateWeightTicket();
 
@@ -2003,7 +1905,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
             } catch (Exception ex) {
                 btnSave.setEnabled(true);
             }
-            ListWeightTicketsTask t = new ListWeightTicketsTask(this.getApplication());
+            SearchWeightTicketTask t = new SearchWeightTicketTask(this.getApplication());
             t.execute();
             return null;
         }
