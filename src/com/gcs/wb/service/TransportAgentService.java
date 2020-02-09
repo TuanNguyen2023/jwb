@@ -102,8 +102,8 @@ public class TransportAgentService {
 
     /**
      * remove Vehicle
-     * @param transportId
-     * @param vehicleId 
+     * @param transportAgentSelected
+     * @param vehicleSelected
      */
     public void vehicleRemoveActionPerformed(TransportAgent transportAgentSelected, Vehicle vehicleSelected) {
         try {
@@ -128,7 +128,7 @@ public class TransportAgentService {
     /**
      * action prohibit Vehicle
      * @param vehicleSelected
-     * @param prohibit 
+     * @param isProhibitVehicle
      */
     public void prohibitApplyActionPerformed(Vehicle vehicleSelected, boolean isProhibitVehicle) {
         try {
