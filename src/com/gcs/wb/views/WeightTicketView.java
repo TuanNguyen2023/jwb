@@ -3640,10 +3640,12 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                 {
                     String param = (outbDel != null && outbDel.getMatnr() != null) ? outbDel.getMatnr().toString() : "";
 
-                    PurchaseOrderDetail purchaseOrderDetail = purOrder.getPurchaseOrderDetail();
-                    if (param.equals("") && purOrder != null
-                            && purchaseOrderDetail.getMaterial() != null && !purchaseOrderDetail.getMaterial().isEmpty()) {
-                        param = purchaseOrderDetail.getMaterial();
+                    if (param.equals("") && purOrder != null)
+                    {
+                        PurchaseOrderDetail purchaseOrderDetail = purOrder.getPurchaseOrderDetail();
+                        if(purchaseOrderDetail.getMaterial() != null && !purchaseOrderDetail.getMaterial().isEmpty()) {
+                            param = purchaseOrderDetail.getMaterial();
+                        }
                     }
                     Variant vari = weightTicketController.findByParam(Constants.WeightTicketView.PROCESS_ORDER_CF);
                     double valu = 0;
