@@ -14,9 +14,14 @@ import com.gcs.wb.jpa.repositorys.SAPSettingRepository;
 import com.gcs.wb.jpa.repositorys.UserRepository;
 import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.service.LoginService;
+import com.gcs.wb.views.LoginView;
 import com.sap.conn.jco.JCoException;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import org.hibersap.session.Credentials;
 import org.hibersap.session.Session;
+import org.jdesktop.application.Application;
+import org.jdesktop.application.ResourceMap;
 
 /**
  *
@@ -32,13 +37,14 @@ public class LoginController {
     private SAPSetting sapSetting = null;
     private User user = null;
     private String lclient = null;
-    private String lplant = null;
     private String username = null;
     private String password = null;
     private boolean offlineMode = false;
     private JCoException jcoException = null;
     private LoginService loginService = new LoginService();
-
+    ResourceMap resourceMap = Application.getInstance(WeighBridgeApp.class).getContext().getResourceMap(LoginView.class);
+    private JFrame mainFrame = WeighBridgeApp.getApplication().getMainFrame();
+    
     public LoginController(String username, String password) {
         userRepository = new UserRepository();
         sapSettingRepository = new SAPSettingRepository();
@@ -46,7 +52,6 @@ public class LoginController {
         appConfig = WeighBridgeApp.getApplication().getConfig();
         configuration = appConfig.getConfiguration();
         lclient = configuration.getSapClient();
-        lplant = configuration.getWkPlant();
         this.username = username;
         this.password = password;
 
@@ -77,34 +82,39 @@ public class LoginController {
         userGetDetailBapi.setUserName(username);
 
         try {
-            user = userRepository.findByUid(username);
             sapSetting = sapSettingRepository.getSAPSetting();
 
             Session session = loginService.getSapSession(credentials);
             boolean onlineMode = configuration.isModeNormal();
-            if(onlineMode) {
+            if (onlineMode) {
                 try {
                     loginService.checkVersionWB(session);
                     session.execute(userGetDetailBapi);  //Login
                 } catch (Exception ex) {
                     onlineMode = false;
-                    if (user != null && !user.getPassword().equals(password)) {
-                        throw new Exception("Authenticated Failed!!!");
-                    } else if (ex.getCause() instanceof JCoException) {
+                    if (ex.getCause() instanceof JCoException) {
                         jcoException = (JCoException) ex.getCause();
                         if (jcoException.getGroup() == JCoException.JCO_ERROR_LOGON_FAILURE) {
-                            throw new Exception("Login Failed!!!");
+                            throw new Exception(resourceMap.getString("msg.onlineUsernameOrPasswordInvalid"));
+                        } else if (jcoException.getGroup() == JCoException.JCO_ERROR_COMMUNICATION) {
+                            JOptionPane.showMessageDialog(mainFrame, resourceMap.getString("msg.connectToSAPFail"));
                         }
                     }
                 }
             }
 
+            user = userRepository.findByUid(username);
             if (onlineMode) {
                 UserGetDetailAddrStructure userGetDetailAddrStructure = userGetDetailBapi.getAddress();
                 String roles = loginService.getRoles(userGetDetailBapi);
 
                 loginService.asyncUser(session, userGetDetailAddrStructure, roles, user, username, password);
+            } else {
+                if ((user == null) || (user != null && !user.getPassword().equals(password))) {
+                    throw new Exception(resourceMap.getString("msg.offlineUsernameOrPasswordInvalid"));
+                }
             }
+
             offlineMode = !onlineMode;
         } catch (Exception ex) {
             throw ex;

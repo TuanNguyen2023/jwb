@@ -72,10 +72,6 @@ public class WeightTicketController {
         return weightTicketService.findWeightTicket(weightTicket, id);
     }
 
-    public String getSoNiemXa(String pWtId) {
-        return weightTicketService.getSoNiemXa(pWtId);
-    }
-
     public PurchaseOrder findPurOrder(String poNum) {
         return weightTicketService.findPurOrder(poNum);
     }

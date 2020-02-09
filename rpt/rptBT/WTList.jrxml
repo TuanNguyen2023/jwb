@@ -19,12 +19,12 @@
 	<field name="COLUMN_4" class="java.lang.String"/>
 	<field name="COLUMN_5" class="java.lang.String"/>
 	<field name="COLUMN_6" class="java.lang.Integer"/>
-	<field name="COLUMN_7" class="java.util.Date"/>
+	<field name="COLUMN_7" class="java.lang.String"/>
 	<field name="COLUMN_8" class="java.lang.Character"/>
 	<field name="COLUMN_9" class="java.lang.String"/>
-	<field name="COLUMN_10" class="java.util.Date"/>
+	<field name="COLUMN_10" class="java.lang.String"/>
 	<field name="COLUMN_11" class="java.lang.Double"/>
-	<field name="COLUMN_12" class="java.util.Date"/>
+	<field name="COLUMN_12" class="java.lang.String"/>
 	<field name="COLUMN_13" class="java.lang.Double"/>
 	<field name="COLUMN_14" class="java.math.BigDecimal"/>
 	<field name="COLUMN_15" class="java.lang.String"/>

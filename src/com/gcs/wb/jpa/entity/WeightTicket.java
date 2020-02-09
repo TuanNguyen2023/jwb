@@ -7,8 +7,8 @@ package com.gcs.wb.jpa.entity;
 import com.gcs.wb.base.constant.Constants;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,6 +21,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
 
 /**
  *
@@ -187,10 +188,12 @@ public class WeightTicket implements Serializable {
     @Column(name = "f_scale")
     private BigDecimal fScale;
     @Column(name = "f_time")
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date fTime;
     @Column(name = "s_scale")
     private BigDecimal sScale;
     @Column(name = "s_time")
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date sTime;
     @Column(name = "f_creator")
     private String fCreator;
@@ -217,8 +220,10 @@ public class WeightTicket implements Serializable {
     @Column(name = "created_time")
     private String createdTime;
     @Column(name = "created_date")
-    private Date createdDate;
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Date createdDate = new Date();
     @Column(name = "updated_date")
+    @Temporal(javax.persistence.TemporalType.DATE)
     private Date updatedDate;
     @Column(name = "posto")
     private String posto;

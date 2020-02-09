@@ -1813,9 +1813,9 @@ public class WTRegView extends javax.swing.JInternalFrame {
             newWeightTicket.setWplant(configuration.getWkPlant());
             newWeightTicket.setSeqDay(seqBDay);
             newWeightTicket.setSeqMonth(seqBMonth);
-            newWeightTicket.setCreatedDate(new java.sql.Date(now.getTime()));
             formatter.applyPattern("HH:mm:ss");
             newWeightTicket.setCreatedTime(formatter.format(now));
+            weightTicketDetail.setCreatedTime(formatter.format(now));
             newWeightTicket.setCreator(WeighBridgeApp.getApplication().getLogin().getUid());
             newWeightTicket.setOfflineMode(WeighBridgeApp.getApplication().isOfflineMode());
             newWeightTicket.setRegType(rbtNInward.isSelected() ? 'I' : 'O');
@@ -1846,7 +1846,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 }
             }
             List<OutboundDeliveryDetail> detail = new ArrayList<>();
-            OutboundDeliveryDetail item = null;
+            OutboundDeliveryDetail item;
             if (WeighBridgeApp.getApplication().isOfflineMode() && !txtNDONum.getText().equals("")) {
                 weightTicketDetail.setDeliveryOrderNo(txtNDONum.getText());
             } else if (!WeighBridgeApp.getApplication().isOfflineMode()) {
@@ -1876,9 +1876,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
                         }
                     }
                 }
-            }
-            if (!configuration.isModeNormal()) {
-                newWeightTicket.setCreator(WeighBridgeApp.getApplication().getCurrent_user());
             }
             setMessage(resourceMapMsg.getString("msg.saveData"));
             try {

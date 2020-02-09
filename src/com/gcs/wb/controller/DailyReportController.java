@@ -84,23 +84,17 @@ public class DailyReportController {
             wtDatas[i][4] = weightTicket.getPlateNo();
             wtDatas[i][5] = weightTicket.getTrailerId();
             wtDatas[i][6] = weightTicket.getCreator();
-            wtDatas[i][7] = create_date.getTime();
+            wtDatas[i][7] = createdDateTime;
             wtDatas[i][8] = weightTicket.getRegType();
             wtDatas[i][9] = weightTicketDetail.getRegItemDescription();
             if (weightTicket.getFTime() != null) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(weightTicket.getFTime());
-                String inDateTime = dateFormat.format(calendar.getTime());
-                wtDatas[i][10] = calendar.getTime();//item.getFTime();
+                wtDatas[i][10] = dateFormat.format(weightTicket.getFTime());
             } else {
                 wtDatas[i][10] = weightTicket.getFTime();
             }
             wtDatas[i][11] = weightTicket.getFScale() == null ? weightTicket.getFScale() : weightTicket.getFScale().doubleValue() / 1000d;
             if (weightTicket.getSTime() != null) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(weightTicket.getSTime());
-                String outDateTime = dateFormat.format(calendar.getTime());
-                wtDatas[i][12] = calendar.getTime();//item.getSTime();
+                wtDatas[i][12] = dateFormat.format(weightTicket.getSTime());
             } else {
                 wtDatas[i][12] = weightTicket.getSTime();
             }

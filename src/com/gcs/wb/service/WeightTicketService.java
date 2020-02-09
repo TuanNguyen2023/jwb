@@ -144,10 +144,6 @@ public class WeightTicketService {
         return entityManager.find(WeightTicket.class, id);
     }
 
-    public String getSoNiemXa(String pWtId) {
-        return weightTicketRepository.getSoNiemXa(pWtId);
-    }
-
     public PurchaseOrder findPurOrder(String poNum) {
         return purchaseOrderRepository.findByPoNumber(poNum);
     }
