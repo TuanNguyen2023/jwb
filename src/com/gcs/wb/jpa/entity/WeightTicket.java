@@ -220,8 +220,6 @@ public class WeightTicket implements Serializable {
     private Date createdDate;
     @Column(name = "updated_date")
     private Date updatedDate;
-    @Column(name = "deleted_date")
-    private Date deletedDate;
     @Column(name = "posto")
     private String posto;
     @OneToMany(mappedBy = "weightTicket", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -578,14 +576,6 @@ public class WeightTicket implements Serializable {
         this.updatedDate = updatedDate;
     }
 
-    public Date getDeletedDate() {
-        return deletedDate;
-    }
-
-    public void setDeletedDate(Date deletedDate) {
-        this.deletedDate = deletedDate;
-    }
-
     public boolean isDissolved() {
         return Constants.WeightTicket.STATUS_DISSOLVED.equals(status);
     }
@@ -753,9 +743,6 @@ public class WeightTicket implements Serializable {
         if (updatedDate != null ? !updatedDate.equals(that.updatedDate) : that.updatedDate != null) {
             return false;
         }
-        if (deletedDate != null ? !deletedDate.equals(that.deletedDate) : that.deletedDate != null) {
-            return false;
-        }
 
         return true;
     }
@@ -800,7 +787,6 @@ public class WeightTicket implements Serializable {
         result = 31 * result + (createdTime != null ? createdTime.hashCode() : 0);
         result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
         result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
-        result = 31 * result + (deletedDate != null ? deletedDate.hashCode() : 0);
         return result;
     }
 

@@ -51,8 +51,6 @@ public class BatchStock implements Serializable {
     private Date createdDate;
     @Column(name = "updated_date")
     private Date updatedDate;
-    @Column(name = "deleted_date")
-    private Date deletedDate;
 
     public BatchStock() {
     }
@@ -137,14 +135,6 @@ public class BatchStock implements Serializable {
         this.updatedDate = updatedDate;
     }
 
-    public Date getDeletedDate() {
-        return deletedDate;
-    }
-
-    public void setDeletedDate(Date deletedDate) {
-        this.deletedDate = deletedDate;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -171,7 +161,6 @@ public class BatchStock implements Serializable {
         result = 31 * result + (lvorm != null ? lvorm.hashCode() : 0);
         result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
         result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
-        result = 31 * result + (deletedDate != null ? deletedDate.hashCode() : 0);
         return result;
     }
 

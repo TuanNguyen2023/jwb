@@ -56,10 +56,8 @@ public class TransportAgentService {
 
     /**
      * save Vehicle
-     * @param entityTransaction
      * @param licensePlate
-     * @param vehicle
-     * @param transportAgentSelected 
+     * @param transportAgentSelected
      */
     public void saveVehicle(String licensePlate, TransportAgent transportAgentSelected) {
         Vehicle vehicle = vehicleRepository.findByPlateNo(licensePlate);

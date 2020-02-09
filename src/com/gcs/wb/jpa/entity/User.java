@@ -48,8 +48,6 @@ public class User implements Serializable {
     private Date createdDate;
     @Column(name = "updated_date")
     private Date updatedDate;
-    @Column(name = "deleted_date")
-    private Date deletedDate;
     @Column(name = "mandt", unique = true)
     private String mandt;
     @Column(name = "wplant", unique = true)
@@ -143,14 +141,6 @@ public class User implements Serializable {
         this.updatedDate = updated_date;
     }
 
-    public Date getDeletedDate() {
-        return deletedDate;
-    }
-
-    public void setDeletedDate(Date deleted_date) {
-        this.deletedDate = deleted_date;
-    }
-
     public String getMandt() {
         return mandt;
     }
@@ -184,7 +174,6 @@ public class User implements Serializable {
         if (langIso != null ? !langIso.equals(user.langIso) : user.langIso != null) return false;
         if (createdDate != null ? !createdDate.equals(user.createdDate) : user.createdDate != null) return false;
         if (updatedDate != null ? !updatedDate.equals(user.updatedDate) : user.updatedDate != null) return false;
-        if (deletedDate != null ? !deletedDate.equals(user.deletedDate) : user.deletedDate != null) return false;
         if (mandt != null ? !mandt.equals(user.mandt) : user.mandt != null) return false;
         if (wplant != null ? !wplant.equals(user.wplant) : user.wplant != null) return false;
         
@@ -203,7 +192,6 @@ public class User implements Serializable {
         result = 31 * result + (langIso != null ? langIso.hashCode() : 0);
         result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
         result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
-        result = 31 * result + (deletedDate != null ? deletedDate.hashCode() : 0);
         result = 31 * result + (mandt != null ? mandt.hashCode() : 0);
         result = 31 * result + (wplant != null ? wplant.hashCode() : 0);
         return result;

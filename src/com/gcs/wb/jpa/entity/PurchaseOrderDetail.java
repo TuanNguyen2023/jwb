@@ -95,10 +95,7 @@ public class PurchaseOrderDetail implements Serializable {
     @Column(name = "updated_date")
     @Temporal(TemporalType.DATE)
     private Date updatedDate;
-    @Column(name = "deleted_date")
-    @Temporal(TemporalType.DATE)
-    private Date deletedDate;
-    
+
     @ManyToOne
     @JoinColumn(name = "purchase_order_id")
     private PurchaseOrder purchaseOrder;
@@ -346,14 +343,6 @@ public class PurchaseOrderDetail implements Serializable {
         this.updatedDate = updatedDate;
     }
 
-    public Date getDeletedDate() {
-        return deletedDate;
-    }
-
-    public void setDeletedDate(Date deletedDate) {
-        this.deletedDate = deletedDate;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -397,7 +386,6 @@ public class PurchaseOrderDetail implements Serializable {
         result = 31 * result + (partDeliv != null ? partDeliv.hashCode() : 0);
         result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
         result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
-        result = 31 * result + (deletedDate != null ? deletedDate.hashCode() : 0);
         return result;
     }
 

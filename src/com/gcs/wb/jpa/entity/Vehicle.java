@@ -43,8 +43,6 @@ public class Vehicle implements Serializable {
     private Date createdDate;
     @Column(name = "updated_date")
     private Date updatedDate;
-    @Column(name = "deleted_date")
-    private Date deletedDate;
 
     public Vehicle() {
     }
@@ -107,14 +105,6 @@ public class Vehicle implements Serializable {
 
     public void setUpdatedDate(Date updated_date) {
         this.updatedDate = updated_date;
-    }
-
-    public Date getDeletedDate() {
-        return deletedDate;
-    }
-
-    public void setDeletedDate(Date deleted_date) {
-        this.deletedDate = deleted_date;
     }
 
     public boolean isProhibit() {
