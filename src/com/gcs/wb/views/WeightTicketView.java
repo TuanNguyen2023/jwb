@@ -2961,7 +2961,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             }
             Date now = new Date();
             weightTicket.setUpdatedDate(now);
-            weightTicket.getWeightTicketDetail().setUpdatedDate(now);
+            weightTicket.getWeightTicketDetail().setUpdatedDate(new java.sql.Date(now.getTime()));
             entityManager.merge(weightTicket);
             OutboundDelivery outbDel = null;
             List<String> completedDO = new ArrayList<>();
