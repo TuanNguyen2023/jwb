@@ -38,6 +38,7 @@ public class Constants {
 
         public static final String STATUS_POSTED = "POSTED";
         public static final String STATUS_DISSOLVED = "DISSOLVED";
+        public static final String STATUS_INCOMPLETED  = "INCOMPLETED ";
         public static final String STATUS_OFFLINE = "OFFLINE";
     }
 
