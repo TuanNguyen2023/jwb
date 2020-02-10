@@ -3083,6 +3083,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                                     if (sapKunnr != null && kunnr == null) {
                                         entityManager.persist(sapKunnr);
                                     } else if (sapKunnr != null && kunnr != null) {
+                                        sapKunnr.setId(kunnr.getId());
                                         entityManager.merge(sapKunnr);
                                     } else if (sapKunnr == null && kunnr != null) {
                                         entityManager.remove(kunnr);
@@ -3091,6 +3092,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                                     if (sapKunag != null && kunag == null && !sapKunnr.getKunnr().equalsIgnoreCase(sapKunag.getKunnr())) {
                                         entityManager.persist(sapKunag);
                                     } else if (sapKunag != null && kunag != null) {
+                                        sapKunag.setId(kunag.getId());
                                         entityManager.merge(sapKunag);
                                     } else if (sapKunag == null && kunag != null && !sapKunnr.getKunnr().equalsIgnoreCase(sapKunag.getKunnr())) {
                                         entityManager.remove(kunag);
@@ -3099,10 +3101,12 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                                     if (sapLifnr != null && lifnr == null) {
                                         entityManager.persist(sapLifnr);
                                     } else if (sapLifnr != null && lifnr != null) {
+                                        sapLifnr.setId(lifnr.getId());
                                         entityManager.merge(sapLifnr);
                                     } else if (sapLifnr == null && lifnr != null) {
                                         entityManager.remove(lifnr);
                                     }
+                                    sapOutb.setId(outbDel.getId());
                                     entityManager.merge(sapOutb);
                                     outbDel = sapOutb;
                                 }
@@ -3369,6 +3373,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                                         if (sapKunnr != null && kunnr == null) {
                                             entityManager.persist(sapKunnr);
                                         } else if (sapKunnr != null && kunnr != null) {
+                                            sapKunnr.setId(kunnr.getId());
                                             entityManager.merge(sapKunnr);
                                         } else if (sapKunnr == null && kunnr != null) {
                                             entityManager.remove(kunnr);
@@ -3377,6 +3382,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                                         if (sapKunag != null && kunag == null && !sapKunnr.getKunnr().equalsIgnoreCase(sapKunag.getKunnr())) {
                                             entityManager.persist(sapKunag);
                                         } else if (sapKunag != null && kunag != null) {
+                                            sapKunag.setId(kunag.getId());
                                             entityManager.merge(sapKunag);
                                         } else if (sapKunag == null && kunag != null && !sapKunnr.getKunnr().equalsIgnoreCase(sapKunag.getKunnr())) {
                                             entityManager.remove(kunag);
@@ -3385,11 +3391,13 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                                         if (sapLifnr != null && lifnr == null) {
                                             entityManager.persist(sapLifnr);
                                         } else if (sapLifnr != null && lifnr != null) {
+                                            sapLifnr.setId(lifnr.getId());
                                             entityManager.merge(sapLifnr);
                                         } else if (sapLifnr == null && lifnr != null) {
                                             entityManager.remove(lifnr);
                                         }
                                         // 120518_17h keep values(posted, mat_doc) which are gotten from Save SAP at the first time
+                                        sapOutb.setId(outbDel.getId());
                                         sapOutb.setPosted(outbDel.isPosted());
                                         sapOutb.setMatDoc(outbDel.getMatDoc());
                                         entityManager.merge(sapOutb);
