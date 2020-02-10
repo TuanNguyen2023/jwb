@@ -2818,6 +2818,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             if (sapVendor != null && vendor == null) {
                 entityManager.persist(sapVendor);
             } else if (sapVendor != null && vendor != null) {
+                sapVendor.setId(vendor.getId());
                 entityManager.merge(sapVendor);
             } else if (sapVendor == null && vendor != null) {
                 entityManager.remove(vendor);
@@ -2826,6 +2827,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             if (sapSupVendor != null && supVendor == null && !sapPurOrder.getVendor().equalsIgnoreCase(sapPurOrder.getSupplVend())) {
                 entityManager.persist(sapSupVendor);
             } else if (sapSupVendor != null && supVendor != null) {
+                sapSupVendor.setId(supVendor.getId());
                 entityManager.merge(sapSupVendor);
             } else if (sapSupVendor == null && supVendor != null && !sapPurOrder.getVendor().equalsIgnoreCase(sapPurOrder.getSupplVend())) {
                 entityManager.remove(supVendor);
@@ -2834,6 +2836,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             if (sapCustomer != null && customer == null) {
                 entityManager.persist(sapCustomer);
             } else if (sapCustomer != null && customer != null) {
+                sapCustomer.setId(customer.getId());
                 entityManager.merge(sapCustomer);
             } else if (sapCustomer == null && customer != null) {
                 entityManager.remove(customer);
@@ -2841,6 +2844,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             if (sapPurOrder != null && purOrder == null) {
                 entityManager.persist(sapPurOrder);
             } else if (sapPurOrder != null && purOrder != null) {
+                sapPurOrder.setId(purOrder.getId());
                 entityManager.merge(sapPurOrder);
             } else if (sapPurOrder == null && purOrder != null) {
                 entityManager.remove(purOrder);
