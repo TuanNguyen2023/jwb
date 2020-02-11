@@ -10,11 +10,13 @@ import com.gcs.wb.jpa.entity.*;
 import com.gcs.wb.jpa.entity.OutboundDeliveryDetail;
 import com.gcs.wb.jpa.service.JReportService;
 import com.gcs.wb.model.AppConfig;
+import com.gcs.wb.model.WeighingMode;
 import com.gcs.wb.service.WeightTicketRegistarationService;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JRadioButton;
@@ -217,6 +219,20 @@ public class WeightTicketRegistarationController {
 
     public List<OutboundDeliveryDetail> findByMandtDelivNumb(String deliv_numb) throws Exception {
         return wTRegService.findByMandtDelivNumb(deliv_numb);
+    }
 
+    public DefaultComboBoxModel getModeTypeModel(Constants.WeighingProcess.MODE mode) {
+        DefaultComboBoxModel model = new DefaultComboBoxModel();
+        if (mode == Constants.WeighingProcess.MODE.INPUT) {
+            Constants.WeighingProcess.getInputModeList().forEach(item -> {
+                model.addElement(item);
+            });
+        } else if (mode == Constants.WeighingProcess.MODE.OUTPUT) {
+            Constants.WeighingProcess.getOutputModeList().forEach(item -> {
+                model.addElement(item);
+            });
+        }
+        
+        return model;
     }
 }

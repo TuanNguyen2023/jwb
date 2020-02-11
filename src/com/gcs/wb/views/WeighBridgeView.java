@@ -173,8 +173,8 @@ public class WeighBridgeView extends FrameView {
         tabPane.setBackground(resourceMap.getColor("tabPane.background")); // NOI18N
         tabPane.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
         tabPane.setFont(resourceMap.getFont("tabPane.font")); // NOI18N
-        tabPane.setMaximumSize(new java.awt.Dimension(1920, 1080));
-        tabPane.setMinimumSize(new java.awt.Dimension(1920, 1080));
+        tabPane.setMaximumSize(new java.awt.Dimension(1920, 2080));
+        tabPane.setMinimumSize(new java.awt.Dimension(1920, 2080));
         tabPane.setName("tabPane"); // NOI18N
         tabPane.setPreferredSize(new java.awt.Dimension(1920, 1080));
         tabPane.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -284,7 +284,7 @@ public class WeighBridgeView extends FrameView {
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 405, Short.MAX_VALUE)
+            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
         );
 
         menuBar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -364,7 +364,7 @@ public class WeighBridgeView extends FrameView {
                 .addComponent(txt_status, javax.swing.GroupLayout.PREFERRED_SIZE, 463, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusMessageLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 141, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 151, Short.MAX_VALUE)
                 .addComponent(statusAnimationLabel)
                 .addContainerGap())
         );

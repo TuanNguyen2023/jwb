@@ -4,8 +4,13 @@
  */
 package com.gcs.wb.base.constant;
 
+import com.gcs.wb.model.WeighingMode;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -13,6 +18,47 @@ import java.util.regex.Pattern;
  * @author THANGPT
  */
 public class Constants {
+    
+    public static class WeighingProcess {
+
+        public static enum MODE {
+            INPUT,
+            OUTPUT
+        }
+
+        public static enum MODE_DETAIL {
+            IN_PO_PURCHASE,
+            IN_WAREHOUSE_TRANSFER,
+            IN_OTHER,
+            OUT_SELL_ROAD,
+            OUT_PLANT_PLANT,
+            OUT_SLOC_SLOC,
+            OUT_PULL_STATION,
+            OUT_SELL_WATERWAY,
+            OUT_OTHER
+        };
+        
+        public static List<WeighingMode> getOutputModeList() {
+            List<WeighingMode> mode = new ArrayList<>();
+            mode.add(new WeighingMode(MODE_DETAIL.OUT_SELL_ROAD, "Bán Hàng (Bộ)"));
+            mode.add(new WeighingMode(MODE_DETAIL.OUT_PLANT_PLANT, "Plant - Plant"));
+            mode.add(new WeighingMode(MODE_DETAIL.OUT_SLOC_SLOC, "Sloc - Sloc"));
+            mode.add(new WeighingMode(MODE_DETAIL.OUT_PULL_STATION, "Nhập Bến Kéo"));
+            mode.add(new WeighingMode(MODE_DETAIL.OUT_SELL_WATERWAY, "Bán Hàng (Thủy)"));
+            mode.add(new WeighingMode(MODE_DETAIL.OUT_OTHER, "Cân khác"));
+
+            return mode;
+        }
+
+        public static List<WeighingMode> getInputModeList() {
+            List<WeighingMode> mode = new ArrayList<>();
+            mode.add(new WeighingMode(MODE_DETAIL.IN_PO_PURCHASE, "PO Mua Hàng"));
+            mode.add(new WeighingMode(MODE_DETAIL.IN_WAREHOUSE_TRANSFER, "Chuyển Kho"));
+            mode.add(new WeighingMode(MODE_DETAIL.IN_OTHER, "Cân khác"));
+
+            return mode;
+        }
+    }
 
     public static class Configuration {
 
