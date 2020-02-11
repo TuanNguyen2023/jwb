@@ -6,9 +6,9 @@ package com.gcs.wb.controller;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.base.constant.Constants;
+import com.gcs.wb.jpa.JReportService;
 import com.gcs.wb.jpa.entity.*;
 import com.gcs.wb.jpa.entity.OutboundDeliveryDetail;
-import com.gcs.wb.jpa.service.JReportService;
 import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.service.WeightTicketRegistarationService;
 import java.util.Date;

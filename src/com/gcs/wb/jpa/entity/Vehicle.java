@@ -4,9 +4,9 @@
  */
 package com.gcs.wb.jpa.entity;
 
-import com.gcs.wb.base.constant.Constants;
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.Calendar;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -37,8 +37,12 @@ public class Vehicle implements Serializable {
     private int type;
     @Column(name = "weight")
     private float weight;
-    @Column(name = "status")
-    private String status;
+//    @Column(name = "status")
+//    private String status;
+    @Column(name = "valid_from")
+    private Date validFrom;
+    @Column(name = "valid_to")
+    private Date validTo;
     @Column(name = "created_date")
     private Date createdDate;
     @Column(name = "updated_date")
@@ -83,13 +87,22 @@ public class Vehicle implements Serializable {
         this.weight = weight;
     }
 
-    public String getStatus() {
-        return status;
+    public Date getValidFrom() {
+        return validFrom;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setValidFrom(Date validFrom) {
+        this.validFrom = validFrom;
     }
+
+    public Date getValidTo() {
+        return validTo;
+    }
+
+    public void setValidTo(Date validTo) {
+        this.validTo = validTo;
+    }
+
 
     public Date getCreatedDate() {
         return createdDate;
@@ -108,12 +121,14 @@ public class Vehicle implements Serializable {
     }
 
     public boolean isProhibit() {
-        return Constants.Vehicle.STATUS_INACTIVED.equals(this.status);
+        //return Constants.Vehicle.STATUS_INACTIVED.equals(this.status);
+        Date dateNow = new Date(Calendar.getInstance().getTime().getTime());
+        return dateNow.after(this.validTo) && dateNow.before(this.validFrom);
     }
 
-    public void setProhibit(boolean isProhibit) {
-        this.status = isProhibit ? Constants.Vehicle.STATUS_INACTIVED : Constants.Vehicle.STATUS_ACTIVED;
-    }
+//    public void setProhibit(boolean isProhibit) {
+//        this.status = isProhibit ? Constants.Vehicle.STATUS_INACTIVED : Constants.Vehicle.STATUS_ACTIVED;
+//    }
 
     @Override
     public int hashCode() {

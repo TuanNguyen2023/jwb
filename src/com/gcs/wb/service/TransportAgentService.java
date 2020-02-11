@@ -13,6 +13,7 @@ import com.gcs.wb.jpa.entity.Vehicle;
 import com.gcs.wb.jpa.repositorys.TransportAgentVehicleRepository;
 import com.gcs.wb.jpa.repositorys.VehicleRepository;
 import com.gcs.wb.views.TransportAgentView;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -56,12 +57,13 @@ public class TransportAgentService {
 
     /**
      * save Vehicle
+     *
      * @param licensePlate
      * @param transportAgentSelected
      */
-    public void saveVehicle(String licensePlate, TransportAgent transportAgentSelected) {
+    public void saveVehicle(String licensePlate, TransportAgent transportAgentSelected, Date validFrom, Date validTo) {
         Vehicle vehicle = vehicleRepository.findByPlateNo(licensePlate);
-        
+
         TransportAgentVehicle transportAgentVehicle = new TransportAgentVehicle();
         if (!entityTransaction.isActive()) {
             entityTransaction.begin();
@@ -71,7 +73,9 @@ public class TransportAgentService {
             // insert new vehicle
             vehicle = new Vehicle();
             vehicle.setPlateNo(licensePlate);
-            vehicle.setProhibit(false);
+            //vehicle.setProhibit(false);
+            vehicle.setValidFrom(new java.sql.Date(validFrom.getTime()));
+            vehicle.setValidTo(new java.sql.Date(validTo.getTime()));
             entityManager.persist(vehicle);
 
             // insert vehicle relationship
@@ -82,15 +86,22 @@ public class TransportAgentService {
             // check vehicle has exit in transport agent
             transportAgentVehicle = transportAgentVehicleRepository.findByTransportAgentIdAndVehicleId(transportAgentSelected.getId(), vehicle.getId());
             if (transportAgentVehicle != null) {
-                JOptionPane.showMessageDialog(mainFrame,
-                        resourceMapMsg.getString("msg.duplicationPlateNo",
-                        licensePlate,
-                        transportAgentSelected.getName()));
-                return;
+                if (transportAgentVehicle.getVehicle().getPlateNo() != null && !transportAgentVehicle.getVehicle().getPlateNo().isEmpty()) {
+                    transportAgentVehicle.getVehicle().setValidFrom(new java.sql.Date(validFrom.getTime()));
+                    transportAgentVehicle.getVehicle().setValidTo(new java.sql.Date(validTo.getTime()));
+                } else {
+                    JOptionPane.showMessageDialog(mainFrame,
+                            resourceMapMsg.getString("msg.duplicationPlateNo",
+                                    licensePlate,
+                                    transportAgentSelected.getName()));
+                    return;
+                }
             } else {
                 // insert vehicle relationship
                 transportAgentVehicle = new TransportAgentVehicle();
                 transportAgentVehicle.setTransportAgent(transportAgentSelected);
+                vehicle.setValidFrom(new java.sql.Date(validFrom.getTime()));
+                vehicle.setValidTo(new java.sql.Date(validTo.getTime()));
                 transportAgentVehicle.setVehicle(vehicle);
                 entityManager.persist(transportAgentVehicle);
             }
@@ -102,6 +113,7 @@ public class TransportAgentService {
 
     /**
      * remove Vehicle
+     *
      * @param transportAgentSelected
      * @param vehicleSelected
      */
@@ -111,8 +123,8 @@ public class TransportAgentService {
                 entityTransaction.begin();
             }
 
-            TransportAgentVehicle transportAgentVehicle =
-                    transportAgentVehicleRepository.findByTransportAgentIdAndVehicleId(transportAgentSelected.getId(), vehicleSelected.getId());
+            TransportAgentVehicle transportAgentVehicle
+                    = transportAgentVehicleRepository.findByTransportAgentIdAndVehicleId(transportAgentSelected.getId(), vehicleSelected.getId());
             entityManager.remove(transportAgentVehicle);
 
             entityTransaction.commit();
@@ -125,27 +137,27 @@ public class TransportAgentService {
             entityManager.clear();
         }
     }
-    /**
-     * action prohibit Vehicle
-     * @param vehicleSelected
-     * @param isProhibitVehicle
-     */
-    public void prohibitApplyActionPerformed(Vehicle vehicleSelected, boolean isProhibitVehicle) {
-        try {
-            if (!entityTransaction.isActive()) {
-                entityTransaction.begin();
-            }
-
-            vehicleSelected.setProhibit(isProhibitVehicle);
-            entityManager.merge(vehicleSelected);
-            entityTransaction.commit();
-            entityManager.clear();
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.prohibitFalse"));
-            if (entityTransaction.isActive()) {
-                entityTransaction.rollback();
-            }
-            entityManager.clear();
-        }
-    }
+//    /**
+//     * action prohibit Vehicle
+//     * @param vehicleSelected
+//     * @param isProhibitVehicle
+//     */
+//    public void prohibitApplyActionPerformed(Vehicle vehicleSelected, boolean isProhibitVehicle) {
+//        try {
+//            if (!entityTransaction.isActive()) {
+//                entityTransaction.begin();
+//            }
+//
+//            vehicleSelected.setProhibit(isProhibitVehicle);
+//            entityManager.merge(vehicleSelected);
+//            entityTransaction.commit();
+//            entityManager.clear();
+//        } catch (Exception ex) {
+//            JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.prohibitFalse"));
+//            if (entityTransaction.isActive()) {
+//                entityTransaction.rollback();
+//            }
+//            entityManager.clear();
+//        }
+//    }
 }

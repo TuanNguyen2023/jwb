@@ -12,11 +12,13 @@ package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.base.constant.Constants;
+import com.gcs.wb.base.validator.DateFromToValidator;
 import com.gcs.wb.controller.TransportAgentController;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.Vehicle;
 import java.awt.Color;
 import java.awt.Component;
+import java.util.Calendar;
 import java.util.regex.Matcher;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
@@ -34,6 +36,8 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
     public TransportAgentController transportAgentController = new TransportAgentController();
     private boolean vehicleCreatable = false;
     public ResourceMap resourceMapMsg = Application.getInstance(WeighBridgeApp.class).getContext().getResourceMap(TransportAgentView.class);
+    public static final String SDATE = "date";
+    private final DateFromToValidator dateFromToValidator = new DateFromToValidator();
 
     /** Creates new form TransportAgentView */
     public TransportAgentView() {
@@ -50,8 +54,6 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
     private void initComponents() {
         bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
-        transportAgentSelected = new com.gcs.wb.jpa.entity.TransportAgent();
-        vehicleSelected = new com.gcs.wb.jpa.entity.Vehicle();
         pnTransportAgent = new javax.swing.JPanel();
         spnTransportAgent = new javax.swing.JScrollPane();
         lstTransportAgent = new javax.swing.JList();
@@ -62,8 +64,10 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
         txtLicensePlate = new javax.swing.JTextField();
         btnVehicleSave = new javax.swing.JButton();
         btnVehicleRemove = new javax.swing.JButton();
-        chkProhibitVehicle = new javax.swing.JCheckBox();
-        btnProhibitApply = new javax.swing.JButton();
+        lblValidFrom = new javax.swing.JLabel();
+        lblValidTo = new javax.swing.JLabel();
+        dpValidFrom = new org.jdesktop.swingx.JXDatePicker();
+        dpValidTo = new org.jdesktop.swingx.JXDatePicker();
 
         setClosable(true);
         setMaximizable(true);
@@ -105,14 +109,14 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
             pnTransportAgentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnTransportAgentLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(spnTransportAgent, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
+                .addComponent(spnTransportAgent, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
                 .addContainerGap())
         );
         pnTransportAgentLayout.setVerticalGroup(
             pnTransportAgentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnTransportAgentLayout.createSequentialGroup()
-                .addComponent(spnTransportAgent, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)
-                .addGap(147, 147, 147))
+                .addComponent(spnTransportAgent, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(182, Short.MAX_VALUE))
         );
 
         pnVehicle.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("pnVehicle.border.title"))); // NOI18N
@@ -177,21 +181,25 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
             }
         });
 
-        chkProhibitVehicle.setText(resourceMap.getString("chkProhibitVehicle.text")); // NOI18N
-        chkProhibitVehicle.setName("chkProhibitVehicle"); // NOI18N
+        lblValidFrom.setText(resourceMap.getString("lblValidFrom.text")); // NOI18N
+        lblValidFrom.setName("lblValidFrom"); // NOI18N
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, lstVehicle, org.jdesktop.beansbinding.ELProperty.create("${selectedElement != null}"), chkProhibitVehicle, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
-        bindingGroup.addBinding(binding);
+        lblValidTo.setText(resourceMap.getString("lblValidTo.text")); // NOI18N
+        lblValidTo.setName("lblValidTo"); // NOI18N
 
-        btnProhibitApply.setText(resourceMap.getString("btnProhibitApply.text")); // NOI18N
-        btnProhibitApply.setName("btnProhibitApply"); // NOI18N
+        dpValidFrom.setDate(null);
+        dpValidFrom.setName("dpValidFrom"); // NOI18N
+        dpValidFrom.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                dpValidFromPropertyChange(evt);
+            }
+        });
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, lstVehicle, org.jdesktop.beansbinding.ELProperty.create("${selectedElement != null}"), btnProhibitApply, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
-        bindingGroup.addBinding(binding);
-
-        btnProhibitApply.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnProhibitApplyActionPerformed(evt);
+        dpValidTo.setDate(null);
+        dpValidTo.setName("dpValidTo"); // NOI18N
+        dpValidTo.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                dpValidToPropertyChange(evt);
             }
         });
 
@@ -202,38 +210,44 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
             .addGroup(pnVehicleLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(spnVehicle, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
-                    .addGroup(pnVehicleLayout.createSequentialGroup()
-                        .addComponent(chkProhibitVehicle)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
-                        .addComponent(btnProhibitApply))
+                    .addComponent(spnVehicle, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnVehicleLayout.createSequentialGroup()
                         .addComponent(btnVehicleRemove)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 141, Short.MAX_VALUE)
                         .addComponent(btnVehicleSave))
+                    .addComponent(lblLicensePlate)
                     .addGroup(pnVehicleLayout.createSequentialGroup()
-                        .addComponent(lblLicensePlate)
+                        .addGroup(pnVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblValidFrom)
+                            .addComponent(lblValidTo))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtLicensePlate, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)))
+                        .addGroup(pnVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtLicensePlate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
+                            .addComponent(dpValidTo, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
+                            .addComponent(dpValidFrom, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         pnVehicleLayout.setVerticalGroup(
             pnVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnVehicleLayout.createSequentialGroup()
-                .addComponent(spnVehicle, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
+                .addComponent(spnVehicle, javax.swing.GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(pnVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblLicensePlate)
                     .addComponent(txtLicensePlate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(13, 13, 13)
+                .addGap(18, 18, 18)
+                .addGroup(pnVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblValidFrom)
+                    .addComponent(dpValidFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(pnVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblValidTo)
+                    .addComponent(dpValidTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(pnVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnVehicleSave)
                     .addComponent(btnVehicleRemove))
-                .addGap(11, 11, 11)
-                .addGroup(pnVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(chkProhibitVehicle)
-                    .addComponent(btnProhibitApply))
-                .addContainerGap())
+                .addGap(21, 21, 21))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -264,7 +278,13 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
 
     private void lstTransportAgentValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstTransportAgentValueChanged
         transportAgentSelected = (TransportAgent) lstTransportAgent.getSelectedValue();
+        dpValidFrom.setBackground(Color.black);
+        dpValidTo.setBackground(Color.black);
         if (transportAgentSelected != null) {
+            dpValidFrom.setDate(null);
+            dpValidTo.setDate(null);
+            txtLicensePlate.setEditable(true);
+            txtLicensePlate.setText("");
             vehicleSelected = null;
             lstVehicle.clearSelection();
             lstVehicle.setModel(getVehiclesModel());
@@ -273,8 +293,13 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
 
     private void lstVehicleValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstVehicleValueChanged
         vehicleSelected = (Vehicle) lstVehicle.getSelectedValue();
+
         if (vehicleSelected != null) {
-            chkProhibitVehicle.setSelected(vehicleSelected.isProhibit());
+            txtLicensePlate.setText(vehicleSelected.getPlateNo());
+            txtLicensePlate.setEditable(false);
+            txtLicensePlate.setEnabled(false);
+            dpValidFrom.setDate(vehicleSelected.getValidFrom());
+            dpValidTo.setDate(vehicleSelected.getValidTo());
         }
     }//GEN-LAST:event_lstVehicleValueChanged
 
@@ -295,14 +320,45 @@ private void btnVehicleRemoveActionPerformed(java.awt.event.ActionEvent evt) {//
     vehicleSelected = null;
 }//GEN-LAST:event_btnVehicleRemoveActionPerformed
 
-private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProhibitApplyActionPerformed
-    // action prohibit vehicle
-    transportAgentController.prohibitApplyActionPerformed(vehicleSelected, chkProhibitVehicle.isSelected());
-    chkProhibitVehicle.setSelected(false);
-    vehicleSelected = null;
-    lstVehicle.clearSelection();
-    lstVehicle.setModel(getVehiclesModel());
-}//GEN-LAST:event_btnProhibitApplyActionPerformed
+private void dpValidFromPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_dpValidFromPropertyChange
+// TODO add your handling code here:
+    if (SDATE.equals(evt.getPropertyName())) {
+        validateDateForm();
+    }
+}//GEN-LAST:event_dpValidFromPropertyChange
+
+private void dpValidToPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_dpValidToPropertyChange
+// TODO add your handling code here:
+    if (SDATE.equals(evt.getPropertyName())) {
+        validateDateForm();
+    }
+}//GEN-LAST:event_dpValidToPropertyChange
+
+    private void validateDateForm() {
+        try {
+            dateFromToValidator.validate(dpValidFrom.getDate(), dpValidTo.getDate());
+
+            lblValidFrom.setForeground(Color.black);
+            lblValidTo.setForeground(Color.black);
+            if(txtLicensePlate.getText() != null && dpValidFrom.getDate() != null && dpValidTo.getDate() != null){
+                btnVehicleSave.setEnabled(true);
+            }
+        } catch (IllegalArgumentException ex) {
+            if(dpValidFrom.getDate() == null ){
+                lblValidFrom.setForeground(Color.black);
+            }
+            else{
+                lblValidFrom.setForeground(Color.red);
+            }
+            if(dpValidTo.getDate() == null){
+                lblValidTo.setForeground(Color.black);
+            }
+            else{
+                lblValidTo.setForeground(Color.red);
+            }
+            btnVehicleSave.setEnabled(false);
+        }
+    }
 
     private boolean validateLicensePlate() {
         boolean isLicensePlate = false;
@@ -327,11 +383,15 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
     @Action(enabledProperty = "vehicleCreatable")
     public void saveVehicle() {
 
-         //save vehicle
-        transportAgentController.saveVehicle(txtLicensePlate.getText().trim(), transportAgentSelected);
+        //save vehicle
+        transportAgentController.saveVehicle(txtLicensePlate.getText().trim(), transportAgentSelected, dpValidFrom.getDate(), dpValidTo.getDate());
         setVehicleCreatable(false);
         vehicleSelected = null;
         txtLicensePlate.setText("");
+        dpValidFrom.setDate(null);
+        dpValidTo.setDate(null);
+        dpValidFrom.setBackground(Color.black);
+        dpValidTo.setBackground(Color.black);
         lstVehicle.clearSelection();
         lstVehicle.setModel(getVehiclesModel());
     }
@@ -348,21 +408,22 @@ private void btnProhibitApplyActionPerformed(java.awt.event.ActionEvent evt) {//
     }
     // </editor-fold>
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnProhibitApply;
     private javax.swing.JButton btnVehicleRemove;
     private javax.swing.JButton btnVehicleSave;
-    private javax.swing.JCheckBox chkProhibitVehicle;
+    private org.jdesktop.swingx.JXDatePicker dpValidFrom;
+    private org.jdesktop.swingx.JXDatePicker dpValidTo;
     private javax.swing.JLabel lblLicensePlate;
+    private javax.swing.JLabel lblValidFrom;
+    private javax.swing.JLabel lblValidTo;
     private javax.swing.JList lstTransportAgent;
     private javax.swing.JList lstVehicle;
     private javax.swing.JPanel pnTransportAgent;
     private javax.swing.JPanel pnVehicle;
     private javax.swing.JScrollPane spnTransportAgent;
     private javax.swing.JScrollPane spnVehicle;
-    private com.gcs.wb.jpa.entity.TransportAgent transportAgentSelected;
     private javax.swing.JTextField txtLicensePlate;
-    private com.gcs.wb.jpa.entity.Vehicle vehicleSelected;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
-   
+    private com.gcs.wb.jpa.entity.TransportAgent transportAgentSelected;
+    private com.gcs.wb.jpa.entity.Vehicle vehicleSelected;
 }

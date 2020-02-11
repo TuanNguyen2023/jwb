@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Weight Tickets List" pageWidth="1684" pageHeight="1190" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="1684" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
 	<property name="ireport.zoom" value="0.683013455365075"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="133"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="P_TAGENT" class="java.lang.String"/>
 	<parameter name="P_MONTH" class="java.lang.String"/>
@@ -13,7 +13,7 @@
 	<parameter name="P_PPHONE" class="java.lang.String"/>
 	<parameter name="P_PFAX" class="java.lang.String"/>
 	<field name="COLUMN_0" class="java.lang.Integer"/>
-	<field name="COLUMN_1" class="java.lang.Integer"/>
+	<field name="COLUMN_1" class="java.lang.Long"/>
 	<field name="COLUMN_2" class="java.lang.String"/>
 	<field name="COLUMN_3" class="java.lang.String"/>
 	<field name="COLUMN_4" class="java.lang.String"/>
@@ -30,9 +30,8 @@
 	<field name="COLUMN_15" class="java.lang.String"/>
 	<field name="COLUMN_16" class="java.lang.String"/>
 	<field name="COLUMN_17" class="java.lang.Boolean"/>
-	<field name="COLUMN_18" class="java.lang.Boolean"/>
+	<field name="COLUMN_18" class="java.lang.String"/>
 	<field name="COLUMN_19" class="java.lang.String"/>
-	<field name="COLUMN_20" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -44,9 +43,9 @@
 					<font fontName="DejaVu Sans" size="10" isBold="true" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["CÔNG TY CỔ PHẦN XI MĂNG FICO TÂY NINH" + "\n" +  "\n" +
-$P{P_PNAME_RPT} + "\n" + "\n" +
-$P{P_PADDRESS} + "\n" + "\n" +
-($P{P_PPHONE} != null ? "Tel: "+ $P{P_PPHONE} : "") + ( $P{P_PFAX} != null ? "- Fax: " + $P{P_PFAX} : "")]]></textFieldExpression>
+					$P{P_PNAME_RPT} + "\n" + "\n" +
+					$P{P_PADDRESS} + "\n" + "\n" +
+					($P{P_PPHONE} != null ? "Tel: "+ $P{P_PPHONE} : "") + ( $P{P_PFAX} != null ? "- Fax: " + $P{P_PFAX} : "")]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="730" y="56" width="348" height="20"/>
@@ -211,18 +210,11 @@ $P{P_PADDRESS} + "\n" + "\n" +
 				<text><![CDATA[Số D.O]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="1488" y="9" width="88" height="20"/>
+				<reportElement x="1488" y="9" width="126" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" isBold="true" isUnderline="true" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[Số chứng từ SAP]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="1576" y="9" width="38" height="20"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="DejaVu Sans" isBold="true" isUnderline="true" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[Hủy]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="1614" y="9" width="70" height="20"/>
@@ -255,7 +247,7 @@ $P{P_PADDRESS} + "\n" + "\n" +
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{COLUMN_18} == null || $F{COLUMN_18} == false? "" : "X"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{COLUMN_17} == null || $F{COLUMN_17} == false? "" : "X"]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="360" y="0" width="70" height="20"/>
@@ -290,20 +282,12 @@ $P{P_PADDRESS} + "\n" + "\n" +
 				<textFieldExpression><![CDATA[$F{COLUMN_11}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="1488" y="0" width="88" height="20"/>
+				<reportElement x="1488" y="0" width="126" height="20"/>
 				<box leftPadding="2" rightPadding="2"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{COLUMN_16}]]></textFieldExpression>
-			</textField>
-			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="1576" y="0" width="38" height="20"/>
-				<box leftPadding="2" rightPadding="2"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
-					<font fontName="DejaVu Sans" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{COLUMN_17} == null || $F{COLUMN_17} == false ? "" : "X"]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement x="1193" y="0" width="65" height="20"/>
@@ -313,7 +297,7 @@ $P{P_PADDRESS} + "\n" + "\n" +
 				</textElement>
 				<textFieldExpression><![CDATA[$F{COLUMN_13}]]></textFieldExpression>
 			</textField>
-			<textField evaluationTime="Auto" pattern="" isBlankWhenNull="true">
+			<textField evaluationTime="Auto" pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="true">
 				<reportElement x="570" y="0" width="115" height="20"/>
 				<box leftPadding="2" rightPadding="2"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
@@ -345,7 +329,7 @@ $P{P_PADDRESS} + "\n" + "\n" +
 				</textElement>
 				<textFieldExpression><![CDATA[$F{COLUMN_3}]]></textFieldExpression>
 			</textField>
-			<textField evaluationTime="Auto" pattern="" isBlankWhenNull="true">
+			<textField evaluationTime="Auto" pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="true">
 				<reportElement x="1078" y="0" width="115" height="20"/>
 				<box leftPadding="2" rightPadding="2"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
@@ -399,7 +383,7 @@ $P{P_PADDRESS} + "\n" + "\n" +
 				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{P_TAGENT} == null ? $F{COLUMN_19} : $P{P_TAGENT}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{P_TAGENT} == null ? $F{COLUMN_18} : $P{P_TAGENT}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="1400" y="0" width="88" height="20"/>
@@ -407,7 +391,7 @@ $P{P_PADDRESS} + "\n" + "\n" +
 				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{COLUMN_20}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{COLUMN_19}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
