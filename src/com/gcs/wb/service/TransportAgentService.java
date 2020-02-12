@@ -137,27 +137,4 @@ public class TransportAgentService {
             entityManager.clear();
         }
     }
-//    /**
-//     * action prohibit Vehicle
-//     * @param vehicleSelected
-//     * @param isProhibitVehicle
-//     */
-//    public void prohibitApplyActionPerformed(Vehicle vehicleSelected, boolean isProhibitVehicle) {
-//        try {
-//            if (!entityTransaction.isActive()) {
-//                entityTransaction.begin();
-//            }
-//
-//            vehicleSelected.setProhibit(isProhibitVehicle);
-//            entityManager.merge(vehicleSelected);
-//            entityTransaction.commit();
-//            entityManager.clear();
-//        } catch (Exception ex) {
-//            JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.prohibitFalse"));
-//            if (entityTransaction.isActive()) {
-//                entityTransaction.rollback();
-//            }
-//            entityManager.clear();
-//        }
-//    }
 }

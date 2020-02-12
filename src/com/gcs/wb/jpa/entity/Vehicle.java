@@ -37,8 +37,6 @@ public class Vehicle implements Serializable {
     private int type;
     @Column(name = "weight")
     private float weight;
-//    @Column(name = "status")
-//    private String status;
     @Column(name = "valid_from")
     private Date validFrom;
     @Column(name = "valid_to")
@@ -123,12 +121,8 @@ public class Vehicle implements Serializable {
     public boolean isProhibit() {
         //return Constants.Vehicle.STATUS_INACTIVED.equals(this.status);
         Date dateNow = new Date(Calendar.getInstance().getTime().getTime());
-        return dateNow.after(this.validTo) && dateNow.before(this.validFrom);
+        return !(dateNow.before(this.validTo) && dateNow.after(this.validFrom));
     }
-
-//    public void setProhibit(boolean isProhibit) {
-//        this.status = isProhibit ? Constants.Vehicle.STATUS_INACTIVED : Constants.Vehicle.STATUS_ACTIVED;
-//    }
 
     @Override
     public int hashCode() {

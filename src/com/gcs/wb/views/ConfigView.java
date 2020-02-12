@@ -18,7 +18,6 @@ import com.gcs.wb.base.serials.SerialHelper;
 import com.gcs.wb.controller.ConfigController;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.Configuration;
-import com.gcs.wb.jpa.repositorys.ConfigurationRepository;
 import java.awt.Color;
 import java.util.HashSet;
 import javax.swing.DefaultComboBoxModel;
@@ -1102,8 +1101,7 @@ public class ConfigView extends javax.swing.JDialog {
                 JPAConnector.getInstance();
 
                 // get config in database
-                ConfigurationRepository configurationRepository = new ConfigurationRepository();
-                config.setConfiguration(configurationRepository.getConfiguration());
+                config.setConfiguration(configController.getConfiguration());
 
                 objBinding();
             } catch (Exception ex) {

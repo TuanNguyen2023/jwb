@@ -5,7 +5,6 @@
 package com.gcs.wb.controller;
 
 import com.gcs.wb.base.enums.ParityEnum;
-import com.gcs.wb.base.util.Base64_Utils;
 import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.service.ConfigService;
@@ -21,12 +20,16 @@ import javax.swing.JComboBox;
 public class ConfigController {
 
     private final ConfigService configService = new ConfigService();
-    
+
+    public Configuration getConfiguration() {
+        return configService.getConfiguration();
+    }
+
     public AppConfig objMapping(AppConfig config, String wbId, String dbHost, String dbName, String dbUsr, String dbPwd,
             String sHost, String sRoute, String sNo, String sDClient, Integer speed1, Object port1, Float sbit1,
-            Object port2, Integer speed2, Float sbit2, String wPlant, 
+            Object port2, Integer speed2, Float sbit2, String wPlant,
             JComboBox cbxDataBits1, JComboBox cbxPControl1, JCheckBox chbMettler1, JComboBox cbxDataBits2, JComboBox cbxPControl2, JCheckBox chbMettler2) {
-        
+
         if (config == null) {
             config = new AppConfig();
         }
@@ -34,20 +37,20 @@ public class ConfigController {
         config.setDbName(dbName);
         config.setDbUsername(dbUsr);
         config.setDbPassword(dbPwd);
-        
+
         Configuration configuration = config.getConfiguration();
         if (configuration == null) {
             configuration = new Configuration();
         } else {
             configuration.setUpdatedDate(new Date());
         }
-        
+
         configuration.setSapHost(sHost);
         configuration.setSapGwHost(sHost);
         configuration.setSapRouteString(sRoute);
         configuration.setSapSystemNumber(sNo);
         configuration.setSapClient(sDClient);
-        
+
         configuration.setWkPlant(wPlant);
         configuration.setWbId(wbId);
 
@@ -68,9 +71,9 @@ public class ConfigController {
         config.setConfiguration(configuration);
         return config;
     }
-    
+
     public ParityEnum getPlControl(AppConfig config, int getBPC) {
-        
+
         ParityEnum p1Control = null;
 
         switch (getBPC) {
@@ -91,6 +94,6 @@ public class ConfigController {
                 break;
         }
         return p1Control;
-        
+
     }
 }
