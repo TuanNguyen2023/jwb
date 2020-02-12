@@ -59,10 +59,10 @@
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="pnPrintControl" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="pnRegistrationOfVehicle" min="-2" pref="472" max="-2" attributes="0"/>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="pnRegistrationOfVehicle" min="-2" pref="415" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="pnControl" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="41" max="32767" attributes="0"/>
+              <EmptySpace pref="24" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -442,9 +442,9 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                      <Component id="pnROVTop" alignment="0" max="32767" attributes="1"/>
+                  <Group type="103" groupAlignment="1" attributes="0">
                       <Component id="pnROVContent" alignment="0" max="32767" attributes="3"/>
+                      <Component id="pnROVTop" alignment="0" min="-2" max="-2" attributes="1"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -456,6 +456,7 @@
                   <Component id="pnROVTop" min="-2" pref="24" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="pnROVContent" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -511,6 +512,7 @@
                 <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
                   <ComponentRef name="rbtRegCatGroup"/>
                 </Property>
+                <Property name="selected" type="boolean" value="true"/>
                 <Property name="text" type="java.lang.String" resourceKey="rbtInput.text"/>
                 <Property name="name" type="java.lang.String" value="rbtInput" noResource="true"/>
               </Properties>
@@ -537,6 +539,9 @@
                 </Property>
                 <Property name="name" type="java.lang.String" value="cbxModeType" noResource="true"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxModeTypeActionPerformed"/>
+              </Events>
             </Component>
             <Container class="javax.swing.JPanel" name="pnWTicket">
               <Properties>
@@ -909,10 +914,8 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                      <Component id="pnROVLeft" alignment="0" max="32767" attributes="1"/>
-                      <Component id="pnROVRight" alignment="0" max="32767" attributes="1"/>
-                  </Group>
+                  <Component id="pnROVRight" alignment="0" pref="384" max="32767" attributes="1"/>
+                  <Component id="pnROVLeft" alignment="0" max="32767" attributes="1"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -930,7 +933,7 @@
                           <Group type="103" groupAlignment="1" attributes="0">
                               <Component id="lblTicketIdN" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="lblWeightTickerRefN" alignment="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblRigisterIdN" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblRegisterIdN" min="-2" max="-2" attributes="0"/>
                               <Component id="lblDriverNameN" min="-2" max="-2" attributes="0"/>
                               <Component id="lblCMNDN" min="-2" max="-2" attributes="0"/>
                               <Component id="lblPlateNoN" min="-2" max="-2" attributes="0"/>
@@ -984,7 +987,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="txtRegisterIdN" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblRigisterIdN" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblRegisterIdN" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -1034,7 +1037,7 @@
                               <Component id="txtNoteN" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="lblNoteN" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" pref="104" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="67" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1046,10 +1049,10 @@
                     <Property name="name" type="java.lang.String" value="lblWeightTickerRefN" noResource="true"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JLabel" name="lblRigisterIdN">
+                <Component class="javax.swing.JLabel" name="lblRegisterIdN">
                   <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="lblRigisterIdN.text"/>
-                    <Property name="name" type="java.lang.String" value="lblRigisterIdN" noResource="true"/>
+                    <Property name="text" type="java.lang.String" resourceKey="lblRegisterIdN.text"/>
+                    <Property name="name" type="java.lang.String" value="lblRegisterIdN" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblDriverNameN">
@@ -1120,31 +1123,26 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtWeightTickerRefN">
                   <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="txtWeightTickerRefN.text"/>
                     <Property name="name" type="java.lang.String" value="txtWeightTickerRefN" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtRegisterIdN">
                   <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="txtRegisterIdN.text"/>
                     <Property name="name" type="java.lang.String" value="txtRegisterIdN" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtDriverNameN">
                   <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="txtDriverNameN.text"/>
                     <Property name="name" type="java.lang.String" value="txtDriverNameN" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtCMNDN">
                   <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="txtCMNDN.text"/>
                     <Property name="name" type="java.lang.String" value="txtCMNDN" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtPlateNoN">
                   <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="txtPlateNoN.text"/>
                     <Property name="name" type="java.lang.String" value="txtPlateNoN" noResource="true"/>
                   </Properties>
                 </Component>
@@ -1158,7 +1156,6 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtTrailerNoN">
                   <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="txtTrailerNoN.text"/>
                     <Property name="name" type="java.lang.String" value="txtTrailerNoN" noResource="true"/>
                   </Properties>
                 </Component>
@@ -1180,19 +1177,16 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtSoNiemXaN">
                   <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="txtSoNiemXaN.text"/>
                     <Property name="name" type="java.lang.String" value="txtSoNiemXaN" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtProductionBatchN">
                   <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="txtProductionBatchN.text"/>
                     <Property name="name" type="java.lang.String" value="txtProductionBatchN" noResource="true"/>
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtNoteN">
                   <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="txtNoteN.text"/>
                     <Property name="name" type="java.lang.String" value="txtNoteN" noResource="true"/>
                   </Properties>
                 </Component>
@@ -1204,7 +1198,6 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtTicketIdN">
                   <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="txtTicketIdN.text"/>
                     <Property name="name" type="java.lang.String" value="txtTicketIdN" noResource="true"/>
                   </Properties>
                 </Component>
@@ -1487,7 +1480,6 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtDONumN">
                   <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="txtDONumN.text"/>
                     <Property name="name" type="java.lang.String" value="txtDONumN" noResource="true"/>
                   </Properties>
                 </Component>
@@ -1499,7 +1491,6 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtSONumN">
                   <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="txtSONumN.text"/>
                     <Property name="name" type="java.lang.String" value="txtSONumN" noResource="true"/>
                   </Properties>
                 </Component>
@@ -1511,7 +1502,6 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtPONumN">
                   <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="txtPONumN.text"/>
                     <Property name="name" type="java.lang.String" value="txtPONumN" noResource="true"/>
                   </Properties>
                 </Component>
@@ -1523,7 +1513,6 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtPOSTONumN">
                   <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="txtPOSTONumN.text"/>
                     <Property name="name" type="java.lang.String" value="txtPOSTONumN" noResource="true"/>
                   </Properties>
                 </Component>
@@ -1551,7 +1540,6 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtSuppliesIdN">
                   <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="txtSuppliesIdN.text"/>
                     <Property name="name" type="java.lang.String" value="txtSuppliesIdN" noResource="true"/>
                   </Properties>
                 </Component>

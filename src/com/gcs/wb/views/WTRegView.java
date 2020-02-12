@@ -36,7 +36,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 import java.util.logging.Level;
-import org.jdesktop.beansbinding.*;
 
 public class WTRegView extends javax.swing.JInternalFrame {
 
@@ -165,7 +164,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         pnROVContent = new javax.swing.JPanel();
         pnROVLeft = new javax.swing.JPanel();
         lblWeightTickerRefN = new javax.swing.JLabel();
-        lblRigisterIdN = new javax.swing.JLabel();
+        lblRegisterIdN = new javax.swing.JLabel();
         lblDriverNameN = new javax.swing.JLabel();
         lblCMNDN = new javax.swing.JLabel();
         lblPlateNoN = new javax.swing.JLabel();
@@ -440,6 +439,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         pnROVTop.setName("pnROVTop"); // NOI18N
 
         rbtRegCatGroup.add(rbtInput);
+        rbtInput.setSelected(true);
         rbtInput.setText(resourceMap.getString("rbtInput.text")); // NOI18N
         rbtInput.setName("rbtInput"); // NOI18N
         rbtInput.addActionListener(new java.awt.event.ActionListener() {
@@ -458,6 +458,11 @@ public class WTRegView extends javax.swing.JInternalFrame {
         });
 
         cbxModeType.setName("cbxModeType"); // NOI18N
+        cbxModeType.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxModeTypeActionPerformed(evt);
+            }
+        });
 
         pnWTicket.setName("pnWTicket"); // NOI18N
         pnWTicket.setLayout(new javax.swing.BoxLayout(pnWTicket, javax.swing.BoxLayout.LINE_AXIS));
@@ -803,8 +808,8 @@ public class WTRegView extends javax.swing.JInternalFrame {
         lblWeightTickerRefN.setText(resourceMap.getString("lblWeightTickerRefN.text")); // NOI18N
         lblWeightTickerRefN.setName("lblWeightTickerRefN"); // NOI18N
 
-        lblRigisterIdN.setText(resourceMap.getString("lblRigisterIdN.text")); // NOI18N
-        lblRigisterIdN.setName("lblRigisterIdN"); // NOI18N
+        lblRegisterIdN.setText(resourceMap.getString("lblRegisterIdN.text")); // NOI18N
+        lblRegisterIdN.setName("lblRegisterIdN"); // NOI18N
 
         lblDriverNameN.setText(resourceMap.getString("lblDriverNameN.text")); // NOI18N
         lblDriverNameN.setName("lblDriverNameN"); // NOI18N
@@ -839,25 +844,19 @@ public class WTRegView extends javax.swing.JInternalFrame {
         lblNoteN.setText(resourceMap.getString("lblNoteN.text")); // NOI18N
         lblNoteN.setName("lblNoteN"); // NOI18N
 
-        txtWeightTickerRefN.setText(resourceMap.getString("txtWeightTickerRefN.text")); // NOI18N
         txtWeightTickerRefN.setName("txtWeightTickerRefN"); // NOI18N
 
-        txtRegisterIdN.setText(resourceMap.getString("txtRegisterIdN.text")); // NOI18N
         txtRegisterIdN.setName("txtRegisterIdN"); // NOI18N
 
-        txtDriverNameN.setText(resourceMap.getString("txtDriverNameN.text")); // NOI18N
         txtDriverNameN.setName("txtDriverNameN"); // NOI18N
 
-        txtCMNDN.setText(resourceMap.getString("txtCMNDN.text")); // NOI18N
         txtCMNDN.setName("txtCMNDN"); // NOI18N
 
-        txtPlateNoN.setText(resourceMap.getString("txtPlateNoN.text")); // NOI18N
         txtPlateNoN.setName("txtPlateNoN"); // NOI18N
 
         txtTonnageN.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
         txtTonnageN.setName("txtTonnageN"); // NOI18N
 
-        txtTrailerNoN.setText(resourceMap.getString("txtTrailerNoN.text")); // NOI18N
         txtTrailerNoN.setName("txtTrailerNoN"); // NOI18N
 
         txtSlingN.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
@@ -866,19 +865,15 @@ public class WTRegView extends javax.swing.JInternalFrame {
         txtPalletN.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
         txtPalletN.setName("txtPalletN"); // NOI18N
 
-        txtSoNiemXaN.setText(resourceMap.getString("txtSoNiemXaN.text")); // NOI18N
         txtSoNiemXaN.setName("txtSoNiemXaN"); // NOI18N
 
-        txtProductionBatchN.setText(resourceMap.getString("txtProductionBatchN.text")); // NOI18N
         txtProductionBatchN.setName("txtProductionBatchN"); // NOI18N
 
-        txtNoteN.setText(resourceMap.getString("txtNoteN.text")); // NOI18N
         txtNoteN.setName("txtNoteN"); // NOI18N
 
         lblTicketIdN.setText(resourceMap.getString("lblTicketIdN.text")); // NOI18N
         lblTicketIdN.setName("lblTicketIdN"); // NOI18N
 
-        txtTicketIdN.setText(resourceMap.getString("txtTicketIdN.text")); // NOI18N
         txtTicketIdN.setName("txtTicketIdN"); // NOI18N
 
         javax.swing.GroupLayout pnROVLeftLayout = new javax.swing.GroupLayout(pnROVLeft);
@@ -890,7 +885,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lblTicketIdN)
                     .addComponent(lblWeightTickerRefN)
-                    .addComponent(lblRigisterIdN)
+                    .addComponent(lblRegisterIdN)
                     .addComponent(lblDriverNameN)
                     .addComponent(lblCMNDN)
                     .addComponent(lblPlateNoN)
@@ -937,7 +932,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtRegisterIdN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblRigisterIdN))
+                    .addComponent(lblRegisterIdN))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtDriverNameN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -977,7 +972,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtNoteN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblNoteN))
-                .addGap(104, 104, 104))
+                .addGap(67, 67, 67))
         );
 
         pnROVRight.setName("pnROVRight"); // NOI18N
@@ -1038,25 +1033,21 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         cbxBatchStock2N.setName("cbxBatchStock2N"); // NOI18N
 
-        txtDONumN.setText(resourceMap.getString("txtDONumN.text")); // NOI18N
         txtDONumN.setName("txtDONumN"); // NOI18N
 
         btnDOCheckN.setText(resourceMap.getString("btnDOCheckN.text")); // NOI18N
         btnDOCheckN.setName("btnDOCheckN"); // NOI18N
 
-        txtSONumN.setText(resourceMap.getString("txtSONumN.text")); // NOI18N
         txtSONumN.setName("txtSONumN"); // NOI18N
 
         btnSOCheckN.setText(resourceMap.getString("btnSOCheckN.text")); // NOI18N
         btnSOCheckN.setName("btnSOCheckN"); // NOI18N
 
-        txtPONumN.setText(resourceMap.getString("txtPONumN.text")); // NOI18N
         txtPONumN.setName("txtPONumN"); // NOI18N
 
         btnPOCheckN.setText(resourceMap.getString("btnPOCheckN.text")); // NOI18N
         btnPOCheckN.setName("btnPOCheckN"); // NOI18N
 
-        txtPOSTONumN.setText(resourceMap.getString("txtPOSTONumN.text")); // NOI18N
         txtPOSTONumN.setName("txtPOSTONumN"); // NOI18N
 
         btnPOSTOCheckN.setText(resourceMap.getString("btnPOSTOCheckN.text")); // NOI18N
@@ -1066,7 +1057,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         cbxVendorTransportN.setName("cbxVendorTransportN"); // NOI18N
 
-        txtSuppliesIdN.setText(resourceMap.getString("txtSuppliesIdN.text")); // NOI18N
         txtSuppliesIdN.setName("txtSuppliesIdN"); // NOI18N
 
         javax.swing.GroupLayout pnROVRightLayout = new javax.swing.GroupLayout(pnROVRight);
@@ -1194,9 +1184,8 @@ public class WTRegView extends javax.swing.JInternalFrame {
         );
         pnROVContentLayout.setVerticalGroup(
             pnROVContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnROVContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                .addComponent(pnROVLeft, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(pnROVRight, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(pnROVRight, javax.swing.GroupLayout.DEFAULT_SIZE, 384, Short.MAX_VALUE)
+            .addComponent(pnROVLeft, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout pnRegistrationOfVehicleLayout = new javax.swing.GroupLayout(pnRegistrationOfVehicle);
@@ -1204,9 +1193,9 @@ public class WTRegView extends javax.swing.JInternalFrame {
         pnRegistrationOfVehicleLayout.setHorizontalGroup(
             pnRegistrationOfVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnRegistrationOfVehicleLayout.createSequentialGroup()
-                .addGroup(pnRegistrationOfVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(pnROVTop, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnROVContent, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(pnRegistrationOfVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(pnROVContent, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnROVTop, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnRegistrationOfVehicleLayout.setVerticalGroup(
@@ -1214,7 +1203,8 @@ public class WTRegView extends javax.swing.JInternalFrame {
             .addGroup(pnRegistrationOfVehicleLayout.createSequentialGroup()
                 .addComponent(pnROVTop, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnROVContent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(pnROVContent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(38, 38, 38))
         );
 
         pnControl.setName("pnControl"); // NOI18N
@@ -1320,10 +1310,10 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnPrintControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnRegistrationOfVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(pnRegistrationOfVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(pnControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(41, Short.MAX_VALUE))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         bindingGroup.bind();
@@ -1532,6 +1522,13 @@ private void rbtOutputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
     loadModeTypeModel(MODE.OUTPUT);
 }//GEN-LAST:event_rbtOutputActionPerformed
 
+private void cbxModeTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxModeTypeActionPerformed
+    this.modeDetail = ((WeighingMode) cbxModeType.getSelectedItem()).getModeDetail();
+
+    // TODO: new ui set enable input
+    prepareEditableForm(modeDetail);
+}//GEN-LAST:event_cbxModeTypeActionPerformed
+
     private DefaultComboBoxModel getMatsModel() {
         return weightTicketRegistarationController.getMatsModel();
     }
@@ -1606,7 +1603,7 @@ private void rbtOutputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
         btnSo.setEnabled(true);
         btnCheckDO.setEnabled(true);
         btnSave.setEnabled(false);
-        
+
         // TODO new ui
         rbtInput.setEnabled(true);
         rbtOutput.setEnabled(true);
@@ -1625,24 +1622,341 @@ private void rbtOutputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
         btnMany.setEnabled(false);
         btnSo.setEnabled(false);
         btnCheckDO.setEnabled(false);
+
+        // TODO new ui
+        rbtInput.setEnabled(false);
+        rbtOutput.setEnabled(false);
+        cbxModeType.setEnabled(false);
+        loadModeTypeModel(MODE.INPUT);
+        disableAllInForm();
     }
-    
+
     public void loadModeTypeModel(MODE mode) {
         if (mode == MODE.INPUT) {
             rbtInput.setSelected(true);
         } else {
             rbtOutput.setSelected(true);
         }
-        
-        this.mode = mode;
+
         cbxModeType.setModel(weightTicketRegistarationController.getModeTypeModel(mode));
-        
+        this.mode = mode;
+        this.modeDetail = ((WeighingMode) cbxModeType.getSelectedItem()).getModeDetail();
+
         // TODO: new ui set enable input
-        prepareEditableForm(mode);
+        prepareEditableForm(modeDetail);
     }
-    
-    public void prepareEditableForm(MODE mode) {
-        
+
+    private void disableAllInForm() {
+        txtTicketIdN.setEnabled(false);
+        txtWeightTickerRefN.setEnabled(false);
+        txtRegisterIdN.setEnabled(false);
+        txtDriverNameN.setEnabled(false);
+        txtCMNDN.setEnabled(false);
+        txtPlateNoN.setEnabled(false);
+        txtTonnageN.setEnabled(false);
+        txtTrailerNoN.setEnabled(false);
+        txtSlingN.setEnabled(false);
+        txtPalletN.setEnabled(false);
+        txtSoNiemXaN.setEnabled(false);
+        txtProductionBatchN.setEnabled(false);
+        txtNoteN.setEnabled(false);
+        txtDONumN.setEnabled(false);
+        btnDOCheckN.setEnabled(false);
+        txtSONumN.setEnabled(false);
+        btnSOCheckN.setEnabled(false);
+        txtPONumN.setEnabled(false);
+        btnPOCheckN.setEnabled(false);
+        txtPOSTONumN.setEnabled(false);
+        btnPOSTOCheckN.setEnabled(false);
+        cbxMaterialTypeN.setEnabled(false);
+        txtWeightN.setEnabled(false);
+        cbxSlocN.setEnabled(false);
+        cbxSloc2N.setEnabled(false);
+        cbxBatchStockN.setEnabled(false);
+        cbxBatchStock2N.setEnabled(false);
+        cbxVendorLoadingN.setEnabled(false);
+        cbxVendorTransportN.setEnabled(false);
+        txtSuppliesIdN.setEnabled(false);
+    }
+
+    private void prepareEditableForm(MODE_DETAIL modeDetail) {
+        switch (modeDetail) {
+            case IN_PO_PURCHASE:
+                prepareInPOPurchaseMode();
+                break;
+            case IN_WAREHOUSE_TRANSFER:
+                prepareInWarehouseTransfer();
+                break;
+            case IN_OTHER:
+                prepareInOutOther();
+                break;
+            case OUT_SELL_ROAD:
+                prepareOutSellRoad();
+                break;
+            case OUT_PLANT_PLANT:
+                prepareOutPlantPlant();
+                break;
+            case OUT_SLOC_SLOC:
+                prepareOutSlocSloc();
+                break;
+            case OUT_PULL_STATION:
+                prepareOutPullStation();
+                break;
+            case OUT_SELL_WATERWAY:
+                prepareOutSellWateway();
+                break;
+            case OUT_OTHER:
+                prepareInOutOther();
+                break;
+        }
+    }
+
+    private void showComponent(JComponent component, JComponent label, boolean isVisible, boolean isEnabled) {
+        label.setVisible(isVisible);
+        component.setVisible(isVisible);
+        component.setVisible(isVisible);
+        component.setEnabled(isEnabled);
+    }
+
+    private void showComponent(JComponent component, JComponent label, JComponent unit, boolean isVisible, boolean isEnabled) {
+        label.setVisible(isVisible);
+        component.setVisible(isVisible);
+        component.setVisible(isVisible);
+        component.setEnabled(isEnabled);
+        unit.setVisible(isVisible);
+        unit.setEnabled(true);
+    }
+
+    private void prepareInPOPurchaseMode() {
+        showComponent(txtTicketIdN, lblTicketIdN, true, true);
+        showComponent(txtWeightTickerRefN, lblWeightTickerRefN, false, false);
+        showComponent(txtRegisterIdN, lblRegisterIdN, true, true);
+        showComponent(txtDriverNameN, lblDriverNameN, true, true);
+        showComponent(txtCMNDN, lblCMNDN, true, true);
+        showComponent(txtPlateNoN, lblPlateNoN, true, true);
+        showComponent(txtTonnageN, lblTonnageN, lblTonngageUnitN, true, false);
+        showComponent(txtTrailerNoN, lblTrailerNoN, true, true);
+        showComponent(txtSlingN, lblSlingN, false, false);
+        showComponent(txtPalletN, lblPalletN, false, false);
+        showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
+        showComponent(txtProductionBatchN, lblProductionBatchN, true, true);
+        showComponent(txtNoteN, lblNoteN, true, true);
+        showComponent(txtDONumN, lblDONumN, btnDOCheckN, false, false);
+        showComponent(txtSONumN, lblSONumN, btnSOCheckN, false, false);
+        showComponent(txtPONumN, lblPONumN, btnPOCheckN, true, true);
+        showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, false, false);
+        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, false);
+        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, true);
+        showComponent(cbxSlocN, lblSlocN, true, true);
+        showComponent(cbxSloc2N, lblSloc2N, false, false);
+        showComponent(cbxBatchStockN, lblBatchStockN, true, true);
+        showComponent(cbxBatchStock2N, lblBatchStock2N, false, false);
+        showComponent(cbxVendorLoadingN, lblVendorLoadingN, false, false);
+        showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
+        showComponent(txtSuppliesIdN, lblSuppliesIdN, false, false);
+    }
+
+    private void prepareInWarehouseTransfer() {
+        showComponent(txtTicketIdN, lblTicketIdN, true, true);
+        showComponent(txtWeightTickerRefN, lblWeightTickerRefN, true, false);
+        showComponent(txtRegisterIdN, lblRegisterIdN, true, true);
+        showComponent(txtDriverNameN, lblDriverNameN, true, true);
+        showComponent(txtCMNDN, lblCMNDN, true, true);
+        showComponent(txtPlateNoN, lblPlateNoN, true, true);
+        showComponent(txtTonnageN, lblTonnageN, lblTonngageUnitN, true, false);
+        showComponent(txtTrailerNoN, lblTrailerNoN, true, true);
+        showComponent(txtSlingN, lblSlingN, false, false);
+        showComponent(txtPalletN, lblPalletN, false, false);
+        showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
+        showComponent(txtProductionBatchN, lblProductionBatchN, true, true);
+        showComponent(txtNoteN, lblNoteN, true, true);
+        showComponent(txtDONumN, lblDONumN, btnDOCheckN, true, true);
+        showComponent(txtSONumN, lblSONumN, btnSOCheckN, false, false);
+        showComponent(txtPONumN, lblPONumN, btnPOCheckN, false, false);
+        showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, false, false);
+        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, false);
+        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, false);
+        showComponent(cbxSlocN, lblSlocN, true, true);
+        showComponent(cbxSloc2N, lblSloc2N, false, false);
+        showComponent(cbxBatchStockN, lblBatchStockN, true, true);
+        showComponent(cbxBatchStock2N, lblBatchStock2N, false, false);
+        showComponent(cbxVendorLoadingN, lblVendorLoadingN, false, false);
+        showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
+        showComponent(txtSuppliesIdN, lblSuppliesIdN, false, false);
+    }
+
+    private void prepareInOutOther() {
+        showComponent(txtTicketIdN, lblTicketIdN, true, true);
+        showComponent(txtWeightTickerRefN, lblWeightTickerRefN, false, false);
+        showComponent(txtRegisterIdN, lblRegisterIdN, true, true);
+        showComponent(txtDriverNameN, lblDriverNameN, true, true);
+        showComponent(txtCMNDN, lblCMNDN, true, true);
+        showComponent(txtPlateNoN, lblPlateNoN, true, true);
+        showComponent(txtTonnageN, lblTonnageN, lblTonngageUnitN, true, false);
+        showComponent(txtTrailerNoN, lblTrailerNoN, true, true);
+        showComponent(txtSlingN, lblSlingN, true, true);
+        showComponent(txtPalletN, lblPalletN, true, true);
+        showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
+        showComponent(txtProductionBatchN, lblProductionBatchN, true, true);
+        showComponent(txtNoteN, lblNoteN, true, true);
+        showComponent(txtDONumN, lblDONumN, btnDOCheckN, false, false);
+        showComponent(txtSONumN, lblSONumN, btnSOCheckN, false, false);
+        showComponent(txtPONumN, lblPONumN, btnPOCheckN, false, false);
+        showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, false, false);
+        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, false);
+        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, true);
+        showComponent(cbxSlocN, lblSlocN, true, true);
+        showComponent(cbxSloc2N, lblSloc2N, false, false);
+        showComponent(cbxBatchStockN, lblBatchStockN, true, true);
+        showComponent(cbxBatchStock2N, lblBatchStock2N, false, false);
+        showComponent(cbxVendorLoadingN, lblVendorLoadingN, false, false);
+        showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
+        showComponent(txtSuppliesIdN, lblSuppliesIdN, false, false);
+    }
+
+    private void prepareOutSellRoad() {
+        showComponent(txtTicketIdN, lblTicketIdN, false, false);
+        showComponent(txtWeightTickerRefN, lblWeightTickerRefN, false, false);
+        showComponent(txtRegisterIdN, lblRegisterIdN, true, true);
+        showComponent(txtDriverNameN, lblDriverNameN, true, true);
+        showComponent(txtCMNDN, lblCMNDN, true, true);
+        showComponent(txtPlateNoN, lblPlateNoN, true, true);
+        showComponent(txtTonnageN, lblTonnageN, lblTonngageUnitN, true, false);
+        showComponent(txtTrailerNoN, lblTrailerNoN, true, true);
+        showComponent(txtSlingN, lblSlingN, true, true);
+        showComponent(txtPalletN, lblPalletN, true, true);
+        showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
+        showComponent(txtProductionBatchN, lblProductionBatchN, true, true);
+        showComponent(txtNoteN, lblNoteN, true, true);
+        showComponent(txtDONumN, lblDONumN, btnDOCheckN, true, true);
+        showComponent(txtSONumN, lblSONumN, btnSOCheckN, false, false);
+        showComponent(txtPONumN, lblPONumN, btnPOCheckN, false, false);
+        showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, false, false);
+        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, false);
+        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, false);
+        showComponent(cbxSlocN, lblSlocN, true, true);
+        showComponent(cbxSloc2N, lblSloc2N, false, false);
+        showComponent(cbxBatchStockN, lblBatchStockN, true, true);
+        showComponent(cbxBatchStock2N, lblBatchStock2N, false, false);
+        showComponent(cbxVendorLoadingN, lblVendorLoadingN, false, false);
+        showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
+        showComponent(txtSuppliesIdN, lblSuppliesIdN, false, false);
+    }
+
+    private void prepareOutPlantPlant() {
+        showComponent(txtTicketIdN, lblTicketIdN, true, true);
+        showComponent(txtWeightTickerRefN, lblWeightTickerRefN, false, false);
+        showComponent(txtRegisterIdN, lblRegisterIdN, true, true);
+        showComponent(txtDriverNameN, lblDriverNameN, true, true);
+        showComponent(txtCMNDN, lblCMNDN, true, true);
+        showComponent(txtPlateNoN, lblPlateNoN, true, true);
+        showComponent(txtTonnageN, lblTonnageN, lblTonngageUnitN, true, false);
+        showComponent(txtTrailerNoN, lblTrailerNoN, true, true);
+        showComponent(txtSlingN, lblSlingN, true, true);
+        showComponent(txtPalletN, lblPalletN, true, true);
+        showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
+        showComponent(txtProductionBatchN, lblProductionBatchN, true, true);
+        showComponent(txtNoteN, lblNoteN, true, true);
+        showComponent(txtDONumN, lblDONumN, btnDOCheckN, false, false);
+        showComponent(txtSONumN, lblSONumN, btnSOCheckN, false, false);
+        showComponent(txtPONumN, lblPONumN, btnPOCheckN, true, true);
+        showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, false, false);
+        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, false);
+        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, false);
+        showComponent(cbxSlocN, lblSlocN, true, true);
+        showComponent(cbxSloc2N, lblSloc2N, false, false);
+        showComponent(cbxBatchStockN, lblBatchStockN, true, true);
+        showComponent(cbxBatchStock2N, lblBatchStock2N, false, false);
+        showComponent(cbxVendorLoadingN, lblVendorLoadingN, false, false);
+        showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
+        showComponent(txtSuppliesIdN, lblSuppliesIdN, false, false);
+    }
+
+    private void prepareOutSlocSloc() {
+        showComponent(txtTicketIdN, lblTicketIdN, true, true);
+        showComponent(txtWeightTickerRefN, lblWeightTickerRefN, false, false);
+        showComponent(txtRegisterIdN, lblRegisterIdN, true, true);
+        showComponent(txtDriverNameN, lblDriverNameN, true, true);
+        showComponent(txtCMNDN, lblCMNDN, true, true);
+        showComponent(txtPlateNoN, lblPlateNoN, true, true);
+        showComponent(txtTonnageN, lblTonnageN, lblTonngageUnitN, true, false);
+        showComponent(txtTrailerNoN, lblTrailerNoN, true, true);
+        showComponent(txtSlingN, lblSlingN, false, false);
+        showComponent(txtPalletN, lblPalletN, false, false);
+        showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
+        showComponent(txtProductionBatchN, lblProductionBatchN, true, true);
+        showComponent(txtNoteN, lblNoteN, true, true);
+        showComponent(txtDONumN, lblDONumN, btnDOCheckN, false, false);
+        showComponent(txtSONumN, lblSONumN, btnSOCheckN, false, false);
+        showComponent(txtPONumN, lblPONumN, btnPOCheckN, true, true);
+        showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, true, true);
+        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, false);
+        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, false);
+        showComponent(cbxSlocN, lblSlocN, true, true);
+        showComponent(cbxSloc2N, lblSloc2N, true, true);
+        showComponent(cbxBatchStockN, lblBatchStockN, true, true);
+        showComponent(cbxBatchStock2N, lblBatchStock2N, true, true);
+        showComponent(cbxVendorLoadingN, lblVendorLoadingN, true, false);
+        showComponent(cbxVendorTransportN, lblVendorTransportN, true, false);
+        showComponent(txtSuppliesIdN, lblSuppliesIdN, true, true);
+    }
+
+    private void prepareOutPullStation() {
+        showComponent(txtTicketIdN, lblTicketIdN, true, true);
+        showComponent(txtWeightTickerRefN, lblWeightTickerRefN, false, false);
+        showComponent(txtRegisterIdN, lblRegisterIdN, true, true);
+        showComponent(txtDriverNameN, lblDriverNameN, true, true);
+        showComponent(txtCMNDN, lblCMNDN, true, true);
+        showComponent(txtPlateNoN, lblPlateNoN, true, true);
+        showComponent(txtTonnageN, lblTonnageN, lblTonngageUnitN, true, false);
+        showComponent(txtTrailerNoN, lblTrailerNoN, true, true);
+        showComponent(txtSlingN, lblSlingN, false, false);
+        showComponent(txtPalletN, lblPalletN, false, false);
+        showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
+        showComponent(txtProductionBatchN, lblProductionBatchN, true, true);
+        showComponent(txtNoteN, lblNoteN, true, true);
+        showComponent(txtDONumN, lblDONumN, btnDOCheckN, false, false);
+        showComponent(txtSONumN, lblSONumN, btnSOCheckN, false, false);
+        showComponent(txtPONumN, lblPONumN, btnPOCheckN, true, true);
+        showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, true, true);
+        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, false);
+        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, false);
+        showComponent(cbxSlocN, lblSlocN, true, true);
+        showComponent(cbxSloc2N, lblSloc2N, false, false);
+        showComponent(cbxBatchStockN, lblBatchStockN, true, true);
+        showComponent(cbxBatchStock2N, lblBatchStock2N, false, false);
+        showComponent(cbxVendorLoadingN, lblVendorLoadingN, true, true);
+        showComponent(cbxVendorTransportN, lblVendorTransportN, true, true);
+        showComponent(txtSuppliesIdN, lblSuppliesIdN, false, false);
+    }
+
+    private void prepareOutSellWateway() {
+        showComponent(txtTicketIdN, lblTicketIdN, false, false);
+        showComponent(txtWeightTickerRefN, lblWeightTickerRefN, false, false);
+        showComponent(txtRegisterIdN, lblRegisterIdN, true, true);
+        showComponent(txtDriverNameN, lblDriverNameN, true, true);
+        showComponent(txtCMNDN, lblCMNDN, true, true);
+        showComponent(txtPlateNoN, lblPlateNoN, true, true);
+        showComponent(txtTonnageN, lblTonnageN, lblTonngageUnitN, true, false);
+        showComponent(txtTrailerNoN, lblTrailerNoN, true, true);
+        showComponent(txtSlingN, lblSlingN, false, false);
+        showComponent(txtPalletN, lblPalletN, false, false);
+        showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
+        showComponent(txtProductionBatchN, lblProductionBatchN, true, true);
+        showComponent(txtNoteN, lblNoteN, true, true);
+        showComponent(txtDONumN, lblDONumN, btnDOCheckN, true, false);
+        showComponent(txtSONumN, lblSONumN, btnSOCheckN, true, true);
+        showComponent(txtPONumN, lblPONumN, btnPOCheckN, false, false);
+        showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, false, false);
+        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, false);
+        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, false);
+        showComponent(cbxSlocN, lblSlocN, true, true);
+        showComponent(cbxSloc2N, lblSloc2N, false, false);
+        showComponent(cbxBatchStockN, lblBatchStockN, true, true);
+        showComponent(cbxBatchStock2N, lblBatchStock2N, false, false);
+        showComponent(cbxVendorLoadingN, lblVendorLoadingN, false, false);
+        showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
+        showComponent(txtSuppliesIdN, lblSuppliesIdN, false, false);
     }
 
     @Action(enabledProperty = "saveNeeded")
@@ -2853,7 +3167,7 @@ private void rbtOutputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
     private javax.swing.JLabel lblPlateNo;
     private javax.swing.JLabel lblPlateNoN;
     private javax.swing.JLabel lblProductionBatchN;
-    private javax.swing.JLabel lblRigisterIdN;
+    private javax.swing.JLabel lblRegisterIdN;
     private javax.swing.JLabel lblSONumN;
     private javax.swing.JLabel lblSlingN;
     private javax.swing.JLabel lblSloc2N;
