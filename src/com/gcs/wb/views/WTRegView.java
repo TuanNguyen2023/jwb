@@ -17,6 +17,7 @@ import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.*;
 import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.model.WeighingMode;
+import com.gcs.wb.views.validations.WeightTicketRegistrationValidation;
 import com.sap.conn.jco.JCoException;
 import org.apache.log4j.Logger;
 import org.hibersap.HibersapException;
@@ -55,21 +56,26 @@ public class WTRegView extends javax.swing.JInternalFrame {
     private String outboundDeliveryNo = null;
     private boolean isHasCheck = false;
     private com.gcs.wb.jpa.entity.WeightTicket newWeightTicket;
-    private com.gcs.wb.jpa.entity.OutboundDelivery outboundDelivery;
+    private OutboundDelivery outboundDelivery;
     private com.gcs.wb.jpa.entity.WeightTicket selectedWeightTicket;
     private boolean[] editable = null;
     Object[][] wtData = null;
     Object[] wtCols = Constants.WTRegView.WEIGHTTICKET_COLUMS;
     Class[] wtTypes = Constants.WTRegView.WEIGHTTICKET_TYPES;
 
+    // TODO update ui
     private MODE mode;
     private MODE_DETAIL modeDetail;
+    private WeightTicketRegistrationValidation wtRegisValidation;
+    private List<OutboundDelivery> outboundDeliverys;
 
     public WTRegView() {
         newWeightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
         selectedWeightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
         outboundDelivery = new com.gcs.wb.jpa.entity.OutboundDelivery();
         weightTicketList = new ArrayList<>();
+        outboundDeliverys = new ArrayList<>();
+        wtRegisValidation = new WeightTicketRegistrationValidation(rootPane, resourceMapMsg);
         initComponents();
         initComboboxRenderer();
 
@@ -845,25 +851,63 @@ public class WTRegView extends javax.swing.JInternalFrame {
         lblNoteN.setName("lblNoteN"); // NOI18N
 
         txtWeightTickerRefN.setName("txtWeightTickerRefN"); // NOI18N
+        txtWeightTickerRefN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtWeightTickerRefNKeyReleased(evt);
+            }
+        });
 
         txtRegisterIdN.setName("txtRegisterIdN"); // NOI18N
+        txtRegisterIdN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtRegisterIdNKeyReleased(evt);
+            }
+        });
 
         txtDriverNameN.setName("txtDriverNameN"); // NOI18N
+        txtDriverNameN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtDriverNameNKeyReleased(evt);
+            }
+        });
 
         txtCMNDN.setName("txtCMNDN"); // NOI18N
+        txtCMNDN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtCMNDNKeyReleased(evt);
+            }
+        });
 
         txtPlateNoN.setName("txtPlateNoN"); // NOI18N
+        txtPlateNoN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtPlateNoNKeyReleased(evt);
+            }
+        });
 
         txtTonnageN.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
+        txtTonnageN.setText(resourceMap.getString("txtTonnageN.text")); // NOI18N
         txtTonnageN.setName("txtTonnageN"); // NOI18N
 
         txtTrailerNoN.setName("txtTrailerNoN"); // NOI18N
 
-        txtSlingN.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
+        txtSlingN.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
+        txtSlingN.setText(resourceMap.getString("txtSlingN.text")); // NOI18N
         txtSlingN.setName("txtSlingN"); // NOI18N
+        txtSlingN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtSlingNKeyReleased(evt);
+            }
+        });
 
-        txtPalletN.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
+        txtPalletN.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
+        txtPalletN.setText(resourceMap.getString("txtPalletN.text")); // NOI18N
         txtPalletN.setName("txtPalletN"); // NOI18N
+        txtPalletN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtPalletNKeyReleased(evt);
+            }
+        });
 
         txtSoNiemXaN.setName("txtSoNiemXaN"); // NOI18N
 
@@ -1023,6 +1067,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         cbxMaterialTypeN.setName("cbxMaterialTypeN"); // NOI18N
 
         txtWeightN.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
+        txtWeightN.setText(resourceMap.getString("txtWeightN.text")); // NOI18N
         txtWeightN.setName("txtWeightN"); // NOI18N
 
         cbxSlocN.setName("cbxSlocN"); // NOI18N
@@ -1034,6 +1079,11 @@ public class WTRegView extends javax.swing.JInternalFrame {
         cbxBatchStock2N.setName("cbxBatchStock2N"); // NOI18N
 
         txtDONumN.setName("txtDONumN"); // NOI18N
+        txtDONumN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtDONumNKeyReleased(evt);
+            }
+        });
 
         btnDOCheckN.setText(resourceMap.getString("btnDOCheckN.text")); // NOI18N
         btnDOCheckN.setName("btnDOCheckN"); // NOI18N
@@ -1297,7 +1347,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                     .addComponent(pnPrintControl, javax.swing.GroupLayout.DEFAULT_SIZE, 921, Short.MAX_VALUE)
                     .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 921, Short.MAX_VALUE)
                     .addComponent(pnFilter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnControl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 921, Short.MAX_VALUE))
+                    .addComponent(pnControl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -1313,7 +1363,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addComponent(pnRegistrationOfVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(pnControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         bindingGroup.bind();
@@ -1529,6 +1579,38 @@ private void cbxModeTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     prepareEditableForm(modeDetail);
 }//GEN-LAST:event_cbxModeTypeActionPerformed
 
+private void txtWeightTickerRefNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtWeightTickerRefNKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtWeightTickerRefNKeyReleased
+
+private void txtRegisterIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRegisterIdNKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtRegisterIdNKeyReleased
+
+private void txtDriverNameNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDriverNameNKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtDriverNameNKeyReleased
+
+private void txtCMNDNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCMNDNKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtCMNDNKeyReleased
+
+private void txtPlateNoNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPlateNoNKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtPlateNoNKeyReleased
+
+private void txtSlingNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSlingNKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtSlingNKeyReleased
+
+private void txtPalletNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPalletNKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtPalletNKeyReleased
+
+private void txtDONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDONumNKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtDONumNKeyReleased
+
     private DefaultComboBoxModel getMatsModel() {
         return weightTicketRegistarationController.getMatsModel();
     }
@@ -1709,6 +1791,8 @@ private void cbxModeTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
                 prepareInOutOther();
                 break;
         }
+
+        validateForm();
     }
 
     private void showComponent(JComponent component, JComponent label, boolean isVisible, boolean isEnabled) {
@@ -1724,7 +1808,6 @@ private void cbxModeTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         component.setVisible(isVisible);
         component.setEnabled(isEnabled);
         unit.setVisible(isVisible);
-        unit.setEnabled(true);
     }
 
     private void prepareInPOPurchaseMode() {
@@ -1957,6 +2040,52 @@ private void cbxModeTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         showComponent(cbxVendorLoadingN, lblVendorLoadingN, false, false);
         showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
         showComponent(txtSuppliesIdN, lblSuppliesIdN, false, false);
+    }
+
+    private void validateForm() {
+        boolean isValid = false;
+        switch (modeDetail) {
+            case IN_PO_PURCHASE:
+
+                break;
+            case IN_WAREHOUSE_TRANSFER:
+                break;
+            case IN_OTHER:
+                break;
+            case OUT_SELL_ROAD:
+                isValid = validateOutSellRoad();
+                break;
+            case OUT_PLANT_PLANT:
+                break;
+            case OUT_SLOC_SLOC:
+                break;
+            case OUT_PULL_STATION:
+                break;
+            case OUT_SELL_WATERWAY:
+                break;
+            case OUT_OTHER:
+                break;
+        }
+
+        btnSave.setEnabled(isValid);
+    }
+
+    private boolean validateOutSellRoad() {
+        boolean isRegisterIdValid = wtRegisValidation.validateLength(txtRegisterIdN.getText(), lblRegisterIdN, 1, 50);
+        boolean isDriverNameValid = wtRegisValidation.validateLength(txtDriverNameN.getText(), lblDriverNameN, 1, 70);
+        boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
+        boolean isPlateNoValid = wtRegisValidation.validatePlateNo(txtPlateNoN.getText(), lblPlateNoN, outboundDeliverys);
+        boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 12);
+        boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
+        boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
+        boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
+        boolean isDOValid = wtRegisValidation.validateDO(txtDONumN.getText(), lblDONumN);
+        btnDOCheckN.setEnabled(isDOValid);
+        boolean isBatchStockValid = wtRegisValidation.validateCbxSelected(cbxBatchStockN.getSelectedIndex(), lblBatchStockN);
+
+        return isRegisterIdValid && isDriverNameValid && isCMNDBLValid && isPlateNoValid
+                && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
+                && isNoteValid && isBatchStockValid;
     }
 
     @Action(enabledProperty = "saveNeeded")

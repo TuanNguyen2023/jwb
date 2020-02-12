@@ -25,10 +25,8 @@ public class LengthValidator extends AbstractThrowableValidator<String, IllegalA
 
     @Override
     public void validate(String input) throws IllegalArgumentException {
-        if (StringUtils.hasText(input)) {
-            boolean isValid = this.min <= input.length() && input.length() <= this.max;
-            Assert.isTrue(isValid, "invalid text length [min=" + this.min + ", max=" + this.max + "]@" + input);
-        }
+        boolean isValid = this.min <= input.length() && input.length() <= this.max;
+        Assert.isTrue(isValid, "invalid text length [min=" + this.min + ", max=" + this.max + "]@" + input);
     }
 
     public int getMax() {
