@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.math.BigInteger;
 import javax.swing.JFormattedTextField;
 import com.gcs.wb.WeighBridgeApp;
+import org.apache.log4j.Logger;
 
 /**
  * Handles the input coming from the serial port. A new line character
@@ -108,6 +109,7 @@ public class SerialReaderEventBased implements SerialPortDataListener {
             String result = new String(readBuffer);
             //result = result.replaceAll( "[^\\d]", "" );
             result = this.getWeight(result);
+            Logger.getLogger(this.getClass()).info("@jSerialComm, weight bridge signal: " + result);
 
             BigInteger ival = BigInteger.ZERO;
             try {

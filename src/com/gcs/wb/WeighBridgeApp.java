@@ -29,6 +29,7 @@ import javax.swing.table.DefaultTableModel;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.TooManyListenersException;
+import org.apache.log4j.Logger;
 
 /**
  * The main class of the application.
@@ -160,7 +161,7 @@ public class WeighBridgeApp extends SingleFrameApplication {
     public boolean connectWB(String portName, Integer speed, Short dataBits, Short stopBits, Short parity, boolean isMettlerScale, JFormattedTextField control) throws SerialPortInvalidPortException, IllegalPortException, IOException, TooManyListenersException {
 
         boolean connected = false;
-
+        Logger.getLogger(this.getClass()).info("@jSerialComm, connect to weight bridge, " + (isMettlerScale ? "@ScaleMettler" : "@SerialComm"));
         try {
             if (isMettlerScale) {
                 if (mettlerScale != null) {
