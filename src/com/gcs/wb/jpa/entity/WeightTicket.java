@@ -35,7 +35,7 @@ import javax.persistence.Temporal;
     @NamedQuery(name = "WeightTicket.findByDeliveryOrderNo",
     query = "SELECT w FROM WeightTicket w "
     + " , IN(w.weightTicketDetails) wd "
-    + " WHERE wd.deliveryOrderNo = :deliveryOrderNo"),
+    + " WHERE wd.deliveryOrderNo LIKE '%:deliveryOrderNo%'"),
     @NamedQuery(name = "WeightTicket.findBySoNiemXa", query = "SELECT w FROM WeightTicket w WHERE w.soNiemXa = :soNiemXa"),
     @NamedQuery(name = "WeightTicket.findByDateFull",
     query = "SELECT w FROM WeightTicket w "
@@ -611,6 +611,11 @@ public class WeightTicket implements Serializable {
 
     public void setWeightTicketDetails(List<WeightTicketDetail> weightTicketDetails) {
         this.weightTicketDetails = weightTicketDetails;
+    }
+    
+    public void addWeightTicketDetail(WeightTicketDetail weightTicketDetail) {
+        weightTicketDetail.setWeightTicket(this);
+        weightTicketDetails.add(weightTicketDetail);
     }
 
     public WeightTicketDetail getWeightTicketDetail() {

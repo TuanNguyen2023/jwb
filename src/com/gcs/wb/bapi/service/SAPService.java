@@ -471,7 +471,7 @@ public class SAPService {
 
     public boolean syncOutboundDelivery(OutboundDelivery sapOutboundDelivery, OutboundDelivery outboundDelivery, String deliveryNum) {
 
-        boolean result = false;
+        boolean result;
         if (!entityTransaction.isActive()) {
             entityTransaction.begin();
         }
