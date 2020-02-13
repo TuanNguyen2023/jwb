@@ -109,7 +109,7 @@ public class SerialReaderEventBased implements SerialPortDataListener {
             String result = new String(readBuffer);
             //result = result.replaceAll( "[^\\d]", "" );
             result = this.getWeight(result);
-            Logger.getLogger(this.getClass()).info("@jSerialComm, weight bridge signal: " + result);
+            Logger.getLogger(this.getClass()).error("@jSerialComm, weight bridge signal: " + result);
 
             BigInteger ival = BigInteger.ZERO;
             try {

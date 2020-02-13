@@ -44,11 +44,15 @@ public class WeighBridgeApp extends SingleFrameApplication {
     private AppConfig config = null;
     private SAPSetting sapSetting = null;
     private User login = null;
-    /**Working in Offline mode(SAP Server is not connectable)*/
+    /**
+     * Working in Offline mode(SAP Server is not connectable)
+     */
     private boolean offlineMode = false;
     private boolean authenticated = false;
     private Session _SAPSession = null;
-    /**HiberSAP credential object*/
+    /**
+     * HiberSAP credential object
+     */
     private Credentials credentials = null;
     private SerialComm normScale = null;
     private ScaleMettler mettlerScale = null;
@@ -76,7 +80,7 @@ public class WeighBridgeApp extends SingleFrameApplication {
             try {
                 // check database connection
                 JPAConnector.getInstance();
-                
+
                 // get config in database
                 ConfigurationRepository configurationRepository = new ConfigurationRepository();
                 config.setConfiguration(configurationRepository.getConfiguration());
@@ -152,6 +156,7 @@ public class WeighBridgeApp extends SingleFrameApplication {
     // </editor-fold>
     /**
      * A convenient static getter for the application instance.
+     *
      * @return the instance of WeighBridgeApp
      */
     public static WeighBridgeApp getApplication() {
@@ -161,7 +166,9 @@ public class WeighBridgeApp extends SingleFrameApplication {
     public boolean connectWB(String portName, Integer speed, Short dataBits, Short stopBits, Short parity, boolean isMettlerScale, JFormattedTextField control) throws SerialPortInvalidPortException, IllegalPortException, IOException, TooManyListenersException {
 
         boolean connected = false;
-        Logger.getLogger(this.getClass()).info("@jSerialComm, connect to weight bridge, " + (isMettlerScale ? "@ScaleMettler" : "@SerialComm"));
+        Logger.getLogger(this.getClass()).error("@jSerialComm, connect to weight bridge, " + (isMettlerScale ? "@ScaleMettler" : "@SerialComm"));
+        Logger.getLogger(this.getClass()).error("@jSerialComm, port: " + portName + " speed: " + speed
+                + " databit: " + dataBits  + " stopbit: " + stopBits);
         try {
             if (isMettlerScale) {
                 if (mettlerScale != null) {
@@ -230,6 +237,7 @@ public class WeighBridgeApp extends SingleFrameApplication {
 
     /**
      * Main method launching the application.
+     *
      * @param args
      */
     public static void main(String[] args) {
@@ -274,6 +282,7 @@ public class WeighBridgeApp extends SingleFrameApplication {
 
     /**
      * Working in Offline mode(SAP Server is not connectable)
+     *
      * @return the offlineMode
      */
     public boolean isOfflineMode() {
@@ -282,6 +291,7 @@ public class WeighBridgeApp extends SingleFrameApplication {
 
     /**
      * Working in Offline mode(SAP Server is not connectable)
+     *
      * @param offlineMode the offlineMode to set
      */
     public void setOfflineMode(boolean offlineMode) {
@@ -304,6 +314,7 @@ public class WeighBridgeApp extends SingleFrameApplication {
 
     /**
      * HiberSAP credential object
+     *
      * @param credentials the credentials to set
      */
     public void setCredentials(Credentials credentials) {
@@ -312,6 +323,7 @@ public class WeighBridgeApp extends SingleFrameApplication {
 
     /**
      * HiberSAP credential object
+     *
      * @return the credentials
      */
     public Credentials getCredentials() {
