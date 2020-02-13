@@ -7,6 +7,7 @@ package com.gcs.wb.controller;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.Vehicle;
 import com.gcs.wb.service.TransportAgentService;
+import java.util.Date;
 import javax.swing.DefaultListModel;
 
 /**
@@ -25,15 +26,15 @@ public class TransportAgentController {
         return transportAgentService.getVehiclesModel(transportAgentSelected);
     }
     
-    public void saveVehicle(String txtLicensePlate, TransportAgent transportAgentSelected) {
-        transportAgentService.saveVehicle(txtLicensePlate, transportAgentSelected);
+    public void saveVehicle(String txtLicensePlate, TransportAgent transportAgentSelected, Date validFrom, Date validTo) {
+        transportAgentService.saveVehicle(txtLicensePlate, transportAgentSelected,validFrom, validTo);
     }
     
     public void vehicleRemoveActionPerformed(TransportAgent transportAgentSelected, Vehicle vehicleSelected) {
         transportAgentService.vehicleRemoveActionPerformed(transportAgentSelected, vehicleSelected);
     }
     
-    public void prohibitApplyActionPerformed(Vehicle vehicleSelected, boolean isProhibitVehicle) {
-        transportAgentService.prohibitApplyActionPerformed(vehicleSelected, isProhibitVehicle);
-    }
+//    public void prohibitApplyActionPerformed(Vehicle vehicleSelected, boolean isProhibitVehicle) {
+//        transportAgentService.prohibitApplyActionPerformed(vehicleSelected, isProhibitVehicle);
+//    }
 }

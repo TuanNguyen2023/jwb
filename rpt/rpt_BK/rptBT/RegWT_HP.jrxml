@@ -12,7 +12,7 @@
 	<parameter name="P_ID" class="java.lang.String">
 		<parameterDescription><![CDATA[ID Param.]]></parameterDescription>
 	</parameter>
-	<parameter name="P_DAYSEQ" class="java.lang.Integer">
+	<parameter name="P_DAYSEQ" class="java.lang.Long">
 		<parameterDescription><![CDATA[Sequence by day]]></parameterDescription>
 	</parameter>
 	<parameter name="P_REPRINT" class="java.lang.Boolean">
@@ -20,39 +20,7 @@
 	</parameter>
 	<parameter name="P_ADDRESS" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[SELECT
-     WeightTicket.`MANDT` AS MANDT,
-     WeightTicket.`WPlant` AS WPlant,
-     WeightTicket.`ID` AS ID,
-     WeightTicket.`SEQ_BY_DAY` AS SEQ_BY_DAY,
-     WeightTicket.`SEQ_BY_MONTH` AS SEQ_BY_MONTH,
-     WeightTicket.`TEN_TAI_XE` AS TEN_TAI_XE,
-     WeightTicket.`CMND_BL` AS CMND_BL,
-     WeightTicket.`SO_XE` AS SO_XE,
-     WeightTicket.`SO_ROMOOC` AS SO_ROMOOC,
-     WeightTicket.`REG_CATEGORY` AS REG_CATEGORY,
-     WeightTicket.`REG_ITEM_TEXT` AS REG_ITEM_TEXT,
-     WeightTicket.`CREATE_DATE` AS CREATE_DATE,
-     WeightTicket.`CREATOR` AS CREATOR,
-     User.`FULL_NAME` AS FULL_NAME,
-     WeightTicket.`DELIV_NUMB` AS DELIV_NUMB,
-     WeightTicket.`DISSOLVED` AS DISSOLVED,
-     WeightTicket.`POSTED` AS POSTED,
-     WeightTicket.`REG_ITEM_QTY` AS REG_ITEM_QTY,
-     WeightTicket.`CREATE_TIME` AS CREATE_TIME,
-     (SELECT Name_RPT from rpt_address where rpt_address.`rpt_id` = $P{P_ADDRESS}) AS PName_RPT,
-     (SELECT ADDRESS from rpt_address where rpt_address.`rpt_id` = $P{P_ADDRESS}) AS PAddress,
-     (SELECT Phone from rpt_address where rpt_address.`rpt_id` = $P{P_ADDRESS}) AS PPhone,
-     (SELECT FAX from rpt_address where rpt_address.`rpt_id` = $P{P_ADDRESS}) AS PFAX
-FROM
-     `User` User INNER JOIN `WeightTicket` WeightTicket ON User.`MANDT` = WeightTicket.`MANDT`
-     AND User.`ID` = WeightTicket.`CREATOR`
-     AND User.`WPlant` = WeightTicket.`WPlant`
-WHERE
-     WeightTicket.`MANDT` = $P{P_CLIENT}
- AND WeightTicket.`WPlant` = $P{P_WPLANT}
- AND WeightTicket.`ID` = $P{P_ID}
- AND WeightTicket.`SEQ_BY_DAY` = $P{P_DAYSEQ}]]>
+		<![CDATA[p_report_online_registaration_weight_ticket $P{P_ADDRESS},$P{P_CLIENT},$P{P_WPLANT},$P{P_ID},$P{P_DAYSEQ}]]>
 	</queryString>
 	<field name="MANDT" class="java.lang.String"/>
 	<field name="WPlant" class="java.lang.String"/>
@@ -77,6 +45,8 @@ WHERE
 	<field name="PAddress" class="java.lang.String"/>
 	<field name="PPhone" class="java.lang.String"/>
 	<field name="PFAX" class="java.lang.String"/>
+	<field name="Customer_name" class="java.lang.String"/>
+	<field name="saledistrict" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -89,9 +59,9 @@ WHERE
 			<staticText>
 				<reportElement x="0" y="83" width="275" height="26"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="DejaVu Sans" size="18" isBold="true" isUnderline="true" pdfEncoding="Identity-H"/>
+					<font fontName="DejaVu Sans" size="16" isBold="true" isUnderline="true" pdfEncoding="Identity-H"/>
 				</textElement>
-				<text><![CDATA[PHIẾU ĐĂNG TÀI]]></text>
+				<text><![CDATA[PHIẾU YÊU CẦU XUẤT HÀNG]]></text>
 			</staticText>
 			<componentElement>
 				<reportElement stretchType="RelativeToBandHeight" x="275" y="77" width="121" height="32"/>
@@ -155,7 +125,7 @@ WHERE
 				<text><![CDATA[SĐT:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="65" y="0" width="210" height="20"/>
+				<reportElement x="65" y="0" width="176" height="20"/>
 				<box leftPadding="5"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="10" isBold="true" pdfEncoding="Identity-H"/>
@@ -163,7 +133,7 @@ WHERE
 				<textFieldExpression><![CDATA[$F{SEQ_BY_DAY}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="275" y="0" width="159" height="20"/>
+				<reportElement x="248" y="0" width="149" height="20"/>
 				<box rightPadding="5"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="10" isBold="true" pdfEncoding="Identity-H"/>
@@ -171,7 +141,7 @@ WHERE
 				<text><![CDATA[Số phiếu trong tháng:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="434" y="0" width="121" height="20"/>
+				<reportElement x="397" y="0" width="121" height="20"/>
 				<box leftPadding="5"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="10" isBold="true" pdfEncoding="Identity-H"/>
@@ -181,7 +151,7 @@ WHERE
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="101" splitType="Stretch">
+		<band height="174" splitType="Stretch">
 			<staticText>
 				<reportElement x="0" y="0" width="65" height="20"/>
 				<box rightPadding="5"/>
@@ -191,7 +161,7 @@ WHERE
 				<text><![CDATA[Tên tài xế:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="65" y="0" width="210" height="20"/>
+				<reportElement x="65" y="0" width="176" height="20"/>
 				<box leftPadding="5"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
@@ -207,7 +177,7 @@ WHERE
 				<text><![CDATA[CMND/BL:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="65" y="20" width="210" height="20"/>
+				<reportElement x="65" y="20" width="176" height="20"/>
 				<box leftPadding="5"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
@@ -223,7 +193,7 @@ WHERE
 				<text><![CDATA[Số xe:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="65" y="40" width="210" height="20"/>
+				<reportElement x="65" y="40" width="176" height="20"/>
 				<box leftPadding="5"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
@@ -239,7 +209,7 @@ WHERE
 				<text><![CDATA[Số Rơmoóc:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="65" y="60" width="210" height="20"/>
+				<reportElement x="65" y="60" width="176" height="20"/>
 				<box leftPadding="5"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
@@ -247,7 +217,7 @@ WHERE
 				<textFieldExpression><![CDATA[$F{SO_ROMOOC}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="275" y="0" width="121" height="20"/>
+				<reportElement x="248" y="0" width="77" height="20"/>
 				<box rightPadding="5"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
@@ -255,7 +225,7 @@ WHERE
 				<text><![CDATA[Đăng ký:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="396" y="0" width="159" height="20"/>
+				<reportElement x="335" y="1" width="220" height="20"/>
 				<box leftPadding="5"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
@@ -263,7 +233,7 @@ WHERE
 				<textFieldExpression><![CDATA[$F{REG_CATEGORY}.equalsIgnoreCase("I") ? "Nhập" : "Xuất"]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="275" y="20" width="121" height="20"/>
+				<reportElement x="248" y="20" width="77" height="20"/>
 				<box rightPadding="5"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
@@ -271,23 +241,23 @@ WHERE
 				<text><![CDATA[Loại hàng:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="396" y="20" width="159" height="20"/>
+				<reportElement x="335" y="21" width="220" height="20"/>
 				<box leftPadding="5"/>
 				<textElement verticalAlignment="Middle">
-					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
+					<font fontName="DejaVu Sans" size="8" pdfEncoding="Identity-H"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{REG_ITEM_TEXT}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="275" y="40" width="121" height="20"/>
+				<reportElement x="248" y="40" width="77" height="20"/>
 				<box rightPadding="5"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
 				</textElement>
-				<text><![CDATA[Trọng lượng đăng ký:]]></text>
+				<text><![CDATA[Trọng lượng Đk:]]></text>
 			</staticText>
 			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
-				<reportElement x="396" y="40" width="141" height="20"/>
+				<reportElement x="335" y="41" width="162" height="20"/>
 				<box leftPadding="5"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
@@ -295,7 +265,7 @@ WHERE
 				<textFieldExpression><![CDATA[$F{REG_ITEM_QTY}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="275" y="60" width="121" height="20"/>
+				<reportElement x="248" y="60" width="77" height="20"/>
 				<box rightPadding="5"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
@@ -303,7 +273,7 @@ WHERE
 				<text><![CDATA[Số D.O:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="396" y="60" width="159" height="20"/>
+				<reportElement x="335" y="61" width="220" height="20"/>
 				<box leftPadding="5"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
@@ -311,11 +281,11 @@ WHERE
 				<textFieldExpression><![CDATA[$F{DELIV_NUMB}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="537" y="40" width="18" height="20"/>
+				<reportElement x="437" y="41" width="33" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
 				</textElement>
-				<text><![CDATA[(T)]]></text>
+				<text><![CDATA[(Tấn)]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="80" width="65" height="20"/>
@@ -326,7 +296,7 @@ WHERE
 				<text><![CDATA[Người tạo:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="65" y="80" width="210" height="20"/>
+				<reportElement x="65" y="80" width="176" height="20"/>
 				<box leftPadding="5"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
@@ -334,7 +304,7 @@ WHERE
 				<textFieldExpression><![CDATA[$F{FULL_NAME}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="275" y="80" width="121" height="20"/>
+				<reportElement x="248" y="80" width="77" height="20"/>
 				<box rightPadding="5"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
@@ -342,16 +312,72 @@ WHERE
 				<text><![CDATA[Ngày:]]></text>
 			</staticText>
 			<textField pattern="dd/MM/yyyy">
-				<reportElement x="396" y="80" width="159" height="20"/>
+				<reportElement x="335" y="81" width="220" height="20"/>
 				<box leftPadding="5"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{CREATE_DATE}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="223" y="149" width="91" height="20"/>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10" isBold="true" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[PXSX]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="149" width="142" height="20"/>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10" isBold="true" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[NV Trạm cân/Giao nhận]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="448" y="149" width="91" height="20"/>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="10" isBold="true" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Khách hàng]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="248" y="101" width="77" height="20"/>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Khách hàng :]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="335" y="101" width="220" height="20"/>
+				<box leftPadding="5"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="8" isBold="true" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Customer_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="260" y="121" width="65" height="20"/>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" pdfEncoding="Identity-H"/>
+				</textElement>
+				<text><![CDATA[Thị trường :]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="335" y="123" width="218" height="20"/>
+				<box leftPadding="5"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9" isBold="true" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{saledistrict}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="54" splitType="Stretch"/>
+		<band height="10" splitType="Stretch"/>
 	</pageFooter>
 </jasperReport>

@@ -57,7 +57,7 @@
 		<parameter name="P_STAGE1" class="java.lang.Boolean" isForPrompting="false"/>
 		<parameter name="P_STAGE2" class="java.lang.Boolean" isForPrompting="false"/>
 		<queryString>
-			<![CDATA[p_report_offline_outbound_detail $P{P_MANDT},$P{P_DEL_NUM}]]>
+			<![CDATA[p_report_online_outbound_detail $P{P_MANDT},$P{P_DEL_NUM}]]>
 		</queryString>
 		<field name="outb_details_MANDT" class="java.lang.String"/>
 		<field name="outb_details_DELIV_NUMB" class="java.lang.String"/>
@@ -87,7 +87,7 @@
 	<parameter name="P_STAGE1" class="java.lang.Boolean" isForPrompting="false"/>
 	<parameter name="P_STAGE2" class="java.lang.Boolean" isForPrompting="false"/>
 	<queryString>
-		<![CDATA[p_report_offline_or_not_PO_weight_ticket $P{P_ADDRESS},$P{P_MANDT},$P{P_WPlant},$P{P_ID},$P{P_DAYSEQ}]]>
+		<![CDATA[p_report_online_or_without_po_weight_ticket $P{P_ADDRESS},$P{P_MANDT},$P{P_WPlant},$P{P_ID},$P{P_DAYSEQ}]]>
 	</queryString>
 	<field name="MANDT" class="java.lang.String"/>
 	<field name="ID" class="java.lang.String"/>

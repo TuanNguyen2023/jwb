@@ -55,155 +55,6 @@ public class WeightTicketRegistarationService {
 
     Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
 
-    public List<WeightTicket> listWeightTicketsDoInBackground(JXDatePicker dpFrom, JXDatePicker dpTo, JComboBox cbxType, JComboBox cbxTimeFrom, JComboBox cbxTimeTo, JTextField txtNguoitao, JRadioButton rbtDissolved, JRadioButton rbtPosted, JRadioButton rbtStateAll, JTextField txtTaixe, JTextField txtBienSo) throws Exception {
-        int days = (int) ((dpTo.getDate().getTime() - dpFrom.getDate().getTime()) / (1000 * 60 * 60 * 24));
-        Date Now = new Date();
-        int days2 = (int) ((Now.getTime() - dpTo.getDate().getTime()) / (1000 * 60 * 60 * 24));
-
-        Object[] select = cbxType.getSelectedObjects();
-        com.gcs.wb.jpa.entity.Material selecttext = (com.gcs.wb.jpa.entity.Material) select[0];
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        String fFrom = format.format(dpFrom.getDate());
-        String fTo = format.format(dpTo.getDate());
-
-        List<WeightTicket> result = findByDateFull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMatnr(), txtBienSo.getText().trim());
-        List<WeightTicket> data = findByDateFull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMatnr(), txtBienSo.getText().trim());
-        result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
-        if (selecttext.getMaktx().equals("Linh tinh")) {
-            data = findByDateNull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
-            result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
-            if (rbtDissolved.isSelected()) {
-                data = findByDateDissolvedNull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
-                result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
-            } else if (rbtPosted.isSelected()) {
-                data = findByDatePostedNull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
-                result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
-            } else if (rbtStateAll.isSelected()) {
-                data = findByDateAllNull(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
-                result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
-            }
-        } else if (selecttext.getMaktx().equals("Tất cả")) {
-            data = findByDateNullAll(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
-            result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
-            if (rbtDissolved.isSelected()) {
-                data = findByDateDissolvedNullAll(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
-                result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
-            } else if (rbtPosted.isSelected()) {
-                data = findByDatePostedNullAll(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
-                result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
-            } else if (rbtStateAll.isSelected()) {
-                data = findByDateAllNullAll(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), txtBienSo.getText().trim());
-                result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
-            }
-        } else {
-            if (rbtDissolved.isSelected()) {
-                data = findByDateDissolved(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMatnr(), txtBienSo.getText().trim());
-                result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
-            } else if (rbtPosted.isSelected()) {
-                data = findByDatePosted(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMatnr(), txtBienSo.getText().trim());
-                result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
-            } else if (rbtStateAll.isSelected()) {
-                data = findByDateAll(fFrom, fTo, txtNguoitao.getText().trim(), txtTaixe.getText().trim(), selecttext.getMatnr(), txtBienSo.getText().trim());
-                result = filterHours(data, cbxTimeFrom.getSelectedItem().toString(), cbxTimeTo.getSelectedItem().toString());
-            }
-        }
-        return result;
-    }
-
-    private List<WeightTicket> filterHours(List<WeightTicket> data, String timefrom, String timeto) {
-        List<WeightTicket> result = new ArrayList<>();
-        int n1 = Integer.parseInt(timefrom);
-        double n2 = Integer.parseInt(timeto) + 0.99;
-        if (!data.isEmpty()) {
-            for (int i = 0; i < data.size(); i++) {
-                WeightTicket item = data.get(i);
-
-                String ct = item.getCreatedTime();
-                Character c0 = ct.charAt(0);
-                Character c1 = ct.charAt(1);
-                String ct1 = c0.toString().concat(c1.toString());
-                int cTime = Integer.parseInt(ct1);
-                if (cTime >= n1 && cTime <= n2) {
-                    if (configuration.isModeNormal()) {
-                        result.add(item);
-                    } else {
-                        //filter sloc
-                        String[] sloc_item = WeighBridgeApp.getApplication().getSloc().split("-");
-                        if (sloc_item.length > 0) {
-                            for (int j = 0; j < sloc_item.length; j++) {
-                                String current_sloc = sloc_item[j].toString().trim();
-                                if (item.getLgort() == null) {
-                                    result.add(item);
-                                    break;
-                                } else if (item.getLgort().equals(current_sloc)) {
-                                    result.add(item);
-                                }
-                            }
-                        }
-
-                    }
-
-                }
-            }
-        }
-        return result;
-    }
-
-    public Object[][] handleWtData(String getMode, Object[][] wtData, List<WeightTicket> weightTicketList, AppConfig config, Object[] wtCols, String sVendor) {
-        for (int i = 0; i < weightTicketList.size(); i++) {
-            WeightTicket item = weightTicketList.get(i);
-            WeightTicketDetail weightTicketDetail = item.getWeightTicketDetail();
-            if (!item.getMandt().equalsIgnoreCase(configuration.getSapClient()) && !item.getWplant().equalsIgnoreCase(configuration.getWkPlant())) {
-                continue;
-            }
-            wtData[i][0] = item.getSeqDay();
-            wtData[i][1] = item.getDriverName();
-            wtData[i][2] = item.getDriverIdNo();
-            wtData[i][3] = item.getPlateNo();
-            wtData[i][4] = item.getTrailerId();
-            wtData[i][5] = item.getRegType();
-            wtData[i][6] = weightTicketDetail.getRegItemDescription();
-            wtData[i][7] = weightTicketDetail.getRegItemQuantity();
-            wtData[i][8] = weightTicketDetail.getDeliveryOrderNo();
-            wtData[i][9] = item.getCreator();
-            wtData[i][10] = item.getSeqMonth();
-            wtData[i][11] = item.getCreatedDate();
-            String hh;
-            String mm;
-            String ss;
-            hh = item.getCreatedTime().substring(0, 2);
-            mm = item.getCreatedTime().substring(2, 4);
-            ss = item.getCreatedTime().substring(4);
-            wtData[i][12] = hh + ":" + mm + ":" + ss;
-            wtData[i][13] = item.isDissolved();
-            if (item.isPosted()) {
-                wtData[i][14] = true;
-            } else {
-                wtData[i][14] = false;
-            }
-        }
-        return wtData;
-    }
-
-    public void hanldeCheckDOOutbDel(OutboundDelivery sapOutb, Customer customer, Customer kunag, Vendor lifnr, Customer sapKunnr, Customer sapKunag, Vendor sapLifnr) {
-        if (sapOutb != null) {
-            if (sapOutb.getKunnr() != null && !sapOutb.getKunnr().trim().isEmpty()) {
-                customer = customerRepository.findByKunnr(sapOutb.getKunnr());
-                sapKunnr = sAPService.getCustomer(sapOutb.getKunnr());
-            }
-            if (sapOutb.getKunag() != null && !sapOutb.getKunag().trim().isEmpty()) {
-                kunag = customerRepository.findByKunnr(sapOutb.getKunag());
-                sapKunag = sAPService.getCustomer(sapOutb.getKunag());
-            }
-            if (sapOutb.getLifnr() != null && !sapOutb.getLifnr().trim().isEmpty()) {
-                lifnr = vendorRepository.findByLifnr(sapOutb.getLifnr());
-                sapLifnr = sAPService.getVendor(sapOutb.getLifnr());
-                // abbr = sapLifnr.getVendorPK().getLifnr();
-            }
-
-        }
-    }
-
     public List<Object[]> checkExistDO(String doNumber) {
         return wTRegRepository.checkDoExist(doNumber, configuration.getWkPlant());
     }
@@ -319,7 +170,6 @@ public class WeightTicketRegistarationService {
     public int getCountTicketMonth(String plant) {
         int count = 0;
         try {
-            EntityManager entityManager = JPAConnector.getInstance();
             if (entityManager != null) {
                 EntityTransaction entityTransaction = entityManager.getTransaction();
                 entityTransaction.begin();
@@ -344,7 +194,6 @@ public class WeightTicketRegistarationService {
     public int getCountTicketDay(String plant) {
         int count = 0;
         try {
-            EntityManager entityManager = JPAConnector.getInstance();
             if (entityManager != null) {
                 EntityTransaction entityTransaction = entityManager.getTransaction();
                 entityTransaction.begin();

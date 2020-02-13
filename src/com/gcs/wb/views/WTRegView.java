@@ -3183,7 +3183,7 @@ private void txtDONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                 result = true;
                 if (vehicle.isProhibit()) {
                     result = false;
-                    JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.errorLicensePlate", txtNPlateNo.getText().trim()));
+                    JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.invalidLicensePlate", txtNPlateNo.getText().trim()));
                 }
 
                 List<TransportAgentVehicle> transportAgentVehicles = weightTicketRegistarationController.findByVehicleId(vehicle.getId());

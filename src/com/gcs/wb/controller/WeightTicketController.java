@@ -13,7 +13,6 @@ import com.gcs.wb.jpa.entity.PurchaseOrder;
 import com.gcs.wb.jpa.entity.SLoc;
 import com.gcs.wb.jpa.entity.Variant;
 import com.gcs.wb.jpa.entity.WeightTicket;
-import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.service.WeightTicketService;
 import java.util.Date;
 import java.util.List;

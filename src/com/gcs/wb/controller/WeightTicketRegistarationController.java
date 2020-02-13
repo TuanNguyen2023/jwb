@@ -6,9 +6,9 @@ package com.gcs.wb.controller;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.base.constant.Constants;
+import com.gcs.wb.jpa.JReportService;
 import com.gcs.wb.jpa.entity.*;
 import com.gcs.wb.jpa.entity.OutboundDeliveryDetail;
-import com.gcs.wb.jpa.service.JReportService;
 import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.model.WeighingMode;
 import com.gcs.wb.service.WeightTicketRegistarationService;
@@ -36,13 +36,6 @@ public class WeightTicketRegistarationController {
     Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
     private final Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
 
-    public List<WeightTicket> listWeightTicketsDoInBackground(JXDatePicker dpFrom, JXDatePicker dpTo, JComboBox cbxType, JComboBox cbxTimeFrom, JComboBox cbxTimeTo, JTextField txtNguoitao, JRadioButton rbtDissolved, JRadioButton rbtPosted, JRadioButton rbtStateAll, JTextField txtTaixe, JTextField txtBienSo) throws Exception {
-        return wTRegService.listWeightTicketsDoInBackground(dpFrom, dpTo, cbxType, cbxTimeFrom, cbxTimeTo, txtNguoitao, rbtDissolved, rbtPosted, rbtStateAll, txtTaixe, txtBienSo);
-    }
-
-    public Object[][] handleWtData(String getMode, Object[][] wtData, List<WeightTicket> weightTicketList, AppConfig config, Object[] wtCols, String sVendor) {
-        return wTRegService.handleWtData(getMode, wtData, weightTicketList, config, wtCols, sVendor);
-    }
 
     public String getReportName() {
         String reportName = null;
@@ -63,10 +56,6 @@ public class WeightTicketRegistarationController {
         params.put("P_FROM", kFrom);
         params.put("P_TO", kTo);
         return params;
-    }
-
-    public void hanldeCheckDOOutbDel(OutboundDelivery sapOutb, Customer kunnr, Customer kunag, Vendor lifnr, Customer sapKunnr, Customer sapKunag, Vendor sapLifnr) {
-        wTRegService.hanldeCheckDOOutbDel(sapOutb, kunnr, kunag, lifnr, sapKunnr, sapKunag, sapLifnr);
     }
 
     public void printReport(Map<String, Object> map, String reportName) {

@@ -59,12 +59,12 @@ public class WeightTicketDetail implements Serializable {
     private Integer docYear;
     @Column(name = "recv_matnr")
     private String recvMatnr;
-    @Column(name = "pp_procord")
-    private String ppProcord;
-    @Column(name = "pp_procordcnf")
-    private String ppProcordcnf;
-    @Column(name = "pp_procordcnfcnt")
-    private String ppProcordcnfcnt;
+//    @Column(name = "pp_procord")
+//    private String ppProcord;
+//    @Column(name = "pp_procordcnf")
+//    private String ppProcordcnf;
+//    @Column(name = "pp_procordcnfcnt")
+//    private String ppProcordcnfcnt;
     @Column(name = "kunnr")
     private String kunnr;
     @Column(name = "status")
@@ -199,30 +199,6 @@ public class WeightTicketDetail implements Serializable {
         this.recvMatnr = recvMatnr;
     }
 
-    public String getPpProcord() {
-        return ppProcord;
-    }
-
-    public void setPpProcord(String ppProcord) {
-        this.ppProcord = ppProcord;
-    }
-
-    public String getPpProcordcnf() {
-        return ppProcordcnf;
-    }
-
-    public void setPpProcordcnf(String ppProcordcnf) {
-        this.ppProcordcnf = ppProcordcnf;
-    }
-
-    public String getPpProcordcnfcnt() {
-        return ppProcordcnfcnt;
-    }
-
-    public void setPpProcordcnfcnt(String ppProcordcnfcnt) {
-        this.ppProcordcnfcnt = ppProcordcnfcnt;
-    }
-
     public String getKunnr() {
         return kunnr;
     }
@@ -332,15 +308,15 @@ public class WeightTicketDetail implements Serializable {
         if (recvMatnr != null ? !recvMatnr.equals(that.recvMatnr) : that.recvMatnr != null) {
             return false;
         }
-        if (ppProcord != null ? !ppProcord.equals(that.ppProcord) : that.ppProcord != null) {
-            return false;
-        }
-        if (ppProcordcnf != null ? !ppProcordcnf.equals(that.ppProcordcnf) : that.ppProcordcnf != null) {
-            return false;
-        }
-        if (ppProcordcnfcnt != null ? !ppProcordcnfcnt.equals(that.ppProcordcnfcnt) : that.ppProcordcnfcnt != null) {
-            return false;
-        }
+//        if (ppProcord != null ? !ppProcord.equals(that.ppProcord) : that.ppProcord != null) {
+//            return false;
+//        }
+//        if (ppProcordcnf != null ? !ppProcordcnf.equals(that.ppProcordcnf) : that.ppProcordcnf != null) {
+//            return false;
+//        }
+//        if (ppProcordcnfcnt != null ? !ppProcordcnfcnt.equals(that.ppProcordcnfcnt) : that.ppProcordcnfcnt != null) {
+//            return false;
+//        }
         if (kunnr != null ? !kunnr.equals(that.kunnr) : that.kunnr != null) {
             return false;
         }
@@ -373,9 +349,9 @@ public class WeightTicketDetail implements Serializable {
         result = 31 * result + (unit != null ? unit.hashCode() : 0);
         result = 31 * result + (docYear != null ? docYear.hashCode() : 0);
         result = 31 * result + (recvMatnr != null ? recvMatnr.hashCode() : 0);
-        result = 31 * result + (ppProcord != null ? ppProcord.hashCode() : 0);
-        result = 31 * result + (ppProcordcnf != null ? ppProcordcnf.hashCode() : 0);
-        result = 31 * result + (ppProcordcnfcnt != null ? ppProcordcnfcnt.hashCode() : 0);
+        //result = 31 * result + (ppProcord != null ? ppProcord.hashCode() : 0);
+        //result = 31 * result + (ppProcordcnf != null ? ppProcordcnf.hashCode() : 0);
+        //result = 31 * result + (ppProcordcnfcnt != null ? ppProcordcnfcnt.hashCode() : 0);
         result = 31 * result + (kunnr != null ? kunnr.hashCode() : 0);
         result = 31 * result + (createdTime != null ? createdTime.hashCode() : 0);
         result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);

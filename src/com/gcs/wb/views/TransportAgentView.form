@@ -1,12 +1,6 @@
 <?xml version="1.1" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JInternalFrameFormInfo">
-  <NonVisualComponents>
-    <Component class="com.gcs.wb.jpa.entity.TransportAgent" name="transportAgentSelected">
-    </Component>
-    <Component class="com.gcs.wb.jpa.entity.Vehicle" name="vehicleSelected">
-    </Component>
-  </NonVisualComponents>
   <Properties>
     <Property name="closable" type="boolean" value="true"/>
     <Property name="maximizable" type="boolean" value="true"/>
@@ -70,7 +64,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="spnTransportAgent" pref="175" max="32767" attributes="0"/>
+                  <Component id="spnTransportAgent" pref="240" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -78,8 +72,8 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="spnTransportAgent" pref="144" max="32767" attributes="0"/>
-                  <EmptySpace min="-2" pref="147" max="-2" attributes="0"/>
+                  <Component id="spnTransportAgent" min="-2" pref="166" max="-2" attributes="0"/>
+                  <EmptySpace pref="194" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -129,21 +123,24 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="spnVehicle" alignment="1" pref="180" max="32767" attributes="0"/>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="chkProhibitVehicle" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="46" max="32767" attributes="0"/>
-                          <Component id="btnProhibitApply" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="spnVehicle" alignment="0" pref="245" max="32767" attributes="0"/>
                       <Group type="102" alignment="1" attributes="0">
                           <Component id="btnVehicleRemove" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="78" max="32767" attributes="0"/>
+                          <EmptySpace pref="143" max="32767" attributes="0"/>
                           <Component id="btnVehicleSave" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <Component id="lblLicensePlate" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="lblLicensePlate" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="lblValidFrom" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblValidTo" alignment="0" min="-2" max="-2" attributes="0"/>
+                          </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="txtLicensePlate" pref="149" max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="txtLicensePlate" alignment="1" pref="188" max="32767" attributes="0"/>
+                              <Component id="dpValidTo" alignment="0" pref="188" max="32767" attributes="0"/>
+                              <Component id="dpValidFrom" alignment="0" pref="188" max="32767" attributes="0"/>
+                          </Group>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -153,23 +150,28 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <Component id="spnVehicle" pref="172" max="32767" attributes="0"/>
+                  <Component id="spnVehicle" pref="180" max="32767" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="lblLicensePlate" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="txtLicensePlate" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblValidFrom" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="dpValidFrom" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblValidTo" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="dpValidTo" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btnVehicleSave" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btnVehicleRemove" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="chkProhibitVehicle" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnProhibitApply" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -238,25 +240,38 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnVehicleRemoveActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JCheckBox" name="chkProhibitVehicle">
+        <Component class="javax.swing.JLabel" name="lblValidFrom">
           <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="chkProhibitVehicle.text"/>
-            <Property name="name" type="java.lang.String" value="chkProhibitVehicle" noResource="true"/>
+            <Property name="text" type="java.lang.String" resourceKey="lblValidFrom.text"/>
+            <Property name="name" type="java.lang.String" value="lblValidFrom" noResource="true"/>
           </Properties>
-          <BindingProperties>
-            <BindingProperty name="enabled" source="lstVehicle" sourcePath="${selectedElement != null}" target="chkProhibitVehicle" targetPath="enabled" updateStrategy="0" immediately="false"/>
-          </BindingProperties>
         </Component>
-        <Component class="javax.swing.JButton" name="btnProhibitApply">
+        <Component class="javax.swing.JLabel" name="lblValidTo">
           <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="btnProhibitApply.text"/>
-            <Property name="name" type="java.lang.String" value="btnProhibitApply" noResource="true"/>
+            <Property name="text" type="java.lang.String" resourceKey="lblValidTo.text"/>
+            <Property name="name" type="java.lang.String" value="lblValidTo" noResource="true"/>
           </Properties>
-          <BindingProperties>
-            <BindingProperty name="enabled" source="lstVehicle" sourcePath="${selectedElement != null}" target="btnProhibitApply" targetPath="enabled" updateStrategy="0" immediately="false"/>
-          </BindingProperties>
+        </Component>
+        <Component class="org.jdesktop.swingx.JXDatePicker" name="dpValidFrom">
+          <Properties>
+            <Property name="date" type="java.util.Date" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="null" type="code"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="dpValidFrom" noResource="true"/>
+          </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnProhibitApplyActionPerformed"/>
+            <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="dpValidFromPropertyChange"/>
+          </Events>
+        </Component>
+        <Component class="org.jdesktop.swingx.JXDatePicker" name="dpValidTo">
+          <Properties>
+            <Property name="date" type="java.util.Date" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="null" type="code"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="dpValidTo" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="dpValidToPropertyChange"/>
           </Events>
         </Component>
       </SubComponents>

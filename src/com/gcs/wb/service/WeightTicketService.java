@@ -18,9 +18,9 @@ import com.gcs.wb.bapi.outbdlv.structure.VbkokStructure;
 import com.gcs.wb.bapi.outbdlv.structure.VbpokStructure;
 import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.jpa.JPAConnector;
+import com.gcs.wb.jpa.JReportService;
 import com.gcs.wb.jpa.entity.*;
 import com.gcs.wb.jpa.repositorys.*;
-import com.gcs.wb.jpa.service.JReportService;
 import com.gcs.wb.views.WeightTicketView;
 import org.apache.log4j.Logger;
 import org.hibersap.session.Session;
@@ -699,14 +699,14 @@ public class WeightTicketService {
         }
         kl_total = kl.add(kl_km);
 
-        if (weightTicketDetail.getPpProcord() != null && weightTicketDetail.getPpProcord().length() == 12) {
-            bapi.setProc_ord_id(weightTicketDetail.getPpProcord());
-            if (outbDel == null) {
-                bapi.setYield(wt.getGQty());
-            } else {
-                bapi.setYield(kl_total);
-            }
-        }
+//        if (weightTicketDetail.getPpProcord() != null && weightTicketDetail.getPpProcord().length() == 12) {
+//            bapi.setProc_ord_id(weightTicketDetail.getPpProcord());
+//            if (outbDel == null) {
+//                bapi.setYield(wt.getGQty());
+//            } else {
+//                bapi.setYield(kl_total);
+//            }
+//        }
         bapi.setYield(kl_total);
         VbkokStructure wa = new VbkokStructure();
         if (outbDel == null) {
