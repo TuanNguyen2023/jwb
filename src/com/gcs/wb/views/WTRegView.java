@@ -15,6 +15,7 @@ import com.gcs.wb.base.util.StringUtil;
 import com.gcs.wb.controller.WeightTicketRegistarationController;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.*;
+import com.gcs.wb.jpa.repositorys.TransportAgentVehicleRepository;
 import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.model.WeighingMode;
 import com.gcs.wb.views.validations.WeightTicketRegistrationValidation;
@@ -1643,34 +1644,14 @@ private void txtDONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
 
     @Action(block = Task.BlockingScope.ACTION)
     public Task checkDO() {
-        txtNPlateNo.setText(txtNPlateNo.getText().trim().toUpperCase());
-        txtNDriverName.setText(txtNDriverName.getText().trim().toUpperCase());
-        txtNCMNDBL.setText(txtNCMNDBL.getText().trim().toUpperCase());
-        
-        return new CheckDOTask(WeighBridgeApp.getApplication());
+        boolean isPlateNoValid = wtRegisValidation.validatePlateNo(txtPlateNoN.getText(), lblPlateNoN);
+        if (!isPlateNoValid) {
+            JOptionPane.showMessageDialog(rootPane,
+                    resourceMapMsg.getString("msg.plzInputPlateNo"));
+            return null;
+        }
 
-//        if (WeighBridgeApp.getApplication().isOfflineMode()) {
-//            return new CheckDOOFFTask(WeighBridgeApp.getApplication());
-//        } else {
-//            String val[] = txtNDONum.getText().trim().split("-");
-//            for (int i = 0; i < val.length; i++) {
-//                if (val[i].length() > 0) {
-//                    val[i] = StringUtil.paddingZero(val[i], 10);
-//                    return new CheckDOTask(WeighBridgeApp.getApplication());
-//                } else if (val[i].length() == 0) {
-//                    lblNDONum.setForeground(Color.black);
-//                    isValidOutboundDelivery = true;
-//                    setSaveNeeded(isValidated() && isValidOutboundDelivery);
-//                    return null;
-//                } else {
-//                    lblNDONum.setForeground(Color.red);
-//                    isValidOutboundDelivery = false;
-//                    setSaveNeeded(isValidated() && isValidOutboundDelivery);
-//                }
-//                continue;
-//            }
-//            return null;
-//        }
+        return new CheckDOTask(WeighBridgeApp.getApplication());
     }
 
     @Action(enabledProperty = "creatable")
@@ -1693,7 +1674,7 @@ private void txtDONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
         rbtInput.setEnabled(true);
         rbtOutput.setEnabled(true);
         cbxModeType.setEnabled(true);
-        loadModeTypeModel(MODE.INPUT);
+        loadModeTypeModel(MODE.OUTPUT);
     }
 
     @Action(enabledProperty = "clearable")
@@ -1712,7 +1693,7 @@ private void txtDONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
         rbtInput.setEnabled(false);
         rbtOutput.setEnabled(false);
         cbxModeType.setEnabled(false);
-        loadModeTypeModel(MODE.INPUT);
+        loadModeTypeModel(MODE.OUTPUT);
         disableAllInForm();
     }
 
@@ -2077,13 +2058,22 @@ private void txtDONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
         boolean isRegisterIdValid = wtRegisValidation.validateLength(txtRegisterIdN.getText(), lblRegisterIdN, 1, 50);
         boolean isDriverNameValid = wtRegisValidation.validateLength(txtDriverNameN.getText(), lblDriverNameN, 1, 70);
         boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
-        boolean isPlateNoValid = wtRegisValidation.validatePlateNo(txtPlateNoN.getText(), lblPlateNoN);
+
+        String plateNo = txtPlateNoN.getText().trim();
+        boolean isPlateNoValid = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
+        if (isPlateNoValid) {
+            newWeightTicket.setAbbr(weightTicketRegistarationController.loadTransportAgentAbbr(plateNo));
+            txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(plateNo).toString());
+        }
+
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 12);
         boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
+
         boolean isDOValid = wtRegisValidation.validateDO(txtDONumN.getText(), lblDONumN);
-        btnDOCheckN.setEnabled(isDOValid && isPlateNoValid);
+        btnDOCheckN.setEnabled(isDOValid);
+
         boolean isBatchStockValid = wtRegisValidation.validateCbxSelected(cbxBatchStockN.getSelectedIndex(), lblBatchStockN);
 
         return isRegisterIdValid && isDriverNameValid && isCMNDBLValid && isPlateNoValid
@@ -2373,16 +2363,16 @@ private void txtDONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                 }
 
                 // check ship point
-                if (!checkShippingPoint(outboundDelivery)) {
-                    String modeName;
-                    if (mode == MODE.INPUT) {
-                        modeName = Constants.WTRegView.INPUT;
-                    } else {
-                        modeName = Constants.WTRegView.OUTPUT;
-                    }
-                    throw new Exception(resourceMapMsg.getString("msg.shippingPointVar", deliveryOrderNo, modeName));
-                }
-
+                // TODO: confirm lai viec check shipping point
+//                if (!checkShippingPoint(outboundDelivery)) {
+//                    String modeName;
+//                    if (mode == MODE.INPUT) {
+//                        modeName = Constants.WTRegView.INPUT;
+//                    } else {
+//                        modeName = Constants.WTRegView.OUTPUT;
+//                    }
+//                    throw new Exception(resourceMapMsg.getString("msg.shippingPointVar", deliveryOrderNo, modeName));
+//                }
                 // set DO data to Weight ticket
                 updateWeightTicket(outboundDelivery);
                 setStep(4, null);
@@ -2397,9 +2387,7 @@ private void txtDONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                 OutboundDelivery sapOutboundDelivery = sapService.getOutboundDelivery(deliveryOrderNo);
 
                 setStep(3, resourceMapMsg.getString("msg.saveDataToDb"));
-                sapService.syncOutboundDelivery(sapOutboundDelivery, outboundDelivery, deliveryOrderNo);
-
-                return outboundDelivery;
+                return sapService.syncOutboundDelivery(sapOutboundDelivery, outboundDelivery, deliveryOrderNo);
             } catch (Exception ex) {
                 return null;
             }
@@ -2424,7 +2412,7 @@ private void txtDONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
             List<OutboundDeliveryDetail> outboundDeliveryDetails = outboundDelivery.getOutboundDeliveryDetails();
             for (OutboundDeliveryDetail outboundDeliveryDetail : outboundDeliveryDetails) {
                 strMaterial.add(outboundDeliveryDetail.getArktx());
-                totalWeight.add(outboundDeliveryDetail.getLfimg());
+                totalWeight = totalWeight.add(outboundDeliveryDetail.getLfimg());
             }
 
             newWeightTicket.addWeightTicketDetail(weightTicketDetail);

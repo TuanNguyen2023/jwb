@@ -53,12 +53,19 @@ public class WeightTicketRegistrationValidation {
 
         if (result) {
             Vehicle vehicle = vehicleRepository.findByPlateNo(value);
-            result = !(vehicle == null || vehicle.isProhibit());
 
-            if (!result) {
+            if (vehicle == null) {
+                result = false;
                 JOptionPane.showMessageDialog(rootPane,
                         resourceMapMsg.getString("msg.errorLicensePlate"));
+            } else if (vehicle.isProhibit()) {
+                result = false;
+                JOptionPane.showMessageDialog(rootPane,
+                        resourceMapMsg.getString("msg.invalidLicensePlate"));
+            } else {
+                result = true;
             }
+            
         }
         label.setForeground(result ? Color.black : Color.red);
 

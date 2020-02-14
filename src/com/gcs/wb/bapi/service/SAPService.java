@@ -469,9 +469,9 @@ public class SAPService {
         return result;
     }
 
-    public boolean syncOutboundDelivery(OutboundDelivery sapOutboundDelivery, OutboundDelivery outboundDelivery, String deliveryNum) {
+    public OutboundDelivery syncOutboundDelivery(OutboundDelivery sapOutboundDelivery, OutboundDelivery outboundDelivery, String deliveryNum) {
 
-        boolean result;
+        OutboundDelivery result;
         if (!entityTransaction.isActive()) {
             entityTransaction.begin();
         }
@@ -479,19 +479,16 @@ public class SAPService {
         try {
             if (sapOutboundDelivery != null && outboundDelivery == null) {
                 entityManager.persist(sapOutboundDelivery);
-                outboundDelivery = sapOutboundDelivery;
-                result = true;
+                result = sapOutboundDelivery;
             } else if (sapOutboundDelivery != null && outboundDelivery != null) {
                 sapOutboundDelivery.setId(outboundDelivery.getId());
                 entityManager.merge(sapOutboundDelivery);
-                outboundDelivery = sapOutboundDelivery;
-                result = true;
+                result = sapOutboundDelivery;
             } else {
                 if (outboundDelivery != null) {
                     entityManager.remove(outboundDelivery);
-                    outboundDelivery = null;
                 }
-                result = false;
+                result = null;
             }
 
             entityTransaction.commit();
@@ -501,7 +498,7 @@ public class SAPService {
                 entityTransaction.rollback();
             }
             Logger.getLogger(SAPService.class.getName()).log(Level.SEVERE, null, ex);
-            result = false;
+            result = null;
         }
 
         return result;

@@ -49,4 +49,11 @@ public class TransportAgentVehicleRepository {
 
         return null;
     }
+    
+    public List<TransportAgentVehicle> findByPlateNo(String plateNo) {
+        TypedQuery<TransportAgentVehicle> typedQuery = entityManager.createNamedQuery("TransportAgentVehicle.findByPlateNo", TransportAgentVehicle.class);
+        typedQuery.setParameter("plateNo", plateNo);
+
+        return typedQuery.getResultList();
+    }
 }

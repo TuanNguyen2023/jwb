@@ -9,14 +9,22 @@ import java.io.Serializable;
 import java.sql.Date;
 import java.util.Objects;
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
 /**
  *
  * @author thangtp.nr
  */
+@Entity
+@Table(name = "tbl_vehicle_load")
+@NamedQueries({
+    @NamedQuery(name = "VehicleLoad.findByPlateNo", query = "SELECT v FROM VehicleLoad v WHERE v.plateNo = :plateNo")})
 public class VehicleLoad implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -75,7 +83,7 @@ public class VehicleLoad implements Serializable {
 
     @Override
     public int hashCode() {
-        int hash = (int) (id ^ (id >>> 32));
+        int hash = (int) (id ^ (id >>> 31));
         hash = 32 * hash + this.id;
         hash = 32 * hash + Objects.hashCode(this.plateNo);
         hash = 32 * hash + Objects.hashCode(this.vehicleLoad);
