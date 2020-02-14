@@ -33,10 +33,9 @@ import javax.persistence.Temporal;
     @NamedQuery(name = "WeightTicket.findAll", query = "SELECT w FROM WeightTicket w"),
     @NamedQuery(name = "WeightTicket.findByCreatedDateRange", query = "SELECT w FROM WeightTicket w WHERE w.createdDate BETWEEN :from AND :to"),
     @NamedQuery(name = "WeightTicket.findByDeliveryOrderNo",
-            query = "SELECT w FROM WeightTicket w "
-            + " , IN(w.weightTicketDetails) wd "
-            + " WHERE wd.deliveryOrderNo = :deliveryOrderNo"),
-    @NamedQuery(name = "WeightTicket.findBySoNiemXa", query = "SELECT w FROM WeightTicket w WHERE w.soNiemXa = :soNiemXa"),
+  query = "SELECT w FROM WeightTicket w "
+    + " , IN(w.weightTicketDetails) wd "
+    + " WHERE wd.deliveryOrderNo LIKE :deliveryOrderNo"),    @NamedQuery(name = "WeightTicket.findBySoNiemXa", query = "SELECT w FROM WeightTicket w WHERE w.soNiemXa = :soNiemXa"),
     @NamedQuery(name = "WeightTicket.findByDateFull",
             query = "SELECT w FROM WeightTicket w "
             + " , IN(w.weightTicketDetails) wd "
@@ -683,6 +682,11 @@ public class WeightTicket implements Serializable {
 
     public void setWeightTicketDetails(List<WeightTicketDetail> weightTicketDetails) {
         this.weightTicketDetails = weightTicketDetails;
+    }
+    
+    public void addWeightTicketDetail(WeightTicketDetail weightTicketDetail) {
+        weightTicketDetail.setWeightTicket(this);
+        weightTicketDetails.add(weightTicketDetail);
     }
 
     public WeightTicketDetail getWeightTicketDetail() {

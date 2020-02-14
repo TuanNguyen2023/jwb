@@ -6,6 +6,7 @@ import com.gcs.wb.jpa.entity.OutboundDelivery;
 import com.gcs.wb.jpa.entity.Vehicle;
 import com.gcs.wb.jpa.repositorys.VehicleRepository;
 import java.awt.Color;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.stream.Stream;
@@ -44,25 +45,27 @@ public class WeightTicketRegistrationValidation {
         }
     }
 
-    public boolean validatePlateNo(String value, JComponent label, List<OutboundDelivery> outboundDeliverys) {
+    public boolean validatePlateNo(String value, JComponent label) {
         value = value.trim();
 
         Matcher matcher = Constants.TransportAgent.LICENSE_PLATE_PATTERN.matcher(value);
-        boolean result = outboundDeliverys.size() > 0 && matcher.matches();
+        boolean result = matcher.matches();
 
         if (result) {
-            
-            if (confirmValue.startsWith(value)) {
-                result = true;
-            } else {
-                Vehicle vehicle = vehicleRepository.findByPlateNo(value);
-                result = !(vehicle == null || vehicle.isProhibit());
+            Vehicle vehicle = vehicleRepository.findByPlateNo(value);
 
-                if (!result) {
-                    JOptionPane.showMessageDialog(rootPane,
-                            resourceMapMsg.getString("msg.errorLicensePlate"));
-                }
+            if (vehicle == null) {
+                result = false;
+                JOptionPane.showMessageDialog(rootPane,
+                        resourceMapMsg.getString("msg.errorLicensePlate"));
+            } else if (vehicle.isProhibit()) {
+                result = false;
+                JOptionPane.showMessageDialog(rootPane,
+                        resourceMapMsg.getString("msg.invalidLicensePlate"));
+            } else {
+                result = true;
             }
+            
         }
         label.setForeground(result ? Color.black : Color.red);
 
@@ -77,7 +80,7 @@ public class WeightTicketRegistrationValidation {
             DONum = DONum.trim();
             try {
                 if (DONum.length() == 10) {
-                    Integer.parseInt(DONum);
+                    Long.parseLong(DONum);
                     result = true;
                 } else {
                     result = false;

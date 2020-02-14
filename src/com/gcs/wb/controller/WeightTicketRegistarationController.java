@@ -9,21 +9,16 @@ import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.jpa.JReportService;
 import com.gcs.wb.jpa.entity.*;
 import com.gcs.wb.jpa.entity.OutboundDeliveryDetail;
-import com.gcs.wb.model.AppConfig;
-import com.gcs.wb.model.WeighingMode;
+import com.gcs.wb.jpa.repositorys.TransportAgentVehicleRepository;
+import com.gcs.wb.jpa.repositorys.VehicleLoadRepository;
 import com.gcs.wb.service.WeightTicketRegistarationService;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
-import org.jdesktop.swingx.JXDatePicker;
 
 /**
  *
@@ -35,7 +30,8 @@ public class WeightTicketRegistarationController {
     JReportService jreportService = new JReportService();
     Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
     private final Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
-
+    TransportAgentVehicleRepository transportAgentVehicleRepository = new TransportAgentVehicleRepository();
+    VehicleLoadRepository vehicleLoadRepository = new VehicleLoadRepository();
 
     public String getReportName() {
         String reportName = null;
@@ -221,7 +217,25 @@ public class WeightTicketRegistarationController {
                 model.addElement(item);
             });
         }
-        
+
         return model;
+    }
+
+    public String loadTransportAgentAbbr(String plateNo) {
+        List<TransportAgentVehicle> transportAgentVehicles = transportAgentVehicleRepository.findByPlateNo(plateNo);
+        if (transportAgentVehicles.size() > 0) {
+            return transportAgentVehicles.get(0).getTransportAgent().getAbbr();
+        }
+
+        return "";
+    }
+
+    public Float loadVehicleLoading(String plateNo) {
+        VehicleLoad vehicleLoad = vehicleLoadRepository.findByPlateNo(plateNo);
+        if (vehicleLoad != null) {
+            return vehicleLoad.getVehicleLoad();
+        }
+
+        return 1f;
     }
 }

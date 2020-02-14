@@ -15,6 +15,7 @@ import com.gcs.wb.base.util.StringUtil;
 import com.gcs.wb.controller.WeightTicketRegistarationController;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.*;
+import com.gcs.wb.jpa.repositorys.TransportAgentVehicleRepository;
 import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.model.WeighingMode;
 import com.gcs.wb.views.validations.WeightTicketRegistrationValidation;
@@ -1085,6 +1086,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
             }
         });
 
+        btnDOCheckN.setAction(actionMap.get("checkDO")); // NOI18N
         btnDOCheckN.setText(resourceMap.getString("btnDOCheckN.text")); // NOI18N
         btnDOCheckN.setName("btnDOCheckN"); // NOI18N
 
@@ -1347,7 +1349,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                     .addComponent(pnPrintControl, javax.swing.GroupLayout.DEFAULT_SIZE, 921, Short.MAX_VALUE)
                     .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 921, Short.MAX_VALUE)
                     .addComponent(pnFilter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnControl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(pnControl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 921, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -1363,7 +1365,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addComponent(pnRegistrationOfVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(pnControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(40, Short.MAX_VALUE))
+                .addContainerGap(44, Short.MAX_VALUE))
         );
 
         bindingGroup.bind();
@@ -1642,32 +1644,14 @@ private void txtDONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
 
     @Action(block = Task.BlockingScope.ACTION)
     public Task checkDO() {
-        txtNPlateNo.setText(txtNPlateNo.getText().trim().toUpperCase());
-        txtNDriverName.setText(txtNDriverName.getText().trim().toUpperCase());
-        txtNCMNDBL.setText(txtNCMNDBL.getText().trim().toUpperCase());
-
-        if (WeighBridgeApp.getApplication().isOfflineMode()) {
-            return new CheckDOOFFTask(WeighBridgeApp.getApplication());
-        } else {
-            String val[] = txtNDONum.getText().trim().split("-");
-            for (int i = 0; i < val.length; i++) {
-                if (val[i].length() > 0) {
-                    val[i] = StringUtil.paddingZero(val[i], 10);
-                    return new CheckDOTask(WeighBridgeApp.getApplication());
-                } else if (val[i].length() == 0) {
-                    lblNDONum.setForeground(Color.black);
-                    isValidOutboundDelivery = true;
-                    setSaveNeeded(isValidated() && isValidOutboundDelivery);
-                    return null;
-                } else {
-                    lblNDONum.setForeground(Color.red);
-                    isValidOutboundDelivery = false;
-                    setSaveNeeded(isValidated() && isValidOutboundDelivery);
-                }
-                continue;
-            }
+        boolean isPlateNoValid = wtRegisValidation.validatePlateNo(txtPlateNoN.getText(), lblPlateNoN);
+        if (!isPlateNoValid) {
+            JOptionPane.showMessageDialog(rootPane,
+                    resourceMapMsg.getString("msg.plzInputPlateNo"));
             return null;
         }
+
+        return new CheckDOTask(WeighBridgeApp.getApplication());
     }
 
     @Action(enabledProperty = "creatable")
@@ -1690,7 +1674,7 @@ private void txtDONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
         rbtInput.setEnabled(true);
         rbtOutput.setEnabled(true);
         cbxModeType.setEnabled(true);
-        loadModeTypeModel(MODE.INPUT);
+        loadModeTypeModel(MODE.OUTPUT);
     }
 
     @Action(enabledProperty = "clearable")
@@ -1709,7 +1693,7 @@ private void txtDONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
         rbtInput.setEnabled(false);
         rbtOutput.setEnabled(false);
         cbxModeType.setEnabled(false);
-        loadModeTypeModel(MODE.INPUT);
+        loadModeTypeModel(MODE.OUTPUT);
         disableAllInForm();
     }
 
@@ -2074,13 +2058,22 @@ private void txtDONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
         boolean isRegisterIdValid = wtRegisValidation.validateLength(txtRegisterIdN.getText(), lblRegisterIdN, 1, 50);
         boolean isDriverNameValid = wtRegisValidation.validateLength(txtDriverNameN.getText(), lblDriverNameN, 1, 70);
         boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
-        boolean isPlateNoValid = wtRegisValidation.validatePlateNo(txtPlateNoN.getText(), lblPlateNoN, outboundDeliverys);
+
+        String plateNo = txtPlateNoN.getText().trim();
+        boolean isPlateNoValid = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
+        if (isPlateNoValid) {
+            newWeightTicket.setAbbr(weightTicketRegistarationController.loadTransportAgentAbbr(plateNo));
+            txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(plateNo).toString());
+        }
+
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 12);
         boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
+
         boolean isDOValid = wtRegisValidation.validateDO(txtDONumN.getText(), lblDONumN);
         btnDOCheckN.setEnabled(isDOValid);
+
         boolean isBatchStockValid = wtRegisValidation.validateCbxSelected(cbxBatchStockN.getSelectedIndex(), lblBatchStockN);
 
         return isRegisterIdValid && isDriverNameValid && isCMNDBLValid && isPlateNoValid
@@ -2333,48 +2326,71 @@ private void txtDONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
 
     private class CheckDOTask extends org.jdesktop.application.Task<Object, Void> {
 
-        private OutboundDelivery localOutboundDelivery = null;
-        private String mode = null;
-        private String ship_point = null;
+        private List<String> strMaterial = new ArrayList<>();
+        private BigDecimal totalWeight = BigDecimal.ZERO;
 
         CheckDOTask(org.jdesktop.application.Application app) {
             super(app);
-            outboundDelivery = null;
         }
 
         @Override
         protected Object doInBackground() throws Exception {
-            String oldKunnr = "";
-            String oldSoxe = "";
-            String[] listDO = txtNDONum.getText().trim().split("-");
-            for (int index = 0; index < listDO.length; index++) {
+            String[] deliveryOrderNos = txtDONumN.getText().split("-");
+            for (String deliveryOrderNo : deliveryOrderNos) {
                 setStep(1, resourceMapMsg.getString("msg.checkDOInDB"));
-                listDO[index] = StringUtil.paddingZero(listDO[index], 10);
-                localOutboundDelivery = weightTicketRegistarationController.findByDeliveryOrderNumber(listDO[index]);
+                deliveryOrderNo = StringUtil.paddingZero(deliveryOrderNo.trim(), 10);
+                OutboundDelivery outboundDelivery = weightTicketRegistarationController.findByDeliveryOrderNumber(deliveryOrderNo);
 
-                setStep(2, resourceMapMsg.getString("checkDOInSap"));
-                OutboundDelivery sapOutboundDelivery = sapService.getOutboundDelivery(listDO[index]);
+                // sync from SAP
+                if (!WeighBridgeApp.getApplication().isOfflineMode()) {
+                    outboundDelivery = syncOutboundDelivery(deliveryOrderNo, outboundDelivery);
+                }
 
-                setStep(3, resourceMapMsg.getString("msg.saveDataToDb"));
-                startTransaction();
-                syncOutboundDelivery(listDO[index], sapOutboundDelivery);
-                finishTransaction();
+                // check exist DO
+                if (outboundDelivery == null) {
+                    throw new Exception(resourceMapMsg.getString("msg.dONotExitst", deliveryOrderNo));
+                }
 
-                oldKunnr = checkKunnr(oldKunnr);
-                oldSoxe = checkPlate(oldSoxe);
+                // check mapping Plate No
+                String plateNo = txtPlateNoN.getText().trim();
+                if (!outboundDelivery.getTraid().trim().startsWith(plateNo)) {
+                    throw new Exception(resourceMapMsg.getString("msg.notDuplicateLicensePlate"));
+                }
 
-                setMode();
+                // check DO in used
+                if (isDOInUsed(deliveryOrderNo, outboundDelivery)) {
+                    throw new Exception(resourceMapMsg.getString("msg.typeDO", deliveryOrderNo, getMode(outboundDelivery)));
+                }
 
-                checkDOInUsed(listDO[index]);
-                checkShippingPoint(listDO[index]);
-
-                updateWeightTicket();
-
+                // check ship point
+                // TODO: confirm lai viec check shipping point
+//                if (!checkShippingPoint(outboundDelivery)) {
+//                    String modeName;
+//                    if (mode == MODE.INPUT) {
+//                        modeName = Constants.WTRegView.INPUT;
+//                    } else {
+//                        modeName = Constants.WTRegView.OUTPUT;
+//                    }
+//                    throw new Exception(resourceMapMsg.getString("msg.shippingPointVar", deliveryOrderNo, modeName));
+//                }
+                // set DO data to Weight ticket
+                updateWeightTicket(outboundDelivery);
                 setStep(4, null);
-                continue;
             }
 
             return null;
+        }
+
+        private OutboundDelivery syncOutboundDelivery(String deliveryOrderNo, OutboundDelivery outboundDelivery) {
+            try {
+                setStep(2, resourceMapMsg.getString("checkDOInSap"));
+                OutboundDelivery sapOutboundDelivery = sapService.getOutboundDelivery(deliveryOrderNo);
+
+                setStep(3, resourceMapMsg.getString("msg.saveDataToDb"));
+                return sapService.syncOutboundDelivery(sapOutboundDelivery, outboundDelivery, deliveryOrderNo);
+            } catch (Exception ex) {
+                return null;
+            }
         }
 
         private void setStep(int step, String msg) {
@@ -2384,204 +2400,74 @@ private void txtDONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
             setProgress(step, 1, 4);
         }
 
-        private void updateWeightTicket() {
-            if (isValidOutboundDelivery && localOutboundDelivery != null) {
-                WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
-                weightTicketDetail.setItem(localOutboundDelivery.getDeliveryItem());
-                weightTicketDetail.setMatnrRef(localOutboundDelivery.getMatnr());
-                weightTicketDetail.setRegItemDescription(localOutboundDelivery.getArktx());
-                weightTicketDetail.setUnit(localOutboundDelivery.getVrkme());
-                weightTicketDetail.setKunnr(localOutboundDelivery.getKunnr());
+        private void updateWeightTicket(OutboundDelivery outboundDelivery) {
+            WeightTicketDetail weightTicketDetail = new WeightTicketDetail();
+            weightTicketDetail.setItem(outboundDelivery.getDeliveryItem());
+            weightTicketDetail.setMatnrRef(outboundDelivery.getMatnr());
+            weightTicketDetail.setRegItemDescription(outboundDelivery.getArktx());
+            weightTicketDetail.setUnit(outboundDelivery.getVrkme());
+            weightTicketDetail.setKunnr(outboundDelivery.getKunnr());
+            weightTicketDetail.setDeliveryOrderNo(outboundDelivery.getDeliveryOrderNo());
 
-                txtNMaterial.setText(localOutboundDelivery.getArktx());
-                cbxNMaterial.setSelectedItem(localOutboundDelivery.getArktx());
-                BigDecimal regqty = BigDecimal.ZERO;
-                List<OutboundDeliveryDetail> detail = new ArrayList<>();
-                OutboundDeliveryDetail item = null;
-                String[] do_list = txtNDONum.getText().trim().split("-");
-                for (int i = 0; i < do_list.length; i++) {
-                    String doNum = do_list[i];
-                    try {
-                        detail = weightTicketRegistarationController.findByMandtDelivNumb(doNum);
-                    } catch (Exception ex) {
-                        java.util.logging.Logger.getLogger(WTRegView.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    for (int j = 0; j < detail.size(); j++) {
-                        item = detail.get(j);
-                        regqty = regqty.add(item.getLfimg());
-                        weightTicketDetail.setDeliveryOrderNo(doNum);
-                    }
-                }
-                txtNWeight.setValue(regqty.doubleValue());
-                outboundDelivery = localOutboundDelivery;
+            List<OutboundDeliveryDetail> outboundDeliveryDetails = outboundDelivery.getOutboundDeliveryDetails();
+            for (OutboundDeliveryDetail outboundDeliveryDetail : outboundDeliveryDetails) {
+                strMaterial.add(outboundDeliveryDetail.getArktx());
+                totalWeight = totalWeight.add(outboundDeliveryDetail.getLfimg());
+            }
+
+            newWeightTicket.addWeightTicketDetail(weightTicketDetail);
+        }
+
+        private boolean checkShippingPoint(OutboundDelivery outboundDelivery) {
+            String ship_point = outboundDelivery.getShipPoint();
+            int klmax = weightTicketRegistarationController.shippingPointVar(ship_point, outboundDelivery.getMatnr().trim());
+
+            return (klmax > 0);
+        }
+
+        private boolean isDOInUsed(String deliveryOrderNo, OutboundDelivery outboundDelivery) {
+            String wplant = configuration.getWkPlant();
+            String sDoType = Constants.WTRegView.DO_TYPES;
+
+            WeightTicket weightTicket = weightTicketRegistarationController.findByDeliveryOrderNo(deliveryOrderNo);
+            String Lfart = outboundDelivery.getLfart();
+
+            if ((sDoType.contains(Lfart) && outboundDelivery.getWbstk() == 'X'
+                    && outboundDelivery.getWerks().equalsIgnoreCase(wplant))
+                    || (weightTicket != null && !weightTicket.isPosted())) {
+                return true;
+            } else {
+                return false;
             }
         }
 
-        private String getSelectedMode() {
-            String selectedMode = "";
-            if (rbtNInward.isSelected()) {
-                selectedMode = Constants.WTRegView.INPUT;
-            }
-
-            if (rbtNOutward.isSelected()) {
-                selectedMode = Constants.WTRegView.OUTPUT;
-            }
-
-            return selectedMode;
-        }
-
-        private void handleUnselectedMode(String selectedMode) {
-            if (StringUtil.isEmptyString(selectedMode)) {
-                String msg = resourceMapMsg.getString("msg.plzChooseIO");
-                setMessage(msg);
-                JOptionPane.showMessageDialog(rootPane, msg);
-            }
-        }
-
-        private void handleDOCheckExist(String doNumber) {
-            boolean isInUsedDO = false;
-            isInUsedDO = weightTicketRegistarationController.checkExistDO(doNumber);
-            if (isInUsedDO) {
-                isValidOutboundDelivery = false;
-                localOutboundDelivery = null;
-                String msg = resourceMapMsg.getString("msg.checkExistDO", doNumber);
-                setMessage(msg);
-                JOptionPane.showMessageDialog(rootPane, msg);
-            }
-
-        }
-
-        private void handleShippingPointVar(String doNumber, String selectedMode) {
-            if (localOutboundDelivery != null) {
-                int klmax = weightTicketRegistarationController.shippingPointVar(ship_point, localOutboundDelivery.getMatnr().toString().trim());
-                Boolean ship = (klmax <= 0) ? false : true;
-                if (ship == false) {
-                    isValidOutboundDelivery = false;
-                    localOutboundDelivery = null;
-                    String msg = resourceMapMsg.getString("msg.shippingPointVar", doNumber, selectedMode);
-                    setMessage(msg);
-                    JOptionPane.showMessageDialog(rootPane, msg);
-                }
-            }
-        }
-
-        private void checkShippingPoint(String doNumber) {
-            if (isValidOutboundDelivery && localOutboundDelivery != null) {
-                ship_point = localOutboundDelivery.getShipPoint();
-                String selectedMode = getSelectedMode();
-                handleUnselectedMode(selectedMode);
-                handleDOCheckExist(doNumber);
-                // TODO uncomment for Shipping Point Handling if new req.
-                //handleShippingPointVar(doNumber, selectedMode);
-            }
-        }
-
-        private void checkDOInUsed(String doNumber) {
-            if (isValidOutboundDelivery && localOutboundDelivery != null) {
-                WeightTicket wt = null;
-                String delivNumb = localOutboundDelivery.getDeliveryOrderNo();
-                wt = weightTicketRegistarationController.findByDeliveryOrderNo(delivNumb);
-                String wplant = "";
-                wplant = configuration.getWkPlant();
-                String sDoType = Constants.WTRegView.DO_TYPES;
-                String Lfart = "";
-                try {
-                    Lfart = localOutboundDelivery.getLfart();
-
-                } catch (Exception ex) {
-                }
-
-                if ((sDoType.indexOf(Lfart) >= 0 && localOutboundDelivery.getWbstk() == 'X' && localOutboundDelivery.getWerks().toString().equalsIgnoreCase(wplant))
-                        || (wt != null && !wt.isDissolved())) {
-                    isValidOutboundDelivery = false;
-                    localOutboundDelivery = null;
-                    String msg = resourceMapMsg.getString("msg.typeDO", doNumber, mode);
-                    setMessage(msg);
-                    JOptionPane.showMessageDialog(rootPane, msg);
-                } else {
-                    isNeedRevertWeightTicket = true;
-                    outboundDeliveryNo = localOutboundDelivery.getDeliveryOrderNo().toString().trim();
-                }
-            }
-        }
-
-        private void setMode() {
-            if (isValidOutboundDelivery && localOutboundDelivery != null) {
-                if (localOutboundDelivery.getLfart().equalsIgnoreCase("LF") || localOutboundDelivery.getLfart().equalsIgnoreCase("ZTLF")) {
-                    mode = Constants.WTRegView.OUTPUT_LOWCASE;
-                } else {
-                    mode = Constants.WTRegView.INPUT_LOWCASE;
-                }
-            }
-        }
-
-        private String checkPlate(String oldSoxe) {
-            if (localOutboundDelivery != null
-                    && !oldSoxe.equals("")
-                    && !oldSoxe.equals(localOutboundDelivery.getTraid())) {
-                isValidOutboundDelivery = false;
-                String msg = resourceMapMsg.getString("msg.notDuplicateLicensePlate");
-                setMessage(msg);
-                JOptionPane.showMessageDialog(rootPane, msg);
-            } else if (localOutboundDelivery != null) {
-                oldSoxe = localOutboundDelivery.getTraid();
-            }
-            return oldSoxe;
-        }
-
-        private String checkKunnr(String oldKunnr) {
-            if (localOutboundDelivery != null
-                    && !oldKunnr.equals("")
-                    && !oldKunnr.equals(localOutboundDelivery.getKunnr())) {
-                isValidOutboundDelivery = false;
-                String msg = resourceMapMsg.getString("msg.notDuplicateCode");
-                setMessage(msg);
-                JOptionPane.showMessageDialog(rootPane, msg);
-            } else if (localOutboundDelivery != null) {
-                oldKunnr = localOutboundDelivery.getKunnr();
-            }
-            return oldKunnr;
-        }
-
-        private void syncOutboundDelivery(String deliveryNum, OutboundDelivery sapOutb) {
-            isValidOutboundDelivery = sapService.syncOutboundDelivery(sapOutb, localOutboundDelivery, deliveryNum);
-            if (!isValidOutboundDelivery) {
-                String msg = resourceMapMsg.getString("msg.dONotExitst", deliveryNum);
-                setMessage(msg);
-                JOptionPane.showMessageDialog(rootPane, msg);
-            }
-        }
-
-        private void finishTransaction() {
-            if (entityTransaction.isActive()) {
-                entityTransaction.commit();
-                entityManager.clear();
-            }
-        }
-
-        private void startTransaction() {
-            entityTransaction = entityManager.getTransaction();
-            if (!entityTransaction.isActive()) {
-                entityTransaction.begin();
+        private String getMode(OutboundDelivery outboundDelivery) {
+            if (outboundDelivery.getLfart().equalsIgnoreCase("LF") || outboundDelivery.getLfart().equalsIgnoreCase("ZTLF")) {
+                return Constants.WTRegView.OUTPUT_LOWCASE;
+            } else {
+                return Constants.WTRegView.INPUT_LOWCASE;
             }
         }
 
         @Override
+        protected void succeeded(Object t) {
+            isValidOutboundDelivery = true;
+            cbxMaterialTypeN.setSelectedItem(String.join(" - ", strMaterial));
+            txtWeightN.setText(totalWeight.toString());
+        }
+
+        @Override
         protected void failed(Throwable cause) {
+            newWeightTicket.setWeightTicketDetails(new ArrayList<>());
+            cbxMaterialTypeN.setSelectedItem("");
+            txtWeightN.setText("0");
+
             isValidOutboundDelivery = false;
             if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
                 cause = cause.getCause();
             }
             logger.error(null, cause);
             JOptionPane.showMessageDialog(rootPane, cause.getMessage());
-
-            if (entityTransaction.isActive()) {
-                entityTransaction.rollback();
-            }
-        }
-
-        @Override
-        protected void finished() {
         }
     }
 
@@ -2650,7 +2536,7 @@ private void txtDONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                 String delivNumb = outb.getDeliveryOrderNo();
                 wt = weightTicketRegistarationController.findByDeliveryOrderNo(delivNumb);
 
-                if (wt != null && !wt.isDissolved()) {
+                if (wt != null && !wt.isPosted()) {
                     isValidOutboundDelivery = false;
                     outb = null;
                     String msg = resourceMapMsg.getString("msg.typeDO", doNumber, mode);
@@ -2769,7 +2655,7 @@ private void txtDONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
         protected Object doInBackground() {
             String oldKunnr = "";
             String oldSoxe = "";
-            String[] listDO = txtNDONum.getText().trim().split("-");
+            String[] listDO = txtDONumN.getText().trim().split("-");
             for (int index = 0; index < listDO.length; index++) {
                 setStep(1, resourceMapMsg.getString("msg.checkDOInDB"));
                 listDO[index] = StringUtil.paddingZero(listDO[index], 10);
