@@ -8,19 +8,6 @@
     </Component>
     <Component class="javax.swing.ButtonGroup" name="grbCat">
     </Component>
-    <Component class="com.gcs.wb.jpa.entity.WeightTicket" name="weightTicket">
-    </Component>
-    <Component class="com.gcs.wb.jpa.entity.PurchaseOrder" name="purOrder">
-    </Component>
-    <Component class="com.gcs.wb.jpa.entity.OutboundDelivery" name="outbDel">
-    </Component>
-    <Component class="com.gcs.wb.jpa.entity.SAPSetting" name="setting">
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="java.beans.Beans.isDesignTime() ? null : WeighBridgeApp.getApplication().getSapSetting()"/>
-      </AuxValues>
-    </Component>
-    <Component class="com.gcs.wb.jpa.entity.Material" name="material">
-    </Component>
   </NonVisualComponents>
   <Properties>
     <Property name="background" type="java.awt.Color" resourceKey="Form.background"/>
@@ -49,34 +36,34 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="pnWTicket" alignment="0" max="32767" attributes="0"/>
                   <Component id="pnScaleData" alignment="0" max="32767" attributes="2"/>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="pnWTFilter" pref="563" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="pnCurScale" min="-2" max="-2" attributes="1"/>
+                      <Component id="pnWTFilter" pref="577" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Component id="pnCurScale" max="32767" attributes="2"/>
                   </Group>
-                  <Component id="pnWTicket" alignment="0" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
+          <Group type="102" max="-2" attributes="0">
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="pnCurScale" max="32767" attributes="3"/>
-                  <Component id="pnWTFilter" alignment="0" max="32767" attributes="1"/>
+                  <Component id="pnCurScale" pref="147" max="32767" attributes="1"/>
+                  <Component id="pnWTFilter" alignment="0" pref="147" max="32767" attributes="1"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="pnScaleData" min="-2" pref="119" max="-2" attributes="1"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <Component id="pnScaleData" min="-2" max="-2" attributes="1"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="pnWTicket" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="78" max="32767" attributes="0"/>
+              <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -109,12 +96,11 @@
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="lblWTNum" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="txtWTNum" pref="352" max="32767" attributes="0"/>
+                          <Component id="txtWTNum" pref="324" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jButton1" min="-2" pref="58" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="jButton2" min="-2" pref="56" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
@@ -123,16 +109,16 @@
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="txtPONum" min="-2" pref="131" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="rbtMvt311" pref="435" max="32767" attributes="0"/>
+                              <Component id="rbtMvt311" pref="398" max="32767" attributes="0"/>
                           </Group>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="rbtMb1b" min="-2" pref="69" max="-2" attributes="1"/>
-                              <Component id="rbtMisc" alignment="0" min="-2" pref="82" max="-2" attributes="1"/>
+                              <Component id="rbtMisc" min="-2" pref="82" max="-2" attributes="1"/>
+                              <Component id="rbtMb1b" min="-2" pref="103" max="-2" attributes="1"/>
                           </Group>
                       </Group>
                   </Group>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="54" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -152,17 +138,22 @@
                       </Group>
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="rbtPO" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtPONum" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="rbtMisc" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="rbtPO" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtPONum" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="rbtMvt311" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" attributes="0">
+                          <Component id="rbtMisc" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="rbtMb1b" min="-2" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="rbtMvt311" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="rbtMb1b" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace pref="15" max="32767" attributes="0"/>
+                  <EmptySpace pref="24" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -373,9 +364,12 @@
                               <Component id="rbtBridge2" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="btnAccept" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <EmptySpace min="167" pref="167" max="167" attributes="0"/>
+                                      <Component id="btnAccept" pref="95" max="32767" attributes="0"/>
+                                  </Group>
                                   <Group type="102" alignment="1" attributes="0">
                                       <Component id="txfCurScale" min="-2" pref="221" max="-2" attributes="0"/>
                                       <EmptySpace min="4" pref="4" max="4" attributes="0"/>
@@ -384,7 +378,7 @@
                               </Group>
                           </Group>
                       </Group>
-                      <EmptySpace pref="18" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -522,9 +516,9 @@
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="txfGoodsQty" alignment="0" pref="333" max="32767" attributes="2"/>
-                      <Component id="txfOutQty" alignment="0" pref="333" max="32767" attributes="2"/>
-                      <Component id="txfInQty" alignment="0" pref="333" max="32767" attributes="2"/>
+                      <Component id="txfGoodsQty" alignment="0" pref="339" max="32767" attributes="2"/>
+                      <Component id="txfOutQty" alignment="0" pref="339" max="32767" attributes="2"/>
+                      <Component id="txfInQty" alignment="0" pref="339" max="32767" attributes="2"/>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -540,8 +534,8 @@
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="txtOutTime" pref="327" max="32767" attributes="2"/>
-                              <Component id="txtInTime" alignment="0" pref="327" max="32767" attributes="2"/>
+                              <Component id="txtOutTime" pref="335" max="32767" attributes="2"/>
+                              <Component id="txtInTime" alignment="0" pref="335" max="32767" attributes="2"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
@@ -791,80 +785,152 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
+              <Group type="102" attributes="0">
                   <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="lblSLoc" alignment="1" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblTrailerPlate" alignment="1" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblLicPlate" alignment="1" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblCMNDBL" alignment="1" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblDName" alignment="1" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblGRText" min="-2" max="-2" attributes="0"/>
-                      <Group type="102" alignment="1" attributes="0">
-                          <Component id="lblReason" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="chkDissolved" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="361" max="32767" attributes="0"/>
-                          <Component id="jButton3" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btnPostAgain" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btnReprint" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btnSave" min="-2" pref="73" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="lblVendorTransport" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblVendorLoading" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblPoPosto" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblGRText" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblPallet" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblSling" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblTrailerPlate" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblLicPlate" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblRegCat" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblProcedure1" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblDName" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblCMNDBL" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblReason" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblBatchProduce" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblCementDesc" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblWeightTicketIdRef" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblTicketId" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="lblMatnr" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="chkDissolved" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace pref="276" max="32767" attributes="0"/>
+                                  <Component id="jButton3" min="-2" max="-2" attributes="0"/>
+                              </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="cbxReason" pref="245" max="32767" attributes="0"/>
-                                      <Component id="txtGRText" pref="245" max="32767" attributes="0"/>
-                                      <Component id="cbxSLoc" alignment="1" pref="245" max="32767" attributes="0"/>
-                                      <Component id="txtLicPlate" alignment="0" pref="245" max="32767" attributes="0"/>
-                                      <Component id="txtDName" alignment="0" pref="245" max="32767" attributes="2"/>
-                                      <Component id="txtTrailerPlate" alignment="0" pref="245" max="32767" attributes="0"/>
-                                      <Component id="txtCMNDBL" alignment="0" min="-2" pref="173" max="-2" attributes="2"/>
+                                      <Group type="102" alignment="1" attributes="0">
+                                          <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
+                                          <Component id="rbtInward" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace pref="8" max="32767" attributes="0"/>
+                                          <Component id="rbtOutward" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" alignment="1" attributes="0">
+                                          <Group type="103" groupAlignment="1" attributes="0">
+                                              <Component id="txtRegistrationNo" alignment="0" pref="169" max="32767" attributes="0"/>
+                                              <Component id="txtDName" alignment="0" pref="169" max="32767" attributes="2"/>
+                                          </Group>
+                                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" alignment="1" attributes="0">
+                                          <Component id="txtGRText" pref="169" max="32767" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" attributes="0">
+                                          <Component id="cbxReason" pref="85" max="32767" attributes="0"/>
+                                          <EmptySpace pref="88" max="32767" attributes="1"/>
+                                      </Group>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Group type="103" groupAlignment="1" attributes="0">
+                                              <Component id="txtTrailerPlate" alignment="1" pref="169" max="32767" attributes="0"/>
+                                              <Component id="txtSling" alignment="0" pref="169" max="32767" attributes="0"/>
+                                          </Group>
+                                          <EmptySpace max="-2" attributes="1"/>
+                                      </Group>
+                                      <Group type="102" alignment="1" attributes="0">
+                                          <Group type="103" groupAlignment="1" attributes="0">
+                                              <Component id="txtLicPlate" alignment="0" pref="169" max="32767" attributes="0"/>
+                                              <Component id="txtCMNDBL" alignment="1" pref="169" max="32767" attributes="1"/>
+                                          </Group>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" attributes="0">
+                                          <Component id="txtPallet" pref="169" max="32767" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" attributes="0">
+                                          <Component id="txtTicketId" pref="169" max="32767" attributes="1"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" attributes="0">
+                                          <Component id="txtBatchProduce" pref="169" max="32767" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" attributes="0">
+                                          <Component id="txtCementDesc" pref="169" max="32767" attributes="1"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" attributes="0">
+                                          <Component id="txtWeightTicketIdRef" pref="169" max="32767" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                      </Group>
                                   </Group>
-                                  <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="lblRegItem" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lblRegCat" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lblMatnr" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lblDelNum" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lblBatch" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lblCementDesc" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lblComplete" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lblPONo" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lblRegItem" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lblWeight" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lblSLoc" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lblPoPosto" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lblChargIn" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lblVendorLoading" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbKunnr" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lblCharg" min="-2" max="-2" attributes="0"/>
+                                      <Group type="102" alignment="1" attributes="0">
+                                          <Group type="103" groupAlignment="1" attributes="0">
+                                              <Component id="lblRemark" alignment="1" min="-2" max="-2" attributes="0"/>
+                                              <Component id="lblProcedure" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                              <Component id="txtProcedure" max="32767" attributes="1"/>
+                                              <Component id="txtRemark" alignment="0" pref="159" max="32767" attributes="1"/>
+                                          </Group>
+                                          <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="0" attributes="0">
+                                              <Component id="lblLgortIn" alignment="1" min="-2" max="-2" attributes="0"/>
+                                              <Component id="lblDelNum" alignment="1" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                      <Component id="lblComplete" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                              <Component id="lbKunnr" alignment="1" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="txtPoPosto" pref="434" max="32767" attributes="0"/>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="rbtInward" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="rbtOutward" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <Component id="txtRegItem" alignment="0" min="-2" pref="250" max="-2" attributes="0"/>
-                              <Component id="txtDelNum" alignment="0" pref="434" max="32767" attributes="0"/>
-                              <Component id="cbxBatch" alignment="0" pref="434" max="32767" attributes="0"/>
-                              <Component id="txtCementDesc" alignment="0" pref="434" max="32767" attributes="0"/>
-                              <Component id="cbxCompleted" alignment="0" pref="434" max="32767" attributes="0"/>
-                              <Component id="txtMatnr" alignment="0" pref="434" max="32767" attributes="0"/>
-                              <Component id="cbxKunnr" alignment="0" pref="434" max="32767" attributes="0"/>
-                              <Component id="cbxVendorLoading" alignment="1" pref="434" max="32767" attributes="0"/>
-                              <Component id="cbxVendorTransport" alignment="1" pref="434" max="32767" attributes="0"/>
                           </Group>
                       </Group>
+                      <Group type="102" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="lblVendorTransport" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="btnPostAgain" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace pref="21" max="32767" attributes="1"/>
+                          <Component id="btnReprint" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="btnSave" min="-2" pref="141" max="-2" attributes="0"/>
+                      </Group>
+                      <Component id="txtDelNum" alignment="0" pref="294" max="32767" attributes="3"/>
+                      <Component id="txtPONo" alignment="0" pref="294" max="32767" attributes="3"/>
+                      <Component id="txtRegItem" alignment="0" pref="294" max="32767" attributes="3"/>
+                      <Component id="txtMatnr" alignment="0" pref="294" max="32767" attributes="3"/>
+                      <Component id="txtWeight" pref="294" max="32767" attributes="3"/>
+                      <Component id="cbxKunnr" pref="294" max="32767" attributes="3"/>
+                      <Component id="cbxSLoc" pref="294" max="32767" attributes="1"/>
+                      <Component id="txtLgortIn" pref="294" max="32767" attributes="3"/>
+                      <Component id="cbxCharg" pref="294" max="32767" attributes="3"/>
+                      <Component id="txtChargIn" pref="294" max="32767" attributes="3"/>
+                      <Component id="txtPoPosto" alignment="0" pref="294" max="32767" attributes="3"/>
+                      <Component id="cbxVendorLoading" pref="294" max="32767" attributes="3"/>
+                      <Component id="cbxVendorTransport" alignment="0" pref="294" max="32767" attributes="3"/>
+                      <Component id="cbxCompleted" pref="294" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -872,113 +938,168 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
+              <Group type="102" attributes="0">
+                  <EmptySpace pref="11" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="lblDName" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtDName" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblRegCat" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="rbtInward" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblProcedure" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="rbtOutward" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="rbtInward" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblRegCat" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtProcedure" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lblCMNDBL" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtCMNDBL" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" max="-2" attributes="0">
+                      <Component id="lblProcedure1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtRegistrationNo" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblDelNum" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtDelNum" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" max="-2" attributes="0">
+                      <Component id="lblDName" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtDName" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblPONo" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtPONo" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" max="-2" attributes="0">
+                      <Component id="lblCMNDBL" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtCMNDBL" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblRegItem" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtRegItem" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="lblLicPlate" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtLicPlate" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lblTrailerPlate" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtTrailerPlate" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lblRegItem" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtRegItem" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="lblMatnr" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="txtMatnr" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lblDelNum" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtDelNum" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblWeight" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtWeight" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="lbKunnr" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="cbxKunnr" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="lblSLoc" alignment="3" min="-2" pref="22" max="-2" attributes="0"/>
+                              <Component id="cbxSLoc" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="lblLgortIn" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtLgortIn" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="txtLicPlate" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="lblTrailerPlate" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtTrailerPlate" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" max="-2" attributes="0">
+                              <Component id="lblSling" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtSling" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="lblPallet" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtPallet" alignment="0" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" max="-2" attributes="0">
+                              <Component id="lblGRText" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtGRText" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblRemark" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtRemark" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                          <Component id="lblSLoc" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbxSLoc" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="lblCharg" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="cbxCharg" alignment="3" min="-2" max="-2" attributes="1"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="lblChargIn" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtChargIn" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="lblPoPosto" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="txtPoPosto" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="lblVendorLoading" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="cbxVendorLoading" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
-                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                          <Component id="lblBatch" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbxBatch" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="txtCementDesc" alignment="3" min="-2" max="-2" attributes="1"/>
+                              <Component id="lblCementDesc" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="txtBatchProduce" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblBatchProduce" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="txtTicketId" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblTicketId" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="txtWeightTicketIdRef" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblWeightTicketIdRef" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                          <Component id="lblCementDesc" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtCementDesc" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                          <Component id="lblGRText" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtGRText" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                          <Component id="lblReason" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbxReason" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                          <Component id="lblComplete" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbxCompleted" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="lbKunnr" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="cbxKunnr" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="txtPoPosto" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblPoPosto" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="cbxVendorLoading" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblVendorLoading" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="cbxVendorTransport" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblVendorTransport" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace pref="40" max="32767" attributes="0"/>
-                  <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="chkDissolved" min="-2" max="-2" attributes="0"/>
-                      <Group type="102" alignment="1" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="lblVendorTransport" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="cbxVendorTransport" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="lblComplete" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="cbxCompleted" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="btnSave" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="btnReprint" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="btnPostAgain" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jButton3" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="lblReason" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="cbxReason" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Component id="chkDissolved" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -1113,21 +1234,21 @@
             <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbxSLocItemStateChanged"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JLabel" name="lblBatch">
+        <Component class="javax.swing.JLabel" name="lblCharg">
           <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblBatch.text"/>
-            <Property name="name" type="java.lang.String" value="lblBatch" noResource="true"/>
+            <Property name="text" type="java.lang.String" resourceKey="lblCharg.text"/>
+            <Property name="name" type="java.lang.String" value="lblCharg" noResource="true"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JComboBox" name="cbxBatch">
+        <Component class="javax.swing.JComboBox" name="cbxCharg">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
               <action class="com.gcs.wb.views.WeightTicketView" id="acceptBatch" methodName="acceptBatch"/>
             </Property>
-            <Property name="name" type="java.lang.String" value="cbxBatch" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="cbxCharg" noResource="true"/>
           </Properties>
           <Events>
-            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="cbxBatchKeyReleased"/>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="cbxChargKeyReleased"/>
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lblReason">
@@ -1166,6 +1287,7 @@
         </Component>
         <Component class="javax.swing.JTextField" name="txtGRText">
           <Properties>
+            <Property name="editable" type="boolean" value="false"/>
             <Property name="name" type="java.lang.String" value="txtGRText" noResource="true"/>
           </Properties>
           <Events>
@@ -1326,6 +1448,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="lblVendorLoading">
           <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" resourceKey="lblVendorLoading.text"/>
             <Property name="name" type="java.lang.String" value="lblVendorLoading" noResource="true"/>
           </Properties>
@@ -1334,6 +1457,172 @@
           <Properties>
             <Property name="text" type="java.lang.String" resourceKey="lblVendorTransport.text"/>
             <Property name="name" type="java.lang.String" value="lblVendorTransport" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblProcedure">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblProcedure.text"/>
+            <Property name="toolTipText" type="java.lang.String" resourceKey="lblProcedure.toolTipText"/>
+            <Property name="name" type="java.lang.String" value="lblProcedure" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblProcedure1">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblRegistrationNo.text"/>
+            <Property name="name" type="java.lang.String" value="lblRegistrationNo" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtRegistrationNo">
+          <Properties>
+            <Property name="background" type="java.awt.Color" resourceKey="txtRegistrationNo.background"/>
+            <Property name="editable" type="boolean" value="false"/>
+            <Property name="text" type="java.lang.String" resourceKey="txtRegistrationNo.text"/>
+            <Property name="name" type="java.lang.String" value="txtRegistrationNo" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JFormattedTextField" name="txtSling">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+            <Property name="name" type="java.lang.String" value="txtSling" noResource="true"/>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JFormattedTextField(new RegexFormatter(&quot;\\d{2}\\w-\\d{4}&quot;))"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblSling">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblSling.text"/>
+            <Property name="name" type="java.lang.String" value="lblSling" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblPallet">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblPallet.text"/>
+            <Property name="name" type="java.lang.String" value="lblPallet" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JFormattedTextField" name="txtPallet">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+            <Property name="name" type="java.lang.String" value="txtPallet" noResource="true"/>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JFormattedTextField(new RegexFormatter(&quot;\\d{2}\\w-\\d{4}&quot;))"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblRemark">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblRemark.text"/>
+            <Property name="name" type="java.lang.String" value="lblRemark" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtRemark">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="txtRemark" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtRemarkKeyReleased"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblBatchProduce">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblBatchProduce.text"/>
+            <Property name="name" type="java.lang.String" value="lblBatchProduce" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JFormattedTextField" name="txtBatchProduce">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+            <Property name="name" type="java.lang.String" value="txtBatchProduce" noResource="true"/>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JFormattedTextField(new RegexFormatter(&quot;\\d{2}\\w-\\d{4}&quot;))"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JFormattedTextField" name="txtTicketId">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+            <Property name="name" type="java.lang.String" value="txtTicketId" noResource="true"/>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JFormattedTextField(new RegexFormatter(&quot;\\d{2}\\w-\\d{4}&quot;))"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblTicketId">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblTicketId.text"/>
+            <Property name="name" type="java.lang.String" value="lblTicketId" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JFormattedTextField" name="txtWeightTicketIdRef">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+            <Property name="name" type="java.lang.String" value="txtWeightTicketIdRef" noResource="true"/>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JFormattedTextField(new RegexFormatter(&quot;\\d{2}\\w-\\d{4}&quot;))"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblWeightTicketIdRef">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblWeightTicketIdRef.text"/>
+            <Property name="name" type="java.lang.String" value="lblWeightTicketIdRef" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtPONo">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+            <Property name="name" type="java.lang.String" value="txtPONo" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblPONo">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblPONo.text"/>
+            <Property name="name" type="java.lang.String" value="lblPONo" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtWeight">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+            <Property name="name" type="java.lang.String" value="txtWeight" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblWeight">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblWeight.text"/>
+            <Property name="name" type="java.lang.String" value="lblWeight" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtLgortIn">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+            <Property name="name" type="java.lang.String" value="txtLgortIn" noResource="true"/>
+            <Property name="requestFocusEnabled" type="boolean" value="false"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblLgortIn">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblLgortIn.text"/>
+            <Property name="name" type="java.lang.String" value="lblLgortIn" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtChargIn">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+            <Property name="name" type="java.lang.String" value="txtChargIn" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblChargIn">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblChargIn.text"/>
+            <Property name="name" type="java.lang.String" value="lblChargIn" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtProcedure">
+          <Properties>
+            <Property name="background" type="java.awt.Color" resourceKey="txtProcedure.background"/>
+            <Property name="editable" type="boolean" value="false"/>
+            <Property name="name" type="java.lang.String" value="txtProcedure" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>
