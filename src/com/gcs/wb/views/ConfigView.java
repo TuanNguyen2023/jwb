@@ -1007,7 +1007,7 @@ public class ConfigView extends javax.swing.JDialog {
             }
             cbxSpeed1.setSelectedItem(speed1);
 
-            int dbit1 = configuration.getWb1DataBit();
+            Short dbit1 = configuration.getWb1DataBit().shortValue();
             cbxDataBits1.setSelectedItem(dbit1);
 
             Float sbit1 = configuration.getWb1StopBit().floatValue();
@@ -1037,7 +1037,7 @@ public class ConfigView extends javax.swing.JDialog {
             }
             cbxSpeed2.setSelectedItem(speed2);
 
-            int dbit2 = configuration.getWb2DataBit();
+            Short dbit2 = configuration.getWb2DataBit().shortValue();
             cbxDataBits2.setSelectedItem(dbit2);
 
             Float sbit2 = configuration.getWb2StopBit().floatValue();
