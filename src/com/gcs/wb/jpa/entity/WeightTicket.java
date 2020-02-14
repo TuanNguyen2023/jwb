@@ -242,6 +242,8 @@ public class WeightTicket implements Serializable {
     private String batch;
     @Column(name = "ticket_id")
     private String ticketId;
+    @Column(name = "registered_number")
+    private String registeredNumber;
     
     @Column(name = "weight_ticket_id_ref")
     private int weightTicketIdRef;
@@ -256,7 +258,15 @@ public class WeightTicket implements Serializable {
     public void setWeightTicketIdRef(int weightTicketIdRef) {
         this.weightTicketIdRef = weightTicketIdRef;
     }
-    
+
+    public String getRegisteredNumber() {
+        return registeredNumber;
+    }
+
+    public void setRegisteredNumber(String registeredNumber) {
+        this.registeredNumber = registeredNumber;
+    }
+
     public String getTicketId() {
         return ticketId;
     }

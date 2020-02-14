@@ -11,7 +11,8 @@ import com.gcs.wb.jpa.entity.*;
 import com.gcs.wb.jpa.entity.OutboundDeliveryDetail;
 import com.gcs.wb.jpa.repositorys.TransportAgentVehicleRepository;
 import com.gcs.wb.jpa.repositorys.VehicleLoadRepository;
-import com.gcs.wb.service.WeightTicketRegistarationService;
+import com.gcs.wb.service.WeightTicketRegistrationService;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +27,7 @@ import org.apache.log4j.Logger;
  */
 public class WeightTicketRegistarationController {
 
-    WeightTicketRegistarationService wTRegService = new WeightTicketRegistarationService();
+    WeightTicketRegistrationService wTRegService = new WeightTicketRegistrationService();
     JReportService jreportService = new JReportService();
     Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
     private final Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
@@ -237,5 +238,17 @@ public class WeightTicketRegistarationController {
         }
 
         return 1f;
+    }
+    
+    public List<BatchStock> getBatchStocks(SLoc sloc, String[] arr_matnr) {
+        return wTRegService.getBatchStocks(sloc, arr_matnr);
+    }
+
+    public void getSyncBatchStocks(SLoc sloc, String[] arr_matnr) {
+        wTRegService.getSyncBatchStocks(sloc, arr_matnr);
+    }
+    
+    public DefaultComboBoxModel getBatchStockModel(List<BatchStock> batchStocks) {
+        return new DefaultComboBoxModel(batchStocks.toArray());
     }
 }

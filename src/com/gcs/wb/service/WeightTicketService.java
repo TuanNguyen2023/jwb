@@ -75,7 +75,7 @@ public class WeightTicketService {
     }
 
     public void getSyncBatchStocks(SLoc selSloc, WeightTicket weightTicket) {
-        sapService.syncBatchStocks(selSloc.getLgort(), weightTicket.getWeightTicketDetail().getMatnrRef(), weightTicket.getLgort());
+        sapService.syncBatchStocks(selSloc.getLgort(), weightTicket.getWeightTicketDetail().getMatnrRef());
     }
 
     public DefaultComboBoxModel setCbxBatch(List<BatchStock> batchs) {

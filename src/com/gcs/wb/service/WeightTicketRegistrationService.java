@@ -7,9 +7,9 @@ package com.gcs.wb.service;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.jpa.JPAConnector;
-import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.jpa.entity.*;
 import com.gcs.wb.jpa.entity.OutboundDeliveryDetail;
+import com.gcs.wb.jpa.repositorys.BatchStockRepository;
 import com.gcs.wb.jpa.repositorys.WeightTicketRegistarationRepository;
 import com.gcs.wb.jpa.repositorys.CustomerRepository;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
@@ -19,26 +19,19 @@ import com.gcs.wb.jpa.repositorys.TransportAgentVehicleRepository;
 import com.gcs.wb.jpa.repositorys.VehicleRepository;
 import com.gcs.wb.jpa.repositorys.VendorRepository;
 import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
-import com.gcs.wb.model.AppConfig;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.ParameterMode;
 import javax.persistence.StoredProcedureQuery;
-import javax.swing.JComboBox;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
 import org.apache.log4j.Logger;
-import org.jdesktop.swingx.JXDatePicker;
 
 /**
  *
  * @author THANGPT
  */
-public class WeightTicketRegistarationService {
+public class WeightTicketRegistrationService {
 
     EntityManager entityManager = JPAConnector.getInstance();
     CustomerRepository customerRepository = new CustomerRepository();
@@ -49,6 +42,7 @@ public class WeightTicketRegistarationService {
     OutboundDeliveryRepository outboundDeliveryRepository = new OutboundDeliveryRepository();
     VehicleRepository vehicleRepository = new VehicleRepository();
     TransportAgentVehicleRepository transportAgentVehicleRepository = new TransportAgentVehicleRepository();
+    BatchStockRepository batchStockRepository = new BatchStockRepository();
 
     SAPService sAPService = new SAPService();
     Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
@@ -225,6 +219,25 @@ public class WeightTicketRegistarationService {
         String devNumber = "%" + deliv_numb + "%";
         OutboundDetailRepository repo = new OutboundDetailRepository();
         return repo.findByDeliveryOrderNo(devNumber);
+    }
 
+    public List<BatchStock> getBatchStocks(SLoc sloc, String[] arr_matnr) {
+        List<BatchStock> batchStocks = new ArrayList<>();
+        for (String matnr : arr_matnr) {
+            List<BatchStock> items = batchStockRepository.getListBatchStock(configuration.getWkPlant(),
+                    sloc.getLgort(), matnr);
+
+            if (items.size() > 0) {
+                batchStocks.addAll(items);
+            }
+        }
+
+        return batchStocks;
+    }
+
+    public void getSyncBatchStocks(SLoc sloc, String[] arr_matnr) {
+        for (String matnr : arr_matnr) {
+            sAPService.syncBatchStocks(sloc.getLgort(), matnr);
+        }
     }
 }

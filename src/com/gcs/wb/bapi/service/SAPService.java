@@ -225,9 +225,9 @@ public class SAPService {
      *
      * @param lgortSloc
      * @param matnr
-     * @param lgortWT
      */
-    public void syncBatchStocks(String lgortSloc, String matnr, String lgortWT) {
+    public void syncBatchStocks(String lgortSloc, String matnr) {
+        entityTransaction = entityManager.getTransaction();
         // get data DB
         List<BatchStock> batchs = batchStockRepository.getListBatchStock(configuration.getWkPlant(), lgortSloc, matnr);
         // get data SAP
@@ -245,32 +245,35 @@ public class SAPService {
                 bs.setLvorm(b.getLvorm() == null || b.getLvorm().trim().isEmpty() ? ' ' : b.getLvorm().charAt(0));
                 batchStockSaps.add(bs);
             }
-        } catch (Exception ex) {
-        }
-        //sync data
-        entityTransaction = entityManager.getTransaction();
-        if (!entityTransaction.isActive()) {
-            entityTransaction.begin();
-        }
-        //case delete
-        for (BatchStock b : batchs) {
-            if (batchStockSaps.indexOf(b) == -1) {
-                entityManager.remove(b);
-            }
-        }
-        //case persit/merge
-        for (BatchStock bs : batchStockSaps) {
-            int index = batchs.indexOf(bs);
-            if (index == -1) {
-                entityManager.persist(bs);
-            } else {
-                bs.setId(batchs.get(index).getId());
-                entityManager.merge(bs);
-            }
-        }
 
-        entityTransaction.commit();
-        entityManager.clear();
+            //sync data
+            if (!entityTransaction.isActive()) {
+                entityTransaction.begin();
+            }
+            //case delete
+            for (BatchStock b : batchs) {
+                if (batchStockSaps.indexOf(b) == -1) {
+                    entityManager.remove(b);
+                }
+            }
+            //case persit/merge
+            for (BatchStock bs : batchStockSaps) {
+                int index = batchs.indexOf(bs);
+                if (index == -1) {
+                    entityManager.persist(bs);
+                } else {
+                    bs.setId(batchs.get(index).getId());
+                    entityManager.merge(bs);
+                }
+            }
+
+            entityTransaction.commit();
+            entityManager.clear();
+        } catch (Exception ex) {
+            if (entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
+        }
     }
 
     /**
