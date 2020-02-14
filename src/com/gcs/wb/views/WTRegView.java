@@ -81,8 +81,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
         t.execute();
 
         cbxHourTo.setSelectedIndex(23);
-        txtNMaterial.setVisible(false);
-        cbxNMaterial.setModel(weightTicketRegistarationController.getListMaterial());
     }
 
     private void initComboboxRenderer() {
@@ -138,7 +136,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         rbtRegCatGroup = new javax.swing.ButtonGroup();
         jTextField1 = new javax.swing.JTextField();
@@ -171,29 +168,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
         rbtInput = new javax.swing.JRadioButton();
         rbtOutput = new javax.swing.JRadioButton();
         cbxModeType = new javax.swing.JComboBox();
-        pnWTicket = new javax.swing.JPanel();
-        pnNLeft = new javax.swing.JPanel();
-        lblNDriverName = new javax.swing.JLabel();
-        txtNDriverName = new javax.swing.JTextField();
-        lblNCMNDBL = new javax.swing.JLabel();
-        txtNCMNDBL = new javax.swing.JTextField();
-        lblNPlateNo = new javax.swing.JLabel();
-        txtNPlateNo = new javax.swing.JTextField();
-        lblNTrailerPlate = new javax.swing.JLabel();
-        txtNTrailerPlate = new javax.swing.JTextField();
-        pnNRight = new javax.swing.JPanel();
-        lblNRegCat = new javax.swing.JLabel();
-        rbtNInward = new javax.swing.JRadioButton();
-        rbtNOutward = new javax.swing.JRadioButton();
-        txtNMaterial = new javax.swing.JTextField();
-        lblNMaterial = new javax.swing.JLabel();
-        cbxNMaterial = new javax.swing.JComboBox();
-        lblNWeight = new javax.swing.JLabel();
-        txtNWeight = new javax.swing.JFormattedTextField();
-        lblNWeightUnit = new javax.swing.JLabel();
-        lblNDONum = new javax.swing.JLabel();
-        txtNDONum = new javax.swing.JTextField();
-        btnCheckDO = new javax.swing.JButton();
         pnROVContent = new javax.swing.JPanel();
         pnROVLeft = new javax.swing.JPanel();
         lblWeightTickerRefN = new javax.swing.JLabel();
@@ -258,11 +232,9 @@ public class WTRegView extends javax.swing.JInternalFrame {
         pnControl = new javax.swing.JPanel();
         btnNew = new javax.swing.JButton();
         btnClear = new javax.swing.JButton();
-        btnMany = new javax.swing.JButton();
         btnSave = new javax.swing.JButton();
         lblWeightTicketNo = new javax.swing.JLabel();
         txtWeightTicketNo = new javax.swing.JTextField();
-        btnSo = new javax.swing.JButton();
 
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(WTRegView.class);
         jTextField1.setText(resourceMap.getString("jTextField1.text")); // NOI18N
@@ -497,312 +469,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
             }
         });
 
-        pnWTicket.setName("pnWTicket"); // NOI18N
-        pnWTicket.setLayout(new javax.swing.BoxLayout(pnWTicket, javax.swing.BoxLayout.LINE_AXIS));
-
-        pnNLeft.setName("pnNLeft"); // NOI18N
-
-        lblNDriverName.setText(resourceMap.getString("lblNDriverName.text")); // NOI18N
-        lblNDriverName.setName("lblNDriverName"); // NOI18N
-
-        txtNDriverName.setName("txtNDriverName"); // NOI18N
-
-        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txtNDriverName, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
-        bindingGroup.addBinding(binding);
-
-        txtNDriverName.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNDriverNameActionPerformed(evt);
-            }
-        });
-        txtNDriverName.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtNDriverNameFocusLost(evt);
-            }
-        });
-
-        lblNCMNDBL.setText(resourceMap.getString("lblNCMNDBL.text")); // NOI18N
-        lblNCMNDBL.setName("lblNCMNDBL"); // NOI18N
-
-        txtNCMNDBL.setName("txtNCMNDBL"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txtNCMNDBL, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
-        bindingGroup.addBinding(binding);
-
-        txtNCMNDBL.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNCMNDBLActionPerformed(evt);
-            }
-        });
-        txtNCMNDBL.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtNCMNDBLFocusLost(evt);
-            }
-        });
-
-        lblNPlateNo.setText(resourceMap.getString("lblNPlateNo.text")); // NOI18N
-        lblNPlateNo.setName("lblNPlateNo"); // NOI18N
-
-        txtNPlateNo.setName("txtNPlateNo"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txtNPlateNo, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
-        bindingGroup.addBinding(binding);
-
-        txtNPlateNo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNPlateNoActionPerformed(evt);
-            }
-        });
-        txtNPlateNo.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtNPlateNoFocusLost(evt);
-            }
-        });
-
-        lblNTrailerPlate.setText(resourceMap.getString("lblNTrailerPlate.text")); // NOI18N
-        lblNTrailerPlate.setName("lblNTrailerPlate"); // NOI18N
-
-        txtNTrailerPlate.setName("txtNTrailerPlate"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txtNTrailerPlate, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
-        bindingGroup.addBinding(binding);
-
-        txtNTrailerPlate.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNTrailerPlateActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout pnNLeftLayout = new javax.swing.GroupLayout(pnNLeft);
-        pnNLeft.setLayout(pnNLeftLayout);
-        pnNLeftLayout.setHorizontalGroup(
-            pnNLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnNLeftLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnNLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblNTrailerPlate)
-                    .addComponent(lblNDriverName)
-                    .addComponent(lblNCMNDBL)
-                    .addComponent(lblNPlateNo))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnNLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtNCMNDBL)
-                    .addComponent(txtNPlateNo)
-                    .addComponent(txtNTrailerPlate)
-                    .addComponent(txtNDriverName, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        pnNLeftLayout.setVerticalGroup(
-            pnNLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnNLeftLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnNLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblNDriverName)
-                    .addComponent(txtNDriverName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnNLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblNCMNDBL)
-                    .addComponent(txtNCMNDBL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnNLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblNPlateNo)
-                    .addComponent(txtNPlateNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnNLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblNTrailerPlate)
-                    .addComponent(txtNTrailerPlate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        pnWTicket.add(pnNLeft);
-
-        pnNRight.setName("pnNRight"); // NOI18N
-
-        lblNRegCat.setText(resourceMap.getString("lblNRegCat.text")); // NOI18N
-        lblNRegCat.setName("lblNRegCat"); // NOI18N
-
-        rbtNInward.setText(resourceMap.getString("rbtNInward.text")); // NOI18N
-        rbtNInward.setName("rbtNInward"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${rbtEnabled}"), rbtNInward, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
-        bindingGroup.addBinding(binding);
-
-        rbtNInward.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                rbtNInwardItemStateChanged(evt);
-            }
-        });
-
-        rbtNOutward.setText(resourceMap.getString("rbtNOutward.text")); // NOI18N
-        rbtNOutward.setName("rbtNOutward"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${rbtEnabled}"), rbtNOutward, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
-        bindingGroup.addBinding(binding);
-
-        rbtNOutward.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                rbtNOutwardItemStateChanged(evt);
-            }
-        });
-
-        txtNMaterial.setName("txtNMaterial"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txtNMaterial, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
-        bindingGroup.addBinding(binding);
-
-        txtNMaterial.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNMaterialActionPerformed(evt);
-            }
-        });
-        txtNMaterial.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtNMaterialKeyReleased(evt);
-            }
-        });
-
-        lblNMaterial.setText(resourceMap.getString("lblNMaterial.text")); // NOI18N
-        lblNMaterial.setName("lblNMaterial"); // NOI18N
-
-        cbxNMaterial.setEditable(true);
-        cbxNMaterial.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " " }));
-        cbxNMaterial.setName("cbxNMaterial"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), cbxNMaterial, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
-        bindingGroup.addBinding(binding);
-
-        cbxNMaterial.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cbxNMaterialItemStateChanged(evt);
-            }
-        });
-        cbxNMaterial.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbxNMaterialActionPerformed(evt);
-            }
-        });
-        cbxNMaterial.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                cbxNMaterialKeyReleased(evt);
-            }
-        });
-
-        lblNWeight.setText(resourceMap.getString("lblNWeight.text")); // NOI18N
-        lblNWeight.setName("lblNWeight"); // NOI18N
-
-        txtNWeight.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
-        txtNWeight.setName("txtNWeight"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txtNWeight, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
-        bindingGroup.addBinding(binding);
-
-        txtNWeight.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNWeightActionPerformed(evt);
-            }
-        });
-        txtNWeight.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtNWeightKeyReleased(evt);
-            }
-        });
-
-        lblNWeightUnit.setText(resourceMap.getString("lblNWeightUnit.text")); // NOI18N
-        lblNWeightUnit.setName("lblNWeightUnit"); // NOI18N
-
-        lblNDONum.setText(resourceMap.getString("lblNDONum.text")); // NOI18N
-        lblNDONum.setName("lblNDONum"); // NOI18N
-
-        txtNDONum.setEditable(false);
-        txtNDONum.setAction(actionMap.get("checkDO")); // NOI18N
-        txtNDONum.setName("txtNDONum"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txtNDONum, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
-        bindingGroup.addBinding(binding);
-
-        txtNDONum.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNDONumActionPerformed(evt);
-            }
-        });
-        txtNDONum.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtNDONumKeyReleased(evt);
-            }
-        });
-
-        btnCheckDO.setAction(actionMap.get("checkDO")); // NOI18N
-        btnCheckDO.setText(resourceMap.getString("btnCheckDO.text")); // NOI18N
-        btnCheckDO.setName("btnCheckDO"); // NOI18N
-        btnCheckDO.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCheckDOActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout pnNRightLayout = new javax.swing.GroupLayout(pnNRight);
-        pnNRight.setLayout(pnNRightLayout);
-        pnNRightLayout.setHorizontalGroup(
-            pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnNRightLayout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addGroup(pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnNRightLayout.createSequentialGroup()
-                        .addGroup(pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lblNDONum)
-                            .addComponent(lblNWeight))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
-                    .addGroup(pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(pnNRightLayout.createSequentialGroup()
-                            .addGap(11, 11, 11)
-                            .addComponent(lblNMaterial))
-                        .addGroup(pnNRightLayout.createSequentialGroup()
-                            .addGap(17, 17, 17)
-                            .addComponent(lblNRegCat, javax.swing.GroupLayout.DEFAULT_SIZE, 55, Short.MAX_VALUE))))
-                .addGroup(pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnNRightLayout.createSequentialGroup()
-                        .addComponent(rbtNInward)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(rbtNOutward)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtNMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(cbxNMaterial, 0, 198, Short.MAX_VALUE)
-                    .addComponent(txtNDONum, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
-                    .addComponent(txtNWeight, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblNWeightUnit)
-                    .addComponent(btnCheckDO, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(110, 110, 110))
-        );
-        pnNRightLayout.setVerticalGroup(
-            pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnNRightLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblNRegCat)
-                    .addComponent(rbtNInward)
-                    .addComponent(rbtNOutward)
-                    .addComponent(txtNMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbxNMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblNMaterial))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtNWeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblNWeightUnit)
-                    .addComponent(lblNWeight))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtNDONum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblNDONum)
-                    .addComponent(btnCheckDO))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        pnWTicket.add(pnNRight);
-
         javax.swing.GroupLayout pnROVTopLayout = new javax.swing.GroupLayout(pnROVTop);
         pnROVTop.setLayout(pnROVTopLayout);
         pnROVTopLayout.setHorizontalGroup(
@@ -812,20 +478,12 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addComponent(rbtInput)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(rbtOutput)
-                .addGroup(pnROVTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnROVTopLayout.createSequentialGroup()
-                        .addGap(371, 371, 371)
-                        .addComponent(pnWTicket, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnROVTopLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(cbxModeType, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cbxModeType, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(317, Short.MAX_VALUE))
         );
         pnROVTopLayout.setVerticalGroup(
             pnROVTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnROVTopLayout.createSequentialGroup()
-                .addContainerGap(22, Short.MAX_VALUE)
-                .addComponent(pnWTicket, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(pnROVTopLayout.createSequentialGroup()
                 .addGroup(pnROVTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbxModeType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1305,15 +963,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
         btnClear.setText(resourceMap.getString("btnClear.text")); // NOI18N
         btnClear.setName("btnClear"); // NOI18N
 
-        btnMany.setText(resourceMap.getString("btnMany.text")); // NOI18N
-        btnMany.setEnabled(false);
-        btnMany.setName("btnMany"); // NOI18N
-        btnMany.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnManyActionPerformed(evt);
-            }
-        });
-
         btnSave.setAction(actionMap.get("saveRecord")); // NOI18N
         btnSave.setText(resourceMap.getString("btnSave.text")); // NOI18N
         btnSave.setName("btnSave"); // NOI18N
@@ -1326,34 +975,21 @@ public class WTRegView extends javax.swing.JInternalFrame {
         txtWeightTicketNo.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         txtWeightTicketNo.setName("txtWeightTicketNo"); // NOI18N
 
-        btnSo.setText(resourceMap.getString("btnSo.text")); // NOI18N
-        btnSo.setEnabled(false);
-        btnSo.setName("btnSo"); // NOI18N
-        btnSo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSoActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout pnControlLayout = new javax.swing.GroupLayout(pnControl);
         pnControl.setLayout(pnControlLayout);
         pnControlLayout.setHorizontalGroup(
             pnControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnControlLayout.createSequentialGroup()
                 .addComponent(btnNew)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnClear)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnMany)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnSo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnSave)
-                .addGap(29, 29, 29)
+                .addGap(102, 102, 102)
                 .addComponent(lblWeightTicketNo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtWeightTicketNo, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(135, 135, 135))
+                .addComponent(txtWeightTicketNo, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(376, 376, 376))
         );
         pnControlLayout.setVerticalGroup(
             pnControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1362,11 +998,9 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addGroup(pnControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnNew)
                     .addComponent(btnClear)
-                    .addComponent(btnMany)
-                    .addComponent(btnSo)
                     .addComponent(btnSave)
-                    .addComponent(txtWeightTicketNo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblWeightTicketNo)))
+                    .addComponent(lblWeightTicketNo)
+                    .addComponent(txtWeightTicketNo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -1380,7 +1014,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                     .addComponent(pnPrintControl, javax.swing.GroupLayout.DEFAULT_SIZE, 921, Short.MAX_VALUE)
                     .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 921, Short.MAX_VALUE)
                     .addComponent(pnFilter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnControl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(pnControl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 921, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -1396,10 +1030,8 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addComponent(pnRegistrationOfVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(pnControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(56, Short.MAX_VALUE))
+                .addContainerGap(80, Short.MAX_VALUE))
         );
-
-        bindingGroup.bind();
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -1407,191 +1039,14 @@ public class WTRegView extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Old Code">
 // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Event methods">
-    private void rbtNInwardItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbtNInwardItemStateChanged
-        setSaveNeeded(isValidated());
-    }//GEN-LAST:event_rbtNInwardItemStateChanged
-
-    private void rbtNOutwardItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbtNOutwardItemStateChanged
-        setSaveNeeded(isValidated());
-    }//GEN-LAST:event_rbtNOutwardItemStateChanged
-
-    private void txtNMaterialKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNMaterialKeyReleased
-        setSaveNeeded(isValidated());
-    }//GEN-LAST:event_txtNMaterialKeyReleased
-
-    private void txtNWeightKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNWeightKeyReleased
-        setSaveNeeded(isValidated());
-    }//GEN-LAST:event_txtNWeightKeyReleased
-
-    private void txtNDONumKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNDONumKeyReleased
-        if (WeighBridgeApp.getApplication().isOfflineMode()) {
-            return;
-        }
-
-        if (txtNDONum.getText().trim() == null) {
-            return;
-        }
-        int DOLength = txtNDONum.getText().trim().length();
-        if (DOLength == 0 || (isValidOutboundDelivery && DOLength >= 7 && isValidOutboundDelivery && DOLength <= 10)) {
-            if ((evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) || (evt.isShiftDown() && evt.getKeyCode() == KeyEvent.VK_INSERT)) {
-                isValidOutboundDelivery = false;
-                txtNDONum.setForeground(Color.red);
-            } else {
-                txtNDONum.setForeground(Color.black);
-            }
-        } else {
-            isValidOutboundDelivery = false;
-            txtNDONum.setForeground(Color.red);
-        }
-
-        if (DOLength == 0) {
-            isValidOutboundDelivery = true;
-            setRbtEnabled(true);
-            txtNMaterial.setEditable(true);
-            txtNWeight.setEditable(true);
-        } else {
-            txtNMaterial.setEditable(false);
-            txtNWeight.setEditable(false);
-        }
-
-        if (isValidOutboundDelivery) {
-            setSaveNeeded(isValidated());
-        }
-    }//GEN-LAST:event_txtNDONumKeyReleased
-
-    private void txtNPlateNoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNPlateNoActionPerformed
-        setSaveNeeded(isValidated());
-    }//GEN-LAST:event_txtNPlateNoActionPerformed
-
-    private void txtNDriverNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNDriverNameActionPerformed
-        setSaveNeeded(isValidated());
-    }//GEN-LAST:event_txtNDriverNameActionPerformed
-
-    private void txtNCMNDBLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNCMNDBLActionPerformed
-        setSaveNeeded(isValidated());
-    }//GEN-LAST:event_txtNCMNDBLActionPerformed
-
-    private void txtNMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNMaterialActionPerformed
-        setSaveNeeded(isValidated());
-    }//GEN-LAST:event_txtNMaterialActionPerformed
-
-    private void txtNWeightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNWeightActionPerformed
-        setSaveNeeded(isValidated());
-    }//GEN-LAST:event_txtNWeightActionPerformed
-
-    private void txtNDONumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNDONumActionPerformed
-        setSaveNeeded(isValidated());
-    }//GEN-LAST:event_txtNDONumActionPerformed
-
-    private void txtNTrailerPlateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNTrailerPlateActionPerformed
-    }//GEN-LAST:event_txtNTrailerPlateActionPerformed
-
     private void cbxHourToItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbxHourToItemStateChanged
         if (cbxHourTo.getSelectedIndex() < cbxHourFrom.getSelectedIndex()) {
             cbxHourTo.setSelectedIndex(cbxHourFrom.getSelectedIndex());
         }
     }//GEN-LAST:event_cbxHourToItemStateChanged
 
-    private void cbxNMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxNMaterialActionPerformed
-        txtNMaterial.setText(cbxNMaterial.getSelectedItem().toString());
-        setSaveNeeded(isValidated());
-    }//GEN-LAST:event_cbxNMaterialActionPerformed
-
-    private void cbxNMaterialItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbxNMaterialItemStateChanged
-        txtNMaterial.setText(cbxNMaterial.getSelectedItem().toString());
-        setSaveNeeded(isValidated());
-    }//GEN-LAST:event_cbxNMaterialItemStateChanged
-
-    private void cbxNMaterialKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cbxNMaterialKeyReleased
-        txtNMaterial.setText(cbxNMaterial.getSelectedItem().toString());
-        setSaveNeeded(isValidated());
-    }//GEN-LAST:event_cbxNMaterialKeyReleased
-
-    private void btnManyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManyActionPerformed
-        String soDO = JOptionPane.showInputDialog(this.getRootPane(), resourceMapMsg.getString("msg.inputDO"));
-        boolean isNumber = true;
-        if (StringUtil.isNotEmptyString(soDO)) {
-            soDO = soDO.trim();
-            for (int i = 0; i < soDO.length(); i++) {
-                if (!Character.isDigit(soDO.charAt(i))) {
-                    isNumber = false;
-                    break;
-                }
-            }
-
-            if (isNumber && StringUtil.hasLengthInRange(soDO, 8, 10)) {
-                if (txtNDONum.getText().equals("")) {
-                    txtNDONum.setText(StringUtil.paddingZero(soDO, 10));
-                } else {
-                    String inputDO = (soDO.length() == 8) ? StringUtil.paddingZero(soDO, 8) : StringUtil.paddingZero(soDO, 10);
-                    if (!StringUtil.contains(txtNDONum.getText(), inputDO)) {
-                        txtNDONum.setText(txtNDONum.getText() + "-" + inputDO);
-                    } else {
-                        JOptionPane.showMessageDialog(this.getRootPane(), resourceMapMsg.getString("msg.duplicateDo"));
-                    }
-                }
-            } else {
-                JOptionPane.showMessageDialog(this.getRootPane(), resourceMapMsg.getString("msg.falseDo"));
-                txtNDONum.setText("");
-            }
-
-        }
-    }//GEN-LAST:event_btnManyActionPerformed
-
-    private void btnCheckDOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCheckDOActionPerformed
-        setSaveNeeded(isValidated());
-        isHasCheck = true;
-    }//GEN-LAST:event_btnCheckDOActionPerformed
-
     private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dpDateFromActionPerformed
     }//GEN-LAST:event_dpDateFromActionPerformed
-
-    private void txtNPlateNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNPlateNoFocusLost
-        setSaveNeeded(isValidated());
-    }//GEN-LAST:event_txtNPlateNoFocusLost
-
-    private void txtNDriverNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNDriverNameFocusLost
-        setSaveNeeded(isValidated());
-    }//GEN-LAST:event_txtNDriverNameFocusLost
-
-    private void txtNCMNDBLFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNCMNDBLFocusLost
-        setSaveNeeded(isValidated());
-    }//GEN-LAST:event_txtNCMNDBLFocusLost
-
-    private void btnSoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSoActionPerformed
-        String soSO = JOptionPane.showInputDialog(this.getRootPane(), resourceMapMsg.getString("msg.inputSO"));
-        boolean isNumber = false;
-        if (soSO == null) {
-            isNumber = false;
-        } else if (soSO != null || !soSO.equals("")) {
-            soSO = soSO.trim();
-            for (int i = 0; i < soSO.length(); i++) {
-                if (!Character.isDigit(soSO.charAt(i))) {
-                    isNumber = false;
-                } else {
-                    isNumber = true;
-                }
-            }
-            if (isNumber && soSO.length() >= 8 && soSO.length() <= 10) {
-                if (txtNDONum.getText().equals("")) {
-                    txtNDONum.setText(StringUtil.paddingZero(soSO, 10));
-
-                } else {
-                    String inputDO = (soSO.length() == 8) ? StringUtil.paddingZero(soSO, 8) : StringUtil.paddingZero(soSO, 10);
-                    // String inputDO2 = StringUtil.paddingZero(soDO, 8);
-                    if (txtNDONum.getText().indexOf(inputDO) == -1) {
-                        txtNDONum.setText(txtNDONum.getText() + "-" + inputDO);
-                    } else {
-                        JOptionPane.showMessageDialog(this.getRootPane(), resourceMapMsg.getString("msg.duplicateDo"));
-                    }
-                }
-            } else {
-                JOptionPane.showMessageDialog(this.getRootPane(), resourceMapMsg.getString("msg.falseDo"));
-                txtNDONum.setText("");
-            }
-
-        }
-    }//GEN-LAST:event_btnSoActionPerformed
 
 private void rbtInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtInputActionPerformed
     loadModeTypeModel(MODE.INPUT);
@@ -1648,7 +1103,7 @@ private void cbxBatchStockNActionPerformed(java.awt.event.ActionEvent evt) {//GE
     if (cbxBatchStockN.getSelectedIndex() == -1) {
         return;
     }
-    
+
     validateForm();
 
     BatchStock batchStock = (BatchStock) cbxBatchStockN.getSelectedItem();
@@ -1704,14 +1159,7 @@ private void cbxBatchStockNActionPerformed(java.awt.event.ActionEvent evt) {//GE
         setRbtEnabled(true);
         setCreatable(false);
         setClearable(true);
-        setSaveNeeded(isValidated());
         txtWeightTicketNo.setText("");
-        txtNMaterial.setEditable(true);
-        cbxNMaterial.setEditable(true);
-        txtNWeight.setEditable(true);
-        btnMany.setEnabled(true);
-        btnSo.setEnabled(true);
-        btnCheckDO.setEnabled(true);
         btnSave.setEnabled(false);
 
         // TODO new ui
@@ -1729,9 +1177,6 @@ private void cbxBatchStockNActionPerformed(java.awt.event.ActionEvent evt) {//GE
         setRbtEnabled(false);
         setSaveNeeded(false);
         setClearable(false);
-        btnMany.setEnabled(false);
-        btnSo.setEnabled(false);
-        btnCheckDO.setEnabled(false);
 
         // TODO new ui
         rbtInput.setEnabled(false);
@@ -2155,15 +1600,12 @@ private void cbxBatchStockNActionPerformed(java.awt.event.ActionEvent evt) {//GE
 
     @Action(enabledProperty = "saveNeeded")
     public Task saveRecord() {
-        int answer = JOptionPane.YES_OPTION;
-        if (StringUtil.isEmptyString(txtNDONum.getText())) {
-            answer = JOptionPane.showConfirmDialog(
-                    this.getRootPane(),
-                    resourceMapMsg.getString("msg.questtionSaveDO"),
-                    JOptionPane.OPTIONS_PROPERTY,
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.QUESTION_MESSAGE);
-        }
+        int answer = JOptionPane.showConfirmDialog(
+                this.getRootPane(),
+                resourceMapMsg.getString("msg.questtionSaveDO"),
+                JOptionPane.OPTIONS_PROPERTY,
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
 
         if (answer == JOptionPane.YES_OPTION) {
             btnSave.setEnabled(false);
@@ -2656,123 +2098,6 @@ private void cbxBatchStockNActionPerformed(java.awt.event.ActionEvent evt) {//GE
         firePropertyChange("saveNeeded", old, isSaveNeeded());
     }
 
-    private boolean validateDriver() {
-        boolean isValid = !(txtNDriverName.getText() == null || txtNDriverName.getText().trim().isEmpty());
-        if (isValid) {
-            lblNDriverName.setForeground(Color.black);
-        } else {
-            lblNDriverName.setForeground(Color.red);
-        }
-
-        return isValid;
-    }
-
-    private boolean validateDriverNoId() {
-        boolean isValid = !(txtNCMNDBL.getText() == null || txtNCMNDBL.getText().trim().isEmpty() || txtNCMNDBL.getText().trim().length() > 9);
-        if (isValid) {
-            lblNCMNDBL.setForeground(Color.black);
-        } else {
-            lblNCMNDBL.setForeground(Color.red);
-        }
-
-        return isValid;
-    }
-
-    private boolean validatePlate() {
-        boolean isValid = !(txtNPlateNo.getText().trim().isEmpty());
-        if (isValid) {
-            if (txtNDONum.getText().trim().isEmpty() || outboundDelivery == null) {
-                isValid = validateLicensePlate(null, null);
-            } else {
-                isValid = validateLicensePlate(outboundDelivery.getLfart(), outboundDelivery.getTraid());
-            }
-        }
-
-        if (isValid && rbtNInward.isSelected()) {
-            if (outboundDelivery != null) {
-                String soXe_tmp = txtNPlateNo.getText().trim();
-                int indexRomooc = -1;
-                if (outboundDelivery.getTraid() != null && !outboundDelivery.getTraid().equals("")) {
-                    indexRomooc = outboundDelivery.getTraid().indexOf("|");
-                    if (indexRomooc >= 0) {
-                        soXe_tmp = soXe_tmp.concat("|").concat(txtNTrailerPlate.getText().trim());
-                    }
-                }
-                if (!soXe_tmp.equals(outboundDelivery.getTraid().trim())) {
-                    if (outboundDelivery.getTraid() != null
-                            && indexRomooc >= 0
-                            && indexRomooc != (outboundDelivery.getTraid().trim().length() - 1)
-                            && txtNTrailerPlate.getText().trim().equals("")) {
-                        JOptionPane.showMessageDialog(rootPane,
-                                resourceMapMsg.getString("msg.plzInputRomoc"));
-                    } else {
-                        JOptionPane.showMessageDialog(rootPane,
-                                resourceMapMsg.getString("msg.errorLicensePlate"));
-                    }
-                }
-
-            }
-        }
-
-        if (isValid) {
-            lblNPlateNo.setForeground(Color.black);
-        } else {
-            lblNPlateNo.setForeground(Color.red);
-        }
-
-        return isValid;
-    }
-
-    private boolean validateRegisteredCategory() {
-        boolean isValid = rbtNInward.isSelected() || rbtNOutward.isSelected();
-        if (isValid) {
-            lblNRegCat.setForeground(Color.black);
-        } else {
-            lblNRegCat.setForeground(Color.red);
-        }
-        return isValid;
-    }
-
-    private boolean validateMaterial() {
-        boolean isValid = !(txtNMaterial.getText() == null || txtNMaterial.getText().trim().isEmpty());
-        if (isValid) {
-            lblNMaterial.setForeground(Color.black);
-        } else {
-            lblNMaterial.setForeground(Color.red);
-        }
-        return isValid;
-    }
-
-    private boolean validateQuantity() {
-        boolean isValid = !(txtNWeight.getText().isEmpty() || Double.parseDouble(txtNWeight.getText()) <= 0d);
-        if (isValid) {
-            lblNWeight.setForeground(Color.black);
-        } else {
-            lblNWeight.setForeground(Color.red);
-        }
-
-        return isValid;
-    }
-
-    public boolean isValidated() {
-        boolean isValidDriverName = validateDriver();
-        boolean isValidDriverNoId = validateDriverNoId();
-        boolean isValidPlateNo = validatePlate();
-        boolean isValidRegisteredCategory = validateRegisteredCategory();
-        boolean isValidRegisteredMaterial = validateMaterial();
-        boolean isValidRegisteredQuantity = validateQuantity();
-        boolean result = isValidDriverName && isValidDriverNoId && isValidPlateNo && isValidRegisteredCategory && isValidRegisteredMaterial && isValidRegisteredQuantity;
-        setFormValid(result);
-
-        boolean isValid;
-        if (StringUtil.isNotEmptyString(txtNDONum.getText())) {
-            isValid = result && isValidOutboundDelivery && isHasCheck;
-        } else {
-            isValid = result && isValidOutboundDelivery;
-        }
-        return isValid;
-    }
-
     private void printWT(WeightTicket wt, boolean reprint) throws Exception {
         try {
             weightTicketRegistarationController.printRegWT(wt, reprint);
@@ -2782,94 +2107,10 @@ private void cbxBatchStockNActionPerformed(java.awt.event.ActionEvent evt) {//GE
         }
     }
 
-    private boolean validateLicensePlate(String lfart, String traid) {
-        boolean result = false;
-        if (lfart != null && traid != null && (lfart.equalsIgnoreCase("ZTLF") || lfart.equalsIgnoreCase("NL"))) {
-            String txt = traid;
-            String doLicPlate;
-            int idx1 = txt.indexOf("|");
-            int idx2 = txt.indexOf("\\");
-            if (idx1 >= 0 || idx2 >= 0) {
-                int splitPos = idx1 < 0 ? idx2 : idx1;
-                int bIdx = splitPos - 8;
-                if (bIdx < 0) {
-                    bIdx = 0;
-                }
-                doLicPlate = txt.substring(bIdx, splitPos);
-                splitPos++;
-            } else {
-                int countSpace = 0;
-                int[] pos = new int[3];
-                char[] chars = txt.toCharArray();
-                for (int x = 0; x < chars.length; x++) {
-                    char c = chars[x];
-                    if (c == ' ') {
-                        pos[countSpace] = x;
-                        countSpace++;
-                    }
-                }
-                if (countSpace == 3) {
-                    int splitPos = pos[1];
-                    int bIdx = splitPos - 8;
-                    if (bIdx < 0) {
-                        bIdx = 0;
-                    }
-                    doLicPlate = txt.substring(bIdx, splitPos);
-                    splitPos++;
-                } else {
-                    doLicPlate = traid;
-                }
-            }
-            if (doLicPlate.equalsIgnoreCase(newWeightTicket.getPlateNo())) {
-                result = true;
-            } else {
-                result = false;
-                JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.errorLicensePlate", newWeightTicket.getPlateNo(), doLicPlate));
-            }
-        } else if (newWeightTicket != null) {
-            Vehicle vehicle = weightTicketRegistarationController.findByPlateNo(txtNPlateNo.getText().trim());
-            if (vehicle == null) {
-                result = false;
-                JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.errorLicensePlate", txtNPlateNo.getText().trim()));
-            } else {
-                result = true;
-                if (vehicle.isProhibit()) {
-                    result = false;
-                    JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.invalidLicensePlate", txtNPlateNo.getText().trim()));
-                }
-
-                List<TransportAgentVehicle> transportAgentVehicles = weightTicketRegistarationController.findByVehicleId(vehicle.getId());
-                if (transportAgentVehicles != null && transportAgentVehicles.size() == 1) {
-                    abbr = transportAgentVehicles.get(0).getTransportAgent().getAbbr();
-                }
-            }
-        }
-        return result;
-    }
-
     private void cleanData() {
         newWeightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
         outboundDelivery = null;
-        txtNDriverName.setText("");
-        txtNCMNDBL.setText("");
-        txtNPlateNo.setText("");
-        txtNTrailerPlate.setText("");
         rbtRegCatGroup.clearSelection();
-        rbtNInward.setEnabled(true);
-        rbtNOutward.setEnabled(true);
-        txtNMaterial.setText("");
-        cbxNMaterial.setSelectedItem("");
-        txtNWeight.setValue(null);
-        txtNDONum.setText("");
-
-        lblNDriverName.setForeground(Color.black);
-        lblNCMNDBL.setForeground(Color.black);
-        lblNPlateNo.setForeground(Color.black);
-        lblNTrailerPlate.setForeground(Color.black);
-        lblNRegCat.setForeground(Color.black);
-        lblNMaterial.setForeground(Color.black);
-        lblNWeight.setForeground(Color.black);
-        lblNDONum.setForeground(Color.black);
         isValidOutboundDelivery = true;
     }
 
@@ -2891,18 +2132,15 @@ private void cbxBatchStockNActionPerformed(java.awt.event.ActionEvent evt) {//GE
     }
     // </editor-fold>
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCheckDO;
     private javax.swing.JButton btnClear;
     private javax.swing.JButton btnDOCheckN;
     private javax.swing.JButton btnFind;
-    private javax.swing.JButton btnMany;
     private javax.swing.JButton btnNew;
     private javax.swing.JButton btnPOCheckN;
     private javax.swing.JButton btnPOSTOCheckN;
     private javax.swing.JButton btnReprint;
     private javax.swing.JButton btnSOCheckN;
     private javax.swing.JButton btnSave;
-    private javax.swing.JButton btnSo;
     private javax.swing.JComboBox cbxBatchStock2N;
     private javax.swing.JComboBox cbxBatchStockN;
     private javax.swing.JComboBox cbxHourFrom;
@@ -2910,7 +2148,6 @@ private void cbxBatchStockNActionPerformed(java.awt.event.ActionEvent evt) {//GE
     private javax.swing.JComboBox cbxMaterialType;
     private javax.swing.JComboBox cbxMaterialTypeN;
     private javax.swing.JComboBox cbxModeType;
-    private javax.swing.JComboBox cbxNMaterial;
     private javax.swing.JComboBox cbxSloc2N;
     private javax.swing.JComboBox cbxSlocN;
     private javax.swing.JComboBox cbxStatus;
@@ -2932,15 +2169,6 @@ private void cbxBatchStockNActionPerformed(java.awt.event.ActionEvent evt) {//GE
     private javax.swing.JLabel lblHourTo;
     private javax.swing.JLabel lblMaterialType;
     private javax.swing.JLabel lblMaterialTypeN;
-    private javax.swing.JLabel lblNCMNDBL;
-    private javax.swing.JLabel lblNDONum;
-    private javax.swing.JLabel lblNDriverName;
-    private javax.swing.JLabel lblNMaterial;
-    private javax.swing.JLabel lblNPlateNo;
-    private javax.swing.JLabel lblNRegCat;
-    private javax.swing.JLabel lblNTrailerPlate;
-    private javax.swing.JLabel lblNWeight;
-    private javax.swing.JLabel lblNWeightUnit;
     private javax.swing.JLabel lblNoteN;
     private javax.swing.JLabel lblPONumN;
     private javax.swing.JLabel lblPOSTONumN;
@@ -2968,18 +2196,13 @@ private void cbxBatchStockNActionPerformed(java.awt.event.ActionEvent evt) {//GE
     private javax.swing.JLabel lblWeightUnitN;
     private javax.swing.JPanel pnControl;
     private javax.swing.JPanel pnFilter;
-    private javax.swing.JPanel pnNLeft;
-    private javax.swing.JPanel pnNRight;
     private javax.swing.JPanel pnPrintControl;
     private javax.swing.JPanel pnROVContent;
     private javax.swing.JPanel pnROVLeft;
     private javax.swing.JPanel pnROVRight;
     private javax.swing.JPanel pnROVTop;
     private javax.swing.JPanel pnRegistrationOfVehicle;
-    private javax.swing.JPanel pnWTicket;
     private javax.swing.JRadioButton rbtInput;
-    private javax.swing.JRadioButton rbtNInward;
-    private javax.swing.JRadioButton rbtNOutward;
     private javax.swing.JRadioButton rbtOutput;
     private javax.swing.ButtonGroup rbtRegCatGroup;
     private javax.swing.JScrollPane spnResult;
@@ -2989,13 +2212,6 @@ private void cbxBatchStockNActionPerformed(java.awt.event.ActionEvent evt) {//GE
     private javax.swing.JTextField txtDONumN;
     private javax.swing.JTextField txtDriverName;
     private javax.swing.JTextField txtDriverNameN;
-    private javax.swing.JTextField txtNCMNDBL;
-    private javax.swing.JTextField txtNDONum;
-    private javax.swing.JTextField txtNDriverName;
-    private javax.swing.JTextField txtNMaterial;
-    private javax.swing.JTextField txtNPlateNo;
-    private javax.swing.JTextField txtNTrailerPlate;
-    private javax.swing.JFormattedTextField txtNWeight;
     private javax.swing.JTextField txtNoteN;
     private javax.swing.JTextField txtPONumN;
     private javax.swing.JTextField txtPOSTONumN;
@@ -3014,7 +2230,6 @@ private void cbxBatchStockNActionPerformed(java.awt.event.ActionEvent evt) {//GE
     private javax.swing.JFormattedTextField txtWeightN;
     private javax.swing.JTextField txtWeightTickerRefN;
     private javax.swing.JTextField txtWeightTicketNo;
-    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 
     /**
