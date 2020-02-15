@@ -63,7 +63,7 @@ public class SerialComm {
                     throw ex;
                 }
             } else {
-                String msg = "Error: Only serial ports are handled by this example.";
+                String msg = "Serial ports are unsuccessfully connected.";
                 Logger.getLogger(SerialComm.class.getName()).error(msg);
                 throw new IllegalPortException(msg);
             }
