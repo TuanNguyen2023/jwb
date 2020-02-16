@@ -166,9 +166,8 @@ public class WeighBridgeApp extends SingleFrameApplication {
     public boolean connectWB(String portName, Integer speed, Short dataBits, Short stopBits, Short parity, boolean isMettlerScale, JFormattedTextField control) throws SerialPortInvalidPortException, IllegalPortException, IOException, TooManyListenersException {
 
         boolean connected = false;
-        Logger.getLogger(this.getClass()).error("@jSerialComm, connect to weight bridge, " + (isMettlerScale ? "@ScaleMettler" : "@SerialComm"));
-        Logger.getLogger(this.getClass()).error("@jSerialComm, port: " + portName + " speed: " + speed
-                + " databit: " + dataBits  + " stopbit: " + stopBits);
+        Logger.getLogger(this.getClass()).info("@jSerialComm, connect to weight bridge, " + (isMettlerScale ? "@ScaleMettler" : "@SerialComm"));
+        Logger.getLogger(this.getClass()).info("@jSerialComm, port: " + portName + " speed: " + speed + " databit: " + dataBits  + " stopbit: " + stopBits);
         try {
             if (isMettlerScale) {
                 if (mettlerScale != null) {

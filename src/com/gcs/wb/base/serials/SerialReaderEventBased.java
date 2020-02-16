@@ -67,7 +67,6 @@ public class SerialReaderEventBased implements SerialPortDataListener {
                 if (flag == '1') {
                     old_number = new_number;
                     new_number = "";
-                } else {
                 }
                 flag = '0';
             }
