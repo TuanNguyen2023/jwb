@@ -208,7 +208,7 @@ public class SAPService {
      * get purchase order follow PO
      *
      * @param poNum
-     * @return
+     * @return PurchaseOrder
      * @throws Exception
      */
     public PurchaseOrder getPurchaseOrder(String poNum) throws Exception {
@@ -218,6 +218,48 @@ public class SAPService {
         PurchaseOrderConverter purchaseOrderConverter = new PurchaseOrderConverter();
         return purchaseOrderConverter.convertHasParameter(bPO, poNum);
 
+    }
+    
+    /**
+     * sync purchase order from SAP to DB
+     *
+     * @param sapPurchaseOrder
+     * @param purchaseOrder
+     * @return PurchaseOrder
+     */
+    public PurchaseOrder syncPurchaseOrder(PurchaseOrder sapPurchaseOrder, PurchaseOrder purchaseOrder) {
+
+        PurchaseOrder result;
+        if (!entityTransaction.isActive()) {
+            entityTransaction.begin();
+        }
+
+        try {
+            if (sapPurchaseOrder != null && purchaseOrder == null) {
+                entityManager.persist(sapPurchaseOrder);
+                result = sapPurchaseOrder;
+            } else if (sapPurchaseOrder != null && purchaseOrder != null) {
+                sapPurchaseOrder.setId(purchaseOrder.getId());
+                entityManager.merge(sapPurchaseOrder);
+                result = sapPurchaseOrder;
+            } else {
+                if (purchaseOrder != null) {
+                    entityManager.remove(purchaseOrder);
+                }
+                result = null;
+            }
+
+            entityTransaction.commit();
+            entityManager.clear();
+        } catch (Exception ex) {
+            if (entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
+            Logger.getLogger(SAPService.class.getName()).log(Level.SEVERE, null, ex);
+            result = null;
+        }
+
+        return result;
     }
 
     /**

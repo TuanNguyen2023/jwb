@@ -33,7 +33,6 @@ public class PurchaseOrderConverter extends AbstractThrowableParamConverter<PoGe
             throw new Exception("Không hỗ trợ P.O số: " + poNum + "!");
         }
 
-        List<PurchaseOrderDetail> purchaseOrderDetails = new ArrayList<>();
         PurchaseOrder result = new PurchaseOrder(configuration.getSapClient(), poNum);
         result.setDocType(header.getDOC_TYPE());
         result.setDeleteInd(header.getDELETE_IND() == null || header.getDELETE_IND().trim().isEmpty() ? ' ' : header.getDELETE_IND().charAt(0));
@@ -49,7 +48,7 @@ public class PurchaseOrderConverter extends AbstractThrowableParamConverter<PoGe
         for (int i = 0; i < items.size(); i++) {
             PoGetDetailItemStructure item = items.get(i);
             PurchaseOrderDetail purchaseOrderDetail = new PurchaseOrderDetail();
-
+            
             if (item.getFREE_ITEM() == null || item.getFREE_ITEM().trim().isEmpty()) {
                 purchaseOrderDetail.setPoItem(item.getPO_ITEM());
                 purchaseOrderDetail.setIDeleteInd(item.getDELETE_IND() == null || item.getDELETE_IND().trim().isEmpty() ? ' ' : item.getDELETE_IND().charAt(0));
@@ -106,10 +105,9 @@ public class PurchaseOrderConverter extends AbstractThrowableParamConverter<PoGe
                 }
             }
 
-            purchaseOrderDetails.add(purchaseOrderDetail);
+            result.addPurchaseOrderDetail(purchaseOrderDetail);
         }
 
-        result.setPurchaseOrderDetails(purchaseOrderDetails);
         return result;
     }
 

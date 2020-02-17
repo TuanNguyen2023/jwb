@@ -43,7 +43,7 @@
                   <Component id="pnPrintControl" alignment="0" pref="921" max="32767" attributes="1"/>
                   <Component id="spnResult" alignment="0" pref="921" max="32767" attributes="2"/>
                   <Component id="pnFilter" alignment="0" max="32767" attributes="2"/>
-                  <Component id="pnControl" alignment="1" pref="921" max="32767" attributes="3"/>
+                  <Component id="pnControl" alignment="1" max="32767" attributes="3"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -62,7 +62,7 @@
               <Component id="pnRegistrationOfVehicle" min="-2" pref="415" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="pnControl" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="80" max="32767" attributes="0"/>
+              <EmptySpace pref="88" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -1126,6 +1126,9 @@
                     </Property>
                     <Property name="name" type="java.lang.String" value="cbxSloc2N" noResource="true"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxSloc2NActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JComboBox" name="cbxBatchStockN">
                   <Properties>
@@ -1145,6 +1148,9 @@
                     </Property>
                     <Property name="name" type="java.lang.String" value="cbxBatchStock2N" noResource="true"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxBatchStock2NActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtDONumN">
                   <Properties>
@@ -1178,9 +1184,15 @@
                   <Properties>
                     <Property name="name" type="java.lang.String" value="txtPONumN" noResource="true"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtPONumNKeyReleased"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JButton" name="btnPOCheckN">
                   <Properties>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                      <action class="com.gcs.wb.views.WTRegView" id="checkPO" methodName="checkPO"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" resourceKey="btnPOCheckN.text"/>
                     <Property name="name" type="java.lang.String" value="btnPOCheckN" noResource="true"/>
                   </Properties>
@@ -1189,9 +1201,15 @@
                   <Properties>
                     <Property name="name" type="java.lang.String" value="txtPOSTONumN" noResource="true"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtPOSTONumNKeyReleased"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JButton" name="btnPOSTOCheckN">
                   <Properties>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                      <action class="com.gcs.wb.views.WTRegView" id="checkPOSTO" methodName="checkPOSTO"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" resourceKey="btnPOSTOCheckN.text"/>
                     <Property name="name" type="java.lang.String" value="btnPOSTOCheckN" noResource="true"/>
                   </Properties>

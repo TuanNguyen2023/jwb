@@ -65,7 +65,7 @@ public class WeightTicketRegistrationValidation {
             } else {
                 result = true;
             }
-            
+
         }
         label.setForeground(result ? Color.black : Color.red);
 
@@ -99,6 +99,26 @@ public class WeightTicketRegistrationValidation {
 
     public boolean validateCbxSelected(int selectedIndex, JComponent label) {
         boolean result = selectedIndex != -1;
+        label.setForeground(result ? Color.black : Color.red);
+
+        return result;
+    }
+
+    public boolean validatePO(String value, JComponent label) {
+        boolean result;
+        value = value.trim();
+
+        try {
+            if (value.length() == 10) {
+                Long.parseLong(value);
+                result = true;
+            } else {
+                result = false;
+            }
+        } catch (NumberFormatException ex) {
+            result = false;
+        }
+
         label.setForeground(result ? Color.black : Color.red);
 
         return result;
