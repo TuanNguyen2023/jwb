@@ -2560,7 +2560,8 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                     txtPONum.setText(weightTicket.getPosto());
                     rbtPO.setSelected(true);
                 }
-                txtProcedure.setText(weightTicket.getMode());
+                txtProcedure.setText(weightTicketController.getModeProcedure(weightTicket.getMode()));
+                txtRegistrationNo.setText(weightTicket.getRegisteredNumber());
                 //check mode quy trình show Sling and Pallet
                 if(Constants.WeighingProcess.MODE_DETAIL.OUT_SELL_ROAD.name().equals(txtProcedure.getText()) ||
                         Constants.WeighingProcess.MODE_DETAIL.OUT_PLANT_PLANT.name().equals(txtProcedure.getText())||
@@ -2601,6 +2602,10 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                         ||Constants.WeighingProcess.MODE_DETAIL.OUT_SLOC_SLOC.name().equals(txtProcedure.getText())){
                     cbxVendorLoading.addItem(weightTicket.getLoadVendor());
                     cbxVendorTransport.addItem(weightTicket.getTransVendor());
+                }
+                if(Constants.WeighingProcess.MODE_DETAIL.OUT_SLOC_SLOC.name().equals(txtProcedure.getText())){
+                    txtLgortIn.setText(weightTicket.getRecvLgort());
+                    txtChargIn.setText(weightTicket.getRecvCharg());
                 }
                 // <editor-fold defaultstate="collapsed" desc="Determine state of Weight Ticket">
                 setStage1(false);

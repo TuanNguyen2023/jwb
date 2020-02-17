@@ -5,6 +5,7 @@
 package com.gcs.wb.controller;
 
 import com.gcs.wb.bapi.goodsmvt.structure.GoodsMvtWeightTicketStructure;
+import com.gcs.wb.base.enums.ModeEnum;
 import com.gcs.wb.jpa.entity.BatchStock;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
@@ -59,10 +60,10 @@ public class WeightTicketController {
 
     }
 
-    public String getMsg(){
+    public String getMsg() {
         return weightTicketService.getMsg();
     }
-    
+
     public DefaultComboBoxModel getMaterialList() {
         return weightTicketService.getMaterialList();
     }
@@ -123,7 +124,7 @@ public class WeightTicketController {
     public Object getPgmVl02nBapi(WeightTicket wt, OutboundDelivery outbDel, WeightTicket weightTicket, int timeFrom, int timeTo, List<OutboundDeliveryDetail> outDetails_lits) {
         return weightTicketService.getPgmVl02nBapi(wt, outbDel, weightTicket, timeFrom, timeTo, outDetails_lits);
     }
-    
+
     public void printWT(WeightTicket wt, boolean reprint, String ximang, List<OutboundDelivery> outbDel_list, List<OutboundDeliveryDetail> outDetails_lits,
             OutboundDelivery outbDel, JRadioButton rbtMisc, JRadioButton rbtPO, boolean isStage1, JRootPane rootPane) {
         weightTicketService.printWT(wt, reprint, ximang, outbDel_list, outDetails_lits, outbDel, rbtMisc, rbtPO, isStage1, rootPane);
@@ -132,7 +133,6 @@ public class WeightTicketController {
 //    public int getCountSingal() {
 //        return weightTicketService.getCountSingal();
 //    }
-
     public SLoc findByLgort(String lgort) {
         return weightTicketService.findByLgort(lgort);
     }
@@ -141,7 +141,7 @@ public class WeightTicketController {
         return weightTicketService.findByParam(param);
     }
 
-    public BatchStock findByWerksLgortMatnrCharg(String werks, String lgort, String matnr, String charg){
+    public BatchStock findByWerksLgortMatnrCharg(String werks, String lgort, String matnr, String charg) {
         return weightTicketService.findByWerksLgortMatnrCharg(werks, lgort, matnr, charg);
     }
 
@@ -153,7 +153,16 @@ public class WeightTicketController {
         return weightTicketService.CheckPOSTO(matnr);
     }
 
-    public OutboundDelivery findByMandtOutDel(String delnum) throws Exception{
+    public OutboundDelivery findByMandtOutDel(String delnum) throws Exception {
         return weightTicketService.findByMandtOutDel(delnum);
+    }
+
+    public String getModeProcedure(String mode) {
+        for (ModeEnum v : ModeEnum.values()) {
+            if (v.name().equals(mode)) {
+                return v.getName();
+            }
+        }
+        return null;
     }
 }
