@@ -35,6 +35,12 @@ import javax.persistence.Table;
     @NamedQuery(name = "TransportAgentVehicle.findByPlateNo",
     query = "SELECT tv FROM TransportAgentVehicle tv"
     + " WHERE tv.vehicle.plateNo = :plateNo"),
+    @NamedQuery(name = "TransportAgentVehicle.findByAbbrAndPlateNo",
+    query = "SELECT tv FROM TransportAgentVehicle tv"
+    + " WHERE tv.transportAgent.abbr = :abbr AND tv.vehicle.plateNo = :plateNo"),
+    @NamedQuery(name = "TransportAgentVehicle.findByPlateNo",
+    query = "SELECT tv FROM TransportAgentVehicle tv"
+    + " WHERE tv.vehicle.plateNo = :plateNo"),
 })
 public class TransportAgentVehicle implements Serializable {
 

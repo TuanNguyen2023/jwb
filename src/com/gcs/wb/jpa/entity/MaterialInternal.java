@@ -13,6 +13,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -21,6 +23,13 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "tbl_material_internal")
+@NamedQueries({
+    @NamedQuery(name = "MaterialInternal.findAll",
+    query = "SELECT mi FROM MaterialInternal mi"),
+    @NamedQuery(name = "MaterialInternal.findByMatnr",
+    query = "SELECT mi FROM MaterialInternal mi"
+    + " WHERE mi.matnr = :matnr")
+})
 public class MaterialInternal implements Serializable {
 
     private static final long serialVersionUID = 1L;

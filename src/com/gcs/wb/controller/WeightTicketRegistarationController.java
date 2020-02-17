@@ -9,10 +9,11 @@ import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.jpa.JReportService;
 import com.gcs.wb.jpa.entity.*;
 import com.gcs.wb.jpa.entity.OutboundDeliveryDetail;
+import com.gcs.wb.jpa.repositorys.MaterialInternalRepository;
 import com.gcs.wb.jpa.repositorys.TransportAgentVehicleRepository;
 import com.gcs.wb.jpa.repositorys.VehicleLoadRepository;
+import com.gcs.wb.jpa.repositorys.VendorRepository;
 import com.gcs.wb.service.WeightTicketRegistrationService;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +34,8 @@ public class WeightTicketRegistarationController {
     private final Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
     TransportAgentVehicleRepository transportAgentVehicleRepository = new TransportAgentVehicleRepository();
     VehicleLoadRepository vehicleLoadRepository = new VehicleLoadRepository();
+    VendorRepository vendorRepository = new VendorRepository();
+    MaterialInternalRepository materialInternalRepository = new MaterialInternalRepository();
 
     public String getReportName() {
         String reportName = null;
@@ -250,5 +253,21 @@ public class WeightTicketRegistarationController {
     
     public DefaultComboBoxModel getBatchStockModel(List<BatchStock> batchStocks) {
         return new DefaultComboBoxModel(batchStocks.toArray());
+    }
+    
+    public Vendor getVendor(String strVendor) {
+        return vendorRepository.findByLifnr(strVendor);
+    }
+    
+    public boolean checkPalteNoInVendor(String abbr, String plateNo) {
+        return transportAgentVehicleRepository.findByAbbrAndPlateNo(abbr, plateNo) != null;
+    }
+    
+    public DefaultComboBoxModel getMaterialInternalModel() {
+        return new DefaultComboBoxModel(materialInternalRepository.getMaterialInternals().toArray());
+    }
+    
+    public MaterialInternal getMaterialInternal(String matnr) {
+        return materialInternalRepository.findByMatnr(matnr);
     }
 }
