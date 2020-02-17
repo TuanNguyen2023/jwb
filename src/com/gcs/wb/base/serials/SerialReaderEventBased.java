@@ -67,6 +67,7 @@ public class SerialReaderEventBased implements SerialPortDataListener {
                 if (flag == '1') {
                     old_number = new_number;
                     new_number = "";
+                } else {
                 }
                 flag = '0';
             }
@@ -100,60 +101,65 @@ public class SerialReaderEventBased implements SerialPortDataListener {
     
     @Override
     public void serialEvent(SerialPortEvent event) {
+        Logger.getLogger(this.getClass()).error("@jSerialComm, Start.. " + event.getEventType());
         if (event.getEventType() == SerialPort.LISTENING_EVENT_DATA_AVAILABLE) {
             // we get here if data has been received
-            byte[] readBuffer = new byte[20];
+        byte[] readBuffer = new byte[20];
+        try {
+            // read data
+            while (in.available() > 0) {
+                int numBytes = in.read(readBuffer);
+            }
+            // print data
+            String result = new String(readBuffer);
+           
+            //result = result.replaceAll( "[^\\d]", "" );
+            result = this.getWeight(result);
+            Logger.getLogger(this.getClass()).error("@jSerialComm, 7777777 weight bridge signal: " + result);
+
+            BigInteger ival = BigInteger.ZERO;
             try {
-                // read data
-                while (in.available() > 0) {
-                    int numBytes = in.read(readBuffer);
-                }
-                // print data
-                String result = new String(readBuffer);
-                //result = result.replaceAll( "[^\\d]", "" );
-                result = this.getWeight(result);
+                ival = new BigInteger(result);
 
-                BigInteger ival = BigInteger.ZERO;
-                try {
-                    ival = new BigInteger(result);
-
-                    //System.out.println(WeighBridgeApp.getApplication().getLast());
-                } catch (Exception ex) {
-                    ival = BigInteger.ZERO;
-                }
-                //control.setValue(ival);
-
-                //Times of delay to refresh screen
-                if (this.count > this.times_delay) {
-                    WeighBridgeApp.getApplication().setLast(WeighBridgeApp.getApplication().getNow());
-                    WeighBridgeApp.getApplication().setNow(ival);
-                    if (WeighBridgeApp.getApplication().getNow().doubleValue() > WeighBridgeApp.getApplication().getMax().doubleValue()) {
-                        WeighBridgeApp.getApplication().setMax(WeighBridgeApp.getApplication().getNow());
-                    }
-                    control.setValue(ival);
-                    control.repaint(500);
-                    //for (int i = 1 ; i <= 1500 ; i++)
-                    // {
-                    // double garbage = Math.PI * Math.PI;
-                    // }
-                    this.count = 0;
-                } else {
-                    this.count++;
-                }
-
-                delay(500);
-                //System.out.println("Read: "+result);
-    //            Logger.getLogger(this.getClass()).error("@jSerialComm, Middle.. " + event.getEventType());
-    //            try
-    //            {
-    //                Thread.sleep(500); // do nothing for 1000 miliseconds (1 second)
-    //            }
-    //            catch(InterruptedException ex)
-    //            {
-    //            }
+                //System.out.println(WeighBridgeApp.getApplication().getLast());
+            } catch (Exception ex) {
+                ival = BigInteger.ZERO;
             }
-            catch (IOException ex) {
+            //control.setValue(ival);
+
+            //Times of delay to refresh screen
+            if (this.count > this.times_delay) {
+                Logger.getLogger(this.getClass()).error("@jSerialComm, 888888" + result);
+                WeighBridgeApp.getApplication().setLast(WeighBridgeApp.getApplication().getNow());
+                WeighBridgeApp.getApplication().setNow(ival);
+                if (WeighBridgeApp.getApplication().getNow().doubleValue() > WeighBridgeApp.getApplication().getMax().doubleValue()) {
+                    WeighBridgeApp.getApplication().setMax(WeighBridgeApp.getApplication().getNow());
+                }
+                control.setValue(ival);
+                control.repaint(500);
+                //for (int i = 1 ; i <= 1500 ; i++)
+                // {
+                // double garbage = Math.PI * Math.PI;
+                // }
+                this.count = 0;
+            } else {
+                this.count++;
             }
+            
+            delay(500);
+            //System.out.println("Read: "+result);
+//            Logger.getLogger(this.getClass()).error("@jSerialComm, Middle.. " + event.getEventType());
+//            try
+//            {
+//                Thread.sleep(500); // do nothing for 1000 miliseconds (1 second)
+//            }
+//            catch(InterruptedException ex)
+//            {
+//            }
+            Logger.getLogger(this.getClass()).error("@jSerialComm, End.. " + event.getEventType());
         }
+        catch (IOException ex) {
+        }
+      }
     }
 }
