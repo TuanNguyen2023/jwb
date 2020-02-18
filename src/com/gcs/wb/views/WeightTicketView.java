@@ -4565,6 +4565,7 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
         boolean result = false, bMisc = false, bPO = false, bMB1B = false, bMvt311 = false, bScale = false, bSLoc = false, bBatch = false;
         boolean bMaterial = false, bBatchMng = false;
         boolean bNiemXa = true;
+        boolean bBatchProduce = true;
 //        if (chkDissolved.isSelected()) {
 //            bMisc = bPO = bMB1B = bMvt311 = bScale = bSLoc = bBatch = !isDissolved();
 //            rbtMisc.setForeground(Color.black);
@@ -4675,15 +4676,29 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
         //}
         bBatch = true;
         txtGRText.setEnabled(true);
-        if (outbDel != null) {
-//            if (isStage2() && outbDel.getMatnr() != null
-//                    && outbDel.getMatnr().equalsIgnoreCase(setting.getMatnrXmxa()) && (txtCementDesc.getText().trim() == null || txtCementDesc.getText().trim().equals(""))) {
-//                bNiemXa = false;
-//            }
+        if (outbDel != null && outbDel.getMatnr() != null) {
+            materialConstraint = weightTicketController.getMaterialConstraintByMatnr(outbDel.getMatnr());
+            if (isStage2()
+                    && materialConstraint != null && materialConstraint.getRequiredNiemXa() 
+                    && (txtCementDesc.getText().trim() == null || txtCementDesc.getText().trim().equals(""))) {
+                bNiemXa = false;
+            }
             if (bNiemXa) {
                 lblCementDesc.setForeground(Color.black);
             } else {
                 lblCementDesc.setForeground(Color.red);
+                txtCementDesc.setEditable(true);
+            }
+            if (isStage2() && outbDel.getMatnr() != null
+                    && materialConstraint != null && materialConstraint.getRequiredBatch() 
+                    && (txtBatchProduce.getText().trim() == null || txtBatchProduce.getText().trim().equals(""))) {
+                bBatchProduce = false;
+            }
+            if (bBatchProduce) {
+                lblBatchProduce.setForeground(Color.black);
+            } else {
+                lblBatchProduce.setForeground(Color.red);
+                txtBatchProduce.setEditable(true);
             }
         }
         result = (bMisc || bPO || bMB1B || bMvt311) && bScale && bSLoc && bBatch && bNiemXa && (isStage1() || isStage2() || (!isStage1() && !isStage2() && weightTicket != null && weightTicket.isPosted()));
