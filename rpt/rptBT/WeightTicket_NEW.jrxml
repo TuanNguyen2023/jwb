@@ -74,7 +74,7 @@
 	</subDataset>
 	<parameter name="P_MANDT" class="java.lang.String"/>
 	<parameter name="P_WPlant" class="java.lang.String"/>
-	<parameter name="P_ID" class="java.lang.String"/>
+	<parameter name="P_ID" class="java.lang.Integer"/>
 	<parameter name="P_DAYSEQ" class="java.lang.Long"/>
 	<parameter name="P_REPRINT" class="java.lang.Boolean"/>
 	<parameter name="P_PCB40BAG" class="java.lang.Long"/>
