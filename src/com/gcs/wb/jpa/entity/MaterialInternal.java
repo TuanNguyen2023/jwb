@@ -54,6 +54,24 @@ public class MaterialInternal implements Serializable {
     @Column(name = "updated_date")
     private Date updatedDate;
 
+     public MaterialInternal() {
+    }
+
+    public MaterialInternal(int id) {
+        this.id = id;
+    }
+    
+    public MaterialInternal(String mandt, String wplant) {
+        this.mandt = mandt;
+        this.wplant = wplant;
+    }
+    
+    public MaterialInternal(String mandt, String wplant, String matnr) {
+        this.mandt = mandt;
+        this.wplant = wplant;
+        this.matnr = matnr;
+     }
+    
     public int getId() {
         return id;
     }
@@ -153,31 +171,13 @@ public class MaterialInternal implements Serializable {
             return false;
         }
         final MaterialInternal other = (MaterialInternal) obj;
-        if (this.id != other.id) {
-            return false;
-        }
-        if (!Objects.equals(this.mandt, other.mandt)) {
-            return false;
-        }
+//        if (!Objects.equals(this.mandt, other.mandt)) {
+//            return false;
+//        }
         if (!Objects.equals(this.wplant, other.wplant)) {
             return false;
         }
         if (!Objects.equals(this.matnr, other.matnr)) {
-            return false;
-        }
-        if (!Objects.equals(this.maktx, other.maktx)) {
-            return false;
-        }
-        if (!Objects.equals(this.maktg, other.maktg)) {
-            return false;
-        }
-        if (!Objects.equals(this.xchpf, other.xchpf)) {
-            return false;
-        }
-        if (!Objects.equals(this.createdDate, other.createdDate)) {
-            return false;
-        }
-        if (!Objects.equals(this.updatedDate, other.updatedDate)) {
             return false;
         }
         return true;

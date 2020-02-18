@@ -78,6 +78,10 @@ public class WeightTicketDetail implements Serializable {
     @Column(name = "updated_date")
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date updatedDate;
+    @Column(name = "MAT_DOC_GR")
+    private String matDocGr;
+    @Column(name = "MAT_DOC_GI")
+    private String matDocGi;
 
     @ManyToOne
     @JoinColumn(name = "weight_ticket_id")
@@ -256,6 +260,28 @@ public class WeightTicketDetail implements Serializable {
 
     public void setWeightTicket(WeightTicket weightTicket) {
         this.weightTicket = weightTicket;
+    }
+
+    /**
+     * @param matDocGr the matDocGr to set
+     */
+    public void setMatDocGr(String matDocGr) {
+        this.matDocGr = matDocGr;
+    }
+
+    public String getMatDocGr() {
+        return matDocGr;
+    }
+
+    /**
+     * @param matDocGi the matDocGi to set
+     */
+    public void setMatDocGi(String matDocGi) {
+        this.matDocGi = matDocGi;
+    }
+
+    public String getMatDocGi() {
+        return matDocGi;
     }
 
     @Override

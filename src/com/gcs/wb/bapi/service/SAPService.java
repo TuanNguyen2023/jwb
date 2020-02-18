@@ -34,6 +34,7 @@ import com.gcs.wb.jpa.entity.BatchStock;
 import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.Material;
+import com.gcs.wb.jpa.entity.MaterialInternal;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
 import com.gcs.wb.jpa.entity.PurchaseOrder;
 import com.gcs.wb.jpa.entity.SLoc;
@@ -41,6 +42,7 @@ import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.TransportAgentVehicle;
 import com.gcs.wb.jpa.entity.Vendor;
 import com.gcs.wb.jpa.repositorys.BatchStockRepository;
+import com.gcs.wb.jpa.repositorys.MaterialInternalRepository;
 import com.gcs.wb.jpa.repositorys.SLocRepository;
 import com.gcs.wb.jpa.repositorys.TransportAgentRepository;
 import com.gcs.wb.jpa.repositorys.TransportAgentVehicleRepository;
@@ -50,6 +52,7 @@ import com.gcs.wb.service.LookupMaterialService;
 import com.gcs.wb.views.TransportAgentView;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
@@ -77,7 +80,8 @@ public class SAPService {
     SLocRepository sLocRepository = new SLocRepository();
     TransportAgentRepository transportAgentRepository = new TransportAgentRepository();
     TransportAgentVehicleRepository transportAgentVehicleRepository = new TransportAgentVehicleRepository();
-
+    MaterialInternalRepository materialInternalRepository = new MaterialInternalRepository();
+    
     AppConfig config = WeighBridgeApp.getApplication().getConfig();
     Configuration configuration = config.getConfiguration();
 
@@ -89,21 +93,20 @@ public class SAPService {
     /**
      * sync Material
      */
-    public void syncMaterialMaster() {
-        List<Material> result = new ArrayList<>();
+    public DefaultComboBoxModel syncMaterialMaster() {
         //get data from DB
-        List<Material> materialsDB = new ArrayList<>();
-        materialsDB = lookupMaterialService.getListMaterial();
+        List<MaterialInternal> materialsDB = new ArrayList<>();
+        materialsDB = materialInternalRepository.getMaterialInternals();
         // get data SAP
-        List<Material> matsSap = new ArrayList<>();
+        List<MaterialInternal> matsSap = new ArrayList<>();
         MaterialGetListBapi bapi = new MaterialGetListBapi();
         try {
             session.execute(bapi);
             List<MaterialGetListStructure> mats = bapi.getEtMaterial();
             MaterialsV2Converter materialsV2Converter = new MaterialsV2Converter();
-            matsSap = materialsV2Converter.convert(mats);
+            matsSap = materialsV2Converter.convertMaster(mats);
         } catch (Exception ex) {
-            return;
+            return null;
         }
 
         //sync DB SAP
@@ -112,13 +115,13 @@ public class SAPService {
             entityTransaction.begin();
         }
         //update for remove DB
-        for (Material mat : materialsDB) {
+        for (MaterialInternal mat : materialsDB) {
             if (matsSap.indexOf(mat) == -1) {
                 entityManager.remove(mat);
             }
         }
         // update SAP -> DB    
-        for (Material mSap : result) {
+        for (MaterialInternal mSap : matsSap) {
             int index = materialsDB.indexOf(mSap);
             if (index == -1) {
                 entityManager.persist(mSap);
@@ -127,8 +130,14 @@ public class SAPService {
                 entityManager.merge(mSap);
             }
         }
+        
         entityTransaction.commit();
         entityManager.clear();
+        
+        // return data
+        //materialsDB = materialInternalRepository.getMaterialInternals();
+
+        return new DefaultComboBoxModel(materialsDB.toArray());
     }
 
     /**
@@ -174,6 +183,7 @@ public class SAPService {
             int index = vendorDBs.indexOf(venSap);
             if (index == -1) {
                 entityManager.persist(venSap);
+                vendorDBs = venSaps;
             } else {
                 venSap.setId(vendorDBs.get(index).getId());
                 entityManager.merge(venSap);
@@ -182,6 +192,10 @@ public class SAPService {
 
         entityTransaction.commit();
         entityManager.clear();
+        
+        if (entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
 
         // return data
         vendorDBs = vendorRepository.getListVendor();
@@ -355,7 +369,7 @@ public class SAPService {
         String mandt = configuration.getSapClient();
         String wplant = configuration.getWkPlant();
         if (configuration.isModeNormal()) {
-            // get data SAP
+//            // get data SAP
             SLocsGetListBapi bSloc = new SLocsGetListBapi(mandt, wplant);
             List<SLoc> slocSaps = new ArrayList<>();
             try {
@@ -386,7 +400,7 @@ public class SAPService {
                 sloc.setMandt(mandt);
                 sloc.setWplant(wplant);
                 int index = slocDBs.indexOf(sloc);
-                if (index == -1) {
+                if (!slocDBs.get(index).getLgort().equals(sloc.getLgort())) {
                     entityManager.persist(sloc);
                 } else {
                     sloc.setId(slocDBs.get(index).getId());

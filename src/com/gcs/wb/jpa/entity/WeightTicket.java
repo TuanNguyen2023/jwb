@@ -208,6 +208,8 @@ public class WeightTicket implements Serializable {
     private String recvCharg;
     @Column(name = "recv_po")
     private String recvPo;
+    @Column(name = "recv_matnr")
+    private String recvMatnr;
     @Column(name = "manual")
     private Character manual;
     @Column(name = "wt_id")
@@ -313,6 +315,14 @@ public class WeightTicket implements Serializable {
 
     public void setPallet(int pallet) {
         this.pallet = pallet;
+    }
+
+        public String getRecvMatnr() {
+        return recvMatnr;
+    }
+
+    public void setRecvMatnr(String recvMatnr) {
+        this.recvMatnr = recvMatnr;
     }
 
     public WeightTicket(int id) {
