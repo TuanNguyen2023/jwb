@@ -137,26 +137,13 @@ public class SerialReaderEventBased implements SerialPortDataListener {
                 }
                 control.setValue(ival);
                 control.repaint(500);
-                //for (int i = 1 ; i <= 1500 ; i++)
-                // {
-                // double garbage = Math.PI * Math.PI;
-                // }
                 this.count = 0;
             } else {
                 this.count++;
             }
             
             delay(500);
-            //System.out.println("Read: "+result);
-//            Logger.getLogger(this.getClass()).error("@jSerialComm, Middle.. " + event.getEventType());
-//            try
-//            {
-//                Thread.sleep(500); // do nothing for 1000 miliseconds (1 second)
-//            }
-//            catch(InterruptedException ex)
-//            {
-//            }
-            Logger.getLogger(this.getClass()).error("@jSerialComm, End.. " + event.getEventType());
+            Logger.getLogger(this.getClass()).error("@jSerialComm, Start.. " + event.getEventType());
         }
         catch (IOException ex) {
         }
