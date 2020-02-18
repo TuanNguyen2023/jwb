@@ -1908,7 +1908,7 @@ private void txtSONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
         boolean isShowPOV = WeighBridgeApp.getApplication().getSapSetting().getCheckPov();
         showComponent(cbxVendorLoadingN, lblVendorLoadingN, isShowPOV, false);
         showComponent(cbxVendorTransportN, lblVendorTransportN, isShowPOV, false);
-        showComponent(cbxSuppliesIdN, lblSuppliesIdN, true, true);
+        showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
 
         cbxMaterialTypeN.setModel(sapService.syncMaterialMaster());
     }
@@ -2828,7 +2828,7 @@ private void txtSONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
             WeightTicketDetail weightTicketDetail = new WeightTicketDetail();
             weightTicketDetail.setUnit("TON");
 
-            Material material = (Material) cbxMaterialTypeN.getSelectedItem();
+            MaterialInternal material = (MaterialInternal) cbxMaterialTypeN.getSelectedItem();
             weightTicketDetail.setMatnrRef(material.getMatnr());
             weightTicketDetail.setRegItemDescription(material.getMaktx());
             weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
