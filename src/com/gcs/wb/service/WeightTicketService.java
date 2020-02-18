@@ -48,6 +48,7 @@ public class WeightTicketService {
     Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
     SLocRepository sLocRepository = new SLocRepository();
     VariantRepository variantRepository = new VariantRepository();
+    MaterialConstraintRepository materialConstraintRepository = new MaterialConstraintRepository();
     EntityManager entityManager = JPAConnector.getInstance();
     String client = configuration.getSapClient();
     SAPService sapService = new SAPService();
@@ -1026,5 +1027,9 @@ public class WeightTicketService {
 
         }
         return msg;
+    }
+    
+    public MaterialConstraint getMaterialConstraintByMatnr( String matnr){
+        return materialConstraintRepository.findByMatnr(matnr);
     }
 }

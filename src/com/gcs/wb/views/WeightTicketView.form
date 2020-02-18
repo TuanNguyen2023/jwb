@@ -42,9 +42,9 @@
                   <Component id="pnWTicket" alignment="0" max="32767" attributes="0"/>
                   <Component id="pnScaleData" alignment="0" max="32767" attributes="2"/>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="pnWTFilter" pref="577" max="32767" attributes="0"/>
+                      <Component id="pnWTFilter" pref="611" max="32767" attributes="0"/>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="pnCurScale" max="32767" attributes="2"/>
+                      <Component id="pnCurScale" pref="327" max="32767" attributes="2"/>
                   </Group>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -61,9 +61,9 @@
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="pnScaleData" min="-2" max="-2" attributes="1"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="pnWTicket" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -118,7 +118,7 @@
                           </Group>
                       </Group>
                   </Group>
-                  <EmptySpace min="-2" pref="54" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="88" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -378,7 +378,7 @@
                               </Group>
                           </Group>
                       </Group>
-                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="53" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -516,9 +516,9 @@
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="txfGoodsQty" alignment="0" pref="339" max="32767" attributes="2"/>
-                      <Component id="txfOutQty" alignment="0" pref="339" max="32767" attributes="2"/>
-                      <Component id="txfInQty" alignment="0" pref="339" max="32767" attributes="2"/>
+                      <Component id="txfGoodsQty" alignment="0" pref="374" max="32767" attributes="2"/>
+                      <Component id="txfOutQty" alignment="0" pref="374" max="32767" attributes="2"/>
+                      <Component id="txfInQty" alignment="0" pref="374" max="32767" attributes="2"/>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -534,8 +534,8 @@
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="txtOutTime" pref="335" max="32767" attributes="2"/>
-                              <Component id="txtInTime" alignment="0" pref="335" max="32767" attributes="2"/>
+                              <Component id="txtOutTime" pref="369" max="32767" attributes="2"/>
+                              <Component id="txtInTime" alignment="0" pref="369" max="32767" attributes="2"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
@@ -786,151 +786,21 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <Group type="103" groupAlignment="1" attributes="0">
-                      <Group type="102" attributes="0">
-                          <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="lblGRText" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblPallet" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblSling" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblTrailerPlate" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblLicPlate" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblRegCat" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblProcedure1" alignment="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblDName" alignment="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblCMNDBL" alignment="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblReason" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblBatchProduce" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblCementDesc" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblWeightTicketIdRef" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblTicketId" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="-2" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="lblMatnr" alignment="1" min="-2" max="-2" attributes="0"/>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="chkDissolved" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace pref="276" max="32767" attributes="0"/>
-                                  <Component id="jButton3" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
-                                          <Component id="rbtInward" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace pref="8" max="32767" attributes="0"/>
-                                          <Component id="rbtOutward" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <Group type="103" groupAlignment="1" attributes="0">
-                                              <Component id="txtRegistrationNo" alignment="0" pref="169" max="32767" attributes="0"/>
-                                              <Component id="txtDName" alignment="0" pref="169" max="32767" attributes="2"/>
-                                          </Group>
-                                          <EmptySpace min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <Component id="txtGRText" pref="169" max="32767" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" attributes="0">
-                                          <Component id="cbxReason" pref="85" max="32767" attributes="0"/>
-                                          <EmptySpace pref="88" max="32767" attributes="1"/>
-                                      </Group>
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <Group type="103" groupAlignment="1" attributes="0">
-                                              <Component id="txtTrailerPlate" alignment="1" pref="169" max="32767" attributes="0"/>
-                                              <Component id="txtSling" alignment="0" pref="169" max="32767" attributes="0"/>
-                                          </Group>
-                                          <EmptySpace max="-2" attributes="1"/>
-                                      </Group>
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <Group type="103" groupAlignment="1" attributes="0">
-                                              <Component id="txtLicPlate" alignment="0" pref="169" max="32767" attributes="0"/>
-                                              <Component id="txtCMNDBL" alignment="1" pref="169" max="32767" attributes="1"/>
-                                          </Group>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" attributes="0">
-                                          <Component id="txtPallet" pref="169" max="32767" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" attributes="0">
-                                          <Component id="txtTicketId" pref="169" max="32767" attributes="1"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" attributes="0">
-                                          <Component id="txtBatchProduce" pref="169" max="32767" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" attributes="0">
-                                          <Component id="txtCementDesc" pref="169" max="32767" attributes="1"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" attributes="0">
-                                          <Component id="txtWeightTicketIdRef" pref="169" max="32767" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                                  <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="lblPONo" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lblRegItem" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lblWeight" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lblSLoc" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lblPoPosto" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lblChargIn" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lblVendorLoading" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lbKunnr" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lblCharg" min="-2" max="-2" attributes="0"/>
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <Group type="103" groupAlignment="1" attributes="0">
-                                              <Component id="lblRemark" alignment="1" min="-2" max="-2" attributes="0"/>
-                                              <Component id="lblProcedure" alignment="1" min="-2" max="-2" attributes="0"/>
-                                          </Group>
-                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                              <Component id="txtProcedure" max="32767" attributes="1"/>
-                                              <Component id="txtRemark" alignment="0" pref="159" max="32767" attributes="1"/>
-                                          </Group>
-                                          <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                                          <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="lblLgortIn" alignment="1" min="-2" max="-2" attributes="0"/>
-                                              <Component id="lblDelNum" alignment="1" min="-2" max="-2" attributes="0"/>
-                                          </Group>
-                                      </Group>
-                                      <Component id="lblComplete" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                          </Group>
-                      </Group>
-                      <Group type="102" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="lblVendorTransport" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="1" attributes="0">
+                      <Group type="102" attributes="0">
+                          <EmptySpace min="-2" pref="561" max="-2" attributes="0"/>
                           <Component id="btnPostAgain" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="21" max="32767" attributes="1"/>
+                          <EmptySpace pref="88" max="32767" attributes="1"/>
                           <Component id="btnReprint" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="btnSave" min="-2" pref="141" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="txtDelNum" alignment="0" pref="294" max="32767" attributes="3"/>
-                      <Component id="txtPONo" alignment="0" pref="294" max="32767" attributes="3"/>
-                      <Component id="txtRegItem" alignment="0" pref="294" max="32767" attributes="3"/>
-                      <Component id="txtMatnr" alignment="0" pref="294" max="32767" attributes="3"/>
-                      <Component id="txtWeight" pref="294" max="32767" attributes="3"/>
-                      <Component id="cbxKunnr" pref="294" max="32767" attributes="3"/>
-                      <Component id="cbxSLoc" pref="294" max="32767" attributes="1"/>
-                      <Component id="txtLgortIn" pref="294" max="32767" attributes="3"/>
-                      <Component id="cbxCharg" pref="294" max="32767" attributes="3"/>
-                      <Component id="txtChargIn" pref="294" max="32767" attributes="3"/>
-                      <Component id="txtPoPosto" alignment="0" pref="294" max="32767" attributes="3"/>
-                      <Component id="cbxVendorLoading" pref="294" max="32767" attributes="3"/>
-                      <Component id="cbxVendorTransport" alignment="0" pref="294" max="32767" attributes="3"/>
-                      <Component id="cbxCompleted" pref="294" max="32767" attributes="1"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="pnWTLeft" max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="pnWTRight" min="-2" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -938,423 +808,23 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
-                  <EmptySpace pref="11" max="32767" attributes="0"/>
+              <Group type="102" alignment="0" max="-2" attributes="0">
+                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                      <Component id="pnWTLeft" alignment="0" max="32767" attributes="1"/>
+                      <Component id="pnWTRight" alignment="0" max="32767" attributes="1"/>
+                  </Group>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="lblProcedure" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="rbtOutward" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="rbtInward" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblRegCat" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtProcedure" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnSave" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnReprint" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnPostAgain" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" max="-2" attributes="0">
-                      <Component id="lblProcedure1" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtRegistrationNo" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblDelNum" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtDelNum" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" max="-2" attributes="0">
-                      <Component id="lblDName" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtDName" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblPONo" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtPONo" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" max="-2" attributes="0">
-                      <Component id="lblCMNDBL" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtCMNDBL" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblRegItem" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="txtRegItem" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="1" attributes="0">
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lblLicPlate" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblMatnr" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtMatnr" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lblWeight" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtWeight" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lbKunnr" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="cbxKunnr" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lblSLoc" alignment="3" min="-2" pref="22" max="-2" attributes="0"/>
-                              <Component id="cbxSLoc" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lblLgortIn" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtLgortIn" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="1" attributes="0">
-                          <Component id="txtLicPlate" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lblTrailerPlate" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtTrailerPlate" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" max="-2" attributes="0">
-                              <Component id="lblSling" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtSling" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="lblPallet" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtPallet" alignment="0" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" max="-2" attributes="0">
-                              <Component id="lblGRText" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtGRText" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblRemark" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtRemark" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                  </Group>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lblCharg" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="cbxCharg" alignment="3" min="-2" max="-2" attributes="1"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lblChargIn" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtChargIn" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lblPoPosto" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtPoPosto" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lblVendorLoading" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="cbxVendorLoading" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txtCementDesc" alignment="3" min="-2" max="-2" attributes="1"/>
-                              <Component id="lblCementDesc" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txtBatchProduce" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblBatchProduce" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txtTicketId" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblTicketId" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txtWeightTicketIdRef" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblWeightTicketIdRef" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                  </Group>
-                  <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lblVendorTransport" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="cbxVendorTransport" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lblComplete" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="cbxCompleted" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="btnSave" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btnReprint" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btnPostAgain" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jButton3" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lblReason" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="cbxReason" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="chkDissolved" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JLabel" name="lblDName">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblDName.text"/>
-            <Property name="name" type="java.lang.String" value="lblDName" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="txtDName">
-          <Properties>
-            <Property name="editable" type="boolean" value="false"/>
-            <Property name="name" type="java.lang.String" value="txtDName" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblCMNDBL">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblCMNDBL.text"/>
-            <Property name="name" type="java.lang.String" value="lblCMNDBL" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="txtCMNDBL">
-          <Properties>
-            <Property name="editable" type="boolean" value="false"/>
-            <Property name="name" type="java.lang.String" value="txtCMNDBL" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblLicPlate">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblLicPlate.text"/>
-            <Property name="name" type="java.lang.String" value="lblLicPlate" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JFormattedTextField" name="txtLicPlate">
-          <Properties>
-            <Property name="editable" type="boolean" value="false"/>
-            <Property name="name" type="java.lang.String" value="txtLicPlate" noResource="true"/>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JFormattedTextField(new RegexFormatter(&quot;\\d{2}\\w-\\d{4}&quot;))"/>
-          </AuxValues>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblTrailerPlate">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblTrailerPlate.text"/>
-            <Property name="name" type="java.lang.String" value="lblTrailerPlate" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JFormattedTextField" name="txtTrailerPlate">
-          <Properties>
-            <Property name="editable" type="boolean" value="false"/>
-            <Property name="name" type="java.lang.String" value="txtTrailerPlate" noResource="true"/>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JFormattedTextField(new RegexFormatter(&quot;\\d{2}\\w-\\d{4}&quot;))"/>
-          </AuxValues>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblRegCat">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblRegCat.text"/>
-            <Property name="name" type="java.lang.String" value="lblRegCat" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JRadioButton" name="rbtInward">
-          <Properties>
-            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-              <ComponentRef name="grbCat"/>
-            </Property>
-            <Property name="text" type="java.lang.String" resourceKey="rbtInward.text"/>
-            <Property name="enabled" type="boolean" value="false"/>
-            <Property name="name" type="java.lang.String" value="rbtInward" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JRadioButton" name="rbtOutward">
-          <Properties>
-            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-              <ComponentRef name="grbCat"/>
-            </Property>
-            <Property name="text" type="java.lang.String" resourceKey="rbtOutward.text"/>
-            <Property name="enabled" type="boolean" value="false"/>
-            <Property name="name" type="java.lang.String" value="rbtOutward" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblRegItem">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblRegItem.text"/>
-            <Property name="name" type="java.lang.String" value="lblRegItem" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="txtRegItem">
-          <Properties>
-            <Property name="editable" type="boolean" value="false"/>
-            <Property name="name" type="java.lang.String" value="txtRegItem" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblMatnr">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblMatnr.text"/>
-            <Property name="name" type="java.lang.String" value="lblMatnr" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblDelNum">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblDelNum.text"/>
-            <Property name="name" type="java.lang.String" value="lblDelNum" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="txtDelNum">
-          <Properties>
-            <Property name="editable" type="boolean" value="false"/>
-            <Property name="name" type="java.lang.String" value="txtDelNum" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblSLoc">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblSLoc.text"/>
-            <Property name="name" type="java.lang.String" value="lblSLoc" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="cbxSLoc">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor" postCode="cbxSLoc.setRenderer(new DefaultListCellRenderer() {&#xa;           @Override&#xa;           public Component getListCellRendererComponent(&#xa;                   JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {&#xa;               super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);&#xa;               if (value instanceof SLoc) {&#xa;                   SLoc sloc = (SLoc)value;&#xa;                   setText(sloc.getLgort().concat(&quot; - &quot;).concat(sloc.getLgobe()));&#xa;//                    setText(sloc.getLgobe().concat(&quot; - &quot;).concat(sloc.getLgort()));&#xa;               }&#xa;               return this;&#xa;           }&#xa;       });">
-              <Connection code="sapService.getSlocModel()" type="code"/>
-            </Property>
-            <Property name="name" type="java.lang.String" value="cbxSLoc" noResource="true"/>
-          </Properties>
-          <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbxSLocItemStateChanged"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblCharg">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblCharg.text"/>
-            <Property name="name" type="java.lang.String" value="lblCharg" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="cbxCharg">
-          <Properties>
-            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="com.gcs.wb.views.WeightTicketView" id="acceptBatch" methodName="acceptBatch"/>
-            </Property>
-            <Property name="name" type="java.lang.String" value="cbxCharg" noResource="true"/>
-          </Properties>
-          <Events>
-            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="cbxChargKeyReleased"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblReason">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblReason.text"/>
-            <Property name="name" type="java.lang.String" value="lblReason" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="cbxReason">
-          <Properties>
-            <Property name="enabled" type="boolean" value="false"/>
-            <Property name="name" type="java.lang.String" value="cbxReason" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblCementDesc">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblCementDesc.text"/>
-            <Property name="name" type="java.lang.String" value="lblCementDesc" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="txtCementDesc">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="txtCementDesc.text"/>
-            <Property name="name" type="java.lang.String" value="txtCementDesc" noResource="true"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtCementDescActionPerformed"/>
-            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtCementDescKeyReleased"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblGRText">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblGRText.text"/>
-            <Property name="name" type="java.lang.String" value="lblGRText" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="txtGRText">
-          <Properties>
-            <Property name="editable" type="boolean" value="false"/>
-            <Property name="name" type="java.lang.String" value="txtGRText" noResource="true"/>
-          </Properties>
-          <Events>
-            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtGRTextKeyReleased"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblComplete">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblComplete.text"/>
-            <Property name="name" type="java.lang.String" value="lblComplete" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="cbxCompleted">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="3">
-                <StringItem index="0" value="Auto"/>
-                <StringItem index="1" value="Set"/>
-                <StringItem index="2" value="NotSet"/>
-              </StringArray>
-            </Property>
-            <Property name="enabled" type="boolean" value="false"/>
-            <Property name="name" type="java.lang.String" value="cbxCompleted" noResource="true"/>
-          </Properties>
-          <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbxCompletedItemStateChanged"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JCheckBox" name="chkDissolved">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="chkDissolved.text"/>
-            <Property name="enabled" type="boolean" value="false"/>
-            <Property name="focusable" type="boolean" value="false"/>
-            <Property name="hideActionText" type="boolean" value="true"/>
-            <Property name="name" type="java.lang.String" value="chkDissolved" noResource="true"/>
-          </Properties>
-          <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="chkDissolvedItemStateChanged"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JTextField" name="txtMatnr">
-          <Properties>
-            <Property name="editable" type="boolean" value="false"/>
-            <Property name="text" type="java.lang.String" resourceKey="txtMatnr.text"/>
-            <Property name="name" type="java.lang.String" value="txtMatnr" noResource="true"/>
-          </Properties>
-          <AccessibilityProperties>
-            <Property name="AccessibleContext.accessibleName" type="java.lang.String" resourceKey="txtMatnr.AccessibleContext.accessibleName"/>
-          </AccessibilityProperties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lbKunnr">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lbKunnr.text"/>
-            <Property name="name" type="java.lang.String" value="lbKunnr" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="cbxKunnr">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="0"/>
-            </Property>
-            <Property name="name" type="java.lang.String" value="cbxKunnr" noResource="true"/>
-          </Properties>
-          <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbxKunnrItemStateChanged"/>
-          </Events>
-        </Component>
         <Component class="javax.swing.JButton" name="btnPostAgain">
           <Properties>
             <Property name="text" type="java.lang.String" resourceKey="btnPostAgain.text"/>
@@ -1387,244 +857,724 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSaveActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="jButton3">
+        <Container class="javax.swing.JPanel" name="pnWTLeft">
           <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="cmdNiemXa.text"/>
-            <Property name="enabled" type="boolean" value="false"/>
-            <Property name="name" type="java.lang.String" value="cmdNiemXa" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="pnWTLeft" noResource="true"/>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton3ActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="cbxVendorLoading">
+
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="lblPallet" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblGRText" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblSling" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblTrailerPlate" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblRegCat" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblRegistrationNo" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblDName" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblCMNDBL" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblBatchProduce" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblCementDesc" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblWeightTicketIdRef" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblTicketId" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblLicPlate" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
+                              <Component id="rbtInward" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace pref="37" max="32767" attributes="0"/>
+                              <Component id="rbtOutward" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="txtRegistrationNo" alignment="0" pref="198" max="32767" attributes="0"/>
+                          <Component id="txtDName" alignment="0" pref="198" max="32767" attributes="2"/>
+                          <Component id="txtGRText" alignment="1" pref="198" max="32767" attributes="0"/>
+                          <Component id="txtTrailerPlate" alignment="1" pref="198" max="32767" attributes="0"/>
+                          <Component id="txtSling" alignment="0" pref="198" max="32767" attributes="0"/>
+                          <Component id="txtLicPlate" alignment="0" pref="198" max="32767" attributes="0"/>
+                          <Component id="txtCMNDBL" alignment="1" pref="198" max="32767" attributes="1"/>
+                          <Component id="txtPallet" alignment="0" pref="198" max="32767" attributes="0"/>
+                          <Component id="txtTicketId" alignment="0" pref="198" max="32767" attributes="1"/>
+                          <Component id="txtBatchProduce" alignment="0" pref="198" max="32767" attributes="0"/>
+                          <Component id="txtCementDesc" alignment="0" pref="198" max="32767" attributes="1"/>
+                          <Component id="txtWeightTicketIdRef" alignment="0" pref="198" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="lblProcedure" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="txtProcedure" pref="169" max="32767" attributes="1"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="lblRemark" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="txtRemark" pref="168" max="32767" attributes="1"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="rbtOutward" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="rbtInward" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblRegCat" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblProcedure" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtProcedure" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="lblRegistrationNo" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtRegistrationNo" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="lblDName" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtDName" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="lblCMNDBL" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtCMNDBL" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="txtLicPlate" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblLicPlate" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="lblTrailerPlate" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtTrailerPlate" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" max="-2" attributes="0">
+                          <Component id="lblSling" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtSling" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="txtPallet" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblPallet" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" max="-2" attributes="0">
+                          <Component id="lblGRText" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtGRText" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtRemark" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblRemark" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="txtCementDesc" alignment="3" min="-2" max="-2" attributes="1"/>
+                          <Component id="lblCementDesc" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="txtBatchProduce" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblBatchProduce" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="txtTicketId" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblTicketId" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="txtWeightTicketIdRef" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblWeightTicketIdRef" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace pref="29" max="32767" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+          </Layout>
+          <SubComponents>
+            <Component class="javax.swing.JLabel" name="lblRegCat">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblRegCat.text"/>
+                <Property name="name" type="java.lang.String" value="lblRegCat" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JRadioButton" name="rbtInward">
+              <Properties>
+                <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+                  <ComponentRef name="grbCat"/>
+                </Property>
+                <Property name="text" type="java.lang.String" resourceKey="rbtInward.text"/>
+                <Property name="enabled" type="boolean" value="false"/>
+                <Property name="name" type="java.lang.String" value="rbtInward" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JRadioButton" name="rbtOutward">
+              <Properties>
+                <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+                  <ComponentRef name="grbCat"/>
+                </Property>
+                <Property name="text" type="java.lang.String" resourceKey="rbtOutward.text"/>
+                <Property name="enabled" type="boolean" value="false"/>
+                <Property name="name" type="java.lang.String" value="rbtOutward" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtRegistrationNo">
+              <Properties>
+                <Property name="background" type="java.awt.Color" resourceKey="txtRegistrationNo.background"/>
+                <Property name="editable" type="boolean" value="false"/>
+                <Property name="text" type="java.lang.String" resourceKey="txtRegistrationNo.text"/>
+                <Property name="name" type="java.lang.String" value="txtRegistrationNo" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtDName">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+                <Property name="name" type="java.lang.String" value="txtDName" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblRegistrationNo">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblRegistrationNo.text"/>
+                <Property name="name" type="java.lang.String" value="lblRegistrationNo" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblDName">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblDName.text"/>
+                <Property name="name" type="java.lang.String" value="lblDName" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblCMNDBL">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblCMNDBL.text"/>
+                <Property name="name" type="java.lang.String" value="lblCMNDBL" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtCMNDBL">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+                <Property name="name" type="java.lang.String" value="txtCMNDBL" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblLicPlate">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblLicPlate.text"/>
+                <Property name="name" type="java.lang.String" value="lblLicPlate" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JFormattedTextField" name="txtLicPlate">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+                <Property name="name" type="java.lang.String" value="txtLicPlate" noResource="true"/>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JFormattedTextField(new RegexFormatter(&quot;\\d{2}\\w-\\d{4}&quot;))"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblTrailerPlate">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblTrailerPlate.text"/>
+                <Property name="name" type="java.lang.String" value="lblTrailerPlate" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JFormattedTextField" name="txtTrailerPlate">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+                <Property name="name" type="java.lang.String" value="txtTrailerPlate" noResource="true"/>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JFormattedTextField(new RegexFormatter(&quot;\\d{2}\\w-\\d{4}&quot;))"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JFormattedTextField" name="txtSling">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+                <Property name="name" type="java.lang.String" value="txtSling" noResource="true"/>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JFormattedTextField(new RegexFormatter(&quot;\\d{2}\\w-\\d{4}&quot;))"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblSling">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblSling.text"/>
+                <Property name="name" type="java.lang.String" value="lblSling" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblPallet">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblPallet.text"/>
+                <Property name="name" type="java.lang.String" value="lblPallet" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JFormattedTextField" name="txtPallet">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+                <Property name="name" type="java.lang.String" value="txtPallet" noResource="true"/>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JFormattedTextField(new RegexFormatter(&quot;\\d{2}\\w-\\d{4}&quot;))"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblGRText">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblGRText.text"/>
+                <Property name="name" type="java.lang.String" value="lblGRText" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtGRText">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+                <Property name="name" type="java.lang.String" value="txtGRText" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtGRTextKeyReleased"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtCementDesc">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="txtCementDesc.text"/>
+                <Property name="name" type="java.lang.String" value="txtCementDesc" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtCementDescActionPerformed"/>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtCementDescKeyReleased"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblCementDesc">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblCementDesc.text"/>
+                <Property name="name" type="java.lang.String" value="lblCementDesc" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblBatchProduce">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblBatchProduce.text"/>
+                <Property name="name" type="java.lang.String" value="lblBatchProduce" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JFormattedTextField" name="txtBatchProduce">
+              <Properties>
+                <Property name="name" type="java.lang.String" value="txtBatchProduce" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JFormattedTextField" name="txtTicketId">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+                <Property name="name" type="java.lang.String" value="txtTicketId" noResource="true"/>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JFormattedTextField(new RegexFormatter(&quot;\\d{2}\\w-\\d{4}&quot;))"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblTicketId">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblTicketId.text"/>
+                <Property name="name" type="java.lang.String" value="lblTicketId" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JFormattedTextField" name="txtWeightTicketIdRef">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+                <Property name="name" type="java.lang.String" value="txtWeightTicketIdRef" noResource="true"/>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JFormattedTextField(new RegexFormatter(&quot;\\d{2}\\w-\\d{4}&quot;))"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblWeightTicketIdRef">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblWeightTicketIdRef.text"/>
+                <Property name="name" type="java.lang.String" value="lblWeightTicketIdRef" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblProcedure">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblProcedure.text"/>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="lblProcedure.toolTipText"/>
+                <Property name="name" type="java.lang.String" value="lblProcedure" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtProcedure">
+              <Properties>
+                <Property name="background" type="java.awt.Color" resourceKey="txtProcedure.background"/>
+                <Property name="editable" type="boolean" value="false"/>
+                <Property name="name" type="java.lang.String" value="txtProcedure" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblRemark">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblRemark.text"/>
+                <Property name="name" type="java.lang.String" value="lblRemark" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtRemark">
+              <Properties>
+                <Property name="name" type="java.lang.String" value="txtRemark" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtRemarkKeyReleased"/>
+              </Events>
+            </Component>
+          </SubComponents>
+        </Container>
+        <Container class="javax.swing.JPanel" name="pnWTRight">
           <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="sapService.getVendorList()" type="code"/>
-            </Property>
-            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="com.gcs.wb.views.WeightTicketView" id="acceptBatch" methodName="acceptBatch"/>
-            </Property>
-            <Property name="name" type="java.lang.String" value="cbxVendorLoading" noResource="true"/>
-            <Property name="renderer" type="javax.swing.ListCellRenderer" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="new DefaultListCellRenderer() {&#xd;&#xa;&#xd;&#xa;                @Override&#xd;&#xa;                public Component getListCellRendererComponent(&#xd;&#xa;                        JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {&#xd;&#xa;                    super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);&#xd;&#xa;                    if (value instanceof Vendor) {&#xd;&#xa;                        Vendor mat = (Vendor) value;&#xd;&#xa;                        setText(mat.getName1() + &quot; &quot; + mat.getName2());&#xd;&#xa;                    }&#xd;&#xa;                    return this;&#xd;&#xa;                }&#xd;&#xa;            }" type="code"/>
-            </Property>
+            <Property name="name" type="java.lang.String" value="pnWTRight" noResource="true"/>
           </Properties>
-          <Events>
-            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="cbxVendorLoadingKeyReleased"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="cbxVendorTransport">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="sapService.getVendorList()" type="code"/>
-            </Property>
-            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="com.gcs.wb.views.WeightTicketView" id="acceptBatch" methodName="acceptBatch"/>
-            </Property>
-            <Property name="name" type="java.lang.String" value="cbxVendorTransport" noResource="true"/>
-            <Property name="renderer" type="javax.swing.ListCellRenderer" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="new DefaultListCellRenderer() {&#xa;&#xa;            @Override&#xa;            public Component getListCellRendererComponent(&#xa;                JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {&#xa;                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);&#xa;                if (value instanceof Vendor) {&#xa;                    Vendor mat = (Vendor) value;&#xa;                    setText(mat.getName1() + &quot; &quot; + mat.getName2());&#xa;                }&#xa;                return this;&#xa;            }&#xa;        }" type="code"/>
-            </Property>
-          </Properties>
-          <Events>
-            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="cbxVendorTransportKeyReleased"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JTextField" name="txtPoPosto">
-          <Properties>
-            <Property name="name" type="java.lang.String" value="txtPoPosto" noResource="true"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtPoPostoActionPerformed"/>
-            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtPoPostoKeyReleased"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblPoPosto">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblPoPosto.text"/>
-            <Property name="name" type="java.lang.String" value="lblPoPosto" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblVendorLoading">
-          <Properties>
-            <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" resourceKey="lblVendorLoading.text"/>
-            <Property name="name" type="java.lang.String" value="lblVendorLoading" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblVendorTransport">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblVendorTransport.text"/>
-            <Property name="name" type="java.lang.String" value="lblVendorTransport" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblProcedure">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblProcedure.text"/>
-            <Property name="toolTipText" type="java.lang.String" resourceKey="lblProcedure.toolTipText"/>
-            <Property name="name" type="java.lang.String" value="lblProcedure" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblProcedure1">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblRegistrationNo.text"/>
-            <Property name="name" type="java.lang.String" value="lblRegistrationNo" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="txtRegistrationNo">
-          <Properties>
-            <Property name="background" type="java.awt.Color" resourceKey="txtRegistrationNo.background"/>
-            <Property name="editable" type="boolean" value="false"/>
-            <Property name="text" type="java.lang.String" resourceKey="txtRegistrationNo.text"/>
-            <Property name="name" type="java.lang.String" value="txtRegistrationNo" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JFormattedTextField" name="txtSling">
-          <Properties>
-            <Property name="editable" type="boolean" value="false"/>
-            <Property name="name" type="java.lang.String" value="txtSling" noResource="true"/>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JFormattedTextField(new RegexFormatter(&quot;\\d{2}\\w-\\d{4}&quot;))"/>
-          </AuxValues>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblSling">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblSling.text"/>
-            <Property name="name" type="java.lang.String" value="lblSling" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblPallet">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblPallet.text"/>
-            <Property name="name" type="java.lang.String" value="lblPallet" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JFormattedTextField" name="txtPallet">
-          <Properties>
-            <Property name="editable" type="boolean" value="false"/>
-            <Property name="name" type="java.lang.String" value="txtPallet" noResource="true"/>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JFormattedTextField(new RegexFormatter(&quot;\\d{2}\\w-\\d{4}&quot;))"/>
-          </AuxValues>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblRemark">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblRemark.text"/>
-            <Property name="name" type="java.lang.String" value="lblRemark" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="txtRemark">
-          <Properties>
-            <Property name="name" type="java.lang.String" value="txtRemark" noResource="true"/>
-          </Properties>
-          <Events>
-            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtRemarkKeyReleased"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblBatchProduce">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblBatchProduce.text"/>
-            <Property name="name" type="java.lang.String" value="lblBatchProduce" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JFormattedTextField" name="txtBatchProduce">
-          <Properties>
-            <Property name="editable" type="boolean" value="false"/>
-            <Property name="name" type="java.lang.String" value="txtBatchProduce" noResource="true"/>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JFormattedTextField(new RegexFormatter(&quot;\\d{2}\\w-\\d{4}&quot;))"/>
-          </AuxValues>
-        </Component>
-        <Component class="javax.swing.JFormattedTextField" name="txtTicketId">
-          <Properties>
-            <Property name="editable" type="boolean" value="false"/>
-            <Property name="name" type="java.lang.String" value="txtTicketId" noResource="true"/>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JFormattedTextField(new RegexFormatter(&quot;\\d{2}\\w-\\d{4}&quot;))"/>
-          </AuxValues>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblTicketId">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblTicketId.text"/>
-            <Property name="name" type="java.lang.String" value="lblTicketId" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JFormattedTextField" name="txtWeightTicketIdRef">
-          <Properties>
-            <Property name="editable" type="boolean" value="false"/>
-            <Property name="name" type="java.lang.String" value="txtWeightTicketIdRef" noResource="true"/>
-          </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JFormattedTextField(new RegexFormatter(&quot;\\d{2}\\w-\\d{4}&quot;))"/>
-          </AuxValues>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblWeightTicketIdRef">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblWeightTicketIdRef.text"/>
-            <Property name="name" type="java.lang.String" value="lblWeightTicketIdRef" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="txtPONo">
-          <Properties>
-            <Property name="editable" type="boolean" value="false"/>
-            <Property name="name" type="java.lang.String" value="txtPONo" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblPONo">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblPONo.text"/>
-            <Property name="name" type="java.lang.String" value="lblPONo" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="txtWeight">
-          <Properties>
-            <Property name="editable" type="boolean" value="false"/>
-            <Property name="name" type="java.lang.String" value="txtWeight" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblWeight">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblWeight.text"/>
-            <Property name="name" type="java.lang.String" value="lblWeight" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="txtLgortIn">
-          <Properties>
-            <Property name="editable" type="boolean" value="false"/>
-            <Property name="name" type="java.lang.String" value="txtLgortIn" noResource="true"/>
-            <Property name="requestFocusEnabled" type="boolean" value="false"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblLgortIn">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblLgortIn.text"/>
-            <Property name="name" type="java.lang.String" value="lblLgortIn" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="txtChargIn">
-          <Properties>
-            <Property name="editable" type="boolean" value="false"/>
-            <Property name="name" type="java.lang.String" value="txtChargIn" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblChargIn">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblChargIn.text"/>
-            <Property name="name" type="java.lang.String" value="lblChargIn" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JTextField" name="txtProcedure">
-          <Properties>
-            <Property name="background" type="java.awt.Color" resourceKey="txtProcedure.background"/>
-            <Property name="editable" type="boolean" value="false"/>
-            <Property name="name" type="java.lang.String" value="txtProcedure" noResource="true"/>
-          </Properties>
-        </Component>
+
+          <Layout>
+            <DimensionLayout dim="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" max="-2" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="lblWeight" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblRegItem" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblPONo" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblSO" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblVendorTransport" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblVendorLoading" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" alignment="1" groupAlignment="1" attributes="0">
+                              <Component id="lblSLoc" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblMatnr" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblPoPosto" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblChargIn" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblCharg" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="lbKunnr" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lblLgortIn" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lblDelNum" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                          </Group>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="cbxVendorTransport" max="32767" attributes="3"/>
+                          <Component id="cbxCharg" alignment="0" max="32767" attributes="3"/>
+                          <Component id="cbxVendorLoading" alignment="0" max="32767" attributes="3"/>
+                          <Component id="cbxSLoc" alignment="0" max="32767" attributes="1"/>
+                          <Component id="txtDelNum" alignment="0" max="32767" attributes="3"/>
+                          <Component id="txtSO" alignment="0" pref="260" max="32767" attributes="1"/>
+                          <Component id="txtMatnr" alignment="0" max="32767" attributes="3"/>
+                          <Component id="txtPONo" alignment="0" pref="260" max="32767" attributes="3"/>
+                          <Component id="cbxKunnr" alignment="0" pref="260" max="32767" attributes="3"/>
+                          <Component id="txtChargIn" alignment="0" pref="260" max="32767" attributes="3"/>
+                          <Component id="txtPoPosto" alignment="0" pref="260" max="32767" attributes="3"/>
+                          <Component id="txtLgortIn" alignment="0" pref="260" max="32767" attributes="3"/>
+                          <Component id="txtRegItem" alignment="0" pref="260" max="32767" attributes="3"/>
+                          <Component id="txtWeight" alignment="0" max="32767" attributes="3"/>
+                      </Group>
+                      <EmptySpace max="32767" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+            <DimensionLayout dim="1">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" max="-2" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" max="-2" attributes="0">
+                          <Component id="lblDelNum" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtDelNum" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="txtSO" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblSO" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="txtPONo" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblPONo" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="txtRegItem" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblRegItem" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" max="-2" attributes="0">
+                          <Component id="txtMatnr" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblMatnr" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="txtWeight" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblWeight" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" max="-2" attributes="0">
+                          <Component id="lbKunnr" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbxKunnr" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="cbxSLoc" alignment="3" min="-2" max="-2" attributes="1"/>
+                          <Component id="lblSLoc" alignment="3" min="-2" pref="22" max="-2" attributes="1"/>
+                      </Group>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" max="-2" attributes="0">
+                          <Component id="txtLgortIn" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblLgortIn" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="lblCharg" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbxCharg" alignment="3" min="-2" max="-2" attributes="2"/>
+                      </Group>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" max="-2" attributes="0">
+                          <Component id="lblChargIn" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtChargIn" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" max="-2" attributes="0">
+                          <Component id="lblPoPosto" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtPoPosto" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="cbxVendorLoading" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblVendorLoading" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="cbxVendorTransport" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblVendorTransport" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+            </DimensionLayout>
+          </Layout>
+          <SubComponents>
+            <Component class="javax.swing.JTextField" name="txtDelNum">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+                <Property name="name" type="java.lang.String" value="txtDelNum" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtPONo">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+                <Property name="name" type="java.lang.String" value="txtPONo" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtRegItem">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+                <Property name="name" type="java.lang.String" value="txtRegItem" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtMatnr">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+                <Property name="text" type="java.lang.String" resourceKey="txtMatnr.text"/>
+                <Property name="name" type="java.lang.String" value="txtMatnr" noResource="true"/>
+              </Properties>
+              <AccessibilityProperties>
+                <Property name="AccessibleContext.accessibleName" type="java.lang.String" resourceKey="txtMatnr.AccessibleContext.accessibleName"/>
+              </AccessibilityProperties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtWeight">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+                <Property name="name" type="java.lang.String" value="txtWeight" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="cbxKunnr">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="0"/>
+                </Property>
+                <Property name="name" type="java.lang.String" value="cbxKunnr" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbxKunnrItemStateChanged"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="cbxSLoc">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor" postCode="cbxSLoc.setRenderer(new DefaultListCellRenderer() {&#xa;           @Override&#xa;           public Component getListCellRendererComponent(&#xa;                   JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {&#xa;               super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);&#xa;               if (value instanceof SLoc) {&#xa;                   SLoc sloc = (SLoc)value;&#xa;                   setText(sloc.getLgort().concat(&quot; - &quot;).concat(sloc.getLgobe()));&#xa;//                    setText(sloc.getLgobe().concat(&quot; - &quot;).concat(sloc.getLgort()));&#xa;               }&#xa;               return this;&#xa;           }&#xa;       });">
+                  <Connection code="sapService.getSlocModel()" type="code"/>
+                </Property>
+                <Property name="name" type="java.lang.String" value="cbxSLoc" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbxSLocItemStateChanged"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtLgortIn">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+                <Property name="name" type="java.lang.String" value="txtLgortIn" noResource="true"/>
+                <Property name="requestFocusEnabled" type="boolean" value="false"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="cbxCharg">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="com.gcs.wb.views.WeightTicketView" id="acceptBatch" methodName="acceptBatch"/>
+                </Property>
+                <Property name="name" type="java.lang.String" value="cbxCharg" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="cbxChargKeyReleased"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtChargIn">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+                <Property name="name" type="java.lang.String" value="txtChargIn" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtPoPosto">
+              <Properties>
+                <Property name="name" type="java.lang.String" value="txtPoPosto" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtPoPostoActionPerformed"/>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtPoPostoKeyReleased"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="cbxVendorLoading">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="sapService.getVendorList()" type="code"/>
+                </Property>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="com.gcs.wb.views.WeightTicketView" id="acceptBatch" methodName="acceptBatch"/>
+                </Property>
+                <Property name="name" type="java.lang.String" value="cbxVendorLoading" noResource="true"/>
+                <Property name="renderer" type="javax.swing.ListCellRenderer" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="new DefaultListCellRenderer() {&#xd;&#xa;&#xd;&#xa;                @Override&#xd;&#xa;                public Component getListCellRendererComponent(&#xd;&#xa;                        JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {&#xd;&#xa;                    super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);&#xd;&#xa;                    if (value instanceof Vendor) {&#xd;&#xa;                        Vendor mat = (Vendor) value;&#xd;&#xa;                        setText(mat.getName1() + &quot; &quot; + mat.getName2());&#xd;&#xa;                    }&#xd;&#xa;                    return this;&#xd;&#xa;                }&#xd;&#xa;            }" type="code"/>
+                </Property>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="cbxVendorLoadingKeyReleased"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="cbxVendorTransport">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="sapService.getVendorList()" type="code"/>
+                </Property>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="com.gcs.wb.views.WeightTicketView" id="acceptBatch" methodName="acceptBatch"/>
+                </Property>
+                <Property name="name" type="java.lang.String" value="cbxVendorTransport" noResource="true"/>
+                <Property name="renderer" type="javax.swing.ListCellRenderer" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                  <Connection code="new DefaultListCellRenderer() {&#xa;&#xa;            @Override&#xa;            public Component getListCellRendererComponent(&#xa;                JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {&#xa;                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);&#xa;                if (value instanceof Vendor) {&#xa;                    Vendor mat = (Vendor) value;&#xa;                    setText(mat.getName1() + &quot; &quot; + mat.getName2());&#xa;                }&#xa;                return this;&#xa;            }&#xa;        }" type="code"/>
+                </Property>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="cbxVendorTransportKeyReleased"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblVendorTransport">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblVendorTransport.text"/>
+                <Property name="name" type="java.lang.String" value="lblVendorTransport" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblVendorLoading">
+              <Properties>
+                <Property name="horizontalAlignment" type="int" value="4"/>
+                <Property name="text" type="java.lang.String" resourceKey="lblVendorLoading.text"/>
+                <Property name="name" type="java.lang.String" value="lblVendorLoading" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblPoPosto">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblPoPosto.text"/>
+                <Property name="name" type="java.lang.String" value="lblPoPosto" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblChargIn">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblChargIn.text"/>
+                <Property name="name" type="java.lang.String" value="lblChargIn" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblCharg">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblCharg.text"/>
+                <Property name="name" type="java.lang.String" value="lblCharg" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblLgortIn">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblLgortIn.text"/>
+                <Property name="name" type="java.lang.String" value="lblLgortIn" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblSLoc">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblSLoc.text"/>
+                <Property name="name" type="java.lang.String" value="lblSLoc" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lbKunnr">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lbKunnr.text"/>
+                <Property name="name" type="java.lang.String" value="lbKunnr" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblWeight">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblWeight.text"/>
+                <Property name="name" type="java.lang.String" value="lblWeight" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblMatnr">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblMatnr.text"/>
+                <Property name="name" type="java.lang.String" value="lblMatnr" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblRegItem">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblRegItem.text"/>
+                <Property name="name" type="java.lang.String" value="lblRegItem" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblPONo">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblPONo.text"/>
+                <Property name="name" type="java.lang.String" value="lblPONo" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblDelNum">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblDelNum.text"/>
+                <Property name="name" type="java.lang.String" value="lblDelNum" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblSO">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblSO.text"/>
+                <Property name="name" type="java.lang.String" value="lblSO" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtSO">
+              <Properties>
+                <Property name="editable" type="boolean" value="false"/>
+                <Property name="text" type="java.lang.String" resourceKey="txtSO.text"/>
+                <Property name="name" type="java.lang.String" value="txtSO" noResource="true"/>
+              </Properties>
+            </Component>
+          </SubComponents>
+        </Container>
       </SubComponents>
     </Container>
   </SubComponents>

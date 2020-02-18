@@ -8,6 +8,7 @@ import com.gcs.wb.bapi.goodsmvt.structure.GoodsMvtWeightTicketStructure;
 import com.gcs.wb.base.enums.ModeEnum;
 import com.gcs.wb.jpa.entity.BatchStock;
 import com.gcs.wb.jpa.entity.Material;
+import com.gcs.wb.jpa.entity.MaterialConstraint;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
 import com.gcs.wb.jpa.entity.OutboundDeliveryDetail;
 import com.gcs.wb.jpa.entity.PurchaseOrder;
@@ -164,5 +165,9 @@ public class WeightTicketController {
             }
         }
         return null;
+    }
+    
+    public MaterialConstraint getMaterialConstraintByMatnr(String matnr){
+        return weightTicketService.getMaterialConstraintByMatnr(matnr);
     }
 }

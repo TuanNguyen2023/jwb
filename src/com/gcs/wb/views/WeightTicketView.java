@@ -20,6 +20,7 @@ import com.gcs.wb.bapi.outbdlv.DOCreate2PGIBapi;
 import com.gcs.wb.bapi.outbdlv.WsDeliveryUpdateBapi;
 import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.base.constant.Constants;
+import com.gcs.wb.base.enums.ModeEnum;
 import com.gcs.wb.base.exceptions.IllegalPortException;
 import com.gcs.wb.base.util.Base64_Utils;
 import com.gcs.wb.base.util.RegexFormatter;
@@ -29,7 +30,6 @@ import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.*;
 import com.gcs.wb.jpa.repositorys.VendorRepository;
 import com.gcs.wb.model.AppConfig;
-import com.gcs.wb.model.WeighingMode;
 import com.sap.conn.jco.JCoException;
 import org.apache.log4j.Logger;
 import org.hibersap.HibersapException;
@@ -83,7 +83,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     private com.gcs.wb.jpa.entity.PurchaseOrder purOrder;
     private com.gcs.wb.jpa.entity.SAPSetting setting;
     private com.gcs.wb.jpa.entity.WeightTicket weightTicket;
-
+    private MaterialConstraint materialConstraint;
     VendorRepository vendorRepository = new VendorRepository();
     EntityManager entityManager = JPAConnector.getInstance();
 
@@ -98,6 +98,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         outbDel = new com.gcs.wb.jpa.entity.OutboundDelivery();
         setting = java.beans.Beans.isDesignTime() ? null : WeighBridgeApp.getApplication().getSapSetting();
         material = new com.gcs.wb.jpa.entity.Material();
+        materialConstraint = new MaterialConstraint();
         initComponents();
 
         txtMatnr.getDocument().addDocumentListener(new DocumentListener() {
@@ -123,7 +124,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
         formatter = new SimpleDateFormat();
         cbxSLoc.setSelectedIndex(-1);
-        cbxReason.setSelectedIndex(-1);
         rbtMvt311.setVisible(true);
         rbtMb1b.setVisible(false);
         txfCurScale.setEditable(true);
@@ -132,12 +132,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         sapSetting = WeighBridgeApp.getApplication().getSapSetting();
         login = WeighBridgeApp.getApplication().getLogin();
         entityManager.clear();
-        chkDissolved.setEnabled(false);
-        chkDissolved.setVisible(false);
-        lblReason.setVisible(false);
-        cbxReason.setVisible(false);
-        lblComplete.setVisible(false);
-        cbxCompleted.setVisible(false);
         rbtMisc.setForeground(Color.red);
         //String client = WeighBridgeApp.getApplication().getConfig().getsClient();
         //List kunnr = this.customerRepository.getListCustomer(client);
@@ -197,7 +191,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             lblVendorLoading.setVisible(false);
             lblVendorTransport.setVisible(false);
         }
-
     }
 
     /**
@@ -247,72 +240,70 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         btnIScaleReset = new javax.swing.JButton();
         btnOScaleReset = new javax.swing.JButton();
         pnWTicket = new javax.swing.JPanel();
-        lblDName = new javax.swing.JLabel();
+        btnPostAgain = new javax.swing.JButton();
+        btnReprint = new javax.swing.JButton();
+        btnSave = new javax.swing.JButton();
+        pnWTLeft = new javax.swing.JPanel();
+        lblRegCat = new javax.swing.JLabel();
+        rbtInward = new javax.swing.JRadioButton();
+        rbtOutward = new javax.swing.JRadioButton();
+        txtRegistrationNo = new javax.swing.JTextField();
         txtDName = new javax.swing.JTextField();
+        lblRegistrationNo = new javax.swing.JLabel();
+        lblDName = new javax.swing.JLabel();
         lblCMNDBL = new javax.swing.JLabel();
         txtCMNDBL = new javax.swing.JTextField();
         lblLicPlate = new javax.swing.JLabel();
         txtLicPlate = new javax.swing.JFormattedTextField(new RegexFormatter("\\d{2}\\w-\\d{4}"));
         lblTrailerPlate = new javax.swing.JLabel();
         txtTrailerPlate = new javax.swing.JFormattedTextField(new RegexFormatter("\\d{2}\\w-\\d{4}"));
-        lblRegCat = new javax.swing.JLabel();
-        rbtInward = new javax.swing.JRadioButton();
-        rbtOutward = new javax.swing.JRadioButton();
-        lblRegItem = new javax.swing.JLabel();
-        txtRegItem = new javax.swing.JTextField();
-        lblMatnr = new javax.swing.JLabel();
-        lblDelNum = new javax.swing.JLabel();
-        txtDelNum = new javax.swing.JTextField();
-        lblSLoc = new javax.swing.JLabel();
-        cbxSLoc = new javax.swing.JComboBox();
-        lblCharg = new javax.swing.JLabel();
-        cbxCharg = new javax.swing.JComboBox();
-        lblReason = new javax.swing.JLabel();
-        cbxReason = new javax.swing.JComboBox();
-        lblCementDesc = new javax.swing.JLabel();
-        txtCementDesc = new javax.swing.JTextField();
-        lblGRText = new javax.swing.JLabel();
-        txtGRText = new javax.swing.JTextField();
-        lblComplete = new javax.swing.JLabel();
-        cbxCompleted = new javax.swing.JComboBox();
-        chkDissolved = new javax.swing.JCheckBox();
-        txtMatnr = new javax.swing.JTextField();
-        lbKunnr = new javax.swing.JLabel();
-        cbxKunnr = new javax.swing.JComboBox();
-        btnPostAgain = new javax.swing.JButton();
-        btnReprint = new javax.swing.JButton();
-        btnSave = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        cbxVendorLoading = new javax.swing.JComboBox();
-        cbxVendorTransport = new javax.swing.JComboBox();
-        txtPoPosto = new javax.swing.JTextField();
-        lblPoPosto = new javax.swing.JLabel();
-        lblVendorLoading = new javax.swing.JLabel();
-        lblVendorTransport = new javax.swing.JLabel();
-        lblProcedure = new javax.swing.JLabel();
-        lblProcedure1 = new javax.swing.JLabel();
-        txtRegistrationNo = new javax.swing.JTextField();
         txtSling = new javax.swing.JFormattedTextField(new RegexFormatter("\\d{2}\\w-\\d{4}"));
         lblSling = new javax.swing.JLabel();
         lblPallet = new javax.swing.JLabel();
         txtPallet = new javax.swing.JFormattedTextField(new RegexFormatter("\\d{2}\\w-\\d{4}"));
-        lblRemark = new javax.swing.JLabel();
-        txtRemark = new javax.swing.JTextField();
+        lblGRText = new javax.swing.JLabel();
+        txtGRText = new javax.swing.JTextField();
+        txtCementDesc = new javax.swing.JTextField();
+        lblCementDesc = new javax.swing.JLabel();
         lblBatchProduce = new javax.swing.JLabel();
-        txtBatchProduce = new javax.swing.JFormattedTextField(new RegexFormatter("\\d{2}\\w-\\d{4}"));
+        txtBatchProduce = new javax.swing.JFormattedTextField();
         txtTicketId = new javax.swing.JFormattedTextField(new RegexFormatter("\\d{2}\\w-\\d{4}"));
         lblTicketId = new javax.swing.JLabel();
         txtWeightTicketIdRef = new javax.swing.JFormattedTextField(new RegexFormatter("\\d{2}\\w-\\d{4}"));
         lblWeightTicketIdRef = new javax.swing.JLabel();
-        txtPONo = new javax.swing.JTextField();
-        lblPONo = new javax.swing.JLabel();
-        txtWeight = new javax.swing.JTextField();
-        lblWeight = new javax.swing.JLabel();
-        txtLgortIn = new javax.swing.JTextField();
-        lblLgortIn = new javax.swing.JLabel();
-        txtChargIn = new javax.swing.JTextField();
-        lblChargIn = new javax.swing.JLabel();
+        lblProcedure = new javax.swing.JLabel();
         txtProcedure = new javax.swing.JTextField();
+        lblRemark = new javax.swing.JLabel();
+        txtRemark = new javax.swing.JTextField();
+        pnWTRight = new javax.swing.JPanel();
+        txtDelNum = new javax.swing.JTextField();
+        txtPONo = new javax.swing.JTextField();
+        txtRegItem = new javax.swing.JTextField();
+        txtMatnr = new javax.swing.JTextField();
+        txtWeight = new javax.swing.JTextField();
+        cbxKunnr = new javax.swing.JComboBox();
+        cbxSLoc = new javax.swing.JComboBox();
+        txtLgortIn = new javax.swing.JTextField();
+        cbxCharg = new javax.swing.JComboBox();
+        txtChargIn = new javax.swing.JTextField();
+        txtPoPosto = new javax.swing.JTextField();
+        cbxVendorLoading = new javax.swing.JComboBox();
+        cbxVendorTransport = new javax.swing.JComboBox();
+        lblVendorTransport = new javax.swing.JLabel();
+        lblVendorLoading = new javax.swing.JLabel();
+        lblPoPosto = new javax.swing.JLabel();
+        lblChargIn = new javax.swing.JLabel();
+        lblCharg = new javax.swing.JLabel();
+        lblLgortIn = new javax.swing.JLabel();
+        lblSLoc = new javax.swing.JLabel();
+        lbKunnr = new javax.swing.JLabel();
+        lblWeight = new javax.swing.JLabel();
+        lblMatnr = new javax.swing.JLabel();
+        lblRegItem = new javax.swing.JLabel();
+        lblPONo = new javax.swing.JLabel();
+        lblDelNum = new javax.swing.JLabel();
+        lblSO = new javax.swing.JLabel();
+        txtSO = new javax.swing.JTextField();
 
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(WeightTicketView.class);
         setBackground(resourceMap.getColor("Form.background")); // NOI18N
@@ -486,7 +477,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         .addGroup(pnWTFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(rbtMisc, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(rbtMb1b, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(54, 54, 54))
+                .addGap(88, 88, 88))
         );
         pnWTFilterLayout.setVerticalGroup(
             pnWTFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -610,7 +601,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                 .addComponent(txfCurScale, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(4, 4, 4)
                                 .addComponent(lblKG)))))
-                .addGap(18, 18, 18))
+                .addGap(53, 53, 53))
         );
         pnCurScaleDataLayout.setVerticalGroup(
             pnCurScaleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -760,9 +751,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     .addComponent(lblIScale, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnScaleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txfGoodsQty, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
-                    .addComponent(txfOutQty, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
-                    .addComponent(txfInQty, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE))
+                    .addComponent(txfGoodsQty, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
+                    .addComponent(txfOutQty, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
+                    .addComponent(txfInQty, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnScaleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnScaleDataLayout.createSequentialGroup()
@@ -775,8 +766,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                             .addComponent(lblOTime))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(pnScaleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtOutTime, javax.swing.GroupLayout.DEFAULT_SIZE, 335, Short.MAX_VALUE)
-                            .addComponent(txtInTime, javax.swing.GroupLayout.DEFAULT_SIZE, 335, Short.MAX_VALUE))
+                            .addComponent(txtOutTime, javax.swing.GroupLayout.DEFAULT_SIZE, 369, Short.MAX_VALUE)
+                            .addComponent(txtInTime, javax.swing.GroupLayout.DEFAULT_SIZE, 369, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(pnScaleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(btnIScaleReset, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -813,163 +804,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         pnWTicket.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("pnWTicket.border.title"))); // NOI18N
         pnWTicket.setName("pnWTicket"); // NOI18N
 
-        lblDName.setText(resourceMap.getString("lblDName.text")); // NOI18N
-        lblDName.setName("lblDName"); // NOI18N
-
-        txtDName.setEditable(false);
-        txtDName.setName("txtDName"); // NOI18N
-
-        lblCMNDBL.setText(resourceMap.getString("lblCMNDBL.text")); // NOI18N
-        lblCMNDBL.setName("lblCMNDBL"); // NOI18N
-
-        txtCMNDBL.setEditable(false);
-        txtCMNDBL.setName("txtCMNDBL"); // NOI18N
-
-        lblLicPlate.setText(resourceMap.getString("lblLicPlate.text")); // NOI18N
-        lblLicPlate.setName("lblLicPlate"); // NOI18N
-
-        txtLicPlate.setEditable(false);
-        txtLicPlate.setName("txtLicPlate"); // NOI18N
-
-        lblTrailerPlate.setText(resourceMap.getString("lblTrailerPlate.text")); // NOI18N
-        lblTrailerPlate.setName("lblTrailerPlate"); // NOI18N
-
-        txtTrailerPlate.setEditable(false);
-        txtTrailerPlate.setName("txtTrailerPlate"); // NOI18N
-
-        lblRegCat.setText(resourceMap.getString("lblRegCat.text")); // NOI18N
-        lblRegCat.setName("lblRegCat"); // NOI18N
-
-        grbCat.add(rbtInward);
-        rbtInward.setText(resourceMap.getString("rbtInward.text")); // NOI18N
-        rbtInward.setEnabled(false);
-        rbtInward.setName("rbtInward"); // NOI18N
-
-        grbCat.add(rbtOutward);
-        rbtOutward.setText(resourceMap.getString("rbtOutward.text")); // NOI18N
-        rbtOutward.setEnabled(false);
-        rbtOutward.setName("rbtOutward"); // NOI18N
-
-        lblRegItem.setText(resourceMap.getString("lblRegItem.text")); // NOI18N
-        lblRegItem.setName("lblRegItem"); // NOI18N
-
-        txtRegItem.setEditable(false);
-        txtRegItem.setName("txtRegItem"); // NOI18N
-
-        lblMatnr.setText(resourceMap.getString("lblMatnr.text")); // NOI18N
-        lblMatnr.setName("lblMatnr"); // NOI18N
-
-        lblDelNum.setText(resourceMap.getString("lblDelNum.text")); // NOI18N
-        lblDelNum.setName("lblDelNum"); // NOI18N
-
-        txtDelNum.setEditable(false);
-        txtDelNum.setName("txtDelNum"); // NOI18N
-
-        lblSLoc.setText(resourceMap.getString("lblSLoc.text")); // NOI18N
-        lblSLoc.setName("lblSLoc"); // NOI18N
-
-        cbxSLoc.setModel(sapService.getSlocModel());
-        cbxSLoc.setRenderer(new DefaultListCellRenderer() {
-            @Override
-            public Component getListCellRendererComponent(
-                JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if (value instanceof SLoc) {
-                    SLoc sloc = (SLoc)value;
-                    setText(sloc.getLgort().concat(" - ").concat(sloc.getLgobe()));
-                    //                    setText(sloc.getLgobe().concat(" - ").concat(sloc.getLgort()));
-                }
-                return this;
-            }
-        });
-        cbxSLoc.setName("cbxSLoc"); // NOI18N
-        cbxSLoc.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cbxSLocItemStateChanged(evt);
-            }
-        });
-
-        lblCharg.setText(resourceMap.getString("lblCharg.text")); // NOI18N
-        lblCharg.setName("lblCharg"); // NOI18N
-
-        cbxCharg.setAction(actionMap.get("acceptBatch")); // NOI18N
-        cbxCharg.setName("cbxCharg"); // NOI18N
-        cbxCharg.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                cbxChargKeyReleased(evt);
-            }
-        });
-
-        lblReason.setText(resourceMap.getString("lblReason.text")); // NOI18N
-        lblReason.setName("lblReason"); // NOI18N
-
-        cbxReason.setEnabled(false);
-        cbxReason.setName("cbxReason"); // NOI18N
-
-        lblCementDesc.setText(resourceMap.getString("lblCementDesc.text")); // NOI18N
-        lblCementDesc.setName("lblCementDesc"); // NOI18N
-
-        txtCementDesc.setText(resourceMap.getString("txtCementDesc.text")); // NOI18N
-        txtCementDesc.setName("txtCementDesc"); // NOI18N
-        txtCementDesc.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtCementDescActionPerformed(evt);
-            }
-        });
-        txtCementDesc.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtCementDescKeyReleased(evt);
-            }
-        });
-
-        lblGRText.setText(resourceMap.getString("lblGRText.text")); // NOI18N
-        lblGRText.setName("lblGRText"); // NOI18N
-
-        txtGRText.setEditable(false);
-        txtGRText.setName("txtGRText"); // NOI18N
-        txtGRText.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtGRTextKeyReleased(evt);
-            }
-        });
-
-        lblComplete.setText(resourceMap.getString("lblComplete.text")); // NOI18N
-        lblComplete.setName("lblComplete"); // NOI18N
-
-        cbxCompleted.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Auto", "Set", "NotSet" }));
-        cbxCompleted.setEnabled(false);
-        cbxCompleted.setName("cbxCompleted"); // NOI18N
-        cbxCompleted.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cbxCompletedItemStateChanged(evt);
-            }
-        });
-
-        chkDissolved.setText(resourceMap.getString("chkDissolved.text")); // NOI18N
-        chkDissolved.setEnabled(false);
-        chkDissolved.setFocusable(false);
-        chkDissolved.setHideActionText(true);
-        chkDissolved.setName("chkDissolved"); // NOI18N
-        chkDissolved.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                chkDissolvedItemStateChanged(evt);
-            }
-        });
-
-        txtMatnr.setEditable(false);
-        txtMatnr.setText(resourceMap.getString("txtMatnr.text")); // NOI18N
-        txtMatnr.setName("txtMatnr"); // NOI18N
-
-        lbKunnr.setText(resourceMap.getString("lbKunnr.text")); // NOI18N
-        lbKunnr.setName("lbKunnr"); // NOI18N
-
-        cbxKunnr.setName("cbxKunnr"); // NOI18N
-        cbxKunnr.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cbxKunnrItemStateChanged(evt);
-            }
-        });
-
         btnPostAgain.setText(resourceMap.getString("btnPostAgain.text")); // NOI18N
         btnPostAgain.setEnabled(false);
         btnPostAgain.setName("btnPostAgain"); // NOI18N
@@ -993,12 +827,311 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             }
         });
 
-        jButton3.setText(resourceMap.getString("cmdNiemXa.text")); // NOI18N
-        jButton3.setEnabled(false);
-        jButton3.setName("cmdNiemXa"); // NOI18N
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        pnWTLeft.setName("pnWTLeft"); // NOI18N
+
+        lblRegCat.setText(resourceMap.getString("lblRegCat.text")); // NOI18N
+        lblRegCat.setName("lblRegCat"); // NOI18N
+
+        grbCat.add(rbtInward);
+        rbtInward.setText(resourceMap.getString("rbtInward.text")); // NOI18N
+        rbtInward.setEnabled(false);
+        rbtInward.setName("rbtInward"); // NOI18N
+
+        grbCat.add(rbtOutward);
+        rbtOutward.setText(resourceMap.getString("rbtOutward.text")); // NOI18N
+        rbtOutward.setEnabled(false);
+        rbtOutward.setName("rbtOutward"); // NOI18N
+
+        txtRegistrationNo.setBackground(resourceMap.getColor("txtRegistrationNo.background")); // NOI18N
+        txtRegistrationNo.setEditable(false);
+        txtRegistrationNo.setText(resourceMap.getString("txtRegistrationNo.text")); // NOI18N
+        txtRegistrationNo.setName("txtRegistrationNo"); // NOI18N
+
+        txtDName.setEditable(false);
+        txtDName.setName("txtDName"); // NOI18N
+
+        lblRegistrationNo.setText(resourceMap.getString("lblRegistrationNo.text")); // NOI18N
+        lblRegistrationNo.setName("lblRegistrationNo"); // NOI18N
+
+        lblDName.setText(resourceMap.getString("lblDName.text")); // NOI18N
+        lblDName.setName("lblDName"); // NOI18N
+
+        lblCMNDBL.setText(resourceMap.getString("lblCMNDBL.text")); // NOI18N
+        lblCMNDBL.setName("lblCMNDBL"); // NOI18N
+
+        txtCMNDBL.setEditable(false);
+        txtCMNDBL.setName("txtCMNDBL"); // NOI18N
+
+        lblLicPlate.setText(resourceMap.getString("lblLicPlate.text")); // NOI18N
+        lblLicPlate.setName("lblLicPlate"); // NOI18N
+
+        txtLicPlate.setEditable(false);
+        txtLicPlate.setName("txtLicPlate"); // NOI18N
+
+        lblTrailerPlate.setText(resourceMap.getString("lblTrailerPlate.text")); // NOI18N
+        lblTrailerPlate.setName("lblTrailerPlate"); // NOI18N
+
+        txtTrailerPlate.setEditable(false);
+        txtTrailerPlate.setName("txtTrailerPlate"); // NOI18N
+
+        txtSling.setEditable(false);
+        txtSling.setName("txtSling"); // NOI18N
+
+        lblSling.setText(resourceMap.getString("lblSling.text")); // NOI18N
+        lblSling.setName("lblSling"); // NOI18N
+
+        lblPallet.setText(resourceMap.getString("lblPallet.text")); // NOI18N
+        lblPallet.setName("lblPallet"); // NOI18N
+
+        txtPallet.setEditable(false);
+        txtPallet.setName("txtPallet"); // NOI18N
+
+        lblGRText.setText(resourceMap.getString("lblGRText.text")); // NOI18N
+        lblGRText.setName("lblGRText"); // NOI18N
+
+        txtGRText.setEditable(false);
+        txtGRText.setName("txtGRText"); // NOI18N
+        txtGRText.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtGRTextKeyReleased(evt);
+            }
+        });
+
+        txtCementDesc.setText(resourceMap.getString("txtCementDesc.text")); // NOI18N
+        txtCementDesc.setName("txtCementDesc"); // NOI18N
+        txtCementDesc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                txtCementDescActionPerformed(evt);
+            }
+        });
+        txtCementDesc.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtCementDescKeyReleased(evt);
+            }
+        });
+
+        lblCementDesc.setText(resourceMap.getString("lblCementDesc.text")); // NOI18N
+        lblCementDesc.setName("lblCementDesc"); // NOI18N
+
+        lblBatchProduce.setText(resourceMap.getString("lblBatchProduce.text")); // NOI18N
+        lblBatchProduce.setName("lblBatchProduce"); // NOI18N
+
+        txtBatchProduce.setName("txtBatchProduce"); // NOI18N
+
+        txtTicketId.setEditable(false);
+        txtTicketId.setName("txtTicketId"); // NOI18N
+
+        lblTicketId.setText(resourceMap.getString("lblTicketId.text")); // NOI18N
+        lblTicketId.setName("lblTicketId"); // NOI18N
+
+        txtWeightTicketIdRef.setEditable(false);
+        txtWeightTicketIdRef.setName("txtWeightTicketIdRef"); // NOI18N
+
+        lblWeightTicketIdRef.setText(resourceMap.getString("lblWeightTicketIdRef.text")); // NOI18N
+        lblWeightTicketIdRef.setName("lblWeightTicketIdRef"); // NOI18N
+
+        lblProcedure.setText(resourceMap.getString("lblProcedure.text")); // NOI18N
+        lblProcedure.setToolTipText(resourceMap.getString("lblProcedure.toolTipText")); // NOI18N
+        lblProcedure.setName("lblProcedure"); // NOI18N
+
+        txtProcedure.setBackground(resourceMap.getColor("txtProcedure.background")); // NOI18N
+        txtProcedure.setEditable(false);
+        txtProcedure.setName("txtProcedure"); // NOI18N
+
+        lblRemark.setText(resourceMap.getString("lblRemark.text")); // NOI18N
+        lblRemark.setName("lblRemark"); // NOI18N
+
+        txtRemark.setName("txtRemark"); // NOI18N
+        txtRemark.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtRemarkKeyReleased(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pnWTLeftLayout = new javax.swing.GroupLayout(pnWTLeft);
+        pnWTLeft.setLayout(pnWTLeftLayout);
+        pnWTLeftLayout.setHorizontalGroup(
+            pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnWTLeftLayout.createSequentialGroup()
+                .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblPallet)
+                    .addComponent(lblGRText)
+                    .addComponent(lblSling)
+                    .addComponent(lblTrailerPlate)
+                    .addComponent(lblRegCat)
+                    .addComponent(lblRegistrationNo)
+                    .addComponent(lblDName)
+                    .addComponent(lblCMNDBL)
+                    .addComponent(lblBatchProduce)
+                    .addComponent(lblCementDesc)
+                    .addComponent(lblWeightTicketIdRef)
+                    .addComponent(lblTicketId)
+                    .addComponent(lblLicPlate))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnWTLeftLayout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addComponent(rbtInward)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                        .addComponent(rbtOutward)
+                        .addGap(10, 10, 10))
+                    .addComponent(txtRegistrationNo, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
+                    .addComponent(txtDName, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
+                    .addComponent(txtGRText, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
+                    .addComponent(txtTrailerPlate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
+                    .addComponent(txtSling, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
+                    .addComponent(txtLicPlate, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
+                    .addComponent(txtCMNDBL, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
+                    .addComponent(txtPallet, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
+                    .addComponent(txtTicketId, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
+                    .addComponent(txtBatchProduce, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
+                    .addComponent(txtCementDesc, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
+                    .addComponent(txtWeightTicketIdRef, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnWTLeftLayout.createSequentialGroup()
+                        .addComponent(lblProcedure)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtProcedure, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE))
+                    .addGroup(pnWTLeftLayout.createSequentialGroup()
+                        .addComponent(lblRemark)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtRemark, javax.swing.GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        pnWTLeftLayout.setVerticalGroup(
+            pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnWTLeftLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(rbtOutward)
+                    .addComponent(rbtInward)
+                    .addComponent(lblRegCat)
+                    .addComponent(lblProcedure)
+                    .addComponent(txtProcedure, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblRegistrationNo)
+                    .addComponent(txtRegistrationNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblDName)
+                    .addComponent(txtDName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblCMNDBL)
+                    .addComponent(txtCMNDBL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtLicPlate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblLicPlate))
+                .addGap(18, 18, 18)
+                .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblTrailerPlate)
+                    .addComponent(txtTrailerPlate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
+                    .addComponent(lblSling)
+                    .addComponent(txtSling, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtPallet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblPallet))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
+                    .addComponent(lblGRText)
+                    .addComponent(txtGRText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtRemark, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblRemark))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtCementDesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblCementDesc))
+                .addGap(9, 9, 9)
+                .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtBatchProduce, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblBatchProduce))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtTicketId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblTicketId))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtWeightTicketIdRef, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblWeightTicketIdRef))
+                .addContainerGap(29, Short.MAX_VALUE))
+        );
+
+        pnWTRight.setName("pnWTRight"); // NOI18N
+
+        txtDelNum.setEditable(false);
+        txtDelNum.setName("txtDelNum"); // NOI18N
+
+        txtPONo.setEditable(false);
+        txtPONo.setName("txtPONo"); // NOI18N
+
+        txtRegItem.setEditable(false);
+        txtRegItem.setName("txtRegItem"); // NOI18N
+
+        txtMatnr.setEditable(false);
+        txtMatnr.setText(resourceMap.getString("txtMatnr.text")); // NOI18N
+        txtMatnr.setName("txtMatnr"); // NOI18N
+
+        txtWeight.setEditable(false);
+        txtWeight.setName("txtWeight"); // NOI18N
+
+        cbxKunnr.setName("cbxKunnr"); // NOI18N
+        cbxKunnr.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbxKunnrItemStateChanged(evt);
+            }
+        });
+
+        cbxSLoc.setModel(sapService.getSlocModel());
+        cbxSLoc.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(
+                JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof SLoc) {
+                    SLoc sloc = (SLoc)value;
+                    setText(sloc.getLgort().concat(" - ").concat(sloc.getLgobe()));
+                    //                    setText(sloc.getLgobe().concat(" - ").concat(sloc.getLgort()));
+                }
+                return this;
+            }
+        });
+        cbxSLoc.setName("cbxSLoc"); // NOI18N
+        cbxSLoc.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cbxSLocItemStateChanged(evt);
+            }
+        });
+
+        txtLgortIn.setEditable(false);
+        txtLgortIn.setName("txtLgortIn"); // NOI18N
+        txtLgortIn.setRequestFocusEnabled(false);
+
+        cbxCharg.setAction(actionMap.get("acceptBatch")); // NOI18N
+        cbxCharg.setName("cbxCharg"); // NOI18N
+        cbxCharg.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                cbxChargKeyReleased(evt);
+            }
+        });
+
+        txtChargIn.setEditable(false);
+        txtChargIn.setName("txtChargIn"); // NOI18N
+
+        txtPoPosto.setName("txtPoPosto"); // NOI18N
+        txtPoPosto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPoPostoActionPerformed(evt);
+            }
+        });
+        txtPoPosto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtPoPostoKeyReleased(evt);
             }
         });
 
@@ -1046,368 +1179,193 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             }
         });
 
-        txtPoPosto.setName("txtPoPosto"); // NOI18N
-        txtPoPosto.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtPoPostoActionPerformed(evt);
-            }
-        });
-        txtPoPosto.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtPoPostoKeyReleased(evt);
-            }
-        });
-
-        lblPoPosto.setText(resourceMap.getString("lblPoPosto.text")); // NOI18N
-        lblPoPosto.setName("lblPoPosto"); // NOI18N
+        lblVendorTransport.setText(resourceMap.getString("lblVendorTransport.text")); // NOI18N
+        lblVendorTransport.setName("lblVendorTransport"); // NOI18N
 
         lblVendorLoading.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblVendorLoading.setText(resourceMap.getString("lblVendorLoading.text")); // NOI18N
         lblVendorLoading.setName("lblVendorLoading"); // NOI18N
 
-        lblVendorTransport.setText(resourceMap.getString("lblVendorTransport.text")); // NOI18N
-        lblVendorTransport.setName("lblVendorTransport"); // NOI18N
-
-        lblProcedure.setText(resourceMap.getString("lblProcedure.text")); // NOI18N
-        lblProcedure.setToolTipText(resourceMap.getString("lblProcedure.toolTipText")); // NOI18N
-        lblProcedure.setName("lblProcedure"); // NOI18N
-
-        lblProcedure1.setText(resourceMap.getString("lblRegistrationNo.text")); // NOI18N
-        lblProcedure1.setName("lblRegistrationNo"); // NOI18N
-
-        txtRegistrationNo.setBackground(resourceMap.getColor("txtRegistrationNo.background")); // NOI18N
-        txtRegistrationNo.setEditable(false);
-        txtRegistrationNo.setText(resourceMap.getString("txtRegistrationNo.text")); // NOI18N
-        txtRegistrationNo.setName("txtRegistrationNo"); // NOI18N
-
-        txtSling.setEditable(false);
-        txtSling.setName("txtSling"); // NOI18N
-
-        lblSling.setText(resourceMap.getString("lblSling.text")); // NOI18N
-        lblSling.setName("lblSling"); // NOI18N
-
-        lblPallet.setText(resourceMap.getString("lblPallet.text")); // NOI18N
-        lblPallet.setName("lblPallet"); // NOI18N
-
-        txtPallet.setEditable(false);
-        txtPallet.setName("txtPallet"); // NOI18N
-
-        lblRemark.setText(resourceMap.getString("lblRemark.text")); // NOI18N
-        lblRemark.setName("lblRemark"); // NOI18N
-
-        txtRemark.setName("txtRemark"); // NOI18N
-        txtRemark.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtRemarkKeyReleased(evt);
-            }
-        });
-
-        lblBatchProduce.setText(resourceMap.getString("lblBatchProduce.text")); // NOI18N
-        lblBatchProduce.setName("lblBatchProduce"); // NOI18N
-
-        txtBatchProduce.setEditable(false);
-        txtBatchProduce.setName("txtBatchProduce"); // NOI18N
-
-        txtTicketId.setEditable(false);
-        txtTicketId.setName("txtTicketId"); // NOI18N
-
-        lblTicketId.setText(resourceMap.getString("lblTicketId.text")); // NOI18N
-        lblTicketId.setName("lblTicketId"); // NOI18N
-
-        txtWeightTicketIdRef.setEditable(false);
-        txtWeightTicketIdRef.setName("txtWeightTicketIdRef"); // NOI18N
-
-        lblWeightTicketIdRef.setText(resourceMap.getString("lblWeightTicketIdRef.text")); // NOI18N
-        lblWeightTicketIdRef.setName("lblWeightTicketIdRef"); // NOI18N
-
-        txtPONo.setEditable(false);
-        txtPONo.setName("txtPONo"); // NOI18N
-
-        lblPONo.setText(resourceMap.getString("lblPONo.text")); // NOI18N
-        lblPONo.setName("lblPONo"); // NOI18N
-
-        txtWeight.setEditable(false);
-        txtWeight.setName("txtWeight"); // NOI18N
-
-        lblWeight.setText(resourceMap.getString("lblWeight.text")); // NOI18N
-        lblWeight.setName("lblWeight"); // NOI18N
-
-        txtLgortIn.setEditable(false);
-        txtLgortIn.setName("txtLgortIn"); // NOI18N
-        txtLgortIn.setRequestFocusEnabled(false);
-
-        lblLgortIn.setText(resourceMap.getString("lblLgortIn.text")); // NOI18N
-        lblLgortIn.setName("lblLgortIn"); // NOI18N
-
-        txtChargIn.setEditable(false);
-        txtChargIn.setName("txtChargIn"); // NOI18N
+        lblPoPosto.setText(resourceMap.getString("lblPoPosto.text")); // NOI18N
+        lblPoPosto.setName("lblPoPosto"); // NOI18N
 
         lblChargIn.setText(resourceMap.getString("lblChargIn.text")); // NOI18N
         lblChargIn.setName("lblChargIn"); // NOI18N
 
-        txtProcedure.setBackground(resourceMap.getColor("txtProcedure.background")); // NOI18N
-        txtProcedure.setEditable(false);
-        txtProcedure.setName("txtProcedure"); // NOI18N
+        lblCharg.setText(resourceMap.getString("lblCharg.text")); // NOI18N
+        lblCharg.setName("lblCharg"); // NOI18N
+
+        lblLgortIn.setText(resourceMap.getString("lblLgortIn.text")); // NOI18N
+        lblLgortIn.setName("lblLgortIn"); // NOI18N
+
+        lblSLoc.setText(resourceMap.getString("lblSLoc.text")); // NOI18N
+        lblSLoc.setName("lblSLoc"); // NOI18N
+
+        lbKunnr.setText(resourceMap.getString("lbKunnr.text")); // NOI18N
+        lbKunnr.setName("lbKunnr"); // NOI18N
+
+        lblWeight.setText(resourceMap.getString("lblWeight.text")); // NOI18N
+        lblWeight.setName("lblWeight"); // NOI18N
+
+        lblMatnr.setText(resourceMap.getString("lblMatnr.text")); // NOI18N
+        lblMatnr.setName("lblMatnr"); // NOI18N
+
+        lblRegItem.setText(resourceMap.getString("lblRegItem.text")); // NOI18N
+        lblRegItem.setName("lblRegItem"); // NOI18N
+
+        lblPONo.setText(resourceMap.getString("lblPONo.text")); // NOI18N
+        lblPONo.setName("lblPONo"); // NOI18N
+
+        lblDelNum.setText(resourceMap.getString("lblDelNum.text")); // NOI18N
+        lblDelNum.setName("lblDelNum"); // NOI18N
+
+        lblSO.setText(resourceMap.getString("lblSO.text")); // NOI18N
+        lblSO.setName("lblSO"); // NOI18N
+
+        txtSO.setEditable(false);
+        txtSO.setText(resourceMap.getString("txtSO.text")); // NOI18N
+        txtSO.setName("txtSO"); // NOI18N
+
+        javax.swing.GroupLayout pnWTRightLayout = new javax.swing.GroupLayout(pnWTRight);
+        pnWTRight.setLayout(pnWTRightLayout);
+        pnWTRightLayout.setHorizontalGroup(
+            pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnWTRightLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblWeight)
+                    .addComponent(lblRegItem)
+                    .addComponent(lblPONo)
+                    .addComponent(lblSO)
+                    .addComponent(lblVendorTransport)
+                    .addComponent(lblVendorLoading)
+                    .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(lblSLoc)
+                        .addComponent(lblMatnr)
+                        .addComponent(lblPoPosto)
+                        .addComponent(lblChargIn)
+                        .addComponent(lblCharg)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnWTRightLayout.createSequentialGroup()
+                            .addGap(4, 4, 4)
+                            .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(lbKunnr)
+                                .addComponent(lblLgortIn, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(lblDelNum, javax.swing.GroupLayout.Alignment.TRAILING)))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(cbxVendorTransport, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cbxCharg, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cbxVendorLoading, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cbxSLoc, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtDelNum)
+                    .addComponent(txtSO, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
+                    .addComponent(txtMatnr)
+                    .addComponent(txtPONo, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
+                    .addComponent(cbxKunnr, 0, 260, Short.MAX_VALUE)
+                    .addComponent(txtChargIn, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
+                    .addComponent(txtPoPosto, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
+                    .addComponent(txtLgortIn, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
+                    .addComponent(txtRegItem, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
+                    .addComponent(txtWeight))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        pnWTRightLayout.setVerticalGroup(
+            pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnWTRightLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
+                    .addComponent(lblDelNum)
+                    .addComponent(txtDelNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtSO, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblSO))
+                .addGap(11, 11, 11)
+                .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtPONo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblPONo))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtRegItem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblRegItem))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
+                    .addComponent(txtMatnr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblMatnr))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtWeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblWeight))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
+                    .addComponent(lbKunnr)
+                    .addComponent(cbxKunnr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbxSLoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblSLoc, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
+                    .addComponent(txtLgortIn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblLgortIn))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblCharg)
+                    .addComponent(cbxCharg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
+                    .addComponent(lblChargIn)
+                    .addComponent(txtChargIn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
+                    .addComponent(lblPoPosto)
+                    .addComponent(txtPoPosto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbxVendorLoading, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblVendorLoading))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbxVendorTransport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblVendorTransport))
+                .addContainerGap())
+        );
+
+        txtMatnr.getAccessibleContext().setAccessibleName(resourceMap.getString("txtMatnr.AccessibleContext.accessibleName")); // NOI18N
 
         javax.swing.GroupLayout pnWTicketLayout = new javax.swing.GroupLayout(pnWTicket);
         pnWTicket.setLayout(pnWTicketLayout);
         pnWTicketLayout.setHorizontalGroup(
             pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnWTicketLayout.createSequentialGroup()
-                .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(pnWTicketLayout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lblGRText)
-                            .addComponent(lblPallet)
-                            .addComponent(lblSling)
-                            .addComponent(lblTrailerPlate)
-                            .addComponent(lblLicPlate)
-                            .addComponent(lblRegCat)
-                            .addComponent(lblProcedure1)
-                            .addComponent(lblDName)
-                            .addComponent(lblCMNDBL)
-                            .addComponent(lblReason)
-                            .addComponent(lblBatchProduce)
-                            .addComponent(lblCementDesc)
-                            .addComponent(lblWeightTicketIdRef)
-                            .addComponent(lblTicketId))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblMatnr, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(pnWTicketLayout.createSequentialGroup()
-                                .addComponent(chkDissolved)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 276, Short.MAX_VALUE)
-                                .addComponent(jButton3))
-                            .addGroup(pnWTicketLayout.createSequentialGroup()
-                                .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnWTicketLayout.createSequentialGroup()
-                                        .addGap(19, 19, 19)
-                                        .addComponent(rbtInward)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
-                                        .addComponent(rbtOutward)
-                                        .addGap(14, 14, 14))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnWTicketLayout.createSequentialGroup()
-                                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(txtRegistrationNo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
-                                            .addComponent(txtDName, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnWTicketLayout.createSequentialGroup()
-                                        .addComponent(txtGRText, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                                    .addGroup(pnWTicketLayout.createSequentialGroup()
-                                        .addComponent(cbxReason, 0, 85, Short.MAX_VALUE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 88, Short.MAX_VALUE))
-                                    .addGroup(pnWTicketLayout.createSequentialGroup()
-                                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(txtTrailerPlate, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
-                                            .addComponent(txtSling, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnWTicketLayout.createSequentialGroup()
-                                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(txtLicPlate, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
-                                            .addComponent(txtCMNDBL, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                                    .addGroup(pnWTicketLayout.createSequentialGroup()
-                                        .addComponent(txtPallet, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                                    .addGroup(pnWTicketLayout.createSequentialGroup()
-                                        .addComponent(txtTicketId, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                                    .addGroup(pnWTicketLayout.createSequentialGroup()
-                                        .addComponent(txtBatchProduce, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                                    .addGroup(pnWTicketLayout.createSequentialGroup()
-                                        .addComponent(txtCementDesc, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                                    .addGroup(pnWTicketLayout.createSequentialGroup()
-                                        .addComponent(txtWeightTicketIdRef, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                                .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(lblPONo)
-                                    .addComponent(lblRegItem)
-                                    .addComponent(lblWeight)
-                                    .addComponent(lblSLoc)
-                                    .addComponent(lblPoPosto)
-                                    .addComponent(lblChargIn)
-                                    .addComponent(lblVendorLoading)
-                                    .addComponent(lbKunnr)
-                                    .addComponent(lblCharg)
-                                    .addGroup(pnWTicketLayout.createSequentialGroup()
-                                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(lblRemark)
-                                            .addComponent(lblProcedure))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(txtProcedure)
-                                            .addComponent(txtRemark, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE))
-                                        .addGap(26, 26, 26)
-                                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(lblLgortIn, javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(lblDelNum, javax.swing.GroupLayout.Alignment.TRAILING)))
-                                    .addComponent(lblComplete)))))
-                    .addGroup(pnWTicketLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(lblVendorTransport)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnWTicketLayout.createSequentialGroup()
+                    .addGroup(pnWTicketLayout.createSequentialGroup()
+                        .addGap(561, 561, 561)
                         .addComponent(btnPostAgain)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 88, Short.MAX_VALUE)
                         .addComponent(btnReprint)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(txtDelNum, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
-                    .addComponent(txtPONo, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
-                    .addComponent(txtRegItem, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
-                    .addComponent(txtMatnr, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
-                    .addComponent(txtWeight, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
-                    .addComponent(cbxKunnr, 0, 294, Short.MAX_VALUE)
-                    .addComponent(cbxSLoc, 0, 294, Short.MAX_VALUE)
-                    .addComponent(txtLgortIn, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
-                    .addComponent(cbxCharg, 0, 294, Short.MAX_VALUE)
-                    .addComponent(txtChargIn, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
-                    .addComponent(txtPoPosto, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
-                    .addComponent(cbxVendorLoading, 0, 294, Short.MAX_VALUE)
-                    .addComponent(cbxVendorTransport, 0, 294, Short.MAX_VALUE)
-                    .addComponent(cbxCompleted, 0, 294, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnWTicketLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(pnWTLeft, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(pnWTRight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         pnWTicketLayout.setVerticalGroup(
             pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnWTicketLayout.createSequentialGroup()
-                .addContainerGap(11, Short.MAX_VALUE)
+                .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(pnWTLeft, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnWTRight, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblProcedure)
-                    .addComponent(rbtOutward)
-                    .addComponent(rbtInward)
-                    .addComponent(lblRegCat)
-                    .addComponent(txtProcedure, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
-                    .addComponent(lblProcedure1)
-                    .addComponent(txtRegistrationNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblDelNum)
-                    .addComponent(txtDelNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
-                    .addComponent(lblDName)
-                    .addComponent(txtDName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblPONo)
-                    .addComponent(txtPONo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
-                    .addComponent(lblCMNDBL)
-                    .addComponent(txtCMNDBL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblRegItem)
-                    .addComponent(txtRegItem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(pnWTicketLayout.createSequentialGroup()
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblLicPlate)
-                            .addComponent(lblMatnr)
-                            .addComponent(txtMatnr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblWeight)
-                            .addComponent(txtWeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(17, 17, 17)
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lbKunnr)
-                            .addComponent(cbxKunnr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblSLoc, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cbxSLoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblLgortIn)
-                            .addComponent(txtLgortIn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(11, 11, 11))
-                    .addGroup(pnWTicketLayout.createSequentialGroup()
-                        .addComponent(txtLicPlate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblTrailerPlate)
-                            .addComponent(txtTrailerPlate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
-                            .addComponent(lblSling)
-                            .addComponent(txtSling, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblPallet)
-                            .addComponent(txtPallet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
-                            .addComponent(lblGRText)
-                            .addComponent(txtGRText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblRemark)
-                            .addComponent(txtRemark, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnWTicketLayout.createSequentialGroup()
-                        .addGap(5, 5, 5)
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblCharg)
-                            .addComponent(cbxCharg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblChargIn)
-                            .addComponent(txtChargIn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblPoPosto)
-                            .addComponent(txtPoPosto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblVendorLoading)
-                            .addComponent(cbxVendorLoading, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(pnWTicketLayout.createSequentialGroup()
-                        .addGap(11, 11, 11)
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtCementDesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblCementDesc))
-                        .addGap(9, 9, 9)
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtBatchProduce, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblBatchProduce))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtTicketId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblTicketId))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtWeightTicketIdRef, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblWeightTicketIdRef))))
-                .addGap(9, 9, 9)
-                .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnWTicketLayout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblVendorTransport)
-                            .addComponent(cbxVendorTransport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblComplete)
-                            .addComponent(cbxCompleted, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnSave)
-                            .addComponent(btnReprint)
-                            .addComponent(btnPostAgain)
-                            .addComponent(jButton3)))
-                    .addGroup(pnWTicketLayout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblReason)
-                            .addComponent(cbxReason, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addComponent(chkDissolved))))
+                    .addComponent(btnSave)
+                    .addComponent(btnReprint)
+                    .addComponent(btnPostAgain))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        txtMatnr.getAccessibleContext().setAccessibleName(resourceMap.getString("txtMatnr.AccessibleContext.accessibleName")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -1419,9 +1377,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     .addComponent(pnWTicket, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pnScaleData, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(pnWTFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 577, Short.MAX_VALUE)
+                        .addComponent(pnWTFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 611, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(pnCurScale, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(pnCurScale, javax.swing.GroupLayout.DEFAULT_SIZE, 327, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -1435,7 +1393,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 .addComponent(pnScaleData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnWTicket, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         bindingGroup.bind();
@@ -1533,17 +1491,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         setSaveNeeded(isValidated());
     }//GEN-LAST:event_txtGRTextKeyReleased
 
-    private void cbxCompletedItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbxCompletedItemStateChanged
-        if (weightTicket != null) {
-            if (cbxCompleted.getSelectedIndex() == 1) {
-                weightTicket.setNoMoreGr('2');
-            } else {
-                weightTicket.setNoMoreGr(' ');
-            }
-        }
-        setSaveNeeded(isValidated());
-    }//GEN-LAST:event_cbxCompletedItemStateChanged
-
     private void rbtMiscItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbtMiscItemStateChanged
         if (!rbtMisc.isSelected()) {
             String regItemDescription = weightTicket != null ? weightTicket.getWeightTicketDetail().getRegItemDescription() : null;
@@ -1555,22 +1502,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             }
         }
     }//GEN-LAST:event_rbtMiscItemStateChanged
-
-    private void chkDissolvedItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkDissolvedItemStateChanged
-        if (weightTicket != null) {
-            //     chkDissolved
-            weightTicket.setDissolved(chkDissolved.isSelected());
-            if (chkDissolved.isSelected() == true) {
-                //  setSaveNeeded(true);
-                // Tuanna 0909 2015 
-                setSaveNeeded(false);
-            } else {
-                setSaveNeeded(false);
-            }
-        }
-        //   chkDissolved.
-//        setSaveNeeded(isValidated());
-    }//GEN-LAST:event_chkDissolvedItemStateChanged
 
     private void rbtPOItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbtPOItemStateChanged
     }//GEN-LAST:event_rbtPOItemStateChanged
@@ -1720,9 +1651,6 @@ private void txtWTNumFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
         txtWTNum.requestFocusInWindow();
 
     }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-    }//GEN-LAST:event_jButton3ActionPerformed
 
     private void txtWTNumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtWTNumActionPerformed
         // TODO add your handling code here:
@@ -1988,7 +1916,6 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
         outDetails_lits.clear();
         entityManager.clear();
         String txt = txtWTNum.getText().trim();
-        chkDissolved.setEnabled(false);
         if (isEnteredValidWTNum()) {
             return new ReadWTTask(WeighBridgeApp.getApplication(), txt);
         } else {
@@ -2035,7 +1962,7 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
 
         boolean valid = isValidated();
         if (weightTicket != null) {
-            if (!weightTicket.isPosted() && chkDissolved.isSelected()) {
+            if (!weightTicket.isPosted()) {
                 valid = true;
             }
             //20121203 HOANGVV : check KL Dang Ky = KL Thuc te cho xi mang
@@ -2148,7 +2075,7 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                             }
                             entityManager.clear();
                             //if (chkPROC1.equals("X")){ //20100214#01 huy phieu can
-                            if (chkPROC1.equals("X") && !chkDissolved.isSelected()) { //20100214#01 huy phieu can
+                            if (chkPROC1.equals("X")) { //20100214#01 huy phieu can
                                 //+}add logic check confirm
                                 //JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), "Không đủ tồn kho XM PCB40!!!");
                                 WeightTicketDetail weightTicketDetail = weightTicket.getWeightTicketDetail();
@@ -2545,15 +2472,18 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
             if (weightTicket == null) {
                 failed(new Exception(resourceMapMsg.getString("msg.notTicketNo", txtWTNum.getText())));
             } else {
+                //show hide text and label
+                switchShowHideMode(weightTicket.getMode());
+                
                 if (weightTicket.getRegType() == 'I') {
                     rbtInward.setSelected(true);
                 } else {
-
                     rbtOutward.setSelected(true);
                 }
                 String Posto = "";
                 txtCementDesc.setText(weightTicket.getSoNiemXa());
-                if(txtCementDesc.getText() != null || txtCementDesc.getText() != ""){
+                
+                if (txtCementDesc.getText() != null || !"".equals(txtCementDesc.getText())) {
                     txtCementDesc.setEditable(false);
                 }
                 if (weightTicket.getPosto() != null) {
@@ -2561,49 +2491,50 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                     rbtPO.setSelected(true);
                 }
                 txtProcedure.setText(weightTicketController.getModeProcedure(weightTicket.getMode()));
+
                 txtRegistrationNo.setText(weightTicket.getRegisteredNumber());
                 //check mode quy trình show Sling and Pallet
-                if(Constants.WeighingProcess.MODE_DETAIL.OUT_SELL_ROAD.name().equals(txtProcedure.getText()) ||
-                        Constants.WeighingProcess.MODE_DETAIL.OUT_PLANT_PLANT.name().equals(txtProcedure.getText())||
-                        Constants.WeighingProcess.MODE_DETAIL.OUT_SELL_WATERWAY.name().equals(txtProcedure.getText())||
-                        Constants.WeighingProcess.MODE_DETAIL.OUT_OTHER.name().equals(txtProcedure.getText())){
+                if (Constants.WeighingProcess.MODE_DETAIL.OUT_SELL_ROAD.name().equals(weightTicket.getMode())
+                        || Constants.WeighingProcess.MODE_DETAIL.OUT_PLANT_PLANT.name().equals(weightTicket.getMode())
+                        || Constants.WeighingProcess.MODE_DETAIL.OUT_SELL_WATERWAY.name().equals(weightTicket.getMode())
+                        || Constants.WeighingProcess.MODE_DETAIL.OUT_OTHER.name().equals(weightTicket.getMode())) {
                     txtSling.setText(String.valueOf(weightTicket.getSling()));
                     txtPallet.setText(String.valueOf(weightTicket.getPallet()));
                 }
                 txtRemark.setText(weightTicket.getRemark());
                 txtBatchProduce.setText(weightTicket.getBatch());
-                if(txtBatchProduce.getText() != null || txtBatchProduce.getText() != ""){
+                if (txtBatchProduce.getText() != null || txtBatchProduce.getText() != "") {
                     txtBatchProduce.setEditable(false);
                 }
-                if(Constants.WeighingProcess.MODE_DETAIL.OUT_PLANT_PLANT.name().equals(txtProcedure.getText()) ||
-                        Constants.WeighingProcess.MODE_DETAIL.OUT_PULL_STATION.name().equals(txtProcedure.getText())||
-                        Constants.WeighingProcess.MODE_DETAIL.OUT_SLOC_SLOC.name().equals(txtProcedure.getText())||
-                        Constants.WeighingProcess.MODE_DETAIL.OUT_OTHER.name().equals(txtProcedure.getText())||
-                        Constants.WeighingProcess.MODE_DETAIL.IN_PO_PURCHASE.name().equals(txtProcedure.getText())||
-                        Constants.WeighingProcess.MODE_DETAIL.IN_WAREHOUSE_TRANSFER.name().equals(txtProcedure.getText())){
+                if (Constants.WeighingProcess.MODE_DETAIL.OUT_PLANT_PLANT.name().equals(weightTicket.getMode())
+                        || Constants.WeighingProcess.MODE_DETAIL.OUT_PULL_STATION.name().equals(weightTicket.getMode())
+                        || Constants.WeighingProcess.MODE_DETAIL.OUT_SLOC_SLOC.name().equals(weightTicket.getMode())
+                        || Constants.WeighingProcess.MODE_DETAIL.OUT_OTHER.name().equals(weightTicket.getMode())
+                        || Constants.WeighingProcess.MODE_DETAIL.IN_PO_PURCHASE.name().equals(weightTicket.getMode())
+                        || Constants.WeighingProcess.MODE_DETAIL.IN_WAREHOUSE_TRANSFER.name().equals(weightTicket.getMode())) {
                     txtTicketId.setText(weightTicket.getTicketId());
                 }
-                if(Constants.WeighingProcess.MODE_DETAIL.IN_WAREHOUSE_TRANSFER.name().equals(txtProcedure.getText())){
+                if (Constants.WeighingProcess.MODE_DETAIL.IN_WAREHOUSE_TRANSFER.name().equals(weightTicket.getMode())) {
                     txtWeightTicketIdRef.setText(String.valueOf(weightTicket.getWeightTicketIdRef()));
                 }
-                if(Constants.WeighingProcess.MODE_DETAIL.OUT_PLANT_PLANT.name().equals(txtProcedure.getText())||
-                        Constants.WeighingProcess.MODE_DETAIL.OUT_SLOC_SLOC.name().equals(txtProcedure.getText())||
-                        Constants.WeighingProcess.MODE_DETAIL.OUT_PULL_STATION.name().equals(txtProcedure.getText())||
-                        Constants.WeighingProcess.MODE_DETAIL.IN_PO_PURCHASE.name().equals(txtProcedure.getText())){
+                if (Constants.WeighingProcess.MODE_DETAIL.OUT_PLANT_PLANT.name().equals(weightTicket.getMode())
+                        || Constants.WeighingProcess.MODE_DETAIL.OUT_SLOC_SLOC.name().equals(weightTicket.getMode())
+                        || Constants.WeighingProcess.MODE_DETAIL.OUT_PULL_STATION.name().equals(weightTicket.getMode())
+                        || Constants.WeighingProcess.MODE_DETAIL.IN_PO_PURCHASE.name().equals(weightTicket.getMode())) {
                     txtPONo.setText(weightTicket.getWeightTicketDetail().getEbeln());
                 }
                 txtWeight.setText(weightTicket.getWeightTicketDetail().getRegItemQuantity().toString());
-                if(Constants.WeighingProcess.MODE_DETAIL.OUT_SLOC_SLOC.name().equals(txtProcedure.getText())
-                        ||Constants.WeighingProcess.MODE_DETAIL.OUT_PULL_STATION.name().equals(txtProcedure.getText())){
+                if (Constants.WeighingProcess.MODE_DETAIL.OUT_SLOC_SLOC.name().equals(weightTicket.getMode())
+                        || Constants.WeighingProcess.MODE_DETAIL.OUT_PULL_STATION.name().equals(weightTicket.getMode())) {
                     txtPoPosto.setText(weightTicket.getPosto());
                 }
-                if(Constants.WeighingProcess.MODE_DETAIL.OUT_PLANT_PLANT.name().equals(txtProcedure.getText())
-                        ||Constants.WeighingProcess.MODE_DETAIL.OUT_PULL_STATION.name().equals(txtProcedure.getText())
-                        ||Constants.WeighingProcess.MODE_DETAIL.OUT_SLOC_SLOC.name().equals(txtProcedure.getText())){
+                if (Constants.WeighingProcess.MODE_DETAIL.OUT_PLANT_PLANT.name().equals(weightTicket.getMode())
+                        || Constants.WeighingProcess.MODE_DETAIL.OUT_PULL_STATION.name().equals(weightTicket.getMode())
+                        || Constants.WeighingProcess.MODE_DETAIL.OUT_SLOC_SLOC.name().equals(weightTicket.getMode())) {
                     cbxVendorLoading.addItem(weightTicket.getLoadVendor());
                     cbxVendorTransport.addItem(weightTicket.getTransVendor());
                 }
-                if(Constants.WeighingProcess.MODE_DETAIL.OUT_SLOC_SLOC.name().equals(txtProcedure.getText())){
+                if (Constants.WeighingProcess.MODE_DETAIL.OUT_SLOC_SLOC.name().equals(weightTicket.getMode())) {
                     txtLgortIn.setText(weightTicket.getRecvLgort());
                     txtChargIn.setText(weightTicket.getRecvCharg());
                 }
@@ -2801,16 +2732,13 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                         && !outbDel.getLfart().equalsIgnoreCase("LR")
                         && !outbDel.getLfart().equalsIgnoreCase("ZTLF")
                         && !outbDel.getLfart().equalsIgnoreCase("ZTLR")) || isWithoutDO())) {
-                    cbxReason.setEnabled(true);
-                    cbxCompleted.setEnabled(true);
                     txtGRText.setEnabled(true);
                     cbxCharg.setEditable(true);
                 } else {
-                    cbxReason.setEnabled(false);
-                    cbxCompleted.setEnabled(false);
 //                    txtGRText.setEnabled(false);
                     cbxCharg.setEditable(false);
-//                    cbxSLoc.setEnabled(false);
+                    cbxSLoc.setEnabled(false);
+                    cbxCharg.setEnabled(false);
                 }
                 // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc="Bind Weight Ticket">
@@ -2826,6 +2754,16 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                         //  txtMatnr.setText(weightTicket.getMatnrRef());
                         txtMatnr.setText("1234567890000");
                         txtMatnr.setText(smatref);
+                        materialConstraint = weightTicketController.getMaterialConstraintByMatnr(smatref);
+                        
+                        if(isStage2() && materialConstraint != null && materialConstraint.getRequiredNiemXa()){
+                            lblCementDesc.setBackground(Color.red);
+                            txtCementDesc.setEditable(true);
+                        }
+                        if(isStage2() && materialConstraint != null && materialConstraint.getRequiredBatch()){
+                            txtBatchProduce.setBackground(Color.red);
+                            txtBatchProduce.setEditable(true);
+                        }
                     } catch (ArithmeticException e) {
                     }
                 }
@@ -2886,27 +2824,14 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                     cbxSLoc.setSelectedIndex(-1);
                 }
                 txtGRText.setText(weightTicket.getText());
-                if(Constants.WeighingProcess.MODE_DETAIL.OUT_SELL_ROAD.name().equals(txtProcedure.getText())||
-                        Constants.WeighingProcess.MODE_DETAIL.IN_WAREHOUSE_TRANSFER.name().equals(txtProcedure.getText())){
+                if (Constants.WeighingProcess.MODE_DETAIL.OUT_SELL_ROAD.name().equals(weightTicket.getMode())
+                        || Constants.WeighingProcess.MODE_DETAIL.IN_WAREHOUSE_TRANSFER.name().equals(weightTicket.getMode())) {
                     txtDelNum.setText(weightTicketDetail.getDeliveryOrderNo());
-                }
-                if (weightTicket.getNoMoreGr() != null && weightTicket.getNoMoreGr() == '2') {
-                    cbxCompleted.setSelectedIndex(1);
-                } else {
-                    cbxCompleted.setSelectedIndex(0);
-                }
-                chkDissolved.setSelected(weightTicket.isDissolved());
-                if (chkDissolved.isSelected() || (!isStage1() && !isStage2() && weightTicket.isPosted())) {
-                    chkDissolved.setEnabled(false);
-                } else {
-                    chkDissolved.setEnabled(true);
                 }
 //                setDissolved(chkDissolved.isSelected());
                 if (isDissolved() || (!isStage1() && !isStage2() && weightTicket.isPosted())) {
                     setValidPONum(false);
                     setWithoutDO(false);
-                    cbxReason.setEnabled(false);
-                    cbxCompleted.setEnabled(false);
 //                    txtGRText.setEnabled(false);
                     cbxCharg.setEditable(false);
                     setStage1(false);
@@ -2967,16 +2892,16 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
 
                 // cấu hình cho cầu cân hiển thị PO và vendor
                 if (sapSetting.getCheckPov() != null && sapSetting.getCheckPov() == true) {
-                    txtPoPosto.setVisible(true);
-                    cbxVendorLoading.setVisible(true);
-                    cbxVendorTransport.setVisible(true);
+                    //txtPoPosto.setVisible(true);
+                    //cbxVendorLoading.setVisible(true);
+                    //cbxVendorTransport.setVisible(true);
 //                    lblPoPosto.setVisible(true);
 //                    lblVendorLoading.setVisible(true);
 //                    lblVendorTransport.setVisible(true);
                 } else {
-                    txtPoPosto.setVisible(false);
-                    cbxVendorLoading.setVisible(false);
-                    cbxVendorTransport.setVisible(false);
+                    //txtPoPosto.setVisible(false);
+                    //cbxVendorLoading.setVisible(false);
+                    //cbxVendorTransport.setVisible(false);
 //                    lblPoPosto.setVisible(false);
 //                    lblVendorLoading.setVisible(false);
 //                    lblVendorTransport.setVisible(false);
@@ -3016,11 +2941,6 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
         protected void finished() {
             setSaveNeeded(isValidated());
             if (weightTicket != null) {
-                if (!weightTicket.isPosted()) {
-                    chkDissolved.setEnabled(true);
-                } else {
-                    chkDissolved.setEnabled(false);
-                }
                 if (weightTicket.isDissolved()) {
                     setSaveNeeded(false);
                 }
@@ -3030,6 +2950,238 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                     btnPostAgain.setEnabled(false);
                 }
             }
+        }
+    }
+
+    private void switchShowHideMode(String mode) {
+        setAllChildPanelsVisible(pnWTLeft);
+        setAllChildPanelsVisible(pnWTRight);
+        btnPostAgain.setEnabled(false);
+        btnReprint.setEnabled(false);
+        btnSave.setEnabled(false);
+        if (ModeEnum.IN_PO_PURCHASE.name().equals(mode)) {
+            lblTicketId.setVisible(false);
+            lblWeightTicketIdRef.setVisible(false);
+            lblRegistrationNo.setVisible(false);
+            lblSling.setVisible(false);
+            lblPallet.setVisible(false);
+            lblDelNum.setVisible(false);
+            lblWeight.setVisible(false);
+            lblMatnr.setVisible(false);
+            lbKunnr.setVisible(false);
+            lblLgortIn.setVisible(false);
+            lblChargIn.setVisible(false);
+            lblPoPosto.setVisible(false);
+            lblVendorLoading.setVisible(false);
+            lblVendorTransport.setVisible(false);
+            lblSO.setVisible(false);
+            
+            txtSO.setVisible(false);
+            txtTicketId.setVisible(false);
+            txtWeightTicketIdRef.setVisible(false);
+            txtRegistrationNo.setVisible(false);
+            txtSling.setVisible(false);
+            txtPallet.setVisible(false);
+            txtDelNum.setVisible(false);
+            txtWeight.setVisible(false);
+            txtMatnr.setVisible(false);
+            cbxKunnr.setVisible(false);
+            txtLgortIn.setVisible(false);
+            txtChargIn.setVisible(false);
+            txtPoPosto.setVisible(false);
+            cbxVendorLoading.setVisible(false);
+            cbxVendorTransport.setVisible(false);
+        }
+        if (ModeEnum.IN_WAREHOUSE_TRANSFER.name().equals(mode)) {
+            lblSling.setVisible(false);
+            lblPallet.setVisible(false);
+            lblPONo.setVisible(false);
+            lblMatnr.setVisible(false);
+            lbKunnr.setVisible(false);
+            lblLgortIn.setVisible(false);
+            lblChargIn.setVisible(false);
+            lblPoPosto.setVisible(false);
+            lblVendorLoading.setVisible(false);
+            lblVendorTransport.setVisible(false);
+            lblSO.setVisible(false);
+            
+            txtSO.setVisible(false);
+            txtSling.setVisible(false);
+            txtPallet.setVisible(false);
+            txtPONo.setVisible(false);
+            txtMatnr.setVisible(false);
+            cbxKunnr.setVisible(false);
+            txtLgortIn.setVisible(false);
+            txtChargIn.setVisible(false);
+            txtPoPosto.setVisible(false);
+            cbxVendorLoading.setVisible(false);
+            cbxVendorTransport.setVisible(false);
+        }
+        if (ModeEnum.IN_OTHER.name().equals(mode)) {
+            lblDelNum.setVisible(false);
+            lblPONo.setVisible(false);
+            lblMatnr.setVisible(false);
+            lbKunnr.setVisible(false);
+            lblLgortIn.setVisible(false);
+            lblChargIn.setVisible(false);
+            lblPoPosto.setVisible(false);
+            lblVendorLoading.setVisible(false);
+            lblVendorTransport.setVisible(false);
+            lblSO.setVisible(false);
+            
+            txtSO.setVisible(false);
+            txtDelNum.setVisible(false);
+            txtPONo.setVisible(false);
+            txtMatnr.setVisible(false);
+            cbxKunnr.setVisible(false);
+            txtLgortIn.setVisible(false);
+            txtChargIn.setVisible(false);
+            txtPoPosto.setVisible(false);
+            cbxVendorLoading.setVisible(false);
+            cbxVendorTransport.setVisible(false);
+        }
+        if (ModeEnum.OUT_SELL_ROAD.name().equals(mode)) {
+            lblTicketId.setVisible(false);
+            lblWeightTicketIdRef.setVisible(false);
+            lblPONo.setVisible(false);
+            lblMatnr.setVisible(false);
+            lbKunnr.setVisible(false);
+            lblLgortIn.setVisible(false);
+            lblChargIn.setVisible(false);
+            lblPoPosto.setVisible(false);
+            lblVendorLoading.setVisible(false);
+            lblVendorTransport.setVisible(false);
+            lblSO.setVisible(false);
+            
+            txtSO.setVisible(false);
+            txtTicketId.setVisible(false);
+            txtWeightTicketIdRef.setVisible(false);
+            txtPONo.setVisible(false);
+            txtMatnr.setVisible(false);
+            cbxKunnr.setVisible(false);
+            txtLgortIn.setVisible(false);
+            txtChargIn.setVisible(false);
+            txtPoPosto.setVisible(false);
+            cbxVendorLoading.setVisible(false);
+            cbxVendorTransport.setVisible(false);
+        }
+        if (ModeEnum.OUT_PLANT_PLANT.name().equals(mode)) {
+            lblWeightTicketIdRef.setVisible(false);
+            lblDelNum.setVisible(false);
+            lblMatnr.setVisible(false);
+            lbKunnr.setVisible(false);
+            lblLgortIn.setVisible(false);
+            lblChargIn.setVisible(false);
+            lblPoPosto.setVisible(false);
+            lblVendorLoading.setVisible(false);
+            lblVendorTransport.setVisible(false);
+            lblSO.setVisible(false);
+            
+            txtSO.setVisible(false);
+            txtWeightTicketIdRef.setVisible(false);
+            txtDelNum.setVisible(false);
+            txtMatnr.setVisible(false);
+            cbxKunnr.setVisible(false);
+            txtLgortIn.setVisible(false);
+            txtChargIn.setVisible(false);
+            txtPoPosto.setVisible(false);
+            cbxVendorLoading.setVisible(false);
+            cbxVendorTransport.setVisible(false);
+
+        }
+        if (ModeEnum.OUT_SLOC_SLOC.name().equals(mode)) {
+            lblSling.setVisible(false);
+            lblPallet.setVisible(false);
+            lblWeightTicketIdRef.setVisible(false);
+            lblDelNum.setVisible(false);
+            lblMatnr.setVisible(false);
+            lbKunnr.setVisible(false);
+            lblSO.setVisible(false);
+            
+            txtSO.setVisible(false);
+            txtSling.setVisible(false);
+            txtPallet.setVisible(false);
+            txtWeightTicketIdRef.setVisible(false);
+            txtDelNum.setVisible(false);
+            txtMatnr.setVisible(false);
+            cbxKunnr.setVisible(false);
+            //ma vat tu
+        }
+        if (ModeEnum.OUT_PULL_STATION.name().equals(mode)) {
+            lblSling.setVisible(false);
+            lblPallet.setVisible(false);
+            lblWeightTicketIdRef.setVisible(false);
+            lblDelNum.setVisible(false);
+            lblMatnr.setVisible(false);
+            lbKunnr.setVisible(false);
+            lblVendorLoading.setVisible(false);
+            lblVendorTransport.setVisible(false);
+            lblSO.setVisible(false);
+            
+            txtSO.setVisible(false);
+            txtSling.setVisible(false);
+            txtPallet.setVisible(false);
+            txtWeightTicketIdRef.setVisible(false);
+            txtDelNum.setVisible(false);
+            txtMatnr.setVisible(false);
+            cbxKunnr.setVisible(false);
+            cbxVendorLoading.setVisible(false);
+            cbxVendorTransport.setVisible(false);
+        }
+        if (ModeEnum.OUT_SELL_WATERWAY.name().equals(mode)) {
+            lblSling.setVisible(false);
+            lblPallet.setVisible(false);
+            lblTicketId.setVisible(false);
+            lblWeightTicketIdRef.setVisible(false);
+            //so SO
+            lblPONo.setVisible(false);
+            lblMatnr.setVisible(false);
+            lbKunnr.setVisible(false);
+            lblLgortIn.setVisible(false);
+            lblChargIn.setVisible(false);
+            lblPoPosto.setVisible(false);
+            lblVendorLoading.setVisible(false);
+            lblVendorTransport.setVisible(false);
+
+            txtSling.setVisible(false);
+            txtPallet.setVisible(false);
+            txtTicketId.setVisible(false);
+            txtWeightTicketIdRef.setVisible(false);
+            //so SO
+            txtPONo.setVisible(false);
+            txtMatnr.setVisible(false);
+            cbxKunnr.setVisible(false);
+            txtLgortIn.setVisible(false);
+            txtChargIn.setVisible(false);
+            txtPoPosto.setVisible(false);
+            cbxVendorLoading.setVisible(false);
+            cbxVendorTransport.setVisible(false);
+        }
+        if (ModeEnum.OUT_OTHER.name().equals(mode)) {
+            lblWeightTicketIdRef.setVisible(false);
+            lblDelNum.setVisible(false);
+            lblPONo.setVisible(false);
+            lblMatnr.setVisible(false);
+            lbKunnr.setVisible(false);
+            lblLgortIn.setVisible(false);
+            lblChargIn.setVisible(false);
+            lblPoPosto.setVisible(false);
+            lblVendorLoading.setVisible(false);
+            lblVendorTransport.setVisible(false);
+            lblSO.setVisible(false);
+            
+            txtSO.setVisible(false);
+            txtWeightTicketIdRef.setVisible(false);
+            txtDelNum.setVisible(false);
+            txtPONo.setVisible(false);
+            txtMatnr.setVisible(false);
+            cbxKunnr.setVisible(false);
+            txtLgortIn.setVisible(false);
+            txtChargIn.setVisible(false);
+            txtPoPosto.setVisible(false);
+            cbxVendorLoading.setVisible(false);
+            cbxVendorTransport.setVisible(false);
+            
         }
     }
 
@@ -3840,7 +3992,7 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
         @Override
         protected Object doInBackground() throws Exception {
             WeighBridgeApp.getApplication().disconnectWB();
-            formatter.applyPattern(WeighBridgeApp.DATE_TIME_DISPLAY_FORMAT); 
+            formatter.applyPattern(WeighBridgeApp.DATE_TIME_DISPLAY_FORMAT);
             Date now = weightTicketController.getServerTime();
             grbBridge.clearSelection();
             btnAccept.setEnabled(false);
@@ -3926,10 +4078,9 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                 {
                     String param = (outbDel != null && outbDel.getMatnr() != null) ? outbDel.getMatnr().toString() : "";
 
-                    if (param.equals("") && purOrder != null)
-                    {
+                    if (param.equals("") && purOrder != null) {
                         PurchaseOrderDetail purchaseOrderDetail = purOrder.getPurchaseOrderDetail();
-                        if(purchaseOrderDetail.getMaterial() != null && !purchaseOrderDetail.getMaterial().isEmpty()) {
+                        if (purchaseOrderDetail.getMaterial() != null && !purchaseOrderDetail.getMaterial().isEmpty()) {
                             param = purchaseOrderDetail.getMaterial();
                         }
                     }
@@ -4099,14 +4250,10 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
         this.setStage2(false);
         this.setValidPONum(false);
         this.setWithoutDO(false);
-        cbxReason.setEnabled(false);
-        cbxCompleted.setEnabled(false);
         cbxKunnr.setSelectedIndex(-1);
         cbxKunnr.setEnabled(false);
         txtGRText.setEnabled(false);
         cbxCharg.setEditable(false);
-        chkDissolved.setEnabled(false);
-        chkDissolved.setSelected(false);
         this.setFormEnable(false);
         this.setSubContract(false);
         this.setMvt311(false);
@@ -4128,7 +4275,6 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
         txtLicPlate.setValue(null);
         txtTrailerPlate.setValue(null);
         cbxSLoc.setSelectedIndex(-1);
-        cbxReason.setSelectedIndex(-1);
 
         txtGRText.setText(null);
         txtRegItem.setText(null);
@@ -4136,7 +4282,7 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
         txtDelNum.setText(null);
         cbxCharg.setModel(new DefaultComboBoxModel());
         txtCementDesc.setText(null);
-        cbxCompleted.setSelectedIndex(-1);
+        txtCementDesc.setEditable(true);
 
         rbtPO.setForeground(Color.black);
         rbtMisc.setForeground(Color.black);
@@ -4157,6 +4303,7 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
         txtSling.setText(null);
         txtPallet.setText(null);
         txtBatchProduce.setText(null);
+        txtBatchProduce.setEditable(true);
         txtTicketId.setText(null);
         txtWeightTicketIdRef.setText(null);
         txtRemark.setText(null);
@@ -4164,6 +4311,22 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
         txtPoPosto.setText(null);
         cbxVendorLoading.setModel(new DefaultComboBoxModel());
         cbxVendorTransport.setModel(new DefaultComboBoxModel());
+
+        setAllChildPanelsVisible(pnWTLeft);
+        setAllChildPanelsVisible(pnWTRight);
+        btnPostAgain.setEnabled(false);
+        btnReprint.setEnabled(false);
+        btnSave.setEnabled(false);
+    }
+
+    private void setAllChildPanelsVisible(Container parent) {
+        Component[] components = parent.getComponents();
+
+        if (components.length > 0) {
+            for (Component component : components) {
+                component.setVisible(true);
+            }
+        }
     }
 
     private Object getGrDoMigoBapi(WeightTicket wt, OutboundDelivery outbDel) {
@@ -4215,8 +4378,27 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
         boolean result = false, bMisc = false, bPO = false, bMB1B = false, bMvt311 = false, bScale = false, bSLoc = false, bBatch = false;
         boolean bMaterial = false, bBatchMng = false;
         boolean bNiemXa = true;
-        if (chkDissolved.isSelected()) {
-            bMisc = bPO = bMB1B = bMvt311 = bScale = bSLoc = bBatch = !isDissolved();
+//        if (chkDissolved.isSelected()) {
+//            bMisc = bPO = bMB1B = bMvt311 = bScale = bSLoc = bBatch = !isDissolved();
+//            rbtMisc.setForeground(Color.black);
+//            if (WeighBridgeApp.getApplication().isOfflineMode()) {
+//                rbtMisc.setForeground(Color.red);
+//            }
+//            rbtPO.setForeground(Color.black);
+//            rbtMb1b.setForeground(Color.black);
+//            rbtMvt311.setForeground(Color.black);
+//            lblIScale.setForeground(Color.black);
+//            lblOScale.setForeground(Color.black);
+//            lblGScale.setForeground(Color.black);
+//            lblSLoc.setForeground(Color.black);
+//            lblCharg.setForeground(Color.black);
+//        } else {
+        if (grbType.getSelection() == null && isWithoutDO()) {
+            rbtMisc.setForeground(Color.red);
+            rbtPO.setForeground(Color.red);
+            rbtMb1b.setForeground(Color.red);
+            rbtMvt311.setForeground(Color.red);
+        } else {
             rbtMisc.setForeground(Color.black);
             if (WeighBridgeApp.getApplication().isOfflineMode()) {
                 rbtMisc.setForeground(Color.red);
@@ -4224,105 +4406,86 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
             rbtPO.setForeground(Color.black);
             rbtMb1b.setForeground(Color.black);
             rbtMvt311.setForeground(Color.black);
-            lblIScale.setForeground(Color.black);
-            lblOScale.setForeground(Color.black);
-            lblGScale.setForeground(Color.black);
-            lblSLoc.setForeground(Color.black);
-            lblCharg.setForeground(Color.black);
+            bMisc = rbtMisc.isSelected();
+            bPO = true;
+            bMB1B = true;
+            bMvt311 = true;
+        }
+        if (rbtPO.isSelected() && isEnteredValidPONum() && isValidPONum()) {
+            rbtPO.setForeground(Color.black);
+            bPO = true;
+        } else if (rbtPO.isSelected() && (!isEnteredValidPONum() || isValidPONum())) {
+            rbtPO.setForeground(Color.red);
+            bPO = false;
+        }
+
+        if (rbtMb1b.isSelected() && weightTicket.getRecvLgort() == null) {
+            rbtMb1b.setForeground(Color.red);
+            bMB1B = false;
         } else {
-            if (grbType.getSelection() == null && isWithoutDO()) {
-                rbtMisc.setForeground(Color.red);
-                rbtPO.setForeground(Color.red);
-                rbtMb1b.setForeground(Color.red);
-                rbtMvt311.setForeground(Color.red);
-            } else {
-                rbtMisc.setForeground(Color.black);
-                if (WeighBridgeApp.getApplication().isOfflineMode()) {
-                    rbtMisc.setForeground(Color.red);
-                }
-                rbtPO.setForeground(Color.black);
-                rbtMb1b.setForeground(Color.black);
-                rbtMvt311.setForeground(Color.black);
-                bMisc = rbtMisc.isSelected();
-                bPO = true;
-                bMB1B = true;
-                bMvt311 = true;
-            }
-            if (rbtPO.isSelected() && isEnteredValidPONum() && isValidPONum()) {
-                rbtPO.setForeground(Color.black);
-                bPO = true;
-            } else if (rbtPO.isSelected() && (!isEnteredValidPONum() || isValidPONum())) {
-                rbtPO.setForeground(Color.red);
-                bPO = false;
-            }
+            rbtMb1b.setForeground(Color.black);
+            bMB1B = true;
+        }
 
-            if (rbtMb1b.isSelected() && weightTicket.getRecvLgort() == null) {
-                rbtMb1b.setForeground(Color.red);
-                bMB1B = false;
-            } else {
-                rbtMb1b.setForeground(Color.black);
-                bMB1B = true;
-            }
+        if (rbtMvt311.isSelected() && (weightTicket.getRecvLgort() == null || weightTicket.getWeightTicketDetail().getRecvMatnr() == null)) {
+            rbtMvt311.setForeground(Color.red);
+            bMvt311 = false;
+        } else {
+            rbtMvt311.setForeground(Color.black);
+            bMvt311 = true;
+        }
 
-            if (rbtMvt311.isSelected() && (weightTicket.getRecvLgort() == null || weightTicket.getWeightTicketDetail().getRecvMatnr() == null)) {
-                rbtMvt311.setForeground(Color.red);
-                bMvt311 = false;
+        if (!txtMatnr.getText().trim().isEmpty() && material != null) {
+            bMaterial = true;
+            if (material.getXchpf() != null && material.getXchpf().charValue() == 'X') {
+                bBatchMng = true;
             } else {
-                rbtMvt311.setForeground(Color.black);
-                bMvt311 = true;
+                bBatchMng = false;
             }
+        } else {
+            bMaterial = bBatchMng = false;
+        }
 
-            if (!txtMatnr.getText().trim().isEmpty() && material != null) {
-                bMaterial = true;
-                if (material.getXchpf() != null && material.getXchpf().charValue() == 'X') {
-                    bBatchMng = true;
-                } else {
-                    bBatchMng = false;
-                }
+        if (!isStage1() && !isStage2()) {
+            bScale = true;
+        }
+        if (isStage1()) {
+            bScale = !(txfInQty.getValue() == null);
+            if (bScale) {
+                lblIScale.setForeground(Color.black);
             } else {
-                bMaterial = bBatchMng = false;
+                lblIScale.setForeground(Color.red);
             }
-
-            if (!isStage1() && !isStage2()) {
-                bScale = true;
-            }
-            if (isStage1()) {
-                bScale = !(txfInQty.getValue() == null);
-                if (bScale) {
-                    lblIScale.setForeground(Color.black);
-                } else {
-                    lblIScale.setForeground(Color.red);
-                }
-            } else if (isStage2()) {
-                bScale = !(txfOutQty.getValue() == null && txfGoodsQty.getValue() == null);
-                if (bScale) {
-                    lblOScale.setForeground(Color.black);
-                    lblGScale.setForeground(Color.black);
-                } else {
-                    lblOScale.setForeground(Color.red);
-                    lblGScale.setForeground(Color.red);
-                }
-            }
-            bSLoc = !(cbxSLoc.getSelectedIndex() == -1);
-            bBatch = !((cbxCharg.getSelectedIndex() == -1 && !cbxCharg.isEditable()) || (cbxCharg.isEditable() && cbxCharg.getEditor().getItem().toString().trim().isEmpty()));
-            if (bMisc) {
-                bSLoc = true;
-                bBatch = true;
-            }
-            if (!bBatch && bMaterial && !bBatchMng) {
-                bBatch = true;
-            }
-            if (bSLoc) {
-                lblSLoc.setForeground(Color.black);
+        } else if (isStage2()) {
+            bScale = !(txfOutQty.getValue() == null && txfGoodsQty.getValue() == null);
+            if (bScale) {
+                lblOScale.setForeground(Color.black);
+                lblGScale.setForeground(Color.black);
             } else {
-                lblSLoc.setForeground(Color.red);
-            }
-            if (bBatch) {
-                lblCharg.setForeground(Color.black);
-            } else {
-                lblCharg.setForeground(Color.red);
+                lblOScale.setForeground(Color.red);
+                lblGScale.setForeground(Color.red);
             }
         }
+        bSLoc = !(cbxSLoc.getSelectedIndex() == -1);
+        bBatch = !((cbxCharg.getSelectedIndex() == -1 && !cbxCharg.isEditable()) || (cbxCharg.isEditable() && cbxCharg.getEditor().getItem().toString().trim().isEmpty()));
+        if (bMisc) {
+            bSLoc = true;
+            bBatch = true;
+        }
+        if (!bBatch && bMaterial && !bBatchMng) {
+            bBatch = true;
+        }
+        if (bSLoc) {
+            lblSLoc.setForeground(Color.black);
+        } else {
+            lblSLoc.setForeground(Color.red);
+        }
+        if (bBatch) {
+            lblCharg.setForeground(Color.black);
+        } else {
+            lblCharg.setForeground(Color.red);
+        }
+        //}
         bBatch = true;
         txtGRText.setEnabled(true);
         if (outbDel != null) {
@@ -4354,26 +4517,21 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
     private javax.swing.JButton btnReprint;
     private javax.swing.JButton btnSave;
     private javax.swing.JComboBox cbxCharg;
-    private javax.swing.JComboBox cbxCompleted;
     private javax.swing.JComboBox cbxKunnr;
-    private javax.swing.JComboBox cbxReason;
     private javax.swing.JComboBox cbxSLoc;
     private javax.swing.JComboBox cbxVendorLoading;
     private javax.swing.JComboBox cbxVendorTransport;
-    private javax.swing.JCheckBox chkDissolved;
     private javax.swing.ButtonGroup grbBridge;
     private javax.swing.ButtonGroup grbCat;
     private javax.swing.ButtonGroup grbType;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel lbKunnr;
     private javax.swing.JLabel lblBatchProduce;
     private javax.swing.JLabel lblCMNDBL;
     private javax.swing.JLabel lblCementDesc;
     private javax.swing.JLabel lblCharg;
     private javax.swing.JLabel lblChargIn;
-    private javax.swing.JLabel lblComplete;
     private javax.swing.JLabel lblDName;
     private javax.swing.JLabel lblDelNum;
     private javax.swing.JLabel lblGRText;
@@ -4393,12 +4551,12 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
     private javax.swing.JLabel lblPallet;
     private javax.swing.JLabel lblPoPosto;
     private javax.swing.JLabel lblProcedure;
-    private javax.swing.JLabel lblProcedure1;
-    private javax.swing.JLabel lblReason;
     private javax.swing.JLabel lblRegCat;
     private javax.swing.JLabel lblRegItem;
+    private javax.swing.JLabel lblRegistrationNo;
     private javax.swing.JLabel lblRemark;
     private javax.swing.JLabel lblSLoc;
+    private javax.swing.JLabel lblSO;
     private javax.swing.JLabel lblSling;
     private javax.swing.JLabel lblTicketId;
     private javax.swing.JLabel lblTrailerPlate;
@@ -4411,6 +4569,8 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
     private javax.swing.JPanel pnCurScaleData;
     private javax.swing.JPanel pnScaleData;
     private javax.swing.JPanel pnWTFilter;
+    private javax.swing.JPanel pnWTLeft;
+    private javax.swing.JPanel pnWTRight;
     private javax.swing.JPanel pnWTicket;
     private javax.swing.JRadioButton rbtBridge1;
     private javax.swing.JRadioButton rbtBridge2;
@@ -4444,6 +4604,7 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
     private javax.swing.JTextField txtRegItem;
     private javax.swing.JTextField txtRegistrationNo;
     private javax.swing.JTextField txtRemark;
+    private javax.swing.JTextField txtSO;
     private javax.swing.JFormattedTextField txtSling;
     private javax.swing.JFormattedTextField txtTicketId;
     private javax.swing.JFormattedTextField txtTrailerPlate;
