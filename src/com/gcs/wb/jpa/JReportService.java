@@ -28,7 +28,7 @@ public class JReportService {
             JasperViewer jv = new JasperViewer(jasperPrint, false);
             jv.setVisible(true);
 
-        } catch (Exception e) {
+        } catch (JRException e) {
             logger.error(e.toString());
         }
     }

@@ -850,11 +850,11 @@ public class WeightTicketService {
                     }
                 }
                 String reportName1 = "";
-                if (configuration.isModeNormal()) {
+                //if (configuration.isModeNormal()) {
                     reportName1 = "./rpt/rptBT/WeightTicket.jasper";
-                } else {
-                    reportName1 = "./rpt/rptPQ/WeightTicket.jasper";
-                }
+//                } else {
+//                    reportName1 = "./rpt/rptPQ/WeightTicket.jasper";
+//                }
 
                 jreportService.printReport(map, reportName1);
 
@@ -948,11 +948,11 @@ public class WeightTicketService {
 
                     String reportName = null;
                     String path = "";
-                    if (configuration.isModeNormal()) {
+                    //if (configuration.isModeNormal()) {
                         path = "./rpt/rptBT/";  // ->> DO cai nay ne e
-                    } else {
-                        path = "./rpt/rptPQ/";
-                    }
+//                    } else {
+//                        path = "./rpt/rptPQ/";
+//                    }
                     if (rbtMisc.isSelected() || rbtPO.isSelected()) {
 
                         reportName = path.concat("WeightTicket.jasper");
