@@ -71,7 +71,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         wtRegisValidation = new WeightTicketRegistrationValidation(rootPane, resourceMapMsg);
         initComponents();
         initComboboxModel();
-        initComboboxRenderer(); 
+        initComboboxRenderer();
 
         SearchWeightTicketTask t = new SearchWeightTicketTask(WeighBridgeApp.getApplication());
         t.execute();
@@ -94,7 +94,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 return this;
             }
         });
-        
+
         cbxMaterialTypeN.setRenderer(new DefaultListCellRenderer() {
 
             @Override
@@ -172,12 +172,12 @@ public class WTRegView extends javax.swing.JInternalFrame {
             }
         });
     }
-    
+
     private void initComboboxModel() {
         DefaultComboBoxModel slocModel = sapService.getSlocModel();
         cbxSlocN.setModel(slocModel);
         cbxSloc2N.setModel(slocModel);
-        
+
         DefaultComboBoxModel vendorModel = sapService.getVendorList();
         cbxVendorLoadingN.setModel(vendorModel);
         cbxVendorTransportN.setModel(vendorModel);
@@ -814,6 +814,11 @@ public class WTRegView extends javax.swing.JInternalFrame {
         txtWeightN.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
         txtWeightN.setText(resourceMap.getString("txtWeightN.text")); // NOI18N
         txtWeightN.setName("txtWeightN"); // NOI18N
+        txtWeightN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtWeightNKeyReleased(evt);
+            }
+        });
 
         cbxSlocN.setName("cbxSlocN"); // NOI18N
         cbxSlocN.addActionListener(new java.awt.event.ActionListener() {
@@ -1101,7 +1106,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                     .addComponent(pnPrintControl, javax.swing.GroupLayout.DEFAULT_SIZE, 936, Short.MAX_VALUE)
                     .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 936, Short.MAX_VALUE)
                     .addComponent(pnFilter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnControl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 936, Short.MAX_VALUE))
+                    .addComponent(pnControl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -1117,7 +1122,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addComponent(pnRegistrationOfVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(pnControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(53, Short.MAX_VALUE))
+                .addContainerGap(65, Short.MAX_VALUE))
         );
 
         pack();
@@ -1231,6 +1236,10 @@ private void cbxSuppliesIdNActionPerformed(java.awt.event.ActionEvent evt) {//GE
 private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTicketIdNKeyReleased
     validateForm();
 }//GEN-LAST:event_txtTicketIdNKeyReleased
+
+private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtWeightNKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtWeightNKeyReleased
 
     private DefaultComboBoxModel getMatsModel() {
         return weightTicketRegistarationController.getMatsModel();
@@ -1462,7 +1471,7 @@ private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
         showComponent(cbxVendorLoadingN, lblVendorLoadingN, false, false);
         showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
         showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
-        
+
         cbxSlocN.setModel(sapService.getSlocModel());
     }
 
@@ -1523,7 +1532,7 @@ private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
         showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
         showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
 
-        cbxMaterialTypeN.setModel(getMatsModel());
+        cbxMaterialTypeN.setModel(weightTicketRegistarationController.getListMaterial());
     }
 
     private void prepareOutSellRoad() {
@@ -1797,10 +1806,15 @@ private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
 
+        boolean isWeightValid = wtRegisValidation.validateLength(txtWeightN.getText(), lblWeightN, 1, 10);
+
+        boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
+        boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
+
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
                 && isCMNDBLValid && isPlateNoValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
-                && isNoteValid;
+                && isNoteValid && isMaterialTypeValid && isSlocValid && isWeightValid;
     }
 
     private boolean validateOutSellRoad() {
@@ -1964,7 +1978,7 @@ private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
         btnSOCheckN.setEnabled(isSOValid);
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
-        
+
         return isRegisterIdValid && isDriverNameValid
                 && isCMNDBLValid && isPlateNoValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
@@ -2408,6 +2422,15 @@ private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
             newWeightTicket.setBatch(txtProductionBatchN.getText().trim());
             newWeightTicket.setText(txtNoteN.getText().trim());
 
+            switch (modeDetail) {
+                case IN_OTHER:
+                    updateDataForOtherMode();
+                    break;
+                case OUT_OTHER:
+                    updateDataForOtherMode();
+                    break;
+            }
+
             List<WeightTicketDetail> weightTicketDetails = newWeightTicket.getWeightTicketDetails();
             if (weightTicketDetails.size() > 0) {
                 weightTicketDetails.forEach(weightTicketDetail -> {
@@ -2443,6 +2466,18 @@ private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
             t.execute();
 
             return null;
+        }
+
+        public void updateDataForOtherMode() {
+            WeightTicketDetail weightTicketDetail = new WeightTicketDetail();
+            weightTicketDetail.setUnit("TON");
+
+            Material material = (Material) cbxMaterialTypeN.getSelectedItem();
+            weightTicketDetail.setMatnrRef(material.getMatnr());
+            weightTicketDetail.setRegItemDescription(material.getMaktx());
+            weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+
+            newWeightTicket.addWeightTicketDetail(weightTicketDetail);
         }
 
         @Override
@@ -2515,7 +2550,7 @@ private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
         isValidPO = false;
         isValidPOSTO = false;
         isValidSO = false;
-        
+
         txtTicketIdN.setText("");
         txtWeightTickerRefN.setText("");
         txtRegisterIdN.setText("");
@@ -2534,6 +2569,7 @@ private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
         txtPOSTONumN.setText("");
         txtSONumN.setText("");
         cbxMaterialTypeN.setSelectedIndex(-1);
+        txtWeightN.setText("0");
         cbxSlocN.setSelectedIndex(-1);
         cbxSloc2N.setSelectedIndex(-1);
         cbxBatchStockN.setSelectedIndex(-1);
