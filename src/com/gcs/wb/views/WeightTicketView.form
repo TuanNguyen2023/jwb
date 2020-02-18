@@ -516,9 +516,9 @@
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="txfGoodsQty" alignment="0" pref="374" max="32767" attributes="2"/>
-                      <Component id="txfOutQty" alignment="0" pref="374" max="32767" attributes="2"/>
-                      <Component id="txfInQty" alignment="0" pref="374" max="32767" attributes="2"/>
+                      <Component id="txfGoodsQty" alignment="0" pref="376" max="32767" attributes="2"/>
+                      <Component id="txfOutQty" alignment="0" pref="376" max="32767" attributes="2"/>
+                      <Component id="txfInQty" alignment="0" pref="376" max="32767" attributes="2"/>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -534,8 +534,8 @@
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="txtOutTime" pref="369" max="32767" attributes="2"/>
-                              <Component id="txtInTime" alignment="0" pref="369" max="32767" attributes="2"/>
+                              <Component id="txtOutTime" pref="371" max="32767" attributes="2"/>
+                              <Component id="txtInTime" alignment="0" pref="371" max="32767" attributes="2"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
@@ -886,34 +886,34 @@
                           <Group type="102" alignment="1" attributes="0">
                               <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
                               <Component id="rbtInward" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace pref="37" max="32767" attributes="0"/>
+                              <EmptySpace pref="41" max="32767" attributes="0"/>
                               <Component id="rbtOutward" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="txtRegistrationNo" alignment="0" pref="198" max="32767" attributes="0"/>
-                          <Component id="txtDName" alignment="0" pref="198" max="32767" attributes="2"/>
-                          <Component id="txtGRText" alignment="1" pref="198" max="32767" attributes="0"/>
-                          <Component id="txtTrailerPlate" alignment="1" pref="198" max="32767" attributes="0"/>
-                          <Component id="txtSling" alignment="0" pref="198" max="32767" attributes="0"/>
-                          <Component id="txtLicPlate" alignment="0" pref="198" max="32767" attributes="0"/>
-                          <Component id="txtCMNDBL" alignment="1" pref="198" max="32767" attributes="1"/>
-                          <Component id="txtPallet" alignment="0" pref="198" max="32767" attributes="0"/>
-                          <Component id="txtTicketId" alignment="0" pref="198" max="32767" attributes="1"/>
-                          <Component id="txtBatchProduce" alignment="0" pref="198" max="32767" attributes="0"/>
-                          <Component id="txtCementDesc" alignment="0" pref="198" max="32767" attributes="1"/>
-                          <Component id="txtWeightTicketIdRef" alignment="0" pref="198" max="32767" attributes="0"/>
+                          <Component id="txtRegistrationNo" alignment="0" pref="202" max="32767" attributes="0"/>
+                          <Component id="txtDName" alignment="0" pref="202" max="32767" attributes="2"/>
+                          <Component id="txtGRText" alignment="1" pref="202" max="32767" attributes="0"/>
+                          <Component id="txtTrailerPlate" alignment="1" pref="202" max="32767" attributes="0"/>
+                          <Component id="txtSling" alignment="0" pref="202" max="32767" attributes="0"/>
+                          <Component id="txtLicPlate" alignment="0" pref="202" max="32767" attributes="0"/>
+                          <Component id="txtCMNDBL" alignment="1" pref="202" max="32767" attributes="1"/>
+                          <Component id="txtPallet" alignment="0" pref="202" max="32767" attributes="0"/>
+                          <Component id="txtTicketId" alignment="0" pref="202" max="32767" attributes="1"/>
+                          <Component id="txtBatchProduce" alignment="0" pref="202" max="32767" attributes="0"/>
+                          <Component id="txtCementDesc" alignment="0" pref="202" max="32767" attributes="1"/>
+                          <Component id="txtWeightTicketIdRef" alignment="0" pref="202" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
                               <Component id="lblProcedure" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="txtProcedure" pref="169" max="32767" attributes="1"/>
+                              <Component id="txtProcedure" pref="177" max="32767" attributes="1"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="lblRemark" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="txtRemark" pref="168" max="32767" attributes="1"/>
+                              <Component id="txtRemark" pref="176" max="32767" attributes="1"/>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
