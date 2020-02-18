@@ -246,16 +246,16 @@ public class WeightTicket implements Serializable {
     private String registeredNumber;
     
     @Column(name = "weight_ticket_id_ref")
-    private int weightTicketIdRef;
+    private String weightTicketIdRef;
 
     public WeightTicket() {
     }
 
-    public int getWeightTicketIdRef() {
+    public String getWeightTicketIdRef() {
         return weightTicketIdRef;
     }
 
-    public void setWeightTicketIdRef(int weightTicketIdRef) {
+    public void setWeightTicketIdRef(String weightTicketIdRef) {
         this.weightTicketIdRef = weightTicketIdRef;
     }
 

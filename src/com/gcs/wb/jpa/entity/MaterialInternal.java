@@ -153,9 +153,7 @@ public class MaterialInternal implements Serializable {
             return false;
         }
         final MaterialInternal other = (MaterialInternal) obj;
-        if (this.id != other.id) {
-            return false;
-        }
+
         if (!Objects.equals(this.mandt, other.mandt)) {
             return false;
         }
@@ -163,21 +161,6 @@ public class MaterialInternal implements Serializable {
             return false;
         }
         if (!Objects.equals(this.matnr, other.matnr)) {
-            return false;
-        }
-        if (!Objects.equals(this.maktx, other.maktx)) {
-            return false;
-        }
-        if (!Objects.equals(this.maktg, other.maktg)) {
-            return false;
-        }
-        if (!Objects.equals(this.xchpf, other.xchpf)) {
-            return false;
-        }
-        if (!Objects.equals(this.createdDate, other.createdDate)) {
-            return false;
-        }
-        if (!Objects.equals(this.updatedDate, other.updatedDate)) {
             return false;
         }
         return true;

@@ -59,7 +59,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
     Object[] wtCols = Constants.WTRegView.WEIGHTTICKET_COLUMS;
     Class[] wtTypes = Constants.WTRegView.WEIGHTTICKET_TYPES;
     // TODO update ui
-    private MODE mode;
+    private MODE mode = MODE.OUTPUT;
     private MODE_DETAIL modeDetail;
     private WeightTicketRegistrationValidation wtRegisValidation;
     private PurchaseOrderRepository purchaseOrderRepository = new PurchaseOrderRepository();
@@ -70,6 +70,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         weightTicketList = new ArrayList<>();
         wtRegisValidation = new WeightTicketRegistrationValidation(rootPane, resourceMapMsg);
         initComponents();
+        initComboboxModel();
         initComboboxRenderer();
 
         SearchWeightTicketTask t = new SearchWeightTicketTask(WeighBridgeApp.getApplication());
@@ -93,7 +94,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 return this;
             }
         });
-        
+
         cbxMaterialTypeN.setRenderer(new DefaultListCellRenderer() {
 
             @Override
@@ -170,6 +171,16 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 return this;
             }
         });
+    }
+
+    private void initComboboxModel() {
+        DefaultComboBoxModel slocModel = sapService.getSlocModel();
+        cbxSlocN.setModel(slocModel);
+        cbxSloc2N.setModel(slocModel);
+
+        DefaultComboBoxModel vendorModel = sapService.getVendorList();
+        cbxVendorLoadingN.setModel(vendorModel);
+        cbxVendorTransportN.setModel(vendorModel);
     }
 
     /**
@@ -488,7 +499,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
         pnROVTop.setName("pnROVTop"); // NOI18N
 
         rbtRegCatGroup.add(rbtInput);
-        rbtInput.setSelected(true);
         rbtInput.setText(resourceMap.getString("rbtInput.text")); // NOI18N
         rbtInput.setName("rbtInput"); // NOI18N
         rbtInput.addActionListener(new java.awt.event.ActionListener() {
@@ -498,6 +508,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         });
 
         rbtRegCatGroup.add(rbtOutput);
+        rbtOutput.setSelected(true);
         rbtOutput.setText(resourceMap.getString("rbtOutput.text")); // NOI18N
         rbtOutput.setName("rbtOutput"); // NOI18N
         rbtOutput.addActionListener(new java.awt.event.ActionListener() {
@@ -803,6 +814,11 @@ public class WTRegView extends javax.swing.JInternalFrame {
         txtWeightN.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
         txtWeightN.setText(resourceMap.getString("txtWeightN.text")); // NOI18N
         txtWeightN.setName("txtWeightN"); // NOI18N
+        txtWeightN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtWeightNKeyReleased(evt);
+            }
+        });
 
         cbxSlocN.setName("cbxSlocN"); // NOI18N
         cbxSlocN.addActionListener(new java.awt.event.ActionListener() {
@@ -1106,7 +1122,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addComponent(pnRegistrationOfVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(pnControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(49, Short.MAX_VALUE))
+                .addContainerGap(65, Short.MAX_VALUE))
         );
 
         pack();
@@ -1221,6 +1237,10 @@ private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
     validateForm();
 }//GEN-LAST:event_txtTicketIdNKeyReleased
 
+private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtWeightNKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtWeightNKeyReleased
+
     private DefaultComboBoxModel getMatsModel() {
         return weightTicketRegistarationController.getMatsModel();
     }
@@ -1275,7 +1295,7 @@ private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
         rbtInput.setEnabled(true);
         rbtOutput.setEnabled(true);
         cbxModeType.setEnabled(true);
-        loadModeTypeModel(MODE.OUTPUT);
+        loadModeTypeModel(mode);
     }
 
     @Action(enabledProperty = "clearable")
@@ -1291,7 +1311,7 @@ private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
         rbtInput.setEnabled(false);
         rbtOutput.setEnabled(false);
         cbxModeType.setEnabled(false);
-        loadModeTypeModel(MODE.OUTPUT);
+        loadModeTypeModel(mode);
         disableAllInForm();
     }
 
@@ -1302,45 +1322,77 @@ private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
             rbtOutput.setSelected(true);
         }
 
-        cbxModeType.setModel(weightTicketRegistarationController.getModeTypeModel(mode));
-        this.mode = mode;
-        this.modeDetail = ((WeighingMode) cbxModeType.getSelectedItem()).getModeDetail();
+        if (this.modeDetail == null || this.mode != mode) {
+            cbxModeType.setModel(weightTicketRegistarationController.getModeTypeModel(mode));
+            this.mode = mode;
+            this.modeDetail = ((WeighingMode) cbxModeType.getSelectedItem()).getModeDetail();
+        }
 
         // TODO: new ui set enable input
+        isValidDO = false;
+        isValidPO = false;
+        isValidPOSTO = false;
+        isValidSO = false;
         prepareEditableForm(modeDetail);
     }
 
     private void disableAllInForm() {
         txtTicketIdN.setEnabled(false);
+        lblTicketIdN.setForeground(Color.black);
         txtWeightTickerRefN.setEnabled(false);
+        lblWeightTickerRefN.setForeground(Color.black);
         txtRegisterIdN.setEnabled(false);
+        lblRegisterIdN.setForeground(Color.black);
         txtDriverNameN.setEnabled(false);
+        lblDriverNameN.setForeground(Color.black);
         txtCMNDN.setEnabled(false);
+        lblCMNDN.setForeground(Color.black);
         txtPlateNoN.setEnabled(false);
+        lblPlateNoN.setForeground(Color.black);
         txtTonnageN.setEnabled(false);
+        lblTonnageN.setForeground(Color.black);
         txtTrailerNoN.setEnabled(false);
+        lblTrailerNoN.setForeground(Color.black);
         txtSlingN.setEnabled(false);
+        lblSlingN.setForeground(Color.black);
         txtPalletN.setEnabled(false);
+        lblPalletN.setForeground(Color.black);
         txtSoNiemXaN.setEnabled(false);
+        lblSoNiemXaN.setForeground(Color.black);
         txtProductionBatchN.setEnabled(false);
+        lblProductionBatchN.setForeground(Color.black);
         txtNoteN.setEnabled(false);
+        lblNoteN.setForeground(Color.black);
         txtDONumN.setEnabled(false);
+        lblDONumN.setForeground(Color.black);
         btnDOCheckN.setEnabled(false);
         txtSONumN.setEnabled(false);
+        lblSONumN.setForeground(Color.black);
         btnSOCheckN.setEnabled(false);
         txtPONumN.setEnabled(false);
+        lblPONumN.setForeground(Color.black);
         btnPOCheckN.setEnabled(false);
         txtPOSTONumN.setEnabled(false);
+        lblPOSTONumN.setForeground(Color.black);
         btnPOSTOCheckN.setEnabled(false);
         cbxMaterialTypeN.setEnabled(false);
+        lblMaterialTypeN.setForeground(Color.black);
         txtWeightN.setEnabled(false);
+        lblWeightN.setForeground(Color.black);
         cbxSlocN.setEnabled(false);
+        lblSlocN.setForeground(Color.black);
         cbxSloc2N.setEnabled(false);
+        lblSloc2N.setForeground(Color.black);
         cbxBatchStockN.setEnabled(false);
+        lblBatchStockN.setForeground(Color.black);
         cbxBatchStock2N.setEnabled(false);
+        lblBatchStock2N.setForeground(Color.black);
         cbxVendorLoadingN.setEnabled(false);
+        lblVendorLoadingN.setForeground(Color.black);
         cbxVendorTransportN.setEnabled(false);
+        lblVendorTransportN.setForeground(Color.black);
         cbxSuppliesIdN.setEnabled(false);
+        lblSuppliesIdN.setForeground(Color.black);
     }
 
     private void prepareEditableForm(MODE_DETAIL modeDetail) {
@@ -1419,6 +1471,8 @@ private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
         showComponent(cbxVendorLoadingN, lblVendorLoadingN, false, false);
         showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
         showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
+
+        cbxSlocN.setModel(sapService.getSlocModel());
     }
 
     private void prepareInWarehouseTransfer() {
@@ -1448,8 +1502,6 @@ private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
         showComponent(cbxVendorLoadingN, lblVendorLoadingN, false, false);
         showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
         showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
-
-        cbxSlocN.setModel(sapService.getSlocModel());
     }
 
     private void prepareInOutOther() {
@@ -1480,8 +1532,7 @@ private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
         showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
         showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
 
-        cbxMaterialTypeN.setModel(getMatsModel());
-        cbxSlocN.setModel(sapService.getSlocModel());
+        cbxMaterialTypeN.setModel(weightTicketRegistarationController.getListMaterial());
     }
 
     private void prepareOutSellRoad() {
@@ -1511,8 +1562,6 @@ private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
         showComponent(cbxVendorLoadingN, lblVendorLoadingN, false, false);
         showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
         showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
-
-        cbxSlocN.setModel(sapService.getSlocModel());
     }
 
     private void prepareOutPlantPlant() {
@@ -1545,10 +1594,6 @@ private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
         showComponent(cbxVendorTransportN, lblVendorTransportN, isShowPOV, true);
 
         showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
-
-        cbxSlocN.setModel(sapService.getSlocModel());
-        cbxVendorLoadingN.setModel(sapService.getVendorList());
-        cbxVendorTransportN.setModel(sapService.getVendorList());
     }
 
     private void prepareOutSlocSloc() {
@@ -1581,10 +1626,6 @@ private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
         showComponent(cbxVendorTransportN, lblVendorTransportN, isShowPOV, false);
         showComponent(cbxSuppliesIdN, lblSuppliesIdN, true, true);
 
-        cbxSlocN.setModel(sapService.getSlocModel());
-        cbxSloc2N.setModel(sapService.getSlocModel());
-        cbxVendorLoadingN.setModel(sapService.getVendorList());
-        cbxVendorTransportN.setModel(sapService.getVendorList());
         cbxSuppliesIdN.setModel(weightTicketRegistarationController.getMaterialInternalModel());
     }
 
@@ -1618,10 +1659,6 @@ private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
         showComponent(cbxVendorTransportN, lblVendorTransportN, isShowPOV, true);
 
         showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
-
-        cbxSlocN.setModel(sapService.getSlocModel());
-        cbxVendorLoadingN.setModel(sapService.getVendorList());
-        cbxVendorTransportN.setModel(sapService.getVendorList());
     }
 
     private void prepareOutSellWateway() {
@@ -1651,8 +1688,6 @@ private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
         showComponent(cbxVendorLoadingN, lblVendorLoadingN, false, false);
         showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
         showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
-
-        cbxSlocN.setModel(sapService.getSlocModel());
     }
 
     private void validateForm() {
@@ -1771,10 +1806,15 @@ private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
 
+        boolean isWeightValid = wtRegisValidation.validateLength(txtWeightN.getText(), lblWeightN, 1, 10);
+
+        boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
+        boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
+
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
                 && isCMNDBLValid && isPlateNoValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
-                && isNoteValid;
+                && isNoteValid && isMaterialTypeValid && isSlocValid && isWeightValid;
     }
 
     private boolean validateOutSellRoad() {
@@ -1938,7 +1978,7 @@ private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
         btnSOCheckN.setEnabled(isSOValid);
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
-        
+
         return isRegisterIdValid && isDriverNameValid
                 && isCMNDBLValid && isPlateNoValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
@@ -1978,7 +2018,7 @@ private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
     public Task saveRecord() {
         int answer = JOptionPane.showConfirmDialog(
                 this.getRootPane(),
-                resourceMapMsg.getString("msg.questtionSaveDO"),
+                resourceMapMsg.getString("msg.questtionSave"),
                 JOptionPane.OPTIONS_PROPERTY,
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE);
@@ -2286,6 +2326,7 @@ private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
 
             totalWeight = totalWeight.add(weight);
             weightTicketDetail.setRegItemQuantity(weight);
+            newWeightTicket.setWeightTicketIdRef(outboundDelivery.getWtIdRef());
             newWeightTicket.addWeightTicketDetail(weightTicketDetail);
         }
 
@@ -2318,6 +2359,11 @@ private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
             isValidDO = true;
             cbxMaterialTypeN.setSelectedItem(String.join(" - ", strMaterial));
             txtWeightN.setText(totalWeight.toString());
+            
+            switch (modeDetail) {
+                case IN_WAREHOUSE_TRANSFER:
+                    txtWeightTickerRefN.setText(newWeightTicket.getWeightTicketIdRef());
+            }
 
             loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
         }
@@ -2382,6 +2428,15 @@ private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
             newWeightTicket.setBatch(txtProductionBatchN.getText().trim());
             newWeightTicket.setText(txtNoteN.getText().trim());
 
+            switch (modeDetail) {
+                case IN_OTHER:
+                    updateDataForOtherMode();
+                    break;
+                case OUT_OTHER:
+                    updateDataForOtherMode();
+                    break;
+            }
+
             List<WeightTicketDetail> weightTicketDetails = newWeightTicket.getWeightTicketDetails();
             if (weightTicketDetails.size() > 0) {
                 weightTicketDetails.forEach(weightTicketDetail -> {
@@ -2417,6 +2472,18 @@ private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
             t.execute();
 
             return null;
+        }
+
+        public void updateDataForOtherMode() {
+            WeightTicketDetail weightTicketDetail = new WeightTicketDetail();
+            weightTicketDetail.setUnit("TON");
+
+            Material material = (Material) cbxMaterialTypeN.getSelectedItem();
+            weightTicketDetail.setMatnrRef(material.getMatnr());
+            weightTicketDetail.setRegItemDescription(material.getMaktx());
+            weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+
+            newWeightTicket.addWeightTicketDetail(weightTicketDetail);
         }
 
         @Override
@@ -2485,9 +2552,37 @@ private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
 
     private void cleanData() {
         newWeightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
-        rbtRegCatGroup.clearSelection();
         isValidDO = false;
         isValidPO = false;
+        isValidPOSTO = false;
+        isValidSO = false;
+
+        txtTicketIdN.setText("");
+        txtWeightTickerRefN.setText("");
+        txtRegisterIdN.setText("");
+        txtDriverNameN.setText("");
+        txtCMNDN.setText("");
+        txtPlateNoN.setText("");
+        txtTonnageN.setText("1");
+        txtTrailerNoN.setText("");
+        txtSlingN.setText("0");
+        txtPalletN.setText("0");
+        txtSoNiemXaN.setText("");
+        txtProductionBatchN.setText("");
+        txtNoteN.setText("");
+        txtDONumN.setText("");
+        txtPONumN.setText("");
+        txtPOSTONumN.setText("");
+        txtSONumN.setText("");
+        cbxMaterialTypeN.setSelectedIndex(-1);
+        txtWeightN.setText("1");
+        cbxSlocN.setSelectedIndex(-1);
+        cbxSloc2N.setSelectedIndex(-1);
+        cbxBatchStockN.setSelectedIndex(-1);
+        cbxBatchStock2N.setSelectedIndex(-1);
+        cbxVendorLoadingN.setSelectedIndex(-1);
+        cbxVendorTransportN.setSelectedIndex(-1);
+        cbxSuppliesIdN.setSelectedIndex(-1);
     }
 
     private List<WeightTicket> filterHours(List<WeightTicket> data, String timeFrom, String timeTo) {
