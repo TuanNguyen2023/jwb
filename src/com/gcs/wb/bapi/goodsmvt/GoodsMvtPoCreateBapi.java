@@ -40,6 +40,9 @@ public class GoodsMvtPoCreateBapi implements Serializable {
     @Import
     @Parameter(value = GoodsMvtCreateConstants.I_WEIGHTTICKET, type = ParameterType.STRUCTURE)
     private GoodsMvtWeightTicketStructure _weightticket;
+    @Import
+    @Parameter(GoodsMvtCreateConstants.IV_WBID_NOSAVE)
+    private String _ivWbidNoSave;
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Export Parameters">
     @Export
@@ -135,5 +138,9 @@ public class GoodsMvtPoCreateBapi implements Serializable {
 
     public void setWeightticket(GoodsMvtWeightTicketStructure _weightticket) {
         this._weightticket = _weightticket;
+    }
+
+    public void setIvWbidNoSave(String ivWbidNoSave) {
+        this._ivWbidNoSave = ivWbidNoSave;
     }
 }
