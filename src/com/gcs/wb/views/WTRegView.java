@@ -1128,7 +1128,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addComponent(pnRegistrationOfVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(pnControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(65, Short.MAX_VALUE))
+                .addContainerGap(69, Short.MAX_VALUE))
         );
 
         pack();
@@ -1242,6 +1242,10 @@ private void cbxSuppliesIdNActionPerformed(java.awt.event.ActionEvent evt) {//GE
 private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTicketIdNKeyReleased
     validateForm();
 }//GEN-LAST:event_txtTicketIdNKeyReleased
+
+private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtWeightNKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtWeightNKeyReleased
 
 @Action(block = Task.BlockingScope.ACTION)
     public Task readPO() {
