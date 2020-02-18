@@ -1738,7 +1738,7 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
             Vendor transportVendor = (Vendor) cbxVendorTransportN.getSelectedItem();
             if (transportVendor != null) {
-                if (!weightTicketRegistarationController.checkPalteNoInVendor(transportVendor.getLifnr(), plateNo)) {
+                if (!weightTicketRegistarationController.checkPlateNoInVendor(transportVendor.getLifnr(), plateNo)) {
                     isPlateNoValid = false;
                     lblPlateNoN.setForeground(Color.red);
                 }
@@ -1752,6 +1752,9 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
         boolean isPOValid = wtRegisValidation.validatePO(txtPONumN.getText(), lblPONumN);
         btnPOCheckN.setEnabled(isPOValid);
+        if (!isValidPO) {
+            lblPONumN.setForeground(Color.red);
+        }
 
         boolean isWeightValid = wtRegisValidation.validateLength(txtWeightN.getText(), lblWeightN, 1, 10);
 
@@ -1782,6 +1785,9 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
         boolean isDOValid = wtRegisValidation.validateDO(txtDONumN.getText(), lblDONumN);
         btnDOCheckN.setEnabled(isDOValid);
+        if (!isValidDO) {
+            lblDONumN.setForeground(Color.red);
+        }
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
@@ -1837,6 +1843,9 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
         boolean isDOValid = wtRegisValidation.validateDO(txtDONumN.getText(), lblDONumN);
         btnDOCheckN.setEnabled(isDOValid);
+        if (!isValidDO) {
+            lblDONumN.setForeground(Color.red);
+        }
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
@@ -1858,7 +1867,7 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
             Vendor transportVendor = (Vendor) cbxVendorTransportN.getSelectedItem();
             if (transportVendor != null) {
-                if (!weightTicketRegistarationController.checkPalteNoInVendor(transportVendor.getLifnr(), plateNo)) {
+                if (!weightTicketRegistarationController.checkPlateNoInVendor(transportVendor.getLifnr(), plateNo)) {
                     isPlateNoValid = false;
                     lblPlateNoN.setForeground(Color.red);
                 }
@@ -1872,6 +1881,9 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
         boolean isPOValid = wtRegisValidation.validatePO(txtPONumN.getText(), lblPONumN);
         btnPOCheckN.setEnabled(isPOValid);
+        if (!isValidPO) {
+            lblPONumN.setForeground(Color.red);
+        }
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
@@ -1894,7 +1906,7 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
             Vendor transportVendor = (Vendor) cbxVendorTransportN.getSelectedItem();
             if (transportVendor != null) {
-                if (!weightTicketRegistarationController.checkPalteNoInVendor(transportVendor.getLifnr(), plateNo)) {
+                if (!weightTicketRegistarationController.checkPlateNoInVendor(transportVendor.getLifnr(), plateNo)) {
                     isPlateNoValid = false;
                     lblPlateNoN.setForeground(Color.red);
                 }
@@ -1908,6 +1920,9 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
         boolean isPOValid = wtRegisValidation.validatePO(txtPONumN.getText(), lblPONumN);
         btnPOCheckN.setEnabled(isPOValid);
+        if (!isValidPO) {
+            lblPONumN.setForeground(Color.red);
+        }
 
         boolean isPOSTOValid = wtRegisValidation.validatePO(txtPOSTONumN.getText(), lblPOSTONumN);
         btnPOSTOCheckN.setEnabled(isPOSTOValid);
@@ -1934,7 +1949,7 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
             Vendor transportVendor = (Vendor) cbxVendorTransportN.getSelectedItem();
             if (transportVendor != null) {
-                if (!weightTicketRegistarationController.checkPalteNoInVendor(transportVendor.getLifnr(), plateNo)) {
+                if (!weightTicketRegistarationController.checkPlateNoInVendor(transportVendor.getLifnr(), plateNo)) {
                     isPlateNoValid = false;
                     lblPlateNoN.setForeground(Color.red);
                 }
@@ -1948,6 +1963,9 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
         boolean isPOValid = wtRegisValidation.validatePO(txtPONumN.getText(), lblPONumN);
         btnPOCheckN.setEnabled(isPOValid);
+        if (!isValidPO) {
+            lblPONumN.setForeground(Color.red);
+        }
 
         boolean isPOSTOValid = wtRegisValidation.validatePO(txtPOSTONumN.getText(), lblPOSTONumN);
         btnPOSTOCheckN.setEnabled(isPOSTOValid);
@@ -1978,6 +1996,9 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
         boolean isSOValid = wtRegisValidation.validatePO(txtSONumN.getText(), lblSONumN);
         btnSOCheckN.setEnabled(isSOValid);
+        if (!isValidSO) {
+            lblSONumN.setForeground(Color.red);
+        }
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 

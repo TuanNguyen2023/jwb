@@ -259,7 +259,7 @@ public class WeightTicketRegistarationController {
         return vendorRepository.findByLifnr(strVendor);
     }
     
-    public boolean checkPalteNoInVendor(String abbr, String plateNo) {
+    public boolean checkPlateNoInVendor(String abbr, String plateNo) {
         return transportAgentVehicleRepository.findByAbbrAndPlateNo(abbr, plateNo) != null;
     }
     
