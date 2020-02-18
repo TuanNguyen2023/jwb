@@ -2018,7 +2018,7 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
     public Task saveRecord() {
         int answer = JOptionPane.showConfirmDialog(
                 this.getRootPane(),
-                resourceMapMsg.getString("msg.questtionSaveDO"),
+                resourceMapMsg.getString("msg.questtionSave"),
                 JOptionPane.OPTIONS_PROPERTY,
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE);
@@ -2326,6 +2326,7 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
             totalWeight = totalWeight.add(weight);
             weightTicketDetail.setRegItemQuantity(weight);
+            newWeightTicket.setWeightTicketIdRef(outboundDelivery.getWtIdRef());
             newWeightTicket.addWeightTicketDetail(weightTicketDetail);
         }
 
@@ -2358,6 +2359,11 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             isValidDO = true;
             cbxMaterialTypeN.setSelectedItem(String.join(" - ", strMaterial));
             txtWeightN.setText(totalWeight.toString());
+            
+            switch (modeDetail) {
+                case IN_WAREHOUSE_TRANSFER:
+                    txtWeightTickerRefN.setText(newWeightTicket.getWeightTicketIdRef());
+            }
 
             loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
         }

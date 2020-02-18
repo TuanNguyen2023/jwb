@@ -118,6 +118,8 @@ public class OutboundDelivery implements Serializable {
     private String matnrFree;
     @Column(name = "status")
     private String status;
+    @Column(name = "wt_id_ref")
+    private String wtIdRef;
     @Column(name = "created_date")
     private Date createdDate;
     @Column(name = "updated_date")
@@ -489,6 +491,14 @@ public class OutboundDelivery implements Serializable {
     
     public void setPosted(boolean isPosted) {
         this.status = isPosted ? Constants.WeightTicket.STATUS_POSTED : null;
+    }
+
+    public String getWtIdRef() {
+        return wtIdRef;
+    }
+
+    public void setWtIdRef(String wtIdRef) {
+        this.wtIdRef = wtIdRef;
     }
     
     public List<OutboundDeliveryDetail> getOutboundDeliveryDetails() {
