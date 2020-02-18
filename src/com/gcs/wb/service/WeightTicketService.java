@@ -228,15 +228,24 @@ public class WeightTicketService {
         stWT.setGQTY(wt.getGQty());
         stWT.setKUNNR(weightTicketDetail.getKunnr());
         stWT.setLIFNR(wt.getAbbr());
-        stWT.setMATID(weightTicketDetail.getMatnrRef());
-        stWT.setMATNAME(weightTicketDetail.getRegItemDescription());
-        stWT.setMVT_TYPE(wt.getMoveType());
-        if ((stWT.getMVT_TYPE() == null || stWT.getMVT_TYPE().isEmpty())
-                && od != null && od.getBwart() != null) {
-            stWT.setMVT_TYPE(od.getBwart());
+        if(wt.getMode().equals("OUT_SLOC_SLOC")) {
+            stWT.setMATID(weightTicketDetail.getRecvMatnr());
+            stWT.setMATNAME(weightTicketDetail.getRegItemDescription());
+            stWT.setMVT_TYPE("311");
+            stWT.setPO_NUMBER(null);
+        } else {
+            stWT.setMATID(weightTicketDetail.getMatnrRef());
+            stWT.setMATNAME(weightTicketDetail.getRegItemDescription());
+            stWT.setMVT_TYPE(wt.getMoveType());
+            if ((stWT.getMVT_TYPE() == null || stWT.getMVT_TYPE().isEmpty())
+                    && od != null && od.getBwart() != null) {
+                stWT.setMVT_TYPE(od.getBwart());
+            }
+            stWT.setPO_NUMBER(weightTicketDetail.getEbeln());
         }
+        
         stWT.setNTEXT(wt.getText());
-        stWT.setPO_NUMBER(weightTicketDetail.getEbeln());
+        
         stWT.setREGQTY_WT(weightTicketDetail.getRegItemQuantity());
         stWT.setREGQTY(od != null ? od.getLfimg() : BigDecimal.ZERO);
         stWT.setSALEDT(od_v2 != null ? od_v2.getBzirk() : "");
@@ -397,7 +406,7 @@ public class WeightTicketService {
         return bapi;
     }
 
-    public Object getGrPoMigoBapi(WeightTicket wt, WeightTicket weightTicket, int timeFrom, int timeTo) {
+    public Object getGrPoMigoBapi(WeightTicket wt, WeightTicket weightTicket, String number, int timeFrom, int timeTo) {
         String plateCombine = wt.getPlateNo();
         if (wt.getTrailerId() != null && !wt.getTrailerId().trim().isEmpty()) {
             plateCombine += wt.getTrailerId();
@@ -405,6 +414,10 @@ public class WeightTicketService {
         GoodsMvtPoCreateBapi bapi = new GoodsMvtPoCreateBapi();
         GoodsMvtHeaderStructure header = new GoodsMvtHeaderStructure();
 
+        PurchaseOrder purchaseOrder = purchaseOrderRepository.findByPoNumber(number);
+        if(wt.getMode().equals("OUT_SLOC_SLOC")) {
+            bapi.setIvWbidNoSave("X");
+        }
         header.setDocDate(DateUtil.stripTime(wt.getSTime()));
 
         GoodsMvtWeightTicketStructure stWT = fillWTStructure(weightTicket, null, null, weightTicket);
@@ -427,14 +440,14 @@ public class WeightTicketService {
         List<GoodsMvtItemPoStructure> tab = new ArrayList<>();
         GoodsMvtItemPoStructure tab_wa = new GoodsMvtItemPoStructure();
         WeightTicketDetail weightTicketDetail = wt.getWeightTicketDetail();
-        tab_wa.setPo_number(weightTicketDetail.getEbeln());
-        tab_wa.setPo_item(weightTicketDetail.getItem());
+        tab_wa.setPo_number(purchaseOrder.getPoNumber());
+        tab_wa.setPo_item(purchaseOrder.getPurchaseOrderDetail().getPoItem());
         tab_wa.setMove_type("101");
         tab_wa.setPlant(configuration.getWkPlant());
-        tab_wa.setStge_loc(wt.getLgort());
+        tab_wa.setStge_loc(purchaseOrder.getPurchaseOrderDetail().getStgeLoc());
         tab_wa.setBatch(wt.getCharg());
         tab_wa.setGr_rcpt(wt.getSCreator());
-        tab_wa.setEntry_qnt(wt.getGQty());
+        tab_wa.setEntry_qnt(purchaseOrder.getPurchaseOrderDetail().getQuantity());
         tab_wa.setEntry_uom(weightTicketDetail.getUnit());
 
         if (wt.getNoMoreGr() != null && wt.getNoMoreGr() == '2') {
@@ -536,16 +549,20 @@ public class WeightTicketService {
         List<GoodsMvtItemPoStructure> tab = new ArrayList<>();
         GoodsMvtItemPoStructure tab_wa = new GoodsMvtItemPoStructure();
         WeightTicketDetail weightTicketDetail = wt.getWeightTicketDetail();
-        tab_wa.setMaterial(weightTicketDetail.getMatnrRef());
+        tab_wa.setMaterial(wt.getRecvMatnr());
         tab_wa.setPlant(configuration.getWkPlant());
+        // kho xuat
         tab_wa.setStge_loc(wt.getLgort());
+         // lo xuat
         tab_wa.setBatch(wt.getCharg());
-        tab_wa.setMove_type(wt.getMoveType());
+        //tab_wa.setMove_type(wt.getMoveType());
+        tab_wa.setMove_type("311");
         tab_wa.setMvt_ind(null);
         tab_wa.setEntry_qnt(wt.getGQty());
         tab_wa.setEntry_uom(weightTicketDetail.getUnit());
 
-        tab_wa.setMoveMat(weightTicketDetail.getRecvMatnr());
+        //vat tu, kho, lo nhan
+        tab_wa.setMoveMat(wt.getRecvMatnr());
         tab_wa.setMovePlant(wt.getRecvPlant());
         tab_wa.setMoveSLoc(wt.getRecvLgort());
         tab_wa.setMoveBatch(wt.getRecvCharg());

@@ -54,6 +54,24 @@ public class MaterialInternal implements Serializable {
     @Column(name = "updated_date")
     private Date updatedDate;
 
+     public MaterialInternal() {
+    }
+
+    public MaterialInternal(int id) {
+        this.id = id;
+    }
+    
+    public MaterialInternal(String mandt, String wplant) {
+        this.mandt = mandt;
+        this.wplant = wplant;
+    }
+    
+    public MaterialInternal(String mandt, String wplant, String matnr) {
+        this.mandt = mandt;
+        this.wplant = wplant;
+        this.matnr = matnr;
+     }
+    
     public int getId() {
         return id;
     }

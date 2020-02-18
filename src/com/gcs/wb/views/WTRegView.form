@@ -62,7 +62,7 @@
               <Component id="pnRegistrationOfVehicle" min="-2" pref="418" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="pnControl" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="65" max="32767" attributes="0"/>
+              <EmptySpace pref="69" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -1197,7 +1197,7 @@
                 <Component class="javax.swing.JButton" name="btnPOCheckN">
                   <Properties>
                     <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                      <action class="com.gcs.wb.views.WTRegView" id="checkPO" methodName="checkPO"/>
+                      <action class="com.gcs.wb.views.WTRegView" id="readPO" methodName="readPO"/>
                     </Property>
                     <Property name="text" type="java.lang.String" resourceKey="btnPOCheckN.text"/>
                     <Property name="name" type="java.lang.String" value="btnPOCheckN" noResource="true"/>
@@ -1214,7 +1214,7 @@
                 <Component class="javax.swing.JButton" name="btnPOSTOCheckN">
                   <Properties>
                     <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                      <action class="com.gcs.wb.views.WTRegView" id="checkPOSTO" methodName="checkPOSTO"/>
+                      <action class="com.gcs.wb.views.WTRegView" id="readPOSTO" methodName="readPOSTO"/>
                     </Property>
                     <Property name="text" type="java.lang.String" resourceKey="btnPOSTOCheckN.text"/>
                     <Property name="name" type="java.lang.String" value="btnPOSTOCheckN" noResource="true"/>
