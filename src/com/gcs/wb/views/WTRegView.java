@@ -2569,7 +2569,7 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         txtPOSTONumN.setText("");
         txtSONumN.setText("");
         cbxMaterialTypeN.setSelectedIndex(-1);
-        txtWeightN.setText("0");
+        txtWeightN.setText("1");
         cbxSlocN.setSelectedIndex(-1);
         cbxSloc2N.setSelectedIndex(-1);
         cbxBatchStockN.setSelectedIndex(-1);

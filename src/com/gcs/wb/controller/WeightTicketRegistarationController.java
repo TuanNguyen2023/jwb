@@ -105,7 +105,7 @@ public class WeightTicketRegistarationController {
         for (Material material : materials) {
             if (result.getIndexOf(material) < 0 && material.getMatnr() != null
                     && material.getMaktx() != null && !material.getMaktx().isEmpty()) {
-                result.addElement(material.getMaktx());
+                result.addElement(material);
             }
         }
         return result;
