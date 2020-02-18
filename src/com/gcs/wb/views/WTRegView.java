@@ -1753,12 +1753,14 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         boolean isPOValid = wtRegisValidation.validatePO(txtPONumN.getText(), lblPONumN);
         btnPOCheckN.setEnabled(isPOValid);
 
+        boolean isWeightValid = wtRegisValidation.validateLength(txtWeightN.getText(), lblWeightN, 1, 10);
+
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
                 && isCMNDBLValid && isPlateNoValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
-                && isNoteValid && isSlocValid;
+                && isNoteValid && isSlocValid && isWeightValid;
     }
 
     private boolean validateInWarehouseTransfer() {
@@ -2359,7 +2361,7 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             isValidDO = true;
             cbxMaterialTypeN.setSelectedItem(String.join(" - ", strMaterial));
             txtWeightN.setText(totalWeight.toString());
-            
+
             switch (modeDetail) {
                 case IN_WAREHOUSE_TRANSFER:
                     txtWeightTickerRefN.setText(newWeightTicket.getWeightTicketIdRef());
