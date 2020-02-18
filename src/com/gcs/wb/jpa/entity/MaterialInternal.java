@@ -183,5 +183,11 @@ public class MaterialInternal implements Serializable {
         }
         return true;
     }
+
+    @Override
+    public String toString() {
+        return maktx != null ? maktx : maktg;
+    }
+    
     
 }

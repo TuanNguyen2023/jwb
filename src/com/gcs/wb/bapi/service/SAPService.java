@@ -81,7 +81,7 @@ public class SAPService {
     TransportAgentRepository transportAgentRepository = new TransportAgentRepository();
     TransportAgentVehicleRepository transportAgentVehicleRepository = new TransportAgentVehicleRepository();
     MaterialInternalRepository materialInternalRepository = new MaterialInternalRepository();
-    
+
     AppConfig config = WeighBridgeApp.getApplication().getConfig();
     Configuration configuration = config.getConfiguration();
 
@@ -95,47 +95,48 @@ public class SAPService {
      */
     public DefaultComboBoxModel syncMaterialMaster() {
         //get data from DB
-        List<MaterialInternal> materialsDB = new ArrayList<>();
-        materialsDB = materialInternalRepository.getMaterialInternals();
-        // get data SAP
-        List<MaterialInternal> matsSap = new ArrayList<>();
-        MaterialGetListBapi bapi = new MaterialGetListBapi();
-        try {
-            session.execute(bapi);
-            List<MaterialGetListStructure> mats = bapi.getEtMaterial();
-            MaterialsV2Converter materialsV2Converter = new MaterialsV2Converter();
-            matsSap = materialsV2Converter.convertMaster(mats);
-        } catch (Exception ex) {
-            return null;
-        }
+        List<MaterialInternal> materialsDB = materialInternalRepository.getMaterialInternals();
 
-        //sync DB SAP
-        entityTransaction = entityManager.getTransaction();
-        if (!entityTransaction.isActive()) {
-            entityTransaction.begin();
-        }
-        //update for remove DB
-        for (MaterialInternal mat : materialsDB) {
-            if (matsSap.indexOf(mat) == -1) {
-                entityManager.remove(mat);
+        if (!WeighBridgeApp.getApplication().isOfflineMode()) {
+            // get data SAP
+            List<MaterialInternal> matsSap = new ArrayList<>();
+            MaterialGetListBapi bapi = new MaterialGetListBapi();
+            try {
+                session.execute(bapi);
+                List<MaterialGetListStructure> mats = bapi.getEtMaterial();
+                MaterialsV2Converter materialsV2Converter = new MaterialsV2Converter();
+                matsSap = materialsV2Converter.convertMaster(mats);
+            } catch (Exception ex) {
             }
-        }
-        // update SAP -> DB    
-        for (MaterialInternal mSap : matsSap) {
-            int index = materialsDB.indexOf(mSap);
-            if (index == -1) {
-                entityManager.persist(mSap);
-            } else {
-                mSap.setId(materialsDB.get(index).getId());
-                entityManager.merge(mSap);
+
+            //sync DB SAP
+            entityTransaction = entityManager.getTransaction();
+            if (!entityTransaction.isActive()) {
+                entityTransaction.begin();
             }
+            //update for remove DB
+            for (MaterialInternal mat : materialsDB) {
+                if (matsSap.indexOf(mat) == -1) {
+                    entityManager.remove(mat);
+                }
+            }
+            // update SAP -> DB    
+            for (MaterialInternal mSap : matsSap) {
+                int index = materialsDB.indexOf(mSap);
+                if (index == -1) {
+                    entityManager.persist(mSap);
+                } else {
+                    mSap.setId(materialsDB.get(index).getId());
+                    entityManager.merge(mSap);
+                }
+            }
+
+            entityTransaction.commit();
+            entityManager.clear();
+
+            // return data
+            materialsDB = materialInternalRepository.getMaterialInternals();
         }
-        
-        entityTransaction.commit();
-        entityManager.clear();
-        
-        // return data
-        materialsDB = materialInternalRepository.getMaterialInternals();
 
         return new DefaultComboBoxModel(materialsDB.toArray());
     }
