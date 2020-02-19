@@ -127,8 +127,8 @@ public class WeightTicketController {
     }
 
     public void printWT(WeightTicket wt, boolean reprint, String ximang, List<OutboundDelivery> outbDel_list, List<OutboundDeliveryDetail> outDetails_lits,
-            OutboundDelivery outbDel, JRadioButton rbtMisc, JRadioButton rbtPO, boolean isStage1, JRootPane rootPane) {
-        weightTicketService.printWT(wt, reprint, ximang, outbDel_list, outDetails_lits, outbDel, rbtMisc, rbtPO, isStage1, rootPane);
+            OutboundDelivery outbDel, String txtPONo, boolean isStage1, JRootPane rootPane) {
+        weightTicketService.printWT(wt, reprint, ximang, outbDel_list, outDetails_lits, outbDel, txtPONo, isStage1, rootPane);
     }
 
 //    public int getCountSingal() {

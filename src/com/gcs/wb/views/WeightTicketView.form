@@ -90,34 +90,15 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="1" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="1" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="lblWTNum" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="txtWTNum" pref="324" max="32767" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jButton1" min="-2" pref="58" max="-2" attributes="0"/>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="jButton2" min="-2" pref="56" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="1" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <Component id="rbtPO" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Component id="txtPONum" min="-2" pref="131" max="-2" attributes="0"/>
-                              </Group>
-                              <Component id="rbtMvt311" pref="398" max="32767" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="rbtMisc" min="-2" pref="82" max="-2" attributes="1"/>
-                              <Component id="rbtMb1b" min="-2" pref="103" max="-2" attributes="1"/>
-                          </Group>
-                      </Group>
-                  </Group>
+                  <Component id="lblWTNum" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="txtWTNum" pref="324" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="jButton1" min="-2" pref="58" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="jButton2" min="-2" pref="56" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="88" max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -125,35 +106,19 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="5" pref="5" max="5" attributes="0"/>
                           <Component id="lblWTNum" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Group type="103" groupAlignment="3" attributes="0">
+                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                           <Component id="txtWTNum" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jButton2" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="rbtPO" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtPONum" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="rbtMvt311" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" attributes="0">
-                          <Component id="rbtMisc" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="rbtMb1b" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                  <EmptySpace pref="24" max="32767" attributes="0"/>
+                  <EmptySpace pref="57" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -164,73 +129,6 @@
             <Property name="text" type="java.lang.String" resourceKey="lblWTNum.text"/>
             <Property name="name" type="java.lang.String" value="lblWTNum" noResource="true"/>
           </Properties>
-        </Component>
-        <Component class="javax.swing.JRadioButton" name="rbtPO">
-          <Properties>
-            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="com.gcs.wb.views.WeightTicketView" id="selectRbtPO" methodName="selectRbtPO"/>
-            </Property>
-            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-              <ComponentRef name="grbType"/>
-            </Property>
-            <Property name="text" type="java.lang.String" resourceKey="rbtPO.text"/>
-            <Property name="name" type="java.lang.String" value="rbtPO" noResource="true"/>
-          </Properties>
-          <BindingProperties>
-            <BindingProperty name="enabled" source="Form" sourcePath="${withoutDO}" target="rbtPO" targetPath="enabled" updateStrategy="0" immediately="false"/>
-          </BindingProperties>
-          <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="rbtPOItemStateChanged"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JTextField" name="txtPONum">
-          <Properties>
-            <Property name="font" type="java.awt.Font" noResource="true" editor="org.netbeans.modules.form.editors2.FontEditor">
-              <FontInfo relative="true">
-                <Font bold="true" component="txtPONum" property="font" relativeSize="true" size="2"/>
-              </FontInfo>
-            </Property>
-            <Property name="foreground" type="java.awt.Color" resourceKey="txtPONum.foreground"/>
-            <Property name="text" type="java.lang.String" resourceKey="txtPONum.text"/>
-            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="com.gcs.wb.views.WeightTicketView" id="readPO" methodName="readPO"/>
-            </Property>
-            <Property name="name" type="java.lang.String" value="txtPONum" noResource="true"/>
-          </Properties>
-          <BindingProperties>
-            <BindingProperty name="editable" source="rbtPO" sourcePath="${selected}" target="txtPONum" targetPath="editable" updateStrategy="0" immediately="false"/>
-            <BindingProperty name="enabled" source="rbtPO" sourcePath="${enabled}" target="txtPONum" targetPath="enabled" updateStrategy="0" immediately="false"/>
-          </BindingProperties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="txtPONum.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;    public void insertUpdate(DocumentEvent e) {&#xa;        checkPONum(e);&#xa;    }&#xa;&#xa;    public void removeUpdate(DocumentEvent e) {&#xa;        checkPONum(e);&#xa;    }&#xa;&#xa;    public void changedUpdate(DocumentEvent e) {&#xa;        checkPONum(e);&#xa;    }&#xa;});"/>
-          </AuxValues>
-        </Component>
-        <Component class="javax.swing.JRadioButton" name="rbtMisc">
-          <Properties>
-            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="com.gcs.wb.views.WeightTicketView" id="selectRbtMisc" methodName="selectRbtMisc"/>
-            </Property>
-            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-              <ComponentRef name="grbType"/>
-            </Property>
-            <Property name="text" type="java.lang.String" resourceKey="rbtMisc.text"/>
-            <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[67, 20]"/>
-            </Property>
-            <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[67, 20]"/>
-            </Property>
-            <Property name="name" type="java.lang.String" value="rbtMisc" noResource="true"/>
-            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[67, 20]"/>
-            </Property>
-          </Properties>
-          <BindingProperties>
-            <BindingProperty name="enabled" source="Form" sourcePath="${withoutDO}" target="rbtMisc" targetPath="enabled" updateStrategy="0" immediately="false"/>
-          </BindingProperties>
-          <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="rbtMiscItemStateChanged"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="txtWTNum">
           <Properties>
@@ -253,42 +151,6 @@
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="txtWTNum.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;    public void insertUpdate(DocumentEvent e) {&#xa;        checkWTNum(e);&#xa;    }&#xa;&#xa;    public void removeUpdate(DocumentEvent e) {&#xa;        checkWTNum(e);&#xa;    }&#xa;&#xa;    public void changedUpdate(DocumentEvent e) {&#xa;        checkWTNum(e);&#xa;    }&#xa;});"/>
           </AuxValues>
-        </Component>
-        <Component class="javax.swing.JRadioButton" name="rbtMb1b">
-          <Properties>
-            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="com.gcs.wb.views.WeightTicketView" id="showMB1BOption" methodName="showMB1BOption"/>
-            </Property>
-            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-              <ComponentRef name="grbType"/>
-            </Property>
-            <Property name="text" type="java.lang.String" resourceKey="rbtMb1b.text"/>
-            <Property name="name" type="java.lang.String" value="rbtMb1b" noResource="true"/>
-          </Properties>
-          <BindingProperties>
-            <BindingProperty name="enabled" source="Form" sourcePath="${withoutDO}" target="rbtMb1b" targetPath="enabled" updateStrategy="0" immediately="false"/>
-          </BindingProperties>
-          <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="rbtMb1bItemStateChanged"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JRadioButton" name="rbtMvt311">
-          <Properties>
-            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="com.gcs.wb.views.WeightTicketView" id="selectRbtMvt311" methodName="selectRbtMvt311"/>
-            </Property>
-            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
-              <ComponentRef name="grbType"/>
-            </Property>
-            <Property name="text" type="java.lang.String" resourceKey="rbtMvt311.text"/>
-            <Property name="name" type="java.lang.String" value="rbtMvt311" noResource="true"/>
-          </Properties>
-          <BindingProperties>
-            <BindingProperty name="enabled" source="Form" sourcePath="${withoutDO}" target="rbtMvt311" targetPath="enabled" updateStrategy="0" immediately="false"/>
-          </BindingProperties>
-          <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="rbtMvt311ItemStateChanged"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="jButton1">
           <Properties>
@@ -1367,8 +1229,14 @@
             <Component class="javax.swing.JTextField" name="txtPONo">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="com.gcs.wb.views.WeightTicketView" id="readPO" methodName="readPO"/>
+                </Property>
                 <Property name="name" type="java.lang.String" value="txtPONo" noResource="true"/>
               </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_ListenersCodePost" type="java.lang.String" value="txtPONo.getDocument().addDocumentListener(new DocumentListener() {&#xd;&#xa;&#xd;&#xa;    public void insertUpdate(DocumentEvent e) {&#xd;&#xa;        checkPONum(e);&#xd;&#xa;    }&#xd;&#xa;&#xd;&#xa;    public void removeUpdate(DocumentEvent e) {&#xd;&#xa;        checkPONum(e);&#xd;&#xa;    }&#xd;&#xa;&#xd;&#xa;    public void changedUpdate(DocumentEvent e) {&#xd;&#xa;        checkPONum(e);&#xd;&#xa;    }&#xd;&#xa;});"/>
+              </AuxValues>
             </Component>
             <Component class="javax.swing.JTextField" name="txtRegItem">
               <Properties>
