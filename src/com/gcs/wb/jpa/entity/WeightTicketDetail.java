@@ -83,6 +83,8 @@ public class WeightTicketDetail implements Serializable {
     private String matDocGr;
     @Column(name = "MAT_DOC_GI")
     private String matDocGi;
+    @Column(name = "so_number")
+    private String soNumber;
 
     @ManyToOne
     @JoinColumn(name = "weight_ticket_id")
@@ -283,6 +285,14 @@ public class WeightTicketDetail implements Serializable {
 
     public String getMatDocGi() {
         return matDocGi;
+    }
+
+    public String getSoNumber() {
+        return soNumber;
+    }
+
+    public void setSoNumber(String soNumber) {
+        this.soNumber = soNumber;
     }
 
     @Override

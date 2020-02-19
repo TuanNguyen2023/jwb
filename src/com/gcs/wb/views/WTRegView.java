@@ -1404,28 +1404,13 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
 
     @Action(block = Task.BlockingScope.ACTION)
     public Task checkSO() {
-
-        txtDriverNameN.setText(txtDriverNameN.getText().trim().toUpperCase());
-        txtCMNDN.setText(txtCMNDN.getText().trim().toUpperCase());
-        txtPlateNoN.setText(txtPlateNoN.getText().trim().toUpperCase());
-
-        if (WeighBridgeApp.getApplication().isOfflineMode()) {
-            return null;
-        } else {
-            String val[] = txtSONumN.getText().trim().split("-");
-            for (int i = 0; i < val.length; i++) {
-                if (val[i].length() > 0) {
-                    //convert DO number to SAP format
-                    return new CheckSOTask(WeighBridgeApp.getApplication());
-                } else {
-//                    lblSONum.setForeground(Color.red);
-//                    validDO = false;
-//                    setSaveNeeded(isValidated() && validDO);
-                }
-                continue;
-            }
+        boolean isPlateNoValid = wtRegisValidation.validatePlateNo(txtPlateNoN.getText(), lblPlateNoN);
+        if (!isPlateNoValid) {
+            JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.plzInputPlateNo"));
             return null;
         }
+
+        return new CheckSOTask(WeighBridgeApp.getApplication());
     }
 
     private class CheckSOTask extends org.jdesktop.application.Task<Object, Void> {
@@ -1440,27 +1425,18 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
             String bsXe = txtPlateNoN.getText().trim();
             List<DOCheckStructure> listDONumbers = null;
             DOCheckStructure doNumber = new DOCheckStructure();
-            //String bsRomoc = txtSoRomooc.getText().trim();
+            String bsRomoc = txtTrailerNoN.getText().trim();
 
-            //String[] dos = null;
-            String[] msgDo = null;
-            if (txtPlateNoN.getText().trim().isEmpty()) {
-                String msg = "Vui long nhap BS Xe!";
-                setMessage(msg);
-                JOptionPane.showMessageDialog(rootPane, msg);
-                txtPlateNoN.setForeground(Color.red);
-                return null;
-            }
             for (String soNumber : val) {
                 StringUtil.paddingZero(soNumber.trim(), 10);
                 if (!WeighBridgeApp.getApplication().isOfflineMode()) {
-                    listDONumbers = sapService.getDONumber(val,bsXe,txtTrailerNoN.getText().trim());
-                    
+                    listDONumbers = sapService.getDONumber(val, bsXe, bsRomoc);
+
                     if (listDONumbers != null) {
                         String doNum = "";
                         for (int i = 0; i < listDONumbers.size(); i++) {
                             doNumber = listDONumbers.get(i);
-                            if(!doNumber.getMessage().trim().isEmpty()) {
+                            if (!doNumber.getMessage().trim().isEmpty()) {
                                 setMessage(doNumber.getMessage());
                                 JOptionPane.showMessageDialog(rootPane, doNumber.getMessage());
                                 String msg = "So SO " + doNumber.getVbelnSO() + " sai, vui long nhap lai!";
@@ -1469,24 +1445,25 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
                                 JOptionPane.showMessageDialog(rootPane, msg);
                                 return null;
                             } else {
-                                if(txtDONumN.getText().trim().isEmpty()) {
+                                if (txtDONumN.getText().trim().isEmpty()) {
                                     doNum = doNumber.getVbelnDO();
                                 } else {
-                                    doNum = "-" + doNumber.getVbelnDO();
+                                    doNum += "-" + doNumber.getVbelnDO();
                                 }
                                 txtDONumN.setText(doNum);
                             }
                         }
                     }
                 }
-                
+
             }
             return null;
         }
 
         @Override
         protected void failed(Throwable cause) {
-            //validDO = false;
+            isValidSO = false;
+
             if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
                 cause = cause.getCause();
             }
@@ -1496,9 +1473,7 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
 
         @Override
         protected void finished() {
-            lblDONumN.setBackground(Color.black);
-            lblSONumN.setBackground(Color.black);
-            btnSave.setEnabled(true);
+            isValidSO = true;
         }
     }
 
@@ -1895,7 +1870,7 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
         showComponent(txtProductionBatchN, lblProductionBatchN, true, true);
         showComponent(txtNoteN, lblNoteN, true, true);
         showComponent(txtDONumN, lblDONumN, btnDOCheckN, true, false);
-        showComponent(txtSONumN, lblSONumN, btnSOCheckN, true, true);
+        showComponent(txtSONumN, lblSONumN, btnSOCheckN, !WeighBridgeApp.getApplication().isOfflineMode(), true);
         showComponent(txtPONumN, lblPONumN, btnPOCheckN, false, false);
         showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, false, false);
         showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, false);
@@ -1907,6 +1882,8 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
         showComponent(cbxVendorLoadingN, lblVendorLoadingN, false, false);
         showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
         showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
+
+        txtDONumN.setText("");
     }
 
     private void validateForm() {
@@ -2212,10 +2189,19 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
 
-        boolean isSOValid = wtRegisValidation.validatePO(txtSONumN.getText(), lblSONumN);
-        btnSOCheckN.setEnabled(isSOValid);
-        if (!isValidSO) {
-            lblSONumN.setForeground(Color.red);
+        if (!WeighBridgeApp.getApplication().isOfflineMode()) {
+            boolean isSOValid = wtRegisValidation.validateDO(txtSONumN.getText(), lblSONumN);
+            btnSOCheckN.setEnabled(isSOValid);
+            if (!isValidSO) {
+                lblSONumN.setForeground(Color.red);
+            } else {
+                btnDOCheckN.setEnabled(true);
+            }
+        } else {
+            isValidSO = true;
+            isValidDO = true;
+            lblSONumN.setForeground(Color.black);
+            lblDONumN.setForeground(Color.black);
         }
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
@@ -2513,7 +2499,8 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
 
                 // check mapping Plate No
                 String plateNo = txtPlateNoN.getText().trim();
-                if (!outboundDelivery.getTraid().trim().startsWith(plateNo)) {
+                String traid = outboundDelivery.getTraid().trim();
+                if (!traid.isEmpty() && !traid.startsWith(plateNo)) {
                     throw new Exception(resourceMapMsg.getString("msg.notDuplicateLicensePlate"));
                 }
 
@@ -2684,6 +2671,9 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
                 case OUT_SLOC_SLOC:
                     updateDataForOutSlocSloc();
                     break;
+                case OUT_SELL_WATERWAY:
+                    updateDataForOutSellWateway();
+                    break;
                 case OUT_PULL_STATION:
                     updateDataForPrepareOutPullStation();
                     break;
@@ -2736,7 +2726,15 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
 
         public void updateDataForPrepareOutPullStation() {
             newWeightTicket.setMoveType("101");
-
+            newWeightTicket.getWeightTicketDetail().setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+        }
+        
+        public void updateDataForOutSellWateway() {
+            if (WeighBridgeApp.getApplication().isOfflineMode()) {
+                WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
+                weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+                weightTicketDetail.setSoNumber(txtSONumN.getText().trim());
+            }
         }
 
         public void updateDataForOtherMode() {
