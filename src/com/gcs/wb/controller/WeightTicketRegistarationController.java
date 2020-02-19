@@ -240,7 +240,7 @@ public class WeightTicketRegistarationController {
             return vehicleLoad.getVehicleLoad();
         }
 
-        return 1f;
+        return 0f;
     }
     
     public List<BatchStock> getBatchStocks(SLoc sloc, String[] arr_matnr) {
