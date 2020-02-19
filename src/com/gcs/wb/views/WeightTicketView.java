@@ -2357,8 +2357,8 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                 if (Constants.WeighingProcess.MODE_DETAIL.OUT_PLANT_PLANT.name().equals(weightTicket.getMode())
                         || Constants.WeighingProcess.MODE_DETAIL.OUT_PULL_STATION.name().equals(weightTicket.getMode())
                         || Constants.WeighingProcess.MODE_DETAIL.OUT_SLOC_SLOC.name().equals(weightTicket.getMode())) {
-                    cbxVendorLoading.addItem(weightTicket.getLoadVendor());
-                    cbxVendorTransport.addItem(weightTicket.getTransVendor());
+                    cbxVendorLoading.setSelectedItem(weightTicketRegistarationController.getVendor(weightTicket.getLoadVendor()));
+                    cbxVendorTransport.setSelectedItem(weightTicketRegistarationController.getVendor(weightTicket.getTransVendor()));
                 }
                 if (Constants.WeighingProcess.MODE_DETAIL.OUT_SLOC_SLOC.name().equals(weightTicket.getMode())) {
                     txtLgortIn.setText(weightTicket.getRecvLgort());
@@ -2693,7 +2693,22 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                         cbxCharg.setSelectedIndex(-1);
                     }
                 }
-
+                // cấu hình cho cầu cân hiển thị PO và vendor
+//                    if (sapSetting.getCheckPov() != null && sapSetting.getCheckPov() == true) {
+//                        txtPoPosto.setVisible(true);
+//                        cbxVendorLoading.setVisible(true);
+//                        cbxVendorTransport.setVisible(true);
+//                        lblPoPosto.setVisible(true);
+//                        lblVendorLoading.setVisible(true);
+//                        lblVendorTransport.setVisible(true);
+//                    } else {
+//                        txtPoPosto.setVisible(false);
+//                        cbxVendorLoading.setVisible(false);
+//                        cbxVendorTransport.setVisible(false);
+//                        lblPoPosto.setVisible(false);
+//                        lblVendorLoading.setVisible(false);
+//                        lblVendorTransport.setVisible(false);
+//                    }
                 // </editor-fold>
                 // </editor-fold>
             }
@@ -2856,24 +2871,24 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
             lblWeightTicketIdRef.setVisible(false);
             lblDelNum.setVisible(false);
             lblMatnr.setVisible(false);
-            lbKunnr.setVisible(false);
+            //lbKunnr.setVisible(false);
             lblLgortIn.setVisible(false);
             lblChargIn.setVisible(false);
             lblPoPosto.setVisible(false);
-            lblVendorLoading.setVisible(false);
-            lblVendorTransport.setVisible(false);
+//            lblVendorLoading.setVisible(false);
+//            lblVendorTransport.setVisible(false);
             lblSO.setVisible(false);
             
             txtSO.setVisible(false);
             txtWeightTicketIdRef.setVisible(false);
             txtDelNum.setVisible(false);
             txtMatnr.setVisible(false);
-            cbxKunnr.setVisible(false);
+            //cbxKunnr.setVisible(false);
             txtLgortIn.setVisible(false);
             txtChargIn.setVisible(false);
             txtPoPosto.setVisible(false);
-            cbxVendorLoading.setVisible(false);
-            cbxVendorTransport.setVisible(false);
+//            cbxVendorLoading.setVisible(false);
+//            cbxVendorTransport.setVisible(false);
 
         }
         if (ModeEnum.OUT_SLOC_SLOC.name().equals(mode)) {
