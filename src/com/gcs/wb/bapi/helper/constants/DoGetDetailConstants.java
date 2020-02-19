@@ -65,6 +65,9 @@ public interface DoGetDetailConstants extends BapiConstants {
     String UEPOS = "UEPOS";
     String PSTYV = "PSTYV";
     //}+20100212#01 Add new fields
+    
+    String VBELN_NACH = "VBELN_NACH";
+    String WT_ID_REF = "WT_ID_REF";
 
     // </editor-fold>
 }
