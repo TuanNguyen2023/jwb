@@ -43,7 +43,7 @@
                   <Component id="pnPrintControl" alignment="0" pref="936" max="32767" attributes="1"/>
                   <Component id="spnResult" alignment="0" pref="936" max="32767" attributes="2"/>
                   <Component id="pnFilter" alignment="0" max="32767" attributes="2"/>
-                  <Component id="pnControl" alignment="1" max="32767" attributes="3"/>
+                  <Component id="pnControl" alignment="1" pref="936" max="32767" attributes="3"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -62,7 +62,7 @@
               <Component id="pnRegistrationOfVehicle" min="-2" pref="418" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="pnControl" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="85" max="32767" attributes="0"/>
+              <EmptySpace pref="89" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -1188,6 +1188,9 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="btnSOCheckN">
                   <Properties>
+                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                      <action class="com.gcs.wb.views.WTRegView" id="checkSO" methodName="checkSO"/>
+                    </Property>
                     <Property name="text" type="java.lang.String" resourceKey="btnSOCheckN.text"/>
                     <Property name="name" type="java.lang.String" value="btnSOCheckN" noResource="true"/>
                   </Properties>

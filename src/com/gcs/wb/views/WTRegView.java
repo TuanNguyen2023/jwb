@@ -881,6 +881,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
             }
         });
 
+        btnSOCheckN.setAction(actionMap.get("checkSO")); // NOI18N
         btnSOCheckN.setText(resourceMap.getString("btnSOCheckN.text")); // NOI18N
         btnSOCheckN.setName("btnSOCheckN"); // NOI18N
 
@@ -1136,7 +1137,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                     .addComponent(pnPrintControl, javax.swing.GroupLayout.DEFAULT_SIZE, 936, Short.MAX_VALUE)
                     .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 936, Short.MAX_VALUE)
                     .addComponent(pnFilter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnControl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(pnControl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 936, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -1152,7 +1153,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addComponent(pnRegistrationOfVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(pnControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(85, Short.MAX_VALUE))
+                .addContainerGap(89, Short.MAX_VALUE))
         );
 
         pack();
@@ -1322,6 +1323,7 @@ private void cbxVendorLoadingNActionPerformed(java.awt.event.ActionEvent evt) {/
                 isValidVendorLoad = false;
             } else {
                 isValidVendorLoad = true;
+                newWeightTicket.setLoadVendor(vendor.getLifnr());
             }
         }
 
@@ -1347,6 +1349,7 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
                 isValidVendorTransport = false;
             } else {
                 isValidVendorTransport = true;
+                newWeightTicket.setTransVendor(vendor.getLifnr());
             }
         }
 
@@ -1915,8 +1918,8 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
         showComponent(txtPlateNoN, lblPlateNoN, true, true);
         showComponent(txtTonnageN, lblTonnageN, lblTonngageUnitN, true, false);
         showComponent(txtTrailerNoN, lblTrailerNoN, true, true);
-        showComponent(txtSlingN, lblSlingN, false, false);
-        showComponent(txtPalletN, lblPalletN, false, false);
+        showComponent(txtSlingN, lblSlingN, true, true);
+        showComponent(txtPalletN, lblPalletN, true, true);
         showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
         showComponent(txtProductionBatchN, lblProductionBatchN, true, true);
         showComponent(txtNoteN, lblNoteN, true, true);
