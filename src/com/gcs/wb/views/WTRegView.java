@@ -1413,6 +1413,8 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
         return new CheckSOTask(WeighBridgeApp.getApplication());
     }
 
+    List<DOCheckStructure> listDONumbers = new ArrayList<>();
+
     private class CheckSOTask extends org.jdesktop.application.Task<Object, Void> {
 
         CheckSOTask(org.jdesktop.application.Application app) {
@@ -1423,19 +1425,19 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
         protected Object doInBackground() {
             String[] val = txtSONumN.getText().trim().split("-");
             String bsXe = txtPlateNoN.getText().trim();
-            List<DOCheckStructure> listDONumbers = null;
             DOCheckStructure doNumber = new DOCheckStructure();
             String bsRomoc = txtTrailerNoN.getText().trim();
 
+            String doNum = "";
             for (String soNumber : val) {
                 StringUtil.paddingZero(soNumber.trim(), 10);
                 if (!WeighBridgeApp.getApplication().isOfflineMode()) {
-                    listDONumbers = sapService.getDONumber(val, bsXe, bsRomoc);
+                    List<DOCheckStructure> doNumbers = sapService.getDONumber(val, bsXe, bsRomoc);
 
-                    if (listDONumbers != null) {
-                        String doNum = "";
-                        for (int i = 0; i < listDONumbers.size(); i++) {
-                            doNumber = listDONumbers.get(i);
+                    if (doNumbers != null) {
+                        listDONumbers.addAll(doNumbers);
+                        for (int i = 0; i < doNumbers.size(); i++) {
+                            doNumber = doNumbers.get(i);
                             if (!doNumber.getMessage().trim().isEmpty()) {
                                 setMessage(doNumber.getMessage());
                                 JOptionPane.showMessageDialog(rootPane, doNumber.getMessage());
@@ -1445,18 +1447,18 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
                                 JOptionPane.showMessageDialog(rootPane, msg);
                                 return null;
                             } else {
-                                if (txtDONumN.getText().trim().isEmpty()) {
+                                if (doNum.isEmpty()) {
                                     doNum = doNumber.getVbelnDO();
                                 } else {
                                     doNum += "-" + doNumber.getVbelnDO();
                                 }
-                                txtDONumN.setText(doNum);
                             }
                         }
                     }
                 }
-
             }
+
+            txtDONumN.setText(doNum);
             return null;
         }
 
@@ -2728,12 +2730,24 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
             newWeightTicket.setMoveType("101");
             newWeightTicket.getWeightTicketDetail().setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
         }
-        
+
         public void updateDataForOutSellWateway() {
             if (WeighBridgeApp.getApplication().isOfflineMode()) {
                 WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
                 weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
                 weightTicketDetail.setSoNumber(txtSONumN.getText().trim());
+            } else {
+                if (listDONumbers != null) {
+                    for (WeightTicketDetail weightTicketDetail : newWeightTicket.getWeightTicketDetails()) {
+                        DOCheckStructure dOCheckStructure = listDONumbers.stream()
+                                .filter(t -> t.getVbelnDO().equalsIgnoreCase(weightTicketDetail.getDeliveryOrderNo()))
+                                .findFirst().get();
+
+                        if (dOCheckStructure != null) {
+                            weightTicketDetail.setSoNumber(dOCheckStructure.getVbelnSO());
+                        }
+                    }
+                }
             }
         }
 
