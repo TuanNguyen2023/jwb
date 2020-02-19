@@ -174,10 +174,14 @@ public class WTRegView extends javax.swing.JInternalFrame {
             public Component getListCellRendererComponent(
                     JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if (value instanceof Material) {
-                    Material material = (Material) value;
-                    setText(material.getMaktx());
-                    setToolTipText(material.getMatnr());
+                if (value instanceof MaterialInternal) {
+                    MaterialInternal materialInternal = (MaterialInternal) value;
+                    setToolTipText(materialInternal.getMatnr());
+                    if (materialInternal.getMaktx().trim() != null) {
+                        setText(materialInternal.getMaktx());
+                    } else {
+                        setText(materialInternal.getMaktg());
+                    }
                 }
                 return this;
             }
@@ -883,6 +887,11 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         cbxMaterialTypeN.setEditable(true);
         cbxMaterialTypeN.setName("cbxMaterialTypeN"); // NOI18N
+        cbxMaterialTypeN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxMaterialTypeNActionPerformed(evt);
+            }
+        });
 
         txtWeightN.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
         txtWeightN.setText(resourceMap.getString("txtWeightN.text")); // NOI18N
@@ -933,6 +942,11 @@ public class WTRegView extends javax.swing.JInternalFrame {
         btnDOCheckN.setName("btnDOCheckN"); // NOI18N
 
         txtSONumN.setName("txtSONumN"); // NOI18N
+        txtSONumN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtSONumNKeyReleased(evt);
+            }
+        });
 
         btnSOCheckN.setText(resourceMap.getString("btnSOCheckN.text")); // NOI18N
         btnSOCheckN.setName("btnSOCheckN"); // NOI18N
@@ -1179,7 +1193,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                     .addComponent(pnPrintControl, javax.swing.GroupLayout.DEFAULT_SIZE, 936, Short.MAX_VALUE)
                     .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 936, Short.MAX_VALUE)
                     .addComponent(pnFilter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnControl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(pnControl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 936, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -1195,7 +1209,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addComponent(pnRegistrationOfVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(pnControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(69, Short.MAX_VALUE))
+                .addContainerGap(81, Short.MAX_VALUE))
         );
 
         pack();
@@ -1314,13 +1328,32 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
     validateForm();
 }//GEN-LAST:event_txtWeightNKeyReleased
 
-@Action(block = Task.BlockingScope.ACTION)
-    public Task readPO() {
-        return new ReadPOTask(WeighBridgeApp.getApplication());
-        
+
+private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxMaterialTypeNActionPerformed
+    if (cbxMaterialTypeN.getSelectedIndex() == -1) {
+        return;
     }
 
-     private class ReadPOTask extends Task<Object, Void> {
+    validateForm();
+
+    MaterialInternal materialInternal = (MaterialInternal) cbxMaterialTypeN.getSelectedItem();
+    if (newWeightTicket != null) {
+        newWeightTicket.setRecvMatnr(materialInternal.getMatnr());
+    }
+}//GEN-LAST:event_cbxMaterialTypeNActionPerformed
+
+private void txtSONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSONumNKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtSONumNKeyReleased
+
+
+    @Action(block = Task.BlockingScope.ACTION)
+    public Task readPO() {
+        return new ReadPOTask(WeighBridgeApp.getApplication());
+
+    }
+
+    private class ReadPOTask extends Task<Object, Void> {
 
         String poNum;
         PurchaseOrder sapPurOrder = null;
@@ -1480,7 +1513,7 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             }
         }
     }
-     
+
     @Action(block = Task.BlockingScope.ACTION)
     public Task readPOSTO() {
         return new ReadPOSTOTask(WeighBridgeApp.getApplication());
@@ -1495,17 +1528,17 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 //        Vendor sapVendor = null;
 //        Vendor sapSupVendor = null;
 //        Customer sapCustomer = null;
-        
+
         ReadPOSTOTask(Application app) {
             super(app);
         }
-        
+
         @Override
         protected Object doInBackground() {
             String postoNum = txtPOSTONumN.getText().trim();
             setMessage("Đang đọc P.O từ CSDL ...");
             setProgress(0, 0, 3);
-            
+
             setMessage(resourceMapMsg.getString("msg.getDataPOSTO"));
             setProgress(0, 0, 3);
             purOrderPosto = weightTicketController.findPurOrder(postoNum);
@@ -1517,7 +1550,7 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             } catch (Exception ex) {
                 failed(ex);
             }
-            
+
             setMessage("Lưu dữ liệu POSTO vào CSDL ...");
             setProgress(2, 0, 3);
             if (!entityManager.getTransaction().isActive()) {
@@ -2018,7 +2051,7 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
         showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
 
-        cbxMaterialTypeN.setModel(weightTicketRegistarationController.getListMaterial());
+        cbxMaterialTypeN.setModel(sapService.syncMaterialMaster());
     }
 
     private void prepareOutSellRoad() {
@@ -2117,7 +2150,7 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         cbxVendorLoadingN.setModel(sapService.getVendorList());
         cbxVendorTransportN.setModel(sapService.getVendorList());
         cbxMaterialTypeN.setModel(sapService.syncMaterialMaster());
-        
+
         DefaultListCellRenderer cellRendererMaterialInternal = new DefaultListCellRenderer() {
 
             @Override
@@ -2439,6 +2472,7 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
         boolean isPOSTOValid = wtRegisValidation.validatePO(txtPOSTONumN.getText(), lblPOSTONumN);
         btnPOSTOCheckN.setEnabled(isPOSTOValid);
+        lblPOSTONumN.setForeground(Color.black);
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
         boolean isSloc2Valid = wtRegisValidation.validateCbxSelected(cbxSloc2N.getSelectedIndex(), lblSloc2N);
@@ -3349,7 +3383,6 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
     private class CheckPOTask extends Task<Object, Void> {
 
-        private List<String> strMaterial = new ArrayList<>();
         private String strVendor = "";
         private String strMatnr = null;
 
@@ -3384,16 +3417,17 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         @Override
         protected void succeeded(Object t) {
             isValidPO = true;
-            cbxMaterialTypeN.setSelectedItem(String.join(" - ", strMaterial));
             cbxVendorTransportN.setSelectedItem(weightTicketRegistarationController.getVendor(strVendor));
-            cbxSuppliesIdN.setSelectedItem(weightTicketRegistarationController.getMaterialInternal(strMatnr));
+            cbxMaterialTypeN.setSelectedItem(weightTicketRegistarationController.getMaterialInternal(strMatnr));
             loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
+            loadBatchStockModel(cbxSloc2N, cbxBatchStock2N, false);
         }
 
         @Override
         protected void failed(Throwable cause) {
             newWeightTicket.setWeightTicketDetails(new ArrayList<>());
-            cbxMaterialTypeN.setSelectedItem("");
+            cbxMaterialTypeN.setSelectedIndex(-1);
+            cbxVendorTransportN.setSelectedIndex(-1);
 
             isValidPO = false;
             if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
@@ -3423,18 +3457,16 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         }
 
         private void updateWeightTicket(PurchaseOrder purchaseOrder) {
-            List<PurchaseOrderDetail> purchaseOrderDetails = purchaseOrder.getPurchaseOrderDetails();
-            for (PurchaseOrderDetail purchaseOrderDetail : purchaseOrderDetails) {
-                WeightTicketDetail weightTicketDetail = new WeightTicketDetail();
-                weightTicketDetail.setEbeln(purchaseOrder.getPoNumber());
-                weightTicketDetail.setMatnrRef(purchaseOrderDetail.getMaterial());
-                weightTicketDetail.setRegItemDescription(purchaseOrderDetail.getShortText());
+            PurchaseOrderDetail purchaseOrderDetail = purchaseOrder.getPurchaseOrderDetail();
+            WeightTicketDetail weightTicketDetail = new WeightTicketDetail();
+            weightTicketDetail.setItem(purchaseOrderDetail.getPoItem());
+            weightTicketDetail.setRegItemDescription(purchaseOrderDetail.getShortText());
+            weightTicketDetail.setRegItemQuantity(purchaseOrderDetail.getQuantity());
+            weightTicketDetail.setMatnrRef(purchaseOrderDetail.getMaterial());
+            weightTicketDetail.setKunnr(purchaseOrder.getCustomer());
+            weightTicketDetail.setUnit("TON");
 
-                newWeightTicket.addWeightTicketDetail(weightTicketDetail);
-
-                strMaterial.add(purchaseOrderDetail.getShortText());
-                strMatnr = purchaseOrderDetail.getMaterial();
-            }
+            strMatnr = purchaseOrderDetail.getMaterial();
 
             newWeightTicket.setTransVendor(purchaseOrder.getVendor());
             strVendor = purchaseOrder.getVendor();
@@ -3480,6 +3512,7 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
         @Override
         protected void succeeded(Object t) {
+            isValidPOSTO = true;
             switch (modeDetail) {
                 case OUT_SLOC_SLOC:
                     cbxVendorLoadingN.setSelectedItem(weightTicketRegistarationController.getVendor(strVendor));
@@ -3488,6 +3521,9 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
         @Override
         protected void failed(Throwable cause) {
+            isValidPOSTO = false;
+            cbxVendorLoadingN.setSelectedIndex(-1);
+
             if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
                 cause = cause.getCause();
             }
@@ -3537,7 +3573,7 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
     public boolean isEnteredValidPONum() {
         return enteredValidPONum;
     }
-    
+
     /**
      * Set the value of validPONum
      *
@@ -3548,7 +3584,7 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         this.validPONum = validPONum;
         firePropertyChange(PROP_VALIDPONUM, oldValidPONum, validPONum);
     }
-    
+
     /**
      * Set the value of validPOSTONum
      *
@@ -3559,7 +3595,7 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         this.validPOSTONum = validPOSTONum;
         firePropertyChange(PROP_VALIDPOSTONUM, oldValidPOSTONum, validPOSTONum);
     }
-    
+
     /**
      * Get the value of validPONum
      *
@@ -3568,7 +3604,7 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
     public boolean isValidPOSTONum() {
         return validPOSTONum;
     }
-    
+
 
     private boolean validPONum = false;
     public static final String PROP_VALIDPONUM = Constants.WeightTicketView.PROP_VALIDPONUM;
