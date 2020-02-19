@@ -800,6 +800,16 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         lblBatchProduce.setName("lblBatchProduce"); // NOI18N
 
         txtBatchProduce.setName("txtBatchProduce"); // NOI18N
+        txtBatchProduce.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtBatchProduceActionPerformed(evt);
+            }
+        });
+        txtBatchProduce.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtBatchProduceKeyReleased(evt);
+            }
+        });
 
         txtTicketId.setEditable(false);
         txtTicketId.setName("txtTicketId"); // NOI18N
@@ -1523,6 +1533,17 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRemarkKeyReleased
 // TODO add your handling code here:
 }//GEN-LAST:event_txtRemarkKeyReleased
+
+private void txtBatchProduceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBatchProduceActionPerformed
+    setSaveNeeded(isValidated());
+}//GEN-LAST:event_txtBatchProduceActionPerformed
+
+private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBatchProduceKeyReleased
+ if (weightTicket != null) {
+        weightTicket.setBatch(txtBatchProduce.getText());
+    }
+    setSaveNeeded(isValidated());
+}//GEN-LAST:event_txtBatchProduceKeyReleased
 
     @Action
     public void showMB1BOption() {
@@ -2559,16 +2580,16 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                         //  txtMatnr.setText(weightTicket.getMatnrRef());
                         txtMatnr.setText("1234567890000");
                         txtMatnr.setText(smatref);
-                        materialConstraint = weightTicketController.getMaterialConstraintByMatnr(smatref);
-                        
-                        if(isStage2() && materialConstraint != null && materialConstraint.getRequiredNiemXa()){
-                            lblCementDesc.setBackground(Color.red);
-                            txtCementDesc.setEditable(true);
-                        }
-                        if(isStage2() && materialConstraint != null && materialConstraint.getRequiredBatch()){
-                            txtBatchProduce.setBackground(Color.red);
-                            txtBatchProduce.setEditable(true);
-                        }
+//                        materialConstraint = weightTicketController.getMaterialConstraintByMatnr(smatref);
+//                        
+//                        if(isStage2() && materialConstraint != null && materialConstraint.getRequiredNiemXa()){
+//                            lblCementDesc.setForeground(Color.red);
+//                            txtCementDesc.setEditable(true);
+//                        }
+//                        if(isStage2() && materialConstraint != null && materialConstraint.getRequiredBatch()){
+//                            lblBatchProduce.setForeground(Color.red);
+//                            txtBatchProduce.setEditable(true);
+//                        }
                     } catch (ArithmeticException e) {
                     }
                 }
@@ -4250,6 +4271,8 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
         lblGScale.setForeground(Color.black);
         lblSLoc.setForeground(Color.black);
         lblCharg.setForeground(Color.black);
+        lblCementDesc.setForeground(Color.black);
+        lblBatchProduce.setForeground(Color.black);
 
         // Temporary enable btnAccept
 //        btnAccept.setEnabled(true);
@@ -4444,7 +4467,7 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                 lblCementDesc.setForeground(Color.red);
                 txtCementDesc.setEditable(true);
             }
-            if (isStage2() && outbDel.getMatnr() != null
+            if (isStage2()
                     && materialConstraint != null && materialConstraint.getRequiredBatch() 
                     && (txtBatchProduce.getText().trim() == null || txtBatchProduce.getText().trim().equals(""))) {
                 bBatchProduce = false;
