@@ -2523,6 +2523,13 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
             try {
                 setStep(2, resourceMapMsg.getString("checkDOInSap"));
                 OutboundDelivery sapOutboundDelivery = sapService.getOutboundDelivery(deliveryOrderNo);
+                // check status post SAP
+                if(sapOutboundDelivery.getVbelnNach()!= null && !sapOutboundDelivery.getVbelnNach().trim().isEmpty()) {
+                        String msg = "Số D.O \" " + deliveryOrderNo + " \" đã được nhập hàng tại chứng từ " + sapOutboundDelivery.getVbelnNach() +"!";
+                        setMessage(msg);
+                        JOptionPane.showMessageDialog(rootPane, msg);
+                        return null;
+                    }
 
                 setStep(3, resourceMapMsg.getString("msg.saveDataToDb"));
                 return sapService.syncOutboundDelivery(sapOutboundDelivery, outboundDelivery, deliveryOrderNo);
@@ -2722,8 +2729,7 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
         }
 
         public void updateDataForInPoPurchaseMode() {
-            WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
-            weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText().trim()));
+            newWeightTicket.getWeightTicketDetail().setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
         }
 
         public void updateDataForPrepareOutPullStation() {
@@ -3164,7 +3170,8 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
             switch (modeDetail) {
                 case IN_PO_PURCHASE:
                     BigDecimal quantity = purchaseOrderDetail.getQuantity() != null ? purchaseOrderDetail.getQuantity() : BigDecimal.ZERO;
-                    BigDecimal tolerance = purchaseOrderDetail.getUnderDlvTol() != null ? purchaseOrderDetail.getUnderDlvTol() : BigDecimal.ZERO;
+                    //BigDecimal tolerance = purchaseOrderDetail.getUnderDlvTol() != null ? purchaseOrderDetail.getUnderDlvTol() : BigDecimal.ZERO;
+                    BigDecimal tolerance = purchaseOrderDetail.getOverDlvTol()!= null ? purchaseOrderDetail.getOverDlvTol() : BigDecimal.ZERO;
 
                     numCheckWeight = quantity.add(
                             quantity.multiply(tolerance).divide(new BigDecimal(100))

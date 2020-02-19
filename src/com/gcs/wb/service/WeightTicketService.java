@@ -306,7 +306,7 @@ public class WeightTicketService {
         return remaining;
     }
 
-    public Object getGrDoMigoBapi(WeightTicket wt, WeightTicket weightTicket, OutboundDelivery outbDel, List<OutboundDeliveryDetail> outDetails_lits, int timeFrom, int timeTo) {
+     public Object getGrDoMigoBapi(WeightTicket wt, WeightTicket weightTicket, OutboundDelivery outbDel, List<OutboundDeliveryDetail> outDetails_lits, int timeFrom, int timeTo) {
         String doNum = null;
         if (outbDel != null) {
             doNum = outbDel.getDeliveryOrderNo();
@@ -683,7 +683,7 @@ public class WeightTicketService {
         return bapi;
     }
 
-    public Object getPgmVl02nBapi(WeightTicket wt, OutboundDelivery outbDel, WeightTicket weightTicket, int timeFrom, int timeTo, List<OutboundDeliveryDetail> outDetails_lits) {
+    public Object getPgmVl02nBapi(WeightTicket wt, OutboundDelivery outbDel, WeightTicket weightTicket,String modeFlg, int timeFrom, int timeTo, List<OutboundDeliveryDetail> outDetails_lits) {
         String doNum = null;
         if (outbDel != null) {
             doNum = outbDel.getDeliveryOrderNo();
@@ -754,7 +754,7 @@ public class WeightTicketService {
         wa.setWauhr(DateUtil.stripDate(stime));
         wa.setLfdat(DateUtil.stripTime(stime));
         wa.setLfuhr(DateUtil.stripDate(stime));
-        wa.setTraty("0004");
+        wa.setTraty(modeFlg);
         wa.setTraid(plateCombine);
         wa.setLifex(wt.getDriverName());
         bapi.setVbkok_wa(wa);

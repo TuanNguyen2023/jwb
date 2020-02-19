@@ -1732,7 +1732,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         if (!isStage1() && !isStage2()) {
             return null;
         }
-        if ((txtPONo.getText() != null || !"".equals(txtPONo.getText())) && purOrder != null) {
+        if ((txtPONo.getText() != null && !"".equals(txtPONo.getText())) && purOrder != null) {
             if (purOrder.getDocType().equals("UB")) {
                 Material m = null;
                 PurchaseOrderDetail purchaseOrderDetail = purOrder.getPurchaseOrderDetail();
@@ -2721,6 +2721,10 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 cbxVendorLoading.setEnabled(false);
                 cbxVendorTransport.setEnabled(false);        
             }
+            if (Constants.WeighingProcess.MODE_DETAIL.IN_OTHER.name().equals(weightTicket.getMode())
+                    || Constants.WeighingProcess.MODE_DETAIL.OUT_OTHER.name().equals(weightTicket.getMode())) {
+                btnSave.setEnabled(true);
+            }
             return null;  // return your result
         }
 
@@ -3178,22 +3182,34 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             entityManager.merge(weightTicket);
             OutboundDelivery outbDel = null;
             List<String> completedDO = new ArrayList<>();
+            String modeFlg = null;
             WeightTicketDetail weightTicketDetail = weightTicket.getWeightTicketDetail();
             if (((isStage2() || (!isStage1() && !isStage2())) && !weightTicket.isDissolved())
                         || (!isStage1() && !isStage2() && !weightTicket.isDissolved()
                         && (weightTicket != null && !weightTicket.isPosted()))) {
-                if(weightTicket.getMode().equals("OUT_SLOC_SLOC")) {
-                    objBapi = getGiMB1BBapi(weightTicket);
-                    objBapi_Po = getGrPoMigoBapi(weightTicket, weightTicket.getWeightTicketDetail().getEbeln());
-                    objBapi_Posto = getGrPoMigoBapi(weightTicket, weightTicket.getPosto());
-                }
 
-                if(weightTicket.getMode().equals("OUT_PULL_STATION") && weightTicket.getPosto() != null) {          
-                    objBapi = getMvtPOSTOCreatePGI(weightTicket, weightTicket.getPosto());
-                }
+                // <editor-fold defaultstate="collapsed" desc="Input PO">
+                if(weightTicket.getWeightTicketDetail().getEbeln() != null) {
+                    if(weightTicket.getMode().equals("IN_PO_PURCHASE")) {
+                        objBapi = getGrPoMigoBapi(weightTicket, weightTicket.getWeightTicketDetail().getEbeln());
+                    }
 
-                // post SAP
-                if (WeighBridgeApp.getApplication().isOfflineMode() == false) {
+                    if(weightTicket.getMode().equals("OUT_PLANT_PLANT")) {
+                        objBapi = getDoCreate2PGI(weightTicket, outbDel);
+                    }
+                    if(weightTicket.getMode().equals("OUT_SLOC_SLOC")) {
+                        objBapi = getGiMB1BBapi(weightTicket);
+                        objBapi_Po = getGrPoMigoBapi(weightTicket, weightTicket.getWeightTicketDetail().getEbeln());
+                        if(weightTicket.getPosto()!= null) {
+                            objBapi_Posto = getGrPoMigoBapi(weightTicket, weightTicket.getPosto());
+                        }
+                    }
+
+                    if(weightTicket.getMode().equals("OUT_PULL_STATION") && weightTicket.getPosto() != null) {          
+                        objBapi = getMvtPOSTOCreatePGI(weightTicket, weightTicket.getPosto());
+                    }
+                    
+                    if (WeighBridgeApp.getApplication().isOfflineMode() == false) {
                         if (objBapi != null) {
                             try {
                                 sapSession.execute(objBapi);
@@ -3235,10 +3251,6 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                 if (objBapi instanceof WsDeliveryUpdateBapi) {
                                     weightTicketDetail.setMatDoc(((WsDeliveryUpdateBapi) objBapi).getMat_doc());
                                     weightTicketDetail.setDocYear(Integer.valueOf(((WsDeliveryUpdateBapi) objBapi).getDoc_year()));
-//                                    if (weightTicketDetail.getPpProcord() != null && weightTicketDetail.getPpProcord().length() == 12) {
-//                                        weightTicketDetail.setPpProcordcnf(((WsDeliveryUpdateBapi) objBapi).getConf_no());
-//                                        weightTicketDetail.setPpProcordcnfcnt(((WsDeliveryUpdateBapi) objBapi).getConf_cnt());
-//                                    }
 
                                     try {
                                         bapi_message = ((WsDeliveryUpdateBapi) objBapi).getReturn().get(0).getMessage().toString();
@@ -3294,58 +3306,6 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     completedDO.add(weightTicketDetail.getDeliveryOrderNo());
                                 }
 
-                                // <editor-fold defaultstate="collapsed" desc="Update D.O from SAP to DB">
-                                if (outbDel != null) {
-                                    OutboundDelivery sapOutb = sapService.getOutboundDelivery(outbDel.getDeliveryOrderNo());
-                                    Customer kunnr = null, sapKunnr = null, kunag = null, sapKunag = null;
-                                    Vendor lifnr = null, sapLifnr = null;
-                                    if (sapOutb != null) {
-                                        if (sapOutb.getKunnr() != null && !sapOutb.getKunnr().trim().isEmpty()) {
-                                            kunnr = weightTicketRegistarationController.findByKunnr(sapOutb.getKunnr());
-                                            sapKunnr = sapService.getCustomer(sapOutb.getKunnr());
-                                        }
-                                        if (sapOutb.getKunag() != null && !sapOutb.getKunag().trim().isEmpty()) {
-                                            kunag = weightTicketRegistarationController.findByKunnr(sapOutb.getKunag());
-                                            sapKunag = sapService.getCustomer(sapOutb.getKunag());
-                                        }
-                                        if (sapOutb.getLifnr() != null && !sapOutb.getLifnr().trim().isEmpty()) {
-                                            lifnr = weightTicketRegistarationController.findByLifnr(sapOutb.getLifnr());
-                                            sapLifnr = sapService.getVendor(sapOutb.getLifnr());
-                                        }
-                                    }
-                                    //Store Ship to party Info
-                                    if (sapKunnr != null && kunnr == null) {
-                                        entityManager.persist(sapKunnr);
-                                    } else if (sapKunnr != null && kunnr != null) {
-                                        sapKunnr.setId(kunnr.getId());
-                                        entityManager.merge(sapKunnr);
-                                    } else if (sapKunnr == null && kunnr != null) {
-                                        entityManager.remove(kunnr);
-                                    }
-                                    //Store Sold to party Info
-                                    if (sapKunag != null && kunag == null && !sapKunnr.getKunnr().equalsIgnoreCase(sapKunag.getKunnr())) {
-                                        entityManager.persist(sapKunag);
-                                    } else if (sapKunag != null && kunag != null) {
-                                        sapKunag.setId(kunag.getId());
-                                        entityManager.merge(sapKunag);
-                                    } else if (sapKunag == null && kunag != null && !sapKunnr.getKunnr().equalsIgnoreCase(sapKunag.getKunnr())) {
-                                        entityManager.remove(kunag);
-                                    }
-                                    //Store Vendor Info
-                                    if (sapLifnr != null && lifnr == null) {
-                                        entityManager.persist(sapLifnr);
-                                    } else if (sapLifnr != null && lifnr != null) {
-                                        sapLifnr.setId(lifnr.getId());
-                                        entityManager.merge(sapLifnr);
-                                    } else if (sapLifnr == null && lifnr != null) {
-                                        entityManager.remove(lifnr);
-                                    }
-                                    sapOutb.setId(outbDel.getId());
-                                    entityManager.merge(sapOutb);
-                                    outbDel = sapOutb;
-                                }
-                                // </editor-fold>
-
                             } catch (Exception ex) {
                                 if (objBapi instanceof WsDeliveryUpdateBapi) {
                                     if (((WsDeliveryUpdateBapi) objBapi).getReturn() != null
@@ -3373,219 +3333,39 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         weightTicket.setPosted(true);
                         weightTicketDetail.setUnit("TON");
                     }
-            }
-            
-            ////////////////
-            if ((txtPONo.getText() != null || !"".equals(txtPONo.getText()))) {
-//                if (((isStage2() || (!isStage1() && !isStage2())) && !weightTicket.isDissolved())
-//                        || (!isStage1() && !isStage2() && !weightTicket.isDissolved()
-//                        && (weightTicket != null && !weightTicket.isPosted()))) {
-//                    if (rbtInward.isSelected()) {
-//                        if (weightTicketDetail.getDeliveryOrderNo() == null) {
-//                            //objBapi = getGrPoMigoBapi(weightTicket);
-//                        } else if (outbDel != null && outbDel.getLfart().equalsIgnoreCase("LR") && outbDel.getLfart().equalsIgnoreCase("ZTLR")) {
-//                            objBapi = getPgmVl02nBapi(weightTicket, outbDel);
-//                        } else {
-//                            objBapi = getGrDoMigoBapi(weightTicket, outbDel);
-//                        }
-//                    } else {
-//                        // set 
-//
-//                        if (!rbtMisc.isSelected()) {
-//                            if (isSubContract() || isMvt311()) {
-//                                if (rbtPO.isSelected()) {
-//                                    objBapi = getGi541MigoBapi(weightTicket);
-//                                } else {
-//                                    objBapi = getGiMB1BBapi(weightTicket);
-//                                }
-//                            } else if (weightTicketDetail.getDeliveryOrderNo() != null) {
-//                                // tuanna 16.06.13
-//                                //  cbxKunnr.setSelectedIndex(-1);
-//                                objBapi = getPgmVl02nBapi(weightTicket, outbDel);
-//
-//                            } else {
-//                                objBapi = getDoCreate2PGI(weightTicket, outbDel);
-//                            }
-//                        }
-//                    }
-//                    if (WeighBridgeApp.getApplication().isOfflineMode() == false) {
-//                        if (objBapi != null) {
-//                            try {
-//                                sapSession.execute(objBapi);
-//                                if (objBapi instanceof DOCreate2PGIBapi) {
-//                                    weightTicketDetail.setDeliveryOrderNo(((DOCreate2PGIBapi) objBapi).getDelivery());
-//                                    weightTicketDetail.setMatDoc(((DOCreate2PGIBapi) objBapi).getMatDoc());
-//                                    weightTicketDetail.setDocYear(Integer.valueOf(((DOCreate2PGIBapi) objBapi).getDocYear()));
-//                                    try {
-//                                        bapi_message = ((DOCreate2PGIBapi) objBapi).getReturn().get(0).getMessage();
-//                                    } catch (Exception Ex) {
-//                                        bapi_message = resourceMapMsg.getString("msg.errorSAP2880");
-//                                    }
-//                                }
-//                                if (objBapi instanceof GoodsMvtPoCreateBapi) {
-//                                    weightTicketDetail.setMatDoc(((GoodsMvtPoCreateBapi) objBapi).getMatDoc());
-//                                    weightTicketDetail.setDocYear(Integer.valueOf(((GoodsMvtPoCreateBapi) objBapi).getMatYear()));
-//                                    try {
-//                                        bapi_message = ((GoodsMvtPoCreateBapi) objBapi).getReturn().get(0).getMessage();
-//                                    } catch (Exception Ex) {
-//                                        bapi_message = resourceMapMsg.getString("msg.errorSAP2889");
-//                                    }
-//                                }
-//                                if (objBapi instanceof GoodsMvtDoCreateBapi) {
-//                                    weightTicketDetail.setMatDoc(((GoodsMvtDoCreateBapi) objBapi).getMatDoc());
-//                                    weightTicketDetail.setDocYear(Integer.valueOf(((GoodsMvtDoCreateBapi) objBapi).getMatYear()));
-//
-//                                    try {
-//                                        bapi_message = ((GoodsMvtDoCreateBapi) objBapi).getReturn().get(0).getMessage();
-//                                    } catch (Exception Ex) {
-//                                        bapi_message = resourceMapMsg.getString("msg.errorSAP2899");
-//                                    }
-//                                }
-//                                if (objBapi instanceof WsDeliveryUpdateBapi) {
-//                                    weightTicketDetail.setMatDoc(((WsDeliveryUpdateBapi) objBapi).getMat_doc());
-//                                    weightTicketDetail.setDocYear(Integer.valueOf(((WsDeliveryUpdateBapi) objBapi).getDoc_year()));
-////                                    if (weightTicketDetail.getPpProcord() != null && weightTicketDetail.getPpProcord().length() == 12) {
-////                                        weightTicketDetail.setPpProcordcnf(((WsDeliveryUpdateBapi) objBapi).getConf_no());
-////                                        weightTicketDetail.setPpProcordcnfcnt(((WsDeliveryUpdateBapi) objBapi).getConf_cnt());
-////                                    }
-//
-//                                    try {
-//                                        bapi_message = ((WsDeliveryUpdateBapi) objBapi).getReturn().get(0).getMessage().toString();
-//                                    } catch (Exception Ex) {
-//                                        bapi_message = resourceMapMsg.getString("msg.errorSAP2944");
-//                                    }
-//
-//                                }
-//                                if (weightTicketDetail.getMatDoc() == null || weightTicketDetail.getMatDoc().equals("")) {
-//                                    revertCompletedDO(completedDO, null, null);
-//                                    weightTicket.setPosted(false);
-//                                    if (bapi_message == "") {
-//                                        bapi_message = resourceMapMsg.getString("msg.errorBAPI");
-//                                    }
-//                                    JOptionPane.showMessageDialog(rootPane, bapi_message);
-//                                    completed = false;
-//                                    entityManager.clear();
-//                                } else if ((weightTicketDetail.getMatDoc() != null) && (!weightTicketDetail.getMatDoc().equals(""))) {
-//                                    weightTicket.setPosted(true);
-//                                    completedDO.add(weightTicketDetail.getDeliveryOrderNo());
-//                                }
-//
-//                                // <editor-fold defaultstate="collapsed" desc="Update D.O from SAP to DB">
-//                                if (outbDel != null) {
-//                                    OutboundDelivery sapOutb = sapService.getOutboundDelivery(outbDel.getDeliveryOrderNo());
-//                                    Customer kunnr = null, sapKunnr = null, kunag = null, sapKunag = null;
-//                                    Vendor lifnr = null, sapLifnr = null;
-//                                    if (sapOutb != null) {
-//                                        if (sapOutb.getKunnr() != null && !sapOutb.getKunnr().trim().isEmpty()) {
-//                                            kunnr = weightTicketRegistarationController.findByKunnr(sapOutb.getKunnr());
-//                                            sapKunnr = sapService.getCustomer(sapOutb.getKunnr());
-//                                        }
-//                                        if (sapOutb.getKunag() != null && !sapOutb.getKunag().trim().isEmpty()) {
-//                                            kunag = weightTicketRegistarationController.findByKunnr(sapOutb.getKunag());
-//                                            sapKunag = sapService.getCustomer(sapOutb.getKunag());
-//                                        }
-//                                        if (sapOutb.getLifnr() != null && !sapOutb.getLifnr().trim().isEmpty()) {
-//                                            lifnr = weightTicketRegistarationController.findByLifnr(sapOutb.getLifnr());
-//                                            sapLifnr = sapService.getVendor(sapOutb.getLifnr());
-//                                        }
-//                                    }
-//                                    //Store Ship to party Info
-//                                    if (sapKunnr != null && kunnr == null) {
-//                                        entityManager.persist(sapKunnr);
-//                                    } else if (sapKunnr != null && kunnr != null) {
-//                                        sapKunnr.setId(kunnr.getId());
-//                                        entityManager.merge(sapKunnr);
-//                                    } else if (sapKunnr == null && kunnr != null) {
-//                                        entityManager.remove(kunnr);
-//                                    }
-//                                    //Store Sold to party Info
-//                                    if (sapKunag != null && kunag == null && !sapKunnr.getKunnr().equalsIgnoreCase(sapKunag.getKunnr())) {
-//                                        entityManager.persist(sapKunag);
-//                                    } else if (sapKunag != null && kunag != null) {
-//                                        sapKunag.setId(kunag.getId());
-//                                        entityManager.merge(sapKunag);
-//                                    } else if (sapKunag == null && kunag != null && !sapKunnr.getKunnr().equalsIgnoreCase(sapKunag.getKunnr())) {
-//                                        entityManager.remove(kunag);
-//                                    }
-//                                    //Store Vendor Info
-//                                    if (sapLifnr != null && lifnr == null) {
-//                                        entityManager.persist(sapLifnr);
-//                                    } else if (sapLifnr != null && lifnr != null) {
-//                                        sapLifnr.setId(lifnr.getId());
-//                                        entityManager.merge(sapLifnr);
-//                                    } else if (sapLifnr == null && lifnr != null) {
-//                                        entityManager.remove(lifnr);
-//                                    }
-//                                    sapOutb.setId(outbDel.getId());
-//                                    entityManager.merge(sapOutb);
-//                                    outbDel = sapOutb;
-//                                }
-//                                // </editor-fold>
-//
-//                            } catch (Exception ex) {
-//                                if (objBapi instanceof WsDeliveryUpdateBapi) {
-//                                    if (((WsDeliveryUpdateBapi) objBapi).getReturn() != null
-//                                            && (((WsDeliveryUpdateBapi) objBapi).getReturn().get(0)) != null
-//                                            && (((WsDeliveryUpdateBapi) objBapi).getReturn().get(0)).getId() != null
-//                                            && (((WsDeliveryUpdateBapi) objBapi).getReturn().get(0)).getId().equals("NOREVERT")) {
-//                                    } else {
-//                                        revertCompletedDO(completedDO, null, null);
-//                                    }
-//                                } else {
-//                                    revertCompletedDO(completedDO, null, null);
-//                                }
-//
-//                                weightTicket.setPosted(false);
-//                                failed(ex);
-//                                completed = false;
-//                                entityManager.clear();
-//                            }
-//                        } else if (rbtMisc.isSelected() || objBapi == null) {
-//                            weightTicket.setPosted(true);
-//                            weightTicketDetail.setUnit("TON");
-//                        }
-//                    } else {
-//                        bapi_message = resourceMapMsg.getString("msg.postOfflien");
-//                        weightTicket.setPosted(true);
-//                        weightTicketDetail.setUnit("TON");
-//                    }
-//                }
-                /*} else if (weightTicket.getDelivNumb() != null || !weightTicket.getDelivNumb().equals("")) {*/
-                // 20120521: update check PO-STO.
-            } else {
+                }
+                // </editor-fold>
+                
+                // <editor-fold defaultstate="collapsed" desc="Input DO">
                 for (int i = 0; i < outbDel_list.size(); i++) {
-                    outbDel = outbDel_list.get(i);
-                    if (((isStage2() || (!isStage1() && !isStage2())) && !weightTicket.isDissolved())
-                            || (!isStage1() && !isStage2() && !weightTicket.isDissolved()
-                            && (weightTicket != null && !weightTicket.isPosted()))) {
-                        if (rbtInward.isSelected()) {
-                            if (weightTicketDetail.getDeliveryOrderNo() == null) {
-                                //objBapi = getGrPoMigoBapi(weightTicket);
-                            } else if (outbDel != null && outbDel.getLfart().equalsIgnoreCase("LR") && outbDel.getLfart().equalsIgnoreCase("ZTLR")) {
-                                objBapi = getPgmVl02nBapi(weightTicket, outbDel);
-                            } else {
-                                objBapi = getGrDoMigoBapi(weightTicket, outbDel);
-                            }
+                     outbDel = outbDel_list.get(i);
+                    // nhap DO
+                    if(weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER")) {
+                        if (outbDel != null && (outbDel.getLfart().equalsIgnoreCase("LR") 
+                                || outbDel.getLfart().equalsIgnoreCase("ZRET") 
+                                || outbDel.getLfart().equalsIgnoreCase("ZVND"))) {
+                            modeFlg = "Z001";
+                            objBapi = getPgmVl02nBapi(weightTicket, outbDel, modeFlg);
                         } else {
-                            if (!WeighBridgeApp.getApplication().isOfflineMode()) {
-                                if (isSubContract() || isMvt311()) {
-                                    if ((txtPONo.getText() != null || !"".equals(txtPONo.getText()))) {
-                                        objBapi = getGi541MigoBapi(weightTicket);
-                                    } else {
-                                        objBapi = getGiMB1BBapi(weightTicket);
-                                    }
-                                } else if (weightTicketDetail.getDeliveryOrderNo() != null) {
-                                    objBapi = getPgmVl02nBapi(weightTicket, outbDel);
-                                } else {
-                                    objBapi = getDoCreate2PGI(weightTicket, outbDel);
-                                }
-                            }
+                            objBapi = getGrDoMigoBapi(weightTicket, outbDel);
                         }
-                        if (WeighBridgeApp.getApplication().isOfflineMode() == false) {
+                    }
+                    
+                    // xuat DO
+                    if(weightTicket.getMode().equals("OUT_SELL_ROAD")) {
+                       modeFlg = "Z001";
+                       objBapi = getPgmVl02nBapi(weightTicket, outbDel, modeFlg);
+                    }
+
+                    // ban hangf thuy
+                    if(weightTicket.getMode().equals("OUT_SELL_WATERWAY")) {
+                        modeFlg = "Z002";
+                        objBapi = getPgmVl02nBapi(weightTicket, outbDel, modeFlg);
+                    }
+                    
+                    if (WeighBridgeApp.getApplication().isOfflineMode() == false) {
                             if (objBapi != null) {
                                 try {
-//                                  J-20062013 - move into "if statement"
-//                                  to check post double GR
                                     sapSession.execute(objBapi);
 
                                     OutboundDeliveryDetail details_item = null;
@@ -3601,7 +3381,6 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                         }
                                         for (int k = 0; k < outDetails_lits.size(); k++) {
                                             details_item = outDetails_lits.get(k);
-                                            //if (details_item.getDelivNumb().equals(outbDel.getDeliveryOrderNo())) {
                                             if (details_item.getDeliveryOrderNo().equals(outbDel.getDeliveryOrderNo())) {
                                                 details_item.setMatDoc(((DOCreate2PGIBapi) objBapi).getMatDoc());
                                                 details_item.setDocYear(((DOCreate2PGIBapi) objBapi).getDocYear());
@@ -3841,16 +3620,20 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                             weightTicket.setPosted(true);
                             weightTicketDetail.setUnit("TON");
                         }
-                    }
-
+                    
                     if (!entityManager.getTransaction().isActive()) {
                         entityManager.getTransaction().begin();
                     }
                     entityManager.merge(outbDel);
                     entityManager.getTransaction().commit();
                 }
+                // </editor-fold>
+                
             }
-            if (WeighBridgeApp.getApplication().isOfflineMode()) {
+            
+            if (WeighBridgeApp.getApplication().isOfflineMode() 
+                    || weightTicket.getMode().equals("IN_OTHER") 
+                    || weightTicket.getMode().equals("OUT_OTHER")) {
                 weightTicket.setPosted(true);
                 weightTicketDetail.setUnit("TON");
             }
@@ -4064,43 +3847,43 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                             param = purchaseOrderDetail.getMaterial();
                         }
                     }
-                    Variant vari = weightTicketController.findByParam(Constants.WeightTicketView.PROCESS_ORDER_CF);
-                    double valu = 0;
+//                    Variant vari = weightTicketController.findByParam(Constants.WeightTicketView.PROCESS_ORDER_CF);
+//                    double valu = 0;
 
-                    if (vari != null) {
+//                    if (vari != null) {
 
-                        if (vari.getValue() != null && !vari.getValue().isEmpty()) {
-                            valu = Double.parseDouble(vari.getValue());
-                        }
-
-                        double upper = qty + (qty * valu) / 100;
-                        double lower = qty - (qty * valu) / 100;
-
-                        if ((lower <= result && result <= upper)) {
-                            txfGoodsQty.setValue(result);
-                            weightTicket.setGQty(new BigDecimal(Double.toString(result)));
-                        } else {
-                            String msg = "";
-                            // TODO review to remove this message
-//                            try {
-//                                msg = weightTicketController.getMsg();
-//                            } catch (Exception ex) {
-//                                msg = resourceMapMsg.getString("msg.massOrderOutLimit");
-//                            }
-                            JOptionPane.showMessageDialog(rootPane, msg); //variant mesage --> Tuanna
-                            txfOutQty.setValue(null);
-                            txtOutTime.setText(null);
-                            txfGoodsQty.setValue(null);
-                            weightTicket.setGQty(null);
-                            btnAccept.setEnabled(false);
-                            // Tuanna add 14.01.2013 - Check logic when input value not match require condition  
-                            btnOScaleReset.setEnabled(true);
-                            return null;
-                        }
-                    } else {
+//                        if (vari.getValue() != null && !vari.getValue().isEmpty()) {
+//                            valu = Double.parseDouble(vari.getValue());
+//                        }
+//
+//                        double upper = qty + (qty * valu) / 100;
+//                        double lower = qty - (qty * valu) / 100;
+//
+//                        if ((lower <= result && result <= upper)) {
+//                            txfGoodsQty.setValue(result);
+//                            weightTicket.setGQty(new BigDecimal(Double.toString(result)));
+//                        } else {
+//                            String msg = "";
+//                            // TODO review to remove this message
+////                            try {
+////                                msg = weightTicketController.getMsg();
+////                            } catch (Exception ex) {
+////                                msg = resourceMapMsg.getString("msg.massOrderOutLimit");
+////                            }
+//                            JOptionPane.showMessageDialog(rootPane, msg); //variant mesage --> Tuanna
+//                            txfOutQty.setValue(null);
+//                            txtOutTime.setText(null);
+//                            txfGoodsQty.setValue(null);
+//                            weightTicket.setGQty(null);
+//                            btnAccept.setEnabled(false);
+//                            // Tuanna add 14.01.2013 - Check logic when input value not match require condition  
+//                            btnOScaleReset.setEnabled(true);
+//                            return null;
+//                        }
+//                    } else {
                         txfGoodsQty.setValue(result);
                         weightTicket.setGQty(new BigDecimal(Double.toString(result)));
-                    }
+//                    }
                 } else if (isSubContract() && weightTicket.getLgort() != null && weightTicket.getCharg() != null) {
                     setMessage(resourceMapMsg.getString("msg.checkIssetWarehouse")); // checking stock --tuanna
                     Double remaining = CheckMatStock(weightTicket.getWeightTicketDetail().getMatnrRef(), configuration.getWkPlant(), weightTicket.getLgort(), weightTicket.getCharg());
@@ -4327,8 +4110,8 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         return weightTicketController.getDoCreate2PGI(wt, outbDel, weightTicket, timeFrom, timeTo, outDetails_lits);
     }
 
-    private Object getPgmVl02nBapi(WeightTicket wt, OutboundDelivery outbDel) {
-        return weightTicketController.getPgmVl02nBapi(wt, outbDel, weightTicket, timeFrom, timeTo, outDetails_lits);
+    private Object getPgmVl02nBapi(WeightTicket wt, OutboundDelivery outbDel, String modeFlg) {
+        return weightTicketController.getPgmVl02nBapi(wt, outbDel, weightTicket,modeFlg, timeFrom, timeTo, outDetails_lits);
     }
 
     private Object getMvtPOSTOCreatePGI(WeightTicket wt, String number) {
@@ -4385,7 +4168,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         }
         if ((txtPONo.getText() != null || !"".equals(txtPONo.getText())) && isEnteredValidPONum() && isValidPONum()) {
             bPO = true;
-        } else if ((txtPONo.getText() != null || !"".equals(txtPONo.getText())) && (!isEnteredValidPONum() || isValidPONum())) {
+        } else if ((txtPONo.getText() != null && !"".equals(txtPONo.getText())) && (!isEnteredValidPONum() || isValidPONum())) {
             bPO = false;
         }
 
@@ -4479,7 +4262,10 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 txtBatchProduce.setEditable(true);
             }
         }
-        result = (bMisc || bPO || bMB1B || bMvt311) && bScale && bSLoc && bBatch && bBatchProduce && bNiemXa && (isStage1() || isStage2() || (!isStage1() && !isStage2() && weightTicket != null && weightTicket.isPosted()));
+        result = (bMisc || bPO || bMB1B || bMvt311) 
+                && bScale && bSLoc && bBatch && bBatchProduce && bNiemXa &&
+                (isStage1() || isStage2() || (!isStage1() && !isStage2() &&
+                weightTicket != null && weightTicket.isPosted()));
         return result;
     }
 
