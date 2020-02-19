@@ -829,12 +829,13 @@ public class WeightTicketService {
     }
 
     public void printWT(WeightTicket wt, boolean reprint, String ximang, List<OutboundDelivery> outbDel_list, List<OutboundDeliveryDetail> outDetails_lits,
-            OutboundDelivery outbDel, JRadioButton rbtMisc, JRadioButton rbtPO, boolean isStage1, JRootPane rootPane) {
+            OutboundDelivery outbDel, String txtPONo, boolean isStage1, JRootPane rootPane) {
         OutboundDelivery item;
         try {
+            boolean isOffline = WeighBridgeApp.getApplication().isOfflineMode();
             Map<String, Object> map = new HashMap<>();
             Long bags = null;
-            if (outbDel_list == null || outbDel_list.isEmpty() || rbtMisc.isSelected() || rbtPO.isSelected()) {
+            if (outbDel_list == null || outbDel_list.isEmpty() || isOffline || (txtPONo != null || !"".equals(txtPONo))) {
                 // can posto xi mang 
                 map.put("P_MANDT", configuration.getSapClient());
                 map.put("P_WPlant", configuration.getWkPlant());
@@ -971,7 +972,7 @@ public class WeightTicketService {
 //                    } else {
 //                        path = "./rpt/rptPQ/";
 //                    }
-                    if (rbtMisc.isSelected() || rbtPO.isSelected()) {
+                    if (isOffline || (txtPONo != null || !"".equals(txtPONo))) {
 
                         reportName = path.concat("WeightTicket.jasper");
                         //reportName = path.concat("WeightTicket.jasper");

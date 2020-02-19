@@ -125,15 +125,12 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
         formatter = new SimpleDateFormat();
         cbxSLoc.setSelectedIndex(-1);
-        rbtMvt311.setVisible(true);
-        rbtMb1b.setVisible(false);
         txfCurScale.setEditable(true);
         txtInTime.setEditable(true);
         txtOutTime.setEditable(true);
         sapSetting = WeighBridgeApp.getApplication().getSapSetting();
         login = WeighBridgeApp.getApplication().getLogin();
         entityManager.clear();
-        rbtMisc.setForeground(Color.red);
         //String client = WeighBridgeApp.getApplication().getConfig().getsClient();
         //List kunnr = this.customerRepository.getListCustomer(client);
         DefaultComboBoxModel result = weightTicketController.getCustomerByMaNdt();
@@ -209,12 +206,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         grbCat = new javax.swing.ButtonGroup();
         pnWTFilter = new javax.swing.JPanel();
         lblWTNum = new javax.swing.JLabel();
-        rbtPO = new javax.swing.JRadioButton();
-        txtPONum = new javax.swing.JTextField();
-        rbtMisc = new javax.swing.JRadioButton();
         txtWTNum = new javax.swing.JTextField();
-        rbtMb1b = new javax.swing.JRadioButton();
-        rbtMvt311 = new javax.swing.JRadioButton();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         pnCurScale = new javax.swing.JPanel();
@@ -323,67 +315,10 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         lblWTNum.setText(resourceMap.getString("lblWTNum.text")); // NOI18N
         lblWTNum.setName("lblWTNum"); // NOI18N
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getActionMap(WeightTicketView.class, this);
-        rbtPO.setAction(actionMap.get("selectRbtPO")); // NOI18N
-        grbType.add(rbtPO);
-        rbtPO.setText(resourceMap.getString("rbtPO.text")); // NOI18N
-        rbtPO.setName("rbtPO"); // NOI18N
-
-        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${withoutDO}"), rbtPO, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
-        bindingGroup.addBinding(binding);
-
-        rbtPO.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                rbtPOItemStateChanged(evt);
-            }
-        });
-
-        txtPONum.setFont(txtPONum.getFont().deriveFont(txtPONum.getFont().getStyle() | java.awt.Font.BOLD, txtPONum.getFont().getSize()+2));
-        txtPONum.setForeground(resourceMap.getColor("txtPONum.foreground")); // NOI18N
-        txtPONum.setText(resourceMap.getString("txtPONum.text")); // NOI18N
-        txtPONum.setAction(actionMap.get("readPO")); // NOI18N
-        txtPONum.setName("txtPONum"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, rbtPO, org.jdesktop.beansbinding.ELProperty.create("${selected}"), txtPONum, org.jdesktop.beansbinding.BeanProperty.create("editable"));
-        bindingGroup.addBinding(binding);
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, rbtPO, org.jdesktop.beansbinding.ELProperty.create("${enabled}"), txtPONum, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
-        bindingGroup.addBinding(binding);
-
-        txtPONum.getDocument().addDocumentListener(new DocumentListener() {
-
-            public void insertUpdate(DocumentEvent e) {
-                checkPONum(e);
-            }
-
-            public void removeUpdate(DocumentEvent e) {
-                checkPONum(e);
-            }
-
-            public void changedUpdate(DocumentEvent e) {
-                checkPONum(e);
-            }
-        });
-
-        rbtMisc.setAction(actionMap.get("selectRbtMisc")); // NOI18N
-        grbType.add(rbtMisc);
-        rbtMisc.setText(resourceMap.getString("rbtMisc.text")); // NOI18N
-        rbtMisc.setMaximumSize(new java.awt.Dimension(67, 20));
-        rbtMisc.setMinimumSize(new java.awt.Dimension(67, 20));
-        rbtMisc.setName("rbtMisc"); // NOI18N
-        rbtMisc.setPreferredSize(new java.awt.Dimension(67, 20));
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${withoutDO}"), rbtMisc, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
-        bindingGroup.addBinding(binding);
-
-        rbtMisc.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                rbtMiscItemStateChanged(evt);
-            }
-        });
-
         txtWTNum.setFont(txtWTNum.getFont().deriveFont(txtWTNum.getFont().getStyle() | java.awt.Font.BOLD, txtWTNum.getFont().getSize()+2));
         txtWTNum.setForeground(resourceMap.getColor("txtWTNum.foreground")); // NOI18N
         txtWTNum.setText(resourceMap.getString("txtWTNum.text")); // NOI18N
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getActionMap(WeightTicketView.class, this);
         txtWTNum.setAction(actionMap.get("readWT")); // NOI18N
         txtWTNum.setName("txtWTNum"); // NOI18N
         txtWTNum.addActionListener(new java.awt.event.ActionListener() {
@@ -411,34 +346,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             }
         });
 
-        rbtMb1b.setAction(actionMap.get("showMB1BOption")); // NOI18N
-        grbType.add(rbtMb1b);
-        rbtMb1b.setText(resourceMap.getString("rbtMb1b.text")); // NOI18N
-        rbtMb1b.setName("rbtMb1b"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${withoutDO}"), rbtMb1b, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
-        bindingGroup.addBinding(binding);
-
-        rbtMb1b.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                rbtMb1bItemStateChanged(evt);
-            }
-        });
-
-        rbtMvt311.setAction(actionMap.get("selectRbtMvt311")); // NOI18N
-        grbType.add(rbtMvt311);
-        rbtMvt311.setText(resourceMap.getString("rbtMvt311.text")); // NOI18N
-        rbtMvt311.setName("rbtMvt311"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${withoutDO}"), rbtMvt311, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
-        bindingGroup.addBinding(binding);
-
-        rbtMvt311.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                rbtMvt311ItemStateChanged(evt);
-            }
-        });
-
         jButton1.setAction(actionMap.get("readWT")); // NOI18N
         jButton1.setText(resourceMap.getString("jButton1.text")); // NOI18N
         jButton1.setActionCommand(resourceMap.getString("jButton1.actionCommand")); // NOI18N
@@ -456,34 +363,21 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         pnWTFilter.setLayout(pnWTFilterLayout);
         pnWTFilterLayout.setHorizontalGroup(
             pnWTFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnWTFilterLayout.createSequentialGroup()
+            .addGroup(pnWTFilterLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnWTFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnWTFilterLayout.createSequentialGroup()
-                        .addComponent(lblWTNum)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtWTNum, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnWTFilterLayout.createSequentialGroup()
-                        .addGroup(pnWTFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnWTFilterLayout.createSequentialGroup()
-                                .addComponent(rbtPO)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtPONum, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(rbtMvt311, javax.swing.GroupLayout.DEFAULT_SIZE, 398, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnWTFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(rbtMisc, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(rbtMb1b, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addComponent(lblWTNum)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtWTNum, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(88, 88, 88))
         );
         pnWTFilterLayout.setVerticalGroup(
             pnWTFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnWTFilterLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(43, 43, 43)
                 .addGroup(pnWTFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnWTFilterLayout.createSequentialGroup()
                         .addGap(5, 5, 5)
@@ -492,19 +386,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         .addComponent(txtWTNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jButton1)
                         .addComponent(jButton2)))
-                .addGap(18, 18, 18)
-                .addGroup(pnWTFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnWTFilterLayout.createSequentialGroup()
-                        .addGroup(pnWTFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(rbtPO)
-                            .addComponent(txtPONum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(rbtMvt311))
-                    .addGroup(pnWTFilterLayout.createSequentialGroup()
-                        .addComponent(rbtMisc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(rbtMb1b)))
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addContainerGap(57, Short.MAX_VALUE))
         );
 
         pnCurScale.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("pnCurScale.border.title"))); // NOI18N
@@ -529,7 +411,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         rbtBridge1.setToolTipText(resourceMap.getString("rbtBridge1.toolTipText")); // NOI18N
         rbtBridge1.setName("rbtBridge1"); // NOI18N
 
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${bridge1}"), rbtBridge1, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
+        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${bridge1}"), rbtBridge1, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
 
         rbtBridge1.addActionListener(new java.awt.event.ActionListener() {
@@ -1069,7 +951,22 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         txtDelNum.setName("txtDelNum"); // NOI18N
 
         txtPONo.setEditable(false);
+        txtPONo.setAction(actionMap.get("readPO")); // NOI18N
         txtPONo.setName("txtPONo"); // NOI18N
+        txtPONo.getDocument().addDocumentListener(new DocumentListener() {
+
+            public void insertUpdate(DocumentEvent e) {
+                checkPONum(e);
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                checkPONum(e);
+            }
+
+            public void changedUpdate(DocumentEvent e) {
+                checkPONum(e);
+            }
+        });
 
         txtRegItem.setEditable(false);
         txtRegItem.setName("txtRegItem"); // NOI18N
@@ -1492,63 +1389,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         setSaveNeeded(isValidated());
     }//GEN-LAST:event_txtGRTextKeyReleased
 
-    private void rbtMiscItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbtMiscItemStateChanged
-        if (!rbtMisc.isSelected()) {
-            String regItemDescription = weightTicket != null ? weightTicket.getWeightTicketDetail().getRegItemDescription() : null;
-            if (weightTicket != null && (regItemDescription != null && !regItemDescription.trim().isEmpty())) {
-                txtRegItem.setText(regItemDescription);
-            } else if (purOrder != null) {
-                PurchaseOrderDetail purchaseOrderDetail = purOrder.getPurchaseOrderDetail();
-                txtRegItem.setText(purchaseOrderDetail.getShortText());
-            }
-        }
-    }//GEN-LAST:event_rbtMiscItemStateChanged
-
-    private void rbtPOItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbtPOItemStateChanged
-    }//GEN-LAST:event_rbtPOItemStateChanged
-
     private void cbxChargKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cbxChargKeyReleased
         setSaveNeeded(isValidated());
     }//GEN-LAST:event_cbxChargKeyReleased
-
-    private void rbtMb1bItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbtMb1bItemStateChanged
-//        if (!rbtMb1b.isSelected()) {
-//            grbType.clearSelection();
-//            if (weightTicket == null) {
-//                return;
-//            }
-//            WeightTicketDetail weightTicketDetail = weightTicket.getWeightTicketDetail();
-//            weightTicket.setRecvLgort(null);
-//            weightTicket.setRecvPlant(null);
-//            weightTicket.setRecvCharg(null);
-//            weightTicket.setRecvPo(null);
-//            weightTicketDetail.setRecvMatnr(null);
-//            weightTicketDetail.setMatnrRef(null);
-////            weightTicket.setRegItemDescription(null);
-//            weightTicketDetail.setUnit(null);
-//            weightTicket.setMoveType(null);
-//            weightTicket.setMoveReas(null);
-//        }
-    }//GEN-LAST:event_rbtMb1bItemStateChanged
-
-    private void rbtMvt311ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbtMvt311ItemStateChanged
-//        if (!rbtMvt311.isSelected()) {
-//            grbType.clearSelection();
-//            if (weightTicket == null) {
-//                return;
-//            }
-//            WeightTicketDetail weightTicketDetail = weightTicket.getWeightTicketDetail();
-//            weightTicket.setRecvLgort(null);
-//            weightTicket.setRecvPlant(null);
-//            weightTicket.setRecvCharg(null);
-//            weightTicketDetail.setRecvMatnr(null);
-//            weightTicketDetail.setMatnrRef(null);
-////            weightTicket.setRegItemDescription(null);
-//            weightTicketDetail.setUnit(null);
-//            weightTicket.setMoveType(null);
-//            weightTicket.setMoveReas(null);
-//        }
-    }//GEN-LAST:event_rbtMvt311ItemStateChanged
 
 private void txtCementDescKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCementDescKeyReleased
 // TODO add your handling code here:
@@ -1793,19 +1636,7 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
 
     @Action
     public void selectRbtPO() {
-        if (rbtPO.isEnabled() && rbtMisc.isEnabled() && rbtMb1b.isEnabled() && rbtMvt311.isEnabled()
-                && grbType.getSelection() != null) {
-            rbtPO.setForeground(Color.black);
-            rbtMisc.setForeground(Color.black);
-            if (WeighBridgeApp.getApplication().isOfflineMode()) {
-                rbtMisc.setForeground(Color.red);
-            }
-            rbtMb1b.setForeground(Color.black);
-            rbtMvt311.setForeground(Color.black);
 
-        }
-
-        if (rbtPO.isEnabled()) {
             /* try{
             String sql = "call pvc_getTicketIndex ( ? ) " ;
             Query qx = (Query) entityManager.createNativeQuery(sql);
@@ -1829,7 +1660,7 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
             }
              * 
              */
-        }
+
         setSaveNeeded(isValidated());
     }
 
@@ -1874,13 +1705,13 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
             return null;
         }
         WeightTicketDetail weightTicketDetail = weightTicket.getWeightTicketDetail();
-        if (!rbtMisc.isSelected() && weightTicketDetail.getMatnrRef() == null) {
+        if (!WeighBridgeApp.getApplication().isOfflineMode() && weightTicketDetail.getMatnrRef() == null) {
             return null;
         }
         if (!isStage1() && !isStage2()) {
             return null;
         }
-        if (rbtPO.isSelected() && purOrder != null) {
+        if ((txtPONo.getText() != null || !"".equals(txtPONo.getText())) && purOrder != null) {
             if (purOrder.getDocType().equals("UB")) {
                 Material m = null;
                 PurchaseOrderDetail purchaseOrderDetail = purOrder.getPurchaseOrderDetail();
@@ -1928,7 +1759,7 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
     @Action(block = Task.BlockingScope.ACTION)
     public Task readPO() {
         if (isEnteredValidPONum()) {
-            return new ReadPOTask(WeighBridgeApp.getApplication(), txtPONum.getText().trim());
+            return new ReadPOTask(WeighBridgeApp.getApplication(), txtPONo.getText().trim());
         } else {
             return null;
         }
@@ -2132,11 +1963,6 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
             boolean valid = text.matches("\\d{10}");
             setEnteredValidPONum(valid);
             setValidPONum(false);
-            if (valid || text.length() == 0) {
-                rbtPO.setForeground(Color.BLACK);
-            } else {
-                rbtPO.setForeground(Color.RED);
-            }
         } catch (BadLocationException ex) {
         } finally {
         }
@@ -2488,8 +2314,7 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                     txtCementDesc.setEditable(false);
                 }
                 if (weightTicket.getPosto() != null) {
-                    txtPONum.setText(weightTicket.getPosto());
-                    rbtPO.setSelected(true);
+                    txtPONo.setText(weightTicket.getPosto());
                 }
                 txtProcedure.setText(weightTicketController.getModeProcedure(weightTicket.getMode()));
 
@@ -2504,7 +2329,7 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                 }
                 txtRemark.setText(weightTicket.getRemark());
                 txtBatchProduce.setText(weightTicket.getBatch());
-                if (txtBatchProduce.getText() != null || txtBatchProduce.getText() != "") {
+                if (txtBatchProduce.getText() != null || !"".equals(txtBatchProduce.getText())) {
                     txtBatchProduce.setEditable(false);
                 }
                 if (Constants.WeighingProcess.MODE_DETAIL.OUT_PLANT_PLANT.name().equals(weightTicket.getMode())
@@ -2604,18 +2429,6 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                         ) {
                     setWithoutDO(true);
                 }
-                if (isStage1() && isWithoutDO()) {
-                    rbtPO.setForeground(Color.red);
-                    rbtMisc.setForeground(Color.red);
-                    rbtMb1b.setForeground(Color.red);
-                } else {
-                    rbtPO.setForeground(Color.black);
-                    rbtMisc.setForeground(Color.black);
-                    if (WeighBridgeApp.getApplication().isOfflineMode()) {
-                        rbtMisc.setForeground(Color.red);
-                    }
-                    rbtMb1b.setForeground(Color.black);
-                }
 
                 if (!isWithoutDO()) {
                     //xu ly nhieu DO trong WT
@@ -2698,9 +2511,8 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                 if (weightTicketDetail.getEbeln() != null && !weightTicketDetail.getEbeln().trim().isEmpty()) {
 
                     purOrder = weightTicketController.findByPoNumber(weightTicketDetail.getEbeln());
-                    txtPONum.setText(weightTicketDetail.getEbeln());
+                    txtPONo.setText(weightTicketDetail.getEbeln());
                     setValidPONum(true);
-                    rbtPO.setSelected(true);
                     setSubContract(false);
                     PurchaseOrderDetail purchaseOrderDetail = purOrder.getPurchaseOrderDetail();
                     if (rbtOutward.isSelected() && purchaseOrderDetail.getItemCat() == '3' //                            && purOrder.getMaterial().equalsIgnoreCase(setting.getMatnrPcb40())
@@ -2710,40 +2522,29 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                 } else {
                     if (Posto.equals("")) {
                         // Tuanna 2018 08015
-                        txtPONum.setText(null);
-                        rbtPO.setSelected(false);
-                    } else {
-                        rbtPO.setSelected(true);
-                        rbtMisc.setSelected(false);
+                        txtPONo.setText(null);
                     }
                 }
                 if (weightTicket.getMoveType() != null && weightTicket.getMoveReas() != null
                         && weightTicket.getMoveType().equalsIgnoreCase("313")
                         && weightTicket.getMoveReas().equalsIgnoreCase("0003")) {
-                    rbtMb1b.setSelected(true);
                     setSubContract(true);
                 } else if (weightTicket.getMoveType() != null && weightTicket.getMoveType().equalsIgnoreCase("311")) {
-                    rbtMvt311.setSelected(true);
                     setMvt311(true);
-                } else if (isWithoutDO() && (weightTicketDetail.getEbeln() == null || weightTicketDetail.getEbeln().trim().isEmpty())) {
-                    rbtMisc.setSelected(true);
-                } else if (!isWithoutDO() && WeighBridgeApp.getApplication().isOfflineMode()) //HLD18++
-                {
-                    rbtMisc.setSelected(true);
                 }
-                if (weightTicket.getRegType() == 'I'
-                        && ((!isWithoutDO() && outbDel != null && !outbDel.getLfart().equalsIgnoreCase("LF")
-                        && !outbDel.getLfart().equalsIgnoreCase("LR")
-                        && !outbDel.getLfart().equalsIgnoreCase("ZTLF")
-                        && !outbDel.getLfart().equalsIgnoreCase("ZTLR")) || isWithoutDO())) {
-                    txtGRText.setEnabled(true);
-                    cbxCharg.setEditable(true);
-                } else {
-//                    txtGRText.setEnabled(false);
-                    cbxCharg.setEditable(false);
-                    cbxSLoc.setEnabled(false);
-                    cbxCharg.setEnabled(false);
-                }
+//                if (weightTicket.getRegType() == 'I'
+//                        && ((!isWithoutDO() && outbDel != null && !outbDel.getLfart().equalsIgnoreCase("LF")
+//                        && !outbDel.getLfart().equalsIgnoreCase("LR")
+//                        && !outbDel.getLfart().equalsIgnoreCase("ZTLF")
+//                        && !outbDel.getLfart().equalsIgnoreCase("ZTLR")) || isWithoutDO())) {
+//                    txtGRText.setEnabled(true);
+//                    cbxCharg.setEditable(true);
+//                } else {
+////                    txtGRText.setEnabled(false);
+//                    cbxCharg.setEditable(false);
+//                    cbxSLoc.setEnabled(false);
+//                    cbxCharg.setEnabled(false);
+//                }
                 // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc="Bind Weight Ticket">
 
@@ -2808,7 +2609,6 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                 if ((WeighBridgeApp.getApplication().isOfflineMode()
                         && !weightTicket.isPosted())
                         || (!WeighBridgeApp.getApplication().isOfflineMode()
-                        && (rbtMisc.isSelected())
                         && !weightTicket.isPosted())) {
                     if (weightTicket.getRegType() == 'O' && weightTicketDetail.getEbeln() == null) {
                         cbxKunnr.setEnabled(true); // 2471
@@ -2894,23 +2694,6 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                     }
                 }
 
-                // cấu hình cho cầu cân hiển thị PO và vendor
-                if (sapSetting.getCheckPov() != null && sapSetting.getCheckPov() == true) {
-                    //txtPoPosto.setVisible(true);
-                    //cbxVendorLoading.setVisible(true);
-                    //cbxVendorTransport.setVisible(true);
-//                    lblPoPosto.setVisible(true);
-//                    lblVendorLoading.setVisible(true);
-//                    lblVendorTransport.setVisible(true);
-                } else {
-                    //txtPoPosto.setVisible(false);
-                    //cbxVendorLoading.setVisible(false);
-                    //cbxVendorTransport.setVisible(false);
-//                    lblPoPosto.setVisible(false);
-//                    lblVendorLoading.setVisible(false);
-//                    lblVendorTransport.setVisible(false);
-                }
-
                 // </editor-fold>
                 // </editor-fold>
             }
@@ -2970,7 +2753,7 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
             lblSling.setVisible(false);
             lblPallet.setVisible(false);
             lblDelNum.setVisible(false);
-            lblWeight.setVisible(false);
+            //lblWeight.setVisible(false);
             lblMatnr.setVisible(false);
             lbKunnr.setVisible(false);
             lblLgortIn.setVisible(false);
@@ -2987,7 +2770,7 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
             txtSling.setVisible(false);
             txtPallet.setVisible(false);
             txtDelNum.setVisible(false);
-            txtWeight.setVisible(false);
+            //txtWeight.setVisible(false);
             txtMatnr.setVisible(false);
             cbxKunnr.setVisible(false);
             txtLgortIn.setVisible(false);
@@ -3587,7 +3370,7 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                                 completed = false;
                                 entityManager.clear();
                             }
-                        } else if (rbtMisc.isSelected() || objBapi == null) {
+                        } else if (WeighBridgeApp.getApplication().isOfflineMode() || objBapi == null) {
                             weightTicket.setPosted(true);
                             weightTicketDetail.setUnit("TON");
                         }
@@ -3599,7 +3382,7 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
             }
             
             ////////////////
-            if (rbtPO.isSelected()) {
+            if ((txtPONo.getText() != null || !"".equals(txtPONo.getText()))) {
 //                if (((isStage2() || (!isStage1() && !isStage2())) && !weightTicket.isDissolved())
 //                        || (!isStage1() && !isStage2() && !weightTicket.isDissolved()
 //                        && (weightTicket != null && !weightTicket.isPosted()))) {
@@ -3790,9 +3573,9 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                                 objBapi = getGrDoMigoBapi(weightTicket, outbDel);
                             }
                         } else {
-                            if (!rbtMisc.isSelected()) {
+                            if (!WeighBridgeApp.getApplication().isOfflineMode()) {
                                 if (isSubContract() || isMvt311()) {
-                                    if (rbtPO.isSelected()) {
+                                    if ((txtPONo.getText() != null || !"".equals(txtPONo.getText()))) {
                                         objBapi = getGi541MigoBapi(weightTicket);
                                     } else {
                                         objBapi = getGiMB1BBapi(weightTicket);
@@ -4056,7 +3839,7 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                                     entityManager.clear();
                                 }
 
-                            } else if (rbtMisc.isSelected() || objBapi == null) {
+                            } else if (WeighBridgeApp.getApplication().isOfflineMode() || objBapi == null) {
                                 weightTicket.setPosted(true);
                                 weightTicketDetail.setUnit("TON");
                             }
@@ -4073,7 +3856,7 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                     entityManager.getTransaction().commit();
                 }
             }
-            if (rbtMisc.isSelected()) {
+            if (WeighBridgeApp.getApplication().isOfflineMode()) {
                 weightTicket.setPosted(true);
                 weightTicketDetail.setUnit("TON");
             }
@@ -4161,9 +3944,9 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
             }
             //+20100216#01
             weightTicket.setCharg(charg);
-            if (rbtMb1b.isSelected() || rbtMvt311.isSelected()) {
-                weightTicket.setRecvCharg(charg);
-            }
+//            if (rbtMvt311.isSelected()) {
+//                weightTicket.setRecvCharg(charg);
+//            }
             lblCharg.setForeground(Color.black);
             if (isSubContract() && txfGoodsQty.getValue() != null) {
                 setMessage(resourceMapMsg.getString("msg.checkIssetWarehouse"));
@@ -4466,7 +4249,7 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
         grbType.clearSelection();
         grbCat.clearSelection();
 
-        txtPONum.setText(null);
+        txtPONo.setText(null);
         txfCurScale.setValue(null);
         txfInQty.setValue(null);
         txtInTime.setText(null);
@@ -4487,12 +4270,6 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
         txtCementDesc.setText(null);
         txtCementDesc.setEditable(true);
 
-        rbtPO.setForeground(Color.black);
-        rbtMisc.setForeground(Color.black);
-        if (WeighBridgeApp.getApplication().isOfflineMode()) {
-            rbtMisc.setForeground(Color.red);
-        }
-        rbtMb1b.setForeground(Color.black);
         lblIScale.setForeground(Color.black);
         lblOScale.setForeground(Color.black);
         lblGScale.setForeground(Color.black);
@@ -4561,7 +4338,7 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
     }
 
     private void printWT(WeightTicket wt, boolean reprint) {
-        weightTicketController.printWT(wt, reprint, ximang, outbDel_list, outDetails_lits, outbDel, rbtMisc, rbtPO, stage1, rootPane);
+        weightTicketController.printWT(wt, reprint, ximang, outbDel_list, outDetails_lits, outbDel, txtPONo.getText(), stage1, rootPane);
     }
 
     private void getSAPMatData(DocumentEvent e) {
@@ -4602,44 +4379,27 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
 //            lblCharg.setForeground(Color.black);
 //        } else {
         if (grbType.getSelection() == null && isWithoutDO()) {
-            rbtMisc.setForeground(Color.red);
-            rbtPO.setForeground(Color.red);
-            rbtMb1b.setForeground(Color.red);
-            rbtMvt311.setForeground(Color.red);
         } else {
-            rbtMisc.setForeground(Color.black);
-            if (WeighBridgeApp.getApplication().isOfflineMode()) {
-                rbtMisc.setForeground(Color.red);
-            }
-            rbtPO.setForeground(Color.black);
-            rbtMb1b.setForeground(Color.black);
-            rbtMvt311.setForeground(Color.black);
-            bMisc = rbtMisc.isSelected();
+            bMisc = WeighBridgeApp.getApplication().isOfflineMode();
             bPO = true;
             bMB1B = true;
             bMvt311 = true;
         }
-        if (rbtPO.isSelected() && isEnteredValidPONum() && isValidPONum()) {
-            rbtPO.setForeground(Color.black);
+        if ((txtPONo.getText() != null || !"".equals(txtPONo.getText())) && isEnteredValidPONum() && isValidPONum()) {
             bPO = true;
-        } else if (rbtPO.isSelected() && (!isEnteredValidPONum() || isValidPONum())) {
-            rbtPO.setForeground(Color.red);
+        } else if ((txtPONo.getText() != null || !"".equals(txtPONo.getText())) && (!isEnteredValidPONum() || isValidPONum())) {
             bPO = false;
         }
 
-        if (rbtMb1b.isSelected() && weightTicket.getRecvLgort() == null) {
-            rbtMb1b.setForeground(Color.red);
+        if (weightTicket.getRecvLgort() == null) {
             bMB1B = false;
         } else {
-            rbtMb1b.setForeground(Color.black);
             bMB1B = true;
         }
 
-        if (rbtMvt311.isSelected() && (weightTicket.getRecvLgort() == null || weightTicket.getWeightTicketDetail().getRecvMatnr() == null)) {
-            rbtMvt311.setForeground(Color.red);
+        if ((weightTicket.getRecvLgort() == null || weightTicket.getWeightTicketDetail().getRecvMatnr() == null)) {
             bMvt311 = false;
         } else {
-            rbtMvt311.setForeground(Color.black);
             bMvt311 = true;
         }
 
@@ -4675,7 +4435,7 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
             }
         }
         bSLoc = !(cbxSLoc.getSelectedIndex() == -1);
-        bBatch = !((cbxCharg.getSelectedIndex() == -1 && !cbxCharg.isEditable()) || (cbxCharg.isEditable() && cbxCharg.getEditor().getItem().toString().trim().isEmpty()));
+        bBatch = !((cbxCharg.getSelectedIndex() == -1 && cbxCharg.isEditable()) || (cbxCharg.isEditable() && cbxCharg.getEditor().getItem().toString().trim().isEmpty()));
         if (bMisc) {
             bSLoc = true;
             bBatch = true;
@@ -4797,11 +4557,7 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
     private javax.swing.JRadioButton rbtBridge1;
     private javax.swing.JRadioButton rbtBridge2;
     private javax.swing.JRadioButton rbtInward;
-    private javax.swing.JRadioButton rbtMb1b;
-    private javax.swing.JRadioButton rbtMisc;
-    private javax.swing.JRadioButton rbtMvt311;
     private javax.swing.JRadioButton rbtOutward;
-    private javax.swing.JRadioButton rbtPO;
     private javax.swing.JFormattedTextField txfCurScale;
     private javax.swing.JFormattedTextField txfGoodsQty;
     private javax.swing.JFormattedTextField txfInQty;
@@ -4819,7 +4575,6 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
     private javax.swing.JTextField txtMatnr;
     private javax.swing.JTextField txtOutTime;
     private javax.swing.JTextField txtPONo;
-    private javax.swing.JTextField txtPONum;
     private javax.swing.JFormattedTextField txtPallet;
     private javax.swing.JTextField txtPoPosto;
     private javax.swing.JTextField txtProcedure;
