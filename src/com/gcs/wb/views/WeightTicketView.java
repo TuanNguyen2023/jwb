@@ -2762,9 +2762,7 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
         btnReprint.setEnabled(false);
         btnSave.setEnabled(false);
         if (ModeEnum.IN_PO_PURCHASE.name().equals(mode)) {
-            lblTicketId.setVisible(false);
             lblWeightTicketIdRef.setVisible(false);
-            lblRegistrationNo.setVisible(false);
             lblSling.setVisible(false);
             lblPallet.setVisible(false);
             lblDelNum.setVisible(false);
@@ -2779,9 +2777,7 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
             lblSO.setVisible(false);
             
             txtSO.setVisible(false);
-            txtTicketId.setVisible(false);
             txtWeightTicketIdRef.setVisible(false);
-            txtRegistrationNo.setVisible(false);
             txtSling.setVisible(false);
             txtPallet.setVisible(false);
             txtDelNum.setVisible(false);
@@ -2795,8 +2791,7 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
             cbxVendorTransport.setVisible(false);
         }
         if (ModeEnum.IN_WAREHOUSE_TRANSFER.name().equals(mode)) {
-            lblSling.setVisible(false);
-            lblPallet.setVisible(false);
+
             lblPONo.setVisible(false);
             lblMatnr.setVisible(false);
             lbKunnr.setVisible(false);
@@ -2808,8 +2803,6 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
             lblSO.setVisible(false);
             
             txtSO.setVisible(false);
-            txtSling.setVisible(false);
-            txtPallet.setVisible(false);
             txtPONo.setVisible(false);
             txtMatnr.setVisible(false);
             cbxKunnr.setVisible(false);
@@ -2819,28 +2812,34 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
             cbxVendorLoading.setVisible(false);
             cbxVendorTransport.setVisible(false);
         }
-        if (ModeEnum.IN_OTHER.name().equals(mode)) {
+        if (ModeEnum.IN_OTHER.name().equals(mode) || ModeEnum.OUT_OTHER.name().equals(mode)) {
             lblDelNum.setVisible(false);
             lblPONo.setVisible(false);
             lblMatnr.setVisible(false);
-            lbKunnr.setVisible(false);
             lblLgortIn.setVisible(false);
             lblChargIn.setVisible(false);
             lblPoPosto.setVisible(false);
             lblVendorLoading.setVisible(false);
             lblVendorTransport.setVisible(false);
             lblSO.setVisible(false);
+            lblCementDesc.setVisible(false);
+            lblBatchProduce.setVisible(false);
+            lblTicketId.setVisible(false);
+            lblWeightTicketIdRef.setVisible(false);
             
             txtSO.setVisible(false);
             txtDelNum.setVisible(false);
             txtPONo.setVisible(false);
             txtMatnr.setVisible(false);
-            cbxKunnr.setVisible(false);
             txtLgortIn.setVisible(false);
             txtChargIn.setVisible(false);
             txtPoPosto.setVisible(false);
             cbxVendorLoading.setVisible(false);
             cbxVendorTransport.setVisible(false);
+            txtCementDesc.setVisible(false);
+            txtBatchProduce.setVisible(false);
+            txtTicketId.setVisible(false);
+            txtWeightTicketIdRef.setVisible(false);
         }
         if (ModeEnum.OUT_SELL_ROAD.name().equals(mode)) {
             lblTicketId.setVisible(false);
@@ -2897,7 +2896,7 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
             lblWeightTicketIdRef.setVisible(false);
             lblDelNum.setVisible(false);
             lblMatnr.setVisible(false);
-            lbKunnr.setVisible(false);
+            //lbKunnr.setVisible(false);
             lblSO.setVisible(false);
             
             txtSO.setVisible(false);
@@ -2906,7 +2905,7 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
             txtWeightTicketIdRef.setVisible(false);
             txtDelNum.setVisible(false);
             txtMatnr.setVisible(false);
-            cbxKunnr.setVisible(false);
+            //cbxKunnr.setVisible(false);
             //ma vat tu
         }
         if (ModeEnum.OUT_PULL_STATION.name().equals(mode)) {
@@ -2915,10 +2914,11 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
             lblWeightTicketIdRef.setVisible(false);
             lblDelNum.setVisible(false);
             lblMatnr.setVisible(false);
-            lbKunnr.setVisible(false);
-            lblVendorLoading.setVisible(false);
-            lblVendorTransport.setVisible(false);
+            //lblVendorLoading.setVisible(false);
+            //lblVendorTransport.setVisible(false);
             lblSO.setVisible(false);
+            lblLgortIn.setVisible(false);
+            lblChargIn.setVisible(false);
             
             txtSO.setVisible(false);
             txtSling.setVisible(false);
@@ -2926,64 +2926,34 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
             txtWeightTicketIdRef.setVisible(false);
             txtDelNum.setVisible(false);
             txtMatnr.setVisible(false);
-            cbxKunnr.setVisible(false);
-            cbxVendorLoading.setVisible(false);
-            cbxVendorTransport.setVisible(false);
+            //cbxVendorLoading.setVisible(false);
+            //cbxVendorTransport.setVisible(false);
+            txtLgortIn.setVisible(false);
+            txtChargIn.setVisible(false);
         }
         if (ModeEnum.OUT_SELL_WATERWAY.name().equals(mode)) {
-            lblSling.setVisible(false);
-            lblPallet.setVisible(false);
+           
             lblTicketId.setVisible(false);
             lblWeightTicketIdRef.setVisible(false);
             //so SO
             lblPONo.setVisible(false);
             lblMatnr.setVisible(false);
-            lbKunnr.setVisible(false);
             lblLgortIn.setVisible(false);
             lblChargIn.setVisible(false);
             lblPoPosto.setVisible(false);
             lblVendorLoading.setVisible(false);
             lblVendorTransport.setVisible(false);
 
-            txtSling.setVisible(false);
-            txtPallet.setVisible(false);
             txtTicketId.setVisible(false);
             txtWeightTicketIdRef.setVisible(false);
             //so SO
             txtPONo.setVisible(false);
             txtMatnr.setVisible(false);
-            cbxKunnr.setVisible(false);
             txtLgortIn.setVisible(false);
             txtChargIn.setVisible(false);
             txtPoPosto.setVisible(false);
             cbxVendorLoading.setVisible(false);
             cbxVendorTransport.setVisible(false);
-        }
-        if (ModeEnum.OUT_OTHER.name().equals(mode)) {
-            lblWeightTicketIdRef.setVisible(false);
-            lblDelNum.setVisible(false);
-            lblPONo.setVisible(false);
-            lblMatnr.setVisible(false);
-            lbKunnr.setVisible(false);
-            lblLgortIn.setVisible(false);
-            lblChargIn.setVisible(false);
-            lblPoPosto.setVisible(false);
-            lblVendorLoading.setVisible(false);
-            lblVendorTransport.setVisible(false);
-            lblSO.setVisible(false);
-            
-            txtSO.setVisible(false);
-            txtWeightTicketIdRef.setVisible(false);
-            txtDelNum.setVisible(false);
-            txtPONo.setVisible(false);
-            txtMatnr.setVisible(false);
-            cbxKunnr.setVisible(false);
-            txtLgortIn.setVisible(false);
-            txtChargIn.setVisible(false);
-            txtPoPosto.setVisible(false);
-            cbxVendorLoading.setVisible(false);
-            cbxVendorTransport.setVisible(false);
-            
         }
     }
 
@@ -4284,6 +4254,8 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
         cbxCharg.setModel(new DefaultComboBoxModel());
         txtCementDesc.setText(null);
         txtCementDesc.setEditable(true);
+        txtLgortIn.setText(null);
+        txtChargIn.setText(null);
 
         lblIScale.setForeground(Color.black);
         lblOScale.setForeground(Color.black);
@@ -4471,8 +4443,8 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
         //}
         bBatch = true;
         txtGRText.setEnabled(true);
-        if (outbDel != null && outbDel.getMatnr() != null) {
-            materialConstraint = weightTicketController.getMaterialConstraintByMatnr(outbDel.getMatnr());
+        if (weightTicket.getWeightTicketDetail() != null && weightTicket.getWeightTicketDetail().getMatnrRef()!= null) {
+            materialConstraint = weightTicketController.getMaterialConstraintByMatnr(weightTicket.getWeightTicketDetail().getMatnrRef());
             if (isStage2()
                     && materialConstraint != null && materialConstraint.getRequiredNiemXa() 
                     && (txtCementDesc.getText().trim() == null || txtCementDesc.getText().trim().equals(""))) {
