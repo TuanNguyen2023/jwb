@@ -6,6 +6,7 @@ package com.gcs.wb.service;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.goodsmvt.GoodsMvtDoCreateBapi;
+import com.gcs.wb.bapi.goodsmvt.GoodsMvtPOSTOCreatePGIBapi;
 import com.gcs.wb.bapi.goodsmvt.GoodsMvtPoCreateBapi;
 import com.gcs.wb.bapi.goodsmvt.structure.*;
 import com.gcs.wb.bapi.helper.MatAvailableBapi;
@@ -447,7 +448,7 @@ public class WeightTicketService {
         tab_wa.setStge_loc(purchaseOrder.getPurchaseOrderDetail().getStgeLoc());
         tab_wa.setBatch(wt.getCharg());
         tab_wa.setGr_rcpt(wt.getSCreator());
-        tab_wa.setEntry_qnt(purchaseOrder.getPurchaseOrderDetail().getQuantity());
+        tab_wa.setEntry_qnt(wt.getGQty());
         tab_wa.setEntry_uom(weightTicketDetail.getUnit());
 
         if (wt.getNoMoreGr() != null && wt.getNoMoreGr() == '2') {
@@ -615,7 +616,7 @@ public class WeightTicketService {
         wa.setWauhr(DateUtil.stripDate(stime));
         wa.setLfdat(DateUtil.stripTime(stime));
         wa.setLfuhr(DateUtil.stripDate(stime));
-        wa.setTraty("0004");
+        wa.setTraty("Z001");
         wa.setTraid(plateCombine);
         wa.setLifex(wt.getDriverName());
         bapi.setVbkok_wa(wa);
@@ -1048,5 +1049,131 @@ public class WeightTicketService {
     
     public MaterialConstraint getMaterialConstraintByMatnr( String matnr){
         return materialConstraintRepository.findByMatnr(matnr);
+    }
+
+    //nhap xuat dong thoi
+    public Object getMvtPOSTOCreatePGI(WeightTicket wt, WeightTicket weightTicket, String posto, int timeFrom, int timeTo) {
+        //config = WeighBridgeApp.getApplication().getConfig();
+        GoodsMvtPOSTOCreatePGIBapi bapi = new GoodsMvtPOSTOCreatePGIBapi();
+        PurchaseOrder purOrderPosto = purchaseOrderRepository.findByPoNumber(posto);
+        String plateCombine = wt.getPlateNo();
+        if (wt.getTrailerId()!= null && !wt.getTrailerId().trim().isEmpty()) {
+            plateCombine += "|" + wt.getTrailerId();
+        }
+        //API ZJBAPI_GOODSMVT_CREATE_V2_2606 - Nhap (posto)
+        bapi.setGmCode(new GoodsMvtCodeStructure("01"));
+        GoodsMvtHeaderStructure header = new GoodsMvtHeaderStructure();
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(wt.getSTime());
+        Date stime = null;
+        if (timeFrom <= cal.get(Calendar.HOUR_OF_DAY) && cal.get(Calendar.HOUR_OF_DAY) <= (timeTo - 1)) {
+            cal.add(Calendar.DATE, -1);
+            stime = cal.getTime();
+        } else {
+            stime = wt.getSTime();
+        }
+
+        header.setDocDate(DateUtil.stripTime(stime));
+        header.setPstngDate(DateUtil.stripTime(stime));
+
+        header.setBillOfLading(plateCombine);
+        header.setGrGiSlipNo(wt.getDriverIdNo());
+
+        List<GoodsMvtItemPoStructure> tab = new ArrayList<GoodsMvtItemPoStructure>();
+        GoodsMvtItemPoStructure tab_wa = new GoodsMvtItemPoStructure();
+        WeightTicketDetail weightTicketDetail = wt.getWeightTicketDetail();
+        tab_wa.setPo_number(purOrderPosto.getPoNumber());
+        tab_wa.setPo_item(purOrderPosto.getPurchaseOrderDetail().getPoItem());
+        tab_wa.setMove_type("101");
+        tab_wa.setMaterial(weightTicketDetail.getMatnrRef());
+        tab_wa.setPlant(configuration.getWkPlant());
+        tab_wa.setStge_loc(wt.getLgort());
+        tab_wa.setBatch(wt.getCharg());
+        tab_wa.setVendor(purOrderPosto.getVendor());
+        tab_wa.setGr_rcpt(wt.getSCreator());
+        tab_wa.setEntry_qnt(wt.getGQty());
+        tab_wa.setEntry_uom(weightTicketDetail.getUnit());
+
+        if (wt.getNoMoreGr() != null && wt.getNoMoreGr() == '2') {
+            tab_wa.setNo_more_gr("X");
+        } else {
+            tab_wa.setNo_more_gr(null);
+        }
+        tab_wa.setMove_reas(wt.getMoveReas());
+        tab_wa.setItem_text(wt.getText());
+        tab.add(tab_wa);
+
+        bapi.setHeader(header);
+        bapi.setItems(tab);
+        //End - API ZJBAPI_GOODSMVT_CREATE_V2_2606
+        
+        // API ZJBAPI_WB2_DO_CR_N_PGI_V2_0207 - xuat (po)
+        PurchaseOrder purOrder = purchaseOrderRepository.findByPoNumber(weightTicketDetail.getEbeln());
+        bapi.setIvCVendor(wt.getLoadVendor());
+        bapi.setIvTVendor(wt.getTransVendor());
+
+        VbkokStructure wa = new VbkokStructure();
+        
+        wa.setVbeln_vl(weightTicketDetail.getDeliveryOrderNo());
+        wa.setKodat(DateUtil.stripTime(wt.getFTime()));
+        wa.setKouhr(DateUtil.stripDate(wt.getFTime()));
+
+        wa.setKomue("X");
+        wa.setWabuc("X");
+    
+        if (timeFrom <= cal.get(Calendar.HOUR_OF_DAY) && cal.get(Calendar.HOUR_OF_DAY) <= (timeTo - 1)) {
+            cal.add(Calendar.DATE, -1);
+            stime = cal.getTime();
+        } else {
+            stime = wt.getSTime();
+        }
+
+        wa.setWadat_ist(DateUtil.stripTime(stime));
+        wa.setWadat(DateUtil.stripTime(stime));
+        wa.setWauhr(DateUtil.stripDate(stime));
+        wa.setLfdat(DateUtil.stripTime(stime));
+        wa.setLfuhr(DateUtil.stripDate(stime));
+        wa.setTraty("Z001");
+        wa.setTraid(plateCombine);
+        wa.setLifex(wt.getDriverName());
+        bapi.setVbkok_wa(wa);
+
+        //get do details for current do
+        BigDecimal kl = BigDecimal.ZERO;
+        BigDecimal kl_km = BigDecimal.ZERO;
+        BigDecimal kl_total = BigDecimal.ZERO;
+        kl_total = kl.add(kl_km);
+
+        List<OutbDeliveryCreateStoStructure> _StockTransItems = new ArrayList<OutbDeliveryCreateStoStructure>();
+       
+       _StockTransItems.add(new OutbDeliveryCreateStoStructure(weightTicketDetail.getEbeln(), purOrder.getPurchaseOrderDetail().getPoItem(), wt.getGQty(), purOrder.getPurchaseOrderDetail().getPoUnit()));
+        
+
+        bapi.setStockTransItems(_StockTransItems);
+
+        GoodsMvtWeightTicketStructure stWT = fillWTStructure(weightTicket, null, null, weightTicket);
+        bapi.setWeightticket(stWT);
+        List<VbpokStructure> tabVp = new ArrayList<VbpokStructure>();
+        VbpokStructure tab_waVp = new VbpokStructure();
+        
+        tab_waVp.setVbeln_vl(weightTicketDetail.getDeliveryOrderNo());
+            
+        tab_waVp.setPosnr_vl(purOrder.getPurchaseOrderDetail().getPoItem());
+        tab_waVp.setVbeln(tab_waVp.getVbeln_vl());
+        tab_waVp.setPosnn(tab_waVp.getPosnr_vl());
+        tab_waVp.setMatnr(weightTicketDetail.getMatnrRef());
+        tab_waVp.setWerks(configuration.getWkPlant());
+        tab_waVp.setLgort(wt.getLgort());
+        tab_waVp.setCharg(wt.getCharg());
+        tab_waVp.setLianp("X");
+        tab_waVp.setPikmg(wt.getGQty());
+        tab_waVp.setLfimg(wt.getGQty());
+        tab_waVp.setVrkme(purOrder.getPurchaseOrderDetail().getPoUnit());
+        tab_waVp.setMeins(purOrder.getPurchaseOrderDetail().getPoUnit());
+        tabVp.add(tab_waVp);
+        bapi.setVbpok_tab(tabVp);
+
+        return bapi;
     }
 }

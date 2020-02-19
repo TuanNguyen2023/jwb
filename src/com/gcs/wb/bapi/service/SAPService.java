@@ -9,6 +9,9 @@ import com.gcs.wb.bapi.helper.TransportagentGetListBapi;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.bapi.helper.structure.BatchStocksStructure;
 import com.gcs.wb.WeighBridgeApp;
+import com.gcs.wb.bapi.goodsmvt.SOGetDetailBapi;
+import com.gcs.wb.bapi.goodsmvt.structure.DOCheckStructure;
+import com.gcs.wb.bapi.goodsmvt.structure.SOCheckStructure;
 import com.gcs.wb.bapi.helper.BatchStocksGetListBapi;
 import com.gcs.wb.bapi.helper.CustomerGetDetailBapi;
 import com.gcs.wb.bapi.helper.MatGetDetailBapi;
@@ -16,6 +19,7 @@ import com.gcs.wb.bapi.helper.MaterialGetListBapi;
 import com.gcs.wb.bapi.helper.PoGetDetailBapi;
 import com.gcs.wb.bapi.helper.SLocsGetListBapi;
 import com.gcs.wb.bapi.helper.VendorGetDetailBapi;
+import com.gcs.wb.bapi.helper.VendorValiationCheckBapi;
 import com.gcs.wb.bapi.helper.structure.CustomerGetDetailStructure;
 import com.gcs.wb.bapi.helper.structure.MatGetDetailStructure;
 import com.gcs.wb.bapi.helper.structure.MaterialGetListStructure;
@@ -285,7 +289,7 @@ public class SAPService {
         List<BatchStock> batchs = batchStockRepository.getListBatchStock(configuration.getWkPlant(), lgortSloc, matnr);
         // get data SAP
         BatchStocksGetListBapi bBatch = new BatchStocksGetListBapi();
-        List<BatchStock> batchStockSaps = new ArrayList<>();
+        List<BatchStock> batchStockSaps = new ArrayList<BatchStock>();
         bBatch.setIdMandt(configuration.getSapClient());
         bBatch.setIdWerks(configuration.getWkPlant());
         bBatch.setIdLgort(lgortSloc);
@@ -294,8 +298,10 @@ public class SAPService {
             session.execute(bBatch);
             List<BatchStocksStructure> bBatchStocks = bBatch.getBatchStocks();
             for (BatchStocksStructure b : bBatchStocks) {
-                BatchStock bs = batchStockRepository.findByWerksLgortMatnrCharg(configuration.getWkPlant(), b.getLgort(), b.getMatnr(), b.getCharg());
+                //BatchStock bs = batchStockRepository.findByWerksLgortMatnrCharg(configuration.getWkPlant(), b.getLgort(), b.getMatnr(), b.getCharg());
+                BatchStock bs = new BatchStock(configuration.getSapClient(), configuration.getWkPlant(), b.getLgort(), b.getMatnr(), b.getCharg());
                 bs.setLvorm(b.getLvorm() == null || b.getLvorm().trim().isEmpty() ? ' ' : b.getLvorm().charAt(0));
+                
                 batchStockSaps.add(bs);
             }
 
@@ -556,5 +562,42 @@ public class SAPService {
         }
 
         return result;
+    }
+
+    public static List<DOCheckStructure> getDONumber(String[] soNumbers, String bsXe, String soRomoc) {
+        SOGetDetailBapi bapi = new SOGetDetailBapi();
+        List<SOCheckStructure> soChecks = new ArrayList<SOCheckStructure>();
+        SOCheckStructure soCheck = new SOCheckStructure();
+        for (int k = 0; k < soNumbers.length; k++) {
+            soCheck.setVbeln( StringUtil.paddingZero(soNumbers[k], 10));
+            soCheck.setTraid(bsXe);
+            soChecks.add(soCheck);
+        }
+        
+        //soCheck.setVbeln(soNumber);
+        bapi.setSOCheck(soChecks);
+        WeighBridgeApp.getApplication().getSAPSession().execute(bapi);
+        List<DOCheckStructure> dos = bapi.getDOCheck();
+        if (dos != null) {
+            return dos;
+        }
+        return null;
+    }
+    
+    public String validateVendor(String idVendor, String mantr, String vendorType) {
+        VendorValiationCheckBapi bapi = new VendorValiationCheckBapi();
+        bapi.setIvVendor(idVendor);
+        bapi.setIvMatnr(mantr);
+        bapi.setIvWerks(configuration.getWkPlant());
+        bapi.setIvKschl(vendorType);
+        try {
+            WeighBridgeApp.getApplication().getSAPSession().execute(bapi);
+            String bapiResult = bapi.getEvReturn();
+            if (bapiResult != null) {
+                return bapiResult;
+            }
+        } catch (Exception ex) {
+        }
+        return null;
     }
 }
