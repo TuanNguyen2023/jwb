@@ -2364,9 +2364,9 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                     txtLgortIn.setText(weightTicket.getRecvLgort());
                     txtChargIn.setText(weightTicket.getRecvCharg());
                 }
-//                if (Constants.WeighingProcess.MODE_DETAIL.OUT_SELL_WATERWAY.name().equals(weightTicket.getMode())) {
-//                    txtSO.setText(weightTicket.getSo());
-//                }
+                if (Constants.WeighingProcess.MODE_DETAIL.OUT_SELL_WATERWAY.name().equals(weightTicket.getMode())) {
+                    txtSO.setText(weightTicket.getWeightTicketDetail().getSoNumber());
+                }
                 // <editor-fold defaultstate="collapsed" desc="Determine state of Weight Ticket">
                 setStage1(false);
                 setStage2(false);
@@ -2693,24 +2693,12 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                         cbxCharg.setSelectedIndex(-1);
                     }
                 }
-                // cấu hình cho cầu cân hiển thị PO và vendor
-//                    if (sapSetting.getCheckPov() != null && sapSetting.getCheckPov() == true) {
-//                        txtPoPosto.setVisible(true);
-//                        cbxVendorLoading.setVisible(true);
-//                        cbxVendorTransport.setVisible(true);
-//                        lblPoPosto.setVisible(true);
-//                        lblVendorLoading.setVisible(true);
-//                        lblVendorTransport.setVisible(true);
-//                    } else {
-//                        txtPoPosto.setVisible(false);
-//                        cbxVendorLoading.setVisible(false);
-//                        cbxVendorTransport.setVisible(false);
-//                        lblPoPosto.setVisible(false);
-//                        lblVendorLoading.setVisible(false);
-//                        lblVendorTransport.setVisible(false);
-//                    }
-                // </editor-fold>
-                // </editor-fold>
+                //disnable drowdownlist
+                cbxKunnr.setEnabled(false);
+                cbxSLoc.setEnabled(false);
+                cbxCharg.setEnabled(false);
+                cbxVendorLoading.setEnabled(false);
+                cbxVendorTransport.setEnabled(false);        
             }
             return null;  // return your result
         }
