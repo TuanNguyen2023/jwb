@@ -2553,10 +2553,9 @@ private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//
             WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
             MaterialInternal materialInternal = (MaterialInternal) cbxMaterialTypeN.getSelectedItem();
 
-            weightTicketDetail.setRecvMatnr(materialInternal.getMatnr());
+            weightTicketDetail.setMatnrRef(materialInternal.getMatnr());
             weightTicketDetail.setRegItemDescription(materialInternal.getMaktx());
             weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText().trim()));
-
         }
 
         @Override
@@ -2921,6 +2920,7 @@ private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//
         private void updateWeightTicket(PurchaseOrder purchaseOrder) {
             PurchaseOrderDetail purchaseOrderDetail = purchaseOrder.getPurchaseOrderDetail();
             WeightTicketDetail weightTicketDetail = new WeightTicketDetail();
+            weightTicketDetail.setEbeln(purchaseOrder.getPoNumber());
             weightTicketDetail.setItem(purchaseOrderDetail.getPoItem());
             weightTicketDetail.setRegItemDescription(purchaseOrderDetail.getShortText());
             weightTicketDetail.setRegItemQuantity(purchaseOrderDetail.getQuantity());
@@ -2931,6 +2931,7 @@ private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//
             strMatnr = purchaseOrderDetail.getMaterial();
 
             newWeightTicket.setTransVendor(purchaseOrder.getVendor());
+            newWeightTicket.addWeightTicketDetail(weightTicketDetail);
             strVendor = purchaseOrder.getVendor();
         }
     }
