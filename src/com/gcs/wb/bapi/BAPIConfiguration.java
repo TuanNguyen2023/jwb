@@ -7,6 +7,8 @@ package com.gcs.wb.bapi;
 import com.gcs.wb.bapi.goodsmvt.GoodsMvtCancelBapi;
 import com.gcs.wb.bapi.goodsmvt.GoodsMvtPoCreateBapi;
 import com.gcs.wb.bapi.goodsmvt.GoodsMvtDoCreateBapi;
+import com.gcs.wb.bapi.goodsmvt.GoodsMvtPOSTOCreatePGIBapi;
+import com.gcs.wb.bapi.goodsmvt.SOGetDetailBapi;
 import com.gcs.wb.bapi.helper.BOMReadBapi;
 import com.gcs.wb.bapi.helper.BatchStocksGetListBapi;
 import com.gcs.wb.bapi.helper.CheckVersionWBBapi;
@@ -26,6 +28,7 @@ import com.gcs.wb.bapi.helper.TransportagentGetListBapi;
 import com.gcs.wb.bapi.helper.UnitsGetListBapi;
 import com.gcs.wb.bapi.helper.UserGetDetailBapi;
 import com.gcs.wb.bapi.helper.VendorGetDetailBapi;
+import com.gcs.wb.bapi.helper.VendorValiationCheckBapi;
 import com.gcs.wb.bapi.outbdlv.DOCreate2PGIBapi;
 import com.gcs.wb.bapi.outbdlv.DORevertBapi;
 import com.gcs.wb.bapi.outbdlv.OutbDeliveryCreateStoBapi;
@@ -102,6 +105,9 @@ public class BAPIConfiguration {
         sessionConfig.addAnnotatedClass(CheckVersionWBBapi.class);
         sessionConfig.addAnnotatedClass(TransportagentGetListBapi.class);
         sessionConfig.addAnnotatedClass(MaterialGetListBapi.class);
+        sessionConfig.addAnnotatedClass(GoodsMvtPOSTOCreatePGIBapi.class);
+        sessionConfig.addAnnotatedClass(VendorValiationCheckBapi.class);
+        sessionConfig.addAnnotatedClass(SOGetDetailBapi.class);
         
         AnnotationConfiguration conf = new AnnotationConfiguration(sessionConfig);
         sessionManager = conf.buildSessionManager();

@@ -14,6 +14,7 @@ import com.fazecast.jSerialComm.SerialPortInvalidPortException;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.SAPErrorTransform;
 import com.gcs.wb.bapi.goodsmvt.GoodsMvtDoCreateBapi;
+import com.gcs.wb.bapi.goodsmvt.GoodsMvtPOSTOCreatePGIBapi;
 import com.gcs.wb.bapi.goodsmvt.GoodsMvtPoCreateBapi;
 import com.gcs.wb.bapi.goodsmvt.structure.GoodsMvtWeightTicketStructure;
 import com.gcs.wb.bapi.outbdlv.DOCreate2PGIBapi;
@@ -3192,7 +3193,11 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                     objBapi_Po = getGrPoMigoBapi(weightTicket, weightTicket.getWeightTicketDetail().getEbeln());
                     objBapi_Posto = getGrPoMigoBapi(weightTicket, weightTicket.getPosto());
                 }
-                
+
+                if(weightTicket.getMode().equals("OUT_PULL_STATION") && weightTicket.getPosto() != null) {          
+                    objBapi = getMvtPOSTOCreatePGI(weightTicket, weightTicket.getPosto());
+                }
+
                 // post SAP
                 if (WeighBridgeApp.getApplication().isOfflineMode() == false) {
                         if (objBapi != null) {
@@ -3248,9 +3253,9 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                                     }
 
                                 }
-                                
+
                                 if (objBapi_Po instanceof GoodsMvtPoCreateBapi) {
-                                    weightTicketDetail.setMatDocGi(((WsDeliveryUpdateBapi) objBapi_Po).getMat_doc());
+                                    weightTicketDetail.setMatDocGi(((GoodsMvtPoCreateBapi) objBapi_Po).getMatDoc());
                                     weightTicketDetail.setDocYear(Integer.valueOf(((GoodsMvtPoCreateBapi) objBapi_Po).getMatYear()));
                                     try {
                                         bapi_message = ((GoodsMvtPoCreateBapi) objBapi_Po).getReturn().get(0).getMessage().toString();
@@ -3258,7 +3263,18 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                                         bapi_message = "No message returned when call SAP ( GoodsMvtPoCreateBapi line >>2889 ) ";
                                     }
                                 }
-                                
+
+                                if (objBapi instanceof GoodsMvtPOSTOCreatePGIBapi) {
+                                    weightTicketDetail.setMatDoc(((GoodsMvtPOSTOCreatePGIBapi) objBapi).getMatDoc());
+                                    weightTicketDetail.setDocYear(Integer.valueOf(((GoodsMvtPOSTOCreatePGIBapi) objBapi).getMatYear()));
+
+                                    try {
+                                        bapi_message = ((GoodsMvtPOSTOCreatePGIBapi) objBapi).getReturn().get(0).getMessage().toString();
+                                    } catch (Exception Ex) {
+                                        bapi_message = " No message returned when call SAP ( GoodsMvtPOSTOCreatePGIBapi line 2899 )";
+                                    }
+                                }
+
                                 if (objBapi_Posto instanceof GoodsMvtPoCreateBapi) {
                                     weightTicketDetail.setMatDocGi(((GoodsMvtPoCreateBapi) objBapi_Posto).getMatDoc());
                                     weightTicketDetail.setDocYear(Integer.valueOf(((GoodsMvtPoCreateBapi) objBapi_Posto).getMatYear()));
@@ -4315,6 +4331,10 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
 
     private Object getPgmVl02nBapi(WeightTicket wt, OutboundDelivery outbDel) {
         return weightTicketController.getPgmVl02nBapi(wt, outbDel, weightTicket, timeFrom, timeTo, outDetails_lits);
+    }
+
+    private Object getMvtPOSTOCreatePGI(WeightTicket wt, String number) {
+        return weightTicketController.getMvtPOSTOCreatePGI(wt, weightTicket, number, timeFrom, timeTo);
     }
 
     private void printWT(WeightTicket wt, boolean reprint) {
