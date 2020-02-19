@@ -1328,6 +1328,9 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
     validateForm();
 }//GEN-LAST:event_txtWeightNKeyReleased
 
+private void txtSONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSONumNKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtSONumNKeyReleased
 
 private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxMaterialTypeNActionPerformed
     if (cbxMaterialTypeN.getSelectedIndex() == -1) {
@@ -1341,10 +1344,6 @@ private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//
         newWeightTicket.setRecvMatnr(materialInternal.getMatnr());
     }
 }//GEN-LAST:event_cbxMaterialTypeNActionPerformed
-
-private void txtSONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSONumNKeyReleased
-    validateForm();
-}//GEN-LAST:event_txtSONumNKeyReleased
 
 
     @Action(block = Task.BlockingScope.ACTION)
@@ -2143,7 +2142,7 @@ private void txtSONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
         boolean isShowPOV = WeighBridgeApp.getApplication().getSapSetting().getCheckPov();
         showComponent(cbxVendorLoadingN, lblVendorLoadingN, isShowPOV, false);
         showComponent(cbxVendorTransportN, lblVendorTransportN, isShowPOV, false);
-        showComponent(cbxSuppliesIdN, lblSuppliesIdN, true, true);
+        showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
 
         cbxSlocN.setModel(sapService.getSlocModel());
         cbxSloc2N.setModel(sapService.getSlocModel());
@@ -2190,7 +2189,7 @@ private void txtSONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
         showComponent(txtSONumN, lblSONumN, btnSOCheckN, false, false);
         showComponent(txtPONumN, lblPONumN, btnPOCheckN, true, true);
         showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, true, true);
-        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, true);
+        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, false);
         showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, false);
         showComponent(cbxSlocN, lblSlocN, true, true);
         showComponent(cbxSloc2N, lblSloc2N, false, false);
@@ -3469,6 +3468,7 @@ private void txtSONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
             strMatnr = purchaseOrderDetail.getMaterial();
 
             newWeightTicket.setTransVendor(purchaseOrder.getVendor());
+            newWeightTicket.addWeightTicketDetail(weightTicketDetail);
             strVendor = purchaseOrder.getVendor();
         }
     }
