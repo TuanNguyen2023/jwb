@@ -1410,22 +1410,13 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
         txtPlateNoN.setText(txtPlateNoN.getText().trim().toUpperCase());
 
         if (WeighBridgeApp.getApplication().isOfflineMode()) {
-            //return new CheckDOOFFTask(WeighBridgeApp.getApplication());
-            //setSaveNeeded(isValidated() && validDO);
             return null;
         } else {
             String val[] = txtSONumN.getText().trim().split("-");
             for (int i = 0; i < val.length; i++) {
                 if (val[i].length() > 0) {
-                    //+20100106 convert DO number to SAP format
-                    //val[i] = Conversion_Exit.Conv_output_num(val[i], 10);
-                    //+20100106 convert DO number to SAP format
+                    //convert DO number to SAP format
                     return new CheckSOTask(WeighBridgeApp.getApplication());
-                } else if (val[i].length() == 0) {
-//                    lblSONum.setForeground(Color.black);
-//                    validDO = true;
-//                    setSaveNeeded(isValidated() && validDO);
-                    return null;
                 } else {
 //                    lblSONum.setForeground(Color.red);
 //                    validDO = false;
@@ -1451,7 +1442,7 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
             DOCheckStructure doNumber = new DOCheckStructure();
             //String bsRomoc = txtSoRomooc.getText().trim();
 
-            String[] dos = null;
+            //String[] dos = null;
             String[] msgDo = null;
             if (txtPlateNoN.getText().trim().isEmpty()) {
                 String msg = "Vui long nhap BS Xe!";
@@ -1463,52 +1454,32 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
             for (String soNumber : val) {
                 StringUtil.paddingZero(soNumber.trim(), 10);
                 if (!WeighBridgeApp.getApplication().isOfflineMode()) {
-
+                    listDONumbers = sapService.getDONumber(val,bsXe,txtTrailerNoN.getText().trim());
+                    
+                    if (listDONumbers != null) {
+                        String doNum = "";
+                        for (int i = 0; i < listDONumbers.size(); i++) {
+                            doNumber = listDONumbers.get(i);
+                            if(!doNumber.getMessage().trim().isEmpty()) {
+                                setMessage(doNumber.getMessage());
+                                JOptionPane.showMessageDialog(rootPane, doNumber.getMessage());
+                                String msg = "So SO " + doNumber.getVbelnSO() + " sai, vui long nhap lai!";
+                                txtDONumN.setText(null);
+                                setMessage(msg);
+                                JOptionPane.showMessageDialog(rootPane, msg);
+                                return null;
+                            } else {
+                                if(txtDONumN.getText().trim().isEmpty()) {
+                                    doNum = doNumber.getVbelnDO();
+                                } else {
+                                    doNum = "-" + doNumber.getVbelnDO();
+                                }
+                                txtDONumN.setText(doNum);
+                            }
+                        }
+                    }
                 }
-                //listDONumbers = SAP2Local.getDONumber(val,bsXe,txtSoRomooc.getText().trim(),true);
-                // checkif (listDONumbers != null) {
-//                    for (int i = 0; i < listDONumbers.size(); i++) {
-//                        doNumber = listDONumbers.get(i);
-//                        if(!doNumber.getMessage().trim().isEmpty()) {
-//                            setMessage(doNumber.getMessage());
-//                            JOptionPane.showMessageDialog(rootPane, doNumber.getMessage());
-//                            String msg = "So SO " + doNumber.getVbelnSO() + " sai, vui long nhap lai!";
-//                            txtDelNum.setText(null);
-//                            setMessage(msg);
-//                            JOptionPane.showMessageDialog(rootPane, msg);
-//                            return null;
-//                        } else {
-//                            txtDelNum.setText(doNumber.getVbelnDO());
-//                        }
-//                    }
-//                } message return from SO
-//
-            }
-            for (int k = 0; k < val.length; k++) {
-//                setMessage("Kiểm tra D.O trong CSDL ...");
-                setProgress(1, 1, 4);
-                //val[k] = Conversion_Exit.Conv_output_num(val[k], 10);
-//                Object doNumber = SAP2Local.getDONumber(val[k],bsXe,txtSoRomooc.getText().trim(),true);
-//                if (doNumber != null) {
-//
-//                }
-                setMessage("Lưu dữ liệu D.O xuống CSDL ...");
-                setProgress(3, 1, 4);
-                if (!entityManager.getTransaction().isActive()) {
-                    entityManager.getTransaction().begin();
-                }
-
-//                    validDO = false;
-//                    String msg = "Số D.O \" " + val[k] + " \" không tồn tại!";
-//                    setMessage(msg);
-//                    JOptionPane.showMessageDialog(rootPane, msg);
-                //  -------------------------------------------->>
-                //20121217
-//                if (validDO && outb != null) {
-//                    mat_numb = outb.getMatnr().trim();
-//                }
-                setProgress(4, 1, 4);
-                continue;
+                
             }
             return null;
         }
@@ -1525,13 +1496,9 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
 
         @Override
         protected void finished() {
-//            if (validDO) {
-//                lblDelNum.setForeground(Color.black);
-//            } else {
-//                lblDelNum.setForeground(Color.red);
-//            }
-////            setRbtEnabled(!validDO);
-//            setSaveNeeded(isValidated() && validDO);
+            lblDONumN.setBackground(Color.black);
+            lblSONumN.setBackground(Color.black);
+            btnSave.setEnabled(true);
         }
     }
 
