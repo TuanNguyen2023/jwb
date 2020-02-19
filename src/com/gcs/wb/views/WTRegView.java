@@ -1328,6 +1328,8 @@ private void cbxVendorLoadingNActionPerformed(java.awt.event.ActionEvent evt) {/
         }
 
         validateForm();
+    } else {
+        isValidVendorLoad = true;
     }
 }//GEN-LAST:event_cbxVendorLoadingNActionPerformed
 
@@ -1354,6 +1356,8 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
         }
 
         validateForm();
+    } else {
+        isValidVendorTransport = true;
     }
 }//GEN-LAST:event_cbxVendorTransportNActionPerformed
 
