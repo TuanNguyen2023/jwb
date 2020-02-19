@@ -5,7 +5,6 @@
 package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
-import com.gcs.wb.bapi.SAPErrorTransform;
 import com.gcs.wb.bapi.goodsmvt.structure.DOCheckStructure;
 import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.base.constant.Constants;
@@ -38,7 +37,6 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
-import org.hibersap.SapException;
 import org.jdesktop.application.Application;
 
 public class WTRegView extends javax.swing.JInternalFrame {
@@ -55,7 +53,11 @@ public class WTRegView extends javax.swing.JInternalFrame {
     private boolean isValidPO = false;
     private boolean isValidPOSTO = false;
     private boolean isValidSO = false;
+    private boolean isValidWeight = false;
+    private boolean isValidVendorLoad = false;
+    private boolean isValidVendorTransport = false;
     private BigDecimal numCheckWeight = BigDecimal.ZERO;
+
     private boolean formValid;
     private com.gcs.wb.jpa.entity.WeightTicket newWeightTicket;
     private com.gcs.wb.jpa.entity.WeightTicket selectedWeightTicket;
@@ -68,8 +70,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
     private MODE_DETAIL modeDetail;
     private WeightTicketRegistrationValidation wtRegisValidation;
     private PurchaseOrderRepository purchaseOrderRepository = new PurchaseOrderRepository();
-    private com.gcs.wb.jpa.entity.PurchaseOrder purOrder;
-    private com.gcs.wb.jpa.entity.PurchaseOrder purOrderPosto;
     WeightTicketController weightTicketController = new WeightTicketController();
 
     public WTRegView() {
@@ -85,71 +85,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
         t.execute();
 
         cbxHourTo.setSelectedIndex(23);
-
-        cbxVendorLoadingN.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cbxVendorLoadingItemStateChanged(evt);
-            }
-        });
-        cbxVendorLoadingN.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cbxVendorTransportItemStateChanged(evt);
-            }
-        });
-    }
-
-    private void cbxVendorLoadingItemStateChanged(java.awt.event.ItemEvent evt) {
-        // 20120522_ setEnabled for "combo box Khach hang" depends on offline_mode
-        // ++ check Ma phieu is empty or not to execute the code inside
-        if (cbxVendorLoadingN.getSelectedItem() != null && !cbxVendorLoadingN.getSelectedItem().toString().equals("")) {
-            Object[] select = cbxVendorLoadingN.getSelectedObjects();
-            Vendor vendor = (Vendor) select[0];
-            //check validate vendor
-            if (newWeightTicket != null && newWeightTicket.getWeightTicketDetail().getMatnrRef() != null) {
-                String msgVendorCheck = null;
-                String vendorBocxep = "ZLCQ";
-                msgVendorCheck = sapService.validateVendor(vendor.getLifnr(), newWeightTicket.getWeightTicketDetail().getMatnrRef(), vendorBocxep);
-                if (!msgVendorCheck.trim().isEmpty()) {
-                    //display errror
-                    JOptionPane.showMessageDialog(rootPane, msgVendorCheck);
-                    return;
-                } else {
-                    newWeightTicket.setLoadVendor(vendor.getLifnr());
-                    if (!entityManager.getTransaction().isActive()) {
-                        entityManager.getTransaction().begin();
-                    }
-                    entityManager.merge(newWeightTicket);
-                    entityManager.getTransaction().commit();
-                }
-            }
-        }
-    }
-
-    private void cbxVendorTransportItemStateChanged(java.awt.event.ItemEvent evt) {
-        // 20120522_ setEnabled for "combo box Khach hang" depends on offline_mode
-        // ++ check Ma phieu is empty or not to execute the code inside
-        if (cbxVendorTransportN.getSelectedItem() != null && !cbxVendorTransportN.getSelectedItem().toString().equals("")) {
-            Object[] select = cbxVendorTransportN.getSelectedObjects();
-            Vendor vendor = (Vendor) select[0];
-            //check validate vendor
-            if (newWeightTicket != null && newWeightTicket.getWeightTicketDetail().getMatnrRef() != null) {
-                String msgVendorCheck = null;
-                String vendorVanchuyen = "ZIFQ";
-                msgVendorCheck = sapService.validateVendor(vendor.getLifnr(), newWeightTicket.getWeightTicketDetail().getMatnrRef(), vendorVanchuyen);
-                if (!msgVendorCheck.trim().isEmpty()) {
-                    //display errror
-                    JOptionPane.showMessageDialog(rootPane, msgVendorCheck);
-                    return;
-                } else {
-                    newWeightTicket.setTransVendor(vendor.getLifnr());
-                    if (!entityManager.getTransaction().isActive()) {
-                        entityManager.getTransaction().begin();
-                    }
-                    entityManager.merge(newWeightTicket);
-                    entityManager.getTransaction().commit();
-                }
-            }
-        }
     }
 
     private void initComboboxRenderer() {
@@ -972,8 +907,18 @@ public class WTRegView extends javax.swing.JInternalFrame {
         btnPOSTOCheckN.setName("btnPOSTOCheckN"); // NOI18N
 
         cbxVendorLoadingN.setName("cbxVendorLoadingN"); // NOI18N
+        cbxVendorLoadingN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxVendorLoadingNActionPerformed(evt);
+            }
+        });
 
         cbxVendorTransportN.setName("cbxVendorTransportN"); // NOI18N
+        cbxVendorTransportN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxVendorTransportNActionPerformed(evt);
+            }
+        });
 
         cbxSuppliesIdN.setName("cbxSuppliesIdN"); // NOI18N
         cbxSuppliesIdN.addActionListener(new java.awt.event.ActionListener() {
@@ -1191,7 +1136,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                     .addComponent(pnPrintControl, javax.swing.GroupLayout.DEFAULT_SIZE, 936, Short.MAX_VALUE)
                     .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 936, Short.MAX_VALUE)
                     .addComponent(pnFilter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnControl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 936, Short.MAX_VALUE))
+                    .addComponent(pnControl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -1207,7 +1152,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addComponent(pnRegistrationOfVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(pnControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(81, Short.MAX_VALUE))
+                .addContainerGap(85, Short.MAX_VALUE))
         );
 
         pack();
@@ -1332,9 +1277,10 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                 JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.quantityOver", numCheckWeight));
 
                 lblWeightN.setForeground(Color.red);
-                btnSave.setEnabled(false);
 
-                return;
+                isValidWeight = false;
+            } else {
+                isValidWeight = true;
             }
         }
     }
@@ -1358,6 +1304,55 @@ private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//
         newWeightTicket.setRecvMatnr(materialInternal.getMatnr());
     }
 }//GEN-LAST:event_cbxMaterialTypeNActionPerformed
+
+private void cbxVendorLoadingNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxVendorLoadingNActionPerformed
+    if (cbxVendorLoadingN.getSelectedItem() != null && !cbxVendorLoadingN.getSelectedItem().toString().equals("")) {
+        Vendor vendor = (Vendor) cbxVendorLoadingN.getSelectedItem();
+        //check validate vendor
+        if (newWeightTicket != null && newWeightTicket.getWeightTicketDetail().getMatnrRef() != null) {
+            String vendorBocxep = "ZLCQ";
+            String msgVendorCheck = "";
+            if (!WeighBridgeApp.getApplication().isOfflineMode()) {
+                msgVendorCheck = sapService.validateVendor(vendor.getLifnr(), newWeightTicket.getWeightTicketDetail().getMatnrRef(), vendorBocxep);
+            }
+            if (!msgVendorCheck.trim().isEmpty()) {
+                //display errror
+                JOptionPane.showMessageDialog(rootPane, msgVendorCheck);
+                lblVendorLoadingN.setForeground(Color.red);
+                isValidVendorLoad = false;
+            } else {
+                isValidVendorLoad = true;
+            }
+        }
+
+        validateForm();
+    }
+}//GEN-LAST:event_cbxVendorLoadingNActionPerformed
+
+private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxVendorTransportNActionPerformed
+    if (cbxVendorTransportN.getSelectedItem() != null && !cbxVendorTransportN.getSelectedItem().toString().equals("")) {
+        Vendor vendor = (Vendor) cbxVendorTransportN.getSelectedItem();
+        //check validate vendor
+        if (newWeightTicket != null && newWeightTicket.getWeightTicketDetail().getMatnrRef() != null) {
+            String vendorVanchuyen = "ZIFQ";
+            String msgVendorCheck = "";
+            if (!WeighBridgeApp.getApplication().isOfflineMode()) {
+                msgVendorCheck = sapService.validateVendor(vendor.getLifnr(), newWeightTicket.getWeightTicketDetail().getMatnrRef(), vendorVanchuyen);
+            }
+            if (!msgVendorCheck.trim().isEmpty()) {
+                //display errror
+                JOptionPane.showMessageDialog(rootPane, msgVendorCheck);
+
+                lblVendorTransportN.setForeground(Color.red);
+                isValidVendorTransport = false;
+            } else {
+                isValidVendorTransport = true;
+            }
+        }
+
+        validateForm();
+    }
+}//GEN-LAST:event_cbxVendorTransportNActionPerformed
 
     private DefaultComboBoxModel getMatsModel() {
         return weightTicketRegistarationController.getMatsModel();
@@ -1584,6 +1579,7 @@ private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//
         isValidPO = false;
         isValidPOSTO = false;
         isValidSO = false;
+        disableAllInForm();
         prepareEditableForm(modeDetail);
     }
 
@@ -1908,9 +1904,6 @@ private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//
         showComponent(cbxVendorTransportN, lblVendorTransportN, isShowPOV, true);
 
         showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
-        cbxSlocN.setModel(sapService.getSlocModel());
-        cbxVendorLoadingN.setModel(sapService.getVendorList());
-        cbxVendorTransportN.setModel(sapService.getVendorList());
     }
 
     private void prepareOutSellWateway() {
@@ -1946,7 +1939,7 @@ private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//
         boolean isValid = false;
         switch (modeDetail) {
             case IN_PO_PURCHASE:
-                isValid = validateInPoPurchase() && isValidPO;
+                isValid = validateInPoPurchase() && isValidPO && isValidWeight;
                 break;
             case IN_WAREHOUSE_TRANSFER:
                 isValid = validateInWarehouseTransfer() && isValidDO;
@@ -1958,13 +1951,13 @@ private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//
                 isValid = validateOutSellRoad() && isValidDO;
                 break;
             case OUT_PLANT_PLANT:
-                isValid = validateOutPlantPlant() && isValidPO;
+                isValid = validateOutPlantPlant() && isValidPO && isValidVendorLoad && isValidVendorTransport;
                 break;
             case OUT_SLOC_SLOC:
                 isValid = validateOutSlocSloc() && isValidPO;
                 break;
             case OUT_PULL_STATION:
-                isValid = validateOutPullStation() && isValidPO;
+                isValid = validateOutPullStation() && isValidPO && isValidVendorLoad && isValidVendorTransport;
                 break;
             case OUT_SELL_WATERWAY:
                 isValid = validateOutSellWateway() && isValidPO;
@@ -2008,14 +2001,12 @@ private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//
             lblPONumN.setForeground(Color.red);
         }
 
-        boolean isWeightValid = wtRegisValidation.validateLength(txtWeightN.getText(), lblWeightN, 1, 10);
-
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
                 && isCMNDBLValid && isPlateNoValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
-                && isNoteValid && isSlocValid && isWeightValid;
+                && isNoteValid && isSlocValid;
     }
 
     private boolean validateInWarehouseTransfer() {
@@ -2771,15 +2762,6 @@ private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//
 
         public void updateDataForPrepareOutPullStation() {
             newWeightTicket.setMoveType("101");
-            newWeightTicket.setSoNiemXa(txtSoNiemXaN.getText().trim());
-            newWeightTicket.setBatch(txtProductionBatchN.getText().trim());
-            newWeightTicket.setText(txtNoteN.getText().trim());
-            //kho xuat
-            SLoc slocO = (SLoc) cbxSlocN.getSelectedItem();
-            newWeightTicket.setLgort(slocO.getLgort());
-            // lo xuat
-            BatchStock batchStockO = (BatchStock) cbxBatchStockN.getSelectedItem();
-            newWeightTicket.setCharg(batchStockO.getCharg());
 
         }
 
@@ -2823,7 +2805,7 @@ private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//
             setRbtEnabled(false);
             setClearable(false);
             setSaveNeeded(false);
-            
+
             clearForm();
         }
     }
@@ -2878,6 +2860,9 @@ private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//
         isValidPO = false;
         isValidPOSTO = false;
         isValidSO = false;
+        isValidWeight = false;
+        isValidVendorLoad = false;
+        isValidVendorTransport = false;
 
         txtTicketIdN.setText("");
         txtWeightTickerRefN.setText("");
@@ -3096,6 +3081,7 @@ private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//
 
         private String strVendor = "";
         private String strMatnr = null;
+        private BigDecimal totalWeight = BigDecimal.ZERO;
 
         CheckPOTask(Application app) {
             super(app);
@@ -3128,6 +3114,7 @@ private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//
         @Override
         protected void succeeded(Object t) {
             isValidPO = true;
+            txtWeightN.setText(totalWeight.toString());
             cbxVendorTransportN.setSelectedItem(weightTicketRegistarationController.getVendor(strVendor));
             cbxMaterialTypeN.setSelectedItem(weightTicketRegistarationController.getMaterialInternal(strMatnr));
             loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
@@ -3174,6 +3161,7 @@ private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//
         private void updateWeightTicket(PurchaseOrder purchaseOrder) {
             PurchaseOrderDetail purchaseOrderDetail = purchaseOrder.getPurchaseOrderDetail();
             WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
+            weightTicketDetail.setEbeln(purchaseOrder.getPoNumber());
             weightTicketDetail.setItem(purchaseOrderDetail.getPoItem());
             weightTicketDetail.setRegItemDescription(purchaseOrderDetail.getShortText());
             weightTicketDetail.setRegItemQuantity(purchaseOrderDetail.getQuantity());
@@ -3185,6 +3173,7 @@ private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//
 
             newWeightTicket.setTransVendor(purchaseOrder.getVendor());
             strVendor = purchaseOrder.getVendor();
+            totalWeight = purchaseOrderDetail.getQuantity();
 
             switch (modeDetail) {
                 case IN_PO_PURCHASE:
@@ -3199,7 +3188,8 @@ private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//
                         numCheckWeight = BigDecimal.ZERO;
                     }
 
-                    txtWeightN.setText(numCheckWeight.toString());
+                    totalWeight = numCheckWeight;
+                    isValidWeight = true;
             }
         }
     }
@@ -3283,6 +3273,7 @@ private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//
         }
 
         private void updateWeightTicket(PurchaseOrder purchaseOrder) {
+            newWeightTicket.setPosto(purchaseOrder.getPoNumber());
             newWeightTicket.setLoadVendor(purchaseOrder.getVendor());
             strVendor = purchaseOrder.getVendor();
         }
