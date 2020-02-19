@@ -564,7 +564,7 @@ public class SAPService {
         return result;
     }
 
-    public static List<DOCheckStructure> getDONumber(String[] soNumbers, String bsXe, String soRomoc) {
+    public List<DOCheckStructure> getDONumber(String[] soNumbers, String bsXe, String soRomoc) {
         SOGetDetailBapi bapi = new SOGetDetailBapi();
         List<SOCheckStructure> soChecks = new ArrayList<SOCheckStructure>();
         SOCheckStructure soCheck = new SOCheckStructure();
@@ -600,4 +600,5 @@ public class SAPService {
         }
         return null;
     }
+
 }
