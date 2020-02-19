@@ -27,7 +27,8 @@ import javax.persistence.Temporal;
 @Entity
 @Table(name = "tbl_weight_ticket_detail")
 @NamedQueries({
-    @NamedQuery(name = "WeightTicketDetail.findAll", query = "SELECT wd FROM WeightTicketDetail wd")
+    @NamedQuery(name = "WeightTicketDetail.findAll", query = "SELECT wd FROM WeightTicketDetail wd"),
+    @NamedQuery(name = "WeightTicketDetail.findByPoNo", query = "SELECT wd FROM WeightTicketDetail wd WHERE wd.ebeln = :poNo") 
 })
 public class WeightTicketDetail implements Serializable {
 
