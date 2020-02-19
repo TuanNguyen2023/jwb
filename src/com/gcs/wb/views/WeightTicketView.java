@@ -4701,7 +4701,7 @@ private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
                 txtBatchProduce.setEditable(true);
             }
         }
-        result = (bMisc || bPO || bMB1B || bMvt311) && bScale && bSLoc && bBatch && bNiemXa && (isStage1() || isStage2() || (!isStage1() && !isStage2() && weightTicket != null && weightTicket.isPosted()));
+        result = (bMisc || bPO || bMB1B || bMvt311) && bScale && bSLoc && bBatch && bBatchProduce && bNiemXa && (isStage1() || isStage2() || (!isStage1() && !isStage2() && weightTicket != null && weightTicket.isPosted()));
         return result;
     }
 
