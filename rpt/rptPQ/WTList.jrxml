@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Weight Tickets List" pageWidth="1684" pageHeight="1190" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="1684" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
 	<property name="ireport.zoom" value="0.683013455365075"/>
-	<property name="ireport.x" value="133"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="P_TAGENT" class="java.lang.String"/>
 	<parameter name="P_MONTH" class="java.lang.String"/>
@@ -252,7 +252,7 @@
 			<textField isBlankWhenNull="true">
 				<reportElement x="360" y="0" width="70" height="20"/>
 				<box leftPadding="2" rightPadding="2"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{COLUMN_5}]]></textFieldExpression>
@@ -260,7 +260,7 @@
 			<textField isBlankWhenNull="true">
 				<reportElement x="0" y="0" width="40" height="20"/>
 				<box leftPadding="2" rightPadding="2"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{COLUMN_0}]]></textFieldExpression>
@@ -268,7 +268,7 @@
 			<textField isBlankWhenNull="true">
 				<reportElement x="1323" y="0" width="77" height="20"/>
 				<box leftPadding="2" rightPadding="2"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{COLUMN_15}]]></textFieldExpression>
@@ -276,7 +276,7 @@
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement x="1015" y="0" width="63" height="20"/>
 				<box leftPadding="2" rightPadding="2"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{COLUMN_11}]]></textFieldExpression>
@@ -284,7 +284,7 @@
 			<textField isBlankWhenNull="true">
 				<reportElement x="1488" y="0" width="126" height="20"/>
 				<box leftPadding="2" rightPadding="2"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{COLUMN_16}]]></textFieldExpression>
@@ -292,7 +292,7 @@
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement x="1193" y="0" width="65" height="20"/>
 				<box leftPadding="2" rightPadding="2"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{COLUMN_13}]]></textFieldExpression>
@@ -308,7 +308,7 @@
 			<textField isBlankWhenNull="true">
 				<reportElement x="80" y="0" width="150" height="20"/>
 				<box leftPadding="2" rightPadding="2"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{COLUMN_2}]]></textFieldExpression>
@@ -316,7 +316,7 @@
 			<textField isBlankWhenNull="true">
 				<reportElement x="290" y="0" width="70" height="20"/>
 				<box leftPadding="2" rightPadding="2"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{COLUMN_4}]]></textFieldExpression>
@@ -324,7 +324,7 @@
 			<textField isBlankWhenNull="true">
 				<reportElement x="230" y="0" width="60" height="20"/>
 				<box leftPadding="2" rightPadding="2"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{COLUMN_3}]]></textFieldExpression>
@@ -332,7 +332,7 @@
 			<textField evaluationTime="Auto" pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="true">
 				<reportElement x="1078" y="0" width="115" height="20"/>
 				<box leftPadding="2" rightPadding="2"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{COLUMN_12}]]></textFieldExpression>
@@ -340,7 +340,7 @@
 			<textField isBlankWhenNull="true">
 				<reportElement x="730" y="0" width="170" height="20"/>
 				<box leftPadding="2" rightPadding="2"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{COLUMN_9}]]></textFieldExpression>
@@ -356,7 +356,7 @@
 			<textField isBlankWhenNull="true">
 				<reportElement x="40" y="0" width="40" height="20"/>
 				<box leftPadding="2" rightPadding="2"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{COLUMN_1}]]></textFieldExpression>
@@ -364,7 +364,7 @@
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement x="1258" y="0" width="65" height="20"/>
 				<box leftPadding="2" rightPadding="2"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{COLUMN_14}]]></textFieldExpression>
@@ -372,7 +372,7 @@
 			<textField evaluationTime="Auto" pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="true">
 				<reportElement x="900" y="0" width="115" height="20"/>
 				<box leftPadding="2" rightPadding="2"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{COLUMN_10}]]></textFieldExpression>
@@ -380,7 +380,7 @@
 			<textField isBlankWhenNull="true">
 				<reportElement x="430" y="0" width="140" height="20"/>
 				<box leftPadding="2" rightPadding="2"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle" markup="none">
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{P_TAGENT} == null ? $F{COLUMN_18} : $P{P_TAGENT}]]></textFieldExpression>
@@ -388,7 +388,7 @@
 			<textField isBlankWhenNull="true">
 				<reportElement x="1400" y="0" width="88" height="20"/>
 				<box leftPadding="2" rightPadding="2"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{COLUMN_19}]]></textFieldExpression>
