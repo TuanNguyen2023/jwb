@@ -1482,6 +1482,7 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
         @Override
         protected void finished() {
             isValidSO = true;
+            btnDOCheckN.setEnabled(true);
         }
     }
 
@@ -1967,6 +1968,7 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
                 if (!weightTicketRegistarationController.checkPlateNoInVendor(transportVendor.getLifnr(), plateNo)) {
                     isPlateNoValid = false;
                     lblPlateNoN.setForeground(Color.red);
+                    JOptionPane.showMessageDialog(rootPane, "msg.validateBSxe");
                 }
             }
         }
@@ -2094,6 +2096,7 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
                 if (!weightTicketRegistarationController.checkPlateNoInVendor(transportVendor.getLifnr(), plateNo)) {
                     isPlateNoValid = false;
                     lblPlateNoN.setForeground(Color.red);
+                    JOptionPane.showMessageDialog(rootPane, "msg.validateBSxe");
                 }
             }
         }
@@ -2133,6 +2136,7 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
                 if (!weightTicketRegistarationController.checkPlateNoInVendor(transportVendor.getLifnr(), plateNo)) {
                     isPlateNoValid = false;
                     lblPlateNoN.setForeground(Color.red);
+                    JOptionPane.showMessageDialog(rootPane, "msg.validateBSxe");
                 }
             }
         }
@@ -2177,6 +2181,7 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
                 if (!weightTicketRegistarationController.checkPlateNoInVendor(transportVendor.getLifnr(), plateNo)) {
                     isPlateNoValid = false;
                     lblPlateNoN.setForeground(Color.red);
+                    JOptionPane.showMessageDialog(rootPane, "msg.validateBSxe");
                 }
             }
         }
@@ -2633,6 +2638,8 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
             }
 
             loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
+            lblDONumN.setBackground(Color.black);
+            btnSave.setEnabled(true);
         }
 
         @Override
