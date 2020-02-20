@@ -17,6 +17,7 @@ import com.gcs.wb.controller.WeightTicketController;
 import com.gcs.wb.controller.WeightTicketRegistarationController;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.*;
+import com.gcs.wb.jpa.repositorys.MaterialInternalRepository;
 import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
 import com.gcs.wb.model.WeighingMode;
 import com.gcs.wb.views.validations.WeightTicketRegistrationValidation;
@@ -70,6 +71,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
     private MODE_DETAIL modeDetail;
     private WeightTicketRegistrationValidation wtRegisValidation;
     private PurchaseOrderRepository purchaseOrderRepository = new PurchaseOrderRepository();
+    MaterialInternalRepository materialInternalRepository = new MaterialInternalRepository();
     WeightTicketController weightTicketController = new WeightTicketController();
 
     public WTRegView() {
@@ -1757,7 +1759,7 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
         showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
         showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
 
-        cbxMaterialTypeN.setModel(sapService.syncMaterialMaster());
+        cbxMaterialTypeN.setModel(weightTicketRegistarationController.getListMaterialInternal());
     }
 
     private void prepareOutSellRoad() {
