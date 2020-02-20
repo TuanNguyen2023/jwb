@@ -4,6 +4,7 @@
  */
 package com.gcs.wb.jpa;
 
+import com.gcs.wb.model.AppConfig;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -26,6 +27,17 @@ public class JPAConnector {
         } else {
             entityManagerFactory = Persistence.createEntityManagerFactory("JWeighBridgePU",
                     DataSources.getJweighbridgeProperties());
+            instance = entityManagerFactory.createEntityManager();
+            return instance;
+        }
+    }
+
+    public static EntityManager getInstance(AppConfig appConfig) {
+        if (instance != null) {
+            return instance;
+        } else {
+            entityManagerFactory = Persistence.createEntityManagerFactory("JWeighBridgePU",
+                    DataSources.getJweighbridgeProperties(appConfig));
             instance = entityManagerFactory.createEntityManager();
             return instance;
         }

@@ -52,7 +52,7 @@ public class LoginService {
         return session;
     }
 
-    public void checkVersionWB(Session session) throws Exception {
+    public static void checkVersionWB(Session session) throws Exception {
         CheckVersionWBBapi version = new CheckVersionWBBapi("2.40"); //09/07/2013
         try {
             session.execute(version);

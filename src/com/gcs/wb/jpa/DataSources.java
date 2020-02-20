@@ -45,4 +45,18 @@ public class DataSources {
         properties.put(PersistenceUnitProperties.JDBC_PASSWORD, appConf.getDbPassword());
         return properties;
     }
+    
+    public static Map getJweighbridgeProperties(AppConfig appConf) {
+        StringBuilder sbURL = new StringBuilder();
+        sbURL.append("jdbc:sqlserver://");
+        sbURL.append(appConf.getDbHost());
+        sbURL.append(";databaseName=");
+        sbURL.append(appConf.getDbName());
+        Map<String, String> properties = new HashMap<>();
+        properties.put(PersistenceUnitProperties.JDBC_DRIVER, "com.microsoft.sqlserver.jdbc.SQLServerDriver");
+        properties.put(PersistenceUnitProperties.JDBC_URL, sbURL.toString());
+        properties.put(PersistenceUnitProperties.JDBC_USER, appConf.getDbUsername());
+        properties.put(PersistenceUnitProperties.JDBC_PASSWORD, appConf.getDbPassword());
+        return properties;
+    }
 }
