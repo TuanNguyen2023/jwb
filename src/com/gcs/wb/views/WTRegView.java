@@ -1627,19 +1627,41 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
         validateForm();
     }
 
-    private void showComponent(JComponent component, JComponent label, boolean isVisible, boolean isEnabled) {
+    private void showComponent(JComponent component, JLabel label, boolean isVisible, boolean isEditable) {
         label.setVisible(isVisible);
         component.setVisible(isVisible);
-        component.setVisible(isVisible);
-        component.setEnabled(isEnabled);
+
+        if (component instanceof JTextField) {
+            JTextField textField = (JTextField) component;
+            textField.setEditable(isEditable);
+            textField.setEnabled(isVisible);
+        } else if (component instanceof JComboBox) {
+            component.setEnabled(isEditable);
+            Component editorComponent = ((JComboBox) component).getEditor().getEditorComponent();
+            if (editorComponent instanceof JTextField) {
+                ((JTextField) editorComponent).setEditable(false);
+                ((JTextField) editorComponent).setEnabled(true);
+            }
+        }
     }
 
-    private void showComponent(JComponent component, JComponent label, JComponent unit, boolean isVisible, boolean isEnabled) {
+    private void showComponent(JComponent component, JLabel label, JComponent unit, boolean isVisible, boolean isEditable) {
         label.setVisible(isVisible);
         component.setVisible(isVisible);
-        component.setVisible(isVisible);
-        component.setEnabled(isEnabled);
         unit.setVisible(isVisible);
+
+        if (component instanceof JTextField) {
+            JTextField textField = (JTextField) component;
+            textField.setEditable(isEditable);
+            textField.setEnabled(isVisible);
+        } else if (component instanceof JComboBox) {
+            component.setEnabled(isEditable);
+            Component editorComponent = ((JComboBox) component).getEditor().getEditorComponent();
+            if (editorComponent instanceof JTextField) {
+                ((JTextField) editorComponent).setEditable(false);
+                ((JTextField) editorComponent).setEnabled(true);
+            }
+        }
     }
 
     private void prepareInPOPurchaseMode() {
@@ -1872,7 +1894,7 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
         showComponent(txtProductionBatchN, lblProductionBatchN, true, true);
         showComponent(txtNoteN, lblNoteN, true, true);
         showComponent(txtDONumN, lblDONumN, btnDOCheckN, true, false);
-        showComponent(txtSONumN, lblSONumN, btnSOCheckN, !WeighBridgeApp.getApplication().isOfflineMode(), true);
+        showComponent(txtSONumN, lblSONumN, btnSOCheckN, true, !WeighBridgeApp.getApplication().isOfflineMode());
         showComponent(txtPONumN, lblPONumN, btnPOCheckN, false, false);
         showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, false, false);
         showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, false);
@@ -2524,12 +2546,12 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
                 setStep(2, resourceMapMsg.getString("checkDOInSap"));
                 OutboundDelivery sapOutboundDelivery = sapService.getOutboundDelivery(deliveryOrderNo);
                 // check status post SAP
-                if(sapOutboundDelivery.getVbelnNach()!= null && !sapOutboundDelivery.getVbelnNach().trim().isEmpty()) {
-                        String msg = "Số D.O \" " + deliveryOrderNo + " \" đã được nhập hàng tại chứng từ " + sapOutboundDelivery.getVbelnNach() +"!";
-                        setMessage(msg);
-                        JOptionPane.showMessageDialog(rootPane, msg);
-                        return null;
-                    }
+                if (sapOutboundDelivery.getVbelnNach() != null && !sapOutboundDelivery.getVbelnNach().trim().isEmpty()) {
+                    String msg = "Số D.O \" " + deliveryOrderNo + " \" đã được nhập hàng tại chứng từ " + sapOutboundDelivery.getVbelnNach() + "!";
+                    setMessage(msg);
+                    JOptionPane.showMessageDialog(rootPane, msg);
+                    return null;
+                }
 
                 setStep(3, resourceMapMsg.getString("msg.saveDataToDb"));
                 return sapService.syncOutboundDelivery(sapOutboundDelivery, outboundDelivery, deliveryOrderNo);
@@ -3171,7 +3193,7 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
                 case IN_PO_PURCHASE:
                     BigDecimal quantity = purchaseOrderDetail.getQuantity() != null ? purchaseOrderDetail.getQuantity() : BigDecimal.ZERO;
                     //BigDecimal tolerance = purchaseOrderDetail.getUnderDlvTol() != null ? purchaseOrderDetail.getUnderDlvTol() : BigDecimal.ZERO;
-                    BigDecimal tolerance = purchaseOrderDetail.getOverDlvTol()!= null ? purchaseOrderDetail.getOverDlvTol() : BigDecimal.ZERO;
+                    BigDecimal tolerance = purchaseOrderDetail.getOverDlvTol() != null ? purchaseOrderDetail.getOverDlvTol() : BigDecimal.ZERO;
 
                     numCheckWeight = quantity.add(
                             quantity.multiply(tolerance).divide(new BigDecimal(100))
