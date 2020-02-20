@@ -584,11 +584,12 @@ public class SAPService {
         return null;
     }
     
-    public String validateVendor(String idVendor, String mantr, String vendorType) {
+    public String validateVendor(String idVendor, String mantr, String vendorType, String wplantPo) {
         VendorValiationCheckBapi bapi = new VendorValiationCheckBapi();
         bapi.setIvVendor(idVendor);
         bapi.setIvMatnr(mantr);
-        bapi.setIvWerks(configuration.getWkPlant());
+        bapi.setIvWerks(wplantPo);
+        bapi.setIvReswk(configuration.getWkPlant());
         bapi.setIvKschl(vendorType);
         try {
             WeighBridgeApp.getApplication().getSAPSession().execute(bapi);
