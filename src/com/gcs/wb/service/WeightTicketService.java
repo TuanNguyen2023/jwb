@@ -722,14 +722,6 @@ public class WeightTicketService {
         }
         kl_total = kl.add(kl_km);
 
-//        if (weightTicketDetail.getPpProcord() != null && weightTicketDetail.getPpProcord().length() == 12) {
-//            bapi.setProc_ord_id(weightTicketDetail.getPpProcord());
-//            if (outbDel == null) {
-//                bapi.setYield(wt.getGQty());
-//            } else {
-//                bapi.setYield(kl_total);
-//            }
-//        }
         bapi.setYield(kl_total);
         VbkokStructure wa = new VbkokStructure();
         if (outbDel == null) {
