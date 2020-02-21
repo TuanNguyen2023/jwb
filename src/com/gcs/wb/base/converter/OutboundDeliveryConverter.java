@@ -66,7 +66,7 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
                 }
                 // free goods processing
                 item_cat = doItem.getPstyv();
-                if (item_cat.equals("ZTNN")) {
+                if (item_cat.equals("ZVNN")) {
                     outboundDelivery.setDeliveryItemFree(doItem.getPosnr());
                     outboundDelivery.setMatnrFree(doItem.getMatnr());
                     //set data cho details free goods
