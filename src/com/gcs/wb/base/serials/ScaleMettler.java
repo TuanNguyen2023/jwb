@@ -12,7 +12,9 @@ import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
 import com.fazecast.jSerialComm.SerialPortInvalidPortException;
+import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.base.exceptions.IllegalPortException;
+import com.gcs.wb.jpa.entity.Configuration;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -37,7 +39,8 @@ public class ScaleMettler implements SerialPortDataListener {
     private InputStream in;
     private int count = 0;
     private StringBuilder buffer = new StringBuilder();
-
+    private Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
+    
     /** Creates a new instance of ScaleComm */
     public ScaleMettler(String portName, Integer speed, Short dataBits, Short stopBits, Short parity, JFormattedTextField control) {
         this.portName = portName;
@@ -114,101 +117,18 @@ public class ScaleMettler implements SerialPortDataListener {
 
         return output.toString();
     }
-
-    /*
-     * 
-    is
-     */
-//    @SuppressWarnings("element-type-mismatch")
-    //  @Override
-        /*
-    public void serialEvent(SerialPortEvent e) {
-    HashMap<Character, String> numbers = new HashMap<Character, String>();
-    //    String remove_string = "00000010" twb;       
-    String remove_string1 = "01D01D" + hexToAscii("0x0003") + hexToAscii("0x0002") ; //  twb;       
-    String remove_string2 = hexToAscii("0x0003");  
-    // String remove_string = "012012"+ hexToAscii("0x0003") + hexToAscii("0x0002");
-    //  String remove_string =  hexToAscii("0x0003") + hexToAscii("0x0002");
     
-    for (int i = 0; i < 10; i++) {
-    numbers.put(String.valueOf(i).charAt(0), String.valueOf(i));
-    }
-    
-    switch (e.getEventType()) {
-    case SerialPortEvent.BI:
-    case SerialPortEvent.OE:
-    case SerialPortEvent.FE:
-    case SerialPortEvent.PE:
-    case SerialPortEvent.CD:
-    case SerialPortEvent.CTS:
-    case SerialPortEvent.DSR:
-    case SerialPortEvent.RI:
-    case SerialPortEvent.OUTPUT_BUFFER_EMPTY:
-    break;
-    case SerialPortEvent.DATA_AVAILABLE:
-    try {
-    while (in.available() > 0) {
-    int b = in.read();
-    //   if (b == 0x000D || b == 0x002E || !(b > 0x002F && b < 0x003A)) 
-    if (b == 0x002B || b == 0x002E || !(b > 0x002F && b < 0x003A)) 
-    {
-    Logger.getLogger ( " move >>>>");
-    // buffer.append("x"); // tuanna 
-    continue;
-    
-    }
-    Character c = (char) b;
-    String val = numbers.get(c);
-    if (val == null) {
-    continue;
-    }
-    buffer.append(val);
-    String strVal = buffer.toString().trim();
-    int found1= strVal.indexOf(remove_string1);
-    int found2  =  strVal.indexOf(remove_string2);
-    int found = found1 > found2 ? found1 : found2; 
-    
-    if (found > 0) {
-    count++;
-    int bIdx = found - 6;
-    if (bIdx >= 0) {
-    strVal = strVal.substring(bIdx, found);
-    Logger.getLogger ( strVal ); 
-    BigInteger intVal = new BigInteger(strVal);
-    control.setValue(intVal);
-    control.repaint(90);                        
-    buffer = new StringBuilder();
-    Logger.getLogger ( " move >>>>" +intVal.toString() );
-    strVal = null;
-    }
-    }
-    
-    }
-    } catch (IOException ex) {
-    Logger.getLogger(ScaleMettler.class.getName()).error(null, ex);
-    }
-    break;
-    }
-    
-    }
-     */
     public void serialEvent(SerialPortEvent e) {
         HashMap<Character, String> numbers = new HashMap<Character, String>();
         //  String remove_string = "00000010";
-        String remove_string = "01A";
-        String[] arrStr = {"013", "014", "015", "018", "012", "011", "01A", "01B", "01C", "01D", "01E", "01F"};
 
+        String[] arrNum = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "+", "."};
 
-        //   String remove_string = "019019"+ hexToAscii("0x0003") + hexToAscii("0x0002");
-        //  String remove_string =  hexToAscii("0x0003") + hexToAscii("0x0002");
-
-        String[] arrNum = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "+"};
-
-        for (int i = 0; i < arrNum.length - 1; i++) {
-            //  numbers.put(String.valueOf(i).charAt(0), String.valueOf(i));
+        for (int i = 0; i < arrNum.length - 2; i++) {
             numbers.put(arrNum[i].charAt(0), String.valueOf(i));
         }
         numbers.put("+".charAt(0), "+");
+        numbers.put(".".charAt(0), ".");
 
         if (e.getEventType() != SerialPort.LISTENING_EVENT_DATA_AVAILABLE) {
             return;
@@ -216,86 +136,27 @@ public class ScaleMettler implements SerialPortDataListener {
         try {
             while (in.available() > 0) {
                 int b = in.read();
-                //     if (b == 0x000D || b == 0x002E || !(b > 0x002F && b < 0x003A)) {
                 if (b == 0x0002 || b == 0x0003) // || b == 0x002E || !(b > 0x002F && b < 0x003A)) {
                 {
+                    buffer = new StringBuilder();
                     continue;
                 }
                 Character c = (char) b;
                 String val = numbers.get(c);
                 if (val == null) {
+                    buffer = new StringBuilder();
                     continue;
                 }
                 buffer.append(val);
                 String strVal = buffer.toString().trim();
-                /*
-                int min = strVal.indexOf(remove_string);
-                int found ;
-                int ismax = -1  ;
-                int k = -1; 
-                int kfound = -1 ; 
-                int bIdx  ;
-                for (int i = 0 ; i < 12 ; i++  )
-                {
-                found =  strVal.indexOf(arrStr[i]); 
                 
-                bIdx = found - 6; 
-                if ( bIdx >= ismax  && bIdx >=5  && found > 0 )
-                {
-                ismax = bIdx ;
-                k= i; 
-                kfound = found ; 
-                }                           
-                }
+                String wb1MettlerParam = configuration.getWb1MettlerParam();
+                String[] mettlerParam = wb1MettlerParam.split("-");
                 
-                if (kfound > 0  ) {
-                count++;
-                bIdx = kfound - 6;
-                // int bIdx = found - 12 ; 
-                if (bIdx >= 0) {
-                strVal = strVal.substring(ismax, kfound);
-                //   strVal = strVal.substring(found+1, end);
-                BigInteger intVal = new BigInteger(strVal);
-                control.setValue(intVal);
-                control.repaint(90);                        
-                buffer = new StringBuilder();
-                
-                strVal = null;
-                }
-                }
-                
-                 */
-
-                /* 
-                int found = strVal.indexOf(remove_string);
-                if (found > 0) {
-                count++;
-                int bIdx = found - 6;
-                if (bIdx >= 0) {
-                strVal = strVal.substring(bIdx, found);
-                BigInteger intVal = new BigInteger(strVal);
-                control.setValue(intVal);
-                control.repaint(90);                        
-                buffer = new StringBuilder();
-                
-                strVal = null;
-                }
-                }
-                 */
-
-
-                //Whatever the file path is.
-
-                /* File statText = new File("D:\\log.txt"); 
-                FileOutputStream is = new FileOutputStream(statText);
-                OutputStreamWriter osw = new OutputStreamWriter(is);    
-                Writer w = new BufferedWriter(osw);
-                w.write("POTATO!!!");
-                 */
-                int found = strVal.indexOf("+");
-                if (found >= 0) {
-                    int len = 6;
-                    strVal = strVal.substring(found + 1, found + 1 + len);
+                int size = Integer.parseInt(mettlerParam[0]);
+                if(strVal.length() == size) {
+                    Logger.getLogger(this.getClass()).error("@ScaleMettler, Value@" + strVal);
+                    strVal = strVal.substring(Integer.parseInt(mettlerParam[1]), Integer.parseInt(mettlerParam[2]));
                     BigInteger intVal = new BigInteger(strVal);
                     control.setValue(intVal);
                     control.repaint(90);
@@ -304,12 +165,12 @@ public class ScaleMettler implements SerialPortDataListener {
 
                 }
             }
-
+            
         } catch (IOException ex) {
             Logger.getLogger(ScaleMettler.class.getName()).error(null, ex);
         }
     }
-
+     
     public void disconnect() throws IOException {
         if (in != null) {
             try {

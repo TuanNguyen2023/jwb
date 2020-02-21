@@ -142,7 +142,7 @@ public class WeightTicketService {
         return result;
     }
 
-    public WeightTicket findWeightTicket(WeightTicket weightTicket, int id) {
+    public WeightTicket findWeightTicket(WeightTicket weightTicket, String id) {
         return entityManager.find(WeightTicket.class, id);
     }
 

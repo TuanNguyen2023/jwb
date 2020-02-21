@@ -101,9 +101,9 @@ public class Configuration implements Serializable {
     @Column(name = "wb2_step")
     private int wb2Step;
     @Column(name = "wb1_mettler_param")
-    private int wb1MettlerParam;
+    private String wb1MettlerParam;
     @Column(name = "wb2_mettler_param")
-    private int wb2MettlerParam;
+    private String wb2MettlerParam;
 
     public Configuration() {
     }
@@ -340,19 +340,19 @@ public class Configuration implements Serializable {
         this.wb2Step = wb2Step;
     }
 
-    public int getWb1MettlerParam() {
+    public String getWb1MettlerParam() {
         return wb1MettlerParam;
     }
 
-    public void setWb1MettlerParam(int wb1MettlerParam) {
+    public void setWb1MettlerParam(String wb1MettlerParam) {
         this.wb1MettlerParam = wb1MettlerParam;
     }
 
-    public int getWb2MettlerParam() {
+    public String getWb2MettlerParam() {
         return wb2MettlerParam;
     }
 
-    public void setWb2MettlerParam(int wb2MettlerParam) {
+    public void setWb2MettlerParam(String wb2MettlerParam) {
         this.wb2MettlerParam = wb2MettlerParam;
     }
     

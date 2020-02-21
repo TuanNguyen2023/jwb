@@ -2291,7 +2291,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
 
     private class ReadWTTask extends Task<Object, Void> {
 
-        int id;
+        String id;
 
         /*
         ReadWTTask(Application app, String id, String seq, String RegId ) {
@@ -2306,7 +2306,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
          */
         ReadWTTask(Application app, String id) {
             super(app);
-            this.id = Integer.parseInt(id);
+            this.id = id;
             setReprintable(false);
             grbType.clearSelection();
             grbCat.clearSelection();
