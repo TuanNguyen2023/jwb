@@ -196,7 +196,7 @@ public class WeightTicketService {
         if (wt == null) {
             return stWT;
         }
-        String tempWTID = new Integer(wt.getId()).toString();
+        String tempWTID = wt.getId();
         //tempWTID = tempWTID.concat(StringUtil.paddingZero(String.valueOf(weightTicket.getSeqDay()), 3));
         stWT = new GoodsMvtWeightTicketStructure(weightTicket.getWplant(),
                 weightTicket.getWbId(),
