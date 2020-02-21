@@ -7,9 +7,7 @@ package com.gcs.wb.service;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.BAPIConfiguration;
 import com.gcs.wb.bapi.helper.CheckVersionWBBapi;
-import com.gcs.wb.bapi.helper.PlantGetDetailBapi;
 import com.gcs.wb.bapi.helper.UserGetDetailBapi;
-import com.gcs.wb.bapi.helper.constants.PlantGeDetailConstants;
 import com.gcs.wb.bapi.helper.structure.UserGetDetailAGRStructure;
 import com.gcs.wb.bapi.helper.structure.UserGetDetailAddrStructure;
 import com.gcs.wb.jpa.JPAConnector;
@@ -20,7 +18,6 @@ import com.gcs.wb.jpa.repositorys.SAPSettingRepository;
 import com.gcs.wb.model.AppConfig;
 import java.sql.Date;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -52,7 +49,7 @@ public class LoginService {
         return session;
     }
 
-    public static void checkVersionWB(Session session) throws Exception {
+    public void checkVersionWB(Session session) throws Exception {
         CheckVersionWBBapi version = new CheckVersionWBBapi("2.40"); //09/07/2013
         try {
             session.execute(version);
@@ -94,18 +91,6 @@ public class LoginService {
             boolean updateUser = true;
             if (user == null) {
                 updateUser = false;
-                if (sapSetting == null) {
-                    PlantGetDetailBapi plantGetDetailBapi = new PlantGetDetailBapi(configuration.getSapClient(), configuration.getWkPlant());
-                    session.execute(plantGetDetailBapi);
-                    HashMap vals = plantGetDetailBapi.getEsPlant();
-
-                    sapSetting = new SAPSetting();
-                    sapSetting.setName1((String) vals.get(PlantGeDetailConstants.NAME1));
-                    sapSetting.setName2((String) vals.get(PlantGeDetailConstants.NAME2));
-                    sapSetting.setMandt(configuration.getSapClient());
-                    sapSetting.setWplant(configuration.getWkPlant());
-                    entityManager.persist(sapSetting);
-                }
                 user = new User(username, password);
             }
 

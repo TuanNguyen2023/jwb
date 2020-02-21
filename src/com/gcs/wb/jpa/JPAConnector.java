@@ -31,17 +31,6 @@ public class JPAConnector {
             return instance;
         }
     }
-
-    public static EntityManager getInstance(AppConfig appConfig) {
-        if (instance != null) {
-            return instance;
-        } else {
-            entityManagerFactory = Persistence.createEntityManagerFactory("JWeighBridgePU",
-                    DataSources.getJweighbridgeProperties(appConfig));
-            instance = entityManagerFactory.createEntityManager();
-            return instance;
-        }
-    }
     
     public static boolean isOpen() {
         return instance != null;

@@ -28,4 +28,17 @@ public class SAPSettingRepository {
 
         return null;
     }
+
+    public SAPSetting findByMandtAndWplant(String mandt, String wplant) {
+        TypedQuery<SAPSetting> typedQuery = entityManager.createNamedQuery("SAPSetting.findByMandtAndWplant", SAPSetting.class);
+        typedQuery.setParameter("mandt", mandt);
+        typedQuery.setParameter("wplant", wplant);
+        List<SAPSetting> sapSettings = typedQuery.getResultList();
+
+        if (sapSettings.size() > 0) {
+            return sapSettings.get(0);
+        }
+
+        return null;
+    }
 }
