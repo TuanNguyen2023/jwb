@@ -1853,7 +1853,7 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
         showComponent(cbxVendorTransportN, lblVendorTransportN, isShowPOV, false);
         showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
 
-        cbxMaterialTypeN.setModel(sapService.syncMaterialMaster());
+        cbxMaterialTypeN.setModel(sapService.getMaterialModel());
     }
 
     private void prepareOutPullStation() {
@@ -2573,7 +2573,7 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
                     JOptionPane.showMessageDialog(rootPane, msg);
                     return null;
                 }
-                
+
                 setStep(3, resourceMapMsg.getString("msg.saveDataToDb"));
                 return sapService.syncOutboundDelivery(sapOutboundDelivery, outboundDelivery, deliveryOrderNo);
             } catch (Exception ex) {
@@ -3158,13 +3158,13 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
             cbxMaterialTypeN.setSelectedItem(weightTicketRegistarationController.getMaterialInternal(strMatnr));
             loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
             loadBatchStockModel(cbxSloc2N, cbxBatchStock2N, false);
-            
+
             switch (modeDetail) {
                 case OUT_SLOC_SLOC:
                     cbxVendorTransportN.setSelectedItem(weightTicketRegistarationController.getVendor(strVendor));
                     break;
             }
-            
+
 
             validateForm();
         }
@@ -3290,7 +3290,7 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
                     cbxVendorLoadingN.setSelectedItem(weightTicketRegistarationController.getVendor(strVendor));
                     break;
             }
-            
+
             validateForm();
         }
 
