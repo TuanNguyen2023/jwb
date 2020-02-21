@@ -134,6 +134,13 @@ public class DoGetDetailStructure implements Serializable {
     @Parameter(DoGetDetailConstants.PSTYV)
     private String _pstyv;
     //}+20100212#01 Add field
+    
+    /**Number DO was posted*/
+    @Parameter(DoGetDetailConstants.VBELN_NACH)
+    private String _vbelnNach;
+    /** Weigh ticker Ref*/
+    @Parameter(DoGetDetailConstants.WT_ID_REF)
+    private String _wtIdRef;
 
     // </editor-fold>
 
@@ -437,5 +444,22 @@ public class DoGetDetailStructure implements Serializable {
         return _pstyv;
     }
     //}+20100212#01
+
+    /**
+     * Number DO was posted
+     * @return the _vbelnNach
+     */
+    public String getVbelnNach() {
+        return _vbelnNach;
+    }
+
+    /**
+     * Weigh ticker Ref
+     * @return the _wtIdRef
+     */
+    public String getWtIdRef() {
+        return _wtIdRef;
+    }
+
     // </editor-fold>
 }

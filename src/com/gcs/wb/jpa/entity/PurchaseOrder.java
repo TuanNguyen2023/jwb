@@ -209,6 +209,11 @@ public class PurchaseOrder implements Serializable {
     public void setPurchaseOrderDetails(List<PurchaseOrderDetail> purchaseOrderDetails) {
         this.purchaseOrderDetails = purchaseOrderDetails;
     }
+    
+    public void addPurchaseOrderDetail(PurchaseOrderDetail purchaseOrderDetail) {
+        purchaseOrderDetail.setPurchaseOrder(this);
+        purchaseOrderDetails.add(purchaseOrderDetail);
+    }
 
     public PurchaseOrderDetail getPurchaseOrderDetail() {
         if (purchaseOrderDetails.isEmpty()) {

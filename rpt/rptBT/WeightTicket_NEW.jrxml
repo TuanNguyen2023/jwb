@@ -74,7 +74,7 @@
 	</subDataset>
 	<parameter name="P_MANDT" class="java.lang.String"/>
 	<parameter name="P_WPlant" class="java.lang.String"/>
-	<parameter name="P_ID" class="java.lang.String"/>
+	<parameter name="P_ID" class="java.lang.Integer"/>
 	<parameter name="P_DAYSEQ" class="java.lang.Long"/>
 	<parameter name="P_REPRINT" class="java.lang.Boolean"/>
 	<parameter name="P_PCB40BAG" class="java.lang.Long"/>
@@ -87,7 +87,7 @@
 	<parameter name="P_STAGE1" class="java.lang.Boolean" isForPrompting="false"/>
 	<parameter name="P_STAGE2" class="java.lang.Boolean" isForPrompting="false"/>
 	<queryString>
-		<![CDATA[p_report_online_or_not_PO_weight_ticket $P{P_MANDT},$P{P_WPlant},$P{P_ID},$P{P_DAYSEQ},$P{P_ADDRESS}]]>
+		<![CDATA[p_report_online_or_without_po_weight_ticket $P{P_MANDT},$P{P_WPlant},$P{P_ID},$P{P_DAYSEQ},$P{P_ADDRESS}]]>
 	</queryString>
 	<field name="MANDT" class="java.lang.String"/>
 	<field name="ID" class="java.lang.String"/>

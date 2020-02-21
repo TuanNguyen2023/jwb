@@ -44,7 +44,7 @@ public class LoginController {
     private LoginService loginService = new LoginService();
     ResourceMap resourceMap = Application.getInstance(WeighBridgeApp.class).getContext().getResourceMap(LoginView.class);
     private JFrame mainFrame = WeighBridgeApp.getApplication().getMainFrame();
-    
+
     public LoginController(String username, String password) {
         userRepository = new UserRepository();
         sapSettingRepository = new SAPSettingRepository();
@@ -85,20 +85,18 @@ public class LoginController {
             sapSetting = sapSettingRepository.getSAPSetting();
 
             Session session = loginService.getSapSession(credentials);
-            boolean onlineMode = configuration.isModeNormal();
-            if (onlineMode) {
-                try {
-                    loginService.checkVersionWB(session);
-                    session.execute(userGetDetailBapi);  //Login
-                } catch (Exception ex) {
-                    onlineMode = false;
-                    if (ex.getCause() instanceof JCoException) {
-                        jcoException = (JCoException) ex.getCause();
-                        if (jcoException.getGroup() == JCoException.JCO_ERROR_LOGON_FAILURE) {
-                            throw new Exception(resourceMap.getString("msg.onlineUsernameOrPasswordInvalid"));
-                        } else if (jcoException.getGroup() == JCoException.JCO_ERROR_COMMUNICATION) {
-                            JOptionPane.showMessageDialog(mainFrame, resourceMap.getString("msg.connectToSAPFail"));
-                        }
+            boolean onlineMode = true;
+            try {
+                loginService.checkVersionWB(session);
+                session.execute(userGetDetailBapi);  //Login
+            } catch (Exception ex) {
+                onlineMode = false;
+                if (ex.getCause() instanceof JCoException) {
+                    jcoException = (JCoException) ex.getCause();
+                    if (jcoException.getGroup() == JCoException.JCO_ERROR_LOGON_FAILURE) {
+                        throw new Exception(resourceMap.getString("msg.onlineUsernameOrPasswordInvalid"));
+                    } else if (jcoException.getGroup() == JCoException.JCO_ERROR_COMMUNICATION) {
+                        JOptionPane.showMessageDialog(mainFrame, resourceMap.getString("msg.connectToSAPFail"));
                     }
                 }
             }

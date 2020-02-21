@@ -2,19 +2,24 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
+import com.gcs.wb.bapi.goodsmvt.structure.DOCheckStructure;
 import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.base.constant.Constants;
+import com.gcs.wb.base.constant.Constants.WeighingProcess.MODE;
+import com.gcs.wb.base.constant.Constants.WeighingProcess.MODE_DETAIL;
 import com.gcs.wb.base.enums.MaterialEnum;
 import com.gcs.wb.base.enums.StatusEnum;
 import com.gcs.wb.base.util.StringUtil;
+import com.gcs.wb.controller.WeightTicketController;
 import com.gcs.wb.controller.WeightTicketRegistarationController;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.*;
-import com.gcs.wb.model.AppConfig;
+import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
+import com.gcs.wb.model.WeighingMode;
+import com.gcs.wb.views.validations.WeightTicketRegistrationValidation;
 import com.sap.conn.jco.JCoException;
 import org.apache.log4j.Logger;
 import org.hibersap.HibersapException;
@@ -28,51 +33,164 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
-import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
-import java.util.logging.Level;
+import org.jdesktop.application.Application;
 
 public class WTRegView extends javax.swing.JInternalFrame {
+
     EntityManager entityManager = JPAConnector.getInstance();
     EntityTransaction entityTransaction = entityManager.getTransaction();
     SAPService sapService = new SAPService();
-    Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration(); 
+    Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
     WeightTicketRegistarationController weightTicketRegistarationController = new WeightTicketRegistarationController();
     public ResourceMap resourceMapMsg = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(WTRegView.class);
-
     private static final Logger logger = Logger.getLogger(WTRegView.class);
     private final List<WeightTicket> weightTicketList;
-    private boolean isValidOutboundDelivery = true;
+    private boolean isValidDO = false;
+    private boolean isValidPO = false;
+    private boolean isValidPOSTO = false;
+    private boolean isValidSO = false;
+    private boolean isValidWeight = false;
+    private boolean isValidVendorLoad = false;
+    private boolean isValidVendorTransport = false;
+    private BigDecimal numCheckWeight = BigDecimal.ZERO;
+
     private boolean formValid;
-    private String abbr;
-    private boolean isNeedRevertWeightTicket = false;
-    private String outboundDeliveryNo = null;
-    private boolean isHasCheck = false;
     private com.gcs.wb.jpa.entity.WeightTicket newWeightTicket;
-    private com.gcs.wb.jpa.entity.OutboundDelivery outboundDelivery;
     private com.gcs.wb.jpa.entity.WeightTicket selectedWeightTicket;
     private boolean[] editable = null;
     Object[][] wtData = null;
     Object[] wtCols = Constants.WTRegView.WEIGHTTICKET_COLUMS;
     Class[] wtTypes = Constants.WTRegView.WEIGHTTICKET_TYPES;
-
+    // TODO update ui
+    private MODE mode = MODE.OUTPUT;
+    private MODE_DETAIL modeDetail;
+    private WeightTicketRegistrationValidation wtRegisValidation;
+    private PurchaseOrderRepository purchaseOrderRepository = new PurchaseOrderRepository();
+    WeightTicketController weightTicketController = new WeightTicketController();
 
     public WTRegView() {
         newWeightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
         selectedWeightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
-        outboundDelivery = new com.gcs.wb.jpa.entity.OutboundDelivery();
         weightTicketList = new ArrayList<>();
+        wtRegisValidation = new WeightTicketRegistrationValidation(rootPane, resourceMapMsg);
         initComponents();
+        initComboboxModel();
+        initComboboxRenderer();
 
         SearchWeightTicketTask t = new SearchWeightTicketTask(WeighBridgeApp.getApplication());
         t.execute();
 
         cbxHourTo.setSelectedIndex(23);
-        txtNMaterial.setVisible(false);
-        cbxNMaterial.setModel(weightTicketRegistarationController.getListMaterial());
+    }
+
+    private void initComboboxRenderer() {
+        cbxModeType.setRenderer(new DefaultListCellRenderer() {
+
+            @Override
+            public Component getListCellRendererComponent(
+                    JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof WeighingMode) {
+                    WeighingMode mod = (WeighingMode) value;
+                    setText(mod.getTitle());
+                    setToolTipText(mod.getTitle());
+                }
+                return this;
+            }
+        });
+
+        cbxMaterialTypeN.setRenderer(new DefaultListCellRenderer() {
+
+            @Override
+            public Component getListCellRendererComponent(
+                    JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof MaterialInternal) {
+                    MaterialInternal materialInternal = (MaterialInternal) value;
+                    setToolTipText(materialInternal.getMatnr());
+                    if (materialInternal.getMaktx().trim() != null) {
+                        setText(materialInternal.getMaktx());
+                    } else {
+                        setText(materialInternal.getMaktg());
+                    }
+                }
+                return this;
+            }
+        });
+
+        DefaultListCellRenderer cellRendererForSloc = new DefaultListCellRenderer() {
+
+            @Override
+            public Component getListCellRendererComponent(
+                    JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof SLoc) {
+                    SLoc sloc = (SLoc) value;
+                    setText(sloc.getLgort().concat(" - ").concat(sloc.getLgobe()));
+                }
+                return this;
+            }
+        };
+        cbxSlocN.setRenderer(cellRendererForSloc);
+        cbxSloc2N.setRenderer(cellRendererForSloc);
+
+        DefaultListCellRenderer cellRendererForBatchStock = new DefaultListCellRenderer() {
+
+            @Override
+            public Component getListCellRendererComponent(
+                    JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof BatchStock) {
+                    BatchStock batchStock = (BatchStock) value;
+                    setText(batchStock.getCharg());
+                }
+                return this;
+            }
+        };
+        cbxBatchStockN.setRenderer(cellRendererForBatchStock);
+        cbxBatchStock2N.setRenderer(cellRendererForBatchStock);
+
+        DefaultListCellRenderer cellRendererVendor = new DefaultListCellRenderer() {
+
+            @Override
+            public Component getListCellRendererComponent(
+                    JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof Vendor) {
+                    Vendor vendor = (Vendor) value;
+                    setText(vendor.getName1());
+                }
+                return this;
+            }
+        };
+        cbxVendorLoadingN.setRenderer(cellRendererVendor);
+        cbxVendorTransportN.setRenderer(cellRendererVendor);
+
+        cbxSuppliesIdN.setRenderer(new DefaultListCellRenderer() {
+
+            @Override
+            public Component getListCellRendererComponent(
+                    JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof MaterialInternal) {
+                    MaterialInternal materialInternal = (MaterialInternal) value;
+                    setText(materialInternal.getMatnr());
+                }
+                return this;
+            }
+        });
+    }
+
+    private void initComboboxModel() {
+        cbxSlocN.setModel(sapService.getSlocModel());
+        cbxSloc2N.setModel(sapService.getSlocModel());
+
+        cbxVendorLoadingN.setModel(sapService.getVendorList());
+        cbxVendorTransportN.setModel(sapService.getVendorList());
     }
 
     /**
@@ -83,11 +201,9 @@ public class WTRegView extends javax.swing.JInternalFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         rbtRegCatGroup = new javax.swing.ButtonGroup();
         jTextField1 = new javax.swing.JTextField();
-        buttonGroup1 = new javax.swing.ButtonGroup();
         pnFilter = new javax.swing.JPanel();
         lblDateFrom = new javax.swing.JLabel();
         dpDateFrom = new org.jdesktop.swingx.JXDatePicker();
@@ -112,37 +228,78 @@ public class WTRegView extends javax.swing.JInternalFrame {
         tabResults = new org.jdesktop.swingx.JXTable();
         pnPrintControl = new javax.swing.JPanel();
         btnReprint = new javax.swing.JButton();
-        pnWTicket = new javax.swing.JPanel();
-        pnNLeft = new javax.swing.JPanel();
-        lblNDriverName = new javax.swing.JLabel();
-        txtNDriverName = new javax.swing.JTextField();
-        lblNCMNDBL = new javax.swing.JLabel();
-        txtNCMNDBL = new javax.swing.JTextField();
-        lblNPlateNo = new javax.swing.JLabel();
-        txtNPlateNo = new javax.swing.JTextField();
-        lblNTrailerPlate = new javax.swing.JLabel();
-        txtNTrailerPlate = new javax.swing.JTextField();
-        pnNRight = new javax.swing.JPanel();
-        lblNRegCat = new javax.swing.JLabel();
-        rbtNInward = new javax.swing.JRadioButton();
-        rbtNOutward = new javax.swing.JRadioButton();
-        txtNMaterial = new javax.swing.JTextField();
-        lblNMaterial = new javax.swing.JLabel();
-        cbxNMaterial = new javax.swing.JComboBox();
-        lblNWeight = new javax.swing.JLabel();
-        txtNWeight = new javax.swing.JFormattedTextField();
-        lblNWeightUnit = new javax.swing.JLabel();
-        lblNDONum = new javax.swing.JLabel();
-        txtNDONum = new javax.swing.JTextField();
-        btnCheckDO = new javax.swing.JButton();
+        pnRegistrationOfVehicle = new javax.swing.JPanel();
+        pnROVTop = new javax.swing.JPanel();
+        rbtInput = new javax.swing.JRadioButton();
+        rbtOutput = new javax.swing.JRadioButton();
+        cbxModeType = new javax.swing.JComboBox();
+        pnROVContent = new javax.swing.JPanel();
+        pnROVLeft = new javax.swing.JPanel();
+        lblWeightTickerRefN = new javax.swing.JLabel();
+        lblRegisterIdN = new javax.swing.JLabel();
+        lblDriverNameN = new javax.swing.JLabel();
+        lblCMNDN = new javax.swing.JLabel();
+        lblPlateNoN = new javax.swing.JLabel();
+        lblTonnageN = new javax.swing.JLabel();
+        lblTonngageUnitN = new javax.swing.JLabel();
+        lblTrailerNoN = new javax.swing.JLabel();
+        lblSlingN = new javax.swing.JLabel();
+        lblPalletN = new javax.swing.JLabel();
+        lblSoNiemXaN = new javax.swing.JLabel();
+        lblProductionBatchN = new javax.swing.JLabel();
+        lblNoteN = new javax.swing.JLabel();
+        txtWeightTickerRefN = new javax.swing.JTextField();
+        txtRegisterIdN = new javax.swing.JTextField();
+        txtDriverNameN = new javax.swing.JTextField();
+        txtCMNDN = new javax.swing.JTextField();
+        txtPlateNoN = new javax.swing.JTextField();
+        txtTonnageN = new javax.swing.JFormattedTextField();
+        txtTrailerNoN = new javax.swing.JTextField();
+        txtSlingN = new javax.swing.JFormattedTextField();
+        txtPalletN = new javax.swing.JFormattedTextField();
+        txtSoNiemXaN = new javax.swing.JTextField();
+        txtProductionBatchN = new javax.swing.JTextField();
+        txtNoteN = new javax.swing.JTextField();
+        lblTicketIdN = new javax.swing.JLabel();
+        txtTicketIdN = new javax.swing.JTextField();
+        pnROVRight = new javax.swing.JPanel();
+        lblMaterialTypeN = new javax.swing.JLabel();
+        lblWeightN = new javax.swing.JLabel();
+        lblWeightUnitN = new javax.swing.JLabel();
+        lblSlocN = new javax.swing.JLabel();
+        lblSloc2N = new javax.swing.JLabel();
+        lblBatchStockN = new javax.swing.JLabel();
+        lblBatchStock2N = new javax.swing.JLabel();
+        lblDONumN = new javax.swing.JLabel();
+        lblSONumN = new javax.swing.JLabel();
+        lblPONumN = new javax.swing.JLabel();
+        lblPOSTONumN = new javax.swing.JLabel();
+        lblVendorLoadingN = new javax.swing.JLabel();
+        lblVendorTransportN = new javax.swing.JLabel();
+        lblSuppliesIdN = new javax.swing.JLabel();
+        cbxMaterialTypeN = new javax.swing.JComboBox();
+        txtWeightN = new javax.swing.JFormattedTextField();
+        cbxSlocN = new javax.swing.JComboBox();
+        cbxSloc2N = new javax.swing.JComboBox();
+        cbxBatchStockN = new javax.swing.JComboBox();
+        cbxBatchStock2N = new javax.swing.JComboBox();
+        txtDONumN = new javax.swing.JTextField();
+        btnDOCheckN = new javax.swing.JButton();
+        txtSONumN = new javax.swing.JTextField();
+        btnSOCheckN = new javax.swing.JButton();
+        txtPONumN = new javax.swing.JTextField();
+        btnPOCheckN = new javax.swing.JButton();
+        txtPOSTONumN = new javax.swing.JTextField();
+        btnPOSTOCheckN = new javax.swing.JButton();
+        cbxVendorLoadingN = new javax.swing.JComboBox();
+        cbxVendorTransportN = new javax.swing.JComboBox();
+        cbxSuppliesIdN = new javax.swing.JComboBox();
         pnControl = new javax.swing.JPanel();
         btnNew = new javax.swing.JButton();
         btnClear = new javax.swing.JButton();
-        btnMany = new javax.swing.JButton();
         btnSave = new javax.swing.JButton();
         lblWeightTicketNo = new javax.swing.JLabel();
         txtWeightTicketNo = new javax.swing.JTextField();
-        btnSo = new javax.swing.JButton();
 
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(WTRegView.class);
         jTextField1.setText(resourceMap.getString("jTextField1.text")); // NOI18N
@@ -155,9 +312,8 @@ public class WTRegView extends javax.swing.JInternalFrame {
         setName("Form"); // NOI18N
 
         pnFilter.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("pnFilter.border.title"))); // NOI18N
-        pnFilter.setMinimumSize(new java.awt.Dimension(12, 35));
+        pnFilter.setMinimumSize(new java.awt.Dimension(12, 137));
         pnFilter.setName("pnFilter"); // NOI18N
-        pnFilter.setPreferredSize(new java.awt.Dimension(315, 35));
 
         lblDateFrom.setText(resourceMap.getString("lblDateFrom.text")); // NOI18N
         lblDateFrom.setName("lblDateFrom"); // NOI18N
@@ -246,88 +402,79 @@ public class WTRegView extends javax.swing.JInternalFrame {
         pnFilterLayout.setHorizontalGroup(
             pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnFilterLayout.createSequentialGroup()
-                .addGap(35, 35, 35)
+                .addGap(77, 77, 77)
                 .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(pnFilterLayout.createSequentialGroup()
-                        .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblDriverName)
-                            .addComponent(lblDateFrom))
-                        .addGap(33, 33, 33))
-                    .addGroup(pnFilterLayout.createSequentialGroup()
-                        .addComponent(lblMaterialType, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                    .addComponent(lblDriverName)
+                    .addComponent(lblDateFrom)
+                    .addComponent(lblMaterialType))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnFind, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(pnFilterLayout.createSequentialGroup()
+                        .addComponent(btnFind)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 633, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnFilterLayout.createSequentialGroup()
                         .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(cbxMaterialType, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(txtDriverName)
-                            .addComponent(dpDateFrom, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE))
+                            .addComponent(dpDateFrom, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(31, 31, 31)
-                        .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(pnFilterLayout.createSequentialGroup()
-                                .addComponent(lblStatus)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cbxStatus, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(pnFilterLayout.createSequentialGroup()
-                                .addComponent(lblDateTo)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(dpDateTo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(pnFilterLayout.createSequentialGroup()
-                                .addComponent(lblPlateNo)
-                                .addGap(18, 18, 18)
-                                .addComponent(txtPlateNo, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(32, 32, 32)
+                        .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblPlateNo)
+                            .addComponent(lblDateTo)
+                            .addComponent(lblStatus))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblCreator)
-                            .addComponent(lblHourFrom))
-                        .addGap(4, 4, 4)
-                        .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(cbxStatus, 0, 166, Short.MAX_VALUE)
+                            .addComponent(txtPlateNo, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
+                            .addComponent(dpDateTo, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblHourFrom)
+                            .addComponent(lblCreator))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(pnFilterLayout.createSequentialGroup()
                                 .addComponent(cbxHourFrom, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
+                                .addGap(12, 12, 12)
                                 .addComponent(lblHourTo)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(cbxHourTo, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(txtCreator))))
-                .addGap(178, 178, 178))
+                            .addComponent(txtCreator, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE))))
+                .addGap(101, 101, 101))
         );
         pnFilterLayout.setVerticalGroup(
             pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnFilterLayout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(lblHourTo)
                         .addComponent(cbxHourTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cbxHourFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(lblHourFrom)
-                        .addComponent(cbxHourFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(lblHourTo))
                     .addGroup(pnFilterLayout.createSequentialGroup()
                         .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblDateFrom)
-                            .addComponent(dpDateFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(10, 10, 10)
-                        .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(txtPlateNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(lblCreator)
-                                .addComponent(txtCreator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(txtDriverName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(lblPlateNo, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(lblDriverName, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(dpDateFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblDateFrom))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtDriverName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtPlateNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblPlateNo, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblDriverName, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtCreator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblCreator))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblStatus)
+                            .addComponent(cbxStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbxMaterialType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblMaterialType)))
                     .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(lblDateTo)
-                        .addComponent(dpDateTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbxMaterialType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblStatus)
-                    .addComponent(cbxStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblMaterialType))
-                .addGap(18, 18, 18)
-                .addComponent(btnFind, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
-                .addGap(26, 26, 26))
+                        .addComponent(dpDateTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblDateTo)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnFind)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         spnResult.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("spnResult.border.title"))); // NOI18N
@@ -357,314 +504,577 @@ public class WTRegView extends javax.swing.JInternalFrame {
         btnReprint.setName("btnReprint"); // NOI18N
         pnPrintControl.add(btnReprint);
 
-        pnWTicket.setName("pnWTicket"); // NOI18N
-        pnWTicket.setLayout(new javax.swing.BoxLayout(pnWTicket, javax.swing.BoxLayout.LINE_AXIS));
+        pnRegistrationOfVehicle.setName("pnRegistrationOfVehicle"); // NOI18N
 
-        pnNLeft.setName("pnNLeft"); // NOI18N
+        pnROVTop.setName("pnROVTop"); // NOI18N
 
-        lblNDriverName.setText(resourceMap.getString("lblNDriverName.text")); // NOI18N
-        lblNDriverName.setName("lblNDriverName"); // NOI18N
-
-        txtNDriverName.setName("txtNDriverName"); // NOI18N
-
-        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txtNDriverName, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
-        bindingGroup.addBinding(binding);
-
-        txtNDriverName.addActionListener(new java.awt.event.ActionListener() {
+        rbtRegCatGroup.add(rbtInput);
+        rbtInput.setText(resourceMap.getString("rbtInput.text")); // NOI18N
+        rbtInput.setName("rbtInput"); // NOI18N
+        rbtInput.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNDriverNameActionPerformed(evt);
-            }
-        });
-        txtNDriverName.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtNDriverNameFocusLost(evt);
+                rbtInputActionPerformed(evt);
             }
         });
 
-        lblNCMNDBL.setText(resourceMap.getString("lblNCMNDBL.text")); // NOI18N
-        lblNCMNDBL.setName("lblNCMNDBL"); // NOI18N
-
-        txtNCMNDBL.setName("txtNCMNDBL"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txtNCMNDBL, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
-        bindingGroup.addBinding(binding);
-
-        txtNCMNDBL.addActionListener(new java.awt.event.ActionListener() {
+        rbtRegCatGroup.add(rbtOutput);
+        rbtOutput.setSelected(true);
+        rbtOutput.setText(resourceMap.getString("rbtOutput.text")); // NOI18N
+        rbtOutput.setName("rbtOutput"); // NOI18N
+        rbtOutput.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNCMNDBLActionPerformed(evt);
-            }
-        });
-        txtNCMNDBL.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtNCMNDBLFocusLost(evt);
+                rbtOutputActionPerformed(evt);
             }
         });
 
-        lblNPlateNo.setText(resourceMap.getString("lblNPlateNo.text")); // NOI18N
-        lblNPlateNo.setName("lblNPlateNo"); // NOI18N
-
-        txtNPlateNo.setName("txtNPlateNo"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txtNPlateNo, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
-        bindingGroup.addBinding(binding);
-
-        txtNPlateNo.addActionListener(new java.awt.event.ActionListener() {
+        cbxModeType.setName("cbxModeType"); // NOI18N
+        cbxModeType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNPlateNoActionPerformed(evt);
-            }
-        });
-        txtNPlateNo.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtNPlateNoFocusLost(evt);
+                cbxModeTypeActionPerformed(evt);
             }
         });
 
-        lblNTrailerPlate.setText(resourceMap.getString("lblNTrailerPlate.text")); // NOI18N
-        lblNTrailerPlate.setName("lblNTrailerPlate"); // NOI18N
-
-        txtNTrailerPlate.setName("txtNTrailerPlate"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txtNTrailerPlate, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
-        bindingGroup.addBinding(binding);
-
-        txtNTrailerPlate.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNTrailerPlateActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout pnNLeftLayout = new javax.swing.GroupLayout(pnNLeft);
-        pnNLeft.setLayout(pnNLeftLayout);
-        pnNLeftLayout.setHorizontalGroup(
-            pnNLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnNLeftLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnNLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblNTrailerPlate)
-                    .addComponent(lblNDriverName)
-                    .addComponent(lblNCMNDBL)
-                    .addComponent(lblNPlateNo))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnNLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtNCMNDBL)
-                    .addComponent(txtNPlateNo)
-                    .addComponent(txtNTrailerPlate)
-                    .addComponent(txtNDriverName, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(72, Short.MAX_VALUE))
-        );
-        pnNLeftLayout.setVerticalGroup(
-            pnNLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnNLeftLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnNLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblNDriverName)
-                    .addComponent(txtNDriverName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnNLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblNCMNDBL)
-                    .addComponent(txtNCMNDBL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnNLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblNPlateNo)
-                    .addComponent(txtNPlateNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnNLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblNTrailerPlate)
-                    .addComponent(txtNTrailerPlate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(50, Short.MAX_VALUE))
-        );
-
-        pnWTicket.add(pnNLeft);
-
-        pnNRight.setName("pnNRight"); // NOI18N
-
-        lblNRegCat.setText(resourceMap.getString("lblNRegCat.text")); // NOI18N
-        lblNRegCat.setName("lblNRegCat"); // NOI18N
-
-        rbtRegCatGroup.add(rbtNInward);
-        rbtNInward.setSelected(true);
-        rbtNInward.setText(resourceMap.getString("rbtNInward.text")); // NOI18N
-        rbtNInward.setName("rbtNInward"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${rbtEnabled}"), rbtNInward, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
-        bindingGroup.addBinding(binding);
-
-        rbtNInward.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                rbtNInwardItemStateChanged(evt);
-            }
-        });
-
-        rbtRegCatGroup.add(rbtNOutward);
-        rbtNOutward.setText(resourceMap.getString("rbtNOutward.text")); // NOI18N
-        rbtNOutward.setName("rbtNOutward"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${rbtEnabled}"), rbtNOutward, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
-        bindingGroup.addBinding(binding);
-
-        rbtNOutward.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                rbtNOutwardItemStateChanged(evt);
-            }
-        });
-
-        txtNMaterial.setName("txtNMaterial"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txtNMaterial, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
-        bindingGroup.addBinding(binding);
-
-        txtNMaterial.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNMaterialActionPerformed(evt);
-            }
-        });
-        txtNMaterial.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtNMaterialKeyReleased(evt);
-            }
-        });
-
-        lblNMaterial.setText(resourceMap.getString("lblNMaterial.text")); // NOI18N
-        lblNMaterial.setName("lblNMaterial"); // NOI18N
-
-        cbxNMaterial.setEditable(true);
-        cbxNMaterial.setModel(new javax.swing.DefaultComboBoxModel(new String[] { " " }));
-        cbxNMaterial.setName("cbxNMaterial"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), cbxNMaterial, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
-        bindingGroup.addBinding(binding);
-
-        cbxNMaterial.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cbxNMaterialItemStateChanged(evt);
-            }
-        });
-        cbxNMaterial.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbxNMaterialActionPerformed(evt);
-            }
-        });
-        cbxNMaterial.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                cbxNMaterialKeyReleased(evt);
-            }
-        });
-
-        lblNWeight.setText(resourceMap.getString("lblNWeight.text")); // NOI18N
-        lblNWeight.setName("lblNWeight"); // NOI18N
-
-        txtNWeight.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
-        txtNWeight.setName("txtNWeight"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txtNWeight, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
-        bindingGroup.addBinding(binding);
-
-        txtNWeight.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNWeightActionPerformed(evt);
-            }
-        });
-        txtNWeight.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtNWeightKeyReleased(evt);
-            }
-        });
-
-        lblNWeightUnit.setText(resourceMap.getString("lblNWeightUnit.text")); // NOI18N
-        lblNWeightUnit.setName("lblNWeightUnit"); // NOI18N
-
-        lblNDONum.setText(resourceMap.getString("lblNDONum.text")); // NOI18N
-        lblNDONum.setName("lblNDONum"); // NOI18N
-
-        txtNDONum.setEditable(false);
-        txtNDONum.setAction(actionMap.get("checkDO")); // NOI18N
-        txtNDONum.setName("txtNDONum"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${formEditable}"), txtNDONum, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
-        bindingGroup.addBinding(binding);
-
-        txtNDONum.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtNDONumActionPerformed(evt);
-            }
-        });
-        txtNDONum.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtNDONumKeyReleased(evt);
-            }
-        });
-
-        btnCheckDO.setAction(actionMap.get("checkDO")); // NOI18N
-        btnCheckDO.setText(resourceMap.getString("btnCheckDO.text")); // NOI18N
-        btnCheckDO.setName("btnCheckDO"); // NOI18N
-        btnCheckDO.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCheckDOActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout pnNRightLayout = new javax.swing.GroupLayout(pnNRight);
-        pnNRight.setLayout(pnNRightLayout);
-        pnNRightLayout.setHorizontalGroup(
-            pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnNRightLayout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addGroup(pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnNRightLayout.createSequentialGroup()
-                        .addGroup(pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lblNDONum)
-                            .addComponent(lblNWeight))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
-                    .addGroup(pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(pnNRightLayout.createSequentialGroup()
-                            .addGap(11, 11, 11)
-                            .addComponent(lblNMaterial))
-                        .addGroup(pnNRightLayout.createSequentialGroup()
-                            .addGap(17, 17, 17)
-                            .addComponent(lblNRegCat, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE))))
-                .addGroup(pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnNRightLayout.createSequentialGroup()
-                        .addComponent(rbtNInward)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(rbtNOutward)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtNMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(cbxNMaterial, 0, 281, Short.MAX_VALUE)
-                    .addComponent(txtNDONum, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)
-                    .addComponent(txtNWeight, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE))
+        javax.swing.GroupLayout pnROVTopLayout = new javax.swing.GroupLayout(pnROVTop);
+        pnROVTop.setLayout(pnROVTopLayout);
+        pnROVTopLayout.setHorizontalGroup(
+            pnROVTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnROVTopLayout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(rbtInput)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblNWeightUnit)
-                    .addComponent(btnCheckDO, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(31, 31, 31))
+                .addComponent(rbtOutput)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cbxModeType, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(317, Short.MAX_VALUE))
         );
-        pnNRightLayout.setVerticalGroup(
-            pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnNRightLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblNRegCat)
-                    .addComponent(rbtNInward)
-                    .addComponent(rbtNOutward)
-                    .addComponent(txtNMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbxNMaterial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblNMaterial))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtNWeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblNWeightUnit)
-                    .addComponent(lblNWeight))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnNRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtNDONum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblNDONum)
-                    .addComponent(btnCheckDO))
-                .addContainerGap(47, Short.MAX_VALUE))
+        pnROVTopLayout.setVerticalGroup(
+            pnROVTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnROVTopLayout.createSequentialGroup()
+                .addGroup(pnROVTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbxModeType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(rbtOutput)
+                    .addComponent(rbtInput))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        pnWTicket.add(pnNRight);
+        pnROVContent.setName("pnROVContent"); // NOI18N
+
+        pnROVLeft.setName("pnROVLeft"); // NOI18N
+
+        lblWeightTickerRefN.setText(resourceMap.getString("lblWeightTickerRefN.text")); // NOI18N
+        lblWeightTickerRefN.setName("lblWeightTickerRefN"); // NOI18N
+
+        lblRegisterIdN.setText(resourceMap.getString("lblRegisterIdN.text")); // NOI18N
+        lblRegisterIdN.setName("lblRegisterIdN"); // NOI18N
+
+        lblDriverNameN.setText(resourceMap.getString("lblDriverNameN.text")); // NOI18N
+        lblDriverNameN.setName("lblDriverNameN"); // NOI18N
+
+        lblCMNDN.setText(resourceMap.getString("lblCMNDN.text")); // NOI18N
+        lblCMNDN.setName("lblCMNDN"); // NOI18N
+
+        lblPlateNoN.setText(resourceMap.getString("lblPlateNoN.text")); // NOI18N
+        lblPlateNoN.setName("lblPlateNoN"); // NOI18N
+
+        lblTonnageN.setText(resourceMap.getString("lblTonnageN.text")); // NOI18N
+        lblTonnageN.setName("lblTonnageN"); // NOI18N
+
+        lblTonngageUnitN.setText(resourceMap.getString("lblTonngageUnitN.text")); // NOI18N
+        lblTonngageUnitN.setName("lblTonngageUnitN"); // NOI18N
+
+        lblTrailerNoN.setText(resourceMap.getString("lblTrailerNoN.text")); // NOI18N
+        lblTrailerNoN.setName("lblTrailerNoN"); // NOI18N
+
+        lblSlingN.setText(resourceMap.getString("lblSlingN.text")); // NOI18N
+        lblSlingN.setName("lblSlingN"); // NOI18N
+
+        lblPalletN.setText(resourceMap.getString("lblPalletN.text")); // NOI18N
+        lblPalletN.setName("lblPalletN"); // NOI18N
+
+        lblSoNiemXaN.setText(resourceMap.getString("lblSoNiemXaN.text")); // NOI18N
+        lblSoNiemXaN.setName("lblSoNiemXaN"); // NOI18N
+
+        lblProductionBatchN.setText(resourceMap.getString("lblProductionBatchN.text")); // NOI18N
+        lblProductionBatchN.setName("lblProductionBatchN"); // NOI18N
+
+        lblNoteN.setText(resourceMap.getString("lblNoteN.text")); // NOI18N
+        lblNoteN.setName("lblNoteN"); // NOI18N
+
+        txtWeightTickerRefN.setName("txtWeightTickerRefN"); // NOI18N
+        txtWeightTickerRefN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtWeightTickerRefNKeyReleased(evt);
+            }
+        });
+
+        txtRegisterIdN.setName("txtRegisterIdN"); // NOI18N
+        txtRegisterIdN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtRegisterIdNKeyReleased(evt);
+            }
+        });
+
+        txtDriverNameN.setName("txtDriverNameN"); // NOI18N
+        txtDriverNameN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtDriverNameNKeyReleased(evt);
+            }
+        });
+
+        txtCMNDN.setName("txtCMNDN"); // NOI18N
+        txtCMNDN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtCMNDNKeyReleased(evt);
+            }
+        });
+
+        txtPlateNoN.setName("txtPlateNoN"); // NOI18N
+        txtPlateNoN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtPlateNoNKeyReleased(evt);
+            }
+        });
+
+        txtTonnageN.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
+        txtTonnageN.setText(resourceMap.getString("txtTonnageN.text")); // NOI18N
+        txtTonnageN.setName("txtTonnageN"); // NOI18N
+
+        txtTrailerNoN.setName("txtTrailerNoN"); // NOI18N
+
+        txtSlingN.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
+        txtSlingN.setText(resourceMap.getString("txtSlingN.text")); // NOI18N
+        txtSlingN.setName("txtSlingN"); // NOI18N
+        txtSlingN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtSlingNKeyReleased(evt);
+            }
+        });
+
+        txtPalletN.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
+        txtPalletN.setText(resourceMap.getString("txtPalletN.text")); // NOI18N
+        txtPalletN.setName("txtPalletN"); // NOI18N
+        txtPalletN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtPalletNKeyReleased(evt);
+            }
+        });
+
+        txtSoNiemXaN.setName("txtSoNiemXaN"); // NOI18N
+
+        txtProductionBatchN.setName("txtProductionBatchN"); // NOI18N
+
+        txtNoteN.setName("txtNoteN"); // NOI18N
+
+        lblTicketIdN.setText(resourceMap.getString("lblTicketIdN.text")); // NOI18N
+        lblTicketIdN.setName("lblTicketIdN"); // NOI18N
+
+        txtTicketIdN.setName("txtTicketIdN"); // NOI18N
+        txtTicketIdN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtTicketIdNKeyReleased(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pnROVLeftLayout = new javax.swing.GroupLayout(pnROVLeft);
+        pnROVLeft.setLayout(pnROVLeftLayout);
+        pnROVLeftLayout.setHorizontalGroup(
+            pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnROVLeftLayout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblTicketIdN)
+                    .addComponent(lblWeightTickerRefN)
+                    .addComponent(lblRegisterIdN)
+                    .addComponent(lblDriverNameN)
+                    .addComponent(lblCMNDN)
+                    .addComponent(lblPlateNoN)
+                    .addComponent(lblTrailerNoN)
+                    .addComponent(lblSlingN)
+                    .addComponent(lblPalletN)
+                    .addComponent(lblSoNiemXaN)
+                    .addComponent(lblProductionBatchN)
+                    .addComponent(lblNoteN))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtTicketIdN, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
+                    .addComponent(txtNoteN, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
+                    .addComponent(txtProductionBatchN, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
+                    .addComponent(txtCMNDN, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
+                    .addComponent(txtTrailerNoN, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
+                    .addGroup(pnROVLeftLayout.createSequentialGroup()
+                        .addComponent(txtPlateNoN, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblTonnageN)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtTonnageN, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblTonngageUnitN))
+                    .addComponent(txtWeightTickerRefN, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
+                    .addComponent(txtDriverNameN, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
+                    .addComponent(txtRegisterIdN, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
+                    .addComponent(txtSlingN, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
+                    .addComponent(txtPalletN, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
+                    .addComponent(txtSoNiemXaN, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE))
+                .addGap(35, 35, 35))
+        );
+        pnROVLeftLayout.setVerticalGroup(
+            pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnROVLeftLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblTicketIdN)
+                    .addComponent(txtTicketIdN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblWeightTickerRefN)
+                    .addComponent(txtWeightTickerRefN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtRegisterIdN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblRegisterIdN))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtDriverNameN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblDriverNameN))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtCMNDN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblCMNDN))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtPlateNoN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblTonnageN)
+                    .addComponent(txtTonnageN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblTonngageUnitN)
+                    .addComponent(lblPlateNoN))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtTrailerNoN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblTrailerNoN))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtSlingN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblSlingN))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtPalletN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblPalletN))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtSoNiemXaN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblSoNiemXaN))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtProductionBatchN)
+                    .addComponent(lblProductionBatchN))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtNoteN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblNoteN))
+                .addGap(137, 137, 137))
+        );
+
+        pnROVRight.setName("pnROVRight"); // NOI18N
+
+        lblMaterialTypeN.setText(resourceMap.getString("lblMaterialTypeN.text")); // NOI18N
+        lblMaterialTypeN.setName("lblMaterialTypeN"); // NOI18N
+
+        lblWeightN.setText(resourceMap.getString("lblWeightN.text")); // NOI18N
+        lblWeightN.setName("lblWeightN"); // NOI18N
+
+        lblWeightUnitN.setText(resourceMap.getString("lblWeightUnitN.text")); // NOI18N
+        lblWeightUnitN.setName("lblWeightUnitN"); // NOI18N
+
+        lblSlocN.setText(resourceMap.getString("lblSlocN.text")); // NOI18N
+        lblSlocN.setName("lblSlocN"); // NOI18N
+
+        lblSloc2N.setText(resourceMap.getString("lblSloc2N.text")); // NOI18N
+        lblSloc2N.setName("lblSloc2N"); // NOI18N
+
+        lblBatchStockN.setText(resourceMap.getString("lblBatchStockN.text")); // NOI18N
+        lblBatchStockN.setName("lblBatchStockN"); // NOI18N
+
+        lblBatchStock2N.setText(resourceMap.getString("lblBatchStock2N.text")); // NOI18N
+        lblBatchStock2N.setName("lblBatchStock2N"); // NOI18N
+
+        lblDONumN.setText(resourceMap.getString("lblDONumN.text")); // NOI18N
+        lblDONumN.setName("lblDONumN"); // NOI18N
+
+        lblSONumN.setText(resourceMap.getString("lblSONumN.text")); // NOI18N
+        lblSONumN.setName("lblSONumN"); // NOI18N
+
+        lblPONumN.setText(resourceMap.getString("lblPONumN.text")); // NOI18N
+        lblPONumN.setName("lblPONumN"); // NOI18N
+
+        lblPOSTONumN.setText(resourceMap.getString("lblPOSTONumN.text")); // NOI18N
+        lblPOSTONumN.setName("lblPOSTONumN"); // NOI18N
+
+        lblVendorLoadingN.setText(resourceMap.getString("lblVendorLoadingN.text")); // NOI18N
+        lblVendorLoadingN.setName("lblVendorLoadingN"); // NOI18N
+
+        lblVendorTransportN.setText(resourceMap.getString("lblVendorTransportN.text")); // NOI18N
+        lblVendorTransportN.setName("lblVendorTransportN"); // NOI18N
+
+        lblSuppliesIdN.setText(resourceMap.getString("lblSuppliesIdN.text")); // NOI18N
+        lblSuppliesIdN.setName("lblSuppliesIdN"); // NOI18N
+
+        cbxMaterialTypeN.setEditable(true);
+        cbxMaterialTypeN.setName("cbxMaterialTypeN"); // NOI18N
+        cbxMaterialTypeN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxMaterialTypeNActionPerformed(evt);
+            }
+        });
+
+        txtWeightN.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
+        txtWeightN.setText(resourceMap.getString("txtWeightN.text")); // NOI18N
+        txtWeightN.setName("txtWeightN"); // NOI18N
+        txtWeightN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtWeightNKeyReleased(evt);
+            }
+        });
+
+        cbxSlocN.setName("cbxSlocN"); // NOI18N
+        cbxSlocN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxSlocNActionPerformed(evt);
+            }
+        });
+
+        cbxSloc2N.setName("cbxSloc2N"); // NOI18N
+        cbxSloc2N.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxSloc2NActionPerformed(evt);
+            }
+        });
+
+        cbxBatchStockN.setName("cbxBatchStockN"); // NOI18N
+        cbxBatchStockN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxBatchStockNActionPerformed(evt);
+            }
+        });
+
+        cbxBatchStock2N.setName("cbxBatchStock2N"); // NOI18N
+        cbxBatchStock2N.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxBatchStock2NActionPerformed(evt);
+            }
+        });
+
+        txtDONumN.setName("txtDONumN"); // NOI18N
+        txtDONumN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtDONumNKeyReleased(evt);
+            }
+        });
+
+        btnDOCheckN.setAction(actionMap.get("checkDO")); // NOI18N
+        btnDOCheckN.setText(resourceMap.getString("btnDOCheckN.text")); // NOI18N
+        btnDOCheckN.setName("btnDOCheckN"); // NOI18N
+
+        txtSONumN.setName("txtSONumN"); // NOI18N
+        txtSONumN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtSONumNKeyReleased(evt);
+            }
+        });
+
+        btnSOCheckN.setAction(actionMap.get("checkSO")); // NOI18N
+        btnSOCheckN.setText(resourceMap.getString("btnSOCheckN.text")); // NOI18N
+        btnSOCheckN.setName("btnSOCheckN"); // NOI18N
+
+        txtPONumN.setName("txtPONumN"); // NOI18N
+        txtPONumN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtPONumNKeyReleased(evt);
+            }
+        });
+
+        btnPOCheckN.setAction(actionMap.get("checkPO")); // NOI18N
+        btnPOCheckN.setText(resourceMap.getString("btnPOCheckN.text")); // NOI18N
+        btnPOCheckN.setName("btnPOCheckN"); // NOI18N
+
+        txtPOSTONumN.setName("txtPOSTONumN"); // NOI18N
+        txtPOSTONumN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtPOSTONumNKeyReleased(evt);
+            }
+        });
+
+        btnPOSTOCheckN.setAction(actionMap.get("checkPOSTO")); // NOI18N
+        btnPOSTOCheckN.setText(resourceMap.getString("btnPOSTOCheckN.text")); // NOI18N
+        btnPOSTOCheckN.setName("btnPOSTOCheckN"); // NOI18N
+
+        cbxVendorLoadingN.setName("cbxVendorLoadingN"); // NOI18N
+        cbxVendorLoadingN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxVendorLoadingNActionPerformed(evt);
+            }
+        });
+
+        cbxVendorTransportN.setName("cbxVendorTransportN"); // NOI18N
+        cbxVendorTransportN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxVendorTransportNActionPerformed(evt);
+            }
+        });
+
+        cbxSuppliesIdN.setName("cbxSuppliesIdN"); // NOI18N
+        cbxSuppliesIdN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxSuppliesIdNActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pnROVRightLayout = new javax.swing.GroupLayout(pnROVRight);
+        pnROVRight.setLayout(pnROVRightLayout);
+        pnROVRightLayout.setHorizontalGroup(
+            pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnROVRightLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblSloc2N)
+                    .addComponent(lblBatchStockN)
+                    .addComponent(lblBatchStock2N)
+                    .addComponent(lblSlocN)
+                    .addComponent(lblMaterialTypeN)
+                    .addComponent(lblPOSTONumN)
+                    .addComponent(lblPONumN)
+                    .addGroup(pnROVRightLayout.createSequentialGroup()
+                        .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblDONumN)
+                            .addComponent(lblSONumN))
+                        .addGap(1, 1, 1))
+                    .addComponent(lblVendorLoadingN)
+                    .addComponent(lblVendorTransportN)
+                    .addComponent(lblWeightN)
+                    .addComponent(lblSuppliesIdN))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cbxSuppliesIdN, 0, 271, Short.MAX_VALUE)
+                    .addComponent(cbxVendorTransportN, 0, 271, Short.MAX_VALUE)
+                    .addComponent(cbxVendorLoadingN, 0, 271, Short.MAX_VALUE)
+                    .addComponent(txtSONumN, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
+                    .addComponent(txtPONumN, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
+                    .addComponent(txtPOSTONumN, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
+                    .addComponent(cbxMaterialTypeN, 0, 271, Short.MAX_VALUE)
+                    .addComponent(cbxBatchStock2N, 0, 271, Short.MAX_VALUE)
+                    .addComponent(cbxBatchStockN, 0, 271, Short.MAX_VALUE)
+                    .addComponent(cbxSloc2N, 0, 271, Short.MAX_VALUE)
+                    .addComponent(cbxSlocN, 0, 271, Short.MAX_VALUE)
+                    .addComponent(txtWeightN, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
+                    .addComponent(txtDONumN, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnSOCheckN)
+                    .addComponent(btnDOCheckN)
+                    .addComponent(btnPOCheckN)
+                    .addComponent(btnPOSTOCheckN)
+                    .addComponent(lblWeightUnitN))
+                .addGap(29, 29, 29))
+        );
+        pnROVRightLayout.setVerticalGroup(
+            pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnROVRightLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblDONumN)
+                    .addComponent(txtDONumN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDOCheckN))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblSONumN)
+                    .addComponent(txtSONumN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSOCheckN))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblPONumN)
+                    .addComponent(txtPONumN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnPOCheckN))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblPOSTONumN)
+                    .addComponent(txtPOSTONumN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnPOSTOCheckN))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbxMaterialTypeN, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblMaterialTypeN))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtWeightN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblWeightN))
+                    .addGroup(pnROVRightLayout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(lblWeightUnitN)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbxSlocN, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblSlocN))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbxSloc2N, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblSloc2N))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbxBatchStockN, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblBatchStockN))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbxBatchStock2N, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblBatchStock2N))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblVendorLoadingN)
+                    .addComponent(cbxVendorLoadingN, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbxVendorTransportN, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblVendorTransportN))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbxSuppliesIdN, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblSuppliesIdN))
+                .addContainerGap(36, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout pnROVContentLayout = new javax.swing.GroupLayout(pnROVContent);
+        pnROVContent.setLayout(pnROVContentLayout);
+        pnROVContentLayout.setHorizontalGroup(
+            pnROVContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnROVContentLayout.createSequentialGroup()
+                .addComponent(pnROVLeft, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(pnROVRight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        pnROVContentLayout.setVerticalGroup(
+            pnROVContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(pnROVRight, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(pnROVLeft, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout pnRegistrationOfVehicleLayout = new javax.swing.GroupLayout(pnRegistrationOfVehicle);
+        pnRegistrationOfVehicle.setLayout(pnRegistrationOfVehicleLayout);
+        pnRegistrationOfVehicleLayout.setHorizontalGroup(
+            pnRegistrationOfVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnRegistrationOfVehicleLayout.createSequentialGroup()
+                .addGroup(pnRegistrationOfVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(pnROVContent, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnROVTop, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        pnRegistrationOfVehicleLayout.setVerticalGroup(
+            pnRegistrationOfVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnRegistrationOfVehicleLayout.createSequentialGroup()
+                .addComponent(pnROVTop, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnROVContent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
 
         pnControl.setName("pnControl"); // NOI18N
 
@@ -676,23 +1086,9 @@ public class WTRegView extends javax.swing.JInternalFrame {
         btnClear.setText(resourceMap.getString("btnClear.text")); // NOI18N
         btnClear.setName("btnClear"); // NOI18N
 
-        btnMany.setText(resourceMap.getString("btnMany.text")); // NOI18N
-        btnMany.setEnabled(false);
-        btnMany.setName("btnMany"); // NOI18N
-        btnMany.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnManyActionPerformed(evt);
-            }
-        });
-
         btnSave.setAction(actionMap.get("saveRecord")); // NOI18N
         btnSave.setText(resourceMap.getString("btnSave.text")); // NOI18N
         btnSave.setName("btnSave"); // NOI18N
-        btnSave.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSaveActionPerformed(evt);
-            }
-        });
 
         lblWeightTicketNo.setText(resourceMap.getString("lblWeightTicketNo.text")); // NOI18N
         lblWeightTicketNo.setName("lblWeightTicketNo"); // NOI18N
@@ -702,34 +1098,21 @@ public class WTRegView extends javax.swing.JInternalFrame {
         txtWeightTicketNo.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         txtWeightTicketNo.setName("txtWeightTicketNo"); // NOI18N
 
-        btnSo.setText(resourceMap.getString("btnSo.text")); // NOI18N
-        btnSo.setEnabled(false);
-        btnSo.setName("btnSo"); // NOI18N
-        btnSo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSoActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout pnControlLayout = new javax.swing.GroupLayout(pnControl);
         pnControl.setLayout(pnControlLayout);
         pnControlLayout.setHorizontalGroup(
             pnControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnControlLayout.createSequentialGroup()
                 .addComponent(btnNew)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnClear)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnMany)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnSo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnSave)
-                .addGap(29, 29, 29)
+                .addGap(102, 102, 102)
                 .addComponent(lblWeightTicketNo)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtWeightTicketNo, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(129, 129, 129))
+                .addComponent(txtWeightTicketNo, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(391, 391, 391))
         );
         pnControlLayout.setVerticalGroup(
             pnControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -738,11 +1121,9 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addGroup(pnControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnNew)
                     .addComponent(btnClear)
-                    .addComponent(btnMany)
-                    .addComponent(btnSo)
                     .addComponent(btnSave)
-                    .addComponent(txtWeightTicketNo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblWeightTicketNo)))
+                    .addComponent(lblWeightTicketNo)
+                    .addComponent(txtWeightTicketNo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -752,30 +1133,28 @@ public class WTRegView extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 915, Short.MAX_VALUE)
-                    .addComponent(spnResult, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 915, Short.MAX_VALUE)
-                    .addComponent(pnPrintControl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 915, Short.MAX_VALUE)
-                    .addComponent(pnWTicket, javax.swing.GroupLayout.DEFAULT_SIZE, 915, Short.MAX_VALUE)
-                    .addComponent(pnControl, javax.swing.GroupLayout.DEFAULT_SIZE, 915, Short.MAX_VALUE))
+                    .addComponent(pnRegistrationOfVehicle, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnPrintControl, javax.swing.GroupLayout.DEFAULT_SIZE, 936, Short.MAX_VALUE)
+                    .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 936, Short.MAX_VALUE)
+                    .addComponent(pnFilter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnControl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 936, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(pnFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(pnFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(spnResult, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(spnResult, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnPrintControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnWTicket, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(pnRegistrationOfVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(pnControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(27, Short.MAX_VALUE))
+                .addContainerGap(89, Short.MAX_VALUE))
         );
-
-        bindingGroup.bind();
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -783,195 +1162,204 @@ public class WTRegView extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Old Code">
 // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Event methods">
-    private void rbtNInwardItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbtNInwardItemStateChanged
-        setSaveNeeded(isValidated());
-    }//GEN-LAST:event_rbtNInwardItemStateChanged
-
-    private void rbtNOutwardItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_rbtNOutwardItemStateChanged
-        setSaveNeeded(isValidated());
-    }//GEN-LAST:event_rbtNOutwardItemStateChanged
-
-    private void txtNMaterialKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNMaterialKeyReleased
-        setSaveNeeded(isValidated());
-    }//GEN-LAST:event_txtNMaterialKeyReleased
-
-    private void txtNWeightKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNWeightKeyReleased
-        setSaveNeeded(isValidated());
-    }//GEN-LAST:event_txtNWeightKeyReleased
-
-    private void txtNDONumKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNDONumKeyReleased
-        if (WeighBridgeApp.getApplication().isOfflineMode()) {
-            return;
-        }
-
-        if (txtNDONum.getText().trim() == null) {
-            return;
-        }
-        int DOLength = txtNDONum.getText().trim().length();
-        if (DOLength == 0 || (isValidOutboundDelivery && DOLength >= 7 && isValidOutboundDelivery && DOLength <= 10)) {
-            if ((evt.isControlDown() && evt.getKeyCode() == KeyEvent.VK_V) || (evt.isShiftDown() && evt.getKeyCode() == KeyEvent.VK_INSERT)) {
-                isValidOutboundDelivery = false;
-                txtNDONum.setForeground(Color.red);
-            } else {
-                txtNDONum.setForeground(Color.black);
-            }
-        } else {
-            isValidOutboundDelivery = false;
-            txtNDONum.setForeground(Color.red);
-        }
-
-        if (DOLength == 0) {
-            isValidOutboundDelivery = true;
-            setRbtEnabled(true);
-            txtNMaterial.setEditable(true);
-            txtNWeight.setEditable(true);
-        } else {
-            txtNMaterial.setEditable(false);
-            txtNWeight.setEditable(false);
-        }
-
-        if (isValidOutboundDelivery) {
-            setSaveNeeded(isValidated());
-        }
-    }//GEN-LAST:event_txtNDONumKeyReleased
-
-    private void txtNPlateNoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNPlateNoActionPerformed
-        setSaveNeeded(isValidated());
-    }//GEN-LAST:event_txtNPlateNoActionPerformed
-
-    private void txtNDriverNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNDriverNameActionPerformed
-        setSaveNeeded(isValidated());
-    }//GEN-LAST:event_txtNDriverNameActionPerformed
-
-    private void txtNCMNDBLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNCMNDBLActionPerformed
-        setSaveNeeded(isValidated());
-    }//GEN-LAST:event_txtNCMNDBLActionPerformed
-
-    private void txtNMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNMaterialActionPerformed
-        setSaveNeeded(isValidated());
-    }//GEN-LAST:event_txtNMaterialActionPerformed
-
-    private void txtNWeightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNWeightActionPerformed
-        setSaveNeeded(isValidated());
-    }//GEN-LAST:event_txtNWeightActionPerformed
-
-    private void txtNDONumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNDONumActionPerformed
-        setSaveNeeded(isValidated());
-    }//GEN-LAST:event_txtNDONumActionPerformed
-
-    private void txtNTrailerPlateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNTrailerPlateActionPerformed
-    }//GEN-LAST:event_txtNTrailerPlateActionPerformed
-
     private void cbxHourToItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbxHourToItemStateChanged
         if (cbxHourTo.getSelectedIndex() < cbxHourFrom.getSelectedIndex()) {
             cbxHourTo.setSelectedIndex(cbxHourFrom.getSelectedIndex());
         }
     }//GEN-LAST:event_cbxHourToItemStateChanged
 
-    private void cbxNMaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxNMaterialActionPerformed
-        txtNMaterial.setText(cbxNMaterial.getSelectedItem().toString());
-        setSaveNeeded(isValidated());
-    }//GEN-LAST:event_cbxNMaterialActionPerformed
-
-    private void cbxNMaterialItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbxNMaterialItemStateChanged
-        txtNMaterial.setText(cbxNMaterial.getSelectedItem().toString());
-        setSaveNeeded(isValidated());
-    }//GEN-LAST:event_cbxNMaterialItemStateChanged
-
-    private void cbxNMaterialKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cbxNMaterialKeyReleased
-        txtNMaterial.setText(cbxNMaterial.getSelectedItem().toString());
-        setSaveNeeded(isValidated());
-    }//GEN-LAST:event_cbxNMaterialKeyReleased
-
-    private void btnManyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManyActionPerformed
-        String soDO = JOptionPane.showInputDialog(this.getRootPane(), resourceMapMsg.getString("msg.inputDO"));
-        boolean isNumber = true;
-        if (StringUtil.isNotEmptyString(soDO)) {
-            soDO = soDO.trim();
-            for (int i = 0; i < soDO.length(); i++) {
-                if (!Character.isDigit(soDO.charAt(i))) {
-                    isNumber = false;
-                    break;
-                }
-            }
-
-            if (isNumber && StringUtil.hasLengthInRange(soDO, 8, 10)) {
-                if (txtNDONum.getText().equals("")) {
-                    txtNDONum.setText(StringUtil.paddingZero(soDO, 10));
-                } else {
-                    String inputDO = (soDO.length() == 8) ? StringUtil.paddingZero(soDO, 8) : StringUtil.paddingZero(soDO, 10);
-                    if (!StringUtil.contains(txtNDONum.getText(), inputDO)) {
-                        txtNDONum.setText(txtNDONum.getText() + "-" + inputDO);
-                    } else {
-                        JOptionPane.showMessageDialog(this.getRootPane(), resourceMapMsg.getString("msg.duplicateDo"));
-                    }
-                }
-            } else {
-                JOptionPane.showMessageDialog(this.getRootPane(), resourceMapMsg.getString("msg.falseDo"));
-                txtNDONum.setText("");
-            }
-
-        }
-    }//GEN-LAST:event_btnManyActionPerformed
-
-    private void btnCheckDOActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCheckDOActionPerformed
-        setSaveNeeded(isValidated());
-        isHasCheck = true;
-    }//GEN-LAST:event_btnCheckDOActionPerformed
-
-
-    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-    }//GEN-LAST:event_btnSaveActionPerformed
-
     private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dpDateFromActionPerformed
     }//GEN-LAST:event_dpDateFromActionPerformed
 
-    private void txtNPlateNoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNPlateNoFocusLost
-        setSaveNeeded(isValidated());
-    }//GEN-LAST:event_txtNPlateNoFocusLost
+private void rbtInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtInputActionPerformed
+    loadModeTypeModel(MODE.INPUT);
+}//GEN-LAST:event_rbtInputActionPerformed
 
-    private void txtNDriverNameFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNDriverNameFocusLost
-        setSaveNeeded(isValidated());
-    }//GEN-LAST:event_txtNDriverNameFocusLost
+private void rbtOutputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtOutputActionPerformed
+    loadModeTypeModel(MODE.OUTPUT);
+}//GEN-LAST:event_rbtOutputActionPerformed
 
-    private void txtNCMNDBLFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNCMNDBLFocusLost
-        setSaveNeeded(isValidated());
-    }//GEN-LAST:event_txtNCMNDBLFocusLost
+private void cbxModeTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxModeTypeActionPerformed
+    this.modeDetail = ((WeighingMode) cbxModeType.getSelectedItem()).getModeDetail();
 
-    private void btnSoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSoActionPerformed
-        String soSO = JOptionPane.showInputDialog(this.getRootPane(), resourceMapMsg.getString("msg.inputSO"));
-        boolean isNumber = false;
-        if (soSO == null) {
-            isNumber = false;
-        } else if (soSO != null || !soSO.equals("")) {
-            soSO = soSO.trim();
-            for (int i = 0; i < soSO.length(); i++) {
-                if (!Character.isDigit(soSO.charAt(i))) {
-                    isNumber = false;
-                } else {
-                    isNumber = true;
-                }
-            }
-            if (isNumber && soSO.length() >= 8 && soSO.length() <= 10) {
-                if (txtNDONum.getText().equals("")) {
-                    txtNDONum.setText(StringUtil.paddingZero(soSO, 10));
+    // TODO: new ui set enable input
+    prepareEditableForm(modeDetail);
+}//GEN-LAST:event_cbxModeTypeActionPerformed
 
-                } else {
-                    String inputDO = (soSO.length() == 8) ? StringUtil.paddingZero(soSO, 8) : StringUtil.paddingZero(soSO, 10);
-                    // String inputDO2 = StringUtil.paddingZero(soDO, 8);
-                    if (txtNDONum.getText().indexOf(inputDO) == -1) {
-                        txtNDONum.setText(txtNDONum.getText() + "-" + inputDO);
-                    } else {
-                        JOptionPane.showMessageDialog(this.getRootPane(), resourceMapMsg.getString("msg.duplicateDo"));
-                    }
-                }
+private void txtWeightTickerRefNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtWeightTickerRefNKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtWeightTickerRefNKeyReleased
+
+private void txtRegisterIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRegisterIdNKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtRegisterIdNKeyReleased
+
+private void txtDriverNameNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDriverNameNKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtDriverNameNKeyReleased
+
+private void txtCMNDNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCMNDNKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtCMNDNKeyReleased
+
+private void txtPlateNoNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPlateNoNKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtPlateNoNKeyReleased
+
+private void txtSlingNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSlingNKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtSlingNKeyReleased
+
+private void txtPalletNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPalletNKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtPalletNKeyReleased
+
+private void txtDONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDONumNKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtDONumNKeyReleased
+
+private void cbxSlocNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxSlocNActionPerformed
+    loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
+}//GEN-LAST:event_cbxSlocNActionPerformed
+
+private void cbxBatchStockNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxBatchStockNActionPerformed
+    if (cbxBatchStockN.getSelectedIndex() == -1) {
+        return;
+    }
+
+    validateForm();
+
+    BatchStock batchStock = (BatchStock) cbxBatchStockN.getSelectedItem();
+    if (newWeightTicket != null) {
+        newWeightTicket.setCharg(batchStock.getCharg());
+    }
+}//GEN-LAST:event_cbxBatchStockNActionPerformed
+
+private void cbxSloc2NActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxSloc2NActionPerformed
+    loadBatchStockModel(cbxSloc2N, cbxBatchStock2N, false);
+}//GEN-LAST:event_cbxSloc2NActionPerformed
+
+private void cbxBatchStock2NActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxBatchStock2NActionPerformed
+    if (cbxBatchStock2N.getSelectedIndex() == -1) {
+        return;
+    }
+
+    validateForm();
+
+    BatchStock batchStock = (BatchStock) cbxBatchStock2N.getSelectedItem();
+    if (newWeightTicket != null) {
+        newWeightTicket.setRecvCharg(batchStock.getCharg());
+    }
+}//GEN-LAST:event_cbxBatchStock2NActionPerformed
+
+private void txtPONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPONumNKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtPONumNKeyReleased
+
+private void txtPOSTONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPOSTONumNKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtPOSTONumNKeyReleased
+
+private void cbxSuppliesIdNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxSuppliesIdNActionPerformed
+
+}//GEN-LAST:event_cbxSuppliesIdNActionPerformed
+
+private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTicketIdNKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtTicketIdNKeyReleased
+
+private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtWeightNKeyReleased
+    if (modeDetail == MODE_DETAIL.IN_PO_PURCHASE) {
+        boolean isWeightValid = wtRegisValidation.validateLength(txtWeightN.getText(), lblWeightN, 1, 10);
+        if (isWeightValid) {
+            BigDecimal weight = new BigDecimal(txtWeightN.getText());
+
+            if (numCheckWeight.subtract(weight).compareTo(BigDecimal.ZERO) < 0) {
+                JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.quantityOver", numCheckWeight));
+
+                lblWeightN.setForeground(Color.red);
+
+                isValidWeight = false;
             } else {
-                JOptionPane.showMessageDialog(this.getRootPane(), resourceMapMsg.getString("msg.falseDo"));
-                txtNDONum.setText("");
+                isValidWeight = true;
             }
-
         }
-    }//GEN-LAST:event_btnSoActionPerformed
+    }
+
+    validateForm();
+}//GEN-LAST:event_txtWeightNKeyReleased
+
+private void txtSONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSONumNKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtSONumNKeyReleased
+
+private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxMaterialTypeNActionPerformed
+    if (cbxMaterialTypeN.getSelectedIndex() == -1) {
+        return;
+    }
+
+    validateForm();
+
+    MaterialInternal materialInternal = (MaterialInternal) cbxMaterialTypeN.getSelectedItem();
+    if (newWeightTicket != null) {
+        newWeightTicket.setRecvMatnr(materialInternal.getMatnr());
+    }
+}//GEN-LAST:event_cbxMaterialTypeNActionPerformed
+
+private void cbxVendorLoadingNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxVendorLoadingNActionPerformed
+    if (cbxVendorLoadingN.getSelectedItem() != null && !cbxVendorLoadingN.getSelectedItem().toString().equals("")) {
+        Vendor vendor = (Vendor) cbxVendorLoadingN.getSelectedItem();
+        //check validate vendor
+        if (newWeightTicket != null && newWeightTicket.getWeightTicketDetail().getMatnrRef() != null) {
+            String vendorBocxep = "ZLCQ";
+            String msgVendorCheck = "";
+            if (!WeighBridgeApp.getApplication().isOfflineMode()) {
+                msgVendorCheck = sapService.validateVendor(vendor.getLifnr(), newWeightTicket.getWeightTicketDetail().getMatnrRef(), vendorBocxep);
+            }
+            if (!msgVendorCheck.trim().isEmpty()) {
+                //display errror
+                JOptionPane.showMessageDialog(rootPane, msgVendorCheck);
+                lblVendorLoadingN.setForeground(Color.red);
+                isValidVendorLoad = false;
+            } else {
+                isValidVendorLoad = true;
+                newWeightTicket.setLoadVendor(vendor.getLifnr());
+            }
+        }
+
+        validateForm();
+    } else {
+        isValidVendorLoad = true;
+    }
+}//GEN-LAST:event_cbxVendorLoadingNActionPerformed
+
+private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxVendorTransportNActionPerformed
+    if (cbxVendorTransportN.getSelectedItem() != null && !cbxVendorTransportN.getSelectedItem().toString().equals("")) {
+        Vendor vendor = (Vendor) cbxVendorTransportN.getSelectedItem();
+        //check validate vendor
+        if (newWeightTicket != null && newWeightTicket.getWeightTicketDetail().getMatnrRef() != null) {
+            String vendorVanchuyen = "ZIFQ";
+            String msgVendorCheck = "";
+            if (!WeighBridgeApp.getApplication().isOfflineMode()) {
+                msgVendorCheck = sapService.validateVendor(vendor.getLifnr(), newWeightTicket.getWeightTicketDetail().getMatnrRef(), vendorVanchuyen);
+            }
+            if (!msgVendorCheck.trim().isEmpty()) {
+                //display errror
+                JOptionPane.showMessageDialog(rootPane, msgVendorCheck);
+
+                lblVendorTransportN.setForeground(Color.red);
+                isValidVendorTransport = false;
+            } else {
+                isValidVendorTransport = true;
+                newWeightTicket.setTransVendor(vendor.getLifnr());
+            }
+        }
+
+        validateForm();
+    } else {
+        isValidVendorTransport = true;
+    }
+}//GEN-LAST:event_cbxVendorTransportNActionPerformed
 
     private DefaultComboBoxModel getMatsModel() {
         return weightTicketRegistarationController.getMatsModel();
@@ -1004,31 +1392,90 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
     @Action(block = Task.BlockingScope.ACTION)
     public Task checkDO() {
-        txtNPlateNo.setText(txtNPlateNo.getText().trim().toUpperCase());
-        txtNDriverName.setText(txtNDriverName.getText().trim().toUpperCase());
-        txtNCMNDBL.setText(txtNCMNDBL.getText().trim().toUpperCase());
-
-        if (WeighBridgeApp.getApplication().isOfflineMode()) {
-            return new CheckDOOFFTask(WeighBridgeApp.getApplication());
-        } else {
-            String val[] = txtNDONum.getText().trim().split("-");
-            for (int i = 0; i < val.length; i++) {
-                if (val[i].length() > 0) {
-                    val[i] = StringUtil.paddingZero(val[i], 10);
-                    return new CheckDOTask(WeighBridgeApp.getApplication());
-                } else if (val[i].length() == 0) {
-                    lblNDONum.setForeground(Color.black);
-                    isValidOutboundDelivery = true;
-                    setSaveNeeded(isValidated() && isValidOutboundDelivery);
-                    return null;
-                } else {
-                    lblNDONum.setForeground(Color.red);
-                    isValidOutboundDelivery = false;
-                    setSaveNeeded(isValidated() && isValidOutboundDelivery);
-                }
-                continue;
-            }
+        boolean isPlateNoValid = wtRegisValidation.validatePlateNo(txtPlateNoN.getText(), lblPlateNoN);
+        if (!isPlateNoValid) {
+            JOptionPane.showMessageDialog(rootPane,
+                    resourceMapMsg.getString("msg.plzInputPlateNo"));
             return null;
+        }
+
+        return new CheckDOTask(WeighBridgeApp.getApplication());
+    }
+
+    @Action(block = Task.BlockingScope.ACTION)
+    public Task checkSO() {
+        boolean isPlateNoValid = wtRegisValidation.validatePlateNo(txtPlateNoN.getText(), lblPlateNoN);
+        if (!isPlateNoValid) {
+            JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.plzInputPlateNo"));
+            return null;
+        }
+
+        return new CheckSOTask(WeighBridgeApp.getApplication());
+    }
+
+    List<DOCheckStructure> listDONumbers = new ArrayList<>();
+
+    private class CheckSOTask extends org.jdesktop.application.Task<Object, Void> {
+
+        CheckSOTask(org.jdesktop.application.Application app) {
+            super(app);
+        }
+
+        @Override
+        protected Object doInBackground() {
+            String[] val = txtSONumN.getText().trim().split("-");
+            String bsXe = txtPlateNoN.getText().trim();
+            DOCheckStructure doNumber = new DOCheckStructure();
+            String bsRomoc = txtTrailerNoN.getText().trim();
+
+            String doNum = "";
+            for (String soNumber : val) {
+                StringUtil.paddingZero(soNumber.trim(), 10);
+                if (!WeighBridgeApp.getApplication().isOfflineMode()) {
+                    List<DOCheckStructure> doNumbers = sapService.getDONumber(val, bsXe, bsRomoc);
+
+                    if (doNumbers != null) {
+                        listDONumbers.addAll(doNumbers);
+                        for (int i = 0; i < doNumbers.size(); i++) {
+                            doNumber = doNumbers.get(i);
+                            if (!doNumber.getMessage().trim().isEmpty()) {
+                                setMessage(doNumber.getMessage());
+                                JOptionPane.showMessageDialog(rootPane, doNumber.getMessage());
+                                String msg = "So SO " + doNumber.getVbelnSO() + " sai, vui long nhap lai!";
+                                txtDONumN.setText(null);
+                                setMessage(msg);
+                                JOptionPane.showMessageDialog(rootPane, msg);
+                                return null;
+                            } else {
+                                if (doNum.isEmpty()) {
+                                    doNum = doNumber.getVbelnDO();
+                                } else {
+                                    doNum += "-" + doNumber.getVbelnDO();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            txtDONumN.setText(doNum);
+            return null;
+        }
+
+        @Override
+        protected void failed(Throwable cause) {
+            isValidSO = false;
+
+            if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
+                cause = cause.getCause();
+            }
+            logger.error(null, cause);
+            JOptionPane.showMessageDialog(rootPane, cause.getMessage());
+        }
+
+        @Override
+        protected void finished() {
+            isValidSO = true;
         }
     }
 
@@ -1038,15 +1485,14 @@ public class WTRegView extends javax.swing.JInternalFrame {
         setRbtEnabled(true);
         setCreatable(false);
         setClearable(true);
-        setSaveNeeded(isValidated());
         txtWeightTicketNo.setText("");
-        txtNMaterial.setEditable(true);
-        cbxNMaterial.setEditable(true);
-        txtNWeight.setEditable(true);
-        btnMany.setEnabled(true);
-        btnSo.setEnabled(true);
-        btnCheckDO.setEnabled(true);
         btnSave.setEnabled(false);
+
+        // TODO new ui
+        rbtInput.setEnabled(true);
+        rbtOutput.setEnabled(true);
+        cbxModeType.setEnabled(true);
+        loadModeTypeModel(mode);
     }
 
     @Action(enabledProperty = "clearable")
@@ -1057,39 +1503,781 @@ public class WTRegView extends javax.swing.JInternalFrame {
         setRbtEnabled(false);
         setSaveNeeded(false);
         setClearable(false);
-        btnMany.setEnabled(false);
-        btnSo.setEnabled(false);
-        btnCheckDO.setEnabled(false);
+
+        // TODO new ui
+        rbtInput.setEnabled(false);
+        rbtOutput.setEnabled(false);
+        cbxModeType.setEnabled(false);
+        loadModeTypeModel(mode);
+        disableAllInForm();
+    }
+
+    public void loadModeTypeModel(MODE mode) {
+        if (mode == MODE.INPUT) {
+            rbtInput.setSelected(true);
+        } else {
+            rbtOutput.setSelected(true);
+        }
+
+        if (this.modeDetail == null || this.mode != mode) {
+            cbxModeType.setModel(weightTicketRegistarationController.getModeTypeModel(mode));
+            this.mode = mode;
+            this.modeDetail = ((WeighingMode) cbxModeType.getSelectedItem()).getModeDetail();
+        }
+
+        // TODO: new ui set enable input
+        isValidDO = false;
+        isValidPO = false;
+        isValidPOSTO = false;
+        isValidSO = false;
+        disableAllInForm();
+        prepareEditableForm(modeDetail);
+    }
+
+    private void disableAllInForm() {
+        txtTicketIdN.setEnabled(false);
+        lblTicketIdN.setForeground(Color.black);
+        txtWeightTickerRefN.setEnabled(false);
+        lblWeightTickerRefN.setForeground(Color.black);
+        txtRegisterIdN.setEnabled(false);
+        lblRegisterIdN.setForeground(Color.black);
+        txtDriverNameN.setEnabled(false);
+        lblDriverNameN.setForeground(Color.black);
+        txtCMNDN.setEnabled(false);
+        lblCMNDN.setForeground(Color.black);
+        txtPlateNoN.setEnabled(false);
+        lblPlateNoN.setForeground(Color.black);
+        txtTonnageN.setEnabled(false);
+        lblTonnageN.setForeground(Color.black);
+        txtTrailerNoN.setEnabled(false);
+        lblTrailerNoN.setForeground(Color.black);
+        txtSlingN.setEnabled(false);
+        lblSlingN.setForeground(Color.black);
+        txtPalletN.setEnabled(false);
+        lblPalletN.setForeground(Color.black);
+        txtSoNiemXaN.setEnabled(false);
+        lblSoNiemXaN.setForeground(Color.black);
+        txtProductionBatchN.setEnabled(false);
+        lblProductionBatchN.setForeground(Color.black);
+        txtNoteN.setEnabled(false);
+        lblNoteN.setForeground(Color.black);
+        txtDONumN.setEnabled(false);
+        lblDONumN.setForeground(Color.black);
+        btnDOCheckN.setEnabled(false);
+        txtSONumN.setEnabled(false);
+        lblSONumN.setForeground(Color.black);
+        btnSOCheckN.setEnabled(false);
+        txtPONumN.setEnabled(false);
+        lblPONumN.setForeground(Color.black);
+        btnPOCheckN.setEnabled(false);
+        txtPOSTONumN.setEnabled(false);
+        lblPOSTONumN.setForeground(Color.black);
+        btnPOSTOCheckN.setEnabled(false);
+        cbxMaterialTypeN.setEnabled(false);
+        lblMaterialTypeN.setForeground(Color.black);
+        txtWeightN.setEnabled(false);
+        lblWeightN.setForeground(Color.black);
+        cbxSlocN.setEnabled(false);
+        lblSlocN.setForeground(Color.black);
+        cbxSloc2N.setEnabled(false);
+        lblSloc2N.setForeground(Color.black);
+        cbxBatchStockN.setEnabled(false);
+        lblBatchStockN.setForeground(Color.black);
+        cbxBatchStock2N.setEnabled(false);
+        lblBatchStock2N.setForeground(Color.black);
+        cbxVendorLoadingN.setEnabled(false);
+        lblVendorLoadingN.setForeground(Color.black);
+        cbxVendorTransportN.setEnabled(false);
+        lblVendorTransportN.setForeground(Color.black);
+        cbxSuppliesIdN.setEnabled(false);
+        lblSuppliesIdN.setForeground(Color.black);
+    }
+
+    private void prepareEditableForm(MODE_DETAIL modeDetail) {
+        switch (modeDetail) {
+            case IN_PO_PURCHASE:
+                prepareInPOPurchaseMode();
+                break;
+            case IN_WAREHOUSE_TRANSFER:
+                prepareInWarehouseTransfer();
+                break;
+            case IN_OTHER:
+                prepareInOutOther();
+                break;
+            case OUT_SELL_ROAD:
+                prepareOutSellRoad();
+                break;
+            case OUT_PLANT_PLANT:
+                prepareOutPlantPlant();
+                break;
+            case OUT_SLOC_SLOC:
+                prepareOutSlocSloc();
+                break;
+            case OUT_PULL_STATION:
+                prepareOutPullStation();
+                break;
+            case OUT_SELL_WATERWAY:
+                prepareOutSellWateway();
+                break;
+            case OUT_OTHER:
+                prepareInOutOther();
+                break;
+        }
+
+        validateForm();
+    }
+
+    private void showComponent(JComponent component, JLabel label, boolean isVisible, boolean isEditable) {
+        label.setVisible(isVisible);
+        component.setVisible(isVisible);
+
+        if (component instanceof JTextField) {
+            JTextField textField = (JTextField) component;
+            textField.setEditable(isEditable);
+            textField.setEnabled(isVisible);
+        } else if (component instanceof JComboBox) {
+            component.setEnabled(isEditable);
+            Component editorComponent = ((JComboBox) component).getEditor().getEditorComponent();
+            if (editorComponent instanceof JTextField) {
+                ((JTextField) editorComponent).setEditable(false);
+                ((JTextField) editorComponent).setEnabled(true);
+            }
+        }
+    }
+
+    private void showComponent(JComponent component, JLabel label, JComponent unit, boolean isVisible, boolean isEditable) {
+        label.setVisible(isVisible);
+        component.setVisible(isVisible);
+        unit.setVisible(isVisible);
+
+        if (component instanceof JTextField) {
+            JTextField textField = (JTextField) component;
+            textField.setEditable(isEditable);
+            textField.setEnabled(isVisible);
+        } else if (component instanceof JComboBox) {
+            component.setEnabled(isEditable);
+            Component editorComponent = ((JComboBox) component).getEditor().getEditorComponent();
+            if (editorComponent instanceof JTextField) {
+                ((JTextField) editorComponent).setEditable(false);
+                ((JTextField) editorComponent).setEnabled(true);
+            }
+        }
+    }
+
+    private void prepareInPOPurchaseMode() {
+        showComponent(txtTicketIdN, lblTicketIdN, true, true);
+        showComponent(txtWeightTickerRefN, lblWeightTickerRefN, false, false);
+        showComponent(txtRegisterIdN, lblRegisterIdN, true, true);
+        showComponent(txtDriverNameN, lblDriverNameN, true, true);
+        showComponent(txtCMNDN, lblCMNDN, true, true);
+        showComponent(txtPlateNoN, lblPlateNoN, true, true);
+        showComponent(txtTonnageN, lblTonnageN, lblTonngageUnitN, true, false);
+        showComponent(txtTrailerNoN, lblTrailerNoN, true, true);
+        showComponent(txtSlingN, lblSlingN, false, false);
+        showComponent(txtPalletN, lblPalletN, false, false);
+        showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
+        showComponent(txtProductionBatchN, lblProductionBatchN, true, true);
+        showComponent(txtNoteN, lblNoteN, true, true);
+        showComponent(txtDONumN, lblDONumN, btnDOCheckN, false, false);
+        showComponent(txtSONumN, lblSONumN, btnSOCheckN, false, false);
+        showComponent(txtPONumN, lblPONumN, btnPOCheckN, true, true);
+        showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, false, false);
+        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, false);
+        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, true);
+        showComponent(cbxSlocN, lblSlocN, true, true);
+        showComponent(cbxSloc2N, lblSloc2N, false, false);
+        showComponent(cbxBatchStockN, lblBatchStockN, true, true);
+        showComponent(cbxBatchStock2N, lblBatchStock2N, false, false);
+        showComponent(cbxVendorLoadingN, lblVendorLoadingN, false, false);
+        showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
+        showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
+    }
+
+    private void prepareInWarehouseTransfer() {
+        showComponent(txtTicketIdN, lblTicketIdN, true, true);
+        showComponent(txtWeightTickerRefN, lblWeightTickerRefN, true, false);
+        showComponent(txtRegisterIdN, lblRegisterIdN, true, true);
+        showComponent(txtDriverNameN, lblDriverNameN, true, true);
+        showComponent(txtCMNDN, lblCMNDN, true, true);
+        showComponent(txtPlateNoN, lblPlateNoN, true, true);
+        showComponent(txtTonnageN, lblTonnageN, lblTonngageUnitN, true, false);
+        showComponent(txtTrailerNoN, lblTrailerNoN, true, true);
+        showComponent(txtSlingN, lblSlingN, false, false);
+        showComponent(txtPalletN, lblPalletN, false, false);
+        showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
+        showComponent(txtProductionBatchN, lblProductionBatchN, true, true);
+        showComponent(txtNoteN, lblNoteN, true, true);
+        showComponent(txtDONumN, lblDONumN, btnDOCheckN, true, true);
+        showComponent(txtSONumN, lblSONumN, btnSOCheckN, false, false);
+        showComponent(txtPONumN, lblPONumN, btnPOCheckN, false, false);
+        showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, false, false);
+        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, false);
+        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, false);
+        showComponent(cbxSlocN, lblSlocN, true, true);
+        showComponent(cbxSloc2N, lblSloc2N, false, false);
+        showComponent(cbxBatchStockN, lblBatchStockN, true, true);
+        showComponent(cbxBatchStock2N, lblBatchStock2N, false, false);
+        showComponent(cbxVendorLoadingN, lblVendorLoadingN, false, false);
+        showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
+        showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
+    }
+
+    private void prepareInOutOther() {
+        showComponent(txtTicketIdN, lblTicketIdN, true, true);
+        showComponent(txtWeightTickerRefN, lblWeightTickerRefN, false, false);
+        showComponent(txtRegisterIdN, lblRegisterIdN, true, true);
+        showComponent(txtDriverNameN, lblDriverNameN, true, true);
+        showComponent(txtCMNDN, lblCMNDN, true, true);
+        showComponent(txtPlateNoN, lblPlateNoN, true, true);
+        showComponent(txtTonnageN, lblTonnageN, lblTonngageUnitN, true, false);
+        showComponent(txtTrailerNoN, lblTrailerNoN, true, true);
+        showComponent(txtSlingN, lblSlingN, true, true);
+        showComponent(txtPalletN, lblPalletN, true, true);
+        showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
+        showComponent(txtProductionBatchN, lblProductionBatchN, true, true);
+        showComponent(txtNoteN, lblNoteN, true, true);
+        showComponent(txtDONumN, lblDONumN, btnDOCheckN, false, false);
+        showComponent(txtSONumN, lblSONumN, btnSOCheckN, false, false);
+        showComponent(txtPONumN, lblPONumN, btnPOCheckN, false, false);
+        showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, false, false);
+        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, true);
+        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, true);
+        showComponent(cbxSlocN, lblSlocN, true, true);
+        showComponent(cbxSloc2N, lblSloc2N, false, false);
+        showComponent(cbxBatchStockN, lblBatchStockN, true, true);
+        showComponent(cbxBatchStock2N, lblBatchStock2N, false, false);
+        showComponent(cbxVendorLoadingN, lblVendorLoadingN, false, false);
+        showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
+        showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
+
+        cbxMaterialTypeN.setModel(sapService.syncMaterialMaster());
+    }
+
+    private void prepareOutSellRoad() {
+        showComponent(txtTicketIdN, lblTicketIdN, false, false);
+        showComponent(txtWeightTickerRefN, lblWeightTickerRefN, false, false);
+        showComponent(txtRegisterIdN, lblRegisterIdN, true, true);
+        showComponent(txtDriverNameN, lblDriverNameN, true, true);
+        showComponent(txtCMNDN, lblCMNDN, true, true);
+        showComponent(txtPlateNoN, lblPlateNoN, true, true);
+        showComponent(txtTonnageN, lblTonnageN, lblTonngageUnitN, true, false);
+        showComponent(txtTrailerNoN, lblTrailerNoN, true, true);
+        showComponent(txtSlingN, lblSlingN, true, true);
+        showComponent(txtPalletN, lblPalletN, true, true);
+        showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
+        showComponent(txtProductionBatchN, lblProductionBatchN, true, true);
+        showComponent(txtNoteN, lblNoteN, true, true);
+        showComponent(txtDONumN, lblDONumN, btnDOCheckN, true, true);
+        showComponent(txtSONumN, lblSONumN, btnSOCheckN, false, false);
+        showComponent(txtPONumN, lblPONumN, btnPOCheckN, false, false);
+        showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, false, false);
+        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, false);
+        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, false);
+        showComponent(cbxSlocN, lblSlocN, true, true);
+        showComponent(cbxSloc2N, lblSloc2N, false, false);
+        showComponent(cbxBatchStockN, lblBatchStockN, true, true);
+        showComponent(cbxBatchStock2N, lblBatchStock2N, false, false);
+        showComponent(cbxVendorLoadingN, lblVendorLoadingN, false, false);
+        showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
+        showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
+    }
+
+    private void prepareOutPlantPlant() {
+        showComponent(txtTicketIdN, lblTicketIdN, true, true);
+        showComponent(txtWeightTickerRefN, lblWeightTickerRefN, false, false);
+        showComponent(txtRegisterIdN, lblRegisterIdN, true, true);
+        showComponent(txtDriverNameN, lblDriverNameN, true, true);
+        showComponent(txtCMNDN, lblCMNDN, true, true);
+        showComponent(txtPlateNoN, lblPlateNoN, true, true);
+        showComponent(txtTonnageN, lblTonnageN, lblTonngageUnitN, true, false);
+        showComponent(txtTrailerNoN, lblTrailerNoN, true, true);
+        showComponent(txtSlingN, lblSlingN, true, true);
+        showComponent(txtPalletN, lblPalletN, true, true);
+        showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
+        showComponent(txtProductionBatchN, lblProductionBatchN, true, true);
+        showComponent(txtNoteN, lblNoteN, true, true);
+        showComponent(txtDONumN, lblDONumN, btnDOCheckN, false, false);
+        showComponent(txtSONumN, lblSONumN, btnSOCheckN, false, false);
+        showComponent(txtPONumN, lblPONumN, btnPOCheckN, true, true);
+        showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, false, false);
+        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, false);
+        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, false);
+        showComponent(cbxSlocN, lblSlocN, true, true);
+        showComponent(cbxSloc2N, lblSloc2N, false, false);
+        showComponent(cbxBatchStockN, lblBatchStockN, true, true);
+        showComponent(cbxBatchStock2N, lblBatchStock2N, false, false);
+
+        boolean isShowPOV = WeighBridgeApp.getApplication().getSapSetting().getCheckPov();
+        showComponent(cbxVendorLoadingN, lblVendorLoadingN, isShowPOV, true);
+        showComponent(cbxVendorTransportN, lblVendorTransportN, isShowPOV, true);
+
+        showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
+    }
+
+    private void prepareOutSlocSloc() {
+        showComponent(txtTicketIdN, lblTicketIdN, true, true);
+        showComponent(txtWeightTickerRefN, lblWeightTickerRefN, false, false);
+        showComponent(txtRegisterIdN, lblRegisterIdN, true, true);
+        showComponent(txtDriverNameN, lblDriverNameN, true, true);
+        showComponent(txtCMNDN, lblCMNDN, true, true);
+        showComponent(txtPlateNoN, lblPlateNoN, true, true);
+        showComponent(txtTonnageN, lblTonnageN, lblTonngageUnitN, true, false);
+        showComponent(txtTrailerNoN, lblTrailerNoN, true, true);
+        showComponent(txtSlingN, lblSlingN, false, false);
+        showComponent(txtPalletN, lblPalletN, false, false);
+        showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
+        showComponent(txtProductionBatchN, lblProductionBatchN, true, true);
+        showComponent(txtNoteN, lblNoteN, true, true);
+        showComponent(txtDONumN, lblDONumN, btnDOCheckN, false, false);
+        showComponent(txtSONumN, lblSONumN, btnSOCheckN, false, false);
+        showComponent(txtPONumN, lblPONumN, btnPOCheckN, true, true);
+        showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, true, true);
+        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, true);
+        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, true);
+        showComponent(cbxSlocN, lblSlocN, true, true);
+        showComponent(cbxSloc2N, lblSloc2N, true, true);
+        showComponent(cbxBatchStockN, lblBatchStockN, true, true);
+        showComponent(cbxBatchStock2N, lblBatchStock2N, true, true);
+
+        boolean isShowPOV = WeighBridgeApp.getApplication().getSapSetting().getCheckPov();
+        showComponent(cbxVendorLoadingN, lblVendorLoadingN, isShowPOV, false);
+        showComponent(cbxVendorTransportN, lblVendorTransportN, isShowPOV, false);
+        showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
+
+        cbxMaterialTypeN.setModel(sapService.syncMaterialMaster());
+    }
+
+    private void prepareOutPullStation() {
+        showComponent(txtTicketIdN, lblTicketIdN, true, true);
+        showComponent(txtWeightTickerRefN, lblWeightTickerRefN, false, false);
+        showComponent(txtRegisterIdN, lblRegisterIdN, true, true);
+        showComponent(txtDriverNameN, lblDriverNameN, true, true);
+        showComponent(txtCMNDN, lblCMNDN, true, true);
+        showComponent(txtPlateNoN, lblPlateNoN, true, true);
+        showComponent(txtTonnageN, lblTonnageN, lblTonngageUnitN, true, false);
+        showComponent(txtTrailerNoN, lblTrailerNoN, true, true);
+        showComponent(txtSlingN, lblSlingN, false, false);
+        showComponent(txtPalletN, lblPalletN, false, false);
+        showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
+        showComponent(txtProductionBatchN, lblProductionBatchN, true, true);
+        showComponent(txtNoteN, lblNoteN, true, true);
+        showComponent(txtDONumN, lblDONumN, btnDOCheckN, false, false);
+        showComponent(txtSONumN, lblSONumN, btnSOCheckN, false, false);
+        showComponent(txtPONumN, lblPONumN, btnPOCheckN, true, true);
+        showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, true, true);
+        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, false);
+        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, false);
+        showComponent(cbxSlocN, lblSlocN, true, true);
+        showComponent(cbxSloc2N, lblSloc2N, false, false);
+        showComponent(cbxBatchStockN, lblBatchStockN, true, true);
+        showComponent(cbxBatchStock2N, lblBatchStock2N, false, false);
+
+        boolean isShowPOV = WeighBridgeApp.getApplication().getSapSetting().getCheckPov();
+        showComponent(cbxVendorLoadingN, lblVendorLoadingN, isShowPOV, true);
+        showComponent(cbxVendorTransportN, lblVendorTransportN, isShowPOV, true);
+
+        showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
+    }
+
+    private void prepareOutSellWateway() {
+        showComponent(txtTicketIdN, lblTicketIdN, false, false);
+        showComponent(txtWeightTickerRefN, lblWeightTickerRefN, false, false);
+        showComponent(txtRegisterIdN, lblRegisterIdN, true, true);
+        showComponent(txtDriverNameN, lblDriverNameN, true, true);
+        showComponent(txtCMNDN, lblCMNDN, true, true);
+        showComponent(txtPlateNoN, lblPlateNoN, true, true);
+        showComponent(txtTonnageN, lblTonnageN, lblTonngageUnitN, true, false);
+        showComponent(txtTrailerNoN, lblTrailerNoN, true, true);
+        showComponent(txtSlingN, lblSlingN, true, true);
+        showComponent(txtPalletN, lblPalletN, true, true);
+        showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
+        showComponent(txtProductionBatchN, lblProductionBatchN, true, true);
+        showComponent(txtNoteN, lblNoteN, true, true);
+        showComponent(txtDONumN, lblDONumN, btnDOCheckN, true, false);
+        showComponent(txtSONumN, lblSONumN, btnSOCheckN, true, !WeighBridgeApp.getApplication().isOfflineMode());
+        showComponent(txtPONumN, lblPONumN, btnPOCheckN, false, false);
+        showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, false, false);
+        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, false);
+        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, false);
+        showComponent(cbxSlocN, lblSlocN, true, true);
+        showComponent(cbxSloc2N, lblSloc2N, false, false);
+        showComponent(cbxBatchStockN, lblBatchStockN, true, true);
+        showComponent(cbxBatchStock2N, lblBatchStock2N, false, false);
+        showComponent(cbxVendorLoadingN, lblVendorLoadingN, false, false);
+        showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
+        showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
+
+        txtDONumN.setText("");
+    }
+
+    private void validateForm() {
+        boolean isValid = false;
+        switch (modeDetail) {
+            case IN_PO_PURCHASE:
+                isValid = validateInPoPurchase() && isValidPO && isValidWeight;
+                break;
+            case IN_WAREHOUSE_TRANSFER:
+                isValid = validateInWarehouseTransfer() && isValidDO;
+                break;
+            case IN_OTHER:
+                isValid = validateInOutOther();
+                break;
+            case OUT_SELL_ROAD:
+                isValid = validateOutSellRoad() && isValidDO;
+                break;
+            case OUT_PLANT_PLANT:
+                isValid = validateOutPlantPlant() && isValidPO && isValidVendorLoad && isValidVendorTransport;
+                break;
+            case OUT_SLOC_SLOC:
+                isValid = validateOutSlocSloc() && isValidPO;
+                break;
+            case OUT_PULL_STATION:
+                isValid = validateOutPullStation() && isValidPO && isValidVendorLoad && isValidVendorTransport;
+                break;
+            case OUT_SELL_WATERWAY:
+                isValid = validateOutSellWateway() && isValidPO;
+                break;
+            case OUT_OTHER:
+                isValid = validateInOutOther();
+                break;
+        }
+
+        btnSave.setEnabled(isValid);
+    }
+
+    private boolean validateInPoPurchase() {
+        boolean isTicketIdValid = wtRegisValidation.validateLength(txtTicketIdN.getText(), lblTicketIdN, 1, 20);
+        boolean isRegisterIdValid = wtRegisValidation.validateLength(txtRegisterIdN.getText(), lblRegisterIdN, 1, 50);
+        boolean isDriverNameValid = wtRegisValidation.validateLength(txtDriverNameN.getText(), lblDriverNameN, 1, 70);
+        boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
+
+        String plateNo = txtPlateNoN.getText().trim();
+        boolean isPlateNoValid = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
+        if (isPlateNoValid) {
+            txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(plateNo).toString());
+
+            Vendor transportVendor = (Vendor) cbxVendorTransportN.getSelectedItem();
+            if (transportVendor != null) {
+                if (!weightTicketRegistarationController.checkPlateNoInVendor(transportVendor.getLifnr(), plateNo)) {
+                    isPlateNoValid = false;
+                    lblPlateNoN.setForeground(Color.red);
+                }
+            }
+        }
+
+        boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 12);
+        boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
+        boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
+        boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
+
+        boolean isPOValid = wtRegisValidation.validatePO(txtPONumN.getText(), lblPONumN);
+        btnPOCheckN.setEnabled(isPOValid);
+        if (!isValidPO) {
+            lblPONumN.setForeground(Color.red);
+        }
+
+        boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
+
+        return isTicketIdValid && isRegisterIdValid && isDriverNameValid
+                && isCMNDBLValid && isPlateNoValid
+                && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
+                && isNoteValid && isSlocValid;
+    }
+
+    private boolean validateInWarehouseTransfer() {
+        boolean isTicketIdValid = wtRegisValidation.validateLength(txtTicketIdN.getText(), lblTicketIdN, 1, 20);
+        boolean isRegisterIdValid = wtRegisValidation.validateLength(txtRegisterIdN.getText(), lblRegisterIdN, 1, 50);
+        boolean isDriverNameValid = wtRegisValidation.validateLength(txtDriverNameN.getText(), lblDriverNameN, 1, 70);
+        boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
+
+        String plateNo = txtPlateNoN.getText().trim();
+        boolean isPlateNoValid = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
+        if (isPlateNoValid) {
+            txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(plateNo).toString());
+        }
+
+        boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 12);
+        boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
+        boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
+        boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
+
+        boolean isDOValid = wtRegisValidation.validateDO(txtDONumN.getText(), lblDONumN);
+        btnDOCheckN.setEnabled(isDOValid);
+        if (!isValidDO) {
+            lblDONumN.setForeground(Color.red);
+        }
+
+        boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
+
+        return isTicketIdValid && isRegisterIdValid && isDriverNameValid
+                && isCMNDBLValid && isPlateNoValid
+                && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
+                && isNoteValid && isSlocValid;
+    }
+
+    private boolean validateInOutOther() {
+        boolean isTicketIdValid = wtRegisValidation.validateLength(txtTicketIdN.getText(), lblTicketIdN, 1, 20);
+        boolean isRegisterIdValid = wtRegisValidation.validateLength(txtRegisterIdN.getText(), lblRegisterIdN, 1, 50);
+        boolean isDriverNameValid = wtRegisValidation.validateLength(txtDriverNameN.getText(), lblDriverNameN, 1, 70);
+        boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
+
+        String plateNo = txtPlateNoN.getText().trim();
+        boolean isPlateNoValid = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
+        if (isPlateNoValid) {
+            txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(plateNo).toString());
+        }
+
+        boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 12);
+        boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
+        boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
+        boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
+
+        boolean isWeightValid = wtRegisValidation.validateLength(txtWeightN.getText(), lblWeightN, 1, 10);
+
+        boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
+        boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
+
+        return isTicketIdValid && isRegisterIdValid && isDriverNameValid
+                && isCMNDBLValid && isPlateNoValid
+                && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
+                && isNoteValid && isMaterialTypeValid && isSlocValid && isWeightValid;
+    }
+
+    private boolean validateOutSellRoad() {
+        boolean isRegisterIdValid = wtRegisValidation.validateLength(txtRegisterIdN.getText(), lblRegisterIdN, 1, 50);
+        boolean isDriverNameValid = wtRegisValidation.validateLength(txtDriverNameN.getText(), lblDriverNameN, 1, 70);
+        boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
+
+        String plateNo = txtPlateNoN.getText().trim();
+        boolean isPlateNoValid = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
+        if (isPlateNoValid) {
+            txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(plateNo).toString());
+        }
+
+        boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 12);
+        boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
+        boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
+        boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
+
+        boolean isDOValid = wtRegisValidation.validateDO(txtDONumN.getText(), lblDONumN);
+        btnDOCheckN.setEnabled(isDOValid);
+        if (!isValidDO) {
+            lblDONumN.setForeground(Color.red);
+        }
+
+        boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
+
+        return isRegisterIdValid && isDriverNameValid && isCMNDBLValid && isPlateNoValid
+                && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
+                && isNoteValid && isSlocValid;
+    }
+
+    private boolean validateOutPlantPlant() {
+        boolean isTicketIdValid = wtRegisValidation.validateLength(txtTicketIdN.getText(), lblTicketIdN, 1, 20);
+        boolean isRegisterIdValid = wtRegisValidation.validateLength(txtRegisterIdN.getText(), lblRegisterIdN, 1, 50);
+        boolean isDriverNameValid = wtRegisValidation.validateLength(txtDriverNameN.getText(), lblDriverNameN, 1, 70);
+        boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
+
+        String plateNo = txtPlateNoN.getText().trim();
+        boolean isPlateNoValid = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
+        if (isPlateNoValid) {
+            txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(plateNo).toString());
+
+            Vendor transportVendor = (Vendor) cbxVendorTransportN.getSelectedItem();
+            if (transportVendor != null) {
+                if (!weightTicketRegistarationController.checkPlateNoInVendor(transportVendor.getLifnr(), plateNo)) {
+                    isPlateNoValid = false;
+                    lblPlateNoN.setForeground(Color.red);
+                }
+            }
+        }
+
+        boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 12);
+        boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
+        boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
+        boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
+
+        boolean isPOValid = wtRegisValidation.validatePO(txtPONumN.getText(), lblPONumN);
+        btnPOCheckN.setEnabled(isPOValid);
+        if (!isValidPO) {
+            lblPONumN.setForeground(Color.red);
+        }
+
+        boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
+
+        return isTicketIdValid && isRegisterIdValid && isDriverNameValid
+                && isCMNDBLValid && isPlateNoValid
+                && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
+                && isNoteValid && isSlocValid;
+    }
+
+    private boolean validateOutSlocSloc() {
+        boolean isTicketIdValid = wtRegisValidation.validateLength(txtTicketIdN.getText(), lblTicketIdN, 1, 20);
+        boolean isRegisterIdValid = wtRegisValidation.validateLength(txtRegisterIdN.getText(), lblRegisterIdN, 1, 50);
+        boolean isDriverNameValid = wtRegisValidation.validateLength(txtDriverNameN.getText(), lblDriverNameN, 1, 70);
+        boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
+
+        String plateNo = txtPlateNoN.getText().trim();
+        boolean isPlateNoValid = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
+        if (isPlateNoValid) {
+            txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(plateNo).toString());
+
+            Vendor transportVendor = (Vendor) cbxVendorTransportN.getSelectedItem();
+            if (transportVendor != null) {
+                if (!weightTicketRegistarationController.checkPlateNoInVendor(transportVendor.getLifnr(), plateNo)) {
+                    isPlateNoValid = false;
+                    lblPlateNoN.setForeground(Color.red);
+                }
+            }
+        }
+
+        boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 12);
+        boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
+        boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
+        boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
+
+        boolean isPOValid = wtRegisValidation.validatePO(txtPONumN.getText(), lblPONumN);
+        btnPOCheckN.setEnabled(isPOValid);
+        if (!isValidPO) {
+            lblPONumN.setForeground(Color.red);
+        }
+
+        boolean isPOSTOValid = wtRegisValidation.validatePO(txtPOSTONumN.getText(), lblPOSTONumN);
+        btnPOSTOCheckN.setEnabled(isPOSTOValid);
+        lblPOSTONumN.setForeground(Color.black);
+
+        boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
+        boolean isSloc2Valid = wtRegisValidation.validateCbxSelected(cbxSloc2N.getSelectedIndex(), lblSloc2N);
+
+        return isTicketIdValid && isRegisterIdValid && isDriverNameValid
+                && isCMNDBLValid && isPlateNoValid
+                && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
+                && isNoteValid && isSlocValid && isSloc2Valid;
+    }
+
+    private boolean validateOutPullStation() {
+        boolean isTicketIdValid = wtRegisValidation.validateLength(txtTicketIdN.getText(), lblTicketIdN, 1, 20);
+        boolean isRegisterIdValid = wtRegisValidation.validateLength(txtRegisterIdN.getText(), lblRegisterIdN, 1, 50);
+        boolean isDriverNameValid = wtRegisValidation.validateLength(txtDriverNameN.getText(), lblDriverNameN, 1, 70);
+        boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
+
+        String plateNo = txtPlateNoN.getText().trim();
+        boolean isPlateNoValid = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
+        if (isPlateNoValid) {
+            txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(plateNo).toString());
+
+            Vendor transportVendor = (Vendor) cbxVendorTransportN.getSelectedItem();
+            if (transportVendor != null) {
+                if (!weightTicketRegistarationController.checkPlateNoInVendor(transportVendor.getLifnr(), plateNo)) {
+                    isPlateNoValid = false;
+                    lblPlateNoN.setForeground(Color.red);
+                }
+            }
+        }
+
+        boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 12);
+        boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
+        boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
+        boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
+
+        boolean isPOValid = wtRegisValidation.validatePO(txtPONumN.getText(), lblPONumN);
+        btnPOCheckN.setEnabled(isPOValid);
+        if (!isValidPO) {
+            lblPONumN.setForeground(Color.red);
+        }
+
+        boolean isPOSTOValid = wtRegisValidation.validatePO(txtPOSTONumN.getText(), lblPOSTONumN);
+        btnPOSTOCheckN.setEnabled(isPOSTOValid);
+
+        boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
+
+        return isTicketIdValid && isRegisterIdValid && isDriverNameValid
+                && isCMNDBLValid && isPlateNoValid
+                && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
+                && isNoteValid && isSlocValid;
+    }
+
+    private boolean validateOutSellWateway() {
+        boolean isRegisterIdValid = wtRegisValidation.validateLength(txtRegisterIdN.getText(), lblRegisterIdN, 1, 50);
+        boolean isDriverNameValid = wtRegisValidation.validateLength(txtDriverNameN.getText(), lblDriverNameN, 1, 70);
+        boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
+
+        String plateNo = txtPlateNoN.getText().trim();
+        boolean isPlateNoValid = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
+        if (isPlateNoValid) {
+            txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(plateNo).toString());
+        }
+
+        boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 12);
+        boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
+        boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
+        boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
+
+        if (!WeighBridgeApp.getApplication().isOfflineMode()) {
+            boolean isSOValid = wtRegisValidation.validateDO(txtSONumN.getText(), lblSONumN);
+            btnSOCheckN.setEnabled(isSOValid);
+            if (!isValidSO) {
+                lblSONumN.setForeground(Color.red);
+            } else {
+                btnDOCheckN.setEnabled(true);
+            }
+        } else {
+            isValidSO = true;
+            isValidDO = true;
+            lblSONumN.setForeground(Color.black);
+            lblDONumN.setForeground(Color.black);
+        }
+
+        boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
+
+        return isRegisterIdValid && isDriverNameValid
+                && isCMNDBLValid && isPlateNoValid
+                && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
+                && isNoteValid && isSlocValid;
+    }
+
+    private void loadBatchStockModel(JComboBox slocComponent, JComboBox batchStockComponent, boolean isSloc) {
+        if (slocComponent.getSelectedIndex() == -1) {
+            return;
+        }
+
+        SLoc sloc = (SLoc) slocComponent.getSelectedItem();
+        if (newWeightTicket != null) {
+            if (isSloc) {
+                newWeightTicket.setLgort(sloc.getLgort());
+            } else {
+                newWeightTicket.setRecvLgort(sloc.getLgort());
+            }
+
+            List<WeightTicketDetail> weightTicketDetails = newWeightTicket.getWeightTicketDetails();
+            if (weightTicketDetails.size() > 0) {
+                String[] arr_matnr = weightTicketDetails.stream().map(item -> item.getMatnrRef()).toArray(String[]::new);
+
+                if (!WeighBridgeApp.getApplication().isOfflineMode()) {
+                    weightTicketRegistarationController.getSyncBatchStocks(sloc, arr_matnr);
+                }
+                List<BatchStock> batchStocks = weightTicketRegistarationController.getBatchStocks(sloc, arr_matnr);
+                batchStockComponent.setModel(weightTicketRegistarationController.getBatchStockModel(batchStocks));
+                batchStockComponent.setSelectedIndex(-1);
+            }
+        }
+
+        validateForm();
     }
 
     @Action(enabledProperty = "saveNeeded")
     public Task saveRecord() {
-        btnMany.setEnabled(false);
-        btnSo.setEnabled(false);
-        btnCheckDO.setEnabled(false);
-        btnSave.setEnabled(false);
-
-        if (!(isValidated() && isValidOutboundDelivery)) {
-            return null;
-        }
-        int answer = JOptionPane.YES_OPTION;
-        if (StringUtil.isEmptyString(txtNDONum.getText())) {
-            answer = JOptionPane.showConfirmDialog(
-                    this.getRootPane(),
-                    resourceMapMsg.getString("msg.questtionSaveDO"),
-                    JOptionPane.OPTIONS_PROPERTY,
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.QUESTION_MESSAGE);
-        }
+        int answer = JOptionPane.showConfirmDialog(
+                this.getRootPane(),
+                resourceMapMsg.getString("msg.questtionSave"),
+                JOptionPane.OPTIONS_PROPERTY,
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
 
         if (answer == JOptionPane.YES_OPTION) {
             btnSave.setEnabled(false);
             return new SaveWeightTicketTask(WeighBridgeApp.getApplication());
-
         } else {
-            btnMany.setEnabled(true);
-            btnSo.setEnabled(true);
-            btnCheckDO.setEnabled(true);
             btnSave.setEnabled(true);
             return null;
         }
@@ -1306,48 +2494,70 @@ public class WTRegView extends javax.swing.JInternalFrame {
     }
 
     private class CheckDOTask extends org.jdesktop.application.Task<Object, Void> {
-        private OutboundDelivery localOutboundDelivery = null;
-        private String mode = null;
-        private String ship_point = null;
+
+        private List<String> strMaterial = new ArrayList<>();
+        private BigDecimal totalWeight = BigDecimal.ZERO;
 
         CheckDOTask(org.jdesktop.application.Application app) {
             super(app);
-            outboundDelivery = null;
+            newWeightTicket.setWeightTicketDetails(new ArrayList<>());
         }
 
         @Override
         protected Object doInBackground() throws Exception {
-            String oldKunnr = "";
-            String oldSoxe = "";
-            String[] listDO = txtNDONum.getText().trim().split("-");
-            for (int index = 0; index < listDO.length; index++) {
+            String[] deliveryOrderNos = txtDONumN.getText().split("-");
+            for (String deliveryOrderNo : deliveryOrderNos) {
                 setStep(1, resourceMapMsg.getString("msg.checkDOInDB"));
-                listDO[index] = StringUtil.paddingZero(listDO[index], 10);
-                localOutboundDelivery = weightTicketRegistarationController.findByDeliveryOrderNumber(listDO[index]);
+                deliveryOrderNo = StringUtil.paddingZero(deliveryOrderNo.trim(), 10);
+                OutboundDelivery outboundDelivery = weightTicketRegistarationController.findByDeliveryOrderNumber(deliveryOrderNo);
 
+                // sync from SAP
+                if (!WeighBridgeApp.getApplication().isOfflineMode()) {
+                    outboundDelivery = syncOutboundDelivery(deliveryOrderNo, outboundDelivery);
+                }
+
+                // check exist DO
+                if (outboundDelivery == null) {
+                    throw new Exception(resourceMapMsg.getString("msg.dONotExitst", deliveryOrderNo));
+                }
+
+                // check mapping Plate No
+                String plateNo = txtPlateNoN.getText().trim();
+                String traid = outboundDelivery.getTraid().trim();
+                if (!traid.isEmpty() && !traid.startsWith(plateNo)) {
+                    throw new Exception(resourceMapMsg.getString("msg.notDuplicateLicensePlate"));
+                }
+
+                // check DO in used
+                if (isDOInUsed(deliveryOrderNo, outboundDelivery)) {
+                    throw new Exception(resourceMapMsg.getString("msg.typeDO", deliveryOrderNo, getMode(outboundDelivery)));
+                }
+
+                // set DO data to Weight ticket
+                updateWeightTicket(outboundDelivery);
+                setStep(4, null);
+            }
+
+            return null;
+        }
+
+        private OutboundDelivery syncOutboundDelivery(String deliveryOrderNo, OutboundDelivery outboundDelivery) {
+            try {
                 setStep(2, resourceMapMsg.getString("checkDOInSap"));
-                OutboundDelivery sapOutboundDelivery = sapService.getOutboundDelivery(listDO[index]);
+                OutboundDelivery sapOutboundDelivery = sapService.getOutboundDelivery(deliveryOrderNo);
+                // check status post SAP
+                if (sapOutboundDelivery.getVbelnNach() != null && !sapOutboundDelivery.getVbelnNach().trim().isEmpty()) {
+                    String msg = "Số D.O \" " + deliveryOrderNo + " \" đã được nhập hàng tại chứng từ " + sapOutboundDelivery.getVbelnNach() + "!";
+                    setMessage(msg);
+                    JOptionPane.showMessageDialog(rootPane, msg);
+                    return null;
+                }
 
                 setStep(3, resourceMapMsg.getString("msg.saveDataToDb"));
-                startTransaction();
-                syncOutboundDelivery(listDO[index], sapOutboundDelivery);
-                finishTransaction();
-
-                oldKunnr = checkKunnr(oldKunnr);
-                oldSoxe = checkPlate(oldSoxe);
-
-                setMode();
-
-                checkDOInUsed(listDO[index]);
-                checkShippingPoint(listDO[index]);
-
-                updateWeightTicket();
-
-                setStep(4, null);
-                continue;
+                return sapService.syncOutboundDelivery(sapOutboundDelivery, outboundDelivery, deliveryOrderNo);
+            } catch (Exception ex) {
+                return null;
             }
-
-            return null;
         }
 
         private void setStep(int step, String msg) {
@@ -1357,430 +2567,82 @@ public class WTRegView extends javax.swing.JInternalFrame {
             setProgress(step, 1, 4);
         }
 
-        private void updateWeightTicket() {
-            if (isValidOutboundDelivery && localOutboundDelivery != null) {
-                WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
-                weightTicketDetail.setItem(localOutboundDelivery.getDeliveryItem());
-                weightTicketDetail.setMatnrRef(localOutboundDelivery.getMatnr());
-                weightTicketDetail.setRegItemDescription(localOutboundDelivery.getArktx());
-                weightTicketDetail.setUnit(localOutboundDelivery.getVrkme());
-                weightTicketDetail.setKunnr(localOutboundDelivery.getKunnr());
+        private void updateWeightTicket(OutboundDelivery outboundDelivery) {
+            WeightTicketDetail weightTicketDetail = new WeightTicketDetail();
+            weightTicketDetail.setItem(outboundDelivery.getDeliveryItem());
+            weightTicketDetail.setMatnrRef(outboundDelivery.getMatnr());
+            weightTicketDetail.setRegItemDescription(outboundDelivery.getArktx());
+            weightTicketDetail.setUnit(outboundDelivery.getVrkme());
+            weightTicketDetail.setKunnr(outboundDelivery.getKunnr());
+            weightTicketDetail.setDeliveryOrderNo(outboundDelivery.getDeliveryOrderNo());
 
-                txtNMaterial.setText(localOutboundDelivery.getArktx());
-                cbxNMaterial.setSelectedItem(localOutboundDelivery.getArktx());
-                BigDecimal regqty = BigDecimal.ZERO;
-                List<OutboundDeliveryDetail> detail = new ArrayList<>();
-                OutboundDeliveryDetail item = null;
-                String[] do_list = txtNDONum.getText().trim().split("-");
-                for (int i = 0; i < do_list.length; i++) {
-                    String doNum = do_list[i];
-                    try {
-                        detail = weightTicketRegistarationController.findByMandtDelivNumb(doNum);
-                    } catch (Exception ex) {
-                        java.util.logging.Logger.getLogger(WTRegView.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    for (int j = 0; j < detail.size(); j++) {
-                        item = detail.get(j);
-                        regqty = regqty.add(item.getLfimg());
-                        weightTicketDetail.setDeliveryOrderNo(doNum);
-                    }
-                }
-                txtNWeight.setValue(regqty.doubleValue());
-                outboundDelivery = localOutboundDelivery;
+            BigDecimal weight = BigDecimal.ZERO;
+            List<OutboundDeliveryDetail> outboundDeliveryDetails = outboundDelivery.getOutboundDeliveryDetails();
+            for (OutboundDeliveryDetail outboundDeliveryDetail : outboundDeliveryDetails) {
+                strMaterial.add(outboundDeliveryDetail.getArktx());
+                weight = weight.add(outboundDeliveryDetail.getLfimg());
             }
+
+            totalWeight = totalWeight.add(weight);
+            weightTicketDetail.setRegItemQuantity(weight);
+            newWeightTicket.setWeightTicketIdRef(outboundDelivery.getWtIdRef());
+            newWeightTicket.addWeightTicketDetail(weightTicketDetail);
         }
 
-        private String getSelectedMode() {
-            String selectedMode = "";
-            if (rbtNInward.isSelected()) {
-                selectedMode = Constants.WTRegView.INPUT;
-            }
+        private boolean isDOInUsed(String deliveryOrderNo, OutboundDelivery outboundDelivery) {
+            String wplant = configuration.getWkPlant();
+            String sDoType = Constants.WTRegView.DO_TYPES;
 
-            if (rbtNOutward.isSelected()) {
-                selectedMode = Constants.WTRegView.OUTPUT;
-            }
+            WeightTicket weightTicket = weightTicketRegistarationController.findByDeliveryOrderNo(deliveryOrderNo);
+            String Lfart = outboundDelivery.getLfart();
 
-            return selectedMode;
-        }
-
-        private void handleUnselectedMode(String selectedMode) {
-            if (StringUtil.isEmptyString(selectedMode)) {
-                String msg = resourceMapMsg.getString("msg.plzChooseIO");
-                setMessage(msg);
-                JOptionPane.showMessageDialog(rootPane, msg);
-            }
-        }
-
-        private void handleDOCheckExist(String doNumber) {
-            boolean isInUsedDO = false;
-            isInUsedDO = weightTicketRegistarationController.checkExistDO(doNumber);
-            if (isInUsedDO) {
-                isValidOutboundDelivery = false;
-                localOutboundDelivery = null;
-                String msg = resourceMapMsg.getString("msg.checkExistDO", doNumber);
-                setMessage(msg);
-                JOptionPane.showMessageDialog(rootPane, msg);
-            }
-
-        }
-
-        private void handleShippingPointVar(String doNumber, String selectedMode) {
-            if (localOutboundDelivery != null) {
-                int klmax = weightTicketRegistarationController.shippingPointVar(ship_point, localOutboundDelivery.getMatnr().toString().trim());
-                Boolean ship = (klmax <= 0) ? false : true;
-                if (ship == false) {
-                    isValidOutboundDelivery = false;
-                    localOutboundDelivery = null;
-                    String msg = resourceMapMsg.getString("msg.shippingPointVar", doNumber, selectedMode);
-                    setMessage(msg);
-                    JOptionPane.showMessageDialog(rootPane, msg);
-                }
-            }
-        }
-
-        private void checkShippingPoint(String doNumber) {
-            if (isValidOutboundDelivery && localOutboundDelivery != null) {
-                ship_point = localOutboundDelivery.getShipPoint();
-                String selectedMode = getSelectedMode();
-                handleUnselectedMode(selectedMode);
-                handleDOCheckExist(doNumber);
-                // TODO uncomment for Shipping Point Handling if new req.
-                //handleShippingPointVar(doNumber, selectedMode);
-            }
-        }
-
-        private void checkDOInUsed(String doNumber) {
-            if (isValidOutboundDelivery && localOutboundDelivery != null) {
-                WeightTicket wt = null;
-                String delivNumb = localOutboundDelivery.getDeliveryOrderNo();
-                wt = weightTicketRegistarationController.findByDeliveryOrderNo(delivNumb);
-                String wplant = "";
-                wplant = configuration.getWkPlant();
-                String sDoType = Constants.WTRegView.DO_TYPES;
-                String Lfart = "";
-                try {
-                    Lfart = localOutboundDelivery.getLfart();
-
-                } catch (Exception ex) {
-                }
-
-                if ((sDoType.indexOf(Lfart) >= 0 && localOutboundDelivery.getWbstk() == 'X' && localOutboundDelivery.getWerks().toString().equalsIgnoreCase(wplant))
-                        || (wt != null && !wt.isDissolved())) {
-                    isValidOutboundDelivery = false;
-                    localOutboundDelivery = null;
-                    String msg = resourceMapMsg.getString("msg.typeDO", doNumber, mode);
-                    setMessage(msg);
-                    JOptionPane.showMessageDialog(rootPane, msg);
-                } else {
-                    isNeedRevertWeightTicket = true;
-                    outboundDeliveryNo = localOutboundDelivery.getDeliveryOrderNo().toString().trim();
-                }
-            }
-        }
-
-        private void setMode() {
-            if (isValidOutboundDelivery && localOutboundDelivery != null) {
-                if (localOutboundDelivery.getLfart().equalsIgnoreCase("LF") || localOutboundDelivery.getLfart().equalsIgnoreCase("ZTLF")) {
-                    mode = Constants.WTRegView.OUTPUT_LOWCASE;
-                } else {
-                    mode = Constants.WTRegView.INPUT_LOWCASE;
-                }
-            }
-        }
-
-        private String checkPlate(String oldSoxe) {
-            if (localOutboundDelivery != null
-                    && !oldSoxe.equals("")
-                    && !oldSoxe.equals(localOutboundDelivery.getTraid())) {
-                isValidOutboundDelivery = false;
-                String msg = resourceMapMsg.getString("msg.notDuplicateLicensePlate");
-                setMessage(msg);
-                JOptionPane.showMessageDialog(rootPane, msg);
-            } else if (localOutboundDelivery != null) {
-                oldSoxe = localOutboundDelivery.getTraid();
-            }
-            return oldSoxe;
-        }
-
-        private String checkKunnr(String oldKunnr) {
-            if (localOutboundDelivery != null
-                    && !oldKunnr.equals("")
-                    && !oldKunnr.equals(localOutboundDelivery.getKunnr())) {
-                isValidOutboundDelivery = false;
-                String msg = resourceMapMsg.getString("msg.notDuplicateCode");
-                setMessage(msg);
-                JOptionPane.showMessageDialog(rootPane, msg);
-            } else if (localOutboundDelivery != null) {
-                oldKunnr = localOutboundDelivery.getKunnr();
-            }
-            return oldKunnr;
-        }
-
-        private void syncOutboundDelivery(String deliveryNum, OutboundDelivery sapOutb) {
-            isValidOutboundDelivery = sapService.syncOutboundDelivery(sapOutb, localOutboundDelivery, deliveryNum);
-            if (!isValidOutboundDelivery) {
-                String msg = resourceMapMsg.getString("msg.dONotExitst", deliveryNum);
-                setMessage(msg);
-                JOptionPane.showMessageDialog(rootPane, msg);
-            }
-        }
-
-        private void finishTransaction() {
-            if (entityTransaction.isActive()) {
-                entityTransaction.commit();
-                entityManager.clear();
-            }
-        }
-
-        private void startTransaction() {
-            entityTransaction = entityManager.getTransaction();
-            if (!entityTransaction.isActive()) {
-                entityTransaction.begin();
-            }
-        }
-
-        @Override
-        protected void failed(Throwable cause) {
-            isValidOutboundDelivery = false;
-            if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
-                cause = cause.getCause();
-            }
-            logger.error(null, cause);
-            JOptionPane.showMessageDialog(rootPane, cause.getMessage());
-
-            if (entityTransaction.isActive()) {
-                entityTransaction.rollback();
-            }
-        }
-
-        @Override
-        protected void finished() {
-        }
-    }
-
-    private class CheckDOOFFTask extends org.jdesktop.application.Task<Object, Void> {
-
-        private OutboundDelivery outb = null;
-        private String mode = null;
-        private String ship_point = null;
-
-        CheckDOOFFTask(org.jdesktop.application.Application app) {
-            super(app);
-            outboundDelivery = null;
-        }
-
-        private void setStep(int step, String msg) {
-            if (StringUtil.isNotEmptyString(msg)) {
-                setMessage(msg);
-            }
-            setProgress(step, 1, 4);
-        }
-
-        private String checkKunnr(String oldKunnr) {
-            //Check kunnr
-            if (outb != null
-                    && !oldKunnr.equals("")
-                    && !oldKunnr.equals(outb.getKunnr())) {
-                isValidOutboundDelivery = false;
-                String msg = resourceMapMsg.getString("msg.notDuplicateCode");
-                setMessage(msg);
-                JOptionPane.showMessageDialog(rootPane, msg);
-            } else if (outb != null) {
-                oldKunnr = outb.getKunnr();
-            }
-
-            return oldKunnr;
-        }
-
-        private String checkPlate(String oldSoxe) {
-            if (outb != null
-                    && !oldSoxe.equals("")
-                    && !oldSoxe.equals(outb.getTraid())) {
-                isValidOutboundDelivery = false;
-                String msg = resourceMapMsg.getString("msg.notDuplicateLicensePlate");
-                setMessage(msg);
-                JOptionPane.showMessageDialog(rootPane, msg);
-            } else if (outb != null) {
-                oldSoxe = outb.getTraid();
-            }
-
-            return oldSoxe;
-        }
-
-        private void setMode() {
-            if (isValidOutboundDelivery && outb != null) {
-                if (outb.getLfart().equalsIgnoreCase("LF") || outb.getLfart().equalsIgnoreCase("ZTLF")) {
-                    mode = Constants.WTRegView.OUTPUT_LOWCASE;
-                } else {
-                    mode = Constants.WTRegView.INPUT_LOWCASE;
-                }
-            }
-        }
-
-        private void checkDOInUsed(String doNumber) {
-            if (isValidOutboundDelivery && outb != null) {
-                WeightTicket wt;
-                String delivNumb = outb.getDeliveryOrderNo();
-                wt = weightTicketRegistarationController.findByDeliveryOrderNo(delivNumb);
-
-                if (wt != null && !wt.isDissolved()) {
-                    isValidOutboundDelivery = false;
-                    outb = null;
-                    String msg = resourceMapMsg.getString("msg.typeDO", doNumber, mode);
-                    setMessage(msg);
-                    JOptionPane.showMessageDialog(rootPane, msg);
-                } else {
-                    isNeedRevertWeightTicket = true;
-                    outboundDeliveryNo = outb.getDeliveryOrderNo().trim();
-                }
-            }
-        }
-
-        private String getSelectedMode() {
-            String selectedMode = "";
-            if (rbtNInward.isSelected()) {
-                selectedMode = Constants.WTRegView.INPUT;
-            }
-
-            if (rbtNOutward.isSelected()) {
-                selectedMode = Constants.WTRegView.OUTPUT;
-            }
-
-            return selectedMode;
-        }
-
-        private void handleUnselectedMode(String selectedMode) {
-            if (StringUtil.isEmptyString(selectedMode)) {
-                String msg = resourceMapMsg.getString("msg.plzChooseIO");
-                setMessage(msg);
-                JOptionPane.showMessageDialog(rootPane, msg);
-            }
-        }
-
-        private void handleDOCheckExist(String doNumber) {
-            boolean isInUsedDO = false;
-            isInUsedDO = weightTicketRegistarationController.checkExistDO(doNumber);
-
-            if (isInUsedDO) {
-                isValidOutboundDelivery = false;
-                outb = null;
-                String msg = resourceMapMsg.getString("msg.checkExistDO", doNumber);
-                setMessage(msg);
-                JOptionPane.showMessageDialog(rootPane, msg);
-            }
-
-        }
-
-        private void handleShippingPointVar(String doNumber, String selectedMode) {
-            if (outb != null) {
-                int klmax = weightTicketRegistarationController.shippingPointVar(ship_point, outb.getMatnr().toString().trim());
-                Boolean ship = (klmax <= 0) ? false : true;
-                if (ship == false) {
-                    isValidOutboundDelivery = false;
-                    outb = null;
-                    String msg = resourceMapMsg.getString("msg.shippingPointVar", doNumber, selectedMode);
-                    setMessage(msg);
-                    JOptionPane.showMessageDialog(rootPane, msg);
-                }
-            }
-        }
-
-        private void checkShippingPoint(String doNumber) {
-            if (isValidOutboundDelivery && outb != null) {
-                ship_point = outb.getShipPoint();
-                String selectedMode = getSelectedMode();
-                handleUnselectedMode(selectedMode);
-                handleDOCheckExist(doNumber);
-                // TODO uncomment for Shipping Point Handling if new req.
-                //handleShippingPointVar(doNumber, selectedMode);
-            }
-        }
-
-        private void updateWeightTicket() {
-            if (isValidOutboundDelivery && outb != null) {
-                WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
-                weightTicketDetail.setItem(outb.getDeliveryItem());
-                weightTicketDetail.setMatnrRef(outb.getMatnr());
-                weightTicketDetail.setRegItemDescription(outb.getArktx());
-                weightTicketDetail.setUnit(outb.getVrkme());
-                weightTicketDetail.setKunnr(outb.getKunnr());
-                txtNMaterial.setText(outb.getArktx());
-                cbxNMaterial.setSelectedItem(outb.getArktx());
-                BigDecimal regqty = BigDecimal.ZERO;
-                List<OutboundDeliveryDetail> detail = new ArrayList<>();
-                OutboundDeliveryDetail item = null;
-                String[] do_list = txtNDONum.getText().trim().split("-");
-                for (int i = 0; i < do_list.length; i++) {
-                    String doNum = do_list[i];
-                    try {
-                        detail = weightTicketRegistarationController.findByMandtDelivNumb(doNum);
-                    } catch (Exception ex) {
-                        java.util.logging.Logger.getLogger(WTRegView.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    for (int j = 0; j < detail.size(); j++) {
-                        item = detail.get(j);
-                        regqty = regqty.add(item.getLfimg());
-                    }
-                }
-                txtNWeight.setValue(regqty.doubleValue());
-                outboundDelivery = outb;
-            }
-        }
-
-        private void checkValidDO(String doNumber) {
-            if (outb != null) {
-                isValidOutboundDelivery = true;
+            if ((sDoType.contains(Lfart) && outboundDelivery.getWbstk() == 'X'
+                    && outboundDelivery.getWerks().equalsIgnoreCase(wplant))
+                    || (weightTicket != null && !weightTicket.isPosted())) {
+                return true;
             } else {
-                isValidOutboundDelivery = false;
-                String msg = resourceMapMsg.getString("msg.dONotExitst", doNumber);
-                setMessage(msg);
-                JOptionPane.showMessageDialog(rootPane, msg);
+                return false;
+            }
+        }
+
+        private String getMode(OutboundDelivery outboundDelivery) {
+            if (outboundDelivery.getLfart().equalsIgnoreCase("LF") || outboundDelivery.getLfart().equalsIgnoreCase("ZTLF")) {
+                return Constants.WTRegView.OUTPUT_LOWCASE;
+            } else {
+                return Constants.WTRegView.INPUT_LOWCASE;
             }
         }
 
         @Override
-        protected Object doInBackground() {
-            String oldKunnr = "";
-            String oldSoxe = "";
-            String[] listDO = txtNDONum.getText().trim().split("-");
-            for (int index = 0; index < listDO.length; index++) {
-                setStep(1, resourceMapMsg.getString("msg.checkDOInDB"));
-                listDO[index] = StringUtil.paddingZero(listDO[index], 10);
+        protected void succeeded(Object t) {
+            isValidDO = true;
+            cbxMaterialTypeN.setSelectedItem(String.join(" - ", strMaterial));
+            txtWeightN.setText(totalWeight.toString());
 
-                outb = weightTicketRegistarationController.findByDeliveryOrderNumber(listDO[index]);
+            validateForm();
 
-                checkValidDO(listDO[index]);
-
-                oldKunnr = checkKunnr(oldKunnr);
-                oldSoxe = checkPlate(oldSoxe);
-
-                setMode();
-
-                checkDOInUsed(listDO[index]);
-
-                checkShippingPoint(listDO[index]);
-
-                updateWeightTicket();
-
-                setProgress(4, 1, 4);
-                continue;
+            switch (modeDetail) {
+                case IN_WAREHOUSE_TRANSFER:
+                    txtWeightTickerRefN.setText(newWeightTicket.getWeightTicketIdRef());
             }
 
-            return null;
+            loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
         }
 
         @Override
         protected void failed(Throwable cause) {
-            isValidOutboundDelivery = false;
+            newWeightTicket.setWeightTicketDetails(new ArrayList<>());
+            cbxMaterialTypeN.setSelectedItem("");
+            txtWeightN.setText("0");
+
+            isValidDO = false;
             if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
                 cause = cause.getCause();
             }
             logger.error(null, cause);
             JOptionPane.showMessageDialog(rootPane, cause.getMessage());
-        }
 
-        @Override
-        protected void finished() {
+            validateForm();
         }
     }
 
@@ -1794,89 +2656,72 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         @Override
         protected Object doInBackground() {
-            Date now = weightTicketRegistarationController.getServerDate();
+            final Date now = weightTicketRegistarationController.getServerDate();
 
-            if (now == null) {
-                now = Calendar.getInstance().getTime();
-
-            }
             SimpleDateFormat formatter = new SimpleDateFormat();
-            AppConfig sap = WeighBridgeApp.getApplication().getConfig();
             int seqBDay = weightTicketRegistarationController.getNewSeqBDay() + 1;
             int seqBMonth = weightTicketRegistarationController.getNewSeqBMonth() + 1;
 
             formatter.applyPattern("yyyy");
-
             int year = Integer.parseInt(formatter.format(now));
-            WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
+            formatter.applyPattern("HH:mm:ss");
+            String createdTime = formatter.format(now);
+
             newWeightTicket.setMandt(configuration.getSapClient());
             newWeightTicket.setWplant(configuration.getWkPlant());
             newWeightTicket.setSeqDay(seqBDay);
             newWeightTicket.setSeqMonth(seqBMonth);
-            formatter.applyPattern("HH:mm:ss");
-            newWeightTicket.setCreatedTime(formatter.format(now));
-            weightTicketDetail.setCreatedTime(formatter.format(now));
+            newWeightTicket.setCreatedTime(createdTime);
+            newWeightTicket.setCreatedDate(now);
             newWeightTicket.setCreator(WeighBridgeApp.getApplication().getLogin().getUid());
             newWeightTicket.setOfflineMode(WeighBridgeApp.getApplication().isOfflineMode());
-            newWeightTicket.setRegType(rbtNInward.isSelected() ? 'I' : 'O');
-            weightTicketDetail.setRegItemDescription(txtNMaterial.getText().trim());
-            weightTicketDetail.setRegItemQuantity(BigDecimal.valueOf(Double.valueOf(txtNWeight.getValue().toString())));
             newWeightTicket.setWbId(configuration.getWbId());
-            newWeightTicket.setAbbr(abbr);
-            newWeightTicket.setPlateNo(txtNPlateNo.getText().trim());
-            newWeightTicket.setDriverIdNo(txtNCMNDBL.getText().trim());
-            newWeightTicket.setDriverName(txtNDriverName.getText().trim());
-            weightTicketDetail.setDocYear(year);
             newWeightTicket.setPosted(false);
-            newWeightTicket.setTrailerId(txtNTrailerPlate.getText().trim());
-            if (weightTicketDetail.getDeliveryOrderNo() != null && weightTicketDetail.getDeliveryOrderNo().trim().isEmpty()) {
-                weightTicketDetail.setDeliveryOrderNo(null);
-                weightTicketDetail.setItem(null);
-                weightTicketDetail.setMatnrRef(null);
-                weightTicketDetail.setRegItemDescription(txtNMaterial.getText().trim());
-                weightTicketDetail.setUnit(null);
+
+            newWeightTicket.setRegType(mode == MODE.INPUT ? 'I' : 'O');
+            newWeightTicket.setMode(modeDetail.name());
+            newWeightTicket.setRegisteredNumber(txtRegisterIdN.getText().trim());
+            newWeightTicket.setDriverName(txtDriverNameN.getText().trim());
+            newWeightTicket.setDriverIdNo(txtCMNDN.getText().trim());
+            newWeightTicket.setPlateNo(txtPlateNoN.getText().trim());
+            newWeightTicket.setTrailerId(txtTrailerNoN.getText().trim());
+            newWeightTicket.setSling(Integer.parseInt(txtSlingN.getText().trim()));
+            newWeightTicket.setPallet(Integer.parseInt(txtPalletN.getText().trim()));
+            newWeightTicket.setRecvPlant(configuration.getWkPlant());
+            newWeightTicket.setSoNiemXa(txtSoNiemXaN.getText().trim());
+            newWeightTicket.setBatch(txtProductionBatchN.getText().trim());
+            newWeightTicket.setText(txtNoteN.getText().trim());
+
+            switch (modeDetail) {
+                case IN_PO_PURCHASE:
+                    updateDataForInPoPurchaseMode();
+                    break;
+                case IN_OTHER:
+                    updateDataForOtherMode();
+                    break;
+                case OUT_SLOC_SLOC:
+                    updateDataForOutSlocSloc();
+                    break;
+                case OUT_SELL_WATERWAY:
+                    updateDataForOutSellWateway();
+                    break;
+                case OUT_PULL_STATION:
+                    updateDataForPrepareOutPullStation();
+                    break;
+                case OUT_OTHER:
+                    updateDataForOtherMode();
+                    break;
             }
-            weightTicketDetail.setKunnr(null);
-            if (weightTicketDetail.getDeliveryOrderNo() != null && !weightTicketDetail.getDeliveryOrderNo().trim().isEmpty()) {
-                String val = weightTicketDetail.getDeliveryOrderNo().trim();
-                val = StringUtil.paddingZero(val, 10);
-                weightTicketDetail.setDeliveryOrderNo(val);
-                if (outboundDelivery != null) {
-                    weightTicketDetail.setKunnr(outboundDelivery.getKunnr());
-                }
+
+            List<WeightTicketDetail> weightTicketDetails = newWeightTicket.getWeightTicketDetails();
+            if (weightTicketDetails.size() > 0) {
+                weightTicketDetails.forEach(weightTicketDetail -> {
+                    weightTicketDetail.setCreatedTime(createdTime);
+                    weightTicketDetail.setDocYear(year);
+                    weightTicketDetail.setCreatedDate(now);
+                });
             }
-            List<OutboundDeliveryDetail> detail = new ArrayList<>();
-            OutboundDeliveryDetail item;
-            if (WeighBridgeApp.getApplication().isOfflineMode() && !txtNDONum.getText().equals("")) {
-                weightTicketDetail.setDeliveryOrderNo(txtNDONum.getText());
-            } else if (!WeighBridgeApp.getApplication().isOfflineMode()) {
-                if (!txtNDONum.getText().equals("")) {
-                    String[] do_list = txtNDONum.getText().trim().split("-");
-                    for (int i = 0; i < do_list.length; i++) {
-                        String doNum = do_list[i];
-                        try {
-                            detail = weightTicketRegistarationController.findByMandtDelivNumb(doNum);
-                        } catch (Exception ex) {
-                            java.util.logging.Logger.getLogger(WTRegView.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                        for (int j = 0; j < detail.size(); j++) {
-                            item = detail.get(j);
-                            String zero = "0";
-                            String n = String.valueOf(seqBDay);
-                            while (n.length() < 3) {
-                                n = zero.concat(n);
-                            }
-                            //item.setWtId(id + n);
-                            if (!entityTransaction.isActive()) {
-                                entityTransaction.begin();
-                            }
-                            entityManager.merge(item);
-                            entityTransaction.commit();
-                            entityManager.clear();
-                        }
-                    }
-                }
-            }
+
             setMessage(resourceMapMsg.getString("msg.saveData"));
             try {
                 if (!entityTransaction.isActive()) {
@@ -1886,9 +2731,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 entityTransaction.commit();
                 entityManager.clear();
             } catch (Exception ex) {
-                if (entityTransaction.isActive()) {
-                    entityTransaction.rollback();
-                }
                 throw ex;
             }
 
@@ -1904,7 +2746,60 @@ public class WTRegView extends javax.swing.JInternalFrame {
             }
             SearchWeightTicketTask t = new SearchWeightTicketTask(this.getApplication());
             t.execute();
+
             return null;
+        }
+
+        public void updateDataForInPoPurchaseMode() {
+            newWeightTicket.getWeightTicketDetail().setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+        }
+
+        public void updateDataForPrepareOutPullStation() {
+            newWeightTicket.setMoveType("101");
+            newWeightTicket.getWeightTicketDetail().setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+        }
+
+        public void updateDataForOutSellWateway() {
+            if (WeighBridgeApp.getApplication().isOfflineMode()) {
+                WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
+                weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+                weightTicketDetail.setSoNumber(txtSONumN.getText().trim());
+            } else {
+                if (listDONumbers != null) {
+                    for (WeightTicketDetail weightTicketDetail : newWeightTicket.getWeightTicketDetails()) {
+                        DOCheckStructure dOCheckStructure = listDONumbers.stream()
+                                .filter(t -> t.getVbelnDO().equalsIgnoreCase(weightTicketDetail.getDeliveryOrderNo()))
+                                .findFirst().get();
+
+                        if (dOCheckStructure != null) {
+                            weightTicketDetail.setSoNumber(dOCheckStructure.getVbelnSO());
+                        }
+                    }
+                }
+            }
+        }
+
+        public void updateDataForOtherMode() {
+            WeightTicketDetail weightTicketDetail = new WeightTicketDetail();
+            weightTicketDetail.setUnit("TON");
+
+            MaterialInternal material = (MaterialInternal) cbxMaterialTypeN.getSelectedItem();
+            weightTicketDetail.setMatnrRef(material.getMatnr());
+            weightTicketDetail.setRegItemDescription(material.getMaktx());
+            weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+
+            newWeightTicket.addWeightTicketDetail(weightTicketDetail);
+        }
+
+        public void updateDataForOutSlocSloc() {
+            newWeightTicket.setMoveType("311");
+            newWeightTicket.setMoveReas(null);
+            WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
+            MaterialInternal materialInternal = (MaterialInternal) cbxMaterialTypeN.getSelectedItem();
+
+            weightTicketDetail.setMatnrRef(materialInternal.getMatnr());
+            weightTicketDetail.setRegItemDescription(materialInternal.getMaktx());
+            weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText().trim()));
         }
 
         @Override
@@ -1918,27 +2813,14 @@ public class WTRegView extends javax.swing.JInternalFrame {
         @Override
         protected void finished() {
             setMessage(resourceMapMsg.getString("msg.finished"));
-            entityManager.clear();
             cleanData();
             setCreatable(true);
             setFormEditable(false);
             setRbtEnabled(false);
             setClearable(false);
             setSaveNeeded(false);
-            if (isNeedRevertWeightTicket) {
-                List<WeightTicket> wt = weightTicketRegistarationController.getListByDeliveryOrderNo(outboundDeliveryNo);
-                WeightTicket item = null;
-                for (int i = 0; i < wt.size() - 1; i++) {
-                    item = wt.get(i);
-                    item.setPosted(false);
-                    if (!entityTransaction.isActive()) {
-                        entityTransaction.begin();
-                    }
-                    entityManager.persist(item);
-                    entityTransaction.commit();
-                }
-            }
-            entityManager.clear();
+
+            clearForm();
         }
     }
 // </editor-fold>
@@ -1977,123 +2859,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
         firePropertyChange("saveNeeded", old, isSaveNeeded());
     }
 
-    private boolean validateDriver() {
-        boolean isValid = !(txtNDriverName.getText() == null || txtNDriverName.getText().trim().isEmpty());
-        if (isValid) {
-            lblNDriverName.setForeground(Color.black);
-        } else {
-            lblNDriverName.setForeground(Color.red);
-        }
-
-        return isValid;
-    }
-
-    private boolean validateDriverNoId() {
-        boolean isValid = !(txtNCMNDBL.getText() == null || txtNCMNDBL.getText().trim().isEmpty() || txtNCMNDBL.getText().trim().length() > 9);
-        if (isValid) {
-            lblNCMNDBL.setForeground(Color.black);
-        } else {
-            lblNCMNDBL.setForeground(Color.red);
-        }
-
-        return isValid;
-    }
-
-    private boolean validatePlate() {
-        boolean isValid = !(txtNPlateNo.getText().trim().isEmpty());
-        if (isValid) {
-            if (txtNDONum.getText().trim().isEmpty() || outboundDelivery == null) {
-                isValid = validateLicensePlate(null, null);
-            } else {
-                isValid = validateLicensePlate(outboundDelivery.getLfart(), outboundDelivery.getTraid());
-            }
-        }
-
-        if (isValid && rbtNInward.isSelected()) {
-            if (outboundDelivery != null) {
-                String soXe_tmp = txtNPlateNo.getText().trim();
-                int indexRomooc = -1;
-                if (outboundDelivery.getTraid() != null && !outboundDelivery.getTraid().equals("")) {
-                    indexRomooc = outboundDelivery.getTraid().indexOf("|");
-                    if (indexRomooc >= 0) {
-                        soXe_tmp = soXe_tmp.concat("|").concat(txtNTrailerPlate.getText().trim());
-                    }
-                }
-                if (!soXe_tmp.equals(outboundDelivery.getTraid().trim())) {
-                    if (outboundDelivery.getTraid() != null
-                            && indexRomooc >= 0
-                            && indexRomooc != (outboundDelivery.getTraid().trim().length() - 1)
-                            && txtNTrailerPlate.getText().trim().equals("")) {
-                        JOptionPane.showMessageDialog(rootPane,
-                                resourceMapMsg.getString("msg.plzInputRomoc"));
-                    } else {
-                        JOptionPane.showMessageDialog(rootPane,
-                                resourceMapMsg.getString("msg.errorLicensePlate"));
-                    }
-                }
-
-            }
-        }
-
-        if (isValid) {
-            lblNPlateNo.setForeground(Color.black);
-        } else {
-            lblNPlateNo.setForeground(Color.red);
-        }
-
-        return isValid;
-    }
-
-    private boolean validateRegisteredCategory() {
-        boolean isValid = rbtNInward.isSelected() || rbtNOutward.isSelected();
-        if (isValid) {
-            lblNRegCat.setForeground(Color.black);
-        } else {
-            lblNRegCat.setForeground(Color.red);
-        }
-        return isValid;
-    }
-
-    private boolean validateMaterial() {
-        boolean isValid = !(txtNMaterial.getText() == null || txtNMaterial.getText().trim().isEmpty());
-        if (isValid) {
-            lblNMaterial.setForeground(Color.black);
-        } else {
-            lblNMaterial.setForeground(Color.red);
-        }
-        return isValid;
-    }
-
-    private boolean validateQuantity() {
-        boolean isValid = !(txtNWeight.getText().isEmpty() || Double.parseDouble(txtNWeight.getText()) <= 0d);
-        if (isValid) {
-            lblNWeight.setForeground(Color.black);
-        } else {
-            lblNWeight.setForeground(Color.red);
-        }
-
-        return isValid;
-    }
-
-    public boolean isValidated() {
-        boolean isValidDriverName = validateDriver();
-        boolean isValidDriverNoId = validateDriverNoId();
-        boolean isValidPlateNo = validatePlate();
-        boolean isValidRegisteredCategory = validateRegisteredCategory();
-        boolean isValidRegisteredMaterial = validateMaterial();
-        boolean isValidRegisteredQuantity = validateQuantity();
-        boolean result = isValidDriverName && isValidDriverNoId && isValidPlateNo && isValidRegisteredCategory && isValidRegisteredMaterial && isValidRegisteredQuantity;
-        setFormValid(result);
-
-        boolean isValid;
-        if (StringUtil.isNotEmptyString(txtNDONum.getText())) {
-            isValid = result && isValidOutboundDelivery && isHasCheck;
-        } else {
-            isValid = result && isValidOutboundDelivery;
-        }
-        return isValid;
-    }
-
     private void printWT(WeightTicket wt, boolean reprint) throws Exception {
         try {
             weightTicketRegistarationController.printRegWT(wt, reprint);
@@ -2103,95 +2868,42 @@ public class WTRegView extends javax.swing.JInternalFrame {
         }
     }
 
-    private boolean validateLicensePlate(String lfart, String traid) {
-        boolean result = false;
-        if (lfart != null && traid != null && (lfart.equalsIgnoreCase("ZTLF") || lfart.equalsIgnoreCase("NL"))) {
-            String txt = traid;
-            String doLicPlate;
-            int idx1 = txt.indexOf("|");
-            int idx2 = txt.indexOf("\\");
-            if (idx1 >= 0 || idx2 >= 0) {
-                int splitPos = idx1 < 0 ? idx2 : idx1;
-                int bIdx = splitPos - 8;
-                if (bIdx < 0) {
-                    bIdx = 0;
-                }
-                doLicPlate = txt.substring(bIdx, splitPos);
-                splitPos++;
-            } else {
-                int countSpace = 0;
-                int[] pos = new int[3];
-                char[] chars = txt.toCharArray();
-                for (int x = 0; x < chars.length; x++) {
-                    char c = chars[x];
-                    if (c == ' ') {
-                        pos[countSpace] = x;
-                        countSpace++;
-                    }
-                }
-                if (countSpace == 3) {
-                    int splitPos = pos[1];
-                    int bIdx = splitPos - 8;
-                    if (bIdx < 0) {
-                        bIdx = 0;
-                    }
-                    doLicPlate = txt.substring(bIdx, splitPos);
-                    splitPos++;
-                } else {
-                    doLicPlate = traid;
-                }
-            }
-            if (doLicPlate.equalsIgnoreCase(newWeightTicket.getPlateNo())) {
-                result = true;
-            } else {
-                result = false;
-                JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.errorLicensePlate", newWeightTicket.getPlateNo(), doLicPlate));
-            }
-        } else if (newWeightTicket != null) {
-            Vehicle vehicle = weightTicketRegistarationController.findByPlateNo(txtNPlateNo.getText().trim());
-            if (vehicle == null) {
-                result = false;
-                JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.errorLicensePlate", txtNPlateNo.getText().trim()));
-            } else {
-                result = true;
-                if (vehicle.isProhibit()) {
-                    result = false;
-                    JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.errorLicensePlate", txtNPlateNo.getText().trim()));
-                }
-
-                List<TransportAgentVehicle> transportAgentVehicles = weightTicketRegistarationController.findByVehicleId(vehicle.getId());
-                if (transportAgentVehicles != null && transportAgentVehicles.size() == 1) {
-                    abbr = transportAgentVehicles.get(0).getTransportAgent().getAbbr();
-                }
-            }
-        }
-        return result;
-    }
-
     private void cleanData() {
         newWeightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
-        outboundDelivery = null;
-        txtNDriverName.setText("");
-        txtNCMNDBL.setText("");
-        txtNPlateNo.setText("");
-        txtNTrailerPlate.setText("");
-        rbtRegCatGroup.clearSelection();
-        rbtNInward.setEnabled(true);
-        rbtNOutward.setEnabled(true);
-        txtNMaterial.setText("");
-        cbxNMaterial.setSelectedItem("");
-        txtNWeight.setValue(null);
-        txtNDONum.setText("");
+        isValidDO = false;
+        isValidPO = false;
+        isValidPOSTO = false;
+        isValidSO = false;
+        isValidWeight = false;
+        isValidVendorLoad = false;
+        isValidVendorTransport = false;
 
-        lblNDriverName.setForeground(Color.black);
-        lblNCMNDBL.setForeground(Color.black);
-        lblNPlateNo.setForeground(Color.black);
-        lblNTrailerPlate.setForeground(Color.black);
-        lblNRegCat.setForeground(Color.black);
-        lblNMaterial.setForeground(Color.black);
-        lblNWeight.setForeground(Color.black);
-        lblNDONum.setForeground(Color.black);
-        isValidOutboundDelivery = true;
+        txtTicketIdN.setText("");
+        txtWeightTickerRefN.setText("");
+        txtRegisterIdN.setText("");
+        txtDriverNameN.setText("");
+        txtCMNDN.setText("");
+        txtPlateNoN.setText("");
+        txtTonnageN.setText("1");
+        txtTrailerNoN.setText("");
+        txtSlingN.setText("0");
+        txtPalletN.setText("0");
+        txtSoNiemXaN.setText("");
+        txtProductionBatchN.setText("");
+        txtNoteN.setText("");
+        txtDONumN.setText("");
+        txtPONumN.setText("");
+        txtPOSTONumN.setText("");
+        txtSONumN.setText("");
+        cbxMaterialTypeN.setSelectedIndex(-1);
+        txtWeightN.setText("1");
+        cbxSlocN.setSelectedIndex(-1);
+        cbxSloc2N.setSelectedIndex(-1);
+        cbxBatchStockN.setSelectedIndex(-1);
+        cbxBatchStock2N.setSelectedIndex(-1);
+        cbxVendorLoadingN.setSelectedIndex(-1);
+        cbxVendorTransportN.setSelectedIndex(-1);
+        cbxSuppliesIdN.setSelectedIndex(-1);
     }
 
     private List<WeightTicket> filterHours(List<WeightTicket> data, String timeFrom, String timeTo) {
@@ -2202,76 +2914,114 @@ public class WTRegView extends javax.swing.JInternalFrame {
             for (int index = 0; index < data.size(); index++) {
                 WeightTicket item = data.get(index);
                 int createTime = Integer.parseInt(item.getCreatedTime().substring(0, 2));
-                if (startTime <= createTime && createTime <= endTime)
-                {
+                if (startTime <= createTime && createTime <= endTime) {
                     result.add(item);
                 }
             }
         }
-        
+
         return result;
     }
     // </editor-fold>
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCheckDO;
     private javax.swing.JButton btnClear;
+    private javax.swing.JButton btnDOCheckN;
     private javax.swing.JButton btnFind;
-    private javax.swing.JButton btnMany;
     private javax.swing.JButton btnNew;
+    private javax.swing.JButton btnPOCheckN;
+    private javax.swing.JButton btnPOSTOCheckN;
     private javax.swing.JButton btnReprint;
+    private javax.swing.JButton btnSOCheckN;
     private javax.swing.JButton btnSave;
-    private javax.swing.JButton btnSo;
-    private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JComboBox cbxBatchStock2N;
+    private javax.swing.JComboBox cbxBatchStockN;
     private javax.swing.JComboBox cbxHourFrom;
     private javax.swing.JComboBox cbxHourTo;
     private javax.swing.JComboBox cbxMaterialType;
-    private javax.swing.JComboBox cbxNMaterial;
+    private javax.swing.JComboBox cbxMaterialTypeN;
+    private javax.swing.JComboBox cbxModeType;
+    private javax.swing.JComboBox cbxSloc2N;
+    private javax.swing.JComboBox cbxSlocN;
     private javax.swing.JComboBox cbxStatus;
+    private javax.swing.JComboBox cbxSuppliesIdN;
+    private javax.swing.JComboBox cbxVendorLoadingN;
+    private javax.swing.JComboBox cbxVendorTransportN;
     private org.jdesktop.swingx.JXDatePicker dpDateFrom;
     private org.jdesktop.swingx.JXDatePicker dpDateTo;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel lblBatchStock2N;
+    private javax.swing.JLabel lblBatchStockN;
+    private javax.swing.JLabel lblCMNDN;
     private javax.swing.JLabel lblCreator;
+    private javax.swing.JLabel lblDONumN;
     private javax.swing.JLabel lblDateFrom;
     private javax.swing.JLabel lblDateTo;
     private javax.swing.JLabel lblDriverName;
+    private javax.swing.JLabel lblDriverNameN;
     private javax.swing.JLabel lblHourFrom;
     private javax.swing.JLabel lblHourTo;
     private javax.swing.JLabel lblMaterialType;
-    private javax.swing.JLabel lblNCMNDBL;
-    private javax.swing.JLabel lblNDONum;
-    private javax.swing.JLabel lblNDriverName;
-    private javax.swing.JLabel lblNMaterial;
-    private javax.swing.JLabel lblNPlateNo;
-    private javax.swing.JLabel lblNRegCat;
-    private javax.swing.JLabel lblNTrailerPlate;
-    private javax.swing.JLabel lblNWeight;
-    private javax.swing.JLabel lblNWeightUnit;
+    private javax.swing.JLabel lblMaterialTypeN;
+    private javax.swing.JLabel lblNoteN;
+    private javax.swing.JLabel lblPONumN;
+    private javax.swing.JLabel lblPOSTONumN;
+    private javax.swing.JLabel lblPalletN;
     private javax.swing.JLabel lblPlateNo;
+    private javax.swing.JLabel lblPlateNoN;
+    private javax.swing.JLabel lblProductionBatchN;
+    private javax.swing.JLabel lblRegisterIdN;
+    private javax.swing.JLabel lblSONumN;
+    private javax.swing.JLabel lblSlingN;
+    private javax.swing.JLabel lblSloc2N;
+    private javax.swing.JLabel lblSlocN;
+    private javax.swing.JLabel lblSoNiemXaN;
     private javax.swing.JLabel lblStatus;
+    private javax.swing.JLabel lblSuppliesIdN;
+    private javax.swing.JLabel lblTicketIdN;
+    private javax.swing.JLabel lblTonnageN;
+    private javax.swing.JLabel lblTonngageUnitN;
+    private javax.swing.JLabel lblTrailerNoN;
+    private javax.swing.JLabel lblVendorLoadingN;
+    private javax.swing.JLabel lblVendorTransportN;
+    private javax.swing.JLabel lblWeightN;
+    private javax.swing.JLabel lblWeightTickerRefN;
     private javax.swing.JLabel lblWeightTicketNo;
+    private javax.swing.JLabel lblWeightUnitN;
     private javax.swing.JPanel pnControl;
     private javax.swing.JPanel pnFilter;
-    private javax.swing.JPanel pnNLeft;
-    private javax.swing.JPanel pnNRight;
     private javax.swing.JPanel pnPrintControl;
-    private javax.swing.JPanel pnWTicket;
-    private javax.swing.JRadioButton rbtNInward;
-    private javax.swing.JRadioButton rbtNOutward;
+    private javax.swing.JPanel pnROVContent;
+    private javax.swing.JPanel pnROVLeft;
+    private javax.swing.JPanel pnROVRight;
+    private javax.swing.JPanel pnROVTop;
+    private javax.swing.JPanel pnRegistrationOfVehicle;
+    private javax.swing.JRadioButton rbtInput;
+    private javax.swing.JRadioButton rbtOutput;
     private javax.swing.ButtonGroup rbtRegCatGroup;
     private javax.swing.JScrollPane spnResult;
     private org.jdesktop.swingx.JXTable tabResults;
+    private javax.swing.JTextField txtCMNDN;
     private javax.swing.JTextField txtCreator;
+    private javax.swing.JTextField txtDONumN;
     private javax.swing.JTextField txtDriverName;
-    private javax.swing.JTextField txtNCMNDBL;
-    private javax.swing.JTextField txtNDONum;
-    private javax.swing.JTextField txtNDriverName;
-    private javax.swing.JTextField txtNMaterial;
-    private javax.swing.JTextField txtNPlateNo;
-    private javax.swing.JTextField txtNTrailerPlate;
-    private javax.swing.JFormattedTextField txtNWeight;
+    private javax.swing.JTextField txtDriverNameN;
+    private javax.swing.JTextField txtNoteN;
+    private javax.swing.JTextField txtPONumN;
+    private javax.swing.JTextField txtPOSTONumN;
+    private javax.swing.JFormattedTextField txtPalletN;
     private javax.swing.JTextField txtPlateNo;
+    private javax.swing.JTextField txtPlateNoN;
+    private javax.swing.JTextField txtProductionBatchN;
+    private javax.swing.JTextField txtRegisterIdN;
+    private javax.swing.JTextField txtSONumN;
+    private javax.swing.JFormattedTextField txtSlingN;
+    private javax.swing.JTextField txtSoNiemXaN;
+    private javax.swing.JTextField txtTicketIdN;
+    private javax.swing.JFormattedTextField txtTonnageN;
+    private javax.swing.JTextField txtTrailerNoN;
+    private javax.swing.JFormattedTextField txtWeightN;
+    private javax.swing.JTextField txtWeightTickerRefN;
     private javax.swing.JTextField txtWeightTicketNo;
-    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 
     /**
@@ -2334,5 +3084,213 @@ public class WTRegView extends javax.swing.JInternalFrame {
         boolean oldRbtEnabled = this.rbtEnabled;
         this.rbtEnabled = rbtEnabled;
         firePropertyChange(Constants.WTRegView.PROP_RBTENABLED, oldRbtEnabled, rbtEnabled);
+    }
+
+    @Action(block = Task.BlockingScope.ACTION)
+    public Task checkPO() {
+        return new CheckPOTask(Application.getInstance(WeighBridgeApp.class));
+    }
+
+    private class CheckPOTask extends Task<Object, Void> {
+
+        private String strVendor = "";
+        private String strMatnr = null;
+        private BigDecimal totalWeight = BigDecimal.ZERO;
+
+        CheckPOTask(Application app) {
+            super(app);
+        }
+
+        @Override
+        protected Object doInBackground() throws Exception {
+            String poNum = txtPONumN.getText().trim();
+
+            // get local PO
+            setStep(1, resourceMapMsg.getString("msg.checkPOInDB"));
+            PurchaseOrder purchaseOrder = purchaseOrderRepository.findByPoNumber(poNum);
+
+            // sync from SAP
+            if (!WeighBridgeApp.getApplication().isOfflineMode()) {
+                purchaseOrder = syncPurchaseOrder(poNum, purchaseOrder);
+            }
+
+            // check exist DO
+            if (purchaseOrder == null) {
+                throw new Exception(resourceMapMsg.getString("msg.poNotExitst", poNum));
+            }
+
+            updateWeightTicket(purchaseOrder);
+
+            setStep(4, null);
+            return null;
+        }
+
+        @Override
+        protected void succeeded(Object t) {
+            isValidPO = true;
+            txtWeightN.setText(totalWeight.toString());
+            cbxVendorTransportN.setSelectedItem(weightTicketRegistarationController.getVendor(strVendor));
+            cbxMaterialTypeN.setSelectedItem(weightTicketRegistarationController.getMaterialInternal(strMatnr));
+            loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
+            loadBatchStockModel(cbxSloc2N, cbxBatchStock2N, false);
+
+            validateForm();
+        }
+
+        @Override
+        protected void failed(Throwable cause) {
+            newWeightTicket.setWeightTicketDetails(new ArrayList<>());
+            cbxMaterialTypeN.setSelectedIndex(-1);
+            cbxVendorTransportN.setSelectedIndex(-1);
+
+            isValidPO = false;
+            if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
+                cause = cause.getCause();
+            }
+            logger.error(null, cause);
+            JOptionPane.showMessageDialog(rootPane, cause.getMessage());
+
+            validateForm();
+        }
+
+        private void setStep(int step, String msg) {
+            if (StringUtil.isNotEmptyString(msg)) {
+                setMessage(msg);
+            }
+            setProgress(step, 1, 4);
+        }
+
+        private PurchaseOrder syncPurchaseOrder(String poNum, PurchaseOrder purchaseOrder) {
+            try {
+                setStep(2, resourceMapMsg.getString("checkPOInSap"));
+                PurchaseOrder sapPurchaseOrder = sapService.getPurchaseOrder(poNum);
+
+                setStep(3, resourceMapMsg.getString("msg.saveDataToDb"));
+                return sapService.syncPurchaseOrder(sapPurchaseOrder, purchaseOrder);
+            } catch (Exception ex) {
+                return null;
+            }
+        }
+
+        private void updateWeightTicket(PurchaseOrder purchaseOrder) {
+            PurchaseOrderDetail purchaseOrderDetail = purchaseOrder.getPurchaseOrderDetail();
+            WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
+            weightTicketDetail.setEbeln(purchaseOrder.getPoNumber());
+            weightTicketDetail.setItem(purchaseOrderDetail.getPoItem());
+            weightTicketDetail.setRegItemDescription(purchaseOrderDetail.getShortText());
+            weightTicketDetail.setRegItemQuantity(purchaseOrderDetail.getQuantity());
+            weightTicketDetail.setMatnrRef(purchaseOrderDetail.getMaterial());
+            weightTicketDetail.setKunnr(purchaseOrder.getCustomer());
+            weightTicketDetail.setUnit("TON");
+
+            strMatnr = purchaseOrderDetail.getMaterial();
+
+            newWeightTicket.setTransVendor(purchaseOrder.getVendor());
+            strVendor = purchaseOrder.getVendor();
+            totalWeight = purchaseOrderDetail.getQuantity();
+
+            switch (modeDetail) {
+                case IN_PO_PURCHASE:
+                    BigDecimal quantity = purchaseOrderDetail.getQuantity() != null ? purchaseOrderDetail.getQuantity() : BigDecimal.ZERO;
+                    //BigDecimal tolerance = purchaseOrderDetail.getUnderDlvTol() != null ? purchaseOrderDetail.getUnderDlvTol() : BigDecimal.ZERO;
+                    BigDecimal tolerance = purchaseOrderDetail.getOverDlvTol() != null ? purchaseOrderDetail.getOverDlvTol() : BigDecimal.ZERO;
+
+                    numCheckWeight = quantity.add(
+                            quantity.multiply(tolerance).divide(new BigDecimal(100))
+                    ).subtract(weightTicketRegistarationController.getSumQuantityWithPoNo(purchaseOrder.getPoNumber()));
+
+                    if (numCheckWeight.compareTo(BigDecimal.ZERO) < 0) {
+                        numCheckWeight = BigDecimal.ZERO;
+                    }
+
+                    totalWeight = numCheckWeight;
+                    isValidWeight = true;
+            }
+        }
+    }
+
+    @Action(block = Task.BlockingScope.ACTION)
+    public Task checkPOSTO() {
+        return new CheckPOSTOTask(Application.getInstance(WeighBridgeApp.class));
+    }
+
+    private class CheckPOSTOTask extends Task<Object, Void> {
+
+        private String strVendor = "";
+
+        CheckPOSTOTask(Application app) {
+            super(app);
+        }
+
+        @Override
+        protected Object doInBackground() throws Exception {
+            String postoNum = txtPOSTONumN.getText().trim();
+
+            // get local PO
+            setStep(1, resourceMapMsg.getString("msg.checkPOInDB"));
+            PurchaseOrder purchaseOrder = purchaseOrderRepository.findByPoNumber(postoNum);
+
+            // sync from SAP
+            if (!WeighBridgeApp.getApplication().isOfflineMode()) {
+                purchaseOrder = syncPurchaseOrder(postoNum, purchaseOrder);
+            }
+
+            // check exist DO
+            if (purchaseOrder == null) {
+                throw new Exception(resourceMapMsg.getString("msg.poNotExitst", postoNum));
+            }
+
+            updateWeightTicket(purchaseOrder);
+
+            setStep(4, null);
+            return null;
+        }
+
+        @Override
+        protected void succeeded(Object t) {
+            isValidPOSTO = true;
+            cbxVendorLoadingN.setSelectedItem(weightTicketRegistarationController.getVendor(strVendor));
+
+            validateForm();
+        }
+
+        @Override
+        protected void failed(Throwable cause) {
+            isValidPOSTO = false;
+            cbxVendorLoadingN.setSelectedIndex(-1);
+
+            if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
+                cause = cause.getCause();
+            }
+            logger.error(null, cause);
+            JOptionPane.showMessageDialog(rootPane, cause.getMessage());
+
+            validateForm();
+        }
+
+        private void setStep(int step, String msg) {
+            if (StringUtil.isNotEmptyString(msg)) {
+                setMessage(msg);
+            }
+            setProgress(step, 1, 4);
+        }
+
+        private PurchaseOrder syncPurchaseOrder(String poNum, PurchaseOrder purchaseOrder) {
+            try {
+                setStep(2, resourceMapMsg.getString("checkPOInSap"));
+                PurchaseOrder sapPurchaseOrder = sapService.getPurchaseOrder(poNum);
+
+                setStep(3, resourceMapMsg.getString("msg.saveDataToDb"));
+                return sapService.syncPurchaseOrder(sapPurchaseOrder, purchaseOrder);
+            } catch (Exception ex) {
+                return null;
+            }
+        }
+
+        private void updateWeightTicket(PurchaseOrder purchaseOrder) {
+            newWeightTicket.setPosto(purchaseOrder.getPoNumber());
+            newWeightTicket.setLoadVendor(purchaseOrder.getVendor());
+            strVendor = purchaseOrder.getVendor();
+        }
     }
 }

@@ -6,22 +6,23 @@ package com.gcs.wb.controller;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.base.constant.Constants;
+import com.gcs.wb.jpa.JReportService;
 import com.gcs.wb.jpa.entity.*;
 import com.gcs.wb.jpa.entity.OutboundDeliveryDetail;
-import com.gcs.wb.jpa.service.JReportService;
-import com.gcs.wb.model.AppConfig;
-import com.gcs.wb.service.WeightTicketRegistarationService;
+import com.gcs.wb.jpa.repositorys.MaterialInternalRepository;
+import com.gcs.wb.jpa.repositorys.TransportAgentVehicleRepository;
+import com.gcs.wb.jpa.repositorys.VehicleLoadRepository;
+import com.gcs.wb.jpa.repositorys.VendorRepository;
+import com.gcs.wb.jpa.repositorys.WeightTicketDetailRepository;
+import com.gcs.wb.service.WeightTicketRegistrationService;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
-import org.jdesktop.swingx.JXDatePicker;
 
 /**
  *
@@ -29,18 +30,15 @@ import org.jdesktop.swingx.JXDatePicker;
  */
 public class WeightTicketRegistarationController {
 
-    WeightTicketRegistarationService wTRegService = new WeightTicketRegistarationService();
+    WeightTicketRegistrationService wTRegService = new WeightTicketRegistrationService();
     JReportService jreportService = new JReportService();
     Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
     private final Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
-
-    public List<WeightTicket> listWeightTicketsDoInBackground(JXDatePicker dpFrom, JXDatePicker dpTo, JComboBox cbxType, JComboBox cbxTimeFrom, JComboBox cbxTimeTo, JTextField txtNguoitao, JRadioButton rbtDissolved, JRadioButton rbtPosted, JRadioButton rbtStateAll, JTextField txtTaixe, JTextField txtBienSo) throws Exception {
-        return wTRegService.listWeightTicketsDoInBackground(dpFrom, dpTo, cbxType, cbxTimeFrom, cbxTimeTo, txtNguoitao, rbtDissolved, rbtPosted, rbtStateAll, txtTaixe, txtBienSo);
-    }
-
-    public Object[][] handleWtData(String getMode, Object[][] wtData, List<WeightTicket> weightTicketList, AppConfig config, Object[] wtCols, String sVendor) {
-        return wTRegService.handleWtData(getMode, wtData, weightTicketList, config, wtCols, sVendor);
-    }
+    TransportAgentVehicleRepository transportAgentVehicleRepository = new TransportAgentVehicleRepository();
+    VehicleLoadRepository vehicleLoadRepository = new VehicleLoadRepository();
+    VendorRepository vendorRepository = new VendorRepository();
+    MaterialInternalRepository materialInternalRepository = new MaterialInternalRepository();
+    WeightTicketDetailRepository weightTicketDetailRepository = new WeightTicketDetailRepository();
 
     public String getReportName() {
         String reportName = null;
@@ -61,10 +59,6 @@ public class WeightTicketRegistarationController {
         params.put("P_FROM", kFrom);
         params.put("P_TO", kTo);
         return params;
-    }
-
-    public void hanldeCheckDOOutbDel(OutboundDelivery sapOutb, Customer kunnr, Customer kunag, Vendor lifnr, Customer sapKunnr, Customer sapKunag, Vendor sapLifnr) {
-        wTRegService.hanldeCheckDOOutbDel(sapOutb, kunnr, kunag, lifnr, sapKunnr, sapKunag, sapLifnr);
     }
 
     public void printReport(Map<String, Object> map, String reportName) {
@@ -114,7 +108,7 @@ public class WeightTicketRegistarationController {
         for (Material material : materials) {
             if (result.getIndexOf(material) < 0 && material.getMatnr() != null
                     && material.getMaktx() != null && !material.getMaktx().isEmpty()) {
-                result.addElement(material.getMaktx());
+                result.addElement(material);
             }
         }
         return result;
@@ -217,6 +211,77 @@ public class WeightTicketRegistarationController {
 
     public List<OutboundDeliveryDetail> findByMandtDelivNumb(String deliv_numb) throws Exception {
         return wTRegService.findByMandtDelivNumb(deliv_numb);
+    }
 
+    public DefaultComboBoxModel getModeTypeModel(Constants.WeighingProcess.MODE mode) {
+        DefaultComboBoxModel model = new DefaultComboBoxModel();
+        if (mode == Constants.WeighingProcess.MODE.INPUT) {
+            Constants.WeighingProcess.getInputModeList().forEach(item -> {
+                model.addElement(item);
+            });
+        } else if (mode == Constants.WeighingProcess.MODE.OUTPUT) {
+            Constants.WeighingProcess.getOutputModeList().forEach(item -> {
+                model.addElement(item);
+            });
+        }
+
+        return model;
+    }
+
+    public String loadTransportAgentAbbr(String plateNo) {
+        List<TransportAgentVehicle> transportAgentVehicles = transportAgentVehicleRepository.findByPlateNo(plateNo);
+        if (transportAgentVehicles.size() > 0) {
+            return transportAgentVehicles.get(0).getTransportAgent().getAbbr();
+        }
+
+        return "";
+    }
+
+    public Float loadVehicleLoading(String plateNo) {
+        VehicleLoad vehicleLoad = vehicleLoadRepository.findByPlateNo(plateNo);
+        if (vehicleLoad != null) {
+            return vehicleLoad.getVehicleLoad();
+        }
+
+        return 0f;
+    }
+    
+    public List<BatchStock> getBatchStocks(SLoc sloc, String[] arr_matnr) {
+        return wTRegService.getBatchStocks(sloc, arr_matnr);
+    }
+
+    public void getSyncBatchStocks(SLoc sloc, String[] arr_matnr) {
+        wTRegService.getSyncBatchStocks(sloc, arr_matnr);
+    }
+    
+    public DefaultComboBoxModel getBatchStockModel(List<BatchStock> batchStocks) {
+        return new DefaultComboBoxModel(batchStocks.toArray());
+    }
+    
+    public Vendor getVendor(String strVendor) {
+        return vendorRepository.findByLifnr(strVendor);
+    }
+    
+    public boolean checkPlateNoInVendor(String abbr, String plateNo) {
+        return transportAgentVehicleRepository.findByAbbrAndPlateNo(abbr, plateNo) != null;
+    }
+    
+    public DefaultComboBoxModel getMaterialInternalModel() {
+        return new DefaultComboBoxModel(materialInternalRepository.getMaterialInternals().toArray());
+    }
+    
+    public MaterialInternal getMaterialInternal(String matnr) {
+        return materialInternalRepository.findByMatnr(matnr);
+    }
+    
+    public BigDecimal getSumQuantityWithPoNo(String poNo) {
+        BigDecimal result = BigDecimal.ZERO;
+        
+        List<WeightTicketDetail> weightTicketDetails = weightTicketDetailRepository.findByPoNo(poNo);
+        for (WeightTicketDetail weightTicketDetail: weightTicketDetails) {
+            result = result.add(weightTicketDetail.getRegItemQuantity());
+        }
+        
+        return result;
     }
 }

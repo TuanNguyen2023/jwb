@@ -160,6 +160,9 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
                     outboundDelivery.setFreeQty(item_qty_free);
                 }
                 outboundDelivery.setLfimg(item_qty);
+                
+                outboundDelivery.setVbelnNach(doItem.getVbelnNach());
+                outboundDelivery.setWtIdRef(doItem.getWtIdRef());
             }
             //set lai item number thanh number dau tien
 

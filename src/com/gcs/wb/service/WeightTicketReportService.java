@@ -130,8 +130,6 @@ public class WeightTicketReportService {
         comboBoxModel.setSelectedItem(transportAgent);
         return comboBoxModel;
     }
-    
-    
 
     public List<WeightTicket> findListWeightTicket(String month, String year, String tagent, String matnr, List<Character> modes, boolean isPosted) throws Exception {
         WeightTicketRepository repository = new WeightTicketRepository();

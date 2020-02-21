@@ -177,6 +177,6 @@ public class Material implements Serializable {
 
     @Override
     public String toString() {
-        return "com.gcs.wb.jpa.entity.Material[id=" + id + "]";
+        return getMaktx();
     }
 }

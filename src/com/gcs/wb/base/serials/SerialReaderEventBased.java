@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.math.BigInteger;
 import javax.swing.JFormattedTextField;
 import com.gcs.wb.WeighBridgeApp;
+import org.apache.log4j.Logger;
 
 /**
  * Handles the input coming from the serial port. A new line character
@@ -91,13 +92,18 @@ public class SerialReaderEventBased implements SerialPortDataListener {
         return result;
     }
 
+    private void delay(long time) {
+        long start = System.currentTimeMillis();
+        while(System.currentTimeMillis() - start < time){
+            // delay
+        }
+    }
+    
     @Override
     public void serialEvent(SerialPortEvent event) {
-        if (event.getEventType() != SerialPort.LISTENING_EVENT_DATA_AVAILABLE) {
-            return;
-        }
-
-        // we get here if data has been received
+        Logger.getLogger(this.getClass()).error("@jSerialComm, Start.. " + event.getEventType());
+        if (event.getEventType() == SerialPort.LISTENING_EVENT_DATA_AVAILABLE) {
+            // we get here if data has been received
         byte[] readBuffer = new byte[20];
         try {
             // read data
@@ -106,8 +112,10 @@ public class SerialReaderEventBased implements SerialPortDataListener {
             }
             // print data
             String result = new String(readBuffer);
+           
             //result = result.replaceAll( "[^\\d]", "" );
             result = this.getWeight(result);
+            Logger.getLogger(this.getClass()).error("@jSerialComm, 7777777 weight bridge signal: " + result);
 
             BigInteger ival = BigInteger.ZERO;
             try {
@@ -121,6 +129,7 @@ public class SerialReaderEventBased implements SerialPortDataListener {
 
             //Times of delay to refresh screen
             if (this.count > this.times_delay) {
+                Logger.getLogger(this.getClass()).error("@jSerialComm, 888888" + result);
                 WeighBridgeApp.getApplication().setLast(WeighBridgeApp.getApplication().getNow());
                 WeighBridgeApp.getApplication().setNow(ival);
                 if (WeighBridgeApp.getApplication().getNow().doubleValue() > WeighBridgeApp.getApplication().getMax().doubleValue()) {
@@ -128,23 +137,16 @@ public class SerialReaderEventBased implements SerialPortDataListener {
                 }
                 control.setValue(ival);
                 control.repaint(500);
-                //for (int i = 1 ; i <= 1500 ; i++)
-                // {
-                // double garbage = Math.PI * Math.PI;
-                // }
                 this.count = 0;
             } else {
                 this.count++;
             }
-            //System.out.println("Read: "+result);
-            //try
-            //{
-            //Thread.sleep(500); // do nothing for 1000 miliseconds (1 second)
-            //}
-            //catch(InterruptedException ex)
-            //{
-            //}
-        } catch (IOException ex) {
+            
+            delay(500);
+            Logger.getLogger(this.getClass()).error("@jSerialComm, Start.. " + event.getEventType());
         }
+        catch (IOException ex) {
+        }
+      }
     }
 }

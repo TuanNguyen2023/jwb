@@ -8,6 +8,7 @@ import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.jpa.entity.Material;
+import com.gcs.wb.jpa.entity.MaterialInternal;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -52,6 +53,18 @@ public class LookupMaterialService {
             }
         }
         return result;
+    }
+    
+    /**
+     * Get data material
+     * @param desc
+     * @return 
+     */
+    public List<MaterialInternal> getListMaterialInternal() {
+        TypedQuery<MaterialInternal> tMaterial =
+                entityManager.createQuery("SELECT m FROM MaterialInternal m WHERE m.wplant = :wplant order by m.matnr asc", MaterialInternal.class);
+        tMaterial.setParameter("wplant", configuration.getWkPlant());
+        return tMaterial.getResultList();
     }
     
 }

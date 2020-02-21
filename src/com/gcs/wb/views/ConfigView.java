@@ -18,7 +18,6 @@ import com.gcs.wb.base.serials.SerialHelper;
 import com.gcs.wb.controller.ConfigController;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.Configuration;
-import com.gcs.wb.jpa.repositorys.ConfigurationRepository;
 import java.awt.Color;
 import java.util.HashSet;
 import javax.swing.DefaultComboBoxModel;
@@ -1007,7 +1006,7 @@ public class ConfigView extends javax.swing.JDialog {
             }
             cbxSpeed1.setSelectedItem(speed1);
 
-            int dbit1 = configuration.getWb1DataBit();
+            Short dbit1 = configuration.getWb1DataBit().shortValue();
             cbxDataBits1.setSelectedItem(dbit1);
 
             Float sbit1 = configuration.getWb1StopBit().floatValue();
@@ -1037,7 +1036,7 @@ public class ConfigView extends javax.swing.JDialog {
             }
             cbxSpeed2.setSelectedItem(speed2);
 
-            int dbit2 = configuration.getWb2DataBit();
+            Short dbit2 = configuration.getWb2DataBit().shortValue();
             cbxDataBits2.setSelectedItem(dbit2);
 
             Float sbit2 = configuration.getWb2StopBit().floatValue();
@@ -1102,8 +1101,7 @@ public class ConfigView extends javax.swing.JDialog {
                 JPAConnector.getInstance();
 
                 // get config in database
-                ConfigurationRepository configurationRepository = new ConfigurationRepository();
-                config.setConfiguration(configurationRepository.getConfiguration());
+                config.setConfiguration(configController.getConfiguration());
 
                 objBinding();
             } catch (Exception ex) {

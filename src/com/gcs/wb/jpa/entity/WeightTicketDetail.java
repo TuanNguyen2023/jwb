@@ -7,7 +7,7 @@ package com.gcs.wb.jpa.entity;
 import com.gcs.wb.base.constant.Constants;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,6 +18,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
 
 /**
  *
@@ -26,7 +27,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tbl_weight_ticket_detail")
 @NamedQueries({
-    @NamedQuery(name = "WeightTicketDetail.findAll", query = "SELECT wd FROM WeightTicketDetail wd")
+    @NamedQuery(name = "WeightTicketDetail.findAll", query = "SELECT wd FROM WeightTicketDetail wd"),
+    @NamedQuery(name = "WeightTicketDetail.findByPoNo", query = "SELECT wd FROM WeightTicketDetail wd WHERE wd.ebeln = :poNo") 
 })
 public class WeightTicketDetail implements Serializable {
 
@@ -59,12 +61,12 @@ public class WeightTicketDetail implements Serializable {
     private Integer docYear;
     @Column(name = "recv_matnr")
     private String recvMatnr;
-    @Column(name = "pp_procord")
-    private String ppProcord;
-    @Column(name = "pp_procordcnf")
-    private String ppProcordcnf;
-    @Column(name = "pp_procordcnfcnt")
-    private String ppProcordcnfcnt;
+//    @Column(name = "pp_procord")
+//    private String ppProcord;
+//    @Column(name = "pp_procordcnf")
+//    private String ppProcordcnf;
+//    @Column(name = "pp_procordcnfcnt")
+//    private String ppProcordcnfcnt;
     @Column(name = "kunnr")
     private String kunnr;
     @Column(name = "status")
@@ -72,9 +74,17 @@ public class WeightTicketDetail implements Serializable {
     @Column(name = "created_time")
     private String createdTime;
     @Column(name = "created_date")
+    @Temporal(javax.persistence.TemporalType.DATE)
     private Date createdDate;
     @Column(name = "updated_date")
+    @Temporal(javax.persistence.TemporalType.DATE)
     private Date updatedDate;
+    @Column(name = "MAT_DOC_GR")
+    private String matDocGr;
+    @Column(name = "MAT_DOC_GI")
+    private String matDocGi;
+    @Column(name = "so_number")
+    private String soNumber;
 
     @ManyToOne
     @JoinColumn(name = "weight_ticket_id")
@@ -199,30 +209,6 @@ public class WeightTicketDetail implements Serializable {
         this.recvMatnr = recvMatnr;
     }
 
-    public String getPpProcord() {
-        return ppProcord;
-    }
-
-    public void setPpProcord(String ppProcord) {
-        this.ppProcord = ppProcord;
-    }
-
-    public String getPpProcordcnf() {
-        return ppProcordcnf;
-    }
-
-    public void setPpProcordcnf(String ppProcordcnf) {
-        this.ppProcordcnf = ppProcordcnf;
-    }
-
-    public String getPpProcordcnfcnt() {
-        return ppProcordcnfcnt;
-    }
-
-    public void setPpProcordcnfcnt(String ppProcordcnfcnt) {
-        this.ppProcordcnfcnt = ppProcordcnfcnt;
-    }
-
     public String getKunnr() {
         return kunnr;
     }
@@ -279,6 +265,36 @@ public class WeightTicketDetail implements Serializable {
         this.weightTicket = weightTicket;
     }
 
+    /**
+     * @param matDocGr the matDocGr to set
+     */
+    public void setMatDocGr(String matDocGr) {
+        this.matDocGr = matDocGr;
+    }
+
+    public String getMatDocGr() {
+        return matDocGr;
+    }
+
+    /**
+     * @param matDocGi the matDocGi to set
+     */
+    public void setMatDocGi(String matDocGi) {
+        this.matDocGi = matDocGi;
+    }
+
+    public String getMatDocGi() {
+        return matDocGi;
+    }
+
+    public String getSoNumber() {
+        return soNumber;
+    }
+
+    public void setSoNumber(String soNumber) {
+        this.soNumber = soNumber;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -332,15 +348,15 @@ public class WeightTicketDetail implements Serializable {
         if (recvMatnr != null ? !recvMatnr.equals(that.recvMatnr) : that.recvMatnr != null) {
             return false;
         }
-        if (ppProcord != null ? !ppProcord.equals(that.ppProcord) : that.ppProcord != null) {
-            return false;
-        }
-        if (ppProcordcnf != null ? !ppProcordcnf.equals(that.ppProcordcnf) : that.ppProcordcnf != null) {
-            return false;
-        }
-        if (ppProcordcnfcnt != null ? !ppProcordcnfcnt.equals(that.ppProcordcnfcnt) : that.ppProcordcnfcnt != null) {
-            return false;
-        }
+//        if (ppProcord != null ? !ppProcord.equals(that.ppProcord) : that.ppProcord != null) {
+//            return false;
+//        }
+//        if (ppProcordcnf != null ? !ppProcordcnf.equals(that.ppProcordcnf) : that.ppProcordcnf != null) {
+//            return false;
+//        }
+//        if (ppProcordcnfcnt != null ? !ppProcordcnfcnt.equals(that.ppProcordcnfcnt) : that.ppProcordcnfcnt != null) {
+//            return false;
+//        }
         if (kunnr != null ? !kunnr.equals(that.kunnr) : that.kunnr != null) {
             return false;
         }
@@ -373,9 +389,9 @@ public class WeightTicketDetail implements Serializable {
         result = 31 * result + (unit != null ? unit.hashCode() : 0);
         result = 31 * result + (docYear != null ? docYear.hashCode() : 0);
         result = 31 * result + (recvMatnr != null ? recvMatnr.hashCode() : 0);
-        result = 31 * result + (ppProcord != null ? ppProcord.hashCode() : 0);
-        result = 31 * result + (ppProcordcnf != null ? ppProcordcnf.hashCode() : 0);
-        result = 31 * result + (ppProcordcnfcnt != null ? ppProcordcnfcnt.hashCode() : 0);
+        //result = 31 * result + (ppProcord != null ? ppProcord.hashCode() : 0);
+        //result = 31 * result + (ppProcordcnf != null ? ppProcordcnf.hashCode() : 0);
+        //result = 31 * result + (ppProcordcnfcnt != null ? ppProcordcnfcnt.hashCode() : 0);
         result = 31 * result + (kunnr != null ? kunnr.hashCode() : 0);
         result = 31 * result + (createdTime != null ? createdTime.hashCode() : 0);
         result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
