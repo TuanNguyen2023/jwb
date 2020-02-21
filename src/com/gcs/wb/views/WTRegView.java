@@ -21,7 +21,6 @@ import com.gcs.wb.jpa.repositorys.MaterialInternalRepository;
 import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
 import com.gcs.wb.model.WeighingMode;
 import com.gcs.wb.views.validations.WeightTicketRegistrationValidation;
-import com.jidesoft.swing.ComboBoxSearchable;
 import com.sap.conn.jco.JCoException;
 import org.apache.log4j.Logger;
 import org.hibersap.HibersapException;
@@ -147,9 +146,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
             }
         };
         cbxSlocN.setRenderer(cellRendererForSloc);
-        new ComboBoxSearchable(cbxSlocN);
         cbxSloc2N.setRenderer(cellRendererForSloc);
-        new ComboBoxSearchable(cbxSloc2N);
         DefaultListCellRenderer cellRendererForBatchStock = new DefaultListCellRenderer() {
 
             @Override
@@ -164,9 +161,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
             }
         };
         cbxBatchStockN.setRenderer(cellRendererForBatchStock);
-        new ComboBoxSearchable(cbxBatchStockN);
         cbxBatchStock2N.setRenderer(cellRendererForBatchStock);
-        new ComboBoxSearchable(cbxBatchStock2N);
         DefaultListCellRenderer cellRendererVendor = new DefaultListCellRenderer() {
 
             @Override
@@ -182,8 +177,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
         };
         cbxVendorLoadingN.setRenderer(cellRendererVendor);
         cbxVendorTransportN.setRenderer(cellRendererVendor);
-        new ComboBoxSearchable(cbxVendorLoadingN);
-        new ComboBoxSearchable(cbxVendorTransportN);
         cbxSuppliesIdN.setRenderer(new DefaultListCellRenderer() {
 
             @Override
@@ -365,7 +358,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 return this;
             }
         });
-        new ComboBoxSearchable(cbxMaterialType);
 
         lblHourFrom.setText(resourceMap.getString("lblHourFrom.text")); // NOI18N
         lblHourFrom.setName("lblHourFrom"); // NOI18N

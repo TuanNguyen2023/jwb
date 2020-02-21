@@ -25,7 +25,6 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import com.gcs.wb.base.util.FormatRenderer;
 import com.gcs.wb.controller.WeightTicketReportController;
-import com.jidesoft.swing.ComboBoxSearchable;
 import java.util.ArrayList;
 import java.util.Map;
 import javax.swing.JOptionPane;
@@ -198,7 +197,6 @@ public class WeightTicketReportView extends javax.swing.JInternalFrame {
                 return this;
             }
         });
-        new ComboBoxSearchable(cbxTransportAgent);
 
         lblType.setText(resourceMap.getString("lblType.text")); // NOI18N
         lblType.setName("lblType"); // NOI18N
@@ -218,7 +216,6 @@ public class WeightTicketReportView extends javax.swing.JInternalFrame {
                 return this;
             }
         });
-        new ComboBoxSearchable(cbxMaterial);
 
         lblMode.setText(resourceMap.getString("lblMode.text")); // NOI18N
         lblMode.setName("lblMode"); // NOI18N
