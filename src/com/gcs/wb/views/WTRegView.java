@@ -3188,7 +3188,7 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
         protected void succeeded(Object t) {
             isValidPO = true;
             txtWeightN.setText(totalWeight.toString());
-            cbxMaterialTypeN.setSelectedItem(weightTicketRegistarationController.getMaterialInternal(strMatnr));
+            cbxMaterialTypeN.setSelectedItem(weightTicketRegistarationController.getMaterial(strMatnr));
             loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
             loadBatchStockModel(cbxSloc2N, cbxBatchStock2N, false);
 

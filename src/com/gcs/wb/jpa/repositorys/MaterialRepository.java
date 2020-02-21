@@ -6,6 +6,7 @@ package com.gcs.wb.jpa.repositorys;
 
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.Material;
+import com.gcs.wb.jpa.entity.MaterialInternal;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -50,5 +51,16 @@ public class MaterialRepository {
         }
 
         return false;
+    }
+    
+    public Material findByMatnr(String matnr) {
+        TypedQuery<Material> typedQuery = entityManager.createNamedQuery("Material.findByMatnr", Material.class);
+        typedQuery.setParameter("matnr", matnr);
+        List<Material> materials = typedQuery.getResultList();
+        if (materials != null && materials.size() > 0) {
+            return materials.get(0);
+        }
+
+        return null;
     }
 }

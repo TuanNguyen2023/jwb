@@ -29,6 +29,7 @@ import com.gcs.wb.controller.WeightTicketController;
 import com.gcs.wb.controller.WeightTicketRegistarationController;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.*;
+import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
 import com.gcs.wb.jpa.repositorys.VendorRepository;
 import com.gcs.wb.model.AppConfig;
 import com.sap.conn.jco.JCoException;
@@ -92,6 +93,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     WeightTicketRegistarationController weightTicketRegistarationController = new WeightTicketRegistarationController();
 
     SAPService sapService = new SAPService();
+    PurchaseOrderRepository purchaseOrderRepository = new PurchaseOrderRepository();
+    PurchaseOrder purchaseOrder = new PurchaseOrder();
 
     public WeightTicketView() {
         weightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
@@ -3193,6 +3196,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             OutboundDelivery outbDel = null;
             List<String> completedDO = new ArrayList<>();
             String modeFlg = null;
+            boolean flgGqty = false;
             WeightTicketDetail weightTicketDetail = weightTicket.getWeightTicketDetail();
             if (((isStage2() || (!isStage1() && !isStage2())) && !weightTicket.isDissolved())
                         || (!isStage1() && !isStage2() && !weightTicket.isDissolved()
@@ -3200,23 +3204,33 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
 
                 // <editor-fold defaultstate="collapsed" desc="Input PO">
                 if(weightTicket.getWeightTicketDetail().getEbeln() != null) {
-                    if(weightTicket.getMode().equals("IN_PO_PURCHASE")) {
-                        objBapi = getGrPoMigoBapi(weightTicket, weightTicket.getWeightTicketDetail().getEbeln());
-                    }
+                    purchaseOrder = purchaseOrderRepository.findByPoNumber(weightTicket.getWeightTicketDetail().getEbeln());
+                    // validate trọng lượng
+                    flgGqty = validateTolerance(purchaseOrder, null);
 
-                    if(weightTicket.getMode().equals("OUT_PLANT_PLANT")) {
-                        objBapi = getDoCreate2PGI(weightTicket, outbDel);
-                    }
-                    if(weightTicket.getMode().equals("OUT_SLOC_SLOC")) {
-                        objBapi = getGiMB1BBapi(weightTicket);
-                        objBapi_Po = getGrPoMigoBapi(weightTicket, weightTicket.getWeightTicketDetail().getEbeln());
-                        if(weightTicket.getPosto()!= null) {
-                            objBapi_Posto = getGrPoMigoBapi(weightTicket, weightTicket.getPosto());
+                    if (flgGqty) {
+                        if (weightTicket.getMode().equals("IN_PO_PURCHASE")) {
+                            objBapi = getGrPoMigoBapi(weightTicket, purchaseOrder);
                         }
-                    }
 
-                    if(weightTicket.getMode().equals("OUT_PULL_STATION") && weightTicket.getPosto() != null) {          
-                        objBapi = getMvtPOSTOCreatePGI(weightTicket, weightTicket.getPosto());
+                        if (weightTicket.getMode().equals("OUT_PLANT_PLANT")) {
+                            objBapi = getDoCreate2PGI(weightTicket, outbDel);
+                        }
+                        if (weightTicket.getMode().equals("OUT_SLOC_SLOC")) {
+                            objBapi = getGiMB1BBapi(weightTicket);
+                            objBapi_Po = getGrPoMigoBapi(weightTicket, purchaseOrder);
+                            if (weightTicket.getPosto() != null) {
+                                purchaseOrder = purchaseOrderRepository.findByPoNumber(weightTicket.getPosto());
+                                objBapi_Posto = getGrPoMigoBapi(weightTicket, purchaseOrder);
+                            }
+                        }
+                        if (weightTicket.getMode().equals("OUT_PULL_STATION") && weightTicket.getPosto() != null) {
+                            objBapi = getMvtPOSTOCreatePGI(weightTicket, weightTicket.getPosto());
+                        }
+
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane, "Không thể xuất/nhập hàng vì trọng lượng vượt quá đăng ký!");
+                        return null;
                     }
                     
                     if (WeighBridgeApp.getApplication().isOfflineMode() == false) {
@@ -3352,28 +3366,36 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 // <editor-fold defaultstate="collapsed" desc="Input DO">
                 for (int i = 0; i < outbDel_list.size(); i++) {
                      outbDel = outbDel_list.get(i);
-                    // nhap DO
-                    if(weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER")) {
-                        if (outbDel != null && (outbDel.getLfart().equalsIgnoreCase("LR") 
-                                || outbDel.getLfart().equalsIgnoreCase("ZRET") 
-                                || outbDel.getLfart().equalsIgnoreCase("ZVND"))) {
+                    // validate trọng lượng DO
+                     flgGqty = validateTolerance(null, outbDel);
+
+                     if (flgGqty) {
+                         // mode nhap DO
+                        if (weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER")) {
+                            if (outbDel != null && (outbDel.getLfart().equalsIgnoreCase("LR")
+                                    || outbDel.getLfart().equalsIgnoreCase("ZRET")
+                                    || outbDel.getLfart().equalsIgnoreCase("ZVND"))) {
+                                modeFlg = "Z001";
+                                objBapi = getPgmVl02nBapi(weightTicket, outbDel, modeFlg);
+                            } else {
+                                objBapi = getGrDoMigoBapi(weightTicket, outbDel);
+                            }
+                        }
+
+                        // xuat DO
+                        if (weightTicket.getMode().equals("OUT_SELL_ROAD")) {
                             modeFlg = "Z001";
                             objBapi = getPgmVl02nBapi(weightTicket, outbDel, modeFlg);
-                        } else {
-                            objBapi = getGrDoMigoBapi(weightTicket, outbDel);
                         }
-                    }
-                    
-                    // xuat DO
-                    if(weightTicket.getMode().equals("OUT_SELL_ROAD")) {
-                       modeFlg = "Z001";
-                       objBapi = getPgmVl02nBapi(weightTicket, outbDel, modeFlg);
-                    }
 
-                    // ban hang thuy
-                    if(weightTicket.getMode().equals("OUT_SELL_WATERWAY")) {
-                        modeFlg = "Z002";
-                        objBapi = getPgmVl02nBapi(weightTicket, outbDel, modeFlg);
+                        // ban hang thuy
+                        if (weightTicket.getMode().equals("OUT_SELL_WATERWAY")) {
+                            modeFlg = "Z002";
+                            objBapi = getPgmVl02nBapi(weightTicket, outbDel, modeFlg);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane, "Không thể xuất/nhập hàng vì trọng lượng vượt quá đăng ký!");
+                        return null;
                     }
                     
                     if (WeighBridgeApp.getApplication().isOfflineMode() == false) {
@@ -3713,6 +3735,35 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         protected void finished() {
             clearForm();
             setSaveNeeded(isValidated());
+        }
+
+        private boolean validateTolerance(PurchaseOrder purchaseOrder, OutboundDelivery outboundDelivery) {
+            BigDecimal numCheckWeight = BigDecimal.ZERO;
+            BigDecimal quantity = BigDecimal.ZERO;
+            BigDecimal tolerance = BigDecimal.ZERO;
+            // check for PO
+            if (purchaseOrder != null) {
+                PurchaseOrderDetail purchaseOrderDetail = purchaseOrder.getPurchaseOrderDetail();
+
+                quantity = purchaseOrderDetail.getQuantity() != null ? purchaseOrderDetail.getQuantity() : BigDecimal.ZERO;
+                tolerance = purchaseOrderDetail.getOverDlvTol() != null ? purchaseOrderDetail.getOverDlvTol() : BigDecimal.ZERO;
+
+                numCheckWeight = quantity.add(
+                        quantity.multiply(tolerance).divide(new BigDecimal(100))
+                ).subtract(weightTicketRegistarationController.getSumQuantityWithPoNo(purchaseOrder.getPoNumber()));
+
+            }
+
+            // check for DO
+            if (outboundDelivery != null) {
+                numCheckWeight = outboundDelivery.getLfimg() != null ? outboundDelivery.getLfimg() : BigDecimal.ZERO;
+            }
+
+            BigDecimal result = numCheckWeight.subtract(weightTicket.getGQty());
+            if(result.compareTo(BigDecimal.ZERO) < 0) {
+                return false;
+            }
+            return true;
         }
     }
 
@@ -4107,8 +4158,8 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         return weightTicketController.getGrDoMigoBapi(wt, weightTicket, outbDel, outDetails_lits, timeFrom, timeTo);
     }
 
-    private Object getGrPoMigoBapi(WeightTicket wt, String number) {
-        return weightTicketController.getGrPoMigoBapi(wt, weightTicket, number, timeFrom, timeTo);
+    private Object getGrPoMigoBapi(WeightTicket wt, PurchaseOrder purchaseOrder) {
+        return weightTicketController.getGrPoMigoBapi(wt, weightTicket, purchaseOrder, timeFrom, timeTo);
     }
 
     private Object getGi541MigoBapi(WeightTicket wt) {

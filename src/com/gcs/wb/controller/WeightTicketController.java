@@ -106,8 +106,8 @@ public class WeightTicketController {
         return weightTicketService.getGrDoMigoBapi(wt, weightTicket, outbDel, outDetails_lits, timeFrom, timeTo);
     }
 
-    public Object getGrPoMigoBapi(WeightTicket wt, WeightTicket weightTicket, String number, int timeFrom, int timeTo) {
-        return weightTicketService.getGrPoMigoBapi(wt, weightTicket, number, timeFrom, timeTo);
+    public Object getGrPoMigoBapi(WeightTicket wt, WeightTicket weightTicket, PurchaseOrder purchaseOrder, int timeFrom, int timeTo) {
+        return weightTicketService.getGrPoMigoBapi(wt, weightTicket, purchaseOrder, timeFrom, timeTo);
     }
 
     public Object getGi541MigoBapi(WeightTicket wt, WeightTicket weightTicket, int timeFrom, int timeTo, PurchaseOrder purOrder, JRadioButton rbtOutward) {

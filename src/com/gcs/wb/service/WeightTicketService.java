@@ -409,7 +409,7 @@ public class WeightTicketService {
         return bapi;
     }
 
-    public Object getGrPoMigoBapi(WeightTicket wt, WeightTicket weightTicket, String number, int timeFrom, int timeTo) {
+    public Object getGrPoMigoBapi(WeightTicket wt, WeightTicket weightTicket, PurchaseOrder purchaseOrder, int timeFrom, int timeTo) {
         String plateCombine = wt.getPlateNo();
         if (wt.getTrailerId() != null && !wt.getTrailerId().trim().isEmpty()) {
             plateCombine += wt.getTrailerId();
@@ -417,7 +417,6 @@ public class WeightTicketService {
         GoodsMvtPoCreateBapi bapi = new GoodsMvtPoCreateBapi();
         GoodsMvtHeaderStructure header = new GoodsMvtHeaderStructure();
 
-        PurchaseOrder purchaseOrder = purchaseOrderRepository.findByPoNumber(number);
         if(wt.getMode().equals("OUT_SLOC_SLOC")) {
             bapi.setIvWbidNoSave("X");
         }
