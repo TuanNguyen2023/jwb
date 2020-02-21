@@ -15,6 +15,7 @@ public interface VendorValiationCheckContants extends BapiConstants{
     /**Import Parameter*/
     String IV_VENDOR = "IV_VENDOR";
     String IV_WERKS = "IV_WERKS";
+    String IV_RESWK = "IV_RESWK";
     String IV_MATNR = "IV_MATNR";
     String IV_KSCHL = "IV_KSCHL";
     

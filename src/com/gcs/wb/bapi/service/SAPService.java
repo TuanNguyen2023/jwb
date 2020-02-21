@@ -149,7 +149,7 @@ public class SAPService {
 
         return new DefaultComboBoxModel(materialsDB.toArray());
     }
-    
+
     public List<Material> syncMaterial() {
         //get data from DB
         List<Material> materialsDB = materialRepository.getListMaterial();
@@ -177,7 +177,7 @@ public class SAPService {
                     entityManager.remove(mat);
                 }
             }
-            // update SAP -> DB    
+            // update SAP -> DB
             for (MaterialInternal mSap : matsSap) {
                 int index = materialsDB.indexOf(mSap);
                 if (index == -1) {
@@ -363,7 +363,7 @@ public class SAPService {
                 //BatchStock bs = batchStockRepository.findByWerksLgortMatnrCharg(configuration.getWkPlant(), b.getLgort(), b.getMatnr(), b.getCharg());
                 BatchStock bs = new BatchStock(configuration.getSapClient(), configuration.getWkPlant(), b.getLgort(), b.getMatnr(), b.getCharg());
                 bs.setLvorm(b.getLvorm() == null || b.getLvorm().trim().isEmpty() ? ' ' : b.getLvorm().charAt(0));
-
+                
                 batchStockSaps.add(bs);
             }
 
@@ -649,12 +649,13 @@ public class SAPService {
         }
         return null;
     }
-
-    public String validateVendor(String idVendor, String mantr, String vendorType) {
+    
+    public String validateVendor(String idVendor, String mantr, String vendorType, String wplantPo) {
         VendorValiationCheckBapi bapi = new VendorValiationCheckBapi();
         bapi.setIvVendor(idVendor);
         bapi.setIvMatnr(mantr);
-        bapi.setIvWerks(configuration.getWkPlant());
+        bapi.setIvWerks(wplantPo);
+        bapi.setIvReswk(configuration.getWkPlant());
         bapi.setIvKschl(vendorType);
         try {
             WeighBridgeApp.getApplication().getSAPSession().execute(bapi);

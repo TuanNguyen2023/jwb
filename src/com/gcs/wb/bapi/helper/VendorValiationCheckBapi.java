@@ -27,6 +27,11 @@ public class VendorValiationCheckBapi implements Serializable {
     @Parameter(VendorValiationCheckContants.IV_WERKS)
     private String _ivWerks;
     
+    /**Import Parameter: IV_RESWK(Plant)*/
+    @Import
+    @Parameter(VendorValiationCheckContants.IV_RESWK)
+    private String _ivReswk;
+    
     /**Import Parameter: IV_MATNR(Material Number)*/
     @Import
     @Parameter(VendorValiationCheckContants.IV_MATNR)
@@ -60,7 +65,15 @@ public class VendorValiationCheckBapi implements Serializable {
     public void setIvWerks(String ivWerks) {
         this._ivWerks = ivWerks;
     }
-    
+
+    /**
+     * Import Parameter: _ivReswk (Plant)
+     * @param ivReswk the _ivWerks to set
+     */
+    public void setIvReswk(String ivReswk) {
+        this._ivReswk = ivReswk;
+    }
+
      /**
      * Import Parameter: IV_MATNR (Material)
      * @param ivMatnr the _ivMatnr to set
