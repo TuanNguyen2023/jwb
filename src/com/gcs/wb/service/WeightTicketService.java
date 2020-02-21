@@ -228,7 +228,7 @@ public class WeightTicketService {
         stWT.setGQTY_WT(wt.getGQty());
         stWT.setGQTY(wt.getGQty());
         stWT.setKUNNR(weightTicketDetail.getKunnr());
-        stWT.setLIFNR(wt.getAbbr());
+        stWT.setLIFNR(weightTicketDetail.getAbbr());
         if(wt.getMode().equals("OUT_SLOC_SLOC")) {
             stWT.setMATID(weightTicketDetail.getRecvMatnr());
             stWT.setMATNAME(weightTicketDetail.getRegItemDescription());
@@ -245,7 +245,7 @@ public class WeightTicketService {
             stWT.setPO_NUMBER(weightTicketDetail.getEbeln());
         }
         
-        stWT.setNTEXT(wt.getText());
+        stWT.setNTEXT(wt.getNote());
         
         stWT.setREGQTY_WT(weightTicketDetail.getRegItemQuantity());
         stWT.setREGQTY(od != null ? od.getLfimg() : BigDecimal.ZERO);
@@ -399,7 +399,7 @@ public class WeightTicketService {
             tab_wa.setNo_more_gr(null);
         }
         tab_wa.setMove_reas(wt.getMoveReas());
-        tab_wa.setItem_text(wt.getText());
+        tab_wa.setItem_text(wt.getNote());
         tab.add(tab_wa);
 
         bapi.setHeader(header);
@@ -457,7 +457,7 @@ public class WeightTicketService {
             tab_wa.setNo_more_gr(null);
         }
         tab_wa.setMove_reas(wt.getMoveReas());
-        tab_wa.setItem_text(wt.getText());
+        tab_wa.setItem_text(wt.getNote());
         tab.add(tab_wa);
 
         bapi.setHeader(header);
@@ -506,7 +506,7 @@ public class WeightTicketService {
 
         tab_wa.setNo_more_gr(null);
 
-        tab_wa.setItem_text(wt.getText());
+        tab_wa.setItem_text(wt.getNote());
         tab.add(tab_wa);
 
         bapi.setHeader(header);
@@ -569,7 +569,7 @@ public class WeightTicketService {
         tab_wa.setMoveBatch(wt.getRecvCharg());
 
         tab_wa.setMove_reas(wt.getMoveReas());
-        tab_wa.setItem_text(wt.getText());
+        tab_wa.setItem_text(wt.getNote());
         tab.add(tab_wa);
 
         bapi.setHeader(header);
@@ -1102,7 +1102,7 @@ public class WeightTicketService {
             tab_wa.setNo_more_gr(null);
         }
         tab_wa.setMove_reas(wt.getMoveReas());
-        tab_wa.setItem_text(wt.getText());
+        tab_wa.setItem_text(wt.getNote());
         tab.add(tab_wa);
 
         bapi.setHeader(header);
@@ -1111,8 +1111,8 @@ public class WeightTicketService {
         
         // API ZJBAPI_WB2_DO_CR_N_PGI_V2_0207 - xuat (po)
         PurchaseOrder purOrder = purchaseOrderRepository.findByPoNumber(weightTicketDetail.getEbeln());
-        bapi.setIvCVendor(wt.getLoadVendor());
-        bapi.setIvTVendor(wt.getTransVendor());
+        bapi.setIvCVendor(weightTicketDetail.getLoadVendor());
+        bapi.setIvTVendor(weightTicketDetail.getTransVendor());
 
         VbkokStructure wa = new VbkokStructure();
         

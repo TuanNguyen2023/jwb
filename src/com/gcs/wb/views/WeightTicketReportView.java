@@ -25,6 +25,7 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import com.gcs.wb.base.util.FormatRenderer;
 import com.gcs.wb.controller.WeightTicketReportController;
+import com.jidesoft.swing.ComboBoxSearchable;
 import java.util.ArrayList;
 import java.util.Map;
 import javax.swing.JOptionPane;
@@ -49,7 +50,6 @@ public class WeightTicketReportView extends javax.swing.JInternalFrame {
     Object[] wtColNames = Constants.WeightTicketReport.WT_COL_NAMES;
     Class[] wtColTypes = Constants.WeightTicketReport.WT_COL_TYPES;
     public ResourceMap resourceMapMsg = Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(WeightTicketReportView.class);
-    
     /** Creates new form WeightTicketReportView */
     public WeightTicketReportView() {
         initComponents();
@@ -198,6 +198,7 @@ public class WeightTicketReportView extends javax.swing.JInternalFrame {
                 return this;
             }
         });
+        new ComboBoxSearchable(cbxTransportAgent);
 
         lblType.setText(resourceMap.getString("lblType.text")); // NOI18N
         lblType.setName("lblType"); // NOI18N
@@ -217,6 +218,7 @@ public class WeightTicketReportView extends javax.swing.JInternalFrame {
                 return this;
             }
         });
+        new ComboBoxSearchable(cbxMaterial);
 
         lblMode.setText(resourceMap.getString("lblMode.text")); // NOI18N
         lblMode.setName("lblMode"); // NOI18N
@@ -350,7 +352,7 @@ public class WeightTicketReportView extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(pnFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
+                .addComponent(pnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE)
                 .addContainerGap())
         );
 

@@ -117,6 +117,6 @@ public class TransportAgent implements Serializable {
 
     @Override
     public String toString() {
-        return "com.gcs.wb.jpa.entity.TransportAgent[abbr=" + abbr + "]";
+        return this.getName();
     }
 }

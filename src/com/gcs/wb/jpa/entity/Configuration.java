@@ -91,6 +91,19 @@ public class Configuration implements Serializable {
     @Column(name = "updated_date")
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date updatedDate;
+    
+    @Column(name = "wb1_delay")
+    private int wb1Delay;
+    @Column(name = "wb2_delay")
+    private int wb2Delay;
+    @Column(name = "wb1_step")
+    private int wb1Step;
+    @Column(name = "wb2_step")
+    private int wb2Step;
+    @Column(name = "wb1_mettler_param")
+    private int wb1MettlerParam;
+    @Column(name = "wb2_mettler_param")
+    private int wb2MettlerParam;
 
     public Configuration() {
     }
@@ -295,6 +308,54 @@ public class Configuration implements Serializable {
         this.updatedDate = updatedDate;
     }
 
+    public int getWb1Delay() {
+        return wb1Delay;
+    }
+
+    public void setWb1Delay(int wb1Delay) {
+        this.wb1Delay = wb1Delay;
+    }
+
+    public int getWb2Delay() {
+        return wb2Delay;
+    }
+
+    public void setWb2Delay(int wb2Delay) {
+        this.wb2Delay = wb2Delay;
+    }
+
+    public int getWb1Step() {
+        return wb1Step;
+    }
+
+    public void setWb1Step(int wb1Step) {
+        this.wb1Step = wb1Step;
+    }
+
+    public int getWb2Step() {
+        return wb2Step;
+    }
+
+    public void setWb2Step(int wb2Step) {
+        this.wb2Step = wb2Step;
+    }
+
+    public int getWb1MettlerParam() {
+        return wb1MettlerParam;
+    }
+
+    public void setWb1MettlerParam(int wb1MettlerParam) {
+        this.wb1MettlerParam = wb1MettlerParam;
+    }
+
+    public int getWb2MettlerParam() {
+        return wb2MettlerParam;
+    }
+
+    public void setWb2MettlerParam(int wb2MettlerParam) {
+        this.wb2MettlerParam = wb2MettlerParam;
+    }
+    
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -336,6 +397,13 @@ public class Configuration implements Serializable {
         hash = 97 * hash + Objects.hashCode(this.rptId);
         hash = 97 * hash + Objects.hashCode(this.createdDate);
         hash = 97 * hash + Objects.hashCode(this.updatedDate);
+        hash = 97 * hash + Objects.hashCode(this.wb1Delay);
+        hash = 97 * hash + Objects.hashCode(this.wb2Delay);
+        hash = 97 * hash + Objects.hashCode(this.wb1Step);
+        hash = 97 * hash + Objects.hashCode(this.wb2Step);
+        hash = 97 * hash + Objects.hashCode(this.wb1MettlerParam);
+        hash = 97 * hash + Objects.hashCode(this.wb2MettlerParam);
+        
         return hash;
     }
 

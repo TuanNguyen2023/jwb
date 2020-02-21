@@ -139,6 +139,7 @@ public class SLoc implements Serializable {
 
     @Override
     public String toString() {
-        return "com.gcs.wb.jpa.entity.SLoc[id=" + id + "]";
+        //return "com.gcs.wb.jpa.entity.SLoc[id=" + id + "]";
+        return this.getLgort().concat(" - ").concat(this.getLgobe());
     }
 }

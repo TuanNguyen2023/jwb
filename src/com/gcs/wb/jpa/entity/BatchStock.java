@@ -166,6 +166,6 @@ public class BatchStock implements Serializable {
 
     @Override
     public String toString() {
-        return "com.gcs.wb.jpa.entity.BatchStocks[id=" + id + "]";
+        return this.getCharg();
     }
 }

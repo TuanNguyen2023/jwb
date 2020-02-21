@@ -20,6 +20,7 @@ import com.gcs.wb.jpa.entity.*;
 import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
 import com.gcs.wb.model.WeighingMode;
 import com.gcs.wb.views.validations.WeightTicketRegistrationValidation;
+import com.jidesoft.swing.ComboBoxSearchable;
 import com.sap.conn.jco.JCoException;
 import org.apache.log4j.Logger;
 import org.hibersap.HibersapException;
@@ -35,6 +36,8 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
 import org.jdesktop.application.Application;
@@ -71,6 +74,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
     private WeightTicketRegistrationValidation wtRegisValidation;
     private PurchaseOrderRepository purchaseOrderRepository = new PurchaseOrderRepository();
     WeightTicketController weightTicketController = new WeightTicketController();
+    List<String> cbxSlocs = new ArrayList<String>();
 
     public WTRegView() {
         newWeightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
@@ -121,23 +125,29 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 return this;
             }
         });
-
+        //autoCompletion.enable(cbxMaterialTypeN);
         DefaultListCellRenderer cellRendererForSloc = new DefaultListCellRenderer() {
 
             @Override
             public Component getListCellRendererComponent(
                     JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
                 if (value instanceof SLoc) {
                     SLoc sloc = (SLoc) value;
                     setText(sloc.getLgort().concat(" - ").concat(sloc.getLgobe()));
+                    //setText(sloc.getLgobe());
+                    //setToolTipText(sloc.getLgort());
+                    cbxSlocs.add(sloc.getLgort().concat(" - ").concat(sloc.getLgobe()));
                 }
+                
                 return this;
             }
         };
         cbxSlocN.setRenderer(cellRendererForSloc);
+        new ComboBoxSearchable(cbxSlocN);
         cbxSloc2N.setRenderer(cellRendererForSloc);
-
+        new ComboBoxSearchable(cbxSloc2N);
         DefaultListCellRenderer cellRendererForBatchStock = new DefaultListCellRenderer() {
 
             @Override
@@ -152,8 +162,9 @@ public class WTRegView extends javax.swing.JInternalFrame {
             }
         };
         cbxBatchStockN.setRenderer(cellRendererForBatchStock);
+        new ComboBoxSearchable(cbxBatchStockN);
         cbxBatchStock2N.setRenderer(cellRendererForBatchStock);
-
+        new ComboBoxSearchable(cbxBatchStock2N);
         DefaultListCellRenderer cellRendererVendor = new DefaultListCellRenderer() {
 
             @Override
@@ -169,7 +180,8 @@ public class WTRegView extends javax.swing.JInternalFrame {
         };
         cbxVendorLoadingN.setRenderer(cellRendererVendor);
         cbxVendorTransportN.setRenderer(cellRendererVendor);
-
+        new ComboBoxSearchable(cbxVendorLoadingN);
+        new ComboBoxSearchable(cbxVendorTransportN);
         cbxSuppliesIdN.setRenderer(new DefaultListCellRenderer() {
 
             @Override
@@ -319,6 +331,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         lblDateFrom.setName("lblDateFrom"); // NOI18N
 
         dpDateFrom.setDate(Calendar.getInstance().getTime());
+        dpDateFrom.setFormats("dd-MM-yyyy hh:mm");
         dpDateFrom.setName("dpDateFrom"); // NOI18N
         dpDateFrom.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -351,6 +364,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 return this;
             }
         });
+        new ComboBoxSearchable(cbxMaterialType);
 
         lblHourFrom.setText(resourceMap.getString("lblHourFrom.text")); // NOI18N
         lblHourFrom.setName("lblHourFrom"); // NOI18N
@@ -1137,7 +1151,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                     .addComponent(pnPrintControl, javax.swing.GroupLayout.DEFAULT_SIZE, 936, Short.MAX_VALUE)
                     .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 936, Short.MAX_VALUE)
                     .addComponent(pnFilter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnControl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 936, Short.MAX_VALUE))
+                    .addComponent(pnControl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -1153,7 +1167,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addComponent(pnRegistrationOfVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(pnControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(89, Short.MAX_VALUE))
+                .addContainerGap(125, Short.MAX_VALUE))
         );
 
         pack();
@@ -1323,7 +1337,7 @@ private void cbxVendorLoadingNActionPerformed(java.awt.event.ActionEvent evt) {/
                 isValidVendorLoad = false;
             } else {
                 isValidVendorLoad = true;
-                newWeightTicket.setLoadVendor(vendor.getLifnr());
+                newWeightTicket.getWeightTicketDetail().setLoadVendor(vendor.getLifnr());
             }
         }
 
@@ -1351,7 +1365,7 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
                 isValidVendorTransport = false;
             } else {
                 isValidVendorTransport = true;
-                newWeightTicket.setTransVendor(vendor.getLifnr());
+                newWeightTicket.getWeightTicketDetail().setTransVendor(vendor.getLifnr());
             }
         }
 
@@ -1623,6 +1637,12 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
                 prepareInOutOther();
                 break;
         }
+//        autoCompletion.enable(cbxVendorLoadingN);
+//        autoCompletion.enable(cbxVendorTransportN);
+//        autoCompletion.enable(cbxBatchStockN);
+//        autoCompletion.enable(cbxBatchStock2N);
+//        autoCompletion.enable(cbxSlocN);
+//        autoCompletion.enable(cbxSloc2N);
 
         validateForm();
     }
@@ -2653,7 +2673,16 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
             setSaveNeeded(false);
             setClearable(false);
         }
-
+        /*
+         *  WYYMMXXXXX: Wplant(1) + YY + MM + XXXXX
+         */
+        private String getAutoGeneratedId(int seqByMonth) {
+            String wPlant = configuration.getWkPlant();
+            String code = wPlant.substring(wPlant.length() - 1, wPlant.length())
+                + DateTimeFormatter.ofPattern("yyMMDD").format(LocalDateTime.now()).substring(0, 4)
+                + StringUtil.paddingZero(String.valueOf(seqByMonth), 5);
+            return code;
+        }
         @Override
         protected Object doInBackground() {
             final Date now = weightTicketRegistarationController.getServerDate();
@@ -2666,7 +2695,8 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
             int year = Integer.parseInt(formatter.format(now));
             formatter.applyPattern("HH:mm:ss");
             String createdTime = formatter.format(now);
-
+            
+            newWeightTicket.setId(getAutoGeneratedId(seqBMonth));
             newWeightTicket.setMandt(configuration.getSapClient());
             newWeightTicket.setWplant(configuration.getWkPlant());
             newWeightTicket.setSeqDay(seqBDay);
@@ -2690,7 +2720,7 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
             newWeightTicket.setRecvPlant(configuration.getWkPlant());
             newWeightTicket.setSoNiemXa(txtSoNiemXaN.getText().trim());
             newWeightTicket.setBatch(txtProductionBatchN.getText().trim());
-            newWeightTicket.setText(txtNoteN.getText().trim());
+            newWeightTicket.setNote(txtNoteN.getText().trim());
 
             switch (modeDetail) {
                 case IN_PO_PURCHASE:
@@ -3185,7 +3215,7 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
 
             strMatnr = purchaseOrderDetail.getMaterial();
 
-            newWeightTicket.setTransVendor(purchaseOrder.getVendor());
+            newWeightTicket.getWeightTicketDetail().setTransVendor(purchaseOrder.getVendor());
             strVendor = purchaseOrder.getVendor();
             totalWeight = purchaseOrderDetail.getQuantity();
 
@@ -3289,7 +3319,7 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
 
         private void updateWeightTicket(PurchaseOrder purchaseOrder) {
             newWeightTicket.setPosto(purchaseOrder.getPoNumber());
-            newWeightTicket.setLoadVendor(purchaseOrder.getVendor());
+            newWeightTicket.getWeightTicketDetail().setLoadVendor(purchaseOrder.getVendor());
             strVendor = purchaseOrder.getVendor();
         }
     }
