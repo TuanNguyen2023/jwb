@@ -244,7 +244,9 @@ public class WeightTicketService {
             }
             stWT.setPO_NUMBER(weightTicketDetail.getEbeln());
         }
-        
+        if(wt.getMode().equals("IN_WAREHOUSE_TRANSFER")) {
+            stWT.setwtIdRef(wt.getWeightTicketIdRef());
+        }
         stWT.setNTEXT(wt.getNote());
         
         stWT.setREGQTY_WT(weightTicketDetail.getRegItemQuantity());

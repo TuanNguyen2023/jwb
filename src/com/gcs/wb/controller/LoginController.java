@@ -7,6 +7,7 @@ package com.gcs.wb.controller;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.helper.UserGetDetailBapi;
 import com.gcs.wb.bapi.helper.structure.UserGetDetailAddrStructure;
+import com.gcs.wb.batch.CronTriggerService;
 import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.jpa.entity.SAPSetting;
 import com.gcs.wb.jpa.entity.User;
@@ -14,6 +15,7 @@ import com.gcs.wb.jpa.repositorys.SAPSettingRepository;
 import com.gcs.wb.jpa.repositorys.UserRepository;
 import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.service.LoginService;
+import com.gcs.wb.service.SyncMasterDataService;
 import com.gcs.wb.views.LoginView;
 import com.sap.conn.jco.JCoException;
 import javax.swing.JFrame;
@@ -44,6 +46,7 @@ public class LoginController {
     private LoginService loginService = new LoginService();
     ResourceMap resourceMap = Application.getInstance(WeighBridgeApp.class).getContext().getResourceMap(LoginView.class);
     private JFrame mainFrame = WeighBridgeApp.getApplication().getMainFrame();
+    private SyncMasterDataService syncMasterDataService = new SyncMasterDataService();
 
     public LoginController(String username, String password) {
         userRepository = new UserRepository();
@@ -107,6 +110,10 @@ public class LoginController {
                 String roles = loginService.getRoles(userGetDetailBapi);
 
                 loginService.asyncUser(session, userGetDetailAddrStructure, roles, user, username, password);
+                syncMasterDataService.syncMasterData();
+
+                // init sync master data cron job
+                (new CronTriggerService()).execute();
             } else {
                 if ((user == null) || (user != null && !user.getPassword().equals(password))) {
                     throw new Exception(resourceMap.getString("msg.offlineUsernameOrPasswordInvalid"));

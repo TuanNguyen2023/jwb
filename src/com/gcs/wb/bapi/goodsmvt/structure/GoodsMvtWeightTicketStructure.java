@@ -99,6 +99,8 @@ public class GoodsMvtWeightTicketStructure implements Serializable {
     private String lfart;
     @Parameter(GoodsMvtCreateConstants.STATUS)
     private String status;
+    @Parameter(GoodsMvtCreateConstants.WT_ID_REF)
+    private String wtIdRef;
     
     public GoodsMvtWeightTicketStructure() {
     }
@@ -433,6 +435,9 @@ public class GoodsMvtWeightTicketStructure implements Serializable {
     public void setREGQTY_WT(BigDecimal REGQTY_WT) {
         this.REGQTY_WT = REGQTY_WT;
     }
-    
-    
+
+    public void setwtIdRef(String wtIdRef) {
+        this.wtIdRef = wtIdRef;
+    }
+
 }

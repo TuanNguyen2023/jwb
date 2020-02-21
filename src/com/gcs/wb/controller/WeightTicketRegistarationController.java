@@ -284,4 +284,21 @@ public class WeightTicketRegistarationController {
         
         return result;
     }
+
+    /**
+     * Get list material inter for mode Other
+     * @return 
+     */
+    public DefaultComboBoxModel getListMaterialInternal() {
+
+        List<MaterialInternal> materials = materialInternalRepository.getMaterialInternals();
+        DefaultComboBoxModel result = new DefaultComboBoxModel();
+        for (MaterialInternal material : materials) {
+            if (result.getIndexOf(material) < 0 && material.getMatnr() != null
+                    && material.getMaktx() != null && !material.getMaktx().isEmpty()) {
+                result.addElement(material);
+            }
+        }
+        return result;
+    }
 }
