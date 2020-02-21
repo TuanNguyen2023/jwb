@@ -585,11 +585,11 @@ public class WeighBridgeView extends FrameView {
                 } else {
                     reportName = "./rpt/rptPQ/WNotesList.jrxml";
                 }
-                JasperDesign jasperDesign = JRXmlLoader.load(reportName);
-                JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
-                Connection connect = JReportConnector.getInstance();
-                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, connect);
-                jv = new JasperViewer(jasperPrint, false);
+//                JasperDesign jasperDesign = JRXmlLoader.load(reportName);
+//                JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
+//                Connection connect = JReportConnector.getInstance();
+//                JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, map, connect);
+//                jv = new JasperViewer(jasperPrint, false);
             } catch (Exception ex) {
                 failed = true;
                 failed(ex);

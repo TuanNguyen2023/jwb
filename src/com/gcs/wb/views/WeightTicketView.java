@@ -1966,7 +1966,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
     private void checkWTNum(DocumentEvent e) {
         try {
             String text = e.getDocument().getText(0, e.getDocument().getLength()).trim();
-            boolean valid = text.matches("\\d{10}");  // 
+            boolean valid = text.matches("^[a-zA-Z0-9]{10}$");  //
             setEnteredValidWTNum(valid);
             if (valid) {
                 lblWTNum.setForeground(Color.BLACK);
@@ -2593,7 +2593,17 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     } catch (ArithmeticException e) {
                     }
                 }
-                txtRegItem.setText(weightTicketDetail.getRegItemDescription());
+                List<WeightTicketDetail> weightTicketDetails = weightTicket.getWeightTicketDetails();
+                if(weightTicketDetails != null && weightTicketDetails.size() > 1){
+                    String regItemDescription = "";
+                    for (WeightTicketDetail weightTicketDetail1 : weightTicketDetails) {
+                        regItemDescription += weightTicketDetail1.getRegItemDescription() + " - ";
+                    }
+                    txtRegItem.setText(regItemDescription);
+                }
+                else{
+                    txtRegItem.setText(weightTicketDetail.getRegItemDescription());
+                }
                 formatter.applyPattern(WeighBridgeApp.DATE_TIME_DISPLAY_FORMAT);
                 if (weightTicket.getFScale() != null) {
                     txfInQty.setValue(weightTicket.getFScale());

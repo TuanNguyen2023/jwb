@@ -104,10 +104,20 @@ public class Configuration implements Serializable {
     private String wb1MettlerParam;
     @Column(name = "wb2_mettler_param")
     private String wb2MettlerParam;
+    @Column(name = "wplant_map")
+    private String wplantMap;
 
     public Configuration() {
     }
 
+    public String getWplantMap() {
+        return wplantMap;
+    }
+
+    public void setWplantMap(String wplantMap) {
+        this.wplantMap = wplantMap;
+    }
+    
     public int getId() {
         return id;
     }

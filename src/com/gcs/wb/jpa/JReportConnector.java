@@ -15,12 +15,13 @@ import org.eclipse.persistence.config.PersistenceUnitProperties;
  */
 public class JReportConnector {
 
-    private static Connection instance = null;
+    private Connection instance = null;
 
-    private JReportConnector() {
+    JReportConnector() {
     }
 
-    public static Connection getInstance() {
+    public Connection getInstance() {
+        instance = null;
         if (instance != null) {
             return instance;
         } else {
