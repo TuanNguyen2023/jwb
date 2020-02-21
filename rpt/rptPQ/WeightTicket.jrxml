@@ -192,7 +192,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="9" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{ID}+$F{SEQ_BY_DAY}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ID}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>

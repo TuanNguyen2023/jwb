@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.math.BigInteger;
 import javax.swing.JFormattedTextField;
 import com.gcs.wb.WeighBridgeApp;
+import com.gcs.wb.jpa.entity.Configuration;
 import org.apache.log4j.Logger;
 
 /**
@@ -25,6 +26,7 @@ public class SerialReaderEventBased implements SerialPortDataListener {
     private JFormattedTextField control;
     private int times_delay;
     private int count;
+    private Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
 
     public SerialReaderEventBased(InputStream in, JFormattedTextField control) throws IOException {
         this.in = in;
@@ -121,7 +123,6 @@ public class SerialReaderEventBased implements SerialPortDataListener {
             try {
                 ival = new BigInteger(result);
 
-                //System.out.println(WeighBridgeApp.getApplication().getLast());
             } catch (Exception ex) {
                 ival = BigInteger.ZERO;
             }
@@ -129,7 +130,7 @@ public class SerialReaderEventBased implements SerialPortDataListener {
 
             //Times of delay to refresh screen
             if (this.count > this.times_delay) {
-                Logger.getLogger(this.getClass()).error("@jSerialComm, 888888" + result);
+                Logger.getLogger(this.getClass()).error("@jSerialComm, @" + result);
                 WeighBridgeApp.getApplication().setLast(WeighBridgeApp.getApplication().getNow());
                 WeighBridgeApp.getApplication().setNow(ival);
                 if (WeighBridgeApp.getApplication().getNow().doubleValue() > WeighBridgeApp.getApplication().getMax().doubleValue()) {
@@ -142,8 +143,8 @@ public class SerialReaderEventBased implements SerialPortDataListener {
                 this.count++;
             }
             
-            delay(500);
-            Logger.getLogger(this.getClass()).error("@jSerialComm, Start.. " + event.getEventType());
+            delay(configuration.getWb1Delay());
+            Logger.getLogger(this.getClass()).error("@jSerialComm, End.. " + event.getEventType());
         }
         catch (IOException ex) {
         }

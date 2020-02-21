@@ -4,15 +4,15 @@
  */
 package com.gcs.wb.jpa.repositorys;
 
+import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.jpa.JPAConnector;
+import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.jpa.entity.WeightTicket;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.ParameterMode;
-import javax.persistence.StoredProcedureQuery;
 import javax.persistence.TypedQuery;
 import org.apache.log4j.Logger;
 
@@ -24,6 +24,7 @@ public class WeightTicketRepository {
 
     EntityManager entityManager = JPAConnector.getInstance();
     Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
+    Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
 
     public List<WeightTicket> getListWeightTicket() {
         TypedQuery<WeightTicket> query = entityManager.createNamedQuery("WeightTicket.findAll", WeightTicket.class);
@@ -65,6 +66,8 @@ public class WeightTicketRepository {
             TypedQuery<WeightTicket> nq = entityManager.createNamedQuery("WeightTicket.findByCreatedDateRange", WeightTicket.class);
             nq.setParameter("from", from);
             nq.setParameter("to", to);
+            nq.setParameter("mandt", configuration.getSapClient());
+            nq.setParameter("wplant", configuration.getWkPlant());
             list = nq.getResultList();
         } catch (Exception ex) {
             logger.error(null, ex);
@@ -85,6 +88,8 @@ public class WeightTicketRepository {
             nq.setParameter("driverName", "%" + driverName + "%");
             nq.setParameter("loaihang", loaihang);
             nq.setParameter("plateNo", "%" + plateNo + "%");
+            nq.setParameter("mandt", configuration.getSapClient());
+            nq.setParameter("wplant", configuration.getWkPlant());
             list = nq.getResultList();
         } catch (Exception ex) {
             logger.error(null, ex);
@@ -104,6 +109,8 @@ public class WeightTicketRepository {
             nq.setParameter("creator", "%" + creator + "%");
             nq.setParameter("driverName", "%" + driverName + "%");
             nq.setParameter("plateNo", "%" + plateNo + "%");
+            nq.setParameter("mandt", configuration.getSapClient());
+            nq.setParameter("wplant", configuration.getWkPlant());
             list = nq.getResultList();
         } catch (Exception ex) {
             logger.error(null, ex);
@@ -123,6 +130,8 @@ public class WeightTicketRepository {
             nq.setParameter("creator", "%" + creator + "%");
             nq.setParameter("driverName", "%" + driverName + "%");
             nq.setParameter("plateNo", "%" + plateNo + "%");
+            nq.setParameter("mandt", configuration.getSapClient());
+            nq.setParameter("wplant", configuration.getWkPlant());
             list = nq.getResultList();
         } catch (Exception ex) {
             logger.error(null, ex);
@@ -143,6 +152,8 @@ public class WeightTicketRepository {
             nq.setParameter("driverName", "%" + driverName + "%");
             nq.setParameter("loaihang", loaihang);
             nq.setParameter("plateNo", "%" + plateNo + "%");
+            nq.setParameter("mandt", configuration.getSapClient());
+            nq.setParameter("wplant", configuration.getWkPlant());
             list = nq.getResultList();
         } catch (Exception ex) {
             logger.error(null, ex);
@@ -164,6 +175,8 @@ public class WeightTicketRepository {
             nq.setParameter("creator", "%" + creator + "%");
             nq.setParameter("driverName", "%" + driverName + "%");
             nq.setParameter("plateNo", "%" + plateNo + "%");
+            nq.setParameter("mandt", configuration.getSapClient());
+            nq.setParameter("wplant", configuration.getWkPlant());
             list = nq.getResultList();
         } catch (Exception ex) {
             logger.error(null, ex);
@@ -184,6 +197,8 @@ public class WeightTicketRepository {
             nq.setParameter("creator", "%" + creator + "%");
             nq.setParameter("driverName", "%" + driverName + "%");
             nq.setParameter("plateNo", "%" + plateNo + "%");
+            nq.setParameter("mandt", configuration.getSapClient());
+            nq.setParameter("wplant", configuration.getWkPlant());
             list = nq.getResultList();
         } catch (Exception ex) {
             logger.error(null, ex);
@@ -204,6 +219,8 @@ public class WeightTicketRepository {
             nq.setParameter("driverName", "%" + driverName + "%");
             nq.setParameter("loaihang", loaihang);
             nq.setParameter("plateNo", "%" + plateNo + "%");
+            nq.setParameter("mandt", configuration.getSapClient());
+            nq.setParameter("wplant", configuration.getWkPlant());
             list = nq.getResultList();
         } catch (Exception ex) {
             logger.error(null, ex);
@@ -223,6 +240,8 @@ public class WeightTicketRepository {
             nq.setParameter("creator", "%" + creator + "%");
             nq.setParameter("driverName", "%" + driverName + "%");
             nq.setParameter("plateNo", "%" + plateNo + "%");
+            nq.setParameter("mandt", configuration.getSapClient());
+            nq.setParameter("wplant", configuration.getWkPlant());
             list = nq.getResultList();
         } catch (Exception ex) {
             logger.error(null, ex);
@@ -242,6 +261,8 @@ public class WeightTicketRepository {
             nq.setParameter("creator", "%" + creator + "%");
             nq.setParameter("driverName", "%" + driverName + "%");
             nq.setParameter("plateNo", "%" + plateNo + "%");
+            nq.setParameter("mandt", configuration.getSapClient());
+            nq.setParameter("wplant", configuration.getWkPlant());
             list = nq.getResultList();
         } catch (Exception ex) {
             logger.error(null, ex);
@@ -262,6 +283,8 @@ public class WeightTicketRepository {
             nq.setParameter("driverName", "%" + driverName + "%");
             nq.setParameter("loaihang", loaihang);
             nq.setParameter("plateNo", "%" + plateNo + "%");
+            nq.setParameter("mandt", configuration.getSapClient());
+            nq.setParameter("wplant", configuration.getWkPlant());
             list = nq.getResultList();
         } catch (Exception ex) {
             logger.error(null, ex);
@@ -281,6 +304,8 @@ public class WeightTicketRepository {
             nq.setParameter("creator", "%" + creator + "%");
             nq.setParameter("driverName", "%" + driverName + "%");
             nq.setParameter("plateNo", "%" + plateNo + "%");
+            nq.setParameter("mandt", configuration.getSapClient());
+            nq.setParameter("wplant", configuration.getWkPlant());
             list = nq.getResultList();
         } catch (Exception ex) {
             logger.error(null, ex);
@@ -301,6 +326,8 @@ public class WeightTicketRepository {
             nq.setParameter("creator", "%" + creator + "%");
             nq.setParameter("driverName", "%" + driverName + "%");
             nq.setParameter("plateNo", "%" + plateNo + "%");
+            nq.setParameter("mandt", configuration.getSapClient());
+            nq.setParameter("wplant", configuration.getWkPlant());
             list = nq.getResultList();
         } catch (Exception ex) {
             logger.error(null, ex);
@@ -310,17 +337,20 @@ public class WeightTicketRepository {
     
     public List<WeightTicket> findListWeightTicket(String month, String year, String tagent, String matnr, List<Character> modes, boolean isPosted) throws Exception {
         String query = "SELECT w FROM WeightTicket w "
+                + " , IN(w.weightTicketDetails) wd "
                 + "WHERE FUNC('YEAR', w.createdDate) = :year "
                 + " AND FUNC('MONTH', w.createdDate) = :month "
-                + " AND w.regType IN :regType ";
+                + " AND w.regType IN :regType "
+                + " AND w.mandt = :mandt"
+                + "  AND w.wplant = :wplant";
         if (!tagent.equalsIgnoreCase("-2")) {
             query += " AND w.plateNo IN ( SELECT tv.vehicle.plateNo FROM TransportAgentVehicle tv WHERE tv.transportAgent.abbr = :taAbbr ) ";
         }
         if (!matnr.equalsIgnoreCase("-2")) {
             if (!matnr.equalsIgnoreCase("-1")) {
-                query += " AND w.matnrRef = :matnrRef ";
+                query += " AND wd.matnrRef = :matnrRef ";
             } else {
-                query += " AND w.matnrRef IS NULL ";
+                query += " AND wd.matnrRef IS NULL ";
             }
         }
         if (isPosted) {
@@ -330,6 +360,8 @@ public class WeightTicketRepository {
             TypedQuery<WeightTicket> nq = entityManager.createQuery(query, WeightTicket.class);
             nq.setParameter("year", Integer.parseInt(year));
             nq.setParameter("month", Integer.parseInt(month));
+            nq.setParameter("mandt", configuration.getSapClient());
+            nq.setParameter("wplant", configuration.getWkPlant());
             if (!tagent.equalsIgnoreCase("-2")) {
                 nq.setParameter("taAbbr", tagent);
             }

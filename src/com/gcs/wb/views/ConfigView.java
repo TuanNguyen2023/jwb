@@ -18,6 +18,7 @@ import com.gcs.wb.base.serials.SerialHelper;
 import com.gcs.wb.controller.ConfigController;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.Configuration;
+import com.gcs.wb.service.SyncMasterDataService;
 import java.awt.Color;
 import java.util.HashSet;
 import javax.swing.DefaultComboBoxModel;
@@ -115,6 +116,8 @@ public class ConfigView extends javax.swing.JDialog {
         txtWBID = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         btnSave = new javax.swing.JButton();
+        syncIconLoading = new org.jdesktop.swingx.JXBusyLabel();
+        lblSyncData = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(ConfigView.class);
@@ -131,7 +134,6 @@ public class ConfigView extends javax.swing.JDialog {
         lblDBHost.setName("lblDBHost"); // NOI18N
         lblDBHost.setPreferredSize(new java.awt.Dimension(60, 14));
 
-        txtDBHost.setText(resourceMap.getString("txtDBHost.text")); // NOI18N
         txtDBHost.setName("txtDBHost"); // NOI18N
         txtDBHost.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -142,7 +144,6 @@ public class ConfigView extends javax.swing.JDialog {
         lblDBName.setText(resourceMap.getString("lblDBName.text")); // NOI18N
         lblDBName.setName("lblDBName"); // NOI18N
 
-        txtDBName.setText(resourceMap.getString("txtDBName.text")); // NOI18N
         txtDBName.setName("txtDBName"); // NOI18N
         txtDBName.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -153,7 +154,6 @@ public class ConfigView extends javax.swing.JDialog {
         lblDBUsr.setText(resourceMap.getString("lblDBUsr.text")); // NOI18N
         lblDBUsr.setName("lblDBUsr"); // NOI18N
 
-        txtDBUsr.setText(resourceMap.getString("txtDBUsr.text")); // NOI18N
         txtDBUsr.setName("txtDBUsr"); // NOI18N
         txtDBUsr.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -165,7 +165,6 @@ public class ConfigView extends javax.swing.JDialog {
         lblDBPwd.setText(resourceMap.getString("lblDBPwd.text")); // NOI18N
         lblDBPwd.setName("lblDBPwd"); // NOI18N
 
-        txtDBPwd.setText(resourceMap.getString("txtDBPwd.text")); // NOI18N
         txtDBPwd.setName("txtDBPwd"); // NOI18N
         txtDBPwd.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -239,7 +238,6 @@ public class ConfigView extends javax.swing.JDialog {
         lblHost.setText(resourceMap.getString("lblHost.text")); // NOI18N
         lblHost.setName("lblHost"); // NOI18N
 
-        txtHost.setText(resourceMap.getString("txtHost.text")); // NOI18N
         txtHost.setName("txtHost"); // NOI18N
         txtHost.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -261,7 +259,6 @@ public class ConfigView extends javax.swing.JDialog {
         lblRString.setText(resourceMap.getString("lblRString.text")); // NOI18N
         lblRString.setName("lblRString"); // NOI18N
 
-        txtRString.setText(resourceMap.getString("txtRString.text")); // NOI18N
         txtRString.setName("txtRString"); // NOI18N
         txtRString.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -553,7 +550,6 @@ public class ConfigView extends javax.swing.JDialog {
         lblPlant.setText(resourceMap.getString("lblPlant.text")); // NOI18N
         lblPlant.setName("lblPlant"); // NOI18N
 
-        txtPlant.setText(resourceMap.getString("txtPlant.text")); // NOI18N
         txtPlant.setName("txtPlant"); // NOI18N
         txtPlant.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -561,7 +557,6 @@ public class ConfigView extends javax.swing.JDialog {
             }
         });
 
-        txtWBID.setText(resourceMap.getString("txtWBID.text")); // NOI18N
         txtWBID.setName("txtWBID"); // NOI18N
 
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
@@ -602,6 +597,13 @@ public class ConfigView extends javax.swing.JDialog {
         btnSave.setName("btnSave"); // NOI18N
         btnSave.setPreferredSize(null);
 
+        syncIconLoading.setBusy(true);
+        syncIconLoading.setDirection(org.jdesktop.swingx.JXBusyLabel.Direction.RIGHT);
+        syncIconLoading.setName("syncIconLoading"); // NOI18N
+
+        lblSyncData.setText(resourceMap.getString("lblSyncData.text")); // NOI18N
+        lblSyncData.setName("lblSyncData"); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -610,7 +612,12 @@ public class ConfigView extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(pnMySQLCon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnSave, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(syncIconLoading, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblSyncData)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 350, Short.MAX_VALUE)
+                        .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(pnSAPConfig, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -628,14 +635,18 @@ public class ConfigView extends javax.swing.JDialog {
                 .addComponent(pnMySQLCon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(pnWorkingPlant, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
-                    .addComponent(pnSAPConfig, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(pnSAPConfig, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnWorkingPlant, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(pnWB1Config, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pnWB2Config, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblSyncData))
+                    .addComponent(syncIconLoading, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -762,6 +773,8 @@ public class ConfigView extends javax.swing.JDialog {
         }
 
         iconLoading.setVisible(false);
+        syncIconLoading.setVisible(false);
+        lblSyncData.setVisible(false);
     }
 
     private DefaultComboBoxModel getPortModel() {
@@ -1053,26 +1066,48 @@ public class ConfigView extends javax.swing.JDialog {
     }
 
     @Action
-    public void saveConfig() {
-        boolean error = false;
-        StringBuilder msg = new StringBuilder();
-        if (!validForm) {
-            return;
+    public Task saveConfig() {
+        return new SaveConfigTask(org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class));
+    }
+
+    private class SaveConfigTask extends org.jdesktop.application.Task<Object, Void> {
+
+        SaveConfigTask(org.jdesktop.application.Application app) {
+            super(app);
+            syncIconLoading.setVisible(true);
+            lblSyncData.setVisible(true);
+            btnSave.setEnabled(false);
         }
-        objMapping();
-        try {
-            config.save();
-        } catch (ConfigurationException ex) {
-            Logger.getLogger(this.getClass()).error(null, ex);
-            error = true;
-            for (String string : ex.getMessages()) {
-                msg.append(string).append(". \n");
+
+        @Override
+        protected Object doInBackground() {
+            boolean error = false;
+            StringBuilder msg = new StringBuilder();
+            if (!validForm) {
+                return null;
             }
-        }
-        if (!error) {
-            dispose();
-        } else {
-            JOptionPane.showMessageDialog(this, msg.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+            objMapping();
+            try {
+                config.save();
+                
+                SyncMasterDataService syncMasterDataService = new SyncMasterDataService();
+                syncMasterDataService.syncMasterDataWhenLogin();
+            } catch (ConfigurationException ex) {
+                Logger.getLogger(this.getClass()).error(null, ex);
+                error = true;
+                for (String string : ex.getMessages()) {
+                    msg.append(string).append(". \n");
+                }
+            }
+            if (!error) {
+                dispose();
+                WeighBridgeApp.restartApplication();
+            } else {
+                JOptionPane.showMessageDialog(rootPane, msg.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+                btnSave.setEnabled(true);
+            }
+
+            return null;  // return your result
         }
     }
 
@@ -1157,11 +1192,13 @@ public class ConfigView extends javax.swing.JDialog {
     private javax.swing.JLabel lblSpeed2;
     private javax.swing.JLabel lblStopBits1;
     private javax.swing.JLabel lblStopBits2;
+    private javax.swing.JLabel lblSyncData;
     private javax.swing.JPanel pnMySQLCon;
     private javax.swing.JPanel pnSAPConfig;
     private javax.swing.JPanel pnWB1Config;
     private javax.swing.JPanel pnWB2Config;
     private javax.swing.JPanel pnWorkingPlant;
+    private org.jdesktop.swingx.JXBusyLabel syncIconLoading;
     private javax.swing.JFormattedTextField txfDClient;
     private javax.swing.JFormattedTextField txfSNo;
     private javax.swing.JTextField txtDBHost;

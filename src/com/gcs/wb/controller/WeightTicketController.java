@@ -69,7 +69,7 @@ public class WeightTicketController {
         return weightTicketService.getMaterialList();
     }
 
-    public WeightTicket findWeightTicket(WeightTicket weightTicket, int id) {
+    public WeightTicket findWeightTicket(WeightTicket weightTicket, String id) {
         return weightTicketService.findWeightTicket(weightTicket, id);
     }
 

@@ -49,7 +49,6 @@ public class WeightTicketReportView extends javax.swing.JInternalFrame {
     Object[] wtColNames = Constants.WeightTicketReport.WT_COL_NAMES;
     Class[] wtColTypes = Constants.WeightTicketReport.WT_COL_TYPES;
     public ResourceMap resourceMapMsg = Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(WeightTicketReportView.class);
-    
     /** Creates new form WeightTicketReportView */
     public WeightTicketReportView() {
         initComponents();
@@ -350,7 +349,7 @@ public class WeightTicketReportView extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(pnFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
+                .addComponent(pnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE)
                 .addContainerGap())
         );
 

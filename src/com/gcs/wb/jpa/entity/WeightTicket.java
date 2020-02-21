@@ -31,11 +31,16 @@ import javax.persistence.Temporal;
 @Table(name = "tbl_weight_ticket")
 @NamedQueries({
     @NamedQuery(name = "WeightTicket.findAll", query = "SELECT w FROM WeightTicket w"),
-    @NamedQuery(name = "WeightTicket.findByCreatedDateRange", query = "SELECT w FROM WeightTicket w WHERE w.createdDate BETWEEN :from AND :to"),
+    @NamedQuery(name = "WeightTicket.findByCreatedDateRange",
+            query = "SELECT w FROM WeightTicket w WHERE w.createdDate BETWEEN :from AND :to"
+            + "  AND w.mandt = :mandt"
+            + "  AND w.wplant = :wplant"),
     @NamedQuery(name = "WeightTicket.findByDeliveryOrderNo",
-  query = "SELECT w FROM WeightTicket w "
-    + " , IN(w.weightTicketDetails) wd "
-    + " WHERE wd.deliveryOrderNo LIKE :deliveryOrderNo"),    @NamedQuery(name = "WeightTicket.findBySoNiemXa", query = "SELECT w FROM WeightTicket w WHERE w.soNiemXa = :soNiemXa"),
+            query = "SELECT w FROM WeightTicket w "
+            + " , IN(w.weightTicketDetails) wd "
+            + " WHERE wd.deliveryOrderNo LIKE :deliveryOrderNo"),
+    @NamedQuery(name = "WeightTicket.findBySoNiemXa",
+            query = "SELECT w FROM WeightTicket w WHERE w.soNiemXa = :soNiemXa"),
     @NamedQuery(name = "WeightTicket.findByDateFull",
             query = "SELECT w FROM WeightTicket w "
             + " , IN(w.weightTicketDetails) wd "
@@ -43,7 +48,9 @@ import javax.persistence.Temporal;
             + "  AND w.creator LIKE :creator"
             + "  AND w.driverName LIKE :driverName"
             + "  AND w.plateNo LIKE :plateNo"
-            + "  AND wd.matnrRef = :loaihang"),
+            + "  AND wd.matnrRef = :loaihang"
+            + "  AND w.mandt = :mandt"
+            + "  AND w.wplant = :wplant"),
     @NamedQuery(name = "WeightTicket.findByDateNull",
             query = "SELECT w FROM WeightTicket w "
             + " , IN(w.weightTicketDetails) wd "
@@ -51,13 +58,17 @@ import javax.persistence.Temporal;
             + "  AND w.creator LIKE :creator"
             + "  AND w.driverName LIKE :driverName"
             + "  AND w.plateNo LIKE :plateNo"
-            + "  AND wd.matnrRef IS NULL"),
+            + "  AND wd.matnrRef IS NULL"
+            + "  AND w.mandt = :mandt"
+            + "  AND w.wplant = :wplant"),
     @NamedQuery(name = "WeightTicket.findByDateNullAll",
             query = "SELECT w FROM WeightTicket w "
             + "WHERE w.createdDate BETWEEN :from AND :to"
             + "  AND w.creator LIKE :creator"
             + "  AND w.plateNo LIKE :plateNo"
-            + "  AND w.driverName LIKE :driverName"),
+            + "  AND w.driverName LIKE :driverName"
+            + "  AND w.mandt = :mandt"
+            + "  AND w.wplant = :wplant"),
     @NamedQuery(name = "WeightTicket.findByDateDissolved",
             query = "SELECT w FROM WeightTicket w "
             + " , IN(w.weightTicketDetails) wd "
@@ -66,7 +77,9 @@ import javax.persistence.Temporal;
             + "  AND w.driverName LIKE :driverName"
             + "  AND w.plateNo LIKE :plateNo"
             + "  AND wd.matnrRef = :loaihang"
-            + "  AND w.status = '" + Constants.WeightTicket.STATUS_DISSOLVED + "'"),
+            + "  AND w.status = '" + Constants.WeightTicket.STATUS_DISSOLVED + "'"
+            + "  AND w.mandt = :mandt"
+            + "  AND w.wplant = :wplant"),
     @NamedQuery(name = "WeightTicket.findByDateDissolvedNull",
             query = "SELECT w FROM WeightTicket w "
             + " , IN(w.weightTicketDetails) wd "
@@ -75,14 +88,18 @@ import javax.persistence.Temporal;
             + "  AND w.driverName LIKE :driverName"
             + "  AND w.plateNo LIKE :plateNo"
             + "  AND wd.matnrRef IS NULL"
-            + "  AND w.status = '" + Constants.WeightTicket.STATUS_DISSOLVED + "'"),
+            + "  AND w.status = '" + Constants.WeightTicket.STATUS_DISSOLVED + "'"
+            + "  AND w.mandt = :mandt"
+            + "  AND w.wplant = :wplant"),
     @NamedQuery(name = "WeightTicket.findByDateDissolvedNullAll",
             query = "SELECT w FROM WeightTicket w "
             + "WHERE w.createdDate BETWEEN :from AND :to"
             + "  AND w.creator LIKE :creator"
             + "  AND w.driverName LIKE :driverName"
             + "  AND w.plateNo LIKE :plateNo"
-            + "  AND w.status = '" + Constants.WeightTicket.STATUS_DISSOLVED + "'"),
+            + "  AND w.status = '" + Constants.WeightTicket.STATUS_DISSOLVED + "'"
+            + "  AND w.mandt = :mandt"
+            + "  AND w.wplant = :wplant"),
     @NamedQuery(name = "WeightTicket.findByDatePosted",
             query = "SELECT w FROM WeightTicket w "
             + " , IN(w.weightTicketDetails) wd "
@@ -91,7 +108,9 @@ import javax.persistence.Temporal;
             + "  AND w.driverName LIKE :driverName"
             + "  AND wd.matnrRef = :loaihang"
             + "  AND w.plateNo LIKE :plateNo"
-            + "  AND w.status = '" + Constants.WeightTicket.STATUS_POSTED + "'"),
+            + "  AND w.status = '" + Constants.WeightTicket.STATUS_POSTED + "'"
+            + "  AND w.mandt = :mandt"
+            + "  AND w.wplant = :wplant"),
     @NamedQuery(name = "WeightTicket.findByDatePostedNull",
             query = "SELECT w FROM WeightTicket w "
             + " , IN(w.weightTicketDetails) wd "
@@ -100,14 +119,18 @@ import javax.persistence.Temporal;
             + "  AND w.driverName LIKE :driverName"
             + "  AND w.plateNo LIKE :plateNo"
             + "  AND wd.matnrRef IS NULL"
-            + "  AND w.status = '" + Constants.WeightTicket.STATUS_POSTED + "'"),
+            + "  AND w.status = '" + Constants.WeightTicket.STATUS_POSTED + "'"
+            + "  AND w.mandt = :mandt"
+            + "  AND w.wplant = :wplant"),
     @NamedQuery(name = "WeightTicket.findByDatePostedNullAll",
             query = "SELECT w FROM WeightTicket w "
             + "WHERE w.createdDate BETWEEN :from AND :to"
             + "  AND w.creator LIKE :creator"
             + "  AND w.driverName LIKE :driverName"
             + "  AND w.plateNo LIKE :plateNo"
-            + "  AND w.status = '" + Constants.WeightTicket.STATUS_POSTED + "'"),
+            + "  AND w.status = '" + Constants.WeightTicket.STATUS_POSTED + "'"
+            + "  AND w.mandt = :mandt"
+            + "  AND w.wplant = :wplant"),
     @NamedQuery(name = "WeightTicket.findByDateAll",
             query = "SELECT w FROM WeightTicket w "
             + " , IN(w.weightTicketDetails) wd "
@@ -115,7 +138,9 @@ import javax.persistence.Temporal;
             + "  AND w.creator LIKE :creator"
             + "  AND w.driverName LIKE :driverName"
             + "  AND w.plateNo LIKE :plateNo"
-            + "  AND wd.matnrRef = :loaihang"),
+            + "  AND wd.matnrRef = :loaihang"
+            + "  AND w.mandt = :mandt"
+            + "  AND w.wplant = :wplant"),
     @NamedQuery(name = "WeightTicket.findByDateAllNull",
             query = "SELECT w FROM WeightTicket w "
             + " , IN(w.weightTicketDetails) wd "
@@ -123,13 +148,17 @@ import javax.persistence.Temporal;
             + "  AND w.creator LIKE :creator"
             + "  AND w.driverName LIKE :driverName"
             + "  AND w.plateNo LIKE :plateNo"
-            + "  AND wd.matnrRef IS NULL"),
+            + "  AND wd.matnrRef IS NULL"
+            + "  AND w.mandt = :mandt"
+            + "  AND w.wplant = :wplant"),
     @NamedQuery(name = "WeightTicket.findByDateAllNullAll",
             query = "SELECT w FROM WeightTicket w "
             + "WHERE w.createdDate BETWEEN :from AND :to"
             + "  AND w.creator LIKE :creator"
             + "  AND w.plateNo LIKE :plateNo"
-            + "  AND w.driverName LIKE :driverName"),
+            + "  AND w.driverName LIKE :driverName"
+            + "  AND w.mandt = :mandt"
+            + "  AND w.wplant = :wplant"),
     @NamedQuery(name = "WeightTicket.findByIdSeqDay",
             query = "SELECT w FROM WeightTicket w "
             + "WHERE w.id = :id"
@@ -139,9 +168,8 @@ public class WeightTicket implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private String id;
     @Column(name = "mandt", unique = true)
     private String mandt;
     @Column(name = "wplant", unique = true)
@@ -160,8 +188,6 @@ public class WeightTicket implements Serializable {
     private String trailerId;
     @Column(name = "reg_type")
     private Character regType;
-    @Column(name = "abbr")
-    private String abbr;
     @Column(name = "wb_id")
     private String wbId;
     @Column(name = "creator")
@@ -170,18 +196,14 @@ public class WeightTicket implements Serializable {
     private String lgort;
     @Column(name = "charg")
     private String charg;
-    @Column(name = "load_vendor")
-    private String loadVendor;
-    @Column(name = "trans_vendor")
-    private String transVendor;
     @Column(name = "no_more_gr")
     private Character noMoreGr;
     @Column(name = "move_type")
     private String moveType;
     @Column(name = "move_reas")
     private String moveReas;
-    @Column(name = "text")
-    private String text;
+    @Column(name = "note")
+    private String note;
     @Column(name = "so_niem_xa")
     private String soNiemXa;
     @Column(name = "f_scale")
@@ -325,18 +347,18 @@ public class WeightTicket implements Serializable {
         this.recvMatnr = recvMatnr;
     }
 
-    public WeightTicket(int id) {
+    public WeightTicket(String id) {
         this.id = id;
     }
 
-    public WeightTicket(int id, String mandt, String wplant, int seqDay) {
+    public WeightTicket(String id, String mandt, String wplant, int seqDay) {
         this.id = id;
         this.mandt = mandt;
         this.wplant = wplant;
         this.seqDay = seqDay;
     }
 
-    public WeightTicket(int id, String mandt, String wplant, int seqDay, int seqMonth,
+    public WeightTicket(String id, String mandt, String wplant, int seqDay, int seqMonth,
             String driverName, String driverIdNo, String plateNo, char regType,
             String regItemDescription, BigDecimal regItemQuantity, Date createdDate, String createdTime) {
         this.id = id;
@@ -352,28 +374,12 @@ public class WeightTicket implements Serializable {
         this.createdTime = createdTime;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
-    }
-
-    public String getLoadVendor() {
-        return loadVendor;
-    }
-
-    public void setLoadVendor(String loadVendor) {
-        this.loadVendor = loadVendor;
-    }
-
-    public String getTransVendor() {
-        return transVendor;
-    }
-
-    public void setTransVendor(String transVendor) {
-        this.transVendor = transVendor;
     }
 
     public String getMandt() {
@@ -504,14 +510,6 @@ public class WeightTicket implements Serializable {
         this.sTime = sTime;
     }
 
-    public String getAbbr() {
-        return abbr;
-    }
-
-    public void setAbbr(String abbr) {
-        this.abbr = abbr;
-    }
-
     public String getWbId() {
         return wbId;
     }
@@ -568,12 +566,12 @@ public class WeightTicket implements Serializable {
         this.moveReas = moveReas;
     }
 
-    public String getText() {
-        return text;
+    public String getNote() {
+        return note;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setNote(String note) {
+        this.note = note;
     }
 
     public String getFCreator() {
@@ -781,9 +779,6 @@ public class WeightTicket implements Serializable {
         if (sTime != null ? !sTime.equals(that.sTime) : that.sTime != null) {
             return false;
         }
-        if (abbr != null ? !abbr.equals(that.abbr) : that.abbr != null) {
-            return false;
-        }
         if (wbId != null ? !wbId.equals(that.wbId) : that.wbId != null) {
             return false;
         }
@@ -805,7 +800,7 @@ public class WeightTicket implements Serializable {
         if (moveReas != null ? !moveReas.equals(that.moveReas) : that.moveReas != null) {
             return false;
         }
-        if (text != null ? !text.equals(that.text) : that.text != null) {
+        if (note != null ? !note.equals(that.note) : that.note != null) {
             return false;
         }
         if (fCreator != null ? !fCreator.equals(that.fCreator) : that.fCreator != null) {
@@ -847,10 +842,10 @@ public class WeightTicket implements Serializable {
 
         return true;
     }
-
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 31));
+        int result = 31;
+        result = 31 * result + (id != null ? id.hashCode() : 0);
         result = 31 * result + (mandt != null ? mandt.hashCode() : 0);
         result = 31 * result + (wplant != null ? wplant.hashCode() : 0);
         result = 31 * result + (int) (seqDay ^ (seqDay >>> 31));
@@ -867,7 +862,6 @@ public class WeightTicket implements Serializable {
         result = 31 * result + (fTime != null ? fTime.hashCode() : 0);
         result = 31 * result + (sScale != null ? sScale.hashCode() : 0);
         result = 31 * result + (sTime != null ? sTime.hashCode() : 0);
-        result = 31 * result + (abbr != null ? abbr.hashCode() : 0);
         result = 31 * result + (wbId != null ? wbId.hashCode() : 0);
         result = 31 * result + (creator != null ? creator.hashCode() : 0);
         result = 31 * result + (lgort != null ? lgort.hashCode() : 0);
@@ -875,7 +869,7 @@ public class WeightTicket implements Serializable {
         result = 31 * result + (noMoreGr != null ? noMoreGr.hashCode() : 0);
         result = 31 * result + (moveType != null ? moveType.hashCode() : 0);
         result = 31 * result + (moveReas != null ? moveReas.hashCode() : 0);
-        result = 31 * result + (text != null ? text.hashCode() : 0);
+        result = 31 * result + (note != null ? note.hashCode() : 0);
         result = 31 * result + (fCreator != null ? fCreator.hashCode() : 0);
         result = 31 * result + (sCreator != null ? sCreator.hashCode() : 0);
         result = 31 * result + (gQty != null ? gQty.hashCode() : 0);

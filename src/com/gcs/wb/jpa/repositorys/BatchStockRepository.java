@@ -39,4 +39,16 @@ public class BatchStockRepository {
 
         return null;
     }
+    
+    public boolean hasData(String mandt, String wplant) {
+        TypedQuery<BatchStock> typedQuery = entityManager.createNamedQuery("BatchStock.findByMandtWplant", BatchStock.class);
+        typedQuery.setParameter("mandt", mandt);
+        typedQuery.setParameter("wplant", wplant);
+        List<BatchStock> batchStocks = typedQuery.getResultList();
+        if (batchStocks != null && batchStocks.size() > 0) {
+            return true;
+        }
+
+        return false;
+    }
 }

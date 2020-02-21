@@ -16,10 +16,12 @@ import com.gcs.wb.bapi.helper.BatchStocksGetListBapi;
 import com.gcs.wb.bapi.helper.CustomerGetDetailBapi;
 import com.gcs.wb.bapi.helper.MatGetDetailBapi;
 import com.gcs.wb.bapi.helper.MaterialGetListBapi;
+import com.gcs.wb.bapi.helper.PlantGetDetailBapi;
 import com.gcs.wb.bapi.helper.PoGetDetailBapi;
 import com.gcs.wb.bapi.helper.SLocsGetListBapi;
 import com.gcs.wb.bapi.helper.VendorGetDetailBapi;
 import com.gcs.wb.bapi.helper.VendorValiationCheckBapi;
+import com.gcs.wb.bapi.helper.constants.PlantGeDetailConstants;
 import com.gcs.wb.bapi.helper.structure.CustomerGetDetailStructure;
 import com.gcs.wb.bapi.helper.structure.MatGetDetailStructure;
 import com.gcs.wb.bapi.helper.structure.MaterialGetListStructure;
@@ -41,12 +43,15 @@ import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.MaterialInternal;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
 import com.gcs.wb.jpa.entity.PurchaseOrder;
+import com.gcs.wb.jpa.entity.SAPSetting;
 import com.gcs.wb.jpa.entity.SLoc;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.TransportAgentVehicle;
 import com.gcs.wb.jpa.entity.Vendor;
 import com.gcs.wb.jpa.repositorys.BatchStockRepository;
 import com.gcs.wb.jpa.repositorys.MaterialInternalRepository;
+import com.gcs.wb.jpa.repositorys.MaterialRepository;
+import com.gcs.wb.jpa.repositorys.SAPSettingRepository;
 import com.gcs.wb.jpa.repositorys.SLocRepository;
 import com.gcs.wb.jpa.repositorys.TransportAgentRepository;
 import com.gcs.wb.jpa.repositorys.TransportAgentVehicleRepository;
@@ -55,8 +60,8 @@ import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.service.LookupMaterialService;
 import com.gcs.wb.views.TransportAgentView;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
@@ -85,6 +90,8 @@ public class SAPService {
     TransportAgentRepository transportAgentRepository = new TransportAgentRepository();
     TransportAgentVehicleRepository transportAgentVehicleRepository = new TransportAgentVehicleRepository();
     MaterialInternalRepository materialInternalRepository = new MaterialInternalRepository();
+    MaterialRepository materialRepository = new MaterialRepository();
+    SAPSettingRepository sapSettingRepository = new SAPSettingRepository();
 
     AppConfig config = WeighBridgeApp.getApplication().getConfig();
     Configuration configuration = config.getConfiguration();
@@ -95,9 +102,9 @@ public class SAPService {
     Session session = WeighBridgeApp.getApplication().getSAPSession();
 
     /**
-     * sync Material
+     * get Material model
      */
-    public DefaultComboBoxModel syncMaterialMaster() {
+    public DefaultComboBoxModel getMaterialModel() {
         //get data from DB
         List<MaterialInternal> materialsDB = materialInternalRepository.getMaterialInternals();
 
@@ -145,10 +152,67 @@ public class SAPService {
         return new DefaultComboBoxModel(materialsDB.toArray());
     }
 
+    public List<Material> syncMaterial() {
+        //get data from DB
+        List<Material> materialsDB = materialRepository.getListMaterial();
+
+        if (!WeighBridgeApp.getApplication().isOfflineMode()) {
+            // get data SAP
+            List<Material> matsSap = new ArrayList<>();
+            MaterialGetListBapi bapi = new MaterialGetListBapi();
+            try {
+                session.execute(bapi);
+                List<MaterialGetListStructure> mats = bapi.getEtMaterial();
+                MaterialsV2Converter materialsV2Converter = new MaterialsV2Converter();
+                matsSap = materialsV2Converter.convert(mats);
+            } catch (Exception ex) {
+            }
+
+            //sync DB SAP
+            entityTransaction = entityManager.getTransaction();
+            if (!entityTransaction.isActive()) {
+                entityTransaction.begin();
+            }
+            //update for remove DB
+            for (Material mat : materialsDB) {
+                if (matsSap.indexOf(mat) == -1) {
+                    entityManager.remove(mat);
+                }
+            }
+            // update SAP -> DB
+            for (Material mSap : matsSap) {
+                int index = materialsDB.indexOf(mSap);
+                if (index == -1) {
+                    entityManager.persist(mSap);
+                } else {
+                    mSap.setId(materialsDB.get(index).getId());
+                    entityManager.merge(mSap);
+                }
+            }
+
+            entityTransaction.commit();
+            entityManager.clear();
+
+            // return data
+            return materialRepository.getListMaterial();
+        }
+
+        return materialsDB;
+    }
+
     /**
-     * sync Vendor
+     * get List Vendor
      */
     public DefaultComboBoxModel getVendorList() {
+        return new DefaultComboBoxModel(syncVendor().toArray());
+    }
+
+    /**
+     * sync Vendor
+     *
+     * @return
+     */
+    public List<Vendor> syncVendor() {
         List<Vendor> vendorDBs = vendorRepository.getListVendor();
 
         if (!WeighBridgeApp.getApplication().isOfflineMode()) {
@@ -198,10 +262,10 @@ public class SAPService {
             entityManager.clear();
 
             // return data
-            vendorDBs = vendorRepository.getListVendor();
+            return vendorRepository.getListVendor();
         }
 
-        return new DefaultComboBoxModel(vendorDBs.toArray());
+        return vendorDBs;
     }
 
     /**
@@ -289,7 +353,7 @@ public class SAPService {
         List<BatchStock> batchs = batchStockRepository.getListBatchStock(configuration.getWkPlant(), lgortSloc, matnr);
         // get data SAP
         BatchStocksGetListBapi bBatch = new BatchStocksGetListBapi();
-        List<BatchStock> batchStockSaps = new ArrayList<BatchStock>();
+        List<BatchStock> batchStockSaps = new ArrayList<>();
         bBatch.setIdMandt(configuration.getSapClient());
         bBatch.setIdWerks(configuration.getWkPlant());
         bBatch.setIdLgort(lgortSloc);
@@ -301,7 +365,7 @@ public class SAPService {
                 //BatchStock bs = batchStockRepository.findByWerksLgortMatnrCharg(configuration.getWkPlant(), b.getLgort(), b.getMatnr(), b.getCharg());
                 BatchStock bs = new BatchStock(configuration.getSapClient(), configuration.getWkPlant(), b.getLgort(), b.getMatnr(), b.getCharg());
                 bs.setLvorm(b.getLvorm() == null || b.getLvorm().trim().isEmpty() ? ' ' : b.getLvorm().charAt(0));
-                
+
                 batchStockSaps.add(bs);
             }
 
@@ -367,6 +431,10 @@ public class SAPService {
     }
 
     public DefaultComboBoxModel getSlocModel() {
+        return new DefaultComboBoxModel(syncSloc().toArray());
+    }
+
+    public List<SLoc> syncSloc() {
         List<SLoc> slocDBs = sLocRepository.getListSLoc();
         String mandt = configuration.getSapClient();
         String wplant = configuration.getWkPlant();
@@ -412,10 +480,10 @@ public class SAPService {
 
             entityTransaction.commit();
             entityManager.clear();
-            slocDBs = sLocRepository.getListSLoc();
+            return sLocRepository.getListSLoc();
         }
 
-        return new DefaultComboBoxModel(slocDBs.toArray());
+        return slocDBs;
     }
 
     public List<TransportAgent> getTransportAgentList() {
@@ -569,11 +637,11 @@ public class SAPService {
         List<SOCheckStructure> soChecks = new ArrayList<SOCheckStructure>();
         SOCheckStructure soCheck = new SOCheckStructure();
         for (int k = 0; k < soNumbers.length; k++) {
-            soCheck.setVbeln( StringUtil.paddingZero(soNumbers[k], 10));
+            soCheck.setVbeln(StringUtil.paddingZero(soNumbers[k], 10));
             soCheck.setTraid(bsXe);
             soChecks.add(soCheck);
         }
-        
+
         //soCheck.setVbeln(soNumber);
         bapi.setSOCheck(soChecks);
         WeighBridgeApp.getApplication().getSAPSession().execute(bapi);
@@ -583,7 +651,7 @@ public class SAPService {
         }
         return null;
     }
-    
+
     public String validateVendor(String idVendor, String mantr, String vendorType, String wplantPo) {
         VendorValiationCheckBapi bapi = new VendorValiationCheckBapi();
         bapi.setIvVendor(idVendor);
@@ -602,4 +670,46 @@ public class SAPService {
         return null;
     }
 
+    public SAPSetting syncSapSetting(String mandt, String wplant) {
+        try {
+            PlantGetDetailBapi plantGetDetailBapi = new PlantGetDetailBapi(configuration.getSapClient(), configuration.getWkPlant());
+            session.execute(plantGetDetailBapi);
+            HashMap vals = plantGetDetailBapi.getEsPlant();
+
+            SAPSetting localSetting = sapSettingRepository.findByMandtAndWplant(mandt, wplant);
+
+            if (vals.size() > 0) {
+                SAPSetting sapSetting = new SAPSetting();
+                sapSetting.setName1((String) vals.get(PlantGeDetailConstants.NAME1));
+                sapSetting.setName2((String) vals.get(PlantGeDetailConstants.NAME2));
+                sapSetting.setMandt(configuration.getSapClient());
+                sapSetting.setWplant(configuration.getWkPlant());
+
+                if (!entityTransaction.isActive()) {
+                    entityTransaction.begin();
+                }
+
+                if (localSetting == null) {
+                    entityManager.persist(sapSetting);
+                } else {
+                    localSetting.setName1(sapSetting.getName1());
+                    localSetting.setName2(sapSetting.getName2());
+                    entityManager.merge(localSetting);
+
+                    sapSetting = localSetting;
+                }
+
+                entityTransaction.commit();
+                entityManager.clear();
+
+                return sapSetting;
+            }
+        } catch (Exception ex) {
+            if (entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
+        }
+
+        return null;
+    }
 }

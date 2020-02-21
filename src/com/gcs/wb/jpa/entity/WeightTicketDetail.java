@@ -85,6 +85,12 @@ public class WeightTicketDetail implements Serializable {
     private String matDocGi;
     @Column(name = "so_number")
     private String soNumber;
+    @Column(name = "abbr")
+    private String abbr;
+    @Column(name = "load_vendor")
+    private String loadVendor;
+    @Column(name = "trans_vendor")
+    private String transVendor;
 
     @ManyToOne
     @JoinColumn(name = "weight_ticket_id")
@@ -294,6 +300,30 @@ public class WeightTicketDetail implements Serializable {
     public void setSoNumber(String soNumber) {
         this.soNumber = soNumber;
     }
+    
+    public String getLoadVendor() {
+        return loadVendor;
+    }
+
+    public void setLoadVendor(String loadVendor) {
+        this.loadVendor = loadVendor;
+    }
+
+    public String getTransVendor() {
+        return transVendor;
+    }
+
+    public void setTransVendor(String transVendor) {
+        this.transVendor = transVendor;
+    }
+
+    public String getAbbr() {
+        return abbr;
+    }
+
+    public void setAbbr(String abbr) {
+        this.abbr = abbr;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -369,6 +399,9 @@ public class WeightTicketDetail implements Serializable {
         if (updatedDate != null ? !updatedDate.equals(that.updatedDate) : that.updatedDate != null) {
             return false;
         }
+        if (abbr != null ? !abbr.equals(that.abbr) : that.abbr != null) {
+            return false;
+        }
 
         return true;
     }
@@ -396,6 +429,7 @@ public class WeightTicketDetail implements Serializable {
         result = 31 * result + (createdTime != null ? createdTime.hashCode() : 0);
         result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
         result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
+        result = 31 * result + (abbr != null ? abbr.hashCode() : 0);
         return result;
     }
 

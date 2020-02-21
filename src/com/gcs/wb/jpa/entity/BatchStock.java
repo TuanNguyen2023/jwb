@@ -26,7 +26,9 @@ import javax.persistence.Table;
     @NamedQuery(name = "BatchStock.findByWerksLgortMatnr",
     query = "SELECT bs FROM BatchStock bs WHERE bs.werks = :werks AND bs.lgort = :lgort AND bs.matnr = :matnr"),
     @NamedQuery(name = "BatchStock.findByWerksLgortMatnrCharg",
-    query = "SELECT bs FROM BatchStock bs WHERE bs.werks = :werks AND bs.lgort = :lgort AND bs.matnr = :matnr AND bs.charg = :charg")
+    query = "SELECT bs FROM BatchStock bs WHERE bs.werks = :werks AND bs.lgort = :lgort AND bs.matnr = :matnr AND bs.charg = :charg"),
+    @NamedQuery(name = "BatchStock.findByMandtWplant",
+    query = "SELECT bs FROM BatchStock bs WHERE bs.werks = :wplant AND bs.mandt = :mandt"),
 })
 public class BatchStock implements Serializable {
 
@@ -166,6 +168,6 @@ public class BatchStock implements Serializable {
 
     @Override
     public String toString() {
-        return "com.gcs.wb.jpa.entity.BatchStocks[id=" + id + "]";
+        return this.getCharg();
     }
 }

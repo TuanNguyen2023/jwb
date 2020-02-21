@@ -22,7 +22,9 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tbl_sap_setting")
 @NamedQueries({
-    @NamedQuery(name = "SAPSetting.findAll", query = "SELECT ss FROM SAPSetting ss")})
+    @NamedQuery(name = "SAPSetting.findAll", query = "SELECT ss FROM SAPSetting ss"),
+    @NamedQuery(name = "SAPSetting.findByMandtAndWplant", query = "SELECT ss FROM SAPSetting ss WHERE ss.mandt = :mandt AND ss.wplant = :wplant")
+})
 public class SAPSetting implements Serializable {
 
     private static final long serialVersionUID = 1L;

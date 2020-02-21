@@ -42,7 +42,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="pnFilter" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="pnResult" pref="401" max="32767" attributes="0"/>
+              <Component id="pnResult" pref="417" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -238,7 +238,7 @@
                 <Property name="name" type="java.lang.String" value="cbxTransportAgent" noResource="true"/>
               </Properties>
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="cbxTransportAgent.setRenderer(new DefaultListCellRenderer() {&#xa;   @Override&#xa;   public Component getListCellRendererComponent(&#xa;           JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {&#xa;       super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);&#xa;       if (value instanceof TransportAgent) {&#xa;           TransportAgent tagent = (TransportAgent)value;&#xa;           setText(tagent.getName());&#xa;           setToolTipText(tagent.getAbbr());&#xa;       }&#xa;       return this;&#xa;   }&#xa;});"/>
+                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="cbxTransportAgent.setRenderer(new DefaultListCellRenderer() {&#xa;   @Override&#xa;   public Component getListCellRendererComponent(&#xa;           JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {&#xa;       super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);&#xa;       if (value instanceof TransportAgent) {&#xa;           TransportAgent tagent = (TransportAgent)value;&#xa;           setText(tagent.getName());&#xa;           setToolTipText(tagent.getAbbr());&#xa;       }&#xa;       return this;&#xa;   }&#xa;});&#xa;new ComboBoxSearchable(cbxTransportAgent);"/>
               </AuxValues>
             </Component>
             <Component class="javax.swing.JLabel" name="lblType">
@@ -255,7 +255,7 @@
                 <Property name="name" type="java.lang.String" value="cbxMaterial" noResource="true"/>
               </Properties>
               <AuxValues>
-                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="cbxMaterial.setRenderer(new DefaultListCellRenderer() {&#xa;   @Override&#xa;   public Component getListCellRendererComponent(&#xa;           JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {&#xa;       super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);&#xa;       if (value instanceof Material) {&#xa;           Material mat = (Material)value;&#xa;           setText(mat.getMaktx());&#xa;           setToolTipText(mat.getMatnr());&#xa;       }&#xa;       return this;&#xa;   }&#xa;});"/>
+                <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="cbxMaterial.setRenderer(new DefaultListCellRenderer() {&#xa;   @Override&#xa;   public Component getListCellRendererComponent(&#xa;           JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {&#xa;       super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);&#xa;       if (value instanceof Material) {&#xa;           Material mat = (Material)value;&#xa;           setText(mat.getMaktx());&#xa;           setToolTipText(mat.getMatnr());&#xa;       }&#xa;       return this;&#xa;   }&#xa;});&#xa;new ComboBoxSearchable(cbxMaterial);"/>
               </AuxValues>
             </Component>
             <Component class="javax.swing.JLabel" name="lblMode">

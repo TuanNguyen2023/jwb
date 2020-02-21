@@ -139,6 +139,6 @@ public class Vendor implements Serializable {
 
     @Override
     public String toString() {
-        return "com.gcs.wb.jpa.entity.Vendor[id=" + id + "]";
+        return this.getName1();
     }
 }

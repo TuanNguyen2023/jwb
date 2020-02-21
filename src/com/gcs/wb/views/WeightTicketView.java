@@ -1394,7 +1394,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
     private void txtGRTextKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtGRTextKeyReleased
         if (weightTicket != null) {
-            weightTicket.setText(txtGRText.getText().trim());
+            weightTicket.setNote(txtGRText.getText().trim());
         }
         setSaveNeeded(isValidated());
     }//GEN-LAST:event_txtGRTextKeyReleased
@@ -1828,7 +1828,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
 
             // Nhận dạng phiếu cân gỏ tay Hiệp Phước
             //   weightTicket.setText("ZBD"); 
-            weightTicket.setText(txtGRText.getText().trim());
+            weightTicket.setNote(txtGRText.getText().trim());
 
             for (int i = 0; i < outbDel_list.size(); i++) {
                 outdel_tmp = outbDel_list.get(i);
@@ -1966,7 +1966,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
     private void checkWTNum(DocumentEvent e) {
         try {
             String text = e.getDocument().getText(0, e.getDocument().getLength()).trim();
-            boolean valid = text.matches("\\d{10}");  // 
+            boolean valid = text.matches("^[a-zA-Z0-9]{10}$");  //
             setEnteredValidWTNum(valid);
             if (valid) {
                 lblWTNum.setForeground(Color.BLACK);
@@ -2291,7 +2291,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
 
     private class ReadWTTask extends Task<Object, Void> {
 
-        int id;
+        String id;
 
         /*
         ReadWTTask(Application app, String id, String seq, String RegId ) {
@@ -2306,7 +2306,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
          */
         ReadWTTask(Application app, String id) {
             super(app);
-            this.id = Integer.parseInt(id);
+            this.id = id;
             setReprintable(false);
             grbType.clearSelection();
             grbCat.clearSelection();
@@ -2378,8 +2378,8 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 if (Constants.WeighingProcess.MODE_DETAIL.OUT_PLANT_PLANT.name().equals(weightTicket.getMode())
                         || Constants.WeighingProcess.MODE_DETAIL.OUT_PULL_STATION.name().equals(weightTicket.getMode())
                         || Constants.WeighingProcess.MODE_DETAIL.OUT_SLOC_SLOC.name().equals(weightTicket.getMode())) {
-                    cbxVendorLoading.setSelectedItem(weightTicketRegistarationController.getVendor(weightTicket.getLoadVendor()));
-                    cbxVendorTransport.setSelectedItem(weightTicketRegistarationController.getVendor(weightTicket.getTransVendor()));
+                    cbxVendorLoading.setSelectedItem(weightTicketRegistarationController.getVendor(weightTicket.getWeightTicketDetail().getLoadVendor()));
+                    cbxVendorTransport.setSelectedItem(weightTicketRegistarationController.getVendor(weightTicket.getWeightTicketDetail().getTransVendor()));
                 }
                 if (Constants.WeighingProcess.MODE_DETAIL.OUT_SLOC_SLOC.name().equals(weightTicket.getMode())) {
                     txtLgortIn.setText(weightTicket.getRecvLgort());
@@ -2593,7 +2593,17 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     } catch (ArithmeticException e) {
                     }
                 }
-                txtRegItem.setText(weightTicketDetail.getRegItemDescription());
+                List<WeightTicketDetail> weightTicketDetails = weightTicket.getWeightTicketDetails();
+                if(weightTicketDetails != null && weightTicketDetails.size() > 1){
+                    String regItemDescription = "";
+                    for (WeightTicketDetail weightTicketDetail1 : weightTicketDetails) {
+                        regItemDescription += weightTicketDetail1.getRegItemDescription() + " - ";
+                    }
+                    txtRegItem.setText(regItemDescription);
+                }
+                else{
+                    txtRegItem.setText(weightTicketDetail.getRegItemDescription());
+                }
                 formatter.applyPattern(WeighBridgeApp.DATE_TIME_DISPLAY_FORMAT);
                 if (weightTicket.getFScale() != null) {
                     txfInQty.setValue(weightTicket.getFScale());
@@ -2648,7 +2658,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 } else {
                     cbxSLoc.setSelectedIndex(-1);
                 }
-                txtGRText.setText(weightTicket.getText());
+                txtGRText.setText(weightTicket.getNote());
                 if (Constants.WeighingProcess.MODE_DETAIL.OUT_SELL_ROAD.name().equals(weightTicket.getMode())
                         || Constants.WeighingProcess.MODE_DETAIL.IN_WAREHOUSE_TRANSFER.name().equals(weightTicket.getMode())) {
                     txtDelNum.setText(weightTicketDetail.getDeliveryOrderNo());
