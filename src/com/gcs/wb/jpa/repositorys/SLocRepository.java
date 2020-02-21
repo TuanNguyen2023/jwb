@@ -37,4 +37,16 @@ public class SLocRepository {
 
         return null;
     }
+    
+    public boolean hasData(String mandt, String wplant) {
+        TypedQuery<SLoc> typedQuery = entityManager.createNamedQuery("SLoc.findByMandtWplant", SLoc.class);
+        typedQuery.setParameter("mandt", mandt);
+        typedQuery.setParameter("wplant", wplant);
+        List<SLoc> sLoc = typedQuery.getResultList();
+        if (sLoc != null && sLoc.size() > 0) {
+            return true;
+        }
+
+        return false;
+    }
 }

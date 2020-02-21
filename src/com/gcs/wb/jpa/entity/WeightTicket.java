@@ -31,11 +31,16 @@ import javax.persistence.Temporal;
 @Table(name = "tbl_weight_ticket")
 @NamedQueries({
     @NamedQuery(name = "WeightTicket.findAll", query = "SELECT w FROM WeightTicket w"),
-    @NamedQuery(name = "WeightTicket.findByCreatedDateRange", query = "SELECT w FROM WeightTicket w WHERE w.createdDate BETWEEN :from AND :to"),
+    @NamedQuery(name = "WeightTicket.findByCreatedDateRange",
+            query = "SELECT w FROM WeightTicket w WHERE w.createdDate BETWEEN :from AND :to"
+            + "  AND w.mandt = :mandt"
+            + "  AND w.wplant = :wplant"),
     @NamedQuery(name = "WeightTicket.findByDeliveryOrderNo",
-  query = "SELECT w FROM WeightTicket w "
-    + " , IN(w.weightTicketDetails) wd "
-    + " WHERE wd.deliveryOrderNo LIKE :deliveryOrderNo"),    @NamedQuery(name = "WeightTicket.findBySoNiemXa", query = "SELECT w FROM WeightTicket w WHERE w.soNiemXa = :soNiemXa"),
+            query = "SELECT w FROM WeightTicket w "
+            + " , IN(w.weightTicketDetails) wd "
+            + " WHERE wd.deliveryOrderNo LIKE :deliveryOrderNo"),
+    @NamedQuery(name = "WeightTicket.findBySoNiemXa",
+            query = "SELECT w FROM WeightTicket w WHERE w.soNiemXa = :soNiemXa"),
     @NamedQuery(name = "WeightTicket.findByDateFull",
             query = "SELECT w FROM WeightTicket w "
             + " , IN(w.weightTicketDetails) wd "
@@ -43,7 +48,9 @@ import javax.persistence.Temporal;
             + "  AND w.creator LIKE :creator"
             + "  AND w.driverName LIKE :driverName"
             + "  AND w.plateNo LIKE :plateNo"
-            + "  AND wd.matnrRef = :loaihang"),
+            + "  AND wd.matnrRef = :loaihang"
+            + "  AND w.mandt = :mandt"
+            + "  AND w.wplant = :wplant"),
     @NamedQuery(name = "WeightTicket.findByDateNull",
             query = "SELECT w FROM WeightTicket w "
             + " , IN(w.weightTicketDetails) wd "
@@ -51,13 +58,17 @@ import javax.persistence.Temporal;
             + "  AND w.creator LIKE :creator"
             + "  AND w.driverName LIKE :driverName"
             + "  AND w.plateNo LIKE :plateNo"
-            + "  AND wd.matnrRef IS NULL"),
+            + "  AND wd.matnrRef IS NULL"
+            + "  AND w.mandt = :mandt"
+            + "  AND w.wplant = :wplant"),
     @NamedQuery(name = "WeightTicket.findByDateNullAll",
             query = "SELECT w FROM WeightTicket w "
             + "WHERE w.createdDate BETWEEN :from AND :to"
             + "  AND w.creator LIKE :creator"
             + "  AND w.plateNo LIKE :plateNo"
-            + "  AND w.driverName LIKE :driverName"),
+            + "  AND w.driverName LIKE :driverName"
+            + "  AND w.mandt = :mandt"
+            + "  AND w.wplant = :wplant"),
     @NamedQuery(name = "WeightTicket.findByDateDissolved",
             query = "SELECT w FROM WeightTicket w "
             + " , IN(w.weightTicketDetails) wd "
@@ -66,7 +77,9 @@ import javax.persistence.Temporal;
             + "  AND w.driverName LIKE :driverName"
             + "  AND w.plateNo LIKE :plateNo"
             + "  AND wd.matnrRef = :loaihang"
-            + "  AND w.status = '" + Constants.WeightTicket.STATUS_DISSOLVED + "'"),
+            + "  AND w.status = '" + Constants.WeightTicket.STATUS_DISSOLVED + "'"
+            + "  AND w.mandt = :mandt"
+            + "  AND w.wplant = :wplant"),
     @NamedQuery(name = "WeightTicket.findByDateDissolvedNull",
             query = "SELECT w FROM WeightTicket w "
             + " , IN(w.weightTicketDetails) wd "
@@ -75,14 +88,18 @@ import javax.persistence.Temporal;
             + "  AND w.driverName LIKE :driverName"
             + "  AND w.plateNo LIKE :plateNo"
             + "  AND wd.matnrRef IS NULL"
-            + "  AND w.status = '" + Constants.WeightTicket.STATUS_DISSOLVED + "'"),
+            + "  AND w.status = '" + Constants.WeightTicket.STATUS_DISSOLVED + "'"
+            + "  AND w.mandt = :mandt"
+            + "  AND w.wplant = :wplant"),
     @NamedQuery(name = "WeightTicket.findByDateDissolvedNullAll",
             query = "SELECT w FROM WeightTicket w "
             + "WHERE w.createdDate BETWEEN :from AND :to"
             + "  AND w.creator LIKE :creator"
             + "  AND w.driverName LIKE :driverName"
             + "  AND w.plateNo LIKE :plateNo"
-            + "  AND w.status = '" + Constants.WeightTicket.STATUS_DISSOLVED + "'"),
+            + "  AND w.status = '" + Constants.WeightTicket.STATUS_DISSOLVED + "'"
+            + "  AND w.mandt = :mandt"
+            + "  AND w.wplant = :wplant"),
     @NamedQuery(name = "WeightTicket.findByDatePosted",
             query = "SELECT w FROM WeightTicket w "
             + " , IN(w.weightTicketDetails) wd "
@@ -91,7 +108,9 @@ import javax.persistence.Temporal;
             + "  AND w.driverName LIKE :driverName"
             + "  AND wd.matnrRef = :loaihang"
             + "  AND w.plateNo LIKE :plateNo"
-            + "  AND w.status = '" + Constants.WeightTicket.STATUS_POSTED + "'"),
+            + "  AND w.status = '" + Constants.WeightTicket.STATUS_POSTED + "'"
+            + "  AND w.mandt = :mandt"
+            + "  AND w.wplant = :wplant"),
     @NamedQuery(name = "WeightTicket.findByDatePostedNull",
             query = "SELECT w FROM WeightTicket w "
             + " , IN(w.weightTicketDetails) wd "
@@ -100,14 +119,18 @@ import javax.persistence.Temporal;
             + "  AND w.driverName LIKE :driverName"
             + "  AND w.plateNo LIKE :plateNo"
             + "  AND wd.matnrRef IS NULL"
-            + "  AND w.status = '" + Constants.WeightTicket.STATUS_POSTED + "'"),
+            + "  AND w.status = '" + Constants.WeightTicket.STATUS_POSTED + "'"
+            + "  AND w.mandt = :mandt"
+            + "  AND w.wplant = :wplant"),
     @NamedQuery(name = "WeightTicket.findByDatePostedNullAll",
             query = "SELECT w FROM WeightTicket w "
             + "WHERE w.createdDate BETWEEN :from AND :to"
             + "  AND w.creator LIKE :creator"
             + "  AND w.driverName LIKE :driverName"
             + "  AND w.plateNo LIKE :plateNo"
-            + "  AND w.status = '" + Constants.WeightTicket.STATUS_POSTED + "'"),
+            + "  AND w.status = '" + Constants.WeightTicket.STATUS_POSTED + "'"
+            + "  AND w.mandt = :mandt"
+            + "  AND w.wplant = :wplant"),
     @NamedQuery(name = "WeightTicket.findByDateAll",
             query = "SELECT w FROM WeightTicket w "
             + " , IN(w.weightTicketDetails) wd "
@@ -115,7 +138,9 @@ import javax.persistence.Temporal;
             + "  AND w.creator LIKE :creator"
             + "  AND w.driverName LIKE :driverName"
             + "  AND w.plateNo LIKE :plateNo"
-            + "  AND wd.matnrRef = :loaihang"),
+            + "  AND wd.matnrRef = :loaihang"
+            + "  AND w.mandt = :mandt"
+            + "  AND w.wplant = :wplant"),
     @NamedQuery(name = "WeightTicket.findByDateAllNull",
             query = "SELECT w FROM WeightTicket w "
             + " , IN(w.weightTicketDetails) wd "
@@ -123,13 +148,17 @@ import javax.persistence.Temporal;
             + "  AND w.creator LIKE :creator"
             + "  AND w.driverName LIKE :driverName"
             + "  AND w.plateNo LIKE :plateNo"
-            + "  AND wd.matnrRef IS NULL"),
+            + "  AND wd.matnrRef IS NULL"
+            + "  AND w.mandt = :mandt"
+            + "  AND w.wplant = :wplant"),
     @NamedQuery(name = "WeightTicket.findByDateAllNullAll",
             query = "SELECT w FROM WeightTicket w "
             + "WHERE w.createdDate BETWEEN :from AND :to"
             + "  AND w.creator LIKE :creator"
             + "  AND w.plateNo LIKE :plateNo"
-            + "  AND w.driverName LIKE :driverName"),
+            + "  AND w.driverName LIKE :driverName"
+            + "  AND w.mandt = :mandt"
+            + "  AND w.wplant = :wplant"),
     @NamedQuery(name = "WeightTicket.findByIdSeqDay",
             query = "SELECT w FROM WeightTicket w "
             + "WHERE w.id = :id"

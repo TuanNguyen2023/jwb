@@ -10,10 +10,9 @@ import org.quartz.JobExecutionException;
  */
 public class SyncMasterDataJob implements Job {
 
-    SyncMasterDataService syncMasterDataService = new SyncMasterDataService();
-
     @Override
     public void execute(JobExecutionContext jec) throws JobExecutionException {
+        SyncMasterDataService syncMasterDataService = new SyncMasterDataService();
         syncMasterDataService.syncMasterData();
     }
 }

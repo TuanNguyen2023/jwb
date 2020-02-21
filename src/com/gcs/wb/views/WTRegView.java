@@ -2622,9 +2622,12 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
             WeightTicket weightTicket = weightTicketRegistarationController.findByDeliveryOrderNo(deliveryOrderNo);
             String Lfart = outboundDelivery.getLfart();
 
-            if ((sDoType.contains(Lfart) && outboundDelivery.getWbstk() == 'X'
+            //if ((sDoType.contains(Lfart) && outboundDelivery.getWbstk() == 'C'
+//               && outboundDelivery.getWerks().equalsIgnoreCase(wplant))
+//                  || (weightTicket != null && weightTicket.isPosted())) {
+            if ((outboundDelivery.getWbstk() == 'C'
                     && outboundDelivery.getWerks().equalsIgnoreCase(wplant))
-                    || (weightTicket != null && !weightTicket.isPosted())) {
+                    || (weightTicket != null && weightTicket.isPosted())) {
                 return true;
             } else {
                 return false;

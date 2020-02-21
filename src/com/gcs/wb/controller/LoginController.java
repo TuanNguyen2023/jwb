@@ -36,7 +36,6 @@ public class LoginController {
     private AppConfig appConfig;
     private Configuration configuration;
     private Credentials credentials = null;
-    private SAPSetting sapSetting = null;
     private User user = null;
     private String lclient = null;
     private String username = null;
@@ -46,7 +45,6 @@ public class LoginController {
     private LoginService loginService = new LoginService();
     ResourceMap resourceMap = Application.getInstance(WeighBridgeApp.class).getContext().getResourceMap(LoginView.class);
     private JFrame mainFrame = WeighBridgeApp.getApplication().getMainFrame();
-    private SyncMasterDataService syncMasterDataService = new SyncMasterDataService();
 
     public LoginController(String username, String password) {
         userRepository = new UserRepository();
@@ -72,10 +70,6 @@ public class LoginController {
         return offlineMode;
     }
 
-    public SAPSetting getSapSetting() {
-        return sapSetting;
-    }
-
     public User getUser() {
         return user;
     }
@@ -85,8 +79,6 @@ public class LoginController {
         userGetDetailBapi.setUserName(username);
 
         try {
-            sapSetting = sapSettingRepository.getSAPSetting();
-
             Session session = loginService.getSapSession(credentials);
             boolean onlineMode = true;
             try {
@@ -110,7 +102,9 @@ public class LoginController {
                 String roles = loginService.getRoles(userGetDetailBapi);
 
                 loginService.asyncUser(session, userGetDetailAddrStructure, roles, user, username, password);
-                syncMasterDataService.syncMasterData();
+
+                SyncMasterDataService syncMasterDataService = new SyncMasterDataService();
+                syncMasterDataService.syncMasterDataWhenLogin();
 
                 // init sync master data cron job
                 (new CronTriggerService()).execute();

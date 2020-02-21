@@ -23,6 +23,7 @@ import javax.persistence.Table;
 @Table(name = "tbl_sloc")
 @NamedQueries({
     @NamedQuery(name = "SLoc.findAll", query = "SELECT s FROM SLoc s"),
+    @NamedQuery(name = "SLoc.findByMandtWplant", query = "SELECT s FROM SLoc s WHERE s.mandt = :mandt AND s.wplant = :wplant"),
     @NamedQuery(name = "SLoc.findByLgort", query = "SELECT s FROM SLoc s WHERE s.lgort = :lgort")
 })
 public class SLoc implements Serializable {

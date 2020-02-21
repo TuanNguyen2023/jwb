@@ -39,4 +39,16 @@ public class MaterialRepository {
         }
         return material;
     }
+    
+    public boolean hasData(String mandt, String wplant) {
+        TypedQuery<Material> typedQuery = entityManager.createNamedQuery("Material.findByMandtWplant", Material.class);
+        typedQuery.setParameter("mandt", mandt);
+        typedQuery.setParameter("wplant", wplant);
+        List<Material> materials = typedQuery.getResultList();
+        if (materials != null && materials.size() > 0) {
+            return true;
+        }
+
+        return false;
+    }
 }
