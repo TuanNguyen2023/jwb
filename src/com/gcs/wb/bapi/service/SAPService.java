@@ -51,6 +51,7 @@ import com.gcs.wb.jpa.entity.Vendor;
 import com.gcs.wb.jpa.repositorys.BatchStockRepository;
 import com.gcs.wb.jpa.repositorys.MaterialInternalRepository;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
+import com.gcs.wb.jpa.repositorys.SAPSettingRepository;
 import com.gcs.wb.jpa.repositorys.SLocRepository;
 import com.gcs.wb.jpa.repositorys.TransportAgentRepository;
 import com.gcs.wb.jpa.repositorys.TransportAgentVehicleRepository;
@@ -90,6 +91,7 @@ public class SAPService {
     TransportAgentVehicleRepository transportAgentVehicleRepository = new TransportAgentVehicleRepository();
     MaterialInternalRepository materialInternalRepository = new MaterialInternalRepository();
     MaterialRepository materialRepository = new MaterialRepository();
+    SAPSettingRepository sapSettingRepository = new SAPSettingRepository();
 
     AppConfig config = WeighBridgeApp.getApplication().getConfig();
     Configuration configuration = config.getConfiguration();
@@ -100,7 +102,7 @@ public class SAPService {
     Session session = WeighBridgeApp.getApplication().getSAPSession();
 
     /**
-     * get  Material model
+     * get Material model
      */
     public DefaultComboBoxModel getMaterialModel() {
         //get data from DB
@@ -156,13 +158,13 @@ public class SAPService {
 
         if (!WeighBridgeApp.getApplication().isOfflineMode()) {
             // get data SAP
-            List<MaterialInternal> matsSap = new ArrayList<>();
+            List<Material> matsSap = new ArrayList<>();
             MaterialGetListBapi bapi = new MaterialGetListBapi();
             try {
                 session.execute(bapi);
                 List<MaterialGetListStructure> mats = bapi.getEtMaterial();
                 MaterialsV2Converter materialsV2Converter = new MaterialsV2Converter();
-                matsSap = materialsV2Converter.convertMaster(mats);
+                matsSap = materialsV2Converter.convert(mats);
             } catch (Exception ex) {
             }
 
@@ -178,7 +180,7 @@ public class SAPService {
                 }
             }
             // update SAP -> DB
-            for (MaterialInternal mSap : matsSap) {
+            for (Material mSap : matsSap) {
                 int index = materialsDB.indexOf(mSap);
                 if (index == -1) {
                     entityManager.persist(mSap);
@@ -351,7 +353,7 @@ public class SAPService {
         List<BatchStock> batchs = batchStockRepository.getListBatchStock(configuration.getWkPlant(), lgortSloc, matnr);
         // get data SAP
         BatchStocksGetListBapi bBatch = new BatchStocksGetListBapi();
-        List<BatchStock> batchStockSaps = new ArrayList<BatchStock>();
+        List<BatchStock> batchStockSaps = new ArrayList<>();
         bBatch.setIdMandt(configuration.getSapClient());
         bBatch.setIdWerks(configuration.getWkPlant());
         bBatch.setIdLgort(lgortSloc);
@@ -363,7 +365,7 @@ public class SAPService {
                 //BatchStock bs = batchStockRepository.findByWerksLgortMatnrCharg(configuration.getWkPlant(), b.getLgort(), b.getMatnr(), b.getCharg());
                 BatchStock bs = new BatchStock(configuration.getSapClient(), configuration.getWkPlant(), b.getLgort(), b.getMatnr(), b.getCharg());
                 bs.setLvorm(b.getLvorm() == null || b.getLvorm().trim().isEmpty() ? ' ' : b.getLvorm().charAt(0));
-                
+
                 batchStockSaps.add(bs);
             }
 
@@ -649,7 +651,7 @@ public class SAPService {
         }
         return null;
     }
-    
+
     public String validateVendor(String idVendor, String mantr, String vendorType, String wplantPo) {
         VendorValiationCheckBapi bapi = new VendorValiationCheckBapi();
         bapi.setIvVendor(idVendor);
@@ -674,6 +676,8 @@ public class SAPService {
             session.execute(plantGetDetailBapi);
             HashMap vals = plantGetDetailBapi.getEsPlant();
 
+            SAPSetting localSetting = sapSettingRepository.findByMandtAndWplant(mandt, wplant);
+
             if (vals.size() > 0) {
                 SAPSetting sapSetting = new SAPSetting();
                 sapSetting.setName1((String) vals.get(PlantGeDetailConstants.NAME1));
@@ -685,7 +689,16 @@ public class SAPService {
                     entityTransaction.begin();
                 }
 
-                entityManager.persist(sapSetting);
+                if (localSetting == null) {
+                    entityManager.persist(sapSetting);
+                } else {
+                    localSetting.setName1(sapSetting.getName1());
+                    localSetting.setName2(sapSetting.getName2());
+                    entityManager.merge(localSetting);
+
+                    sapSetting = localSetting;
+                }
+
                 entityTransaction.commit();
                 entityManager.clear();
 

@@ -38,7 +38,7 @@ public class WeighBridgeApp extends SingleFrameApplication {
 
     // <editor-fold defaultstate="collapsed" desc="Variables declaration area">
     private LoginView vLogin = null;
-    private WeighBridgeView vMain = null;
+    private static WeighBridgeView vMain = null;
     private SettingView vSetting = null;
     private ConfigView configView = null;
     private AppConfig config = null;
@@ -133,6 +133,16 @@ public class WeighBridgeApp extends SingleFrameApplication {
         }
     }
 
+    public static void restartApplication() {
+        getApplication().hide(vMain);
+
+        vMain = new WeighBridgeView(getApplication());
+        vMain.getComponent().setSize(800, 600);
+        vMain.getFrame().setSize(800, 600);
+        vMain.getRootPane().setSize(800, 600);
+        getApplication().show(vMain);
+    }
+
     @Override
     protected void shutdown() {
         JPAConnector.close();
@@ -167,7 +177,7 @@ public class WeighBridgeApp extends SingleFrameApplication {
 
         boolean connected = false;
         Logger.getLogger(this.getClass()).info("@jSerialComm, connect to weight bridge, " + (isMettlerScale ? "@ScaleMettler" : "@SerialComm"));
-        Logger.getLogger(this.getClass()).info("@jSerialComm, port: " + portName + " speed: " + speed + " databit: " + dataBits  + " stopbit: " + stopBits);
+        Logger.getLogger(this.getClass()).info("@jSerialComm, port: " + portName + " speed: " + speed + " databit: " + dataBits + " stopbit: " + stopBits);
         try {
             if (isMettlerScale) {
                 if (mettlerScale != null) {

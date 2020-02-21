@@ -23,6 +23,7 @@ import javax.persistence.Table;
 @Table(name = "tbl_material")
 @NamedQueries({
     @NamedQuery(name = "Material.findAll", query = "SELECT m FROM Material m"),
+    @NamedQuery(name = "Material.findByMandtWplant", query = "SELECT m FROM Material m WHERE m.mandt = :mandt AND m.wplant = :wplant"),
     @NamedQuery(name = "Material.CheckPOSTO", query = "SELECT m FROM Material m WHERE m.matnr = :matnr")
 })
 public class Material implements Serializable {

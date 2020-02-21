@@ -9,7 +9,13 @@ import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.jpa.entity.Material;
+import com.gcs.wb.jpa.entity.SAPSetting;
 import com.gcs.wb.jpa.entity.SLoc;
+import com.gcs.wb.jpa.repositorys.BatchStockRepository;
+import com.gcs.wb.jpa.repositorys.MaterialRepository;
+import com.gcs.wb.jpa.repositorys.SLocRepository;
+import com.gcs.wb.jpa.repositorys.VendorRepository;
+import java.util.ArrayList;
 import java.util.List;
 import org.apache.log4j.Logger;
 
@@ -19,6 +25,11 @@ import org.apache.log4j.Logger;
  */
 public class SyncMasterDataService {
 
+    private VendorRepository vendorRepository = new VendorRepository();
+    private MaterialRepository materialRepository = new MaterialRepository();
+    private SLocRepository sLocRepository = new SLocRepository();
+    private BatchStockRepository batchStockRepository = new BatchStockRepository();
+
     private SAPService sapService = new SAPService();
     private Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
     public static Logger logger = Logger.getLogger(SyncMasterDataService.class);
@@ -27,14 +38,15 @@ public class SyncMasterDataService {
         logger.info("Sync master data is processing...");
 
         logger.info("Sync SAP setting...");
-        syncSapSetting();
-        
+        SAPSetting sapSetting = syncSapSetting();
+        WeighBridgeApp.getApplication().setSapSetting(sapSetting);
+
         logger.info("Sync vendor...");
         syncVendor();
 
         logger.info("Sync material...");
         List<Material> materials = syncMaterial();
-        
+
         logger.info("Sync sloc...");
         List<SLoc> slocs = syncSloc();
 
@@ -46,12 +58,53 @@ public class SyncMasterDataService {
                 }
             }
         }
-        
+
         logger.info("Sync master data is finished...");
     }
 
-    public void syncSapSetting() {
-        sapService.syncSapSetting(configuration.getSapClient(), configuration.getWkPlant());
+    public void syncMasterDataWhenLogin() {
+        String mandt = configuration.getSapClient();
+        String wplant = configuration.getWkPlant();
+
+        logger.info("Sync master data is processing...");
+
+        logger.info("Sync SAP setting...");
+        SAPSetting sapSetting = syncSapSetting();
+        WeighBridgeApp.getApplication().setSapSetting(sapSetting);
+
+        logger.info("Sync vendor...");
+        if (vendorRepository.getListVendor().isEmpty()) {
+            syncVendor();
+        }
+
+        logger.info("Sync material...");
+        List<Material> materials = new ArrayList<>();
+        if (!materialRepository.hasData(mandt, wplant)) {
+            materials = syncMaterial();
+        }
+
+        logger.info("Sync sloc...");
+        List<SLoc> slocs = new ArrayList<>();
+        if (!sLocRepository.hasData(mandt, wplant)) {
+            slocs = syncSloc();
+        }
+
+        logger.info("Sync batch stock...");
+        if (!batchStockRepository.hasData(mandt, wplant)) {
+            if (!materials.isEmpty() && !slocs.isEmpty()) {
+                for (SLoc sloc : slocs) {
+                    for (Material material : materials) {
+                        syncBatchStock(sloc.getLgort(), material.getMatnr());
+                    }
+                }
+            }
+        }
+
+        logger.info("Sync master data is finished...");
+    }
+
+    public SAPSetting syncSapSetting() {
+        return sapService.syncSapSetting(configuration.getSapClient(), configuration.getWkPlant());
     }
 
     public void syncVendor() {
