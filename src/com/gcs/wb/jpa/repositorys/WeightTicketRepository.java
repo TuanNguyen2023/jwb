@@ -337,6 +337,7 @@ public class WeightTicketRepository {
     
     public List<WeightTicket> findListWeightTicket(String month, String year, String tagent, String matnr, List<Character> modes, boolean isPosted) throws Exception {
         String query = "SELECT w FROM WeightTicket w "
+                + " , IN(w.weightTicketDetails) wd "
                 + "WHERE FUNC('YEAR', w.createdDate) = :year "
                 + " AND FUNC('MONTH', w.createdDate) = :month "
                 + " AND w.regType IN :regType "
@@ -347,9 +348,9 @@ public class WeightTicketRepository {
         }
         if (!matnr.equalsIgnoreCase("-2")) {
             if (!matnr.equalsIgnoreCase("-1")) {
-                query += " AND w.matnrRef = :matnrRef ";
+                query += " AND wd.matnrRef = :matnrRef ";
             } else {
-                query += " AND w.matnrRef IS NULL ";
+                query += " AND wd.matnrRef IS NULL ";
             }
         }
         if (isPosted) {
