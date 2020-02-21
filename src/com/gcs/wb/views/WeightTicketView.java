@@ -1818,7 +1818,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             if (!weightTicket.isPosted()) {
                 valid = true;
             }
-            //20121203 HOANGVV : check KL Dang Ky = KL Thuc te cho xi mang
+            //check KL Dang Ky = KL Thuc te cho xi mang
             OutboundDelivery outdel_tmp = null;
             List<OutboundDeliveryDetail> details_list = new ArrayList<>();
             OutboundDeliveryDetail item = null;
@@ -1914,44 +1914,44 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     Double result = (double) 1;
                     Double remaining = (double) 0;
 
-                    if (result != null && remaining != null) {
-                        if (result > remaining) {
-                            //}+20101202#02 check material availability
-                            //+{add logic check confirm
-                            Variant vari = weightTicketController.findByParam(Constants.WeightTicketView.PROCESS_ORDER_CF);
-                            String chkPROC1 = "";
-                            if (vari != null) {
-                                try {
-                                    chkPROC1 = vari.getValue().toString();
-                                } catch (Exception e) {
-                                }
-                            }
-                            entityManager.clear();
-                            //if (chkPROC1.equals("X")){ //20100214#01 huy phieu can
-                            if (chkPROC1.equals("X")) { //20100214#01 huy phieu can
-                                //+}add logic check confirm
-                                //JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), "Không đủ tồn kho XM PCB40!!!");
-                                WeightTicketDetail weightTicketDetail = weightTicket.getWeightTicketDetail();
-                                ProcOrdView procoView = new ProcOrdView(WeighBridgeApp.getApplication().getMainFrame(), null);
-                                procoView.setLocationRelativeTo(WeighBridgeApp.getApplication().getMainFrame());
-                                WeighBridgeApp.getApplication().show(procoView);
-//                                if (!procoView.isShowing()) {
-//                                    if (procoView.getProcOrd() != null) {
-//                                        weightTicketDetail.setPpProcord(procoView.getProcOrd());
-//                                    } else {
-//                                        weightTicketDetail.setPpProcord(null);
-//                                    }
-//                                    procoView.dispose();
-//                                    procoView = null;
-//                                    if (weightTicketDetail.getPpProcord() == null) {
-//                                        JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), resourceMapMsg.getString("msg.needProcessOrder"));
-//                                        return null;
-//                                    }
+//                    if (result != null && remaining != null) {
+//                        if (result > remaining) {
+//                            //}+20101202#02 check material availability
+//                            //+{add logic check confirm
+//                            Variant vari = weightTicketController.findByParam(Constants.WeightTicketView.PROCESS_ORDER_CF);
+//                            String chkPROC1 = "";
+//                            if (vari != null) {
+//                                try {
+//                                    chkPROC1 = vari.getValue().toString();
+//                                } catch (Exception e) {
 //                                }
-                            }
-                            //{+20101202#02 check material availability
-                        }
-                    }
+//                            }
+//                            entityManager.clear();
+//                            //if (chkPROC1.equals("X")){ //20100214#01 huy phieu can
+//                            if (chkPROC1.equals("X")) { //20100214#01 huy phieu can
+//                                //+}add logic check confirm
+//                                //JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), "Không đủ tồn kho XM PCB40!!!");
+//                                WeightTicketDetail weightTicketDetail = weightTicket.getWeightTicketDetail();
+//                                ProcOrdView procoView = new ProcOrdView(WeighBridgeApp.getApplication().getMainFrame(), null);
+//                                procoView.setLocationRelativeTo(WeighBridgeApp.getApplication().getMainFrame());
+//                                WeighBridgeApp.getApplication().show(procoView);
+////                                if (!procoView.isShowing()) {
+////                                    if (procoView.getProcOrd() != null) {
+////                                        weightTicketDetail.setPpProcord(procoView.getProcOrd());
+////                                    } else {
+////                                        weightTicketDetail.setPpProcord(null);
+////                                    }
+////                                    procoView.dispose();
+////                                    procoView = null;
+////                                    if (weightTicketDetail.getPpProcord() == null) {
+////                                        JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), resourceMapMsg.getString("msg.needProcessOrder"));
+////                                        return null;
+////                                    }
+////                                }
+//                            }
+//                            //{+20101202#02 check material availability
+//                        }
+//                    }
                     //}+20101202#02 check material availability
                 }
                 return new SaveWTTask(WeighBridgeApp.getApplication());
@@ -3261,7 +3261,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                 }
 
                                 if (objBapi_Po instanceof GoodsMvtPoCreateBapi) {
-                                    weightTicketDetail.setMatDocGi(((GoodsMvtPoCreateBapi) objBapi_Po).getMatDoc());
+                                    weightTicketDetail.setMatDocGr(((GoodsMvtPoCreateBapi) objBapi_Po).getMatDoc());
                                     weightTicketDetail.setDocYear(Integer.valueOf(((GoodsMvtPoCreateBapi) objBapi_Po).getMatYear()));
                                     try {
                                         bapi_message = ((GoodsMvtPoCreateBapi) objBapi_Po).getReturn().get(0).getMessage().toString();
@@ -3291,7 +3291,9 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     }
                                 }
                                 
-                                if (weightTicketDetail.getMatDoc() == null || weightTicketDetail.getMatDocGi()== null || weightTicketDetail.getMatDoc().equals("")) {
+                                if (weightTicketDetail.getMatDoc() == null || weightTicketDetail.getMatDoc().equals("") ||
+                                        ((objBapi_Po != null) && (weightTicketDetail.getMatDocGr()== null || weightTicketDetail.getMatDocGr().equals(""))) || 
+                                        ((objBapi_Posto != null) && (weightTicketDetail.getMatDocGi()== null || weightTicketDetail.getMatDocGi().equals("")))) {
                                     revertCompletedDO(completedDO, null, null);
                                     weightTicket.setPosted(false);
                                     if (bapi_message == "") {
@@ -3300,12 +3302,13 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     JOptionPane.showMessageDialog(rootPane, bapi_message);
                                     completed = false;
                                     entityManager.clear();
-                                } else if ((weightTicketDetail.getMatDoc() != null) && (!weightTicketDetail.getMatDoc().equals(""))
-                                        && (weightTicketDetail.getMatDocGi() != null) && (!weightTicketDetail.getMatDocGi().equals(""))) {
+                                } else if ((weightTicketDetail.getMatDoc() != null) && (!weightTicketDetail.getMatDoc().equals("")) &&
+                                    ((objBapi_Po == null) || (objBapi_Po != null && weightTicketDetail.getMatDocGr()!= null && !weightTicketDetail.getMatDocGr().equals(""))) || 
+                                    ((objBapi_Posto == null) || (objBapi_Posto != null && weightTicketDetail.getMatDocGi()!= null && !weightTicketDetail.getMatDocGi().equals("")))) {
                                     weightTicket.setPosted(true);
                                     completedDO.add(weightTicketDetail.getDeliveryOrderNo());
                                 }
-
+                                
                             } catch (Exception ex) {
                                 if (objBapi instanceof WsDeliveryUpdateBapi) {
                                     if (((WsDeliveryUpdateBapi) objBapi).getReturn() != null
@@ -3357,7 +3360,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                        objBapi = getPgmVl02nBapi(weightTicket, outbDel, modeFlg);
                     }
 
-                    // ban hangf thuy
+                    // ban hang thuy
                     if(weightTicket.getMode().equals("OUT_SELL_WATERWAY")) {
                         modeFlg = "Z002";
                         objBapi = getPgmVl02nBapi(weightTicket, outbDel, modeFlg);

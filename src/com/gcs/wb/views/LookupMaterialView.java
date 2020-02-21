@@ -205,7 +205,7 @@ public class LookupMaterialView extends javax.swing.JDialog {
         protected Object doInBackground() {
             materials.clear();
             // sync SAP-DB material
-            sapService.syncMaterialMaster();
+            sapService.getMaterialModel();
             // get data Vat tu
             materials.addAll(lookupMaterialController.getListMaterialByDesc(txtMatDesc.getText().trim()));
             wtData = new Object[materials.size()][wtCols.length];

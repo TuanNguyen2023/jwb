@@ -4,6 +4,7 @@
  */
 package com.gcs.wb.jpa;
 
+import com.gcs.wb.model.AppConfig;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
