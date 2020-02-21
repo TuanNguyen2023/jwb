@@ -79,13 +79,8 @@ public class WeightTicketRegistrationValidation {
         for (String DONum : values) {
             DONum = DONum.trim();
             try {
-                if (DONum.length() == 10) {
-                    Long.parseLong(DONum);
-                    result = true;
-                } else {
-                    result = false;
-                    break;
-                }
+                Long.parseLong(DONum);
+                result = true;
             } catch (NumberFormatException ex) {
                 result = false;
                 break;
@@ -109,12 +104,8 @@ public class WeightTicketRegistrationValidation {
         value = value.trim();
 
         try {
-            if (value.length() == 10) {
-                Long.parseLong(value);
-                result = true;
-            } else {
-                result = false;
-            }
+            Long.parseLong(value);
+            result = true;
         } catch (NumberFormatException ex) {
             result = false;
         }
