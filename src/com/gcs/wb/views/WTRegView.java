@@ -2098,7 +2098,7 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
                 if (!weightTicketRegistarationController.checkPlateNoInVendor(transportVendor.getLifnr(), plateNo)) {
                     isPlateNoValid = false;
                     lblPlateNoN.setForeground(Color.red);
-                    JOptionPane.showMessageDialog(rootPane, "msg.validateBSxe");
+                    JOptionPane.showMessageDialog(rootPane, "Vui lòng nhập lại biển số xe!");
                 }
             }
         }
@@ -3194,14 +3194,7 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
                 setStep(2, resourceMapMsg.getString("checkPOInSap"));
                 PurchaseOrder sapPurchaseOrder = sapService.getPurchaseOrder(poNum);
                 List<PurchaseOrderDetail> poItems = sapPurchaseOrder.getPurchaseOrderDetails();
-                
-                //Check Delivery Plant with Configuration parameter.
-                if (!(poItems.get(0).getPlant()).equals(configuration.getWkPlant())) {
-                    String msg = "Số P.O không được phép xuất/nhập hàng tại nhà máy này!";
-                    setMessage(msg);
-                    JOptionPane.showMessageDialog(rootPane, msg);
-                    return null;
-                }
+
                 setStep(3, resourceMapMsg.getString("msg.saveDataToDb"));
                 return sapService.syncPurchaseOrder(sapPurchaseOrder, purchaseOrder);
             } catch (Exception ex) {

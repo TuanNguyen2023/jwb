@@ -3360,7 +3360,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                        objBapi = getPgmVl02nBapi(weightTicket, outbDel, modeFlg);
                     }
 
-                    // ban hangf thuy
+                    // ban hang thuy
                     if(weightTicket.getMode().equals("OUT_SELL_WATERWAY")) {
                         modeFlg = "Z002";
                         objBapi = getPgmVl02nBapi(weightTicket, outbDel, modeFlg);
