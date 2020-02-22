@@ -107,6 +107,8 @@ public class Configuration implements Serializable {
     private String wb2MettlerParam;
     @Column(name = "wplant_map")
     private String wplantMap;
+    @Column(name = "tolerance")
+    private BigDecimal tolerance;
 
     public Configuration() {
     }
@@ -366,7 +368,15 @@ public class Configuration implements Serializable {
     public void setWb2MettlerParam(String wb2MettlerParam) {
         this.wb2MettlerParam = wb2MettlerParam;
     }
-    
+
+    public BigDecimal getTolerance() {
+        return tolerance;
+    }
+
+    public void setTolerance(BigDecimal tolerance) {
+        this.tolerance = tolerance;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
