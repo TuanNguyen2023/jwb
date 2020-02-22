@@ -137,4 +137,8 @@ public class TransportAgentService {
             entityManager.clear();
         }
     }
+    
+    public Vehicle findByPlateNo(String plateNo) {
+        return vehicleRepository.findByPlateNo(plateNo);
+    }
 }

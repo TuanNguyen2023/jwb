@@ -118,7 +118,7 @@
                           <Component id="jButton2" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace pref="57" max="32767" attributes="0"/>
+                  <EmptySpace pref="52" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -1277,9 +1277,7 @@
             </Component>
             <Component class="javax.swing.JComboBox" name="cbxSLoc">
               <Properties>
-                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor" postCode="cbxSLoc.setRenderer(new DefaultListCellRenderer() {&#xa;           @Override&#xa;           public Component getListCellRendererComponent(&#xa;                   JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {&#xa;               super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);&#xa;               if (value instanceof SLoc) {&#xa;                   SLoc sloc = (SLoc)value;&#xa;                   setText(sloc.getLgort().concat(&quot; - &quot;).concat(sloc.getLgobe()));&#xa;//                    setText(sloc.getLgobe().concat(&quot; - &quot;).concat(sloc.getLgort()));&#xa;               }&#xa;               return this;&#xa;           }&#xa;       });">
-                  <Connection code="sapService.getSlocModel()" type="code"/>
-                </Property>
+                <Property name="model" postCode="cbxSLoc.setRenderer(new DefaultListCellRenderer() {&#xa;           @Override&#xa;           public Component getListCellRendererComponent(&#xa;                   JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {&#xa;               super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);&#xa;               if (value instanceof SLoc) {&#xa;                   SLoc sloc = (SLoc)value;&#xa;                   setText(sloc.getLgort().concat(&quot; - &quot;).concat(sloc.getLgobe()));&#xa;//                    setText(sloc.getLgobe().concat(&quot; - &quot;).concat(sloc.getLgort()));&#xa;               }&#xa;               return this;&#xa;           }&#xa;       });"/>
                 <Property name="name" type="java.lang.String" value="cbxSLoc" noResource="true"/>
               </Properties>
               <Events>
@@ -1321,9 +1319,6 @@
             </Component>
             <Component class="javax.swing.JComboBox" name="cbxVendorLoading">
               <Properties>
-                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="sapService.getVendorList()" type="code"/>
-                </Property>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="com.gcs.wb.views.WeightTicketView" id="acceptBatch" methodName="acceptBatch"/>
                 </Property>
@@ -1338,9 +1333,6 @@
             </Component>
             <Component class="javax.swing.JComboBox" name="cbxVendorTransport">
               <Properties>
-                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="sapService.getVendorList()" type="code"/>
-                </Property>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="com.gcs.wb.views.WeightTicketView" id="acceptBatch" methodName="acceptBatch"/>
                 </Property>

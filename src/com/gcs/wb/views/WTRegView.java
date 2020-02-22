@@ -17,6 +17,7 @@ import com.gcs.wb.controller.WeightTicketController;
 import com.gcs.wb.controller.WeightTicketRegistarationController;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.*;
+import com.gcs.wb.jpa.repositorys.MaterialGroupRepository;
 import com.gcs.wb.jpa.repositorys.MaterialInternalRepository;
 import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
 import com.gcs.wb.model.WeighingMode;
@@ -41,6 +42,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Stream;
+import org.apache.commons.lang.SerializationUtils;
 import org.jdesktop.application.Application;
 
 public class WTRegView extends javax.swing.JInternalFrame {
@@ -76,6 +78,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
     private PurchaseOrderRepository purchaseOrderRepository = new PurchaseOrderRepository();
     MaterialInternalRepository materialInternalRepository = new MaterialInternalRepository();
     WeightTicketController weightTicketController = new WeightTicketController();
+    MaterialGroupRepository materialGroupRepository = new MaterialGroupRepository();
     List<String> cbxSlocs = new ArrayList<String>();
 
     public WTRegView() {
@@ -148,6 +151,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         };
         cbxSlocN.setRenderer(cellRendererForSloc);
         cbxSloc2N.setRenderer(cellRendererForSloc);
+
         DefaultListCellRenderer cellRendererForBatchStock = new DefaultListCellRenderer() {
 
             @Override
@@ -163,6 +167,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         };
         cbxBatchStockN.setRenderer(cellRendererForBatchStock);
         cbxBatchStock2N.setRenderer(cellRendererForBatchStock);
+
         DefaultListCellRenderer cellRendererVendor = new DefaultListCellRenderer() {
 
             @Override
@@ -178,6 +183,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         };
         cbxVendorLoadingN.setRenderer(cellRendererVendor);
         cbxVendorTransportN.setRenderer(cellRendererVendor);
+
         cbxSuppliesIdN.setRenderer(new DefaultListCellRenderer() {
 
             @Override
@@ -194,11 +200,15 @@ public class WTRegView extends javax.swing.JInternalFrame {
     }
 
     private void initComboboxModel() {
-        cbxSlocN.setModel(sapService.getSlocModel());
-        cbxSloc2N.setModel(sapService.getSlocModel());
-
-        cbxVendorLoadingN.setModel(sapService.getVendorList());
-        cbxVendorTransportN.setModel(sapService.getVendorList());
+        DefaultComboBoxModel sLocModel = weightTicketRegistarationController.getSlocModel();
+        DefaultComboBoxModel sLoc2Model = (DefaultComboBoxModel) SerializationUtils.clone(sLocModel);
+        cbxSlocN.setModel(sLocModel);
+        cbxSloc2N.setModel(sLoc2Model);
+        
+        DefaultComboBoxModel vendorModel = weightTicketRegistarationController.getVendorModel();
+        DefaultComboBoxModel vendor2Model = (DefaultComboBoxModel) SerializationUtils.clone(vendorModel);
+        cbxVendorLoadingN.setModel(vendorModel);
+        cbxVendorTransportN.setModel(vendor2Model);
     }
 
     /**
@@ -1211,6 +1221,7 @@ private void txtCMNDNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
 }//GEN-LAST:event_txtCMNDNKeyReleased
 
 private void txtPlateNoNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPlateNoNKeyReleased
+    txtPlateNoN.setText(txtPlateNoN.getText().toUpperCase());
     validateForm();
 }//GEN-LAST:event_txtPlateNoNKeyReleased
 
@@ -2551,6 +2562,16 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
                 if (outboundDelivery == null) {
                     throw new Exception(resourceMapMsg.getString("msg.dONotExitst", deliveryOrderNo));
                 }
+                
+                // check status post SAP
+                if (outboundDelivery.getVbelnNach() != null && !outboundDelivery.getVbelnNach().trim().isEmpty()) {
+                    throw new Exception("Số D.O \"" + deliveryOrderNo + "\" đã được nhập hàng tại chứng từ " + outboundDelivery.getVbelnNach() + "!");
+                }
+
+                //Check Delivery Plant with Configuration parameter.
+                if (!(outboundDelivery.getWerks()).equals(configuration.getWkPlant())) {
+                    throw new Exception("Số D.O không được phép xuất/nhập hàng tại nhà máy này!");
+                }
 
                 // check mapping Plate No
                 String plateNo = txtPlateNoN.getText().trim();
@@ -2562,6 +2583,11 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
                 // check DO in used
                 if (isDOInUsed(deliveryOrderNo, outboundDelivery)) {
                     throw new Exception(resourceMapMsg.getString("msg.typeDO", deliveryOrderNo, getMode(outboundDelivery)));
+                }
+                
+                // check out together
+                if (deliveryOrderNos.length > 1 && !checkMaterial(outboundDelivery)) {
+                    throw new Exception(resourceMapMsg.getString("msg.materialNotTogether"));
                 }
 
                 // set DO data to Weight ticket
@@ -2576,21 +2602,6 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
             try {
                 setStep(2, resourceMapMsg.getString("checkDOInSap"));
                 OutboundDelivery sapOutboundDelivery = sapService.getOutboundDelivery(deliveryOrderNo);
-                // check status post SAP
-                if (sapOutboundDelivery.getVbelnNach() != null && !sapOutboundDelivery.getVbelnNach().trim().isEmpty()) {
-                    String msg = "Số D.O \" " + deliveryOrderNo + " \" đã được nhập hàng tại chứng từ " + sapOutboundDelivery.getVbelnNach() + "!";
-                    setMessage(msg);
-                    JOptionPane.showMessageDialog(rootPane, msg);
-                    return null;
-                }
-
-                //Check Delivery Plant with Configuration parameter.
-                if (!(sapOutboundDelivery.getWerks()).equals(configuration.getWkPlant())) {
-                    String msg = "Số D.O không được phép xuất/nhập hàng tại nhà máy này!";
-                    setMessage(msg);
-                    JOptionPane.showMessageDialog(rootPane, msg);
-                    return null;
-                }
 
                 setStep(3, resourceMapMsg.getString("msg.saveDataToDb"));
                 return sapService.syncOutboundDelivery(sapOutboundDelivery, outboundDelivery, deliveryOrderNo);
@@ -2618,7 +2629,9 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
             BigDecimal weight = BigDecimal.ZERO;
             List<OutboundDeliveryDetail> outboundDeliveryDetails = outboundDelivery.getOutboundDeliveryDetails();
             for (OutboundDeliveryDetail outboundDeliveryDetail : outboundDeliveryDetails) {
-                strMaterial.add(outboundDeliveryDetail.getArktx());
+                if (!strMaterial.contains(outboundDeliveryDetail.getArktx())) {
+                    strMaterial.add(outboundDeliveryDetail.getArktx());
+                }
                 weight = weight.add(outboundDeliveryDetail.getLfimg());
             }
 
@@ -2626,6 +2639,12 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
             weightTicketDetail.setRegItemQuantity(weight);
             newWeightTicket.setWeightTicketIdRef(outboundDelivery.getWtIdRef());
             newWeightTicket.addWeightTicketDetail(weightTicketDetail);
+        }
+        
+        private boolean checkMaterial(OutboundDelivery outboundDelivery) {
+            return !outboundDelivery.getOutboundDeliveryDetails().stream().anyMatch(po -> {
+                return !materialGroupRepository.hasData(configuration.getSapClient(), configuration.getWplantMap(), po.getMatnr());
+            });
         }
 
         private boolean isDOInUsed(String deliveryOrderNo, OutboundDelivery outboundDelivery) {
@@ -2940,7 +2959,7 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
         txtDriverNameN.setText("");
         txtCMNDN.setText("");
         txtPlateNoN.setText("");
-        txtTonnageN.setText("1");
+        txtTonnageN.setText("0");
         txtTrailerNoN.setText("");
         txtSlingN.setText("0");
         txtPalletN.setText("0");
@@ -2952,7 +2971,7 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
         txtPOSTONumN.setText("");
         txtSONumN.setText("");
         cbxMaterialTypeN.setSelectedIndex(-1);
-        txtWeightN.setText("1");
+        txtWeightN.setText("0");
         cbxSlocN.setSelectedIndex(-1);
         cbxSloc2N.setSelectedIndex(-1);
         cbxBatchStockN.setSelectedIndex(-1);

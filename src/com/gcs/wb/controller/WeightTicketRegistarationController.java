@@ -11,6 +11,7 @@ import com.gcs.wb.jpa.entity.*;
 import com.gcs.wb.jpa.entity.OutboundDeliveryDetail;
 import com.gcs.wb.jpa.repositorys.MaterialInternalRepository;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
+import com.gcs.wb.jpa.repositorys.SLocRepository;
 import com.gcs.wb.jpa.repositorys.TransportAgentVehicleRepository;
 import com.gcs.wb.jpa.repositorys.VehicleLoadRepository;
 import com.gcs.wb.jpa.repositorys.VendorRepository;
@@ -41,6 +42,7 @@ public class WeightTicketRegistarationController {
     MaterialInternalRepository materialInternalRepository = new MaterialInternalRepository();
     WeightTicketDetailRepository weightTicketDetailRepository = new WeightTicketDetailRepository();
     MaterialRepository materialRepository = new MaterialRepository();
+    SLocRepository sLocRepository = new SLocRepository();
 
     public String getReportName() {
         String reportName = null;
@@ -306,5 +308,13 @@ public class WeightTicketRegistarationController {
             }
         }
         return result;
+    }
+    
+    public DefaultComboBoxModel getSlocModel() {
+        return new DefaultComboBoxModel(sLocRepository.getListSLoc().toArray());
+    }
+    
+    public DefaultComboBoxModel getVendorModel() {
+        return new DefaultComboBoxModel(vendorRepository.getListVendor().toArray());
     }
 }

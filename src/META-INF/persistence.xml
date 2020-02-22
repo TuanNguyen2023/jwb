@@ -23,6 +23,7 @@
     <class>com.gcs.wb.jpa.entity.VehicleLoad</class>
     <class>com.gcs.wb.jpa.entity.MaterialInternal</class>
     <class>com.gcs.wb.jpa.entity.MaterialConstraint</class>
+    <class>com.gcs.wb.jpa.entity.MaterialGroup</class>
     <properties>
       <property name="eclipselink.logging.level.sql" value="FINE"/>
       <property name="hibernate.show_sql" value="true"/>
