@@ -56,6 +56,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 import java.util.logging.Level;
+import org.apache.commons.lang.SerializationUtils;
 
 /*
  *
@@ -192,6 +193,12 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             lblVendorLoading.setVisible(false);
             lblVendorTransport.setVisible(false);
         }
+        
+        cbxSLoc.setModel(weightTicketController.getSlocModel());
+        DefaultComboBoxModel vendorLModel = weightTicketController.getVendorModel();
+        DefaultComboBoxModel vendorTModel = (DefaultComboBoxModel) SerializationUtils.clone(vendorLModel);
+        cbxVendorLoading.setModel(vendorLModel);
+        cbxVendorTransport.setModel(vendorTModel);
     }
 
     /**
@@ -389,7 +396,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         .addComponent(txtWTNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jButton1)
                         .addComponent(jButton2)))
-                .addContainerGap(57, Short.MAX_VALUE))
+                .addContainerGap(52, Short.MAX_VALUE))
         );
 
         pnCurScale.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("pnCurScale.border.title"))); // NOI18N
@@ -998,7 +1005,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             }
         });
 
-        cbxSLoc.setModel(sapService.getSlocModel());
         cbxSLoc.setRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(
@@ -1046,7 +1052,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             }
         });
 
-        cbxVendorLoading.setModel(sapService.getVendorList());
         cbxVendorLoading.setAction(actionMap.get("acceptBatch")); // NOI18N
         cbxVendorLoading.setName("cbxVendorLoading"); // NOI18N
         cbxVendorLoading.setRenderer(new DefaultListCellRenderer() {
@@ -1068,7 +1073,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             }
         });
 
-        cbxVendorTransport.setModel(sapService.getVendorList());
         cbxVendorTransport.setAction(actionMap.get("acceptBatch")); // NOI18N
         cbxVendorTransport.setName("cbxVendorTransport"); // NOI18N
         cbxVendorTransport.setRenderer(new DefaultListCellRenderer() {

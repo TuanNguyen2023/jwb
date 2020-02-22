@@ -34,7 +34,7 @@ public class TransportAgentController {
         transportAgentService.vehicleRemoveActionPerformed(transportAgentSelected, vehicleSelected);
     }
     
-//    public void prohibitApplyActionPerformed(Vehicle vehicleSelected, boolean isProhibitVehicle) {
-//        transportAgentService.prohibitApplyActionPerformed(vehicleSelected, isProhibitVehicle);
-//    }
+    public Vehicle getVehicle(String plateNo) {
+        return transportAgentService.findByPlateNo(plateNo);
+    }
 }

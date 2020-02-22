@@ -15,6 +15,8 @@ import com.gcs.wb.jpa.entity.PurchaseOrder;
 import com.gcs.wb.jpa.entity.SLoc;
 import com.gcs.wb.jpa.entity.Variant;
 import com.gcs.wb.jpa.entity.WeightTicket;
+import com.gcs.wb.jpa.repositorys.SLocRepository;
+import com.gcs.wb.jpa.repositorys.VendorRepository;
 import com.gcs.wb.service.WeightTicketService;
 import java.util.Date;
 import java.util.List;
@@ -30,6 +32,8 @@ import org.hibersap.session.Session;
 public class WeightTicketController {
 
     WeightTicketService weightTicketService = new WeightTicketService();
+    SLocRepository sLocRepository = new SLocRepository();
+    VendorRepository vendorRepository = new VendorRepository();
 
     public DefaultComboBoxModel getCustomerByMaNdt() {
         return weightTicketService.getCustomerByMaNdt();
@@ -173,5 +177,13 @@ public class WeightTicketController {
     
     public MaterialConstraint getMaterialConstraintByMatnr(String matnr){
         return weightTicketService.getMaterialConstraintByMatnr(matnr);
+    }
+    
+    public DefaultComboBoxModel getSlocModel() {
+        return new DefaultComboBoxModel(sLocRepository.getListSLoc().toArray());
+    }
+    
+    public DefaultComboBoxModel getVendorModel() {
+        return new DefaultComboBoxModel(vendorRepository.getListVendor().toArray());
     }
 }
