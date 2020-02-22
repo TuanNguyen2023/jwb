@@ -1363,27 +1363,29 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
     if (cbxVendorTransportN.getSelectedItem() != null && !cbxVendorTransportN.getSelectedItem().toString().equals("")) {
         Vendor vendor = (Vendor) cbxVendorTransportN.getSelectedItem();
         PurchaseOrder purchaseOrder = purchaseOrderRepository.findByPoNumber(newWeightTicket.getWeightTicketDetail().getEbeln());
-        //check validate vendor
-        if (newWeightTicket != null && newWeightTicket.getWeightTicketDetail().getMatnrRef() != null) {
-            String vendorVanchuyen = "ZIFQ";
-            String msgVendorCheck = "";
-            if (!WeighBridgeApp.getApplication().isOfflineMode()) {
-                msgVendorCheck = sapService.validateVendor(vendor.getLifnr(),
-                        newWeightTicket.getWeightTicketDetail().getMatnrRef(),
-                        vendorVanchuyen, purchaseOrder.getPurchaseOrderDetail().getPlant());
-            }
-            if (!msgVendorCheck.trim().isEmpty()) {
-                //display errror
-                JOptionPane.showMessageDialog(rootPane, msgVendorCheck);
+        if (modeDetail != MODE_DETAIL.OUT_SLOC_SLOC) {
+            //check validate vendor
+            if (newWeightTicket != null && newWeightTicket.getWeightTicketDetail().getMatnrRef() != null) {
+                String vendorVanchuyen = "ZIFQ";
+                String msgVendorCheck = "";
+                if (!WeighBridgeApp.getApplication().isOfflineMode()) {
+                    msgVendorCheck = sapService.validateVendor(vendor.getLifnr(),
+                            newWeightTicket.getWeightTicketDetail().getMatnrRef(),
+                            vendorVanchuyen, purchaseOrder.getPurchaseOrderDetail().getPlant());
+                }
+                if (!msgVendorCheck.trim().isEmpty()) {
+                    //display errror
+                    JOptionPane.showMessageDialog(rootPane, msgVendorCheck);
 
-                lblVendorTransportN.setForeground(Color.red);
-                isValidVendorTransport = false;
-            } else {
-                isValidVendorTransport = true;
-                newWeightTicket.getWeightTicketDetail().setTransVendor(vendor.getLifnr());
+                    lblVendorTransportN.setForeground(Color.red);
+                    isValidVendorTransport = false;
+                } else {
+                    isValidVendorTransport = true;
+                    newWeightTicket.getWeightTicketDetail().setTransVendor(vendor.getLifnr());
+                }
             }
         }
-
+        
         validateForm();
     } else {
         isValidVendorTransport = true;
@@ -1486,7 +1488,7 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
                             if (!doNumber.getMessage().trim().isEmpty()) {
                                 setMessage(doNumber.getMessage());
                                 JOptionPane.showMessageDialog(rootPane, doNumber.getMessage());
-                                String msg = "So SO " + doNumber.getVbelnSO() + " sai, vui long nhap lai!";
+                                String msg = "Số SO " + doNumber.getVbelnSO() + " sai, vui lòng nhập lại!";
                                 txtDONumN.setText(null);
                                 setMessage(msg);
                                 JOptionPane.showMessageDialog(rootPane, msg);

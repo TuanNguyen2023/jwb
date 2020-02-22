@@ -3217,34 +3217,36 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 // <editor-fold defaultstate="collapsed" desc="Input PO">
                 if(weightTicket.getWeightTicketDetail().getEbeln() != null) {
                     purchaseOrder = purchaseOrderRepository.findByPoNumber(weightTicket.getWeightTicketDetail().getEbeln());
-                    // validate trọng lượng
-                    flgGqty = validateTolerance(purchaseOrder, null);
-
-                    if (flgGqty) {
-                        if (weightTicket.getMode().equals("IN_PO_PURCHASE")) {
+                    // nhap mua hang
+                    if (weightTicket.getMode().equals("IN_PO_PURCHASE")) {
+                        // validate trọng lượng
+                        flgGqty = validateTolerance(purchaseOrder, null);
+                        if (flgGqty) {
                             objBapi = getGrPoMigoBapi(weightTicket, purchaseOrder);
+                        } else {
+                            JOptionPane.showMessageDialog(rootPane, "Không thể nhập hàng vì trọng lượng vượt quá đăng ký!");
+                            return null;
                         }
-
-                        if (weightTicket.getMode().equals("OUT_PLANT_PLANT")) {
-                            objBapi = getDoCreate2PGI(weightTicket, outbDel);
-                        }
-                        if (weightTicket.getMode().equals("OUT_SLOC_SLOC")) {
-                            objBapi = getGiMB1BBapi(weightTicket);
-                            objBapi_Po = getGrPoMigoBapi(weightTicket, purchaseOrder);
-                            if (weightTicket.getPosto() != null) {
-                                purchaseOrder = purchaseOrderRepository.findByPoNumber(weightTicket.getPosto());
-                                objBapi_Posto = getGrPoMigoBapi(weightTicket, purchaseOrder);
-                            }
-                        }
-                        if (weightTicket.getMode().equals("OUT_PULL_STATION") && weightTicket.getPosto() != null) {
-                            objBapi = getMvtPOSTOCreatePGI(weightTicket, weightTicket.getPosto());
-                        }
-
-                    } else {
-                        JOptionPane.showMessageDialog(rootPane, "Không thể xuất/nhập hàng vì trọng lượng vượt quá đăng ký!");
-                        return null;
                     }
-                    
+
+                    // mode xuat plant
+                    if (weightTicket.getMode().equals("OUT_PLANT_PLANT")) {
+                        objBapi = getDoCreate2PGI(weightTicket, outbDel);
+                    }
+                    // chuyen kho noi bo
+                    if (weightTicket.getMode().equals("OUT_SLOC_SLOC")) {
+                        objBapi = getGiMB1BBapi(weightTicket);
+                        objBapi_Po = getGrPoMigoBapi(weightTicket, purchaseOrder);
+                        if (weightTicket.getPosto() != null) {
+                            purchaseOrder = purchaseOrderRepository.findByPoNumber(weightTicket.getPosto());
+                            objBapi_Posto = getGrPoMigoBapi(weightTicket, purchaseOrder);
+                        }
+                    }
+                    // xuat ben keo
+                    if (weightTicket.getMode().equals("OUT_PULL_STATION") && weightTicket.getPosto() != null) {
+                        objBapi = getMvtPOSTOCreatePGI(weightTicket, weightTicket.getPosto());
+                    }
+
                     if (WeighBridgeApp.getApplication().isOfflineMode() == false) {
                         if (objBapi != null) {
                             try {
