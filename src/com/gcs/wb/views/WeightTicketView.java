@@ -3681,7 +3681,9 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             if (WeighBridgeApp.getApplication().isOfflineMode() 
                     || weightTicket.getMode().equals("IN_OTHER") 
                     || weightTicket.getMode().equals("OUT_OTHER")) {
-                weightTicket.setPosted(true);
+                if (isStage2()) {
+                    weightTicket.setPosted(true);
+                }
                 weightTicketDetail.setUnit("TON");
             }
             if (!entityManager.getTransaction().isActive()) {
@@ -3746,7 +3748,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         @Override
         protected void finished() {
             clearForm();
-            setSaveNeeded(isValidated());
+            setSaveNeeded(false);
         }
 
         private boolean validateTolerance(PurchaseOrder purchaseOrder, OutboundDelivery outboundDelivery) {
