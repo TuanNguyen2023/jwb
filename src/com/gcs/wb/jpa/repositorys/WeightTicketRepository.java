@@ -51,7 +51,7 @@ public class WeightTicketRepository {
         }
         return weightTicket;
     }
-
+    
     public List<WeightTicket> getListByDeliveryOrderNo(String deliverNumber) {
         List<WeightTicket> wt = new ArrayList<WeightTicket>();
         TypedQuery<WeightTicket> query = entityManager.createNamedQuery("WeightTicket.findByDeliveryOrderNo", WeightTicket.class);

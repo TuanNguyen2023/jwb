@@ -684,7 +684,9 @@ public class WeightTicketService {
         return bapi;
     }
 
-    public Object getPgmVl02nBapi(WeightTicket wt, OutboundDelivery outbDel, WeightTicket weightTicket,String modeFlg, int timeFrom, int timeTo, List<OutboundDeliveryDetail> outDetails_lits) {
+    public Object getPgmVl02nBapi(WeightTicket wt, OutboundDelivery outbDel,
+            WeightTicket weightTicket,String modeFlg, int timeFrom, int timeTo,
+            List<OutboundDeliveryDetail> outDetails_lits) {
         String doNum = null;
         if (outbDel != null) {
             doNum = outbDel.getDeliveryOrderNo();
@@ -828,7 +830,7 @@ public class WeightTicketService {
             boolean isOffline = WeighBridgeApp.getApplication().isOfflineMode();
             Map<String, Object> map = new HashMap<>();
             Long bags = null;
-            if (outbDel_list == null || outbDel_list.isEmpty() || isOffline || (txtPONo != null || !"".equals(txtPONo))) {
+            if ((outbDel_list == null || outbDel_list.isEmpty()) && (isOffline || (txtPONo != null || !"".equals(txtPONo)))) {
                 // can posto xi mang 
                 map.put("P_MANDT", configuration.getSapClient());
                 map.put("P_WPlant", configuration.getWkPlant());

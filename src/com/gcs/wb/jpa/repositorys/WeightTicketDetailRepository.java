@@ -27,4 +27,15 @@ public class WeightTicketDetailRepository {
         typedQuery.setParameter("status", status);
         return typedQuery.getResultList();
     }
+    
+     public WeightTicketDetail findBydeliveryOrderNo(String doNumber) {
+        TypedQuery<WeightTicketDetail> typedQuery = entityManager.createNamedQuery("WeightTicketDetail.findByDoNo", WeightTicketDetail.class);
+        typedQuery.setParameter("deliveryOrderNo", doNumber);
+        List<WeightTicketDetail> wtDetail = typedQuery.getResultList();
+        
+        if (wtDetail != null && wtDetail.size() > 0) {
+            return wtDetail.get(0);
+        }
+        return null;
+    }
 }

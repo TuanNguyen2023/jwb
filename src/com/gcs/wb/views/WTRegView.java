@@ -2653,7 +2653,7 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
         
         private boolean checkMaterial(OutboundDelivery outboundDelivery) {
             return !outboundDelivery.getOutboundDeliveryDetails().stream().anyMatch(po -> {
-                return !materialGroupRepository.hasData(configuration.getSapClient(), configuration.getWplantMap(), po.getMatnr());
+                return !materialGroupRepository.hasData(configuration.getSapClient(), configuration.getWkPlant(), po.getMatnr());
             });
         }
 
