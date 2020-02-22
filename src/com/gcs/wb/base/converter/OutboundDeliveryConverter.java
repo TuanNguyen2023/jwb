@@ -42,9 +42,12 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
         boolean flag = true;
         BigDecimal item_qty = BigDecimal.ZERO;
         BigDecimal item_qty_free = BigDecimal.ZERO;
+        BigDecimal sumLfimg = BigDecimal.ZERO;
         List<DoGetDetailStructure> dos = from.getTd_dos();
         if (dos.size() > 0) {
             // <editor-fold defaultstate="collapsed" desc="Fill D.O Data">
+            
+            sumLfimg = BigDecimal.ZERO;
             //check do detail exist
             entityTransaction = entityManager.getTransaction();
             List<OutboundDeliveryDetail> outb_detail_check;
@@ -52,6 +55,7 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
             outboundDelivery = new OutboundDelivery(val);
             outboundDelivery.setMandt(configuration.getSapClient());
             outboundDelivery.setShipPoint(from.getEs_vstel());
+            
             for (int i = 0; i < dos.size(); i++) {
                 DoGetDetailStructure doItem = dos.get(i);
                 try {
@@ -64,6 +68,7 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
                 } catch (Exception ex) {
                     Logger.getLogger(SAPService.class.getName()).log(Level.SEVERE, null, ex);
                 }
+
                 // free goods processing
                 item_cat = doItem.getPstyv();
                 if (item_cat.equals("ZVNN")) {
@@ -86,8 +91,10 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
                         flag_free = false;
                     }
                     item_qty_free = item_qty_free.add(doItem.getLfimg());
-//                    continue;
+
+                    //sumLfimg = doItem.getLfimg();
                 }
+                sumLfimg = sumLfimg.add(doItem.getLfimg());
 
                 outboundDelivery.setDeliveryItem(doItem.getPosnr()); //Get position
                 //set data out details hang thuong
@@ -160,8 +167,8 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
                 if (item_cat.equals("ZVNN")) {
                     outboundDelivery.setFreeQty(item_qty_free);
                 }
-                outboundDelivery.setLfimg(item_qty);
-                
+                //outboundDelivery.setLfimg(item_qty);
+                outboundDelivery.setLfimg(sumLfimg);
                 outboundDelivery.setVbelnNach(doItem.getVbelnNach());
                 outboundDelivery.setWtIdRef(doItem.getWtIdRef());
             }

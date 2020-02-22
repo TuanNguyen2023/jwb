@@ -21,8 +21,10 @@ public class WeightTicketDetailRepository {
     Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
 
     public List<WeightTicketDetail> findByPoNo(String poNo) {
+        String status = "POSTED";
         TypedQuery<WeightTicketDetail> typedQuery = entityManager.createNamedQuery("WeightTicketDetail.findByPoNo", WeightTicketDetail.class);
         typedQuery.setParameter("poNo", poNo);
+        typedQuery.setParameter("status", status);
         return typedQuery.getResultList();
     }
 }
