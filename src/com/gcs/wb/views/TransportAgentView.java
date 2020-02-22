@@ -119,7 +119,7 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
             pnTransportAgentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnTransportAgentLayout.createSequentialGroup()
                 .addComponent(spnTransportAgent, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(194, Short.MAX_VALUE))
+                .addContainerGap(192, Short.MAX_VALUE))
         );
 
         pnVehicle.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("pnVehicle.border.title"))); // NOI18N
@@ -159,6 +159,9 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
         txtLicensePlate.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 txtLicensePlateFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtLicensePlateFocusLost(evt);
             }
         });
         txtLicensePlate.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -233,7 +236,7 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
         pnVehicleLayout.setVerticalGroup(
             pnVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnVehicleLayout.createSequentialGroup()
-                .addComponent(spnVehicle, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
+                .addComponent(spnVehicle, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(pnVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblLicensePlate)
@@ -307,21 +310,18 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_lstVehicleValueChanged
 
     private void txtLicensePlateKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtLicensePlateKeyReleased
-        String plateNo = txtLicensePlate.getText().trim().toUpperCase();
-        txtLicensePlate.setText(plateNo);
-
         boolean isValid = validateLicensePlate();
         setVehicleCreatable(isValid);
 
         if (isValid) {
-            Vehicle vehicle = transportAgentController.getVehicle(plateNo);
+            Vehicle vehicle = transportAgentController.getVehicle(txtLicensePlate.getText().trim());
             if (vehicle != null) {
                 dpValidFrom.setDate(vehicle.getValidFrom());
                 dpValidTo.setDate(vehicle.getValidTo());
             } else {
                 dpValidFrom.setDate(new Date());
                 Calendar calendar = Calendar.getInstance();
-                calendar.set(9999, 12, 31);
+                calendar.set(9999, 11, 31);
                 dpValidTo.setDate(calendar.getTime());
             }
         }
@@ -353,6 +353,10 @@ private void dpValidToPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-
         validateDateForm();
     }
 }//GEN-LAST:event_dpValidToPropertyChange
+
+private void txtLicensePlateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtLicensePlateFocusLost
+    txtLicensePlate.setText(txtLicensePlate.getText().toUpperCase());
+}//GEN-LAST:event_txtLicensePlateFocusLost
 
     private void validateDateForm() {
         try {

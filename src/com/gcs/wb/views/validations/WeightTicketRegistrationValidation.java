@@ -51,6 +51,17 @@ public class WeightTicketRegistrationValidation {
         Matcher matcher = Constants.TransportAgent.LICENSE_PLATE_PATTERN.matcher(value);
         boolean result = matcher.matches();
 
+        label.setForeground(result ? Color.black : Color.red);
+
+        return result;
+    }
+    
+    public boolean validatePlateNoWithDB(String value, JComponent label) {
+        value = value.trim();
+
+        Matcher matcher = Constants.TransportAgent.LICENSE_PLATE_PATTERN.matcher(value);
+        boolean result = matcher.matches();
+
         if (result) {
             Vehicle vehicle = vehicleRepository.findByPlateNo(value);
 

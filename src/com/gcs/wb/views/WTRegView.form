@@ -62,7 +62,7 @@
               <Component id="pnRegistrationOfVehicle" min="-2" pref="418" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="pnControl" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="129" max="32767" attributes="0"/>
+              <EmptySpace pref="127" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -97,7 +97,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="btnFind" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="663" max="-2" attributes="0"/>
+                          <EmptySpace pref="667" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -113,9 +113,9 @@
                           </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="cbxStatus" pref="175" max="32767" attributes="0"/>
-                              <Component id="txtPlateNo" pref="175" max="32767" attributes="1"/>
-                              <Component id="dpDateTo" alignment="0" pref="175" max="32767" attributes="1"/>
+                              <Component id="cbxStatus" pref="181" max="32767" attributes="0"/>
+                              <Component id="txtPlateNo" pref="181" max="32767" attributes="1"/>
+                              <Component id="dpDateTo" alignment="0" pref="181" max="32767" attributes="1"/>
                           </Group>
                           <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
@@ -131,7 +131,7 @@
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="cbxHourTo" min="-2" pref="62" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="txtCreator" pref="182" max="32767" attributes="1"/>
+                              <Component id="txtCreator" pref="188" max="32767" attributes="1"/>
                           </Group>
                       </Group>
                   </Group>
@@ -232,7 +232,7 @@
             <Property name="name" type="java.lang.String" value="cbxMaterialType" noResource="true"/>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="cbxMaterialType.setRenderer(new DefaultListCellRenderer() {&#xa;   @Override&#xa;   public Component getListCellRendererComponent(&#xa;           JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {&#xa;       super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);&#xa;       if (value instanceof Material) {&#xa;           Material mat = (Material)value;&#xa;           setText(mat.getMaktx());&#xa;           setToolTipText(mat.getMatnr());&#xa;       }&#xa;       return this;&#xa;   }&#xa;});&#xa;new ComboBoxSearchable(cbxMaterialType);"/>
+            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="cbxMaterialType.setRenderer(new DefaultListCellRenderer() {&#xa;   @Override&#xa;   public Component getListCellRendererComponent(&#xa;           JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {&#xa;       super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);&#xa;       if (value instanceof Material) {&#xa;           Material mat = (Material)value;&#xa;           setText(mat.getMaktx());&#xa;           setToolTipText(mat.getMatnr());&#xa;       }&#xa;       return this;&#xa;   }&#xa;});"/>
           </AuxValues>
         </Component>
         <Component class="javax.swing.JLabel" name="lblHourFrom">
@@ -443,10 +443,10 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="pnROVContent" alignment="0" max="32767" attributes="3"/>
+                      <Component id="pnROVContent" alignment="0" pref="947" max="32767" attributes="3"/>
                       <Component id="pnROVTop" alignment="0" min="-2" max="-2" attributes="1"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="23" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -795,6 +795,7 @@
                     <Property name="name" type="java.lang.String" value="txtPlateNoN" noResource="true"/>
                   </Properties>
                   <Events>
+                    <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtPlateNoNFocusLost"/>
                     <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtPlateNoNKeyReleased"/>
                   </Events>
                 </Component>
@@ -1003,7 +1004,7 @@
                               <Component id="cbxSuppliesIdN" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
                               <Component id="lblSuppliesIdN" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="36" max="32767" attributes="0"/>
+                          <EmptySpace pref="39" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
