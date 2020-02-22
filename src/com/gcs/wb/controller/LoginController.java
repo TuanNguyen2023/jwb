@@ -101,17 +101,17 @@ public class LoginController {
                 UserGetDetailAddrStructure userGetDetailAddrStructure = userGetDetailBapi.getAddress();
                 String roles = loginService.getRoles(userGetDetailBapi);
 
-                loginService.asyncUser(session, userGetDetailAddrStructure, roles, user, username, password);
+                user = loginService.asyncUser(session, userGetDetailAddrStructure, roles, user, username, password);
 
                 SyncMasterDataService syncMasterDataService = new SyncMasterDataService();
                 syncMasterDataService.syncMasterDataWhenLogin();
 
                 // init sync master data cron job
                 (new CronTriggerService()).execute();
-            } else {
-                if ((user == null) || (user != null && !user.getPassword().equals(password))) {
-                    throw new Exception(resourceMap.getString("msg.offlineUsernameOrPasswordInvalid"));
-                }
+            }
+
+            if ((user == null) || (user != null && !user.getPassword().equals(password))) {
+                throw new Exception(resourceMap.getString("msg.offlineUsernameOrPasswordInvalid"));
             }
 
             offlineMode = !onlineMode;

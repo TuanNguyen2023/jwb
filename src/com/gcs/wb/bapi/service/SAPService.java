@@ -684,6 +684,7 @@ public class SAPService {
                 sapSetting.setName2((String) vals.get(PlantGeDetailConstants.NAME2));
                 sapSetting.setMandt(configuration.getSapClient());
                 sapSetting.setWplant(configuration.getWkPlant());
+                sapSetting.setCheckPov(true);
 
                 if (!entityTransaction.isActive()) {
                     entityTransaction.begin();

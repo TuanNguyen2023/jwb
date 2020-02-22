@@ -81,7 +81,7 @@ public class LoginService {
         }
     }
 
-    public void asyncUser(Session session, UserGetDetailAddrStructure userGetDetailAddrStructure, String roles, User user, String username, String password) throws Exception {
+    public User asyncUser(Session session, UserGetDetailAddrStructure userGetDetailAddrStructure, String roles, User user, String username, String password) throws Exception {
         try {
 
             if (!entityTransaction.isActive()) {
@@ -120,5 +120,7 @@ public class LoginService {
             }
             throw ex;
         }
+        
+        return user;
     }
 }

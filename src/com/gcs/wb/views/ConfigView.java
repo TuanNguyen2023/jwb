@@ -1136,6 +1136,7 @@ public class ConfigView extends javax.swing.JDialog {
                 JPAConnector.getInstance();
 
                 // get config in database
+                configController = new ConfigController();
                 config.setConfiguration(configController.getConfiguration());
 
                 objBinding();
