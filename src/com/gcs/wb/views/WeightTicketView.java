@@ -3406,10 +3406,10 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                             objBapi = getPgmVl02nBapi(weightTicket, outbDel, modeFlg);
                         }
                     } else {
-                        JOptionPane.showMessageDialog(rootPane, "Không thể xuất/nhập hàng vì trọng lượng không đủ!");
+                        JOptionPane.showMessageDialog(rootPane, "Chênh lệch vượt dung sai!");
                         return null;
                     }
-                    
+
                     if (WeighBridgeApp.getApplication().isOfflineMode() == false) {
                             if (objBapi != null) {
                                 try {
