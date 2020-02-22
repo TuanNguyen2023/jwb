@@ -70,6 +70,7 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
                     outboundDelivery.setDeliveryItemFree(doItem.getPosnr());
                     outboundDelivery.setMatnrFree(doItem.getMatnr());
                     //set data cho details free goods
+                    outboundDelivery.setFreeQty(doItem.getLfimg());
                     outboundDeliveryDetail.setFreeItem('X');
                     outboundDeliveryDetail.setLfimg(doItem.getLfimg());
                     outboundDeliveryDetail.setMeins(doItem.getMeins());
@@ -110,7 +111,7 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
                 //end set data
 
                 //only get number item dong dau
-                if (!item_cat.equals("ZTNN")) {
+                if (!item_cat.equals("ZVNN")) {
                     item_qty = item_qty.add(doItem.getLfimg());
                     if (flag) {
                         item_num = doItem.getPosnr();
@@ -156,7 +157,7 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
                 outboundDelivery.setKostk(doItem.getKostk() == null || doItem.getKostk().trim().isEmpty() || doItem.getKostk().trim().charAt(0) != 'C' ? ' ' : 'X');
                 outboundDelivery.setWbstk(doItem.getWbstk() == null || doItem.getWbstk().trim().isEmpty() || doItem.getWbstk().trim().charAt(0) != 'C' ? ' ' : 'X');
 //            }
-                if (item_cat.equals("ZTNN")) {
+                if (item_cat.equals("ZVNN")) {
                     outboundDelivery.setFreeQty(item_qty_free);
                 }
                 outboundDelivery.setLfimg(item_qty);

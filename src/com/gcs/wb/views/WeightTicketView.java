@@ -3394,7 +3394,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                             objBapi = getPgmVl02nBapi(weightTicket, outbDel, modeFlg);
                         }
                     } else {
-                        JOptionPane.showMessageDialog(rootPane, "Không thể xuất/nhập hàng vì trọng lượng vượt quá đăng ký!");
+                        JOptionPane.showMessageDialog(rootPane, "Không thể xuất/nhập hàng vì trọng lượng không đủ!");
                         return null;
                     }
                     
@@ -3752,16 +3752,19 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         quantity.multiply(tolerance).divide(new BigDecimal(100))
                 ).subtract(weightTicketRegistarationController.getSumQuantityWithPoNo(purchaseOrder.getPoNumber()));
 
+                BigDecimal result = numCheckWeight.subtract(weightTicket.getGQty());
+                if(result.compareTo(BigDecimal.ZERO) <= 0) {
+                    return false;
+                }
             }
 
             // check for DO
             if (outboundDelivery != null) {
                 numCheckWeight = outboundDelivery.getLfimg() != null ? outboundDelivery.getLfimg() : BigDecimal.ZERO;
-            }
-
-            BigDecimal result = numCheckWeight.subtract(weightTicket.getGQty());
-            if(result.compareTo(BigDecimal.ZERO) < 0) {
-                return false;
+                BigDecimal result = numCheckWeight.subtract(weightTicket.getGQty());
+                if(result.compareTo(BigDecimal.ZERO) > 0) {
+                    return false;
+                }
             }
             return true;
         }
