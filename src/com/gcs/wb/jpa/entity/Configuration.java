@@ -26,7 +26,8 @@ import javax.persistence.Temporal;
 @Entity
 @Table(name = "tbl_configuration")
 @NamedQueries({
-    @NamedQuery(name = "Configuration.findAll", query = "SELECT c FROM Configuration c")
+    @NamedQuery(name = "Configuration.findAll", query = "SELECT c FROM Configuration c"),
+    @NamedQuery(name = "Configuration.findByWbId", query = "SELECT c FROM Configuration c WHERE c.wbId = :wbId")
 })
 public class Configuration implements Serializable {
 

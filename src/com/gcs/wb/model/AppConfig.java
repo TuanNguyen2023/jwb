@@ -61,6 +61,10 @@ public class AppConfig {
      * Configuration Key: DB_PWD
      */
     public static final String DB_PWD = "DB_PWD";
+    /**
+     * Configuration Key: WB_ID
+     */
+    public static final String WB_ID = "WB_ID";
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Configuration Attributes">
@@ -80,6 +84,10 @@ public class AppConfig {
      * DB login password
      */
     private String dbPassword = null;
+    /**
+     * ma cau can
+     */
+    private String wbId = null;
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Attribute's Getter Setter">
@@ -190,6 +198,26 @@ public class AppConfig {
     public void setDbPassword(String dbPassword) {
         config.setProperty(DB_PWD, Base64_Utils.encodeNTimes(dbPassword));
         this.dbPassword = dbPassword;
+    }
+    
+    /**
+     * WB_ID
+     * @return the wbId
+     */
+    public String getWbId() {
+        if (wbId == null) {
+            wbId = Base64_Utils.decodeNTimes(config.getString(WB_ID, ""));
+        }
+        return wbId;
+    }
+
+    /**
+     * WB_ID
+     * @param wbId
+     */
+    public void setWbId(String wbId) {
+        config.setProperty(WB_ID, Base64_Utils.encodeNTimes(wbId));
+        this.wbId = wbId;
     }
 
     public Configuration getConfiguration() {

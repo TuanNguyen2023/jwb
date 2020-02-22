@@ -22,8 +22,9 @@ public class ConfigurationRepository {
     EntityManager entityManager = JPAConnector.getInstance();
     Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
 
-    public Configuration getConfiguration() {
-        TypedQuery<Configuration> typedQuery = entityManager.createNamedQuery("Configuration.findAll", Configuration.class);
+    public Configuration getConfiguration(String wbId) {
+        TypedQuery<Configuration> typedQuery = entityManager.createNamedQuery("Configuration.findByWbId", Configuration.class);
+        typedQuery.setParameter("wbId", wbId);
         List<Configuration> configurations = typedQuery.getResultList();
         if (configurations != null && configurations.size() > 0) {
             return configurations.get(0);

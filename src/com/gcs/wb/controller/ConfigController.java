@@ -53,6 +53,7 @@ public class ConfigController {
 
         configuration.setWkPlant(wPlant);
         configuration.setWbId(wbId);
+        config.setWbId(wbId);
 
         configuration.setWb1Port((String) port1);
         configuration.setWb1BaudRate(speed1);

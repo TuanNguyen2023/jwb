@@ -1062,6 +1062,8 @@ public class ConfigView extends javax.swing.JDialog {
 
             cbxPControl2.setSelectedItem(p2Control);
             chbMettler2.setSelected(configuration.getWb2Mettler());
+        } else {
+            txtWBID.setText(config.getWbId());
         }
     }
 
