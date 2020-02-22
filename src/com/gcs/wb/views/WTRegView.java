@@ -17,6 +17,7 @@ import com.gcs.wb.controller.WeightTicketController;
 import com.gcs.wb.controller.WeightTicketRegistarationController;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.*;
+import com.gcs.wb.jpa.repositorys.MaterialGroupRepository;
 import com.gcs.wb.jpa.repositorys.MaterialInternalRepository;
 import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
 import com.gcs.wb.model.WeighingMode;
@@ -77,6 +78,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
     private PurchaseOrderRepository purchaseOrderRepository = new PurchaseOrderRepository();
     MaterialInternalRepository materialInternalRepository = new MaterialInternalRepository();
     WeightTicketController weightTicketController = new WeightTicketController();
+    MaterialGroupRepository materialGroupRepository = new MaterialGroupRepository();
     List<String> cbxSlocs = new ArrayList<String>();
 
     public WTRegView() {
@@ -2582,6 +2584,11 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
                 if (isDOInUsed(deliveryOrderNo, outboundDelivery)) {
                     throw new Exception(resourceMapMsg.getString("msg.typeDO", deliveryOrderNo, getMode(outboundDelivery)));
                 }
+                
+                // check out together
+                if (deliveryOrderNos.length > 1 && !checkMaterial(outboundDelivery)) {
+                    throw new Exception(resourceMapMsg.getString("msg.materialNotTogether"));
+                }
 
                 // set DO data to Weight ticket
                 updateWeightTicket(outboundDelivery);
@@ -2622,7 +2629,9 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
             BigDecimal weight = BigDecimal.ZERO;
             List<OutboundDeliveryDetail> outboundDeliveryDetails = outboundDelivery.getOutboundDeliveryDetails();
             for (OutboundDeliveryDetail outboundDeliveryDetail : outboundDeliveryDetails) {
-                strMaterial.add(outboundDeliveryDetail.getArktx());
+                if (!strMaterial.contains(outboundDeliveryDetail.getArktx())) {
+                    strMaterial.add(outboundDeliveryDetail.getArktx());
+                }
                 weight = weight.add(outboundDeliveryDetail.getLfimg());
             }
 
@@ -2630,6 +2639,12 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
             weightTicketDetail.setRegItemQuantity(weight);
             newWeightTicket.setWeightTicketIdRef(outboundDelivery.getWtIdRef());
             newWeightTicket.addWeightTicketDetail(weightTicketDetail);
+        }
+        
+        private boolean checkMaterial(OutboundDelivery outboundDelivery) {
+            return !outboundDelivery.getOutboundDeliveryDetails().stream().anyMatch(po -> {
+                return !materialGroupRepository.hasData(configuration.getSapClient(), configuration.getWplantMap(), po.getMatnr());
+            });
         }
 
         private boolean isDOInUsed(String deliveryOrderNo, OutboundDelivery outboundDelivery) {
