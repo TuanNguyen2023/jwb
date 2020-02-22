@@ -1992,8 +1992,8 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
     }
 
     private boolean validateInPoPurchase() {
-        boolean isTicketIdValid = wtRegisValidation.validateLength(txtTicketIdN.getText(), lblTicketIdN, 1, 20);
-        boolean isRegisterIdValid = wtRegisValidation.validateLength(txtRegisterIdN.getText(), lblRegisterIdN, 1, 50);
+        boolean isTicketIdValid = wtRegisValidation.validateLength(txtTicketIdN.getText(), lblTicketIdN, 0, 20);
+        boolean isRegisterIdValid = wtRegisValidation.validateLength(txtRegisterIdN.getText(), lblRegisterIdN, 0, 50);
         boolean isDriverNameValid = wtRegisValidation.validateLength(txtDriverNameN.getText(), lblDriverNameN, 1, 70);
         boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
 
@@ -2032,8 +2032,8 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
     }
 
     private boolean validateInWarehouseTransfer() {
-        boolean isTicketIdValid = wtRegisValidation.validateLength(txtTicketIdN.getText(), lblTicketIdN, 1, 20);
-        boolean isRegisterIdValid = wtRegisValidation.validateLength(txtRegisterIdN.getText(), lblRegisterIdN, 1, 50);
+        boolean isTicketIdValid = wtRegisValidation.validateLength(txtTicketIdN.getText(), lblTicketIdN, 0, 20);
+        boolean isRegisterIdValid = wtRegisValidation.validateLength(txtRegisterIdN.getText(), lblRegisterIdN, 0, 50);
         boolean isDriverNameValid = wtRegisValidation.validateLength(txtDriverNameN.getText(), lblDriverNameN, 1, 70);
         boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
 
@@ -2063,8 +2063,8 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
     }
 
     private boolean validateInOutOther() {
-        boolean isTicketIdValid = wtRegisValidation.validateLength(txtTicketIdN.getText(), lblTicketIdN, 1, 20);
-        boolean isRegisterIdValid = wtRegisValidation.validateLength(txtRegisterIdN.getText(), lblRegisterIdN, 1, 50);
+        boolean isTicketIdValid = wtRegisValidation.validateLength(txtTicketIdN.getText(), lblTicketIdN, 0, 20);
+        boolean isRegisterIdValid = wtRegisValidation.validateLength(txtRegisterIdN.getText(), lblRegisterIdN, 0, 50);
         boolean isDriverNameValid = wtRegisValidation.validateLength(txtDriverNameN.getText(), lblDriverNameN, 1, 70);
         boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
 
@@ -2091,7 +2091,7 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
     }
 
     private boolean validateOutSellRoad() {
-        boolean isRegisterIdValid = wtRegisValidation.validateLength(txtRegisterIdN.getText(), lblRegisterIdN, 1, 50);
+        boolean isRegisterIdValid = wtRegisValidation.validateLength(txtRegisterIdN.getText(), lblRegisterIdN, 0, 50);
         boolean isDriverNameValid = wtRegisValidation.validateLength(txtDriverNameN.getText(), lblDriverNameN, 1, 70);
         boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
 
@@ -2120,8 +2120,8 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
     }
 
     private boolean validateOutPlantPlant() {
-        boolean isTicketIdValid = wtRegisValidation.validateLength(txtTicketIdN.getText(), lblTicketIdN, 1, 20);
-        boolean isRegisterIdValid = wtRegisValidation.validateLength(txtRegisterIdN.getText(), lblRegisterIdN, 1, 50);
+        boolean isTicketIdValid = wtRegisValidation.validateLength(txtTicketIdN.getText(), lblTicketIdN, 0, 20);
+        boolean isRegisterIdValid = wtRegisValidation.validateLength(txtRegisterIdN.getText(), lblRegisterIdN, 0, 50);
         boolean isDriverNameValid = wtRegisValidation.validateLength(txtDriverNameN.getText(), lblDriverNameN, 1, 70);
         boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
 
@@ -2160,8 +2160,8 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
     }
 
     private boolean validateOutSlocSloc() {
-        boolean isTicketIdValid = wtRegisValidation.validateLength(txtTicketIdN.getText(), lblTicketIdN, 1, 20);
-        boolean isRegisterIdValid = wtRegisValidation.validateLength(txtRegisterIdN.getText(), lblRegisterIdN, 1, 50);
+        boolean isTicketIdValid = wtRegisValidation.validateLength(txtTicketIdN.getText(), lblTicketIdN, 0, 20);
+        boolean isRegisterIdValid = wtRegisValidation.validateLength(txtRegisterIdN.getText(), lblRegisterIdN, 0, 50);
         boolean isDriverNameValid = wtRegisValidation.validateLength(txtDriverNameN.getText(), lblDriverNameN, 1, 70);
         boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
 
@@ -2205,8 +2205,8 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
     }
 
     private boolean validateOutPullStation() {
-        boolean isTicketIdValid = wtRegisValidation.validateLength(txtTicketIdN.getText(), lblTicketIdN, 1, 20);
-        boolean isRegisterIdValid = wtRegisValidation.validateLength(txtRegisterIdN.getText(), lblRegisterIdN, 1, 50);
+        boolean isTicketIdValid = wtRegisValidation.validateLength(txtTicketIdN.getText(), lblTicketIdN, 0, 20);
+        boolean isRegisterIdValid = wtRegisValidation.validateLength(txtRegisterIdN.getText(), lblRegisterIdN, 0, 50);
         boolean isDriverNameValid = wtRegisValidation.validateLength(txtDriverNameN.getText(), lblDriverNameN, 1, 70);
         boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
 
@@ -2248,7 +2248,7 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
     }
 
     private boolean validateOutSellWateway() {
-        boolean isRegisterIdValid = wtRegisValidation.validateLength(txtRegisterIdN.getText(), lblRegisterIdN, 1, 50);
+        boolean isRegisterIdValid = wtRegisValidation.validateLength(txtRegisterIdN.getText(), lblRegisterIdN, 0, 50);
         boolean isDriverNameValid = wtRegisValidation.validateLength(txtDriverNameN.getText(), lblDriverNameN, 1, 70);
         boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
 

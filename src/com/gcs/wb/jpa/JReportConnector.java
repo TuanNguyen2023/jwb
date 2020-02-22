@@ -6,7 +6,8 @@ package com.gcs.wb.jpa;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import org.apache.log4j.Logger;
+import java.sql.SQLException;
+import java.util.logging.Level;
 import org.eclipse.persistence.config.PersistenceUnitProperties;
 
 /**
@@ -15,13 +16,12 @@ import org.eclipse.persistence.config.PersistenceUnitProperties;
  */
 public class JReportConnector {
 
-    private Connection instance = null;
+    private static Connection instance = null;
 
-    JReportConnector() {
+    private JReportConnector() {
     }
 
-    public Connection getInstance() {
-        instance = null;
+    public static Connection getInstance() {
         if (instance != null) {
             return instance;
         } else {
@@ -36,6 +36,17 @@ public class JReportConnector {
             } catch (Exception e) {
             }
             return instance;
+        }
+    }
+
+    public static void close(){
+        if (instance != null) {
+            try {
+                instance.close();
+            } catch (SQLException ex) {
+                java.util.logging.Logger.getLogger(JReportConnector.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            instance = null;
         }
     }
 }

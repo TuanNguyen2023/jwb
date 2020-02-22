@@ -19,8 +19,7 @@ import org.apache.log4j.Logger;
  */
 public class JReportService {
 
-    JReportConnector jReportConnector = new JReportConnector();
-    Connection connect = jReportConnector.getInstance();
+    Connection connect = JReportConnector.getInstance();
     Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
 
     public void printReport(Map<String, Object> map, String reportName) {

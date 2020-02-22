@@ -7,7 +7,9 @@ import com.fazecast.jSerialComm.SerialPortInvalidPortException;
 import com.gcs.wb.base.exceptions.IllegalPortException;
 import com.gcs.wb.base.serials.ScaleMettler;
 import com.gcs.wb.base.serials.SerialComm;
+import com.gcs.wb.batch.CronTriggerService;
 import com.gcs.wb.jpa.JPAConnector;
+import com.gcs.wb.jpa.JReportConnector;
 import com.gcs.wb.jpa.entity.SAPSetting;
 import com.gcs.wb.jpa.entity.User;
 import com.gcs.wb.jpa.repositorys.ConfigurationRepository;
@@ -28,8 +30,11 @@ import org.jdesktop.application.SingleFrameApplication;
 import javax.swing.table.DefaultTableModel;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.text.ParseException;
 import java.util.TooManyListenersException;
+import java.util.logging.Level;
 import org.apache.log4j.Logger;
+import org.quartz.SchedulerException;
 
 /**
  * The main class of the application.
@@ -133,14 +138,17 @@ public class WeighBridgeApp extends SingleFrameApplication {
         }
     }
 
-    public static void restartApplication() {
+    public void restartApplication() {
         getApplication().hide(vMain);
-
-        vMain = new WeighBridgeView(getApplication());
-        vMain.getComponent().setSize(800, 600);
-        vMain.getFrame().setSize(800, 600);
-        vMain.getRootPane().setSize(800, 600);
-        getApplication().show(vMain);
+        JReportConnector.close();
+        try {
+            (new CronTriggerService()).close();
+        } catch (ParseException ex) {
+            java.util.logging.Logger.getLogger(WeighBridgeApp.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SchedulerException ex) {
+            java.util.logging.Logger.getLogger(WeighBridgeApp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        launch(this.getClass(), null);
     }
 
     @Override

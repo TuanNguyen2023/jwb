@@ -30,4 +30,9 @@ public class CronTriggerService {
         scheduler.start();
         scheduler.scheduleJob(syncMasterDataJob, syncMasterDataTrigger);
     }
+
+    public void close() throws ParseException, SchedulerException {
+        Scheduler scheduler = new StdSchedulerFactory().getScheduler();
+        scheduler.shutdown();
+    }
 }

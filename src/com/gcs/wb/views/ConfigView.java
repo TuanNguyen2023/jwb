@@ -1103,7 +1103,8 @@ public class ConfigView extends javax.swing.JDialog {
             }
             if (!error) {
                 dispose();
-                WeighBridgeApp.restartApplication();
+                WeighBridgeApp app = new WeighBridgeApp();
+                app.restartApplication();
             } else {
                 JOptionPane.showMessageDialog(rootPane, msg.toString(), "Error", JOptionPane.ERROR_MESSAGE);
                 btnSave.setEnabled(true);
