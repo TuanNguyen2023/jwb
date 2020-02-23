@@ -1335,22 +1335,24 @@ private void cbxVendorLoadingNActionPerformed(java.awt.event.ActionEvent evt) {/
         Vendor vendor = (Vendor) cbxVendorLoadingN.getSelectedItem();
         //check validate vendor
         PurchaseOrder purchaseOrder = purchaseOrderRepository.findByPoNumber(newWeightTicket.getWeightTicketDetail().getEbeln());
-        if (newWeightTicket != null && newWeightTicket.getWeightTicketDetail().getMatnrRef() != null) {
-            String vendorBocxep = "ZLCQ";
-            String msgVendorCheck = "";
-            if (!WeighBridgeApp.getApplication().isOfflineMode()) {
-                msgVendorCheck = sapService.validateVendor(vendor.getLifnr(),
-                        newWeightTicket.getWeightTicketDetail().getMatnrRef(),
-                        vendorBocxep, purchaseOrder.getPurchaseOrderDetail().getPlant());
-            }
-            if (!msgVendorCheck.trim().isEmpty()) {
-                //display errror
-                JOptionPane.showMessageDialog(rootPane, msgVendorCheck);
-                lblVendorLoadingN.setForeground(Color.red);
-                isValidVendorLoad = false;
-            } else {
-                isValidVendorLoad = true;
-                newWeightTicket.getWeightTicketDetail().setLoadVendor(vendor.getLifnr());
+        if (modeDetail != MODE_DETAIL.OUT_SLOC_SLOC) {
+            if (newWeightTicket != null && newWeightTicket.getWeightTicketDetail().getMatnrRef() != null) {
+                String vendorBocxep = "ZLCQ";
+                String msgVendorCheck = "";
+                if (!WeighBridgeApp.getApplication().isOfflineMode()) {
+                    msgVendorCheck = sapService.validateVendor(vendor.getLifnr(),
+                            newWeightTicket.getWeightTicketDetail().getMatnrRef(),
+                            vendorBocxep, purchaseOrder.getPurchaseOrderDetail().getPlant());
+                }
+                if (!msgVendorCheck.trim().isEmpty()) {
+                    //display errror
+                    JOptionPane.showMessageDialog(rootPane, msgVendorCheck);
+                    lblVendorLoadingN.setForeground(Color.red);
+                    isValidVendorLoad = false;
+                } else {
+                    isValidVendorLoad = true;
+                    newWeightTicket.getWeightTicketDetail().setLoadVendor(vendor.getLifnr());
+                }
             }
         }
 
@@ -2571,7 +2573,8 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
                 }
 
                 //Check Delivery Plant with Configuration parameter.
-                if (!(outboundDelivery.getWerks()).equals(configuration.getWkPlant())) {
+                if ((!(outboundDelivery.getWerks()).equals(configuration.getWkPlant()))
+                        && (!(outboundDelivery.getRecvPlant()).equals(configuration.getWkPlant()))) {
                     throw new Exception("Số D.O không được phép xuất/nhập hàng tại nhà máy này!");
                 }
 
@@ -2583,9 +2586,9 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
                 }
 
                 // check DO in used
-                if (isDOInUsed(deliveryOrderNo, outboundDelivery)) {
-                    throw new Exception(resourceMapMsg.getString("msg.typeDO", deliveryOrderNo, getMode(outboundDelivery)));
-                }
+//                if (isDOInUsed(deliveryOrderNo, outboundDelivery)) {
+//                    throw new Exception(resourceMapMsg.getString("msg.typeDO", deliveryOrderNo, getMode(outboundDelivery)));
+//                }
                 
                 // check out together
                 if (deliveryOrderNos.length > 1 && !checkMaterial(outboundDelivery)) {

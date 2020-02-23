@@ -30,6 +30,7 @@ import com.gcs.wb.controller.WeightTicketController;
 import com.gcs.wb.controller.WeightTicketRegistarationController;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.*;
+import com.gcs.wb.jpa.repositorys.MaterialRepository;
 import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
 import com.gcs.wb.jpa.repositorys.VendorRepository;
 import com.gcs.wb.jpa.repositorys.WeightTicketDetailRepository;
@@ -95,6 +96,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     WeightTicketDetailRepository weightTicketDetailRepository = new WeightTicketDetailRepository();
     EntityManager entityManager = JPAConnector.getInstance();
     ToleranceUtil toleranceUtil = new ToleranceUtil();
+    MaterialRepository materialRepository = new MaterialRepository();
 
     WeightTicketController weightTicketController = new WeightTicketController();
     WeightTicketRegistarationController weightTicketRegistarationController = new WeightTicketRegistarationController();
@@ -2613,6 +2615,10 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         setSubContract(true);
                     }
                 }
+                if(Constants.WeighingProcess.MODE_DETAIL.OUT_SLOC_SLOC.name().equals(weightTicket.getMode())) {
+                   Material mat = materialRepository.findByMatnr(weightTicket.getRecvMatnr());
+                   txtRegItem.setText(mat.getMaktx());
+                }
 
                 formatter.applyPattern(WeighBridgeApp.DATE_TIME_DISPLAY_FORMAT);
                 if (weightTicket.getFScale() != null) {
@@ -3227,29 +3233,30 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     }
                     
                     // check dung sai
-                    if (!toleranceUtil.isInvalidTolerance(purchaseOrder.getPurchaseOrderDetail().getQuantity(), weightTicket.getGQty(), tolorance)) {
-                        // mode xuat plant
-                        if (weightTicket.getMode().equals("OUT_PLANT_PLANT")) {
-                            objBapi = getDoCreate2PGI(weightTicket, outbDel);
+//                    if (!toleranceUtil.isInvalidTolerance(purchaseOrder.getPurchaseOrderDetail().getQuantity(), weightTicket.getGQty(), tolorance)) {
+//                        
+//                    } else {
+//                        JOptionPane.showMessageDialog(rootPane, "Chênh lệnh vượt dung sai cho phép.!");
+//                        weightTicket.setPosted(false);
+//                        completed = false;
+//                        entityManager.clear(); 
+//                    }
+                    // mode xuat plant
+                    if (weightTicket.getMode().equals("OUT_PLANT_PLANT")) {
+                        objBapi = getDoCreate2PGI(weightTicket, outbDel);
+                    }
+                    // chuyen kho noi bo
+                    if (weightTicket.getMode().equals("OUT_SLOC_SLOC")) {
+                        objBapi = getGiMB1BBapi(weightTicket);
+                        objBapi_Po = getGrPoMigoBapi(weightTicket, purchaseOrder);
+                        if (weightTicket.getPosto() != null) {
+                            purchaseOrder = purchaseOrderRepository.findByPoNumber(weightTicket.getPosto());
+                            objBapi_Posto = getGrPoMigoBapi(weightTicket, purchaseOrder);
                         }
-                        // chuyen kho noi bo
-                        if (weightTicket.getMode().equals("OUT_SLOC_SLOC")) {
-                            objBapi = getGiMB1BBapi(weightTicket);
-                            objBapi_Po = getGrPoMigoBapi(weightTicket, purchaseOrder);
-                            if (weightTicket.getPosto() != null) {
-                                purchaseOrder = purchaseOrderRepository.findByPoNumber(weightTicket.getPosto());
-                                objBapi_Posto = getGrPoMigoBapi(weightTicket, purchaseOrder);
-                            }
-                        }
-                        // xuat ben keo
-                        if (weightTicket.getMode().equals("OUT_PULL_STATION") && weightTicket.getPosto() != null) {
-                            objBapi = getMvtPOSTOCreatePGI(weightTicket, weightTicket.getPosto());
-                        }
-                    } else {
-                        JOptionPane.showMessageDialog(rootPane, "Chênh lệnh vượt dung sai cho phép.!");
-                        weightTicket.setPosted(false);
-                        completed = false;
-                        entityManager.clear(); 
+                    }
+                    // xuat ben keo
+                    if (weightTicket.getMode().equals("OUT_PULL_STATION") && weightTicket.getPosto() != null) {
+                        objBapi = getMvtPOSTOCreatePGI(weightTicket, weightTicket.getPosto());
                     }
                     
                     if (WeighBridgeApp.getApplication().isOfflineMode() == false) {
@@ -3385,7 +3392,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 // </editor-fold>
                 
                 // <editor-fold defaultstate="collapsed" desc="Input DO">
-                BigDecimal sumQtyReg = BigDecimal.ONE;
+                BigDecimal sumQtyReg = BigDecimal.ZERO;
                 // sum trọng lượng đăng ký
                 for (int i = 0; i < outbDel_list.size(); i++) {
                      outbDel = outbDel_list.get(i);
@@ -3397,7 +3404,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     // validate trọng lượng DO
                      flgGqty = validateTolerance(null, outbDel);
 
-                     if (flgGqty && (!toleranceUtil.isInvalidTolerance(sumQtyReg, weightTicket.getGQty(), tolorance))) {
+                     if (flgGqty || (!toleranceUtil.isInvalidTolerance(sumQtyReg, weightTicket.getGQty(), tolorance))) {
                          // mode nhap DO
                         if (weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER")) {
                             if (outbDel != null && (outbDel.getLfart().equalsIgnoreCase("LR")
