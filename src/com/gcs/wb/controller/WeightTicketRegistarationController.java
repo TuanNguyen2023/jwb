@@ -317,4 +317,8 @@ public class WeightTicketRegistarationController {
     public DefaultComboBoxModel getVendorModel() {
         return new DefaultComboBoxModel(vendorRepository.getListVendor().toArray());
     }
+    
+    public Unit getUnit(){
+        return wTRegService.getUnit();
+    }
 }

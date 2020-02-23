@@ -58,6 +58,7 @@ public class WeightTicketService {
     EntityTransaction entityTransaction = entityManager.getTransaction();
     Session session = WeighBridgeApp.getApplication().getSAPSession();
     private final Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
+    WeightTicketRegistrationService weightTicketRegistrationService = new WeightTicketRegistrationService();
 
     public DefaultComboBoxModel getCustomerByMaNdt() {
         List<Customer> customers = this.customerRepository.getListCustomer();
@@ -299,7 +300,7 @@ public class WeightTicketService {
         bapi.setPlant(plant);
         bapi.setSloc(sloc);
         bapi.setBatch(batch);
-        bapi.setUnit("TO");
+        bapi.setUnit(weightTicketRegistrationService.getUnit().getPurchaseUnit());
         WeighBridgeApp.getApplication().getSAPSession().execute(bapi);
         List<MatAvailableStructure> stocks = bapi.getWmdvex();
         if (!stocks.isEmpty() && stocks.get(0).getCom_qty() != null) {

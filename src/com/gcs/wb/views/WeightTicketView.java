@@ -1654,7 +1654,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
 //                }
 //                weightTicket.setRecvPlant(configuration.getWkPlant());
 //                weightTicket.setRecvCharg(weightTicket.getCharg());
-//                weightTicketDetail.setUnit("TON");
+//                weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
 //                weightTicket.setMoveType("311");
 //                weightTicket.setMoveReas(null);
 //                mvt311View.dispose();
@@ -3073,7 +3073,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         ) {
 //                    purOrder.setMaterial(setting.getMatnrClinker());
                     purchaseOrderDetail.setShortText(Constants.WeightTicketView.ITEM_DESCRIPTION);
-                    purchaseOrderDetail.setPoUnit("TO");
+                    purchaseOrderDetail.setPoUnit(weightTicketRegistarationController.getUnit().getPurchaseUnit());
                     setValidPONum(true);
                     setSubContract(true);
                 } else {
@@ -3118,7 +3118,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
 //                weightTicketDetail.setItem(purchaseOrderDetail.getPoItem());
 //                weightTicketDetail.setRegItemDescription(purchaseOrderDetail.getShortText());
 //                weightTicketDetail.setMatnrRef(purchaseOrderDetail.getMaterial());
-//                weightTicketDetail.setUnit("TON");
+//                weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
             } else {
                 txtRegItem.setText(null);
                 txtMatnr.setText(null);
@@ -3344,14 +3344,14 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                             }
                         } else if (WeighBridgeApp.getApplication().isOfflineMode()) {
                             weightTicket.setPosted(true);
-                            weightTicketDetail.setUnit("TON");
+                            weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
                         } else {
                             weightTicket.setPosted(false);
                         }
                     } else {
                         bapi_message = resourceMapMsg.getString("msg.postOfflien");
                         weightTicket.setPosted(true);
-                        weightTicketDetail.setUnit("TON");
+                        weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
                     }
                 }
                 // </editor-fold>
@@ -3651,7 +3651,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                             }
                         } else if(WeighBridgeApp.getApplication().isOfflineMode()) {
                             weightTicket.setPosted(true);
-                            weightTicketDetail.setUnit("TON");
+                            weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
                         } else {
                             weightTicket.setPosted(false);
                         }
@@ -3672,7 +3672,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 if (isStage2()) {
                     weightTicket.setPosted(true);
                 }
-                weightTicketDetail.setUnit("TON");
+                weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
             }
             if (!entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().begin();

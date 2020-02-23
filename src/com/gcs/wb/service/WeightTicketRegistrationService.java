@@ -16,6 +16,7 @@ import com.gcs.wb.jpa.repositorys.MaterialRepository;
 import com.gcs.wb.jpa.repositorys.OutboundDeliveryRepository;
 import com.gcs.wb.jpa.repositorys.OutboundDetailRepository;
 import com.gcs.wb.jpa.repositorys.TransportAgentVehicleRepository;
+import com.gcs.wb.jpa.repositorys.UnitRepository;
 import com.gcs.wb.jpa.repositorys.VehicleRepository;
 import com.gcs.wb.jpa.repositorys.VendorRepository;
 import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
@@ -43,6 +44,7 @@ public class WeightTicketRegistrationService {
     VehicleRepository vehicleRepository = new VehicleRepository();
     TransportAgentVehicleRepository transportAgentVehicleRepository = new TransportAgentVehicleRepository();
     BatchStockRepository batchStockRepository = new BatchStockRepository();
+    UnitRepository unitRepository = new UnitRepository();
 
     SAPService sAPService = new SAPService();
     Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
@@ -239,5 +241,10 @@ public class WeightTicketRegistrationService {
         for (String matnr : arr_matnr) {
             sAPService.syncBatchStocks(sloc.getLgort(), matnr);
         }
+    }
+    
+    public Unit getUnit(){
+        List<Unit> units = unitRepository.getListUnit();
+        return units.get(0);
     }
 }

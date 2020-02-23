@@ -2866,7 +2866,7 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
 
         public void updateDataForOtherMode() {
             WeightTicketDetail weightTicketDetail = new WeightTicketDetail();
-            weightTicketDetail.setUnit("TON");
+            weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
 
             MaterialInternal material = (MaterialInternal) cbxMaterialTypeN.getSelectedItem();
             weightTicketDetail.setMatnrRef(material.getMatnr());
@@ -3275,7 +3275,7 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
             weightTicketDetail.setRegItemQuantity(purchaseOrderDetail.getQuantity());
             weightTicketDetail.setMatnrRef(purchaseOrderDetail.getMaterial());
             weightTicketDetail.setKunnr(purchaseOrder.getCustomer());
-            weightTicketDetail.setUnit("TON");
+            weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
 
             strMatnr = purchaseOrderDetail.getMaterial();
 
