@@ -1764,7 +1764,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             return null;
         }
         if ((txtPONo.getText() != null && !"".equals(txtPONo.getText())) && purOrder != null) {
-            if (purOrder.getDocType().equals("UB")) {
+            if (purOrder.getDocType()!= null && purOrder.getDocType().equals("UB")) {
                 Material m = null;
                 PurchaseOrderDetail purchaseOrderDetail = purOrder.getPurchaseOrderDetail();
                 try {
