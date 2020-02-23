@@ -641,7 +641,7 @@ public class WeighBridgeView extends FrameView {
         @Override protected Object doInBackground() {
             setStep(1, resourceMapMsg.getString("msg.isSyncMasterData"));
             SyncMasterDataService syncMasterDataService = new SyncMasterDataService();
-            syncMasterDataService.syncMasterDataWhenLogin();
+            syncMasterDataService.syncMasterData();
             return null;  // return your result
         }
 
