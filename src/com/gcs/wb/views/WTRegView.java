@@ -429,12 +429,12 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnFilterLayout.createSequentialGroup()
                         .addComponent(btnFind)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 667, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 651, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnFilterLayout.createSequentialGroup()
                         .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(cbxMaterialType, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(txtDriverName)
-                            .addComponent(dpDateFrom, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(dpDateFrom, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE))
                         .addGap(31, 31, 31)
                         .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(lblPlateNo)
@@ -450,15 +450,16 @@ public class WTRegView extends javax.swing.JInternalFrame {
                             .addComponent(lblHourFrom)
                             .addComponent(lblCreator))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(pnFilterLayout.createSequentialGroup()
                                 .addComponent(cbxHourFrom, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(12, 12, 12)
                                 .addComponent(lblHourTo)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(cbxHourTo, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(txtCreator, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE))))
-                .addGap(101, 101, 101))
+                            .addComponent(txtCreator))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGap(117, 117, 117))
         );
         pnFilterLayout.setVerticalGroup(
             pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1176,7 +1177,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addComponent(pnRegistrationOfVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(pnControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(127, Short.MAX_VALUE))
+                .addContainerGap(126, Short.MAX_VALUE))
         );
 
         pack();
@@ -1451,12 +1452,6 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
 
         txtSONumN.setText(String.join(" - ", soNums));
 
-        boolean isPlateNoValid = wtRegisValidation.validatePlateNo(txtPlateNoN.getText(), lblPlateNoN);
-        if (!isPlateNoValid) {
-            JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.plzInputPlateNo"));
-            return null;
-        }
-
         return new CheckSOTask(WeighBridgeApp.getApplication());
     }
 
@@ -1488,10 +1483,7 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
                             if (!doNumber.getMessage().trim().isEmpty()) {
                                 setMessage(doNumber.getMessage());
                                 JOptionPane.showMessageDialog(rootPane, doNumber.getMessage());
-                                String msg = "Số SO " + doNumber.getVbelnSO() + " sai, vui lòng nhập lại!";
-                                txtDONumN.setText(null);
-                                setMessage(msg);
-                                JOptionPane.showMessageDialog(rootPane, msg);
+                                txtDONumN.setText(null);                             
                                 return null;
                             } else {
                                 if (doNum.isEmpty()) {

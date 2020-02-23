@@ -249,9 +249,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         btnIScaleReset = new javax.swing.JButton();
         btnOScaleReset = new javax.swing.JButton();
         pnWTicket = new javax.swing.JPanel();
-        btnPostAgain = new javax.swing.JButton();
-        btnReprint = new javax.swing.JButton();
-        btnSave = new javax.swing.JButton();
         pnWTLeft = new javax.swing.JPanel();
         lblRegCat = new javax.swing.JLabel();
         rbtInward = new javax.swing.JRadioButton();
@@ -314,6 +311,10 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         lblSO = new javax.swing.JLabel();
         txtSO = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        btnPostAgain = new javax.swing.JButton();
+        btnReprint = new javax.swing.JButton();
+        btnSave = new javax.swing.JButton();
 
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(WeightTicketView.class);
         setBackground(resourceMap.getColor("Form.background")); // NOI18N
@@ -384,7 +385,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(lblWTNum)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtWTNum, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE)
+                .addComponent(txtWTNum, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -501,7 +502,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                 .addComponent(txfCurScale, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(4, 4, 4)
                                 .addComponent(lblKG)))))
-                .addGap(53, 53, 53))
+                .addGap(54, 54, 54))
         );
         pnCurScaleDataLayout.setVerticalGroup(
             pnCurScaleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -704,29 +705,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         pnWTicket.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("pnWTicket.border.title"))); // NOI18N
         pnWTicket.setName("pnWTicket"); // NOI18N
 
-        btnPostAgain.setText(resourceMap.getString("btnPostAgain.text")); // NOI18N
-        btnPostAgain.setEnabled(false);
-        btnPostAgain.setName("btnPostAgain"); // NOI18N
-        btnPostAgain.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPostAgainActionPerformed(evt);
-            }
-        });
-
-        btnReprint.setAction(actionMap.get("reprintWT")); // NOI18N
-        btnReprint.setText(resourceMap.getString("btnReprint.text")); // NOI18N
-        btnReprint.setName("btnReprint"); // NOI18N
-
-        btnSave.setAction(actionMap.get("saveWT")); // NOI18N
-        btnSave.setFont(resourceMap.getFont("btnSave.font")); // NOI18N
-        btnSave.setText(resourceMap.getString("btnSave.text")); // NOI18N
-        btnSave.setName("btnSave"); // NOI18N
-        btnSave.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSaveActionPerformed(evt);
-            }
-        });
-
         pnWTLeft.setName("pnWTLeft"); // NOI18N
 
         lblRegCat.setText(resourceMap.getString("lblRegCat.text")); // NOI18N
@@ -864,6 +842,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnWTLeftLayout.createSequentialGroup()
                 .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblRemark)
                     .addComponent(lblPallet)
                     .addComponent(lblGRText)
                     .addComponent(lblSling)
@@ -879,34 +858,27 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     .addComponent(lblLicPlate))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnWTLeftLayout.createSequentialGroup()
-                        .addGap(19, 19, 19)
+                    .addComponent(txtRemark, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
+                    .addGroup(pnWTLeftLayout.createSequentialGroup()
                         .addComponent(rbtInward)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
-                        .addComponent(rbtOutward)
-                        .addGap(10, 10, 10))
-                    .addComponent(txtRegistrationNo, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
-                    .addComponent(txtDName, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
-                    .addComponent(txtGRText, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
-                    .addComponent(txtTrailerPlate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
-                    .addComponent(txtSling, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
-                    .addComponent(txtLicPlate, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
-                    .addComponent(txtCMNDBL, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
-                    .addComponent(txtPallet, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
-                    .addComponent(txtTicketId, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
-                    .addComponent(txtBatchProduce, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
-                    .addComponent(txtCementDesc, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
-                    .addComponent(txtWeightTicketIdRef, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnWTLeftLayout.createSequentialGroup()
-                        .addComponent(lblProcedure)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtProcedure, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE))
-                    .addGroup(pnWTLeftLayout.createSequentialGroup()
-                        .addComponent(lblRemark)
+                        .addComponent(rbtOutward)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblProcedure)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtRemark, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)))
+                        .addComponent(txtProcedure, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE))
+                    .addComponent(txtRegistrationNo, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
+                    .addComponent(txtDName, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
+                    .addComponent(txtGRText, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
+                    .addComponent(txtTrailerPlate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
+                    .addComponent(txtSling, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
+                    .addComponent(txtLicPlate, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
+                    .addComponent(txtCMNDBL, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
+                    .addComponent(txtPallet, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
+                    .addComponent(txtTicketId, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
+                    .addComponent(txtBatchProduce, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
+                    .addComponent(txtCementDesc, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
+                    .addComponent(txtWeightTicketIdRef, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE))
                 .addContainerGap())
         );
         pnWTLeftLayout.setVerticalGroup(
@@ -914,9 +886,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             .addGroup(pnWTLeftLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(rbtOutward)
-                    .addComponent(rbtInward)
                     .addComponent(lblRegCat)
+                    .addComponent(rbtInward)
+                    .addComponent(rbtOutward)
                     .addComponent(lblProcedure)
                     .addComponent(txtProcedure, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -950,9 +922,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
                     .addComponent(lblGRText)
-                    .addComponent(txtGRText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtRemark, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblRemark))
+                    .addComponent(txtGRText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtCementDesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -969,7 +939,11 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtWeightTicketIdRef, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblWeightTicketIdRef))
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblRemark)
+                    .addComponent(txtRemark, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
 
         pnWTRight.setName("pnWTRight"); // NOI18N
@@ -1177,25 +1151,25 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                 .addComponent(lblLgortIn, javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(lblDelNum, javax.swing.GroupLayout.Alignment.TRAILING)))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(cbxVendorTransport, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cbxCharg, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cbxVendorLoading, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cbxSLoc, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtDelNum)
-                    .addComponent(txtSO, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
-                    .addComponent(txtMatnr)
-                    .addComponent(txtPONo, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
-                    .addComponent(cbxKunnr, 0, 260, Short.MAX_VALUE)
-                    .addComponent(txtChargIn, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
-                    .addComponent(txtPoPosto, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
-                    .addComponent(txtLgortIn, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
-                    .addComponent(txtRegItem, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
-                    .addGroup(pnWTRightLayout.createSequentialGroup()
-                        .addComponent(txtWeight, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cbxVendorTransport, 0, 340, Short.MAX_VALUE)
+                    .addComponent(cbxCharg, 0, 340, Short.MAX_VALUE)
+                    .addComponent(cbxVendorLoading, 0, 340, Short.MAX_VALUE)
+                    .addComponent(cbxSLoc, 0, 340, Short.MAX_VALUE)
+                    .addComponent(txtSO, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE)
+                    .addComponent(txtMatnr, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE)
+                    .addComponent(txtPONo, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE)
+                    .addComponent(txtChargIn, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE)
+                    .addComponent(txtPoPosto, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE)
+                    .addComponent(txtLgortIn, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE)
+                    .addComponent(txtRegItem, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE)
+                    .addComponent(txtDelNum, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnWTRightLayout.createSequentialGroup()
+                        .addComponent(txtWeight, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel1)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbxKunnr, 0, 340, Short.MAX_VALUE))
+                .addContainerGap())
         );
         pnWTRightLayout.setVerticalGroup(
             pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1228,7 +1202,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
                     .addComponent(lbKunnr)
-                    .addComponent(cbxKunnr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbxKunnr, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbxSLoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1257,42 +1231,79 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbxVendorTransport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblVendorTransport))
-                .addContainerGap())
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         txtMatnr.getAccessibleContext().setAccessibleName(resourceMap.getString("txtMatnr.AccessibleContext.accessibleName")); // NOI18N
+
+        jPanel1.setName("jPanel1"); // NOI18N
+
+        btnPostAgain.setText(resourceMap.getString("btnPostAgain.text")); // NOI18N
+        btnPostAgain.setEnabled(false);
+        btnPostAgain.setName("btnPostAgain"); // NOI18N
+        btnPostAgain.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPostAgainActionPerformed(evt);
+            }
+        });
+
+        btnReprint.setAction(actionMap.get("reprintWT")); // NOI18N
+        btnReprint.setText(resourceMap.getString("btnReprint.text")); // NOI18N
+        btnReprint.setName("btnReprint"); // NOI18N
+
+        btnSave.setAction(actionMap.get("saveWT")); // NOI18N
+        btnSave.setFont(resourceMap.getFont("btnSave.font")); // NOI18N
+        btnSave.setText(resourceMap.getString("btnSave.text")); // NOI18N
+        btnSave.setName("btnSave"); // NOI18N
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(699, Short.MAX_VALUE)
+                .addComponent(btnPostAgain)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnReprint)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnSave)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(btnSave)
+                .addComponent(btnReprint)
+                .addComponent(btnPostAgain))
+        );
 
         javax.swing.GroupLayout pnWTicketLayout = new javax.swing.GroupLayout(pnWTicket);
         pnWTicket.setLayout(pnWTicketLayout);
         pnWTicketLayout.setHorizontalGroup(
             pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnWTicketLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnWTicketLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnWTicketLayout.createSequentialGroup()
-                        .addComponent(btnPostAgain)
+                .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(pnWTicketLayout.createSequentialGroup()
+                        .addComponent(pnWTLeft, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnReprint)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnSave))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnWTicketLayout.createSequentialGroup()
-                        .addComponent(pnWTLeft, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(pnWTRight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(pnWTRight, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         pnWTicketLayout.setVerticalGroup(
             pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnWTicketLayout.createSequentialGroup()
                 .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(pnWTLeft, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnWTRight, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 426, Short.MAX_VALUE))
+                    .addComponent(pnWTRight, javax.swing.GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE)
+                    .addComponent(pnWTLeft, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnSave)
-                    .addComponent(btnReprint)
-                    .addComponent(btnPostAgain))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -1305,9 +1316,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     .addComponent(pnWTicket, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pnScaleData, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(pnWTFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 611, Short.MAX_VALUE)
+                        .addComponent(pnWTFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(pnCurScale, javax.swing.GroupLayout.DEFAULT_SIZE, 327, Short.MAX_VALUE)))
+                        .addComponent(pnCurScale, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -1318,7 +1329,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     .addComponent(pnCurScale, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
                     .addComponent(pnWTFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnScaleData, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(pnScaleData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnWTicket, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -1753,7 +1764,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             return null;
         }
         if ((txtPONo.getText() != null && !"".equals(txtPONo.getText())) && purOrder != null) {
-            if (purOrder.getDocType().equals("UB")) {
+            if (purOrder.getDocType()!= null && purOrder.getDocType().equals("UB")) {
                 Material m = null;
                 PurchaseOrderDetail purchaseOrderDetail = purOrder.getPurchaseOrderDetail();
                 try {
@@ -2547,7 +2558,13 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                 regItemDescription = weightTicketDetail.getRegItemDescription();
                             } else {
                                 doNums += "-" + weightTicketDetail.getDeliveryOrderNo();
-                                regItemDescription += "-" + weightTicketDetail.getRegItemDescription();
+                                String [] regItemDescriptions = regItemDescription.split("-");
+                                for (int i = 0; i < regItemDescriptions.length; i++) {
+                                    if(!weightTicketDetail.getRegItemDescription().equals(regItemDescriptions[i])){
+                                        regItemDescription += "-" + weightTicketDetail.getRegItemDescription();
+                                    }
+                                }
+                                
                             }
                         }
                         //weightTicket.setUnit("TO");
@@ -4379,6 +4396,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lbKunnr;
     private javax.swing.JLabel lblBatchProduce;
     private javax.swing.JLabel lblCMNDBL;
