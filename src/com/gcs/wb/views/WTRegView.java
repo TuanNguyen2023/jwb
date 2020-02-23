@@ -1452,12 +1452,6 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
 
         txtSONumN.setText(String.join(" - ", soNums));
 
-        boolean isPlateNoValid = wtRegisValidation.validatePlateNo(txtPlateNoN.getText(), lblPlateNoN);
-        if (!isPlateNoValid) {
-            JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.plzInputPlateNo"));
-            return null;
-        }
-
         return new CheckSOTask(WeighBridgeApp.getApplication());
     }
 
@@ -1489,10 +1483,7 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
                             if (!doNumber.getMessage().trim().isEmpty()) {
                                 setMessage(doNumber.getMessage());
                                 JOptionPane.showMessageDialog(rootPane, doNumber.getMessage());
-                                String msg = "Số SO " + doNumber.getVbelnSO() + " sai, vui lòng nhập lại!";
-                                txtDONumN.setText(null);
-                                setMessage(msg);
-                                JOptionPane.showMessageDialog(rootPane, msg);
+                                txtDONumN.setText(null);                             
                                 return null;
                             } else {
                                 if (doNum.isEmpty()) {
