@@ -2573,6 +2573,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         setValidPONum(true);
                         setSubContract(false);
                         PurchaseOrderDetail purchaseOrderDetail = purOrder.getPurchaseOrderDetail();
+                        //txtRegItem.setText(purchaseOrderDetail.getShortText());
                         if (rbtOutward.isSelected() && purchaseOrderDetail.getItemCat() == '3' //                            && purOrder.getMaterial().equalsIgnoreCase(setting.getMatnrPcb40())
                                 ) {
                             setSubContract(true);
@@ -2582,6 +2583,17 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                             // Tuanna 2018 08015
                             txtPONo.setText(null);
                         }
+                    }
+                } else if (weightTicket.getWeightTicketDetail().getEbeln() != null && !weightTicket.getWeightTicketDetail().getEbeln().trim().isEmpty()) {
+                    purOrder = weightTicketController.findByPoNumber(weightTicket.getWeightTicketDetail().getEbeln());
+                    txtPONo.setText(weightTicket.getWeightTicketDetail().getEbeln());
+                    setValidPONum(true);
+                    setSubContract(false);
+                    PurchaseOrderDetail purchaseOrderDetail = purOrder.getPurchaseOrderDetail();
+                    txtRegItem.setText(purchaseOrderDetail.getShortText());
+                    if (rbtOutward.isSelected() && purchaseOrderDetail.getItemCat() == '3' //                            && purOrder.getMaterial().equalsIgnoreCase(setting.getMatnrPcb40())
+                            ) {
+                        setSubContract(true);
                     }
                 }
 
