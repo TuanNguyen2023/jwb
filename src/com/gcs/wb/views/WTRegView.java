@@ -3197,7 +3197,12 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
                 purchaseOrder = syncPurchaseOrder(poNum, purchaseOrder);
             }
 
-            // check exist DO
+            //Check PO Plant with Configuration parameter.
+            if (!(purchaseOrder.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant())) {
+                throw new Exception("Số P.O không được phép xuất/nhập hàng tại nhà máy này!");
+            }
+
+            // check exist PO
             if (purchaseOrder == null) {
                 throw new Exception(resourceMapMsg.getString("msg.poNotExist", poNum));
             }
@@ -3322,7 +3327,7 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
         protected Object doInBackground() throws Exception {
             String postoNum = txtPOSTONumN.getText().trim();
 
-            // get local PO
+            // get local POSTO
             setStep(1, resourceMapMsg.getString("msg.checkPOInDB"));
             PurchaseOrder purchaseOrder = purchaseOrderRepository.findByPoNumber(postoNum);
 
@@ -3331,7 +3336,12 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
                 purchaseOrder = syncPurchaseOrder(postoNum, purchaseOrder);
             }
 
-            // check exist DO
+            //Check PO Plant with Configuration parameter.
+            if (!(purchaseOrder.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant())) {
+                throw new Exception("Số POSTO không được phép xuất/nhập hàng tại nhà máy này!");
+            }
+
+            // check exist PO
             if (purchaseOrder == null) {
                 throw new Exception(resourceMapMsg.getString("msg.poNotExist", postoNum));
             }
