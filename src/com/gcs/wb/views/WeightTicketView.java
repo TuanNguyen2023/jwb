@@ -3404,19 +3404,8 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     // validate trọng lượng DO
                      flgGqty = validateTolerance(null, outbDel);
 
-                     if (flgGqty || (!toleranceUtil.isInvalidTolerance(sumQtyReg, weightTicket.getGQty(), tolorance))) {
-                         // mode nhap DO
-                        if (weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER")) {
-                            if (outbDel != null && (outbDel.getLfart().equalsIgnoreCase("LR")
-                                    || outbDel.getLfart().equalsIgnoreCase("ZRET")
-                                    || outbDel.getLfart().equalsIgnoreCase("ZVND"))) {
-                                modeFlg = "Z001";
-                                objBapi = getPgmVl02nBapi(weightTicket, outbDel, modeFlg);
-                            } else {
-                                objBapi = getGrDoMigoBapi(weightTicket, outbDel);
-                            }
-                        }
-
+                     if ((!weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER"))
+                             && (flgGqty || (!toleranceUtil.isInvalidTolerance(sumQtyReg, weightTicket.getGQty(), tolorance)))) {
                         // xuat DO
                         if (weightTicket.getMode().equals("OUT_SELL_ROAD")) {
                             modeFlg = "Z001";
@@ -3433,6 +3422,17 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         weightTicket.setPosted(false);
                         completed = false;
                         entityManager.clear();
+                    }
+                     // mode nhap DO
+                    if (weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER")) {
+                        if (outbDel != null && (outbDel.getLfart().equalsIgnoreCase("LR")
+                                || outbDel.getLfart().equalsIgnoreCase("ZRET")
+                                || outbDel.getLfart().equalsIgnoreCase("ZVND"))) {
+                            modeFlg = "Z001";
+                            objBapi = getPgmVl02nBapi(weightTicket, outbDel, modeFlg);
+                        } else {
+                            objBapi = getGrDoMigoBapi(weightTicket, outbDel);
+                        }
                     }
 
                     if (WeighBridgeApp.getApplication().isOfflineMode() == false) {
