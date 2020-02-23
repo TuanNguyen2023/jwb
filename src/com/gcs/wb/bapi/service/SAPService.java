@@ -635,9 +635,10 @@ public class SAPService {
     public List<DOCheckStructure> getDONumber(String[] soNumbers, String bsXe, String soRomoc) {
         SOGetDetailBapi bapi = new SOGetDetailBapi();
         List<SOCheckStructure> soChecks = new ArrayList<SOCheckStructure>();
-        SOCheckStructure soCheck = new SOCheckStructure();
+        SOCheckStructure soCheck;
         for (int k = 0; k < soNumbers.length; k++) {
-            soCheck.setVbeln(StringUtil.paddingZero(soNumbers[k], 10));
+            soCheck = new SOCheckStructure();
+            soCheck.setVbeln(StringUtil.paddingZero(soNumbers[k].trim(), 10));
             soCheck.setTraid(bsXe);
             soChecks.add(soCheck);
         }
