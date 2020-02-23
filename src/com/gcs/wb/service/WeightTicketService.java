@@ -968,16 +968,16 @@ public class WeightTicketService {
 //                    } else {
 //                        path = "./rpt/rptPQ/";
 //                    }
-                    if (isOffline || (txtPONo != null || !"".equals(txtPONo))) {
-
-                        reportName = path.concat("WeightTicket.jasper");
-                        //reportName = path.concat("WeightTicket.jasper");
-                    } else {
-
-                        reportName = path.concat("WeightTicket_NEW.jasper");
-                        //reportName = path.concat("WeightTicket.jasper");
-                    }
-
+//                    if (isOffline || (txtPONo != null || !"".equals(txtPONo))) {
+//
+//                        reportName = path.concat("WeightTicket.jasper");
+//                        //reportName = path.concat("WeightTicket.jasper");
+//                    } else {
+//
+//                        reportName = path.concat("WeightTicket_NEW.jasper");
+//                        //reportName = path.concat("WeightTicket.jasper");
+//                    }
+                    reportName = path.concat("WeightTicket_NEW.jasper");
                     jreportService.printReport(map, reportName);
                 }
             }
