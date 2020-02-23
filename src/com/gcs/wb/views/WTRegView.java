@@ -3198,7 +3198,7 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
             }
 
             //Check PO Plant with Configuration parameter.
-            if (!(purchaseOrder.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant())) {
+            if ((modeDetail != MODE_DETAIL.IN_PO_PURCHASE) && (!(purchaseOrder.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant()))) {
                 throw new Exception("Số P.O không được phép xuất/nhập hàng tại nhà máy này!");
             }
 
