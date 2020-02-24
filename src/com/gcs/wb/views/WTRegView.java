@@ -3197,14 +3197,14 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
                 purchaseOrder = syncPurchaseOrder(poNum, purchaseOrder);
             }
 
-            //Check PO Plant with Configuration parameter.
-            if ((modeDetail != MODE_DETAIL.IN_PO_PURCHASE) && (!(purchaseOrder.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant()))) {
-                throw new Exception("Số P.O không được phép xuất/nhập hàng tại nhà máy này!");
-            }
-
             // check exist PO
             if (purchaseOrder == null) {
                 throw new Exception(resourceMapMsg.getString("msg.poNotExist", poNum));
+            }
+
+            //Check PO Plant with Configuration parameter.
+            if ((modeDetail != MODE_DETAIL.IN_PO_PURCHASE) && (!(purchaseOrder.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant()))) {
+                throw new Exception("Số P.O không được phép xuất/nhập hàng tại nhà máy này!");
             }
 
             updateWeightTicket(purchaseOrder);
