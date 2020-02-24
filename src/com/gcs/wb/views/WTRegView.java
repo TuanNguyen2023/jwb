@@ -2305,7 +2305,7 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
             if (weightTicketDetails.size() > 0) {
                 arr_matnr = weightTicketDetails.stream().map(item -> item.getMatnrRef()).toArray(String[]::new);
             } else {
-                arr_matnr = new String[] { newWeightTicket.getRecvMatnr() };
+                arr_matnr = new String[]{newWeightTicket.getRecvMatnr()};
             }
 
             List<BatchStock> batchStocks = weightTicketRegistarationController.getBatchStocks(sloc, arr_matnr);
@@ -2634,26 +2634,17 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
             weightTicketDetail.setUnit(outboundDelivery.getVrkme());
             weightTicketDetail.setKunnr(outboundDelivery.getKunnr());
             weightTicketDetail.setDeliveryOrderNo(outboundDelivery.getDeliveryOrderNo());
+            weightTicketDetail.setRegItemQuantity(outboundDelivery.getLfimg());
 
-            BigDecimal weight = BigDecimal.ZERO;
-            List<OutboundDeliveryDetail> outboundDeliveryDetails = outboundDelivery.getOutboundDeliveryDetails();
-            for (OutboundDeliveryDetail outboundDeliveryDetail : outboundDeliveryDetails) {
-                if (!strMaterial.contains(outboundDeliveryDetail.getArktx())) {
-                    strMaterial.add(outboundDeliveryDetail.getArktx());
-                }
-                weight = weight.add(outboundDeliveryDetail.getLfimg());
-            }
+            strMaterial.add(outboundDelivery.getArktx());
+            totalWeight = totalWeight.add(outboundDelivery.getLfimg());
 
-            totalWeight = totalWeight.add(weight);
-            weightTicketDetail.setRegItemQuantity(weight);
             newWeightTicket.setWeightTicketIdRef(outboundDelivery.getWtIdRef());
             newWeightTicket.addWeightTicketDetail(weightTicketDetail);
         }
 
         private boolean checkMaterial(OutboundDelivery outboundDelivery) {
-            return !outboundDelivery.getOutboundDeliveryDetails().stream().anyMatch(po -> {
-                return !materialGroupRepository.hasData(configuration.getSapClient(), configuration.getWkPlant(), po.getMatnr());
-            });
+                return materialGroupRepository.hasData(configuration.getSapClient(), configuration.getWkPlant(), outboundDelivery.getMatnr());
         }
 
         private boolean isDOInUsed(String deliveryOrderNo, OutboundDelivery outboundDelivery) {
