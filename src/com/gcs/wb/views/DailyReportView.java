@@ -100,11 +100,6 @@ public class DailyReportView extends javax.swing.JInternalFrame {
 
         dpDateTo.setDate(Calendar.getInstance().getTime());
         dpDateTo.setName("dpDateTo"); // NOI18N
-        dpDateTo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                dpDateToActionPerformed(evt);
-            }
-        });
         dpDateTo.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 dpDateToPropertyChange(evt);
@@ -188,7 +183,7 @@ public class DailyReportView extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(pnFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(4, 4, 4)
-                .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+                .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnPrintReport)
                 .addContainerGap())
@@ -208,10 +203,6 @@ private void dpDateFromPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN
         validateFilterForm();
     }
 }//GEN-LAST:event_dpDateFromPropertyChange
-
-private void dpDateToActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dpDateToActionPerformed
-// TODO add your handling code here:
-}//GEN-LAST:event_dpDateToActionPerformed
 
     private void validateFilterForm() {
         try {

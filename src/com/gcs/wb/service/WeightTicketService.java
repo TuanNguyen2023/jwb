@@ -787,8 +787,8 @@ public class WeightTicketService {
                 qtyfree = new BigDecimal(0);
             }
             qty = wt.getGQty().subtract(qtyfree);
-            tab_wa.setPikmg(kl);
-            tab_wa.setLfimg(kl);
+            tab_wa.setPikmg(qty);
+            tab_wa.setLfimg(qty);
         }
 
         GoodsMvtWeightTicketStructure stWT = fillWTStructure(weightTicket, outbDel, outDetails_lits, weightTicket);

@@ -13,6 +13,7 @@ import com.gcs.wb.base.constant.Constants.WeighingProcess.MODE_DETAIL;
 import com.gcs.wb.base.enums.MaterialEnum;
 import com.gcs.wb.base.enums.StatusEnum;
 import com.gcs.wb.base.util.StringUtil;
+import com.gcs.wb.base.validator.DateFromToValidator;
 import com.gcs.wb.controller.WeightTicketController;
 import com.gcs.wb.controller.WeightTicketRegistarationController;
 import com.gcs.wb.jpa.JPAConnector;
@@ -74,6 +75,8 @@ public class WTRegView extends javax.swing.JInternalFrame {
     // TODO update ui
     private MODE mode = MODE.OUTPUT;
     private MODE_DETAIL modeDetail;
+    private final DateFromToValidator dateFromToValidator = new DateFromToValidator();
+    public static final String SDATE = "date";
     private WeightTicketRegistrationValidation wtRegisValidation;
     private PurchaseOrderRepository purchaseOrderRepository = new PurchaseOrderRepository();
     MaterialInternalRepository materialInternalRepository = new MaterialInternalRepository();
@@ -338,9 +341,9 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         dpDateFrom.setDate(Calendar.getInstance().getTime());
         dpDateFrom.setName("dpDateFrom"); // NOI18N
-        dpDateFrom.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                dpDateFromActionPerformed(evt);
+        dpDateFrom.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                dpDateFromPropertyChange(evt);
             }
         });
 
@@ -349,6 +352,11 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         dpDateTo.setDate(Calendar.getInstance().getTime());
         dpDateTo.setName("dpDateTo"); // NOI18N
+        dpDateTo.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                dpDateToPropertyChange(evt);
+            }
+        });
 
         lblMaterialType.setLabelFor(cbxMaterialType);
         lblMaterialType.setText(resourceMap.getString("lblMaterialType.text")); // NOI18N
@@ -427,9 +435,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                     .addComponent(lblMaterialType))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnFilterLayout.createSequentialGroup()
-                        .addComponent(btnFind)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 651, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnFind)
                     .addGroup(pnFilterLayout.createSequentialGroup()
                         .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(cbxMaterialType, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -457,8 +463,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                                 .addComponent(lblHourTo)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(cbxHourTo, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(txtCreator))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(txtCreator))))
                 .addGap(117, 117, 117))
         );
         pnFilterLayout.setVerticalGroup(
@@ -1177,7 +1182,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addComponent(pnRegistrationOfVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(pnControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(126, Short.MAX_VALUE))
+                .addContainerGap(125, Short.MAX_VALUE))
         );
 
         pack();
@@ -1191,9 +1196,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
             cbxHourTo.setSelectedIndex(cbxHourFrom.getSelectedIndex());
         }
     }//GEN-LAST:event_cbxHourToItemStateChanged
-
-    private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dpDateFromActionPerformed
-    }//GEN-LAST:event_dpDateFromActionPerformed
 
 private void rbtInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtInputActionPerformed
     loadModeTypeModel(MODE.INPUT);
@@ -1402,6 +1404,32 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
     txtPlateNoN.setText(txtPlateNoN.getText().toUpperCase());
 }//GEN-LAST:event_txtPlateNoNFocusLost
 
+private void dpDateToPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_dpDateToPropertyChange
+    if (SDATE.equals(evt.getPropertyName())) {
+        validateFilterForm();
+    }
+}//GEN-LAST:event_dpDateToPropertyChange
+
+private void dpDateFromPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_dpDateFromPropertyChange
+    if (SDATE.equals(evt.getPropertyName())) {
+        validateFilterForm();
+    }
+}//GEN-LAST:event_dpDateFromPropertyChange
+
+    private void validateFilterForm() {
+        try {
+            dateFromToValidator.validate(dpDateFrom.getDate(), dpDateTo.getDate());
+
+            lblDateFrom.setForeground(Color.black);
+            lblDateTo.setForeground(Color.black);
+            btnFind.setEnabled(true);
+        } catch (IllegalArgumentException ex) {
+            lblDateFrom.setForeground(Color.red);
+            lblDateTo.setForeground(Color.red);
+            btnFind.setEnabled(false);
+        }
+    }
+
     private DefaultComboBoxModel getMatsModel() {
         return weightTicketRegistarationController.getMatsModel();
     }
@@ -1433,9 +1461,16 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
 
     @Action(block = Task.BlockingScope.ACTION)
     public Task checkDO() {
-        String[] doNums = Stream.of(txtDONumN.getText().split("-"))
-                .map(s -> StringUtil.paddingZero(s.trim(), 10))
+        String[] beforeDoNums = txtDONumN.getText().split("-");
+        String[] doNums = Stream.of(beforeDoNums)
+                .map(s -> StringUtil.paddingZero(s.trim(), 10)).distinct()
                 .toArray(String[]::new);
+
+        if (doNums.length != beforeDoNums.length) {
+            JOptionPane.showMessageDialog(rootPane,
+                    resourceMapMsg.getString("msg.duplicateDo"));
+            return null;
+        }
 
         txtDONumN.setText(String.join(" - ", doNums));
 
@@ -1451,9 +1486,16 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
 
     @Action(block = Task.BlockingScope.ACTION)
     public Task checkSO() {
-        String[] soNums = Stream.of(txtSONumN.getText().split("-"))
-                .map(s -> StringUtil.paddingZero(s.trim(), 10))
+        String[] beforeSoNums = txtSONumN.getText().split("-");
+        String[] soNums = Stream.of(beforeSoNums)
+                .map(s -> StringUtil.paddingZero(s.trim(), 10)).distinct()
                 .toArray(String[]::new);
+
+        if (soNums.length != beforeSoNums.length) {
+            JOptionPane.showMessageDialog(rootPane,
+                    resourceMapMsg.getString("msg.duplicateSo"));
+            return null;
+        }
 
         txtSONumN.setText(String.join(" - ", soNums));
 
@@ -2580,14 +2622,14 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
                 //Check Delivery Plant with Configuration parameter.
                 if ((!(outboundDelivery.getWerks()).equals(configuration.getWkPlant()))
                         && (!(outboundDelivery.getRecvPlant()).equals(configuration.getWkPlant()))) {
-                    throw new Exception("Số D.O không được phép xuất/nhập hàng tại nhà máy này!");
+                    throw new Exception(resourceMapMsg.getString("msg.doIsDenied"));
                 }
 
                 // check mapping Plate No
                 String plateNo = txtPlateNoN.getText().trim();
                 String traid = outboundDelivery.getTraid().trim();
                 if (!traid.isEmpty() && !traid.startsWith(plateNo)) {
-                    throw new Exception(resourceMapMsg.getString("msg.notDuplicateLicensePlate"));
+                    throw new Exception(resourceMapMsg.getString("msg.plateNoNotResgiterIO", plateNo, deliveryOrderNo));
                 }
 
                 // check DO in used
@@ -2612,7 +2654,7 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
                 setStep(2, resourceMapMsg.getString("checkDOInSap"));
                 OutboundDelivery sapOutboundDelivery = sapService.getOutboundDelivery(deliveryOrderNo);
 
-                setStep(3, resourceMapMsg.getString("msg.saveDataToDb"));
+                setStep(3, resourceMapMsg.getString("msg.saveDataDOToDb"));
                 return sapService.syncOutboundDelivery(sapOutboundDelivery, outboundDelivery, deliveryOrderNo);
             } catch (Exception ex) {
                 return null;
@@ -3198,7 +3240,9 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
             }
 
             //Check PO Plant with Configuration parameter.
-            if ((modeDetail != MODE_DETAIL.IN_PO_PURCHASE) && (!(purchaseOrder.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant()))) {
+            if ((modeDetail != MODE_DETAIL.IN_PO_PURCHASE)
+                    && (modeDetail != MODE_DETAIL.OUT_PLANT_PLANT)
+                    && (!(purchaseOrder.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant()))) {
                 throw new Exception("Số P.O không được phép xuất/nhập hàng tại nhà máy này!");
             }
 
@@ -3259,7 +3303,7 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
                 PurchaseOrder sapPurchaseOrder = sapService.getPurchaseOrder(poNum);
                 List<PurchaseOrderDetail> poItems = sapPurchaseOrder.getPurchaseOrderDetails();
 
-                setStep(3, resourceMapMsg.getString("msg.saveDataToDb"));
+                setStep(3, resourceMapMsg.getString("msg.saveDataPOToDb"));
                 return sapService.syncPurchaseOrder(sapPurchaseOrder, purchaseOrder);
             } catch (Exception ex) {
                 return null;
@@ -3328,7 +3372,7 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
             String postoNum = txtPOSTONumN.getText().trim();
 
             // get local POSTO
-            setStep(1, resourceMapMsg.getString("msg.checkPOInDB"));
+            setStep(1, resourceMapMsg.getString("msg.checkPOSTOInDB"));
             PurchaseOrder purchaseOrder = purchaseOrderRepository.findByPoNumber(postoNum);
 
             // sync from SAP
@@ -3336,14 +3380,14 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
                 purchaseOrder = syncPurchaseOrder(postoNum, purchaseOrder);
             }
 
-            //Check PO Plant with Configuration parameter.
-            if (!(purchaseOrder.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant())) {
-                throw new Exception("Số POSTO không được phép xuất/nhập hàng tại nhà máy này!");
-            }
-
             // check exist PO
             if (purchaseOrder == null) {
-                throw new Exception(resourceMapMsg.getString("msg.poNotExist", postoNum));
+                throw new Exception(resourceMapMsg.getString("msg.postoNotExist", postoNum));
+            }
+
+            //Check PO Plant with Configuration parameter.
+            if (!(purchaseOrder.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant())) {
+                throw new Exception(resourceMapMsg.getString("msg.postoIsDenied"));
             }
 
             updateWeightTicket(purchaseOrder);
@@ -3387,10 +3431,10 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
 
         private PurchaseOrder syncPurchaseOrder(String poNum, PurchaseOrder purchaseOrder) {
             try {
-                setStep(2, resourceMapMsg.getString("checkPOInSap"));
+                setStep(2, resourceMapMsg.getString("checkPOSTOInSap"));
                 PurchaseOrder sapPurchaseOrder = sapService.getPurchaseOrder(poNum);
 
-                setStep(3, resourceMapMsg.getString("msg.saveDataToDb"));
+                setStep(3, resourceMapMsg.getString("msg.saveDataPOSTOToDb"));
                 return sapService.syncPurchaseOrder(sapPurchaseOrder, purchaseOrder);
             } catch (Exception ex) {
                 return null;

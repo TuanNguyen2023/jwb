@@ -62,7 +62,7 @@
               <Component id="pnRegistrationOfVehicle" min="-2" pref="418" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="pnControl" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="126" max="32767" attributes="0"/>
+              <EmptySpace pref="125" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -95,10 +95,7 @@
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="btnFind" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="651" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="btnFind" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="cbxMaterialType" max="32767" attributes="3"/>
@@ -133,7 +130,6 @@
                               </Group>
                               <Component id="txtCreator" max="32767" attributes="1"/>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace min="-2" pref="117" max="-2" attributes="0"/>
@@ -199,7 +195,7 @@
             <Property name="name" type="java.lang.String" value="dpDateFrom" noResource="true"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="dpDateFromActionPerformed"/>
+            <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="dpDateFromPropertyChange"/>
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lblDateTo">
@@ -215,6 +211,9 @@
             </Property>
             <Property name="name" type="java.lang.String" value="dpDateTo" noResource="true"/>
           </Properties>
+          <Events>
+            <EventHandler event="propertyChange" listener="java.beans.PropertyChangeListener" parameters="java.beans.PropertyChangeEvent" handler="dpDateToPropertyChange"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lblMaterialType">
           <Properties>
