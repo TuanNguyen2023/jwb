@@ -204,7 +204,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         DefaultComboBoxModel sLoc2Model = (DefaultComboBoxModel) SerializationUtils.clone(sLocModel);
         cbxSlocN.setModel(sLocModel);
         cbxSloc2N.setModel(sLoc2Model);
-        
+
         DefaultComboBoxModel vendorModel = weightTicketRegistarationController.getVendorModel();
         DefaultComboBoxModel vendor2Model = (DefaultComboBoxModel) SerializationUtils.clone(vendorModel);
         cbxVendorLoadingN.setModel(vendorModel);
@@ -1328,6 +1328,9 @@ private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//
     if (newWeightTicket != null) {
         newWeightTicket.setRecvMatnr(materialInternal.getMatnr());
     }
+
+    loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
+    loadBatchStockModel(cbxSloc2N, cbxBatchStock2N, false);
 }//GEN-LAST:event_cbxMaterialTypeNActionPerformed
 
 private void cbxVendorLoadingNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxVendorLoadingNActionPerformed
@@ -1388,7 +1391,7 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
                 }
             }
         }
-        
+
         validateForm();
     } else {
         isValidVendorTransport = true;
@@ -1793,6 +1796,7 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
         showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
 
         cbxMaterialTypeN.setModel(weightTicketRegistarationController.getListMaterialInternal());
+        cbxMaterialTypeN.setSelectedIndex(-1);
     }
 
     private void prepareOutSellRoad() {
@@ -1887,6 +1891,7 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
         showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
 
         cbxMaterialTypeN.setModel(sapService.getMaterialModel());
+        cbxMaterialTypeN.setSelectedIndex(-1);
     }
 
     private void prepareOutPullStation() {
@@ -2296,16 +2301,16 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
             }
 
             List<WeightTicketDetail> weightTicketDetails = newWeightTicket.getWeightTicketDetails();
+            String[] arr_matnr;
             if (weightTicketDetails.size() > 0) {
-                String[] arr_matnr = weightTicketDetails.stream().map(item -> item.getMatnrRef()).toArray(String[]::new);
-
-                if (!WeighBridgeApp.getApplication().isOfflineMode()) {
-                    weightTicketRegistarationController.getSyncBatchStocks(sloc, arr_matnr);
-                }
-                List<BatchStock> batchStocks = weightTicketRegistarationController.getBatchStocks(sloc, arr_matnr);
-                batchStockComponent.setModel(weightTicketRegistarationController.getBatchStockModel(batchStocks));
-                batchStockComponent.setSelectedIndex(-1);
+                arr_matnr = weightTicketDetails.stream().map(item -> item.getMatnrRef()).toArray(String[]::new);
+            } else {
+                arr_matnr = new String[] { newWeightTicket.getRecvMatnr() };
             }
+
+            List<BatchStock> batchStocks = weightTicketRegistarationController.getBatchStocks(sloc, arr_matnr);
+            batchStockComponent.setModel(weightTicketRegistarationController.getBatchStockModel(batchStocks));
+            batchStockComponent.setSelectedIndex(-1);
         }
 
         validateForm();
@@ -2566,7 +2571,7 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
                 if (outboundDelivery == null) {
                     throw new Exception(resourceMapMsg.getString("msg.dONotExitst", deliveryOrderNo));
                 }
-                
+
                 // check status post SAP
                 if (outboundDelivery.getVbelnNach() != null && !outboundDelivery.getVbelnNach().trim().isEmpty()) {
                     throw new Exception("Số D.O \"" + deliveryOrderNo + "\" đã được nhập hàng tại chứng từ " + outboundDelivery.getVbelnNach() + "!");
@@ -2589,7 +2594,6 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
 //                if (isDOInUsed(deliveryOrderNo, outboundDelivery)) {
 //                    throw new Exception(resourceMapMsg.getString("msg.typeDO", deliveryOrderNo, getMode(outboundDelivery)));
 //                }
-                
                 // check out together
                 if (deliveryOrderNos.length > 1 && !checkMaterial(outboundDelivery)) {
                     throw new Exception(resourceMapMsg.getString("msg.materialNotTogether"));
@@ -2645,7 +2649,7 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
             newWeightTicket.setWeightTicketIdRef(outboundDelivery.getWtIdRef());
             newWeightTicket.addWeightTicketDetail(weightTicketDetail);
         }
-        
+
         private boolean checkMaterial(OutboundDelivery outboundDelivery) {
             return !outboundDelivery.getOutboundDeliveryDetails().stream().anyMatch(po -> {
                 return !materialGroupRepository.hasData(configuration.getSapClient(), configuration.getWkPlant(), po.getMatnr());
@@ -2728,8 +2732,8 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
         private String getAutoGeneratedId(int seqByMonth) {
             String wPlantMap = StringUtil.isNotEmptyString(configuration.getWplantMap()) ? configuration.getWplantMap().substring(0, 1) : "0";
             String code = wPlantMap
-                + DateTimeFormatter.ofPattern("yyMMDD").format(LocalDateTime.now()).substring(0, 4)
-                + StringUtil.paddingZero(String.valueOf(seqByMonth), 5);
+                    + DateTimeFormatter.ofPattern("yyMMDD").format(LocalDateTime.now()).substring(0, 4)
+                    + StringUtil.paddingZero(String.valueOf(seqByMonth), 5);
             return code;
         }
 
