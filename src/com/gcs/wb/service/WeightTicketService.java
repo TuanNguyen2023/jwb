@@ -144,8 +144,8 @@ public class WeightTicketService {
     }
 
     public WeightTicket findWeightTicket(WeightTicket weightTicket, String id, String mandt, String wplant) {
-        //return entityManager.find(WeightTicket.class, id);
-        return weightTicketRepository.getWeightTicketByIdAndMandtAndWplant(id, mandt, wplant);
+        return entityManager.find(WeightTicket.class, id);
+        //return weightTicketRepository.getWeightTicketByIdAndMandtAndWplant(id, mandt, wplant);
     }
 
     public PurchaseOrder findPurOrder(String poNum) {
@@ -834,8 +834,8 @@ public class WeightTicketService {
             Long bags = null;
             if ((outbDel_list == null || outbDel_list.isEmpty()) && (isOffline || (txtPONo != null || !"".equals(txtPONo)))) {
                 // can posto xi mang 
-                map.put("P_MANDT", configuration.getSapClient());
-                map.put("P_WPlant", configuration.getWkPlant());
+                map.put("P_MANDT", wt.getMandt());
+                map.put("P_WPlant", wt.getWplant());
                 map.put("P_ID", wt.getId());
                 map.put("P_DAYSEQ", wt.getSeqDay());
                 map.put("P_REPRINT", reprint);
@@ -894,8 +894,8 @@ public class WeightTicketService {
                     if (wt.getFScale() != null) {
                         outbDel = item;
                     }
-                    map.put("P_MANDT", configuration.getSapClient());
-                    map.put("P_WPlant", configuration.getWkPlant());
+                    map.put("P_MANDT", wt.getMandt());
+                    map.put("P_WPlant", wt.getWplant());
                     map.put("P_ID", wt.getId());
                     map.put("P_DAYSEQ", wt.getSeqDay());
                     map.put("P_REPRINT", reprint);
@@ -908,7 +908,7 @@ public class WeightTicketService {
                     if (wt.getGQty() != null) {
                         gqty = wt.getGQty();
                     }
-                    if (reprint && wt.isPosted()) {
+                    if (reprint && wt.isDissolved()) {
                         sscale = BigDecimal.ZERO;
                         gqty = BigDecimal.ZERO;
                     }
@@ -925,7 +925,9 @@ public class WeightTicketService {
                     }
 
                     if (outbDel.getFreeQty() != null) {
-                        map.put("P_TOTAL_QTY", String.valueOf(outbDel.getLfimg()));
+                        map.put("P_FREE", String.valueOf(outbDel.getFreeQty()));
+                        map.put("P_TOTAL_QTY_REG", String.valueOf(wt.getWeightTicketDetail().getRegItemQuantity().subtract(outbDel.getFreeQty())));        
+                        map.put("P_TOTAL_QTY", String.valueOf(wt.getWeightTicketDetail().getRegItemQuantity()));
                         if (outbDel != null && (outbDel.getLfart().equalsIgnoreCase("LF") || outbDel.getLfart().equalsIgnoreCase("ZTLF") || outbDel.getLfart().equalsIgnoreCase("NL"))) {
                             Double tmp;
                             // Double tmp = ((outbDel.getLfimg().doubleValue() + outbDel.getFreeQty().doubleValue()) * 1000d) / 50d;

@@ -56,6 +56,8 @@
 		<parameter name="P_PCB40BAG" class="java.lang.Long" isForPrompting="false"/>
 		<parameter name="P_STAGE1" class="java.lang.Boolean" isForPrompting="false"/>
 		<parameter name="P_STAGE2" class="java.lang.Boolean" isForPrompting="false"/>
+		<parameter name="P_FREE" class="java.lang.String"/>
+		<parameter name="P_TOTAL_QTY_REG" class="java.lang.String"/>
 		<queryString>
 			<![CDATA[p_report_online_outbound_detail $P{P_MANDT},$P{P_DEL_NUM}]]>
 		</queryString>
@@ -80,6 +82,8 @@
 	<parameter name="P_PCB40BAG" class="java.lang.Long"/>
 	<parameter name="P_DEL_NUM" class="java.lang.String"/>
 	<parameter name="P_TOTAL_QTY" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="P_TOTAL_QTY_REG" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="P_FREE" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="P_MAT_DOC" class="java.lang.String"/>
 	<parameter name="P_SSCALE" class="java.math.BigDecimal" isForPrompting="false"/>
 	<parameter name="P_GQTY" class="java.math.BigDecimal"/>
@@ -780,7 +784,7 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 								<textElement textAlignment="Right" verticalAlignment="Middle">
 									<font fontName="DejaVu Sans" size="8"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{outb_details_LFIMG}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{outb_details_FREE_ITEM} != null ? $P{P_FREE} : ($P{P_TOTAL_QTY_REG} == null ) ? $F{outb_details_LFIMG} : ""]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -791,7 +795,7 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 								<textElement textAlignment="Right" verticalAlignment="Middle">
 									<font fontName="DejaVu Sans" size="8"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$P{P_STAGE2} != true ? "" : ($P{P_PCB40BAG} != null) ? $F{outb_details_LFIMG} : ($F{outb_details_GOODS_QTY} == null) ? "" : $F{outb_details_GOODS_QTY}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$P{P_STAGE2} != true ? "" : ($F{outb_details_LFIMG} != null) ?$F{outb_details_LFIMG} : ($F{outb_details_LFIMG}  == null) ? "" : $F{outb_details_GOODS_QTY}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
