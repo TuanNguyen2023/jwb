@@ -924,7 +924,7 @@ public class WeightTicketService {
                     }
 
                     if (outbDel.getFreeQty() != null) {
-                        map.put("P_TOTAL_QTY", String.valueOf(outbDel.getLfimg().add(outbDel.getFreeQty())));
+                        map.put("P_TOTAL_QTY", String.valueOf(outbDel.getLfimg()));
                         if (outbDel != null && (outbDel.getLfart().equalsIgnoreCase("LF") || outbDel.getLfart().equalsIgnoreCase("ZTLF") || outbDel.getLfart().equalsIgnoreCase("NL"))) {
                             Double tmp;
                             // Double tmp = ((outbDel.getLfimg().doubleValue() + outbDel.getFreeQty().doubleValue()) * 1000d) / 50d;
