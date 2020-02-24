@@ -1461,9 +1461,16 @@ private void dpDateFromPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN
 
     @Action(block = Task.BlockingScope.ACTION)
     public Task checkDO() {
-        String[] doNums = Stream.of(txtDONumN.getText().split("-"))
-                .map(s -> StringUtil.paddingZero(s.trim(), 10))
+        String[] beforeDoNums = txtDONumN.getText().split("-");
+        String[] doNums = Stream.of(beforeDoNums)
+                .map(s -> StringUtil.paddingZero(s.trim(), 10)).distinct()
                 .toArray(String[]::new);
+
+        if (doNums.length != beforeDoNums.length) {
+            JOptionPane.showMessageDialog(rootPane,
+                    resourceMapMsg.getString("msg.duplicateDo"));
+            return null;
+        }
 
         txtDONumN.setText(String.join(" - ", doNums));
 
@@ -1479,9 +1486,16 @@ private void dpDateFromPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN
 
     @Action(block = Task.BlockingScope.ACTION)
     public Task checkSO() {
-        String[] soNums = Stream.of(txtSONumN.getText().split("-"))
-                .map(s -> StringUtil.paddingZero(s.trim(), 10))
+        String[] beforeSoNums = txtSONumN.getText().split("-");
+        String[] soNums = Stream.of(beforeSoNums)
+                .map(s -> StringUtil.paddingZero(s.trim(), 10)).distinct()
                 .toArray(String[]::new);
+
+        if (soNums.length != beforeSoNums.length) {
+            JOptionPane.showMessageDialog(rootPane,
+                    resourceMapMsg.getString("msg.duplicateSo"));
+            return null;
+        }
 
         txtSONumN.setText(String.join(" - ", soNums));
 
