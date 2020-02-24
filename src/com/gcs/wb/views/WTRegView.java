@@ -2580,14 +2580,14 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
                 //Check Delivery Plant with Configuration parameter.
                 if ((!(outboundDelivery.getWerks()).equals(configuration.getWkPlant()))
                         && (!(outboundDelivery.getRecvPlant()).equals(configuration.getWkPlant()))) {
-                    throw new Exception("Số D.O không được phép xuất/nhập hàng tại nhà máy này!");
+                    throw new Exception(resourceMapMsg.getString("msg.doIsDenied"));
                 }
 
                 // check mapping Plate No
                 String plateNo = txtPlateNoN.getText().trim();
                 String traid = outboundDelivery.getTraid().trim();
                 if (!traid.isEmpty() && !traid.startsWith(plateNo)) {
-                    throw new Exception(resourceMapMsg.getString("msg.notDuplicateLicensePlate"));
+                    throw new Exception(resourceMapMsg.getString("msg.plateNoNotResgiterIO", plateNo, deliveryOrderNo));
                 }
 
                 // check DO in used
