@@ -101,7 +101,6 @@ public class Vehicle implements Serializable {
         this.validTo = validTo;
     }
 
-
     public Date getCreatedDate() {
         return createdDate;
     }
@@ -119,9 +118,14 @@ public class Vehicle implements Serializable {
     }
 
     public boolean isProhibit() {
-        //return Constants.Vehicle.STATUS_INACTIVED.equals(this.status);
-        Date dateNow = new Date(Calendar.getInstance().getTime().getTime());
-        return !(dateNow.before(this.validTo) && dateNow.after(this.validFrom));
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        Date dateNow = new Date(calendar.getTime().getTime());
+        return !(dateNow.compareTo(this.validTo) <= 0 && dateNow.compareTo(this.validFrom) >= 0);
     }
 
     @Override

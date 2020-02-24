@@ -2556,17 +2556,16 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                             total_qty_goods = total_qty_goods.add(outbDel.getLfimg());
                             if(doNums.equals("")) {
                                 doNums = weightTicketDetail.getDeliveryOrderNo();
-                                regItemDescription = weightTicketDetail.getRegItemDescription();
                             } else {
                                 doNums += " - " + weightTicketDetail.getDeliveryOrderNo();
-                                String [] regItemDescriptions = regItemDescription.split("-");
-                                for (int i = 0; i < regItemDescriptions.length; i++) {
-                                    if(!weightTicketDetail.getRegItemDescription().equals(regItemDescriptions[i])){
-                                        regItemDescription += " - " + weightTicketDetail.getRegItemDescription();
-                                    }
-                                }
-                                
                             }
+                            for (OutboundDeliveryDetail outboundDeliveryDetail : outbDel.getOutboundDeliveryDetails()) {
+                                if (regItemDescription.isEmpty()) {
+                                    regItemDescription = outboundDeliveryDetail.getArktx();
+                                } else if (!regItemDescription.contains(outboundDeliveryDetail.getArktx())) {
+                                    regItemDescription += " - " + outboundDeliveryDetail.getArktx();
+                                }
+                            } 
                         }
                         //weightTicket.setUnit("TO");
                         try {

@@ -2635,16 +2635,21 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
             weightTicketDetail.setKunnr(outboundDelivery.getKunnr());
             weightTicketDetail.setDeliveryOrderNo(outboundDelivery.getDeliveryOrderNo());
             weightTicketDetail.setRegItemQuantity(outboundDelivery.getLfimg());
-
-            strMaterial.add(outboundDelivery.getArktx());
-            totalWeight = totalWeight.add(outboundDelivery.getLfimg());
-
-            newWeightTicket.setWeightTicketIdRef(outboundDelivery.getWtIdRef());
             newWeightTicket.addWeightTicketDetail(weightTicketDetail);
+            newWeightTicket.setWeightTicketIdRef(outboundDelivery.getWtIdRef());
+
+            List<OutboundDeliveryDetail> outboundDeliveryDetails = outboundDelivery.getOutboundDeliveryDetails();
+            for (OutboundDeliveryDetail outboundDeliveryDetail : outboundDeliveryDetails) {
+                if (!strMaterial.contains(outboundDeliveryDetail.getArktx())) {
+                    strMaterial.add(outboundDeliveryDetail.getArktx());
+                }
+            }
+
+            totalWeight = totalWeight.add(outboundDelivery.getLfimg());
         }
 
         private boolean checkMaterial(OutboundDelivery outboundDelivery) {
-                return materialGroupRepository.hasData(configuration.getSapClient(), configuration.getWkPlant(), outboundDelivery.getMatnr());
+            return materialGroupRepository.hasData(configuration.getSapClient(), configuration.getWkPlant(), outboundDelivery.getMatnr());
         }
 
         private boolean isDOInUsed(String deliveryOrderNo, OutboundDelivery outboundDelivery) {
