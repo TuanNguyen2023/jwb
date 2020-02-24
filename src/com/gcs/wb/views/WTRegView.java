@@ -3204,7 +3204,7 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
 
             //Check PO Plant with Configuration parameter.
             if ((modeDetail != MODE_DETAIL.IN_PO_PURCHASE) && (!(purchaseOrder.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant()))) {
-                throw new Exception("Số P.O không được phép xuất/nhập hàng tại nhà máy này!");
+                throw new Exception(resourceMapMsg.getString("msg.poIsDenied"));
             }
 
             updateWeightTicket(purchaseOrder);
@@ -3328,7 +3328,7 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
             String postoNum = txtPOSTONumN.getText().trim();
 
             // get local POSTO
-            setStep(1, resourceMapMsg.getString("msg.checkPOInDB"));
+            setStep(1, resourceMapMsg.getString("msg.checkPOSTOInDB"));
             PurchaseOrder purchaseOrder = purchaseOrderRepository.findByPoNumber(postoNum);
 
             // sync from SAP
@@ -3336,14 +3336,14 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
                 purchaseOrder = syncPurchaseOrder(postoNum, purchaseOrder);
             }
 
-            //Check PO Plant with Configuration parameter.
-            if (!(purchaseOrder.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant())) {
-                throw new Exception("Số POSTO không được phép xuất/nhập hàng tại nhà máy này!");
-            }
-
             // check exist PO
             if (purchaseOrder == null) {
-                throw new Exception(resourceMapMsg.getString("msg.poNotExist", postoNum));
+                throw new Exception(resourceMapMsg.getString("msg.postoNotExist", postoNum));
+            }
+
+            //Check PO Plant with Configuration parameter.
+            if (!(purchaseOrder.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant())) {
+                throw new Exception(resourceMapMsg.getString("msg.postoIsDenied"));
             }
 
             updateWeightTicket(purchaseOrder);
@@ -3387,7 +3387,7 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
 
         private PurchaseOrder syncPurchaseOrder(String poNum, PurchaseOrder purchaseOrder) {
             try {
-                setStep(2, resourceMapMsg.getString("checkPOInSap"));
+                setStep(2, resourceMapMsg.getString("checkPOSTOInSap"));
                 PurchaseOrder sapPurchaseOrder = sapService.getPurchaseOrder(poNum);
 
                 setStep(3, resourceMapMsg.getString("msg.saveDataToDb"));
