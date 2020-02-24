@@ -65,7 +65,7 @@ public class WeightTicketReportView extends javax.swing.JInternalFrame {
         // <editor-fold defaultstate="collapsed" desc="Init. Year Combobox">
         DefaultComboBoxModel yearModel = new DefaultComboBoxModel();
         int currYear = Calendar.getInstance().get(Calendar.YEAR);
-        for (int i = currYear - 10; i < currYear + 10; i++) {
+        for (int i = currYear - 10; i <= currYear + 10; i++) {
             yearModel.addElement(String.valueOf(i));
         }
         yearModel.setSelectedItem(currYear);
