@@ -2643,10 +2643,12 @@ private void dpDateFromPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN
 
                 // set DO data to Weight ticket
                 updateWeightTicket(outboundDelivery);
+                btnSave.setEnabled(true);
                 setStep(4, null);
             }
 
             return null;
+            
         }
 
         private OutboundDelivery syncOutboundDelivery(String deliveryOrderNo, OutboundDelivery outboundDelivery) {

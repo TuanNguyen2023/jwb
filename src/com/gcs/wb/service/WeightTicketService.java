@@ -688,7 +688,7 @@ public class WeightTicketService {
 
     public Object getPgmVl02nBapi(WeightTicket wt, OutboundDelivery outbDel,
             WeightTicket weightTicket,String modeFlg, int timeFrom, int timeTo,
-            List<OutboundDeliveryDetail> outDetails_lits) {
+            List<OutboundDeliveryDetail> outDetails_lits, String ivWbidNosave) {
         String doNum = null;
         if (outbDel != null) {
             doNum = outbDel.getDeliveryOrderNo();
@@ -794,6 +794,9 @@ public class WeightTicketService {
         GoodsMvtWeightTicketStructure stWT = fillWTStructure(weightTicket, outbDel, outDetails_lits, weightTicket);
         stWT.setGQTY(tab_wa.getLfimg());
         bapi.setWeightticket(stWT);
+        
+        // add for check ghep ma
+        bapi.setIvWbidNosave("");
 
         tab_wa.setVrkme(weightTicketDetail.getUnit());
         tab_wa.setMeins(outbDel.getMeins());

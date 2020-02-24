@@ -70,6 +70,11 @@ public class WsDeliveryUpdateBapi implements Serializable {
     @Import
     @Parameter(value = WsDeliveryUpdateConstants.I_WEIGHTTICKET, type = ParameterType.STRUCTURE)
     private GoodsMvtWeightTicketStructure _weightticket;
+
+    @Import
+    @Parameter(WsDeliveryUpdateConstants.IV_WBID_NOSAVE)
+    private String _iv_wbid_nosave;
+
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Export Parameters">
     /**Confirmation number*/
@@ -232,5 +237,9 @@ public class WsDeliveryUpdateBapi implements Serializable {
     public void setWeightticket(GoodsMvtWeightTicketStructure _weightticket) {
         this._weightticket = _weightticket;
     }
-    
+
+    public void setIvWbidNosave(String ivWbidNosave) {
+        this._iv_wbid_nosave = ivWbidNosave;
+    }
+
 }
