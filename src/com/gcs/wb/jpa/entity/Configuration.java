@@ -106,9 +106,9 @@ public class Configuration implements Serializable {
     @Column(name = "wb2_mettler_param")
     private String wb2MettlerParam;
     @Column(name = "wplant_map")
-    private String wplantMap;
+    private String wplantMap = Constants.Configuration.WPLANT_MAP;
     @Column(name = "tolerance")
-    private BigDecimal tolerance;
+    private BigDecimal tolerance = Constants.Configuration.TOLERANCE;
 
     public Configuration() {
     }

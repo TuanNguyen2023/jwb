@@ -77,7 +77,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     private BigDecimal total_qty_goods = BigDecimal.ZERO;
     private BigDecimal remain_qty_goods = BigDecimal.ZERO;
     private BigDecimal total_qty_free = BigDecimal.ZERO;
-    private BigDecimal tolorance = BigDecimal.valueOf(9d);
     private List<OutboundDelivery> outbDel_list = new ArrayList<>();
     private List<OutboundDeliveryDetail> outDetails_lits = new ArrayList<>();
     private String wt_ID = null;
@@ -3406,7 +3405,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                      flgGqty = validateTolerance(null, outbDel);
 
                      if ((!weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER"))
-                             && (flgGqty || (!toleranceUtil.isInvalidTolerance(sumQtyReg, weightTicket.getGQty(), tolorance)))) {
+                             && (flgGqty || (!toleranceUtil.isInvalidTolerance(sumQtyReg, weightTicket.getGQty(), configuration.getTolerance())))) {
                         // xuat DO
                         if (weightTicket.getMode().equals("OUT_SELL_ROAD")) {
                             modeFlg = "Z001";
