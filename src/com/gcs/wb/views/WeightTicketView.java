@@ -3378,7 +3378,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                 entityManager.clear();
                             }
                         } else if (WeighBridgeApp.getApplication().isOfflineMode()) {
-                            weightTicket.setPosted(true);
+                            weightTicket.setPosted(false);
                             weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
                         } else {
                             weightTicket.setPosted(false);
@@ -3405,7 +3405,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                      flgGqty = validateTolerance(null, outbDel);
 
                      if ((!weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER"))
-                             && (flgGqty || (!toleranceUtil.isInvalidTolerance(sumQtyReg, weightTicket.getGQty(), configuration.getTolerance())))) {
+                             && (flgGqty && (!toleranceUtil.isInvalidTolerance(sumQtyReg, weightTicket.getGQty(), configuration.getTolerance())))) {
                         // xuat DO
                         if (weightTicket.getMode().equals("OUT_SELL_ROAD")) {
                             modeFlg = "Z001";
@@ -3686,7 +3686,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                 }
                             }
                         } else if(WeighBridgeApp.getApplication().isOfflineMode()) {
-                            weightTicket.setPosted(true);
+                            weightTicket.setPosted(false);
                             weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
                         } else {
                             weightTicket.setPosted(false);
