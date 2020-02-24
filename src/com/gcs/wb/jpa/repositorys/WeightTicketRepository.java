@@ -377,4 +377,17 @@ public class WeightTicketRepository {
             throw ex;
         }
     }
+    
+    public WeightTicket getWeightTicketByIdAndMandtAndWplant(String id, String mandt, String wplant) {
+        WeightTicket weightTicket = null;
+        TypedQuery<WeightTicket> query = entityManager.createNamedQuery("WeightTicket.findByIdAndMandtAndWplant", WeightTicket.class);
+        query.setParameter("id", id);
+        query.setParameter("mandt", mandt);
+        query.setParameter("wplant", wplant);
+        List<WeightTicket> weightTickets = query.getResultList();
+        if (weightTickets != null && weightTickets.size() > 0) {
+            weightTicket = weightTickets.get(0);
+        }
+        return weightTicket;
+    }
 }

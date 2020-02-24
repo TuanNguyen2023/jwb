@@ -31,6 +31,10 @@ import javax.persistence.Temporal;
 @Table(name = "tbl_weight_ticket")
 @NamedQueries({
     @NamedQuery(name = "WeightTicket.findAll", query = "SELECT w FROM WeightTicket w"),
+    @NamedQuery(name = "WeightTicket.findByIdAndMandtAndWplant", 
+            query = "SELECT w FROM WeightTicket w WHERE w.id = :id"
+                    + " AND w.mandt = :mandt"
+                    + " AND w.wplant = :wplant"),
     @NamedQuery(name = "WeightTicket.findByCreatedDateRange",
             query = "SELECT w FROM WeightTicket w WHERE w.createdDate BETWEEN :from AND :to"
             + "  AND w.mandt = :mandt"

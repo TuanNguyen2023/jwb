@@ -143,8 +143,9 @@ public class WeightTicketService {
         return result;
     }
 
-    public WeightTicket findWeightTicket(WeightTicket weightTicket, String id) {
-        return entityManager.find(WeightTicket.class, id);
+    public WeightTicket findWeightTicket(WeightTicket weightTicket, String id, String mandt, String wplant) {
+        //return entityManager.find(WeightTicket.class, id);
+        return weightTicketRepository.getWeightTicketByIdAndMandtAndWplant(id, mandt, wplant);
     }
 
     public PurchaseOrder findPurOrder(String poNum) {

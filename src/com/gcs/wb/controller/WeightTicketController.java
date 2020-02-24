@@ -4,9 +4,11 @@
  */
 package com.gcs.wb.controller;
 
+import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.goodsmvt.structure.GoodsMvtWeightTicketStructure;
 import com.gcs.wb.base.enums.ModeEnum;
 import com.gcs.wb.jpa.entity.BatchStock;
+import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.MaterialConstraint;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
@@ -34,6 +36,7 @@ public class WeightTicketController {
     WeightTicketService weightTicketService = new WeightTicketService();
     SLocRepository sLocRepository = new SLocRepository();
     VendorRepository vendorRepository = new VendorRepository();
+    Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
 
     public DefaultComboBoxModel getCustomerByMaNdt() {
         return weightTicketService.getCustomerByMaNdt();
@@ -74,7 +77,7 @@ public class WeightTicketController {
     }
 
     public WeightTicket findWeightTicket(WeightTicket weightTicket, String id) {
-        return weightTicketService.findWeightTicket(weightTicket, id);
+        return weightTicketService.findWeightTicket(weightTicket, id, configuration.getSapClient(), configuration.getWkPlant());
     }
 
     public PurchaseOrder findPurOrder(String poNum) {
