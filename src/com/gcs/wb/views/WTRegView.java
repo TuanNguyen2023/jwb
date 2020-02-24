@@ -2612,7 +2612,7 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
                 setStep(2, resourceMapMsg.getString("checkDOInSap"));
                 OutboundDelivery sapOutboundDelivery = sapService.getOutboundDelivery(deliveryOrderNo);
 
-                setStep(3, resourceMapMsg.getString("msg.saveDataToDb"));
+                setStep(3, resourceMapMsg.getString("msg.saveDataDOToDb"));
                 return sapService.syncOutboundDelivery(sapOutboundDelivery, outboundDelivery, deliveryOrderNo);
             } catch (Exception ex) {
                 return null;
@@ -3259,7 +3259,7 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
                 PurchaseOrder sapPurchaseOrder = sapService.getPurchaseOrder(poNum);
                 List<PurchaseOrderDetail> poItems = sapPurchaseOrder.getPurchaseOrderDetails();
 
-                setStep(3, resourceMapMsg.getString("msg.saveDataToDb"));
+                setStep(3, resourceMapMsg.getString("msg.saveDataPOToDb"));
                 return sapService.syncPurchaseOrder(sapPurchaseOrder, purchaseOrder);
             } catch (Exception ex) {
                 return null;
@@ -3390,7 +3390,7 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
                 setStep(2, resourceMapMsg.getString("checkPOSTOInSap"));
                 PurchaseOrder sapPurchaseOrder = sapService.getPurchaseOrder(poNum);
 
-                setStep(3, resourceMapMsg.getString("msg.saveDataToDb"));
+                setStep(3, resourceMapMsg.getString("msg.saveDataPOSTOToDb"));
                 return sapService.syncPurchaseOrder(sapPurchaseOrder, purchaseOrder);
             } catch (Exception ex) {
                 return null;
