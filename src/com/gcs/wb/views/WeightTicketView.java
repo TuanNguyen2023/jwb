@@ -3226,8 +3226,9 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         } else {
                             JOptionPane.showMessageDialog(rootPane, "Không thể nhập hàng vì trọng lượng vượt quá đăng ký!");
                             weightTicket.setPosted(false);
-                            completed = false;
-                            entityManager.clear();
+                            return null;
+//                            completed = false;
+//                            entityManager.clear();
                         }
                     }
                     
@@ -3419,8 +3420,9 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     } else {
                         JOptionPane.showMessageDialog(rootPane, "Chênh lệnh vượt dung sai cho phép!");
                         weightTicket.setPosted(false);
-                        completed = false;
-                        entityManager.clear();
+                        return null;
+//                        completed = false;
+//                        entityManager.clear();
                     }
                      // mode nhap DO
                     if (weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER")) {
