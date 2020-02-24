@@ -2744,12 +2744,14 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 cbxSLoc.setEnabled(false);
                 cbxCharg.setEnabled(false);
                 cbxVendorLoading.setEnabled(false);
-                cbxVendorTransport.setEnabled(false);        
-            }
-            if (Constants.WeighingProcess.MODE_DETAIL.IN_OTHER.name().equals(weightTicket.getMode())
+                cbxVendorTransport.setEnabled(false);
+
+                if (Constants.WeighingProcess.MODE_DETAIL.IN_OTHER.name().equals(weightTicket.getMode())
                     || Constants.WeighingProcess.MODE_DETAIL.OUT_OTHER.name().equals(weightTicket.getMode())) {
-                btnSave.setEnabled(true);
+                    btnSave.setEnabled(true);
+                }        
             }
+            
             return null;  // return your result
         }
 
