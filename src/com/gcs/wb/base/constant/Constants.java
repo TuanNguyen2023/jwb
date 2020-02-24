@@ -66,6 +66,8 @@ public class Constants {
         public static final int WEIGHT_LIMIT = 60;
         public static final boolean MODE_NORMAL = true;
         public static final String RPT_ID = "";
+        public static final String WPLANT_MAP = "0";
+        public static final BigDecimal TOLERANCE = new BigDecimal(9);
     }
 
     public static class Label {
