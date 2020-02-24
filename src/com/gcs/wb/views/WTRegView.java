@@ -13,6 +13,7 @@ import com.gcs.wb.base.constant.Constants.WeighingProcess.MODE_DETAIL;
 import com.gcs.wb.base.enums.MaterialEnum;
 import com.gcs.wb.base.enums.StatusEnum;
 import com.gcs.wb.base.util.StringUtil;
+import com.gcs.wb.base.validator.DateFromToValidator;
 import com.gcs.wb.controller.WeightTicketController;
 import com.gcs.wb.controller.WeightTicketRegistarationController;
 import com.gcs.wb.jpa.JPAConnector;
@@ -74,6 +75,8 @@ public class WTRegView extends javax.swing.JInternalFrame {
     // TODO update ui
     private MODE mode = MODE.OUTPUT;
     private MODE_DETAIL modeDetail;
+    private final DateFromToValidator dateFromToValidator = new DateFromToValidator();
+    public static final String SDATE = "date";
     private WeightTicketRegistrationValidation wtRegisValidation;
     private PurchaseOrderRepository purchaseOrderRepository = new PurchaseOrderRepository();
     MaterialInternalRepository materialInternalRepository = new MaterialInternalRepository();
@@ -338,9 +341,9 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         dpDateFrom.setDate(Calendar.getInstance().getTime());
         dpDateFrom.setName("dpDateFrom"); // NOI18N
-        dpDateFrom.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                dpDateFromActionPerformed(evt);
+        dpDateFrom.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                dpDateFromPropertyChange(evt);
             }
         });
 
@@ -349,6 +352,11 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         dpDateTo.setDate(Calendar.getInstance().getTime());
         dpDateTo.setName("dpDateTo"); // NOI18N
+        dpDateTo.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                dpDateToPropertyChange(evt);
+            }
+        });
 
         lblMaterialType.setLabelFor(cbxMaterialType);
         lblMaterialType.setText(resourceMap.getString("lblMaterialType.text")); // NOI18N
@@ -427,9 +435,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                     .addComponent(lblMaterialType))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnFilterLayout.createSequentialGroup()
-                        .addComponent(btnFind)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 651, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnFind)
                     .addGroup(pnFilterLayout.createSequentialGroup()
                         .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(cbxMaterialType, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -457,8 +463,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                                 .addComponent(lblHourTo)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(cbxHourTo, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(txtCreator))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(txtCreator))))
                 .addGap(117, 117, 117))
         );
         pnFilterLayout.setVerticalGroup(
@@ -1177,7 +1182,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addComponent(pnRegistrationOfVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(pnControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(126, Short.MAX_VALUE))
+                .addContainerGap(125, Short.MAX_VALUE))
         );
 
         pack();
@@ -1191,9 +1196,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
             cbxHourTo.setSelectedIndex(cbxHourFrom.getSelectedIndex());
         }
     }//GEN-LAST:event_cbxHourToItemStateChanged
-
-    private void dpDateFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dpDateFromActionPerformed
-    }//GEN-LAST:event_dpDateFromActionPerformed
 
 private void rbtInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtInputActionPerformed
     loadModeTypeModel(MODE.INPUT);
@@ -1401,6 +1403,32 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
 private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPlateNoNFocusLost
     txtPlateNoN.setText(txtPlateNoN.getText().toUpperCase());
 }//GEN-LAST:event_txtPlateNoNFocusLost
+
+private void dpDateToPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_dpDateToPropertyChange
+    if (SDATE.equals(evt.getPropertyName())) {
+        validateFilterForm();
+    }
+}//GEN-LAST:event_dpDateToPropertyChange
+
+private void dpDateFromPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_dpDateFromPropertyChange
+    if (SDATE.equals(evt.getPropertyName())) {
+        validateFilterForm();
+    }
+}//GEN-LAST:event_dpDateFromPropertyChange
+
+    private void validateFilterForm() {
+        try {
+            dateFromToValidator.validate(dpDateFrom.getDate(), dpDateTo.getDate());
+
+            lblDateFrom.setForeground(Color.black);
+            lblDateTo.setForeground(Color.black);
+            btnFind.setEnabled(true);
+        } catch (IllegalArgumentException ex) {
+            lblDateFrom.setForeground(Color.red);
+            lblDateTo.setForeground(Color.red);
+            btnFind.setEnabled(false);
+        }
+    }
 
     private DefaultComboBoxModel getMatsModel() {
         return weightTicketRegistarationController.getMatsModel();
