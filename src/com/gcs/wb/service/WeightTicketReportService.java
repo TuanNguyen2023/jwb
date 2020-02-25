@@ -27,6 +27,7 @@ public class WeightTicketReportService {
     private TransportAgentRepository transportAgentRepository = new TransportAgentRepository();
     private MaterialRepository materialRepository = new MaterialRepository();
     private Object[] wtColNames = Constants.WeightTicketReport.WT_COL_NAMES;
+    List<TransportAgent> transportAgents = new ArrayList<>();
 
     public List<Character> getModeItemStateChanged(List<Character> modes, int mode) {
         modes = new ArrayList<>();
@@ -72,9 +73,9 @@ public class WeightTicketReportService {
         List<WeightTicket> weightTickets = findListWeightTicket(month, year, tAgent, matnr, modes, status == 1);
         wtDatas = new Object[weightTickets.size()][wtColNames.length];
         for (int i = 0; i < weightTickets.size(); i++) {
-            WeightTicket item = weightTickets.get(i);   
+            WeightTicket item = weightTickets.get(i);
             WeightTicketDetail weightTicketDetail = item.getWeightTicketDetail();
-            String time = item.getCreatedTime().replaceAll(":","");
+            String time = item.getCreatedTime().replaceAll(":", "");
             String hh = time.substring(0, 2);
             String mm = time.substring(2, 4);
             String ss = time.substring(4, 6);
@@ -115,14 +116,21 @@ public class WeightTicketReportService {
             } else {
                 wtDatas[i][17] = false;
             }
-            wtDatas[i][18] = transportAgentName;
+            TransportAgent transportAgent = transportAgents.stream()
+                    .filter(t -> {
+                        String abbr = weightTicketDetail.getTransVendor();
+                        return abbr != null && abbr.equals(t.getAbbr());
+                    })
+                    .findAny()
+                    .orElse(null);
+            wtDatas[i][18] = transportAgent != null ? transportAgent.getName() : "";
             wtDatas[i][19] = weightTicketDetail.getEbeln();
         }
         return wtDatas;
     }
 
     public DefaultComboBoxModel getTransportAgentsModel() {
-        List<TransportAgent> transportAgents = transportAgentRepository.getListTransportAgent();
+        transportAgents = transportAgentRepository.getListTransportAgent();
         DefaultComboBoxModel comboBoxModel = new DefaultComboBoxModel(transportAgents.toArray());
         TransportAgent transportAgent = new TransportAgent("-2");
         transportAgent.setName(Constants.Label.LABEL_ALL);

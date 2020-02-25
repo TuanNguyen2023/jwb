@@ -1374,6 +1374,7 @@ private void cbxVendorLoadingNActionPerformed(java.awt.event.ActionEvent evt) {/
                     isValidVendorLoad = false;
                 } else {
                     isValidVendorLoad = true;
+                    lblVendorLoadingN.setForeground(Color.black);
                     newWeightTicket.getWeightTicketDetail().setLoadVendor(vendor.getLifnr());
                 }
             }
@@ -1407,6 +1408,7 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
                     isValidVendorTransport = false;
                 } else {
                     isValidVendorTransport = true;
+                    lblVendorTransportN.setForeground(Color.black);
                     newWeightTicket.getWeightTicketDetail().setTransVendor(vendor.getLifnr());
                 }
             }
@@ -3075,7 +3077,9 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         txtWeightN.setText("0");
         cbxSlocN.setSelectedIndex(-1);
         cbxSloc2N.setSelectedIndex(-1);
+        cbxBatchStockN.setModel(new DefaultComboBoxModel());
         cbxBatchStockN.setSelectedIndex(-1);
+        cbxBatchStock2N.setModel(new DefaultComboBoxModel());
         cbxBatchStock2N.setSelectedIndex(-1);
         cbxVendorLoadingN.setSelectedIndex(-1);
         cbxVendorTransportN.setSelectedIndex(-1);
@@ -3294,10 +3298,9 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             }
 
             //Check PO Plant with Configuration parameter.
-            if ((modeDetail != MODE_DETAIL.IN_PO_PURCHASE)
-                    && (modeDetail != MODE_DETAIL.OUT_PLANT_PLANT)
+            if ((modeDetail == MODE_DETAIL.IN_PO_PURCHASE)
                     && (!(purchaseOrder.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant()))) {
-                throw new Exception("Số P.O không được phép xuất/nhập hàng tại nhà máy này!");
+                throw new Exception("msg.poIsDenied");
             }
 
             // check exist PO
@@ -3440,8 +3443,9 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             }
 
             //Check PO Plant with Configuration parameter.
-            if (!(purchaseOrder.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant())) {
-                throw new Exception(resourceMapMsg.getString("msg.postoIsDenied"));
+            if ((modeDetail == MODE_DETAIL.IN_PO_PURCHASE)
+                    && (!(purchaseOrder.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant()))) {
+                throw new Exception("msg.postoIsDenied");
             }
 
             updateWeightTicket(purchaseOrder);

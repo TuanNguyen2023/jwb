@@ -344,7 +344,7 @@ public class WeightTicketRepository {
                 + " AND w.mandt = :mandt"
                 + "  AND w.wplant = :wplant";
         if (!tagent.equalsIgnoreCase("-2")) {
-            query += " AND w.plateNo IN ( SELECT tv.vehicle.plateNo FROM TransportAgentVehicle tv WHERE tv.transportAgent.abbr = :taAbbr ) ";
+            query += " AND wd.transVendor = :taAbbr";
         }
         if (!matnr.equalsIgnoreCase("-2")) {
             if (!matnr.equalsIgnoreCase("-1")) {
