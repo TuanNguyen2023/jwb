@@ -37,7 +37,13 @@ public class DOCreate2PGIBapi implements Serializable {
     private String _idParnr;
     @Import
     @Parameter(value = DOCreate2PGIConstants.I_WEIGHTTICKET, type = ParameterType.STRUCTURE)
-    private GoodsMvtWeightTicketStructure _weightticket;    
+    private GoodsMvtWeightTicketStructure _weightticket;
+    @Import
+    @Parameter(value = DOCreate2PGIConstants.IV_C_VENDOR, type = ParameterType.SIMPLE)
+    private String _ivCVendor;
+    @Import
+    @Parameter(value = DOCreate2PGIConstants.IV_T_VENDOR, type = ParameterType.SIMPLE)
+    private String _ivTVendor;    
     @Export
     @Parameter(value = DOCreate2PGIConstants.DELIVERY, type = ParameterType.SIMPLE)
     private String _Delivery;
@@ -133,5 +139,18 @@ public class DOCreate2PGIBapi implements Serializable {
     public void setWeightticket(GoodsMvtWeightTicketStructure _weightticket) {
         this._weightticket = _weightticket;
     }
-    
+
+     /**
+     * @param ivCVendor the _ivCVendor to set
+     */
+    public void setIvCVendor(String ivCVendor) {
+        this._ivCVendor = ivCVendor;
+    }
+
+    /**
+     * @param ivTVendor the _ivTVendor to set
+     */
+    public void setIvTVendor(String ivTVendor) {
+        this._ivTVendor = ivTVendor;
+    }
 }

@@ -2697,6 +2697,7 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
                 // set DO data to Weight ticket
                 updateWeightTicket(outboundDelivery);
+                btnSave.setEnabled(true);
                 setStep(4, null);
             }
 

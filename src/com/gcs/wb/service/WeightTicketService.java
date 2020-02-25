@@ -623,6 +623,8 @@ public class WeightTicketService {
         wa.setTraid(plateCombine);
         wa.setLifex(wt.getDriverName());
         bapi.setVbkok_wa(wa);
+        bapi.setIvCVendor(weightTicketDetail.getLoadVendor());
+        bapi.setIvTVendor(weightTicketDetail.getTransVendor());
 
         //get do details for current do
         OutboundDeliveryDetail item = null;

@@ -22,8 +22,9 @@ public interface DOCreate2PGIConstants extends BapiConstants {
     String MATDOCUMENTYEAR = "MATDOCUMENTYEAR";
     String STOCK_TRANS_ITEMS = "STOCK_TRANS_ITEMS";
     String VBPOK_TAB = "VBPOK_TAB";
-    
-//    {[M001-DungDang-27062013] - fixing bug double post GoodsMovement
+
     String I_WEIGHTTICKET = "I_WEIGHTTICKET";
+    String IV_C_VENDOR = "IV_C_VENDOR";
+    String IV_T_VENDOR = "IV_T_VENDOR";
  
 }
