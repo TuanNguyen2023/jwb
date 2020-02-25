@@ -34,11 +34,12 @@ public class DailyReportService {
     
     public String getReportName() {
         String reportName = null;
-        if (configuration.isModeNormal()) {
-            reportName = "./rpt/rptBT/WTList.jasper";
-        } else {
-            reportName = "./rpt/rptPQ/WTList.jasper";
-        }
+//        if (configuration.isModeNormal()) {
+//            reportName = "./rpt/rptBT/WTList.jasper";
+//        } else {
+//            reportName = "./rpt/rptPQ/WTList.jasper";
+//        }
+        reportName = "./rpt/rptBT/WTList.jasper";
         return reportName;
     }
 

@@ -36,11 +36,12 @@ public class DailyReportController {
 
     public String getReportName() {
         String reportName;
-        if (configuration.isModeNormal()) {
-            reportName = "./rpt/rptBT/WTList.jasper";
-        } else {
-            reportName = "./rpt/rptPQ/WTList.jasper";
-        }
+//        if (configuration.isModeNormal()) {
+//            reportName = "./rpt/rptBT/WTList.jasper";
+//        } else {
+//            reportName = "./rpt/rptPQ/WTList.jasper";
+//        }
+        reportName = "./rpt/rptBT/WTList.jasper";
         return reportName;
     }
 

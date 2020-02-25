@@ -18,6 +18,7 @@ import com.gcs.wb.jpa.repositorys.VendorRepository;
 import com.gcs.wb.jpa.repositorys.WeightTicketDetailRepository;
 import com.gcs.wb.service.WeightTicketRegistrationService;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -46,11 +47,12 @@ public class WeightTicketRegistarationController {
 
     public String getReportName() {
         String reportName = null;
-        if (configuration.isModeNormal()) {
-            reportName = "./rpt/rptBT/WTList.jasper";
-        } else {
-            reportName = "./rpt/rptPQ/WTList.jasper";
-        }
+//        if (configuration.isModeNormal()) {
+//            reportName = "./rpt/rptBT/WTList.jasper";
+//        } else {
+//            reportName = "./rpt/rptPQ/WTList.jasper";
+//        }
+        reportName = "./rpt/rptBT/WTList.jasper";
         return reportName;
     }
 
@@ -70,22 +72,29 @@ public class WeightTicketRegistarationController {
     }
 
     public void printRegWT(WeightTicket wt, boolean reprint) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("P_CLIENT", configuration.getSapClient());
-        map.put("P_WPLANT", configuration.getWkPlant());
-        map.put("P_ID", wt.getId());
-        map.put("P_DAYSEQ", wt.getSeqDay());
-        map.put("P_REPRINT", reprint);
-        map.put("P_ADDRESS", configuration.getRptId());
-        String reportName;
-        if (configuration.isModeNormal()) {
-            //reportName = "./rpt/rptBT/RegWT_HP.jasper";
+        List<WeightTicketDetail> weightTicketDetails = new ArrayList<>();
+        weightTicketDetails = wt.getWeightTicketDetails();
+        for (WeightTicketDetail weightTicketDetail : weightTicketDetails) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("P_CLIENT", wt.getMandt());
+            map.put("P_WPLANT", wt.getWplant());
+            map.put("P_ID", wt.getId());
+            map.put("P_DAYSEQ", wt.getSeqDay());
+            map.put("P_REPRINT", reprint);
+            map.put("P_ADDRESS", configuration.getRptId());
+            map.put("P_DO", weightTicketDetail.getDeliveryOrderNo());
+            String reportName;
+    //        if (configuration.isModeNormal()) {
+    //            //reportName = "./rpt/rptBT/RegWT_HP.jasper";
+    //            reportName = "./rpt/rptBT/RegWT_HP.jasper";
+    //        } else {
+    //            //reportName = "./rpt/rptPQ/RegWT.jasper";
+    //            reportName = "./rpt/rptPQ/RegWT.jasper";
+    //        }
             reportName = "./rpt/rptBT/RegWT_HP.jasper";
-        } else {
-            //reportName = "./rpt/rptPQ/RegWT.jasper";
-            reportName = "./rpt/rptPQ/RegWT.jasper";
+            jreportService.printReport(map, reportName);
         }
-        jreportService.printReport(map, reportName);
+        
     }
 
     public boolean checkExistDO(String doNumber) {

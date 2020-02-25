@@ -299,7 +299,7 @@ public class WeightTicket implements Serializable {
         return ticketId;
     }
 
-    public void setTicket_id(String ticketId) {
+    public void setTicketId(String ticketId) {
         this.ticketId = ticketId;
     }
 
