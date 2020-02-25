@@ -3963,43 +3963,43 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                             param = purchaseOrderDetail.getMaterial();
                         }
                     }
-//                    Variant vari = weightTicketController.findByParam(Constants.WeightTicketView.PROCESS_ORDER_CF);
-//                    double valu = 0;
+                    Variant vari = weightTicketController.findByParam(Constants.WeightTicketView.PROCESS_ORDER_CF);
+                    double valu = 0;
 
-//                    if (vari != null) {
+                    if (vari != null) {
 
-//                        if (vari.getValue() != null && !vari.getValue().isEmpty()) {
-//                            valu = Double.parseDouble(vari.getValue());
-//                        }
-//
-//                        double upper = qty + (qty * valu) / 100;
-//                        double lower = qty - (qty * valu) / 100;
-//
-//                        if ((lower <= result && result <= upper)) {
-//                            txfGoodsQty.setValue(result);
-//                            weightTicket.setGQty(new BigDecimal(Double.toString(result)));
-//                        } else {
-//                            String msg = "";
-//                            // TODO review to remove this message
-////                            try {
-////                                msg = weightTicketController.getMsg();
-////                            } catch (Exception ex) {
-////                                msg = resourceMapMsg.getString("msg.massOrderOutLimit");
-////                            }
-//                            JOptionPane.showMessageDialog(rootPane, msg); //variant mesage --> Tuanna
-//                            txfOutQty.setValue(null);
-//                            txtOutTime.setText(null);
-//                            txfGoodsQty.setValue(null);
-//                            weightTicket.setGQty(null);
-//                            btnAccept.setEnabled(false);
-//                            // Tuanna add 14.01.2013 - Check logic when input value not match require condition  
-//                            btnOScaleReset.setEnabled(true);
-//                            return null;
-//                        }
-//                    } else {
+                        if (vari.getValue() != null && !vari.getValue().isEmpty()) {
+                            valu = Double.parseDouble(vari.getValue());
+                        }
+
+                        double upper = qty + (qty * valu) / 100;
+                        double lower = qty - (qty * valu) / 100;
+
+                        if ((lower <= result && result <= upper)) {
+                            txfGoodsQty.setValue(result);
+                            weightTicket.setGQty(new BigDecimal(Double.toString(result)));
+                        } else {
+                            String msg = "Chênh lệch vượt dung sai cho phép!";
+                           // TODO review to remove this message
+//                            try {
+//                                msg = weightTicketController.getMsg();
+//                            } catch (Exception ex) {
+//                                msg = resourceMapMsg.getString("msg.massOrderOutLimit");
+//                            }
+                            JOptionPane.showMessageDialog(rootPane, msg); //variant mesage --> Tuanna
+                            txfOutQty.setValue(null);
+                            txtOutTime.setText(null);
+                            txfGoodsQty.setValue(null);
+                            weightTicket.setGQty(null);
+                            btnAccept.setEnabled(false);
+                            // Tuanna add 14.01.2013 - Check logic when input value not match require condition  
+                            btnOScaleReset.setEnabled(true);
+                            return null;
+                       }
+                    } else {
                         txfGoodsQty.setValue(result);
                         weightTicket.setGQty(new BigDecimal(Double.toString(result)));
-//                    }
+                    }
                 } else if (isSubContract() && weightTicket.getLgort() != null && weightTicket.getCharg() != null) {
                     setMessage(resourceMapMsg.getString("msg.checkIssetWarehouse")); // checking stock --tuanna
                     Double remaining = CheckMatStock(weightTicket.getWeightTicketDetail().getMatnrRef(), configuration.getWkPlant(), weightTicket.getLgort(), weightTicket.getCharg());
