@@ -1374,6 +1374,7 @@ private void cbxVendorLoadingNActionPerformed(java.awt.event.ActionEvent evt) {/
                     isValidVendorLoad = false;
                 } else {
                     isValidVendorLoad = true;
+                    lblVendorLoadingN.setForeground(Color.black);
                     newWeightTicket.getWeightTicketDetail().setLoadVendor(vendor.getLifnr());
                 }
             }
@@ -1407,6 +1408,7 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
                     isValidVendorTransport = false;
                 } else {
                     isValidVendorTransport = true;
+                    lblVendorTransportN.setForeground(Color.black);
                     newWeightTicket.getWeightTicketDetail().setTransVendor(vendor.getLifnr());
                 }
             }
