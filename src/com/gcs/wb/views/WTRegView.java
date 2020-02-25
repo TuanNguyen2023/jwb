@@ -3077,7 +3077,9 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         txtWeightN.setText("0");
         cbxSlocN.setSelectedIndex(-1);
         cbxSloc2N.setSelectedIndex(-1);
+        cbxBatchStockN.setModel(new DefaultComboBoxModel());
         cbxBatchStockN.setSelectedIndex(-1);
+        cbxBatchStock2N.setModel(new DefaultComboBoxModel());
         cbxBatchStock2N.setSelectedIndex(-1);
         cbxVendorLoadingN.setSelectedIndex(-1);
         cbxVendorTransportN.setSelectedIndex(-1);
