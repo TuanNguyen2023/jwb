@@ -50,7 +50,10 @@ public class DailyReportView extends javax.swing.JInternalFrame {
      */
     public DailyReportView() {
         initComponents();
+        dpDateFrom.setFormats(Constants.Date.FORMAT);
+        dpDateTo.setFormats(Constants.Date.FORMAT);
         weightTicketList = new ArrayList();
+
         FilterActionTask filterActionTask = new FilterActionTask(WeighBridgeApp.getApplication());
         filterActionTask.execute();
     }

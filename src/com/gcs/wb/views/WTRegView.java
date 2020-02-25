@@ -91,6 +91,8 @@ public class WTRegView extends javax.swing.JInternalFrame {
         weightTicketList = new ArrayList<>();
         wtRegisValidation = new WeightTicketRegistrationValidation(rootPane, resourceMapMsg);
         initComponents();
+        dpDateFrom.setFormats(Constants.Date.FORMAT);
+        dpDateTo.setFormats(Constants.Date.FORMAT);
         initComboboxModel();
         initComboboxRenderer();
 
@@ -401,17 +403,32 @@ public class WTRegView extends javax.swing.JInternalFrame {
         lblCreator.setName("lblCreator"); // NOI18N
 
         txtCreator.setName("txtCreator"); // NOI18N
+        txtCreator.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtCreatorKeyReleased(evt);
+            }
+        });
 
         lblDriverName.setLabelFor(txtCreator);
         lblDriverName.setText(resourceMap.getString("lblDriverName.text")); // NOI18N
         lblDriverName.setName("lblDriverName"); // NOI18N
 
         txtDriverName.setName("txtDriverName"); // NOI18N
+        txtDriverName.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtDriverNameKeyReleased(evt);
+            }
+        });
 
         lblPlateNo.setText(resourceMap.getString("lblPlateNo.text")); // NOI18N
         lblPlateNo.setName("lblPlateNo"); // NOI18N
 
         txtPlateNo.setName("txtPlateNo"); // NOI18N
+        txtPlateNo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtPlateNoKeyReleased(evt);
+            }
+        });
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getActionMap(WTRegView.class, this);
         btnFind.setAction(actionMap.get("searchWeightTickets")); // NOI18N
@@ -1183,7 +1200,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addComponent(pnRegistrationOfVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(pnControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(125, Short.MAX_VALUE))
+                .addContainerGap(124, Short.MAX_VALUE))
         );
 
         pack();
@@ -1427,18 +1444,37 @@ private void dpDateFromPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN
     }
 }//GEN-LAST:event_dpDateFromPropertyChange
 
+private void txtDriverNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDriverNameKeyReleased
+    validateFilterForm();
+}//GEN-LAST:event_txtDriverNameKeyReleased
+
+private void txtPlateNoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPlateNoKeyReleased
+    validateFilterForm();
+}//GEN-LAST:event_txtPlateNoKeyReleased
+
+private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCreatorKeyReleased
+    validateFilterForm();
+}//GEN-LAST:event_txtCreatorKeyReleased
+
     private void validateFilterForm() {
+        boolean isDriverNameValid = wtRegisValidation.validateLength(txtDriverName.getText(), lblDriverName, 0, 70);
+        boolean isPlateNoValid = wtRegisValidation.validateLength(txtPlateNo.getText(), lblPlateNo, 0, 20);
+        boolean isCreatorValid = wtRegisValidation.validateLength(txtCreator.getText(), lblCreator, 0, 12);
+        
+        boolean isDateValid;
         try {
             dateFromToValidator.validate(dpDateFrom.getDate(), dpDateTo.getDate());
 
             lblDateFrom.setForeground(Color.black);
             lblDateTo.setForeground(Color.black);
-            btnFind.setEnabled(true);
+            isDateValid = true;
         } catch (IllegalArgumentException ex) {
             lblDateFrom.setForeground(Color.red);
             lblDateTo.setForeground(Color.red);
-            btnFind.setEnabled(false);
+            isDateValid = false;
         }
+        
+        btnFind.setEnabled(isDriverNameValid && isPlateNoValid && isCreatorValid && isDateValid);
     }
 
     private DefaultComboBoxModel getMatsModel() {

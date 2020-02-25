@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
  * @author THANGPT
  */
 public class Constants {
-    
+
     public static class WeighingProcess {
 
         public static enum MODE {
@@ -37,7 +37,7 @@ public class Constants {
             OUT_SELL_WATERWAY,
             OUT_OTHER
         };
-        
+
         public static List<WeighingMode> getOutputModeList() {
             List<WeighingMode> mode = new ArrayList<>();
             mode.add(new WeighingMode(MODE_DETAIL.OUT_SELL_ROAD, "Bán Hàng (Bộ)"));
@@ -86,7 +86,7 @@ public class Constants {
 
         public static final String STATUS_POSTED = "POSTED";
         public static final String STATUS_DISSOLVED = "DISSOLVED";
-        public static final String STATUS_INCOMPLETED  = "INCOMPLETED ";
+        public static final String STATUS_INCOMPLETED = "INCOMPLETED ";
         public static final String STATUS_OFFLINE = "OFFLINE";
     }
 
@@ -202,14 +202,14 @@ public class Constants {
             Date.class,
             String.class,
             Boolean.class};
-        
-        public static final String INPUT_LOWCASE="nhập";
-        public static final String OUTPUT_LOWCASE="xuất";
-        
-        public static final String INPUT="Nhập";
-        public static final String OUTPUT="Xuất";
-        
-        public static final String DO_TYPES ="LF,LR,NL,ZTLF,ZTLR";
+
+        public static final String INPUT_LOWCASE = "nhập";
+        public static final String OUTPUT_LOWCASE = "xuất";
+
+        public static final String INPUT = "Nhập";
+        public static final String OUTPUT = "Xuất";
+
+        public static final String DO_TYPES = "LF,LR,NL,ZTLF,ZTLR";
     }
 
     public static final class WeightTicketView {
@@ -230,9 +230,9 @@ public class Constants {
         public static final String PROP_MATERIALAVAILABLE = "materialAvailable";
         public static final String PROP_MATAVAILSTOCKS = "matAvailStocks";
         public static final String PROP_MVT311 = "mvt311";
-        
-        public static final String PROCESS_ORDER_CF="PROCESS_ORDER_CF";
-        
+
+        public static final String PROCESS_ORDER_CF = "PROCESS_ORDER_CF";
+
         public static final String ITEM_DESCRIPTION = "Clinker gia công";
     }
 
@@ -292,5 +292,10 @@ public class Constants {
         public static final Class[] WEIGHTTICKET_TYPES = new Class[]{
             String.class,
             String.class};
+    }
+
+    public static final class Date {
+
+        public static final String FORMAT = "dd/MM/yyyy";
     }
 }
