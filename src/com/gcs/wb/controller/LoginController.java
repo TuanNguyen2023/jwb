@@ -108,6 +108,9 @@ public class LoginController {
 
                 // init sync master data cron job
                 (new CronTriggerService()).execute();
+            } else {
+                SAPSetting sapSetting = sapSettingRepository.findByMandtAndWplant(configuration.getSapClient(), configuration.getWkPlant());
+                WeighBridgeApp.getApplication().setSapSetting(sapSetting);
             }
 
             if ((user == null) || (user != null && !user.getPassword().equals(password))) {

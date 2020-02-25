@@ -64,6 +64,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
     private boolean isValidVendorLoad = false;
     private boolean isValidVendorTransport = false;
     private BigDecimal numCheckWeight = BigDecimal.ZERO;
+    private String plateNoValidDO = "";
 
     private boolean formValid;
     private com.gcs.wb.jpa.entity.WeightTicket newWeightTicket;
@@ -1401,7 +1402,17 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
 }//GEN-LAST:event_cbxVendorTransportNActionPerformed
 
 private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPlateNoNFocusLost
-    txtPlateNoN.setText(txtPlateNoN.getText().toUpperCase());
+    String plateNo = txtPlateNoN.getText().trim();
+    txtPlateNoN.setText(plateNo.toUpperCase());
+
+    if (!plateNoValidDO.isEmpty() && !plateNo.contains(plateNoValidDO)) {
+        lblPlateNoN.setForeground(Color.red);
+        btnSave.setEnabled(false);
+        
+        JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.plateNoNotResgiter", plateNo, plateNoValidDO));
+    } else {
+        validateForm();
+    }
 }//GEN-LAST:event_txtPlateNoNFocusLost
 
 private void dpDateToPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_dpDateToPropertyChange
@@ -1681,6 +1692,8 @@ private void dpDateFromPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN
     }
 
     private void prepareEditableForm(MODE_DETAIL modeDetail) {
+        cleanData();
+
         switch (modeDetail) {
             case IN_PO_PURCHASE:
                 prepareInPOPurchaseMode();
@@ -2631,6 +2644,9 @@ private void dpDateFromPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN
                 if (!traid.isEmpty() && !traid.startsWith(plateNo)) {
                     throw new Exception(resourceMapMsg.getString("msg.plateNoNotResgiterIO", plateNo, deliveryOrderNo));
                 }
+                
+                // for check edit plateNo after check DO
+                plateNoValidDO = traid.isEmpty() ? "" : plateNo;
 
                 // check DO in used
 //                if (isDOInUsed(deliveryOrderNo, outboundDelivery)) {
@@ -2737,8 +2753,6 @@ private void dpDateFromPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN
             }
 
             loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
-            lblDONumN.setBackground(Color.black);
-            btnSave.setEnabled(true);
         }
 
         @Override
@@ -2748,6 +2762,8 @@ private void dpDateFromPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN
             txtWeightN.setText("0");
 
             isValidDO = false;
+            // for check edit plateNo after check DO
+            plateNoValidDO = "";
             if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
                 cause = cause.getCause();
             }
@@ -3001,6 +3017,7 @@ private void dpDateFromPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN
         isValidWeight = false;
         isValidVendorLoad = false;
         isValidVendorTransport = false;
+        plateNoValidDO = "";
 
         txtTicketIdN.setText("");
         txtWeightTickerRefN.setText("");
