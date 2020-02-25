@@ -5,6 +5,7 @@
 package com.gcs.wb.controller;
 
 import com.gcs.wb.WeighBridgeApp;
+import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.jpa.JReportService;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.service.WeightTicketReportService;
@@ -42,7 +43,8 @@ public class WeightTicketReportController {
         params.put("P_PADDRESS", WeighBridgeApp.getApplication().getSapSetting().getAddress());
         params.put("P_PPHONE", WeighBridgeApp.getApplication().getSapSetting().getPhone());
         params.put("P_PFAX", WeighBridgeApp.getApplication().getSapSetting().getFax());
-        params.put("P_TAGENT", ((TransportAgent) cbxTransportAgent.getSelectedItem()).getName());
+        String transportAgentName = ((TransportAgent) cbxTransportAgent.getSelectedItem()).getName();
+        params.put("P_TAGENT", transportAgentName.equals(Constants.Label.LABEL_ALL) ? null : transportAgentName);
         params.put("P_MONTH", cbxMonth.getSelectedItem().toString());
         params.put("P_YEAR", cbxYear.getSelectedItem().toString());
         return params;
