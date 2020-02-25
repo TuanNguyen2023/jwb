@@ -784,7 +784,7 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 								<textElement textAlignment="Right" verticalAlignment="Middle">
 									<font fontName="DejaVu Sans" size="8"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$F{outb_details_FREE_ITEM} != null ? $P{P_FREE} : ($P{P_TOTAL_QTY_REG} == null ) ? $F{outb_details_LFIMG} : ""]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{outb_details_FREE_ITEM} != null ? $P{P_FREE} : ($P{P_TOTAL_QTY_REG} != null ) ? $P{P_TOTAL_QTY_REG} : $F{outb_details_LFIMG}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>

@@ -1801,6 +1801,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         outDetails_lits.clear();
         entityManager.clear();
         String txt = txtWTNum.getText().trim();
+        checkWTNum(txt);
         if (isEnteredValidWTNum()) {
             return new ReadWTTask(WeighBridgeApp.getApplication(), txt);
         } else {
@@ -1808,7 +1809,17 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             return null;
         }
     }
-
+    
+    private void checkWTNum(String wtNum){
+        boolean valid = wtNum.matches("^[a-zA-Z0-9]{10}$");  //
+        setEnteredValidWTNum(valid);
+        if (valid) {
+            lblWTNum.setForeground(Color.BLACK);
+        } else {
+            lblWTNum.setForeground(Color.RED);
+        }
+    }
+    
     @Action(block = Task.BlockingScope.ACTION)
     public Task readPO() {
         if (isEnteredValidPONum()) {
@@ -1998,13 +2009,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
     private void checkWTNum(DocumentEvent e) {
         try {
             String text = e.getDocument().getText(0, e.getDocument().getLength()).trim();
-            boolean valid = text.matches("^[a-zA-Z0-9]{10}$");  //
-            setEnteredValidWTNum(valid);
-            if (valid) {
-                lblWTNum.setForeground(Color.BLACK);
-            } else {
-                lblWTNum.setForeground(Color.RED);
-            }
+            checkWTNum(text);
         } catch (BadLocationException ex) {
         } finally {
         }
