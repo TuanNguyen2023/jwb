@@ -2869,7 +2869,7 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             newWeightTicket.setSoNiemXa(txtSoNiemXaN.getText().trim());
             newWeightTicket.setBatch(txtProductionBatchN.getText().trim());
             newWeightTicket.setNote(txtNoteN.getText().trim());
-
+            newWeightTicket.setTicketId(newWeightTicket.getId());
             switch (modeDetail) {
                 case IN_PO_PURCHASE:
                     updateDataForInPoPurchaseMode();

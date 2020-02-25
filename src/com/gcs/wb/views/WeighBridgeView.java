@@ -589,11 +589,13 @@ public class WeighBridgeView extends FrameView {
                 Map<String, Object> map = new HashMap<String, Object>();
                 map.put("MANDT", WeighBridgeApp.getApplication().getCredentials().getClient());
                 String reportName = null;
-                if (WeighBridgeApp.getApplication().getConfig().getConfiguration().isModeNormal()) {
-                    reportName = "./rpt/rptBT/WNotesList.jrxml";
-                } else {
-                    reportName = "./rpt/rptPQ/WNotesList.jrxml";
-                }
+                reportName = "./rpt/rptBT/WNotesList.jrxml";
+//                if (WeighBridgeApp.getApplication().getConfig().getConfiguration().isModeNormal()) {
+//                    reportName = "./rpt/rptBT/WNotesList.jrxml";
+//                } else {
+//                    reportName = "./rpt/rptPQ/WNotesList.jrxml";
+//                }
+                
 //                JasperDesign jasperDesign = JRXmlLoader.load(reportName);
 //                JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
 //                Connection connect = JReportConnector.getInstance();
