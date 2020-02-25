@@ -1681,6 +1681,8 @@ private void dpDateFromPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN
     }
 
     private void prepareEditableForm(MODE_DETAIL modeDetail) {
+        cleanData();
+
         switch (modeDetail) {
             case IN_PO_PURCHASE:
                 prepareInPOPurchaseMode();
