@@ -64,6 +64,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
     private boolean isValidVendorLoad = false;
     private boolean isValidVendorTransport = false;
     private BigDecimal numCheckWeight = BigDecimal.ZERO;
+    private String plateNoValidDO = "";
 
     private boolean formValid;
     private com.gcs.wb.jpa.entity.WeightTicket newWeightTicket;
@@ -90,6 +91,8 @@ public class WTRegView extends javax.swing.JInternalFrame {
         weightTicketList = new ArrayList<>();
         wtRegisValidation = new WeightTicketRegistrationValidation(rootPane, resourceMapMsg);
         initComponents();
+        dpDateFrom.setFormats(Constants.Date.FORMAT);
+        dpDateTo.setFormats(Constants.Date.FORMAT);
         initComboboxModel();
         initComboboxRenderer();
 
@@ -400,17 +403,32 @@ public class WTRegView extends javax.swing.JInternalFrame {
         lblCreator.setName("lblCreator"); // NOI18N
 
         txtCreator.setName("txtCreator"); // NOI18N
+        txtCreator.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtCreatorKeyReleased(evt);
+            }
+        });
 
         lblDriverName.setLabelFor(txtCreator);
         lblDriverName.setText(resourceMap.getString("lblDriverName.text")); // NOI18N
         lblDriverName.setName("lblDriverName"); // NOI18N
 
         txtDriverName.setName("txtDriverName"); // NOI18N
+        txtDriverName.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtDriverNameKeyReleased(evt);
+            }
+        });
 
         lblPlateNo.setText(resourceMap.getString("lblPlateNo.text")); // NOI18N
         lblPlateNo.setName("lblPlateNo"); // NOI18N
 
         txtPlateNo.setName("txtPlateNo"); // NOI18N
+        txtPlateNo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtPlateNoKeyReleased(evt);
+            }
+        });
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getActionMap(WTRegView.class, this);
         btnFind.setAction(actionMap.get("searchWeightTickets")); // NOI18N
@@ -1182,7 +1200,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addComponent(pnRegistrationOfVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(pnControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(125, Short.MAX_VALUE))
+                .addContainerGap(124, Short.MAX_VALUE))
         );
 
         pack();
@@ -1401,7 +1419,17 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
 }//GEN-LAST:event_cbxVendorTransportNActionPerformed
 
 private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPlateNoNFocusLost
-    txtPlateNoN.setText(txtPlateNoN.getText().toUpperCase());
+    String plateNo = txtPlateNoN.getText().trim();
+    txtPlateNoN.setText(plateNo.toUpperCase());
+
+    if (!plateNoValidDO.isEmpty() && !plateNo.contains(plateNoValidDO)) {
+        lblPlateNoN.setForeground(Color.red);
+        btnSave.setEnabled(false);
+        
+        JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.plateNoNotResgiter", plateNo, plateNoValidDO));
+    } else {
+        validateForm();
+    }
 }//GEN-LAST:event_txtPlateNoNFocusLost
 
 private void dpDateToPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_dpDateToPropertyChange
@@ -1416,18 +1444,37 @@ private void dpDateFromPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN
     }
 }//GEN-LAST:event_dpDateFromPropertyChange
 
+private void txtDriverNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDriverNameKeyReleased
+    validateFilterForm();
+}//GEN-LAST:event_txtDriverNameKeyReleased
+
+private void txtPlateNoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPlateNoKeyReleased
+    validateFilterForm();
+}//GEN-LAST:event_txtPlateNoKeyReleased
+
+private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCreatorKeyReleased
+    validateFilterForm();
+}//GEN-LAST:event_txtCreatorKeyReleased
+
     private void validateFilterForm() {
+        boolean isDriverNameValid = wtRegisValidation.validateLength(txtDriverName.getText(), lblDriverName, 0, 70);
+        boolean isPlateNoValid = wtRegisValidation.validateLength(txtPlateNo.getText(), lblPlateNo, 0, 20);
+        boolean isCreatorValid = wtRegisValidation.validateLength(txtCreator.getText(), lblCreator, 0, 12);
+        
+        boolean isDateValid;
         try {
             dateFromToValidator.validate(dpDateFrom.getDate(), dpDateTo.getDate());
 
             lblDateFrom.setForeground(Color.black);
             lblDateTo.setForeground(Color.black);
-            btnFind.setEnabled(true);
+            isDateValid = true;
         } catch (IllegalArgumentException ex) {
             lblDateFrom.setForeground(Color.red);
             lblDateTo.setForeground(Color.red);
-            btnFind.setEnabled(false);
+            isDateValid = false;
         }
+        
+        btnFind.setEnabled(isDriverNameValid && isPlateNoValid && isCreatorValid && isDateValid);
     }
 
     private DefaultComboBoxModel getMatsModel() {
@@ -2633,6 +2680,9 @@ private void dpDateFromPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN
                 if (!traid.isEmpty() && !traid.startsWith(plateNo)) {
                     throw new Exception(resourceMapMsg.getString("msg.plateNoNotResgiterIO", plateNo, deliveryOrderNo));
                 }
+                
+                // for check edit plateNo after check DO
+                plateNoValidDO = traid.isEmpty() ? "" : plateNo;
 
                 // check DO in used
 //                if (isDOInUsed(deliveryOrderNo, outboundDelivery)) {
@@ -2649,6 +2699,7 @@ private void dpDateFromPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN
             }
 
             return null;
+            
         }
 
         private OutboundDelivery syncOutboundDelivery(String deliveryOrderNo, OutboundDelivery outboundDelivery) {
@@ -2737,8 +2788,6 @@ private void dpDateFromPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN
             }
 
             loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
-            lblDONumN.setBackground(Color.black);
-            btnSave.setEnabled(true);
         }
 
         @Override
@@ -2748,6 +2797,8 @@ private void dpDateFromPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN
             txtWeightN.setText("0");
 
             isValidDO = false;
+            // for check edit plateNo after check DO
+            plateNoValidDO = "";
             if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
                 cause = cause.getCause();
             }
@@ -3001,6 +3052,7 @@ private void dpDateFromPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN
         isValidWeight = false;
         isValidVendorLoad = false;
         isValidVendorTransport = false;
+        plateNoValidDO = "";
 
         txtTicketIdN.setText("");
         txtWeightTickerRefN.setText("");

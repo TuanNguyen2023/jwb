@@ -71,7 +71,8 @@ public interface WsDeliveryUpdateConstants extends BapiConstants {
     String MEINS = "MEINS";
     // </editor-fold>
     // </editor-fold>
-    
-//    {[M001-DungDang-27062013] - fixing bug double post GoodsMovement
+
     String I_WEIGHTTICKET = "I_WEIGHTTICKET";
+    String IV_WBID_NOSAVE = "IV_WBID_NOSAVE";
+            
 }

@@ -129,8 +129,9 @@ public class WeightTicketController {
         return weightTicketService.getDoCreate2PGI(wt, outbDel, weightTicket, timeFrom, timeTo, outDetails_lits);
     }
 
-    public Object getPgmVl02nBapi(WeightTicket wt, OutboundDelivery outbDel, WeightTicket weightTicket, String modeFlg, int timeFrom, int timeTo, List<OutboundDeliveryDetail> outDetails_lits) {
-        return weightTicketService.getPgmVl02nBapi(wt, outbDel, weightTicket, modeFlg, timeFrom, timeTo, outDetails_lits);
+    public Object getPgmVl02nBapi(WeightTicket wt, OutboundDelivery outbDel, WeightTicket weightTicket,
+            String modeFlg, int timeFrom, int timeTo, List<OutboundDeliveryDetail> outDetails_lits, String ivWbidNosave) {
+        return weightTicketService.getPgmVl02nBapi(wt, outbDel, weightTicket, modeFlg, timeFrom, timeTo, outDetails_lits, ivWbidNosave);
     }
 
     public Object getMvtPOSTOCreatePGI(WeightTicket wt, WeightTicket weightTicket, String posto, int timeFrom, int timeTo) {

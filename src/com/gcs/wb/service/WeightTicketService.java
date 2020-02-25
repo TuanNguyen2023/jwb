@@ -688,7 +688,7 @@ public class WeightTicketService {
 
     public Object getPgmVl02nBapi(WeightTicket wt, OutboundDelivery outbDel,
             WeightTicket weightTicket,String modeFlg, int timeFrom, int timeTo,
-            List<OutboundDeliveryDetail> outDetails_lits) {
+            List<OutboundDeliveryDetail> outDetails_lits, String ivWbidNosave) {
         String doNum = null;
         if (outbDel != null) {
             doNum = outbDel.getDeliveryOrderNo();
@@ -766,7 +766,7 @@ public class WeightTicketService {
         tab_wa.setPosnr_vl(weightTicketDetail.getItem());
         tab_wa.setVbeln(tab_wa.getVbeln_vl());
         tab_wa.setPosnn(tab_wa.getPosnr_vl());
-        tab_wa.setMatnr(weightTicketDetail.getMatnrRef());
+        tab_wa.setMatnr(outbDel.getMatnr());
         tab_wa.setWerks(configuration.getWkPlant());
         tab_wa.setLgort(wt.getLgort());
         tab_wa.setCharg(wt.getCharg());
@@ -787,13 +787,21 @@ public class WeightTicketService {
                 qtyfree = new BigDecimal(0);
             }
             qty = wt.getGQty().subtract(qtyfree);
-            tab_wa.setPikmg(qty);
-            tab_wa.setLfimg(qty);
+            if(kl.equals(BigDecimal.ZERO)) {
+                tab_wa.setPikmg(qty);
+                tab_wa.setLfimg(qty);
+            } else {
+                tab_wa.setPikmg(kl);
+                tab_wa.setLfimg(kl);
+            }
         }
 
         GoodsMvtWeightTicketStructure stWT = fillWTStructure(weightTicket, outbDel, outDetails_lits, weightTicket);
         stWT.setGQTY(tab_wa.getLfimg());
         bapi.setWeightticket(stWT);
+
+        // add for check ghep ma
+        bapi.setIvWbidNosave(ivWbidNosave);
 
         tab_wa.setVrkme(weightTicketDetail.getUnit());
         tab_wa.setMeins(outbDel.getMeins());
