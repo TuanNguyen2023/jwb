@@ -687,6 +687,11 @@ public class WTRegView extends javax.swing.JInternalFrame {
         txtTonnageN.setName("txtTonnageN"); // NOI18N
 
         txtTrailerNoN.setName("txtTrailerNoN"); // NOI18N
+        txtTrailerNoN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtTrailerNoNKeyReleased(evt);
+            }
+        });
 
         txtSlingN.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
         txtSlingN.setText(resourceMap.getString("txtSlingN.text")); // NOI18N
@@ -707,10 +712,25 @@ public class WTRegView extends javax.swing.JInternalFrame {
         });
 
         txtSoNiemXaN.setName("txtSoNiemXaN"); // NOI18N
+        txtSoNiemXaN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtSoNiemXaNKeyReleased(evt);
+            }
+        });
 
         txtProductionBatchN.setName("txtProductionBatchN"); // NOI18N
+        txtProductionBatchN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtProductionBatchNKeyReleased(evt);
+            }
+        });
 
         txtNoteN.setName("txtNoteN"); // NOI18N
+        txtNoteN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtNoteNKeyReleased(evt);
+            }
+        });
 
         lblTicketIdN.setText(resourceMap.getString("lblTicketIdN.text")); // NOI18N
         lblTicketIdN.setName("lblTicketIdN"); // NOI18N
@@ -1200,7 +1220,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addComponent(pnRegistrationOfVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(pnControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(124, Short.MAX_VALUE))
+                .addContainerGap(123, Short.MAX_VALUE))
         );
 
         pack();
@@ -1457,6 +1477,22 @@ private void txtPlateNoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCreatorKeyReleased
     validateFilterForm();
 }//GEN-LAST:event_txtCreatorKeyReleased
+
+private void txtTrailerNoNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTrailerNoNKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtTrailerNoNKeyReleased
+
+private void txtSoNiemXaNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSoNiemXaNKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtSoNiemXaNKeyReleased
+
+private void txtProductionBatchNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtProductionBatchNKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtProductionBatchNKeyReleased
+
+private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNoteNKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtNoteNKeyReleased
 
     private void validateFilterForm() {
         boolean isDriverNameValid = wtRegisValidation.validateLength(txtDriverName.getText(), lblDriverName, 0, 70);
