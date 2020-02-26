@@ -6,7 +6,6 @@ package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.goodsmvt.structure.DOCheckStructure;
-import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.base.constant.Constants.WeighingProcess.MODE;
 import com.gcs.wb.base.constant.Constants.WeighingProcess.MODE_DETAIL;
@@ -46,20 +45,18 @@ import java.util.stream.Stream;
 import org.apache.commons.lang.SerializationUtils;
 import org.jdesktop.application.Application;
 
-public class WTRegView extends javax.swing.JInternalFrame {
+public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
 
     EntityManager entityManager = JPAConnector.getInstance();
     EntityTransaction entityTransaction = entityManager.getTransaction();
-    SAPService sapService = new SAPService();
     Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
     WeightTicketRegistarationController weightTicketRegistarationController = new WeightTicketRegistarationController();
-    public ResourceMap resourceMapMsg = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(WTRegView.class);
-    private static final Logger logger = Logger.getLogger(WTRegView.class);
+    public ResourceMap resourceMapMsg = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(RegistrationVehicleOfflineView.class);
+    private static final Logger logger = Logger.getLogger(RegistrationVehicleOfflineView.class);
     private final List<WeightTicket> weightTicketList;
     private boolean isValidDO = false;
     private boolean isValidPO = false;
     private boolean isValidPOSTO = false;
-    private boolean isValidSO = false;
     private boolean isValidWeight = false;
     private boolean isValidVendorLoad = false;
     private boolean isValidVendorTransport = false;
@@ -85,7 +82,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
     MaterialGroupRepository materialGroupRepository = new MaterialGroupRepository();
     List<String> cbxSlocs = new ArrayList<String>();
 
-    public WTRegView() {
+    public RegistrationVehicleOfflineView() {
         newWeightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
         selectedWeightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
         weightTicketList = new ArrayList<>();
@@ -325,7 +322,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         lblWeightTicketNo = new javax.swing.JLabel();
         txtWeightTicketNo = new javax.swing.JTextField();
 
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(WTRegView.class);
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(RegistrationVehicleOfflineView.class);
         jTextField1.setText(resourceMap.getString("jTextField1.text")); // NOI18N
         jTextField1.setName("jTextField1"); // NOI18N
 
@@ -430,7 +427,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
             }
         });
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getActionMap(WTRegView.class, this);
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getActionMap(RegistrationVehicleOfflineView.class, this);
         btnFind.setAction(actionMap.get("searchWeightTickets")); // NOI18N
         btnFind.setText(resourceMap.getString("btnFind.text")); // NOI18N
         btnFind.setName("btnFind"); // NOI18N
@@ -687,11 +684,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
         txtTonnageN.setName("txtTonnageN"); // NOI18N
 
         txtTrailerNoN.setName("txtTrailerNoN"); // NOI18N
-        txtTrailerNoN.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtTrailerNoNKeyReleased(evt);
-            }
-        });
 
         txtSlingN.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
         txtSlingN.setText(resourceMap.getString("txtSlingN.text")); // NOI18N
@@ -712,25 +704,10 @@ public class WTRegView extends javax.swing.JInternalFrame {
         });
 
         txtSoNiemXaN.setName("txtSoNiemXaN"); // NOI18N
-        txtSoNiemXaN.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtSoNiemXaNKeyReleased(evt);
-            }
-        });
 
         txtProductionBatchN.setName("txtProductionBatchN"); // NOI18N
-        txtProductionBatchN.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtProductionBatchNKeyReleased(evt);
-            }
-        });
 
         txtNoteN.setName("txtNoteN"); // NOI18N
-        txtNoteN.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtNoteNKeyReleased(evt);
-            }
-        });
 
         lblTicketIdN.setText(resourceMap.getString("lblTicketIdN.text")); // NOI18N
         lblTicketIdN.setName("lblTicketIdN"); // NOI18N
@@ -838,7 +815,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtNoteN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblNoteN))
-                .addGap(140, 140, 140))
+                .addGap(143, 143, 143))
         );
 
         pnROVRight.setName("pnROVRight"); // NOI18N
@@ -948,7 +925,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
             }
         });
 
-        btnSOCheckN.setAction(actionMap.get("checkSO")); // NOI18N
         btnSOCheckN.setText(resourceMap.getString("btnSOCheckN.text")); // NOI18N
         btnSOCheckN.setName("btnSOCheckN"); // NOI18N
 
@@ -1130,9 +1106,9 @@ public class WTRegView extends javax.swing.JInternalFrame {
             pnRegistrationOfVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnRegistrationOfVehicleLayout.createSequentialGroup()
                 .addGroup(pnRegistrationOfVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(pnROVContent, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 947, Short.MAX_VALUE)
+                    .addComponent(pnROVContent, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 955, Short.MAX_VALUE)
                     .addComponent(pnROVTop, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
         pnRegistrationOfVehicleLayout.setVerticalGroup(
             pnRegistrationOfVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1201,10 +1177,10 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(pnRegistrationOfVehicle, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnPrintControl, javax.swing.GroupLayout.DEFAULT_SIZE, 970, Short.MAX_VALUE)
-                    .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 970, Short.MAX_VALUE)
+                    .addComponent(pnPrintControl, javax.swing.GroupLayout.DEFAULT_SIZE, 986, Short.MAX_VALUE)
+                    .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 986, Short.MAX_VALUE)
                     .addComponent(pnFilter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnControl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 970, Short.MAX_VALUE))
+                    .addComponent(pnControl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 986, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -1364,9 +1340,15 @@ private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//
 
     validateForm();
 
-    MaterialInternal materialInternal = (MaterialInternal) cbxMaterialTypeN.getSelectedItem();
     if (newWeightTicket != null) {
-        newWeightTicket.setRecvMatnr(materialInternal.getMatnr());
+        Object obj = cbxMaterialTypeN.getSelectedItem();
+        if (obj instanceof MaterialInternal) {
+            MaterialInternal materialInternal = (MaterialInternal) obj;
+            newWeightTicket.setRecvMatnr(materialInternal.getMatnr());
+        } else if (obj instanceof Material) {
+            Material material = (Material) obj;
+            newWeightTicket.setRecvMatnr(material.getMatnr());
+        }
     }
 
     loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
@@ -1375,31 +1357,6 @@ private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//
 
 private void cbxVendorLoadingNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxVendorLoadingNActionPerformed
     if (cbxVendorLoadingN.getSelectedItem() != null && !cbxVendorLoadingN.getSelectedItem().toString().equals("")) {
-        Vendor vendor = (Vendor) cbxVendorLoadingN.getSelectedItem();
-        //check validate vendor
-        PurchaseOrder purchaseOrder = purchaseOrderRepository.findByPoNumber(newWeightTicket.getWeightTicketDetail().getEbeln());
-        if (modeDetail != MODE_DETAIL.OUT_SLOC_SLOC) {
-            if (newWeightTicket != null && newWeightTicket.getWeightTicketDetail().getMatnrRef() != null) {
-                String vendorBocxep = "ZLCQ";
-                String msgVendorCheck = "";
-                if (!WeighBridgeApp.getApplication().isOfflineMode()) {
-                    msgVendorCheck = sapService.validateVendor(vendor.getLifnr(),
-                            newWeightTicket.getWeightTicketDetail().getMatnrRef(),
-                            vendorBocxep, purchaseOrder.getPurchaseOrderDetail().getPlant());
-                }
-                if (!msgVendorCheck.trim().isEmpty()) {
-                    //display errror
-                    JOptionPane.showMessageDialog(rootPane, msgVendorCheck);
-                    lblVendorLoadingN.setForeground(Color.red);
-                    isValidVendorLoad = false;
-                } else {
-                    isValidVendorLoad = true;
-                    lblVendorLoadingN.setForeground(Color.black);
-                    newWeightTicket.getWeightTicketDetail().setLoadVendor(vendor.getLifnr());
-                }
-            }
-        }
-
         validateForm();
     } else {
         isValidVendorLoad = true;
@@ -1408,32 +1365,6 @@ private void cbxVendorLoadingNActionPerformed(java.awt.event.ActionEvent evt) {/
 
 private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxVendorTransportNActionPerformed
     if (cbxVendorTransportN.getSelectedItem() != null && !cbxVendorTransportN.getSelectedItem().toString().equals("")) {
-        Vendor vendor = (Vendor) cbxVendorTransportN.getSelectedItem();
-        PurchaseOrder purchaseOrder = purchaseOrderRepository.findByPoNumber(newWeightTicket.getWeightTicketDetail().getEbeln());
-        if (modeDetail != MODE_DETAIL.OUT_SLOC_SLOC) {
-            //check validate vendor
-            if (newWeightTicket != null && newWeightTicket.getWeightTicketDetail().getMatnrRef() != null) {
-                String vendorVanchuyen = "ZIFQ";
-                String msgVendorCheck = "";
-                if (!WeighBridgeApp.getApplication().isOfflineMode()) {
-                    msgVendorCheck = sapService.validateVendor(vendor.getLifnr(),
-                            newWeightTicket.getWeightTicketDetail().getMatnrRef(),
-                            vendorVanchuyen, purchaseOrder.getPurchaseOrderDetail().getPlant());
-                }
-                if (!msgVendorCheck.trim().isEmpty()) {
-                    //display errror
-                    JOptionPane.showMessageDialog(rootPane, msgVendorCheck);
-
-                    lblVendorTransportN.setForeground(Color.red);
-                    isValidVendorTransport = false;
-                } else {
-                    isValidVendorTransport = true;
-                    lblVendorTransportN.setForeground(Color.black);
-                    newWeightTicket.getWeightTicketDetail().setTransVendor(vendor.getLifnr());
-                }
-            }
-        }
-
         validateForm();
     } else {
         isValidVendorTransport = true;
@@ -1447,7 +1378,7 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
     if (!plateNoValidDO.isEmpty() && !plateNo.contains(plateNoValidDO)) {
         lblPlateNoN.setForeground(Color.red);
         btnSave.setEnabled(false);
-        
+
         JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.plateNoNotResgiter", plateNo, plateNoValidDO));
     } else {
         validateForm();
@@ -1478,27 +1409,11 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
     validateFilterForm();
 }//GEN-LAST:event_txtCreatorKeyReleased
 
-private void txtTrailerNoNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTrailerNoNKeyReleased
-    validateForm();
-}//GEN-LAST:event_txtTrailerNoNKeyReleased
-
-private void txtSoNiemXaNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSoNiemXaNKeyReleased
-    validateForm();
-}//GEN-LAST:event_txtSoNiemXaNKeyReleased
-
-private void txtProductionBatchNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtProductionBatchNKeyReleased
-    validateForm();
-}//GEN-LAST:event_txtProductionBatchNKeyReleased
-
-private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNoteNKeyReleased
-    validateForm();
-}//GEN-LAST:event_txtNoteNKeyReleased
-
     private void validateFilterForm() {
         boolean isDriverNameValid = wtRegisValidation.validateLength(txtDriverName.getText(), lblDriverName, 0, 70);
         boolean isPlateNoValid = wtRegisValidation.validateLength(txtPlateNo.getText(), lblPlateNo, 0, 20);
         boolean isCreatorValid = wtRegisValidation.validateLength(txtCreator.getText(), lblCreator, 0, 12);
-        
+
         boolean isDateValid;
         try {
             dateFromToValidator.validate(dpDateFrom.getDate(), dpDateTo.getDate());
@@ -1511,7 +1426,7 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             lblDateTo.setForeground(Color.red);
             isDateValid = false;
         }
-        
+
         btnFind.setEnabled(isDriverNameValid && isPlateNoValid && isCreatorValid && isDateValid);
     }
 
@@ -1569,88 +1484,6 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         return new CheckDOTask(WeighBridgeApp.getApplication());
     }
 
-    @Action(block = Task.BlockingScope.ACTION)
-    public Task checkSO() {
-        String[] beforeSoNums = txtSONumN.getText().split("-");
-        String[] soNums = Stream.of(beforeSoNums)
-                .map(s -> StringUtil.paddingZero(s.trim(), 10)).distinct()
-                .toArray(String[]::new);
-
-        if (soNums.length != beforeSoNums.length) {
-            JOptionPane.showMessageDialog(rootPane,
-                    resourceMapMsg.getString("msg.duplicateSo"));
-            return null;
-        }
-
-        txtSONumN.setText(String.join(" - ", soNums));
-
-        return new CheckSOTask(WeighBridgeApp.getApplication());
-    }
-
-    List<DOCheckStructure> listDONumbers = new ArrayList<>();
-
-    private class CheckSOTask extends org.jdesktop.application.Task<Object, Void> {
-
-        CheckSOTask(org.jdesktop.application.Application app) {
-            super(app);
-        }
-
-        @Override
-        protected Object doInBackground() {
-            String[] val = txtSONumN.getText().trim().split("-");
-            String bsXe = txtPlateNoN.getText().trim();
-            DOCheckStructure doNumber = new DOCheckStructure();
-            String bsRomoc = txtTrailerNoN.getText().trim();
-
-            String doNum = "";
-            if (!WeighBridgeApp.getApplication().isOfflineMode()) {
-                List<DOCheckStructure> doNumbers = sapService.getDONumber(val, bsXe, bsRomoc);
-
-                if (doNumbers != null) {
-                    listDONumbers.addAll(doNumbers);
-                    for (int i = 0; i < doNumbers.size(); i++) {
-                        doNumber = doNumbers.get(i);
-                        if (!doNumber.getMessage().trim().isEmpty()) {
-                            setMessage(doNumber.getMessage());
-                            JOptionPane.showMessageDialog(rootPane, doNumber.getMessage());
-                            String msg = "SO " + doNumber.getVbelnSO() + " sai, vui lòng nhập lại!";
-                            txtDONumN.setText(null);
-                            setMessage(msg);
-                            JOptionPane.showMessageDialog(rootPane, msg);
-                            return null;
-                        } else {
-                            if (doNum.isEmpty()) {
-                                doNum = doNumber.getVbelnDO();
-                            } else {
-                                doNum += "-" + doNumber.getVbelnDO();
-                            }
-                        }
-                    }
-                }
-            }
-
-            txtDONumN.setText(doNum);
-            return null;
-        }
-
-        @Override
-        protected void failed(Throwable cause) {
-            isValidSO = false;
-
-            if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
-                cause = cause.getCause();
-            }
-            logger.error(null, cause);
-            JOptionPane.showMessageDialog(rootPane, cause.getMessage());
-        }
-
-        @Override
-        protected void finished() {
-            isValidSO = true;
-            btnDOCheckN.setEnabled(true);
-        }
-    }
-
     @Action(enabledProperty = "creatable")
     public void newRecord() {
         setFormEditable(true);
@@ -1701,7 +1534,6 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         isValidDO = false;
         isValidPO = false;
         isValidPOSTO = false;
-        isValidSO = false;
         disableAllInForm();
         prepareEditableForm(modeDetail);
     }
@@ -1856,7 +1688,7 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         showComponent(txtSONumN, lblSONumN, btnSOCheckN, false, false);
         showComponent(txtPONumN, lblPONumN, btnPOCheckN, true, true);
         showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, false, false);
-        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, false);
+        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, true);
         showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, true);
         showComponent(cbxSlocN, lblSlocN, true, true);
         showComponent(cbxSloc2N, lblSloc2N, false, false);
@@ -1865,11 +1697,14 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         showComponent(cbxVendorLoadingN, lblVendorLoadingN, false, false);
         showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
         showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
+
+        cbxMaterialTypeN.setModel(weightTicketRegistarationController.getListMaterial());
+        cbxMaterialTypeN.setSelectedIndex(-1);
     }
 
     private void prepareInWarehouseTransfer() {
         showComponent(txtTicketIdN, lblTicketIdN, true, true);
-        showComponent(txtWeightTickerRefN, lblWeightTickerRefN, true, false);
+        showComponent(txtWeightTickerRefN, lblWeightTickerRefN, true, true);
         showComponent(txtRegisterIdN, lblRegisterIdN, true, true);
         showComponent(txtDriverNameN, lblDriverNameN, true, true);
         showComponent(txtCMNDN, lblCMNDN, true, true);
@@ -1885,8 +1720,8 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         showComponent(txtSONumN, lblSONumN, btnSOCheckN, false, false);
         showComponent(txtPONumN, lblPONumN, btnPOCheckN, false, false);
         showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, false, false);
-        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, false);
-        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, false);
+        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, true);
+        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, true);
         showComponent(cbxSlocN, lblSlocN, true, true);
         showComponent(cbxSloc2N, lblSloc2N, false, false);
         showComponent(cbxBatchStockN, lblBatchStockN, true, true);
@@ -1894,6 +1729,9 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         showComponent(cbxVendorLoadingN, lblVendorLoadingN, false, false);
         showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
         showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
+
+        cbxMaterialTypeN.setModel(weightTicketRegistarationController.getListMaterial());
+        cbxMaterialTypeN.setSelectedIndex(-1);
     }
 
     private void prepareInOutOther() {
@@ -1946,8 +1784,8 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         showComponent(txtSONumN, lblSONumN, btnSOCheckN, false, false);
         showComponent(txtPONumN, lblPONumN, btnPOCheckN, false, false);
         showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, false, false);
-        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, false);
-        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, false);
+        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, true);
+        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, true);
         showComponent(cbxSlocN, lblSlocN, true, true);
         showComponent(cbxSloc2N, lblSloc2N, false, false);
         showComponent(cbxBatchStockN, lblBatchStockN, true, true);
@@ -1955,6 +1793,9 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         showComponent(cbxVendorLoadingN, lblVendorLoadingN, false, false);
         showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
         showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
+
+        cbxMaterialTypeN.setModel(weightTicketRegistarationController.getListMaterial());
+        cbxMaterialTypeN.setSelectedIndex(-1);
     }
 
     private void prepareOutPlantPlant() {
@@ -1975,8 +1816,8 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         showComponent(txtSONumN, lblSONumN, btnSOCheckN, false, false);
         showComponent(txtPONumN, lblPONumN, btnPOCheckN, true, true);
         showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, false, false);
-        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, false);
-        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, false);
+        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, true);
+        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, true);
         showComponent(cbxSlocN, lblSlocN, true, true);
         showComponent(cbxSloc2N, lblSloc2N, false, false);
         showComponent(cbxBatchStockN, lblBatchStockN, true, true);
@@ -1987,6 +1828,9 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         showComponent(cbxVendorTransportN, lblVendorTransportN, isShowPOV, true);
 
         showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
+
+        cbxMaterialTypeN.setModel(weightTicketRegistarationController.getListMaterial());
+        cbxMaterialTypeN.setSelectedIndex(-1);
     }
 
     private void prepareOutSlocSloc() {
@@ -2015,11 +1859,11 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         showComponent(cbxBatchStock2N, lblBatchStock2N, true, true);
 
         boolean isShowPOV = WeighBridgeApp.getApplication().getSapSetting().getCheckPov();
-        showComponent(cbxVendorLoadingN, lblVendorLoadingN, isShowPOV, false);
-        showComponent(cbxVendorTransportN, lblVendorTransportN, isShowPOV, false);
+        showComponent(cbxVendorLoadingN, lblVendorLoadingN, isShowPOV, true);
+        showComponent(cbxVendorTransportN, lblVendorTransportN, isShowPOV, true);
         showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
 
-        cbxMaterialTypeN.setModel(sapService.getMaterialModel());
+        cbxMaterialTypeN.setModel(weightTicketRegistarationController.getListMaterialInternal());
         cbxMaterialTypeN.setSelectedIndex(-1);
     }
 
@@ -2041,8 +1885,8 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         showComponent(txtSONumN, lblSONumN, btnSOCheckN, false, false);
         showComponent(txtPONumN, lblPONumN, btnPOCheckN, true, true);
         showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, true, true);
-        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, false);
-        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, false);
+        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, true);
+        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, true);
         showComponent(cbxSlocN, lblSlocN, true, true);
         showComponent(cbxSloc2N, lblSloc2N, false, false);
         showComponent(cbxBatchStockN, lblBatchStockN, true, true);
@@ -2053,6 +1897,9 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         showComponent(cbxVendorTransportN, lblVendorTransportN, isShowPOV, true);
 
         showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
+
+        cbxMaterialTypeN.setModel(weightTicketRegistarationController.getListMaterial());
+        cbxMaterialTypeN.setSelectedIndex(-1);
     }
 
     private void prepareOutSellWateway() {
@@ -2069,12 +1916,12 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
         showComponent(txtProductionBatchN, lblProductionBatchN, true, true);
         showComponent(txtNoteN, lblNoteN, true, true);
-        showComponent(txtDONumN, lblDONumN, btnDOCheckN, true, false);
-        showComponent(txtSONumN, lblSONumN, btnSOCheckN, true, !WeighBridgeApp.getApplication().isOfflineMode());
+        showComponent(txtDONumN, lblDONumN, btnDOCheckN, true, true);
+        showComponent(txtSONumN, lblSONumN, btnSOCheckN, true, true);
         showComponent(txtPONumN, lblPONumN, btnPOCheckN, false, false);
         showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, false, false);
-        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, false);
-        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, false);
+        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, true);
+        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, true);
         showComponent(cbxSlocN, lblSlocN, true, true);
         showComponent(cbxSloc2N, lblSloc2N, false, false);
         showComponent(cbxBatchStockN, lblBatchStockN, true, true);
@@ -2083,7 +1930,8 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
         showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
 
-        txtDONumN.setText("");
+        cbxMaterialTypeN.setModel(weightTicketRegistarationController.getListMaterial());
+        cbxMaterialTypeN.setSelectedIndex(-1);
     }
 
     private void validateForm() {
@@ -2393,27 +2241,14 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
 
-        if (!WeighBridgeApp.getApplication().isOfflineMode()) {
-            boolean isSOValid = wtRegisValidation.validateDO(txtSONumN.getText(), lblSONumN);
-            btnSOCheckN.setEnabled(isSOValid);
-            if (!isValidSO) {
-                lblSONumN.setForeground(Color.red);
-            } else {
-                btnDOCheckN.setEnabled(true);
-            }
-        } else {
-            isValidSO = true;
-            isValidDO = true;
-            lblSONumN.setForeground(Color.black);
-            lblDONumN.setForeground(Color.black);
-        }
+        boolean isSOValid = wtRegisValidation.validateDO(txtSONumN.getText(), lblSONumN);
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
         return isRegisterIdValid && isDriverNameValid
                 && isCMNDBLValid && isPlateNoValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
-                && isNoteValid && isSlocValid;
+                && isNoteValid && isSlocValid && isSOValid;
     }
 
     private void loadBatchStockModel(JComboBox slocComponent, JComboBox batchStockComponent, boolean isSloc) {
@@ -2516,15 +2351,15 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 wtData[i][4] = item.getTrailerId();
                 wtData[i][5] = item.getRegType();
                 String[] regItemDescriptions = weightTicketDetails.stream()
-                    .map(t -> t.getRegItemDescription())
-                    .filter(t -> t != null)
-                    .toArray(String[]::new);
+                        .map(t -> t.getRegItemDescription())
+                        .filter(t -> t != null)
+                        .toArray(String[]::new);
                 wtData[i][6] = regItemDescriptions.length > 0 ? String.join(" - ", regItemDescriptions) : "";
                 wtData[i][7] = weightTicketDetail.getRegItemQuantity();
                 String[] doNums = weightTicketDetails.stream()
-                    .map(t -> t.getDeliveryOrderNo())
-                    .filter(t -> t != null)
-                    .toArray(String[]::new);
+                        .map(t -> t.getDeliveryOrderNo())
+                        .filter(t -> t != null)
+                        .toArray(String[]::new);
                 wtData[i][8] = doNums.length > 0 ? String.join(" - ", doNums) : "";
                 wtData[i][9] = item.getCreator();
                 wtData[i][10] = item.getSeqMonth();
@@ -2700,11 +2535,6 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 deliveryOrderNo = StringUtil.paddingZero(deliveryOrderNo.trim(), 10);
                 OutboundDelivery outboundDelivery = weightTicketRegistarationController.findByDeliveryOrderNumber(deliveryOrderNo);
 
-                // sync from SAP
-                if (!WeighBridgeApp.getApplication().isOfflineMode()) {
-                    outboundDelivery = syncOutboundDelivery(deliveryOrderNo, outboundDelivery);
-                }
-
                 // check exist DO
                 if (outboundDelivery == null) {
                     throw new Exception(resourceMapMsg.getString("msg.dONotExitst", deliveryOrderNo));
@@ -2727,7 +2557,7 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 if (!traid.isEmpty() && !traid.startsWith(plateNo)) {
                     throw new Exception(resourceMapMsg.getString("msg.plateNoNotResgiterIO", plateNo, deliveryOrderNo));
                 }
-                
+
                 // for check edit plateNo after check DO
                 plateNoValidDO = traid.isEmpty() ? "" : plateNo;
 
@@ -2747,19 +2577,7 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             }
 
             return null;
-            
-        }
 
-        private OutboundDelivery syncOutboundDelivery(String deliveryOrderNo, OutboundDelivery outboundDelivery) {
-            try {
-                setStep(2, resourceMapMsg.getString("checkDOInSap"));
-                OutboundDelivery sapOutboundDelivery = sapService.getOutboundDelivery(deliveryOrderNo);
-
-                setStep(3, resourceMapMsg.getString("msg.saveDataDOToDb"));
-                return sapService.syncOutboundDelivery(sapOutboundDelivery, outboundDelivery, deliveryOrderNo);
-            } catch (Exception ex) {
-                return null;
-            }
         }
 
         private void setStep(int step, String msg) {
@@ -2841,10 +2659,8 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         @Override
         protected void failed(Throwable cause) {
             newWeightTicket.setWeightTicketDetails(new ArrayList<>());
-            cbxMaterialTypeN.setSelectedItem("");
-            txtWeightN.setText("0");
 
-            isValidDO = false;
+            isValidDO = true;
             // for check edit plateNo after check DO
             plateNoValidDO = "";
             if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
@@ -2915,13 +2731,36 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             newWeightTicket.setBatch(txtProductionBatchN.getText().trim());
             newWeightTicket.setNote(txtNoteN.getText().trim());
             newWeightTicket.setTicketId(newWeightTicket.getId());
+
+            WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
+            Object obj = cbxMaterialTypeN.getSelectedItem();
+            if (obj instanceof MaterialInternal) {
+                MaterialInternal materialInternal = (MaterialInternal) obj;
+                newWeightTicket.setRecvMatnr(materialInternal.getMatnr());
+                weightTicketDetail.setMatnrRef(materialInternal.getMatnr());
+                weightTicketDetail.setRegItemDescription(materialInternal.getMaktx());
+            } else if (obj instanceof Material) {
+                Material material = (Material) obj;
+                newWeightTicket.setRecvMatnr(material.getMatnr());
+                weightTicketDetail.setMatnrRef(material.getMatnr());
+                weightTicketDetail.setRegItemDescription(material.getMaktx());
+            }
+
+            weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText().trim()));
+
+            if (!txtDONumN.getText().trim().isEmpty()) {
+                weightTicketDetail.setDeliveryOrderNo(txtDONumN.getText().trim());
+            }
+            
+            if (!txtPONumN.getText().trim().isEmpty()) {
+                weightTicketDetail.setEbeln(txtPONumN.getText().trim());
+            }
+            
+            if (!txtPOSTONumN.getText().trim().isEmpty()) {
+                newWeightTicket.setPosto(txtPOSTONumN.getText().trim());
+            }
+            
             switch (modeDetail) {
-                case IN_PO_PURCHASE:
-                    updateDataForInPoPurchaseMode();
-                    break;
-                case IN_OTHER:
-                    updateDataForOtherMode();
-                    break;
                 case OUT_SLOC_SLOC:
                     updateDataForOutSlocSloc();
                     break;
@@ -2931,19 +2770,13 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 case OUT_PULL_STATION:
                     updateDataForPrepareOutPullStation();
                     break;
-                case OUT_OTHER:
-                    updateDataForOtherMode();
-                    break;
             }
 
-            List<WeightTicketDetail> weightTicketDetails = newWeightTicket.getWeightTicketDetails();
-            if (weightTicketDetails.size() > 0) {
-                weightTicketDetails.forEach(weightTicketDetail -> {
-                    weightTicketDetail.setCreatedTime(createdTime);
-                    weightTicketDetail.setDocYear(year);
-                    weightTicketDetail.setCreatedDate(now);
-                });
-            }
+            newWeightTicket.getWeightTicketDetails().forEach(t -> {
+                t.setCreatedTime(createdTime);
+                t.setDocYear(year);
+                t.setCreatedDate(now);
+            });
 
             setMessage(resourceMapMsg.getString("msg.saveData"));
             try {
@@ -2973,56 +2806,23 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             return null;
         }
 
-        public void updateDataForInPoPurchaseMode() {
-            newWeightTicket.getWeightTicketDetail().setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
-        }
-
         public void updateDataForPrepareOutPullStation() {
             newWeightTicket.setMoveType("101");
-            newWeightTicket.getWeightTicketDetail().setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
         }
 
         public void updateDataForOutSellWateway() {
-            if (WeighBridgeApp.getApplication().isOfflineMode()) {
-                WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
-                weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
-                weightTicketDetail.setSoNumber(txtSONumN.getText().trim());
-            } else {
-                if (listDONumbers != null) {
-                    for (WeightTicketDetail weightTicketDetail : newWeightTicket.getWeightTicketDetails()) {
-                        DOCheckStructure dOCheckStructure = listDONumbers.stream()
-                                .filter(t -> t.getVbelnDO().equalsIgnoreCase(weightTicketDetail.getDeliveryOrderNo()))
-                                .findFirst().get();
-
-                        if (dOCheckStructure != null) {
-                            weightTicketDetail.setSoNumber(dOCheckStructure.getVbelnSO());
-                        }
-                    }
-                }
-            }
-        }
-
-        public void updateDataForOtherMode() {
-            WeightTicketDetail weightTicketDetail = new WeightTicketDetail();
-            weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
-
-            MaterialInternal material = (MaterialInternal) cbxMaterialTypeN.getSelectedItem();
-            weightTicketDetail.setMatnrRef(material.getMatnr());
-            weightTicketDetail.setRegItemDescription(material.getMaktx());
-            weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
-
-            newWeightTicket.addWeightTicketDetail(weightTicketDetail);
+            String[] soNums = txtSONumN.getText().split("-");
+            int index = 0;
+            newWeightTicket.getWeightTicketDetails().forEach(t -> {
+                try{
+                    t.setSoNumber(soNums[index]);
+                } catch (Exception ex) {}
+            });
         }
 
         public void updateDataForOutSlocSloc() {
             newWeightTicket.setMoveType("311");
             newWeightTicket.setMoveReas(null);
-            WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
-            MaterialInternal materialInternal = (MaterialInternal) cbxMaterialTypeN.getSelectedItem();
-
-            weightTicketDetail.setMatnrRef(materialInternal.getMatnr());
-            weightTicketDetail.setRegItemDescription(materialInternal.getMaktx());
-            weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText().trim()));
         }
 
         @Override
@@ -3096,7 +2896,6 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         isValidDO = false;
         isValidPO = false;
         isValidPOSTO = false;
-        isValidSO = false;
         isValidWeight = false;
         isValidVendorLoad = false;
         isValidVendorTransport = false;
@@ -3338,15 +3137,10 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             setStep(1, resourceMapMsg.getString("msg.checkPOInDB"));
             PurchaseOrder purchaseOrder = purchaseOrderRepository.findByPoNumber(poNum);
 
-            // sync from SAP
-            if (!WeighBridgeApp.getApplication().isOfflineMode()) {
-                purchaseOrder = syncPurchaseOrder(poNum, purchaseOrder);
-            }
-
             //Check PO Plant with Configuration parameter.
             if ((modeDetail == MODE_DETAIL.IN_PO_PURCHASE)
                     && (!(purchaseOrder.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant()))) {
-                throw new Exception(resourceMapMsg.getString("msg.poIsDenied"));
+                throw new Exception("msg.poIsDenied");
             }
 
             // check exist PO
@@ -3380,10 +3174,8 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         @Override
         protected void failed(Throwable cause) {
             newWeightTicket.setWeightTicketDetails(new ArrayList<>());
-            cbxMaterialTypeN.setSelectedIndex(-1);
-            cbxVendorTransportN.setSelectedIndex(-1);
 
-            isValidPO = false;
+            isValidPO = true;
             if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
                 cause = cause.getCause();
             }
@@ -3400,19 +3192,6 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             setProgress(step, 1, 4);
         }
 
-        private PurchaseOrder syncPurchaseOrder(String poNum, PurchaseOrder purchaseOrder) {
-            try {
-                setStep(2, resourceMapMsg.getString("checkPOInSap"));
-                PurchaseOrder sapPurchaseOrder = sapService.getPurchaseOrder(poNum);
-                List<PurchaseOrderDetail> poItems = sapPurchaseOrder.getPurchaseOrderDetails();
-
-                setStep(3, resourceMapMsg.getString("msg.saveDataPOToDb"));
-                return sapService.syncPurchaseOrder(sapPurchaseOrder, purchaseOrder);
-            } catch (Exception ex) {
-                return null;
-            }
-        }
-
         private void updateWeightTicket(PurchaseOrder purchaseOrder) {
             PurchaseOrderDetail purchaseOrderDetail = purchaseOrder.getPurchaseOrderDetail();
             WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
@@ -3426,7 +3205,7 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
 
             strMatnr = purchaseOrderDetail.getMaterial();
 
-            newWeightTicket.getWeightTicketDetail().setTransVendor(purchaseOrder.getVendor());
+            weightTicketDetail.setTransVendor(purchaseOrder.getVendor());
             strVendor = purchaseOrder.getVendor();
             totalWeight = purchaseOrderDetail.getQuantity();
 
@@ -3448,7 +3227,7 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                     isValidWeight = true;
                     break;
                 case OUT_SLOC_SLOC:
-                    newWeightTicket.getWeightTicketDetail().setTransVendor(purchaseOrder.getVendor());
+                    weightTicketDetail.setTransVendor(purchaseOrder.getVendor());
                     break;
             }
         }
@@ -3478,11 +3257,6 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             setStep(1, resourceMapMsg.getString("msg.checkPOSTOInDB"));
             PurchaseOrder purchaseOrder = purchaseOrderRepository.findByPoNumber(postoNum);
 
-            // sync from SAP
-            if (!WeighBridgeApp.getApplication().isOfflineMode()) {
-                purchaseOrder = syncPurchaseOrder(postoNum, purchaseOrder);
-            }
-
             // check exist PO
             if (purchaseOrder == null) {
                 throw new Exception(resourceMapMsg.getString("msg.postoNotExist", postoNum));
@@ -3491,7 +3265,7 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             //Check PO Plant with Configuration parameter.
             if ((modeDetail == MODE_DETAIL.IN_PO_PURCHASE)
                     && (!(purchaseOrder.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant()))) {
-                throw new Exception(resourceMapMsg.getString("msg.postoIsDenied"));
+                throw new Exception("msg.postoIsDenied");
             }
 
             updateWeightTicket(purchaseOrder);
@@ -3514,8 +3288,7 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
 
         @Override
         protected void failed(Throwable cause) {
-            isValidPOSTO = false;
-            cbxVendorLoadingN.setSelectedIndex(-1);
+            isValidPOSTO = true;
 
             if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
                 cause = cause.getCause();
@@ -3533,27 +3306,10 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             setProgress(step, 1, 4);
         }
 
-        private PurchaseOrder syncPurchaseOrder(String poNum, PurchaseOrder purchaseOrder) {
-            try {
-                setStep(2, resourceMapMsg.getString("checkPOSTOInSap"));
-                PurchaseOrder sapPurchaseOrder = sapService.getPurchaseOrder(poNum);
-
-                setStep(3, resourceMapMsg.getString("msg.saveDataPOSTOToDb"));
-                return sapService.syncPurchaseOrder(sapPurchaseOrder, purchaseOrder);
-            } catch (Exception ex) {
-                return null;
-            }
-        }
-
         private void updateWeightTicket(PurchaseOrder purchaseOrder) {
             newWeightTicket.setPosto(purchaseOrder.getPoNumber());
             newWeightTicket.getWeightTicketDetail().setLoadVendor(purchaseOrder.getVendor());
             strVendor = purchaseOrder.getVendor();
-            switch (modeDetail) {
-                case OUT_SLOC_SLOC:
-                    newWeightTicket.getWeightTicketDetail().setLoadVendor(purchaseOrder.getVendor());
-                    break;
-            }
         }
     }
 }

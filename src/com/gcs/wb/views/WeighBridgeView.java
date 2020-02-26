@@ -536,7 +536,11 @@ public class WeighBridgeView extends FrameView {
     private void reinitTabContain() {
         if (tabPane.getSelectedComponent().getName().equalsIgnoreCase(dpVR.getName())) {
             if (vehicleRegistrationView == null) {
-                vehicleRegistrationView = new WTRegView();
+                if (WeighBridgeApp.getApplication().isOfflineMode()) {
+                    vehicleRegistrationView = new RegistrationVehicleOfflineView();
+                } else {
+                    vehicleRegistrationView = new WTRegView();
+                }
                 dpVR.add(vehicleRegistrationView);
                 vehicleRegistrationView.show();
             }
