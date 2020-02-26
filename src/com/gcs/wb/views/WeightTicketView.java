@@ -4191,8 +4191,8 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         txtRemark.setText(null);
         txtWeight.setText(null);
         txtPoPosto.setText(null);
-        cbxVendorLoading.setModel(new DefaultComboBoxModel());
-        cbxVendorTransport.setModel(new DefaultComboBoxModel());
+        cbxVendorLoading.setSelectedItem(new DefaultComboBoxModel());
+        cbxVendorTransport.setSelectedItem(new DefaultComboBoxModel());
 
         setAllChildPanelsVisible(pnWTLeft);
         setAllChildPanelsVisible(pnWTRight);
