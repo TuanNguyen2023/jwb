@@ -3414,7 +3414,17 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     // validate trọng lượng DO
                      flgGqty = validateTolerance(null, outbDel);
 
-                     if ((!weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER"))
+                     // mode nhap DO
+                    if (weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER")) {
+                        if (outbDel != null && (outbDel.getLfart().equalsIgnoreCase("LR")
+                                || outbDel.getLfart().equalsIgnoreCase("ZRET")
+                                || outbDel.getLfart().equalsIgnoreCase("ZVND"))) {
+                            modeFlg = "Z001";
+                            objBapi = getPgmVl02nBapi(weightTicket, outbDel, modeFlg, ivWbidNosave);
+                        } else {
+                            objBapi = getGrDoMigoBapi(weightTicket, outbDel);
+                        }
+                    } else if ((!weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER"))
                              && (flgGqty && (!toleranceUtil.isInvalidTolerance(sumQtyReg, weightTicket.getGQty(), configuration.getTolerance())))) {
                         // xuat DO
                         if (weightTicket.getMode().equals("OUT_SELL_ROAD")) {
@@ -3433,17 +3443,6 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         return null;
 //                        completed = false;
 //                        entityManager.clear();
-                    }
-                     // mode nhap DO
-                    if (weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER")) {
-                        if (outbDel != null && (outbDel.getLfart().equalsIgnoreCase("LR")
-                                || outbDel.getLfart().equalsIgnoreCase("ZRET")
-                                || outbDel.getLfart().equalsIgnoreCase("ZVND"))) {
-                            modeFlg = "Z001";
-                            objBapi = getPgmVl02nBapi(weightTicket, outbDel, modeFlg, ivWbidNosave);
-                        } else {
-                            objBapi = getGrDoMigoBapi(weightTicket, outbDel);
-                        }
                     }
 
                     if (WeighBridgeApp.getApplication().isOfflineMode() == false) {
@@ -3711,7 +3710,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 // </editor-fold>
                 
             }
-            
+
             if (WeighBridgeApp.getApplication().isOfflineMode() 
                     || weightTicket.getMode().equals("IN_OTHER") 
                     || weightTicket.getMode().equals("OUT_OTHER")) {
