@@ -1872,7 +1872,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             // Nhận dạng phiếu cân gỏ tay Hiệp Phước
             //   weightTicket.setText("ZBD"); 
             weightTicket.setNote(txtGRText.getText().trim());
-
+            weightTicket.setRemark(txtRemark.getText().trim());
             for (int i = 0; i < outbDel_list.size(); i++) {
                 outdel_tmp = outbDel_list.get(i);
                 try {
@@ -4190,8 +4190,8 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         txtRemark.setText(null);
         txtWeight.setText(null);
         txtPoPosto.setText(null);
-        cbxVendorLoading.setModel(new DefaultComboBoxModel());
-        cbxVendorTransport.setModel(new DefaultComboBoxModel());
+        cbxVendorLoading.setSelectedItem(new DefaultComboBoxModel());
+        cbxVendorTransport.setSelectedItem(new DefaultComboBoxModel());
 
         setAllChildPanelsVisible(pnWTLeft);
         setAllChildPanelsVisible(pnWTRight);
@@ -4335,7 +4335,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 lblGScale.setForeground(Color.red);
             }
         }
-        bSLoc = !(cbxSLoc.getSelectedIndex() == -1);
+        bSLoc = !(cbxSLoc.getSelectedIndex() == -1 && cbxSLoc.isEditable());
         bBatch = !((cbxCharg.getSelectedIndex() == -1 && cbxCharg.isEditable()) || (cbxCharg.isEditable() && cbxCharg.getEditor().getItem().toString().trim().isEmpty()));
         if (bMisc) {
             bSLoc = true;

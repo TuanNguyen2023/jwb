@@ -970,8 +970,8 @@ public class WeightTicketService {
                     if (bags != null) {
                         map.put("P_PCB40BAG", bags);
                     }
-                    if (outbDel.getMatDoc() != null) {
-                        map.put("P_MAT_DOC", outbDel.getMatDoc());
+                    if (wt.getWeightTicketDetail().getMatDoc() != null) {
+                        map.put("P_MAT_DOC", wt.getWeightTicketDetail().getMatDoc());
                     }
 
                     String reportName = null;

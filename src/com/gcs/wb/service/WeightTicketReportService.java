@@ -75,6 +75,8 @@ public class WeightTicketReportService {
         for (int i = 0; i < weightTickets.size(); i++) {
             WeightTicket item = weightTickets.get(i);
             WeightTicketDetail weightTicketDetail = item.getWeightTicketDetail();
+            List<WeightTicketDetail> weightTicketDetails = item.getWeightTicketDetails();
+            
             String time = item.getCreatedTime().replaceAll(":", "");
             String hh = time.substring(0, 2);
             String mm = time.substring(2, 4);
@@ -95,7 +97,11 @@ public class WeightTicketReportService {
             wtDatas[i][6] = item.getCreator();
             wtDatas[i][7] = createdDateTime;
             wtDatas[i][8] = item.getRegType();
-            wtDatas[i][9] = weightTicketDetail.getRegItemDescription();
+            String[] regItemDescriptions = weightTicketDetails.stream()
+                    .map(t -> t.getRegItemDescription())
+                    .filter(t -> t != null)
+                    .toArray(String[]::new);
+            wtDatas[i][9] = regItemDescriptions.length > 0 ? String.join(" - ", regItemDescriptions) : "";
             if (item.getFTime() != null) {
                 wtDatas[i][10] = dateFormat.format(item.getFTime());
             } else {
@@ -109,7 +115,11 @@ public class WeightTicketReportService {
             }
             wtDatas[i][13] = item.getSScale() == null ? item.getSScale() : item.getSScale().doubleValue() / 1000d;
             wtDatas[i][14] = item.getGQty();
-            wtDatas[i][15] = weightTicketDetail.getDeliveryOrderNo();
+            String[] doNums = weightTicketDetails.stream()
+                    .map(t -> t.getDeliveryOrderNo())
+                    .filter(t -> t != null)
+                    .toArray(String[]::new);
+            wtDatas[i][15] = doNums.length > 0 ? String.join(" - ", doNums) : "";
             wtDatas[i][16] = weightTicketDetail.getMatDoc();
             if (item.isPosted()) {
                 wtDatas[i][17] = true;
@@ -124,7 +134,11 @@ public class WeightTicketReportService {
                     .findAny()
                     .orElse(null);
             wtDatas[i][18] = transportAgent != null ? transportAgent.getName() : "";
-            wtDatas[i][19] = weightTicketDetail.getEbeln();
+            String[] poNums = weightTicketDetails.stream()
+                    .map(t -> t.getEbeln())
+                    .filter(t -> t != null)
+                    .toArray(String[]::new);
+            wtDatas[i][19] = poNums.length > 0 ? String.join(" - ", poNums) : "";
         }
         return wtDatas;
     }

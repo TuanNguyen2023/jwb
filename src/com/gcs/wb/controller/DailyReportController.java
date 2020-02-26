@@ -8,10 +8,13 @@ import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.jpa.JReportService;
 import com.gcs.wb.jpa.entity.Configuration;
+import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.WeightTicket;
 import com.gcs.wb.jpa.entity.WeightTicketDetail;
+import com.gcs.wb.jpa.repositorys.TransportAgentRepository;
 import com.gcs.wb.service.DailyReportService;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +32,7 @@ public class DailyReportController {
     Object[] wtColNames = Constants.DailyReport.WT_COL_NAMES;
     Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
     JReportService jreportService = new JReportService();
+    private TransportAgentRepository transportAgentRepository = new TransportAgentRepository();
 
     public List<WeightTicket> findByCreateDateRange(JXDatePicker dpDateFrom, JXDatePicker dpDateTo) {
         return dailyReportService.findByCreateDateRange(dpDateFrom, dpDateTo);
@@ -61,12 +65,13 @@ public class DailyReportController {
     }
     
     public Object[][] handleWtDatas(Object[][] wtDatas, List<WeightTicket> weightTicketList) {
-
+        List<TransportAgent> transportAgents = transportAgentRepository.getListTransportAgent();
         wtDatas = new Object[weightTicketList.size()][wtColNames.length];
 
         for (int i = 0; i < weightTicketList.size(); i++) {
             WeightTicket weightTicket = weightTicketList.get(i);
             WeightTicketDetail weightTicketDetail = weightTicket.getWeightTicketDetail();
+            List<WeightTicketDetail> weightTicketDetails = weightTicket.getWeightTicketDetails();
             String time = weightTicket.getCreatedTime().replaceAll(":","");
             String hh = time.substring(0, 2);
             String mm = time.substring(2, 4);
@@ -87,7 +92,11 @@ public class DailyReportController {
             wtDatas[i][6] = weightTicket.getCreator();
             wtDatas[i][7] = createdDateTime;
             wtDatas[i][8] = weightTicket.getRegType();
-            wtDatas[i][9] = weightTicketDetail.getRegItemDescription();
+            String[] regItemDescriptions = weightTicketDetails.stream()
+                    .map(t -> t.getRegItemDescription())
+                    .filter(t -> t != null)
+                    .toArray(String[]::new);
+            wtDatas[i][9] = regItemDescriptions.length > 0 ? String.join(" - ", regItemDescriptions) : "";
             if (weightTicket.getFTime() != null) {
                 wtDatas[i][10] = dateFormat.format(weightTicket.getFTime());
             } else {
@@ -101,15 +110,32 @@ public class DailyReportController {
             }
             wtDatas[i][13] = weightTicket.getSScale() == null ? weightTicket.getSScale() : weightTicket.getSScale().doubleValue() / 1000d;
             wtDatas[i][14] = weightTicket.getGQty();
-            wtDatas[i][15] = weightTicketDetail.getDeliveryOrderNo();
+            String[] doNums = weightTicketDetails.stream()
+                    .map(t -> t.getDeliveryOrderNo())
+                    .filter(t -> t != null)
+                    .toArray(String[]::new);
+            wtDatas[i][15] = doNums.length > 0 ? String.join(" - ", doNums) : "";
             wtDatas[i][16] = weightTicketDetail.getMatDoc();
             if (weightTicket.isPosted()) {
                 wtDatas[i][17] = true;
             } else {
                 wtDatas[i][17] = false;
             }
-            wtDatas[i][18] = weightTicketDetail.getEbeln();
-            wtDatas[i][19] = "";
+            TransportAgent transportAgent = transportAgents.stream()
+                    .filter(t -> {
+                        String abbr = weightTicketDetail.getTransVendor();
+                        return abbr != null && abbr.equals(t.getAbbr());
+                    })
+                    .findAny()
+                    .orElse(null);
+            wtDatas[i][18] = transportAgent != null ? transportAgent.getName() : "";
+            //wtDatas[i][18] = weightTicketDetail.getEbeln();
+            String[] poNums = weightTicketDetails.stream()
+                    .map(t -> t.getEbeln())
+                    .filter(t -> t != null)
+                    .toArray(String[]::new);
+            wtDatas[i][19] = poNums.length > 0 ? String.join(" - ", poNums) : "";
+            //wtDatas[i][19] = "";
         }
         return wtDatas;
     }
