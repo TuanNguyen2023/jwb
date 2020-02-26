@@ -2472,15 +2472,24 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             for (int i = 0; i < weightTicketList.size(); i++) {
                 WeightTicket item = weightTicketList.get(i);
                 WeightTicketDetail weightTicketDetail = item.getWeightTicketDetail();
+                List<WeightTicketDetail> weightTicketDetails = item.getWeightTicketDetails();
                 wtData[i][0] = item.getSeqDay();
                 wtData[i][1] = item.getDriverName();
                 wtData[i][2] = item.getDriverIdNo();
                 wtData[i][3] = item.getPlateNo();
                 wtData[i][4] = item.getTrailerId();
                 wtData[i][5] = item.getRegType();
-                wtData[i][6] = weightTicketDetail.getRegItemDescription();
+                String[] regItemDescriptions = weightTicketDetails.stream()
+                    .map(t -> t.getRegItemDescription())
+                    .filter(t -> t != null)
+                    .toArray(String[]::new);
+                wtData[i][6] = regItemDescriptions.length > 0 ? String.join(" - ", regItemDescriptions) : "";
                 wtData[i][7] = weightTicketDetail.getRegItemQuantity();
-                wtData[i][8] = weightTicketDetail.getDeliveryOrderNo();
+                String[] doNums = weightTicketDetails.stream()
+                    .map(t -> t.getDeliveryOrderNo())
+                    .filter(t -> t != null)
+                    .toArray(String[]::new);
+                wtData[i][8] = doNums.length > 0 ? String.join(" - ", doNums) : "";
                 wtData[i][9] = item.getCreator();
                 wtData[i][10] = item.getSeqMonth();
 

@@ -97,7 +97,11 @@ public class WeightTicketReportService {
             wtDatas[i][6] = item.getCreator();
             wtDatas[i][7] = createdDateTime;
             wtDatas[i][8] = item.getRegType();
-            wtDatas[i][9] = weightTicketDetail.getRegItemDescription();
+            String[] regItemDescriptions = weightTicketDetails.stream()
+                    .map(t -> t.getRegItemDescription())
+                    .filter(t -> t != null)
+                    .toArray(String[]::new);
+            wtDatas[i][9] = regItemDescriptions.length > 0 ? String.join(" - ", regItemDescriptions) : "";
             if (item.getFTime() != null) {
                 wtDatas[i][10] = dateFormat.format(item.getFTime());
             } else {
@@ -130,7 +134,11 @@ public class WeightTicketReportService {
                     .findAny()
                     .orElse(null);
             wtDatas[i][18] = transportAgent != null ? transportAgent.getName() : "";
-            wtDatas[i][19] = weightTicketDetail.getEbeln();
+            String[] poNums = weightTicketDetails.stream()
+                    .map(t -> t.getEbeln())
+                    .filter(t -> t != null)
+                    .toArray(String[]::new);
+            wtDatas[i][19] = poNums.length > 0 ? String.join(" - ", poNums) : "";
         }
         return wtDatas;
     }
