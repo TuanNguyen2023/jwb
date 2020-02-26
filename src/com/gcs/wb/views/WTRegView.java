@@ -3301,7 +3301,7 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             //Check PO Plant with Configuration parameter.
             if ((modeDetail == MODE_DETAIL.IN_PO_PURCHASE)
                     && (!(purchaseOrder.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant()))) {
-                throw new Exception("msg.poIsDenied");
+                throw new Exception(resourceMapMsg.getString("msg.poIsDenied"));
             }
 
             // check exist PO
@@ -3446,7 +3446,7 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             //Check PO Plant with Configuration parameter.
             if ((modeDetail == MODE_DETAIL.IN_PO_PURCHASE)
                     && (!(purchaseOrder.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant()))) {
-                throw new Exception("msg.postoIsDenied");
+                throw new Exception(resourceMapMsg.getString("msg.postoIsDenied"));
             }
 
             updateWeightTicket(purchaseOrder);
