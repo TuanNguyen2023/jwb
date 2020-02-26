@@ -75,6 +75,8 @@ public class WeightTicketReportService {
         for (int i = 0; i < weightTickets.size(); i++) {
             WeightTicket item = weightTickets.get(i);
             WeightTicketDetail weightTicketDetail = item.getWeightTicketDetail();
+            List<WeightTicketDetail> weightTicketDetails = item.getWeightTicketDetails();
+            
             String time = item.getCreatedTime().replaceAll(":", "");
             String hh = time.substring(0, 2);
             String mm = time.substring(2, 4);
@@ -109,7 +111,11 @@ public class WeightTicketReportService {
             }
             wtDatas[i][13] = item.getSScale() == null ? item.getSScale() : item.getSScale().doubleValue() / 1000d;
             wtDatas[i][14] = item.getGQty();
-            wtDatas[i][15] = weightTicketDetail.getDeliveryOrderNo();
+            String[] doNums = weightTicketDetails.stream()
+                    .map(t -> t.getDeliveryOrderNo())
+                    .filter(t -> t != null)
+                    .toArray(String[]::new);
+            wtDatas[i][15] = doNums.length > 0 ? String.join(" - ", doNums) : "";
             wtDatas[i][16] = weightTicketDetail.getMatDoc();
             if (item.isPosted()) {
                 wtDatas[i][17] = true;
