@@ -4336,7 +4336,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 lblGScale.setForeground(Color.red);
             }
         }
-        bSLoc = !(cbxSLoc.getSelectedIndex() == -1);
+        bSLoc = !(cbxSLoc.getSelectedIndex() == -1 && cbxSLoc.isEditable());
         bBatch = !((cbxCharg.getSelectedIndex() == -1 && cbxCharg.isEditable()) || (cbxCharg.isEditable() && cbxCharg.getEditor().getItem().toString().trim().isEmpty()));
         if (bMisc) {
             bSLoc = true;
