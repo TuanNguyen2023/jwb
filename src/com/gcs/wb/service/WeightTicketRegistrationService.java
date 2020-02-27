@@ -131,36 +131,36 @@ public class WeightTicketRegistrationService {
         return weightTicketRepository.findByDateDissolvedNullAll(from, to, creator, taixe, bienso);
     }
 
-    public List<WeightTicket> findByDatePosted(String sfrom, String sto, String creator, String taixe, String loaihang, String bienso) throws Exception {
+    public List<WeightTicket> findByDatePosted(String sfrom, String sto, String creator, String taixe, String loaihang, String bienso, String mode) throws Exception {
         java.sql.Date from = java.sql.Date.valueOf(sfrom);
         java.sql.Date to = java.sql.Date.valueOf(sto);
-        return weightTicketRepository.findByDatePosted(from, to, creator, taixe, loaihang, bienso);
+        return weightTicketRepository.findByDatePosted(from, to, creator, taixe, loaihang, bienso, mode);
     }
 
-    public List<WeightTicket> findByDatePostedNull(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
+    public List<WeightTicket> findByDatePostedNull(String sfrom, String sto, String creator, String taixe, String bienso, String mode) throws Exception {
         java.sql.Date from = java.sql.Date.valueOf(sfrom);
         java.sql.Date to = java.sql.Date.valueOf(sto);
-        return weightTicketRepository.findByDatePostedNull(from, to, creator, taixe, bienso);
+        return weightTicketRepository.findByDatePostedNull(from, to, creator, taixe, bienso, mode);
     }
 
-    public List<WeightTicket> findByDatePostedNullAll(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
+    public List<WeightTicket> findByDatePostedNullAll(String sfrom, String sto, String creator, String taixe, String bienso, String mode) throws Exception {
         java.sql.Date from = java.sql.Date.valueOf(sfrom);
         java.sql.Date to = java.sql.Date.valueOf(sto);
-        return weightTicketRepository.findByDatePostedNullAll(from, to, creator, taixe, bienso);
+        return weightTicketRepository.findByDatePostedNullAll(from, to, creator, taixe, bienso, mode);
     }
 
-    public List<WeightTicket> findByDateAll(String sfrom, String sto, String creator, String taixe, String loaihang, String bienso) throws Exception {
+    public List<WeightTicket> findByDateAll(String sfrom, String sto, String creator, String taixe, String loaihang, String bienso, String mode) throws Exception {
         WeightTicketRepository repository = new WeightTicketRepository();
         java.sql.Date from = java.sql.Date.valueOf(sfrom);
         java.sql.Date to = java.sql.Date.valueOf(sto);
-        return repository.findByDateAll(from, to, creator, taixe, loaihang, bienso);
+        return repository.findByDateAll(from, to, creator, taixe, loaihang, bienso, mode);
     }
 
-    public List<WeightTicket> findByDateAllNull(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
+    public List<WeightTicket> findByDateAllNull(String sfrom, String sto, String creator, String taixe, String bienso, String mode) throws Exception {
         WeightTicketRepository repository = new WeightTicketRepository();
         java.sql.Date from = java.sql.Date.valueOf(sfrom);
         java.sql.Date to = java.sql.Date.valueOf(sto);
-        return repository.findByDateAllNull(from, to, creator, taixe, bienso);
+        return repository.findByDateAllNull(from, to, creator, taixe, bienso, mode);
     }
 
     public int getCountTicketMonth(String plant) {
@@ -210,11 +210,11 @@ public class WeightTicketRegistrationService {
         return count;
     }
 
-    public List<WeightTicket> findByDateAllNullAll(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
+    public List<WeightTicket> findByDateAllNullAll(String sfrom, String sto, String creator, String taixe, String bienso, String mode) throws Exception {
         WeightTicketRepository repository = new WeightTicketRepository();
         java.sql.Date from = java.sql.Date.valueOf(sfrom);
         java.sql.Date to = java.sql.Date.valueOf(sto);
-        return repository.findByDateAllNullAll(from, to, creator, taixe, bienso);
+        return repository.findByDateAllNullAll(from, to, creator, taixe, bienso, mode);
     }
 
     public List<OutboundDeliveryDetail> findByMandtDelivNumb(String deliv_numb) throws Exception {
@@ -246,5 +246,23 @@ public class WeightTicketRegistrationService {
     public Unit getUnit(){
         List<Unit> units = unitRepository.getListUnit();
         return units.get(0);
+    }
+
+    public List<WeightTicket> findByDateUnfinishNull(String sfrom, String sto, String creator, String taixe, String bienso, String mode) {
+        java.sql.Date from = java.sql.Date.valueOf(sfrom);
+        java.sql.Date to = java.sql.Date.valueOf(sto);
+        return weightTicketRepository.findByDateUnfinishNull(from, to, creator, taixe, bienso, mode);
+    }
+
+    public List<WeightTicket> findByDateUnfinishNullAll(String sfrom, String sto, String creator, String taixe, String bienso, String mode) {
+        java.sql.Date from = java.sql.Date.valueOf(sfrom);
+        java.sql.Date to = java.sql.Date.valueOf(sto);
+        return weightTicketRepository.findByDateUnfinishNullAll(from, to, creator, taixe, bienso, mode);
+    }
+
+    public List<WeightTicket> findByDateUnfinish(String sfrom, String sto, String creator, String taixe, String loaihang, String bienso, String mode) {
+        java.sql.Date from = java.sql.Date.valueOf(sfrom);
+        java.sql.Date to = java.sql.Date.valueOf(sto);
+        return weightTicketRepository.findByDateUnfinish(from, to, creator, taixe, loaihang, bienso, mode);
     }
 }

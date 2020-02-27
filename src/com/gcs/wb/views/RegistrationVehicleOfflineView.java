@@ -2294,9 +2294,9 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         private List<WeightTicket> getWeightTicketWithOtherType(String from, String to) throws Exception {
             List<WeightTicket> data = null;
             if (cbxStatus.getSelectedIndex() == StatusEnum.POSTED.VALUE) {
-                data = weightTicketRegistarationController.findByDatePostedNull(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
+                data = weightTicketRegistarationController.findByDatePostedNull(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim(), "");
             } else if (cbxStatus.getSelectedIndex() == StatusEnum.ALL.VALUE) {
-                data = weightTicketRegistarationController.findByDateAllNull(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
+                data = weightTicketRegistarationController.findByDateAllNull(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim(), "");
             }
 
             return filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
@@ -2305,9 +2305,9 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         private List<WeightTicket> getWeightTicketWithAllType(String from, String to) throws Exception {
             List<WeightTicket> data = null;
             if (cbxStatus.getSelectedIndex() == StatusEnum.POSTED.VALUE) {
-                data = weightTicketRegistarationController.findByDatePostedNullAll(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
+                data = weightTicketRegistarationController.findByDatePostedNullAll(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim(), "");
             } else if (cbxStatus.getSelectedIndex() == StatusEnum.ALL.VALUE) {
-                data = weightTicketRegistarationController.findByDateAllNullAll(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
+                data = weightTicketRegistarationController.findByDateAllNullAll(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim(), "");
             }
 
             return filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
@@ -2316,9 +2316,9 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         private List<WeightTicket> getWeightTicketWithSelectedType(String from, String to, String matnr) throws Exception {
             List<WeightTicket> data = null;
             if (cbxStatus.getSelectedIndex() == StatusEnum.POSTED.VALUE) {
-                data = weightTicketRegistarationController.findByDatePosted(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), matnr, txtPlateNo.getText().trim());
+                data = weightTicketRegistarationController.findByDatePosted(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), matnr, txtPlateNo.getText().trim(), "");
             } else if (cbxStatus.getSelectedIndex() == StatusEnum.ALL.VALUE) {
-                data = weightTicketRegistarationController.findByDateAll(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), matnr, txtPlateNo.getText().trim());
+                data = weightTicketRegistarationController.findByDateAll(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), matnr, txtPlateNo.getText().trim(), "");
             }
 
             return filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());

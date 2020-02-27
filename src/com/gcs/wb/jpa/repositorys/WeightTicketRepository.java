@@ -209,7 +209,7 @@ public class WeightTicketRepository {
     public List<WeightTicket> findByDatePosted(
             Date from, Date to,
             String creator, String driverName,
-            String loaihang, String plateNo) {
+            String loaihang, String plateNo, String mode) {
         List<WeightTicket> list = new ArrayList<WeightTicket>();
         try {
             TypedQuery<WeightTicket> nq = entityManager.createNamedQuery("WeightTicket.findByDatePosted", WeightTicket.class);
@@ -221,6 +221,7 @@ public class WeightTicketRepository {
             nq.setParameter("plateNo", "%" + plateNo + "%");
             nq.setParameter("mandt", configuration.getSapClient());
             nq.setParameter("wplant", configuration.getWkPlant());
+            nq.setParameter("mode", mode);
             list = nq.getResultList();
         } catch (Exception ex) {
             logger.error(null, ex);
@@ -231,7 +232,7 @@ public class WeightTicketRepository {
     public List<WeightTicket> findByDatePostedNull(
             Date from, Date to,
             String creator, String driverName,
-            String plateNo) {
+            String plateNo, String mode) {
         List<WeightTicket> list = new ArrayList<WeightTicket>();
         try {
             TypedQuery<WeightTicket> nq = entityManager.createNamedQuery("WeightTicket.findByDatePostedNull", WeightTicket.class);
@@ -242,6 +243,7 @@ public class WeightTicketRepository {
             nq.setParameter("plateNo", "%" + plateNo + "%");
             nq.setParameter("mandt", configuration.getSapClient());
             nq.setParameter("wplant", configuration.getWkPlant());
+            nq.setParameter("mode", mode);
             list = nq.getResultList();
         } catch (Exception ex) {
             logger.error(null, ex);
@@ -252,7 +254,7 @@ public class WeightTicketRepository {
     public List<WeightTicket> findByDatePostedNullAll(
             Date from, Date to,
             String creator, String driverName,
-            String plateNo) {
+            String plateNo, String mode) {
         List<WeightTicket> list = new ArrayList<WeightTicket>();
         try {
             TypedQuery<WeightTicket> nq = entityManager.createNamedQuery("WeightTicket.findByDatePostedNullAll", WeightTicket.class);
@@ -263,6 +265,7 @@ public class WeightTicketRepository {
             nq.setParameter("plateNo", "%" + plateNo + "%");
             nq.setParameter("mandt", configuration.getSapClient());
             nq.setParameter("wplant", configuration.getWkPlant());
+            nq.setParameter("mode", mode);
             list = nq.getResultList();
         } catch (Exception ex) {
             logger.error(null, ex);
@@ -273,7 +276,7 @@ public class WeightTicketRepository {
     public List<WeightTicket> findByDateAll(
             Date from, Date to,
             String creator, String driverName,
-            String loaihang, String plateNo) {
+            String loaihang, String plateNo, String mode) {
         List<WeightTicket> list = new ArrayList<WeightTicket>();
         try {
             TypedQuery<WeightTicket> nq = entityManager.createNamedQuery("WeightTicket.findByDateAll", WeightTicket.class);
@@ -285,6 +288,7 @@ public class WeightTicketRepository {
             nq.setParameter("plateNo", "%" + plateNo + "%");
             nq.setParameter("mandt", configuration.getSapClient());
             nq.setParameter("wplant", configuration.getWkPlant());
+            nq.setParameter("mode", mode);
             list = nq.getResultList();
         } catch (Exception ex) {
             logger.error(null, ex);
@@ -295,7 +299,7 @@ public class WeightTicketRepository {
     public List<WeightTicket> findByDateAllNull(
             Date from, Date to,
             String creator, String driverName,
-            String plateNo) throws Exception {
+            String plateNo, String mode) throws Exception {
         List<WeightTicket> list = new ArrayList<WeightTicket>();
         try {
             TypedQuery<WeightTicket> nq = entityManager.createNamedQuery("WeightTicket.findByDateAllNull", WeightTicket.class);
@@ -306,6 +310,7 @@ public class WeightTicketRepository {
             nq.setParameter("plateNo", "%" + plateNo + "%");
             nq.setParameter("mandt", configuration.getSapClient());
             nq.setParameter("wplant", configuration.getWkPlant());
+            nq.setParameter("mode", mode);
             list = nq.getResultList();
         } catch (Exception ex) {
             logger.error(null, ex);
@@ -316,7 +321,7 @@ public class WeightTicketRepository {
     public List<WeightTicket> findByDateAllNullAll(
             Date from, Date to,
             String creator, String driverName,
-            String plateNo) {
+            String plateNo, String mode) {
         List<WeightTicket> list = new ArrayList<WeightTicket>();
 
         try {
@@ -328,6 +333,7 @@ public class WeightTicketRepository {
             nq.setParameter("plateNo", "%" + plateNo + "%");
             nq.setParameter("mandt", configuration.getSapClient());
             nq.setParameter("wplant", configuration.getWkPlant());
+            nq.setParameter("mode", mode);
             list = nq.getResultList();
         } catch (Exception ex) {
             logger.error(null, ex);
@@ -389,5 +395,71 @@ public class WeightTicketRepository {
             weightTicket = weightTickets.get(0);
         }
         return weightTicket;
+    }
+
+    public List<WeightTicket> findByDateUnfinishNull(Date from, Date to,
+            String creator, String driverName,
+            String plateNo, String mode) {
+        List<WeightTicket> list = new ArrayList<>();
+        try {
+            TypedQuery<WeightTicket> nq = entityManager.createNamedQuery("WeightTicket.findByDateUnfinishNull", WeightTicket.class);
+            nq.setParameter("from", from);
+            nq.setParameter("to", to);
+            nq.setParameter("creator", "%" + creator + "%");
+            nq.setParameter("driverName", "%" + driverName + "%");
+            nq.setParameter("plateNo", "%" + plateNo + "%");
+            nq.setParameter("mandt", configuration.getSapClient());
+            nq.setParameter("wplant", configuration.getWkPlant());
+            nq.setParameter("mode", mode);
+            list = nq.getResultList();
+        } catch (Exception ex) {
+            logger.error(null, ex);
+        }
+        return list;
+    }
+
+    public List<WeightTicket> findByDateUnfinishNullAll(
+            Date from, Date to,
+            String creator, String driverName,
+            String plateNo, String mode) {
+        List<WeightTicket> list = new ArrayList<>();
+        try {
+            TypedQuery<WeightTicket> nq = entityManager.createNamedQuery("WeightTicket.findByDateUnfinishNullAll", WeightTicket.class);
+            nq.setParameter("from", from);
+            nq.setParameter("to", to);
+            nq.setParameter("creator", "%" + creator + "%");
+            nq.setParameter("driverName", "%" + driverName + "%");
+            nq.setParameter("plateNo", "%" + plateNo + "%");
+            nq.setParameter("mandt", configuration.getSapClient());
+            nq.setParameter("wplant", configuration.getWkPlant());
+            nq.setParameter("mode", mode);
+            list = nq.getResultList();
+        } catch (Exception ex) {
+            logger.error(null, ex);
+        }
+        return list;
+    }
+
+    public List<WeightTicket> findByDateUnfinish(
+            Date from, Date to,
+            String creator, String driverName,
+            String loaihang, String plateNo, String mode) {
+        List<WeightTicket> list = new ArrayList<>();
+        try {
+            TypedQuery<WeightTicket> nq = entityManager.createNamedQuery("WeightTicket.findByDateUnfinish", WeightTicket.class);
+            nq.setParameter("from", from);
+            nq.setParameter("to", to);
+            nq.setParameter("creator", "%" + creator + "%");
+            nq.setParameter("driverName", "%" + driverName + "%");
+            nq.setParameter("loaihang", loaihang);
+            nq.setParameter("plateNo", "%" + plateNo + "%");
+            nq.setParameter("mandt", configuration.getSapClient());
+            nq.setParameter("wplant", configuration.getWkPlant());
+            nq.setParameter("mode", mode);
+            list = nq.getResultList();
+        } catch (Exception ex) {
+            logger.error(null, ex);
+        }
+        return list;
     }
 }

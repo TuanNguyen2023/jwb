@@ -175,25 +175,25 @@ public class WeightTicketRegistarationController {
         return wTRegService.findByVehicleId(vehicleId);
     }
 
-    public List<WeightTicket> findByDatePostedNull(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
-        return wTRegService.findByDatePostedNull(sfrom, sto, creator, taixe, bienso);
+    public List<WeightTicket> findByDatePostedNull(String sfrom, String sto, String creator, String taixe, String bienso, String mode) throws Exception {
+        return wTRegService.findByDatePostedNull(sfrom, sto, creator, taixe, bienso, mode);
     }
 
-    public List<WeightTicket> findByDatePostedNullAll(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
-        return wTRegService.findByDatePostedNullAll(sfrom, sto, creator, taixe, bienso);
+    public List<WeightTicket> findByDatePostedNullAll(String sfrom, String sto, String creator, String taixe, String bienso, String mode) throws Exception {
+        return wTRegService.findByDatePostedNullAll(sfrom, sto, creator, taixe, bienso, mode);
     }
 
-    public List<WeightTicket> findByDatePosted(String sfrom, String sto, String creator, String taixe, String loaihang, String bienso) throws Exception {
-        return wTRegService.findByDatePosted(sfrom, sto, creator, taixe, loaihang, bienso);
+    public List<WeightTicket> findByDatePosted(String sfrom, String sto, String creator, String taixe, String loaihang, String bienso, String mode) throws Exception {
+        return wTRegService.findByDatePosted(sfrom, sto, creator, taixe, loaihang, bienso, mode);
     }
 
-    public List<WeightTicket> findByDateAll(String sfrom, String sto, String creator, String taixe, String loaihang, String bienso) throws Exception {
-        return wTRegService.findByDateAll(sfrom, sto, creator, taixe, loaihang, bienso);
+    public List<WeightTicket> findByDateAll(String sfrom, String sto, String creator, String taixe, String loaihang, String bienso, String mode) throws Exception {
+        return wTRegService.findByDateAll(sfrom, sto, creator, taixe, loaihang, bienso, mode);
     }
 
-    public List<WeightTicket> findByDateAllNull(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
+    public List<WeightTicket> findByDateAllNull(String sfrom, String sto, String creator, String taixe, String bienso, String mode) throws Exception {
 
-        return wTRegService.findByDateAllNull(sfrom, sto, creator, taixe, bienso);
+        return wTRegService.findByDateAllNull(sfrom, sto, creator, taixe, bienso, mode);
     }
 
     public Date getServerDate() {
@@ -218,8 +218,8 @@ public class WeightTicketRegistarationController {
         return count;
     }
 
-    public List<WeightTicket> findByDateAllNullAll(String sfrom, String sto, String creator, String taixe, String bienso) throws Exception {
-        return wTRegService.findByDateAllNullAll(sfrom, sto, creator, taixe, bienso);
+    public List<WeightTicket> findByDateAllNullAll(String sfrom, String sto, String creator, String taixe, String bienso, String mode) throws Exception {
+        return wTRegService.findByDateAllNullAll(sfrom, sto, creator, taixe, bienso, mode);
     }
 
     public List<OutboundDeliveryDetail> findByMandtDelivNumb(String deliv_numb) throws Exception {
@@ -329,5 +329,17 @@ public class WeightTicketRegistarationController {
     
     public Unit getUnit(){
         return wTRegService.getUnit();
+    }
+
+    public List<WeightTicket> findByDateUnfinishNull(String sfrom, String sto, String creator, String taixe, String bienso, String mode) throws Exception {
+        return wTRegService.findByDateUnfinishNull(sfrom, sto, creator, taixe, bienso, mode);
+    }
+
+    public List<WeightTicket> findByDateUnfinishNullAll(String sfrom, String sto, String creator, String taixe, String bienso, String mode) throws Exception {
+        return wTRegService.findByDateUnfinishNullAll(sfrom, sto, creator, taixe, bienso, mode);
+    }
+
+    public List<WeightTicket> findByDateUnfinish(String sfrom, String sto, String creator, String taixe, String loaihang, String bienso, String mode) throws Exception {
+        return wTRegService.findByDateUnfinish(sfrom, sto, creator, taixe, loaihang, bienso, mode);
     }
 }
