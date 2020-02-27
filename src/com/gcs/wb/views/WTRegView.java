@@ -84,6 +84,8 @@ public class WTRegView extends javax.swing.JInternalFrame {
     WeightTicketController weightTicketController = new WeightTicketController();
     MaterialGroupRepository materialGroupRepository = new MaterialGroupRepository();
     List<String> cbxSlocs = new ArrayList<String>();
+    private PurchaseOrder purchaseOrderPO = new PurchaseOrder();
+    private PurchaseOrder purchaseOrderPOSTO = new PurchaseOrder();
 
     public WTRegView() {
         newWeightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
@@ -3336,25 +3338,30 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
 
             // get local PO
             setStep(1, resourceMapMsg.getString("msg.checkPOInDB"));
-            PurchaseOrder purchaseOrder = purchaseOrderRepository.findByPoNumber(poNum);
+            purchaseOrderPO = purchaseOrderRepository.findByPoNumber(poNum);
 
             // sync from SAP
             if (!WeighBridgeApp.getApplication().isOfflineMode()) {
-                purchaseOrder = syncPurchaseOrder(poNum, purchaseOrder);
+                purchaseOrderPO = syncPurchaseOrder(poNum, purchaseOrderPO);
+            }
+
+            // check exist PO
+            if (purchaseOrderPO == null) {
+                throw new Exception(resourceMapMsg.getString("msg.poNotExist", poNum));
             }
 
             //Check PO Plant with Configuration parameter.
             if ((modeDetail == MODE_DETAIL.IN_PO_PURCHASE)
-                    && (!(purchaseOrder.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant()))) {
+                    && (!(purchaseOrderPO.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant()))) {
+                throw new Exception(resourceMapMsg.getString("msg.poIsDenied"));
+            }
+            if ((modeDetail == MODE_DETAIL.OUT_PLANT_PLANT 
+                    || modeDetail == MODE_DETAIL.OUT_PULL_STATION)
+                    && (!(purchaseOrderPO.getSupplPlnt()).equals(configuration.getWkPlant()))) {
                 throw new Exception(resourceMapMsg.getString("msg.poIsDenied"));
             }
 
-            // check exist PO
-            if (purchaseOrder == null) {
-                throw new Exception(resourceMapMsg.getString("msg.poNotExist", poNum));
-            }
-
-            updateWeightTicket(purchaseOrder);
+            updateWeightTicket(purchaseOrderPO);
 
             setStep(4, null);
             return null;
@@ -3476,25 +3483,35 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
 
             // get local POSTO
             setStep(1, resourceMapMsg.getString("msg.checkPOSTOInDB"));
-            PurchaseOrder purchaseOrder = purchaseOrderRepository.findByPoNumber(postoNum);
+            purchaseOrderPOSTO = purchaseOrderRepository.findByPoNumber(postoNum);
 
             // sync from SAP
             if (!WeighBridgeApp.getApplication().isOfflineMode()) {
-                purchaseOrder = syncPurchaseOrder(postoNum, purchaseOrder);
+                purchaseOrderPOSTO = syncPurchaseOrder(postoNum, purchaseOrderPOSTO);
             }
 
             // check exist PO
-            if (purchaseOrder == null) {
+            if (purchaseOrderPOSTO == null) {
                 throw new Exception(resourceMapMsg.getString("msg.postoNotExist", postoNum));
             }
 
             //Check PO Plant with Configuration parameter.
             if ((modeDetail == MODE_DETAIL.IN_PO_PURCHASE)
-                    && (!(purchaseOrder.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant()))) {
+                    && (!(purchaseOrderPOSTO.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant()))) {
                 throw new Exception(resourceMapMsg.getString("msg.postoIsDenied"));
             }
 
-            updateWeightTicket(purchaseOrder);
+            //Check POSTO Plant with PO plant
+            if(!purchaseOrderPOSTO.getPurchaseOrderDetail().getPlant().equals(configuration.getWkPlant())) {
+                throw new Exception(resourceMapMsg.getString("msg.postoIsPlant"));
+            }
+
+            //Check matnr for PO-POSTO
+            if(!purchaseOrderPOSTO.getPurchaseOrderDetail().getMaterial().equals(purchaseOrderPO.getPurchaseOrderDetail().getMaterial())) {
+                throw new Exception(resourceMapMsg.getString("msg.postoIsMatnr"));
+            }
+
+            updateWeightTicket(purchaseOrderPOSTO);
 
             setStep(4, null);
             return null;
