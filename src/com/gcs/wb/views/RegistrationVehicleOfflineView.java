@@ -463,9 +463,9 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
                             .addComponent(lblStatus))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbxStatus, 0, 181, Short.MAX_VALUE)
-                            .addComponent(txtPlateNo, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
-                            .addComponent(dpDateTo, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE))
+                            .addComponent(cbxStatus, 0, 197, Short.MAX_VALUE)
+                            .addComponent(txtPlateNo, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
+                            .addComponent(dpDateTo, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
                         .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(lblHourFrom)
@@ -925,6 +925,7 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
             }
         });
 
+        btnSOCheckN.setAction(actionMap.get("checkSO")); // NOI18N
         btnSOCheckN.setText(resourceMap.getString("btnSOCheckN.text")); // NOI18N
         btnSOCheckN.setName("btnSOCheckN"); // NOI18N
 
@@ -1081,7 +1082,7 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
                 .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbxSuppliesIdN, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblSuppliesIdN))
-                .addContainerGap(39, Short.MAX_VALUE))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout pnROVContentLayout = new javax.swing.GroupLayout(pnROVContent);
@@ -1196,7 +1197,7 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
                 .addComponent(pnRegistrationOfVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(pnControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(123, Short.MAX_VALUE))
+                .addContainerGap(122, Short.MAX_VALUE))
         );
 
         pack();
@@ -1309,23 +1310,6 @@ private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
 }//GEN-LAST:event_txtTicketIdNKeyReleased
 
 private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtWeightNKeyReleased
-    if (modeDetail == MODE_DETAIL.IN_PO_PURCHASE) {
-        boolean isWeightValid = wtRegisValidation.validateLength(txtWeightN.getText(), lblWeightN, 1, 10);
-        if (isWeightValid) {
-            BigDecimal weight = new BigDecimal(txtWeightN.getText());
-
-            if (numCheckWeight.subtract(weight).compareTo(BigDecimal.ZERO) < 0) {
-                JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.quantityOver", numCheckWeight));
-
-                lblWeightN.setForeground(Color.red);
-
-                isValidWeight = false;
-            } else {
-                isValidWeight = true;
-            }
-        }
-    }
-
     validateForm();
 }//GEN-LAST:event_txtWeightNKeyReleased
 
@@ -1358,6 +1342,11 @@ private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//
 private void cbxVendorLoadingNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxVendorLoadingNActionPerformed
     if (cbxVendorLoadingN.getSelectedItem() != null && !cbxVendorLoadingN.getSelectedItem().toString().equals("")) {
         validateForm();
+
+        Vendor vendor = (Vendor) cbxVendorLoadingN.getSelectedItem();
+        if (newWeightTicket != null) {
+            newWeightTicket.getWeightTicketDetail().setLoadVendor(vendor.getLifnr());
+        }
     } else {
         isValidVendorLoad = true;
     }
@@ -1366,6 +1355,11 @@ private void cbxVendorLoadingNActionPerformed(java.awt.event.ActionEvent evt) {/
 private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxVendorTransportNActionPerformed
     if (cbxVendorTransportN.getSelectedItem() != null && !cbxVendorTransportN.getSelectedItem().toString().equals("")) {
         validateForm();
+
+        Vendor vendor = (Vendor) cbxVendorTransportN.getSelectedItem();
+        if (newWeightTicket != null) {
+            newWeightTicket.getWeightTicketDetail().setTransVendor(vendor.getLifnr());
+        }
     } else {
         isValidVendorTransport = true;
     }
@@ -1598,6 +1592,7 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
     }
 
     private void prepareEditableForm(MODE_DETAIL modeDetail) {
+        disableAllInForm();
         cleanData();
 
         switch (modeDetail) {
@@ -1938,7 +1933,7 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         boolean isValid = false;
         switch (modeDetail) {
             case IN_PO_PURCHASE:
-                isValid = validateInPoPurchase() && isValidPO && isValidWeight;
+                isValid = validateInPoPurchase() && isValidPO;
                 break;
             case IN_WAREHOUSE_TRANSFER:
                 isValid = validateInWarehouseTransfer() && isValidDO;
@@ -1950,16 +1945,16 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                 isValid = validateOutSellRoad() && isValidDO;
                 break;
             case OUT_PLANT_PLANT:
-                isValid = validateOutPlantPlant() && isValidPO && isValidVendorLoad && isValidVendorTransport;
+                isValid = validateOutPlantPlant() && isValidPO;
                 break;
             case OUT_SLOC_SLOC:
                 isValid = validateOutSlocSloc() && isValidPO;
                 break;
             case OUT_PULL_STATION:
-                isValid = validateOutPullStation() && isValidPO && isValidVendorLoad && isValidVendorTransport;
+                isValid = validateOutPullStation() && isValidPO;
                 break;
             case OUT_SELL_WATERWAY:
-                isValid = validateOutSellWateway() && isValidPO;
+                isValid = validateOutSellWateway() && isValidDO;
                 break;
             case OUT_OTHER:
                 isValid = validateInOutOther();
@@ -2002,11 +1997,11 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         }
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
-
+        boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
                 && isCMNDBLValid && isPlateNoValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
-                && isNoteValid && isSlocValid;
+                && isNoteValid && isSlocValid && isMaterialTypeValid;
     }
 
     private boolean validateInWarehouseTransfer() {
@@ -2033,11 +2028,11 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         }
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
-
+        boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
                 && isCMNDBLValid && isPlateNoValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
-                && isNoteValid && isSlocValid;
+                && isNoteValid && isSlocValid && isMaterialTypeValid;
     }
 
     private boolean validateInOutOther() {
@@ -2091,10 +2086,10 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         }
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
-
+        boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
         return isRegisterIdValid && isDriverNameValid && isCMNDBLValid && isPlateNoValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
-                && isNoteValid && isSlocValid;
+                && isNoteValid && isSlocValid && isMaterialTypeValid;
     }
 
     private boolean validateOutPlantPlant() {
@@ -2130,11 +2125,11 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         }
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
-
+        boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
                 && isCMNDBLValid && isPlateNoValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
-                && isNoteValid && isSlocValid;
+                && isNoteValid && isSlocValid && isMaterialTypeValid;
     }
 
     private boolean validateOutSlocSloc() {
@@ -2175,11 +2170,11 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
         boolean isSloc2Valid = wtRegisValidation.validateCbxSelected(cbxSloc2N.getSelectedIndex(), lblSloc2N);
-
+        boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
                 && isCMNDBLValid && isPlateNoValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
-                && isNoteValid && isSlocValid && isSloc2Valid;
+                && isNoteValid && isSlocValid && isSloc2Valid && isMaterialTypeValid;
     }
 
     private boolean validateOutPullStation() {
@@ -2218,11 +2213,11 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         btnPOSTOCheckN.setEnabled(isPOSTOValid);
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
-
+        boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
                 && isCMNDBLValid && isPlateNoValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
-                && isNoteValid && isSlocValid;
+                && isNoteValid && isSlocValid && isMaterialTypeValid;
     }
 
     private boolean validateOutSellWateway() {
@@ -2241,14 +2236,16 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
 
+        boolean isDOValid = wtRegisValidation.validateDO(txtDONumN.getText(), lblDONumN);
+        btnDOCheckN.setEnabled(isDOValid);
         boolean isSOValid = wtRegisValidation.validateDO(txtSONumN.getText(), lblSONumN);
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
-
+        boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
         return isRegisterIdValid && isDriverNameValid
                 && isCMNDBLValid && isPlateNoValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
-                && isNoteValid && isSlocValid && isSOValid;
+                && isNoteValid && isSlocValid && isSOValid && isMaterialTypeValid;
     }
 
     private void loadBatchStockModel(JComboBox slocComponent, JComboBox batchStockComponent, boolean isSloc) {
@@ -2751,15 +2748,15 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             if (!txtDONumN.getText().trim().isEmpty()) {
                 weightTicketDetail.setDeliveryOrderNo(txtDONumN.getText().trim());
             }
-            
+
             if (!txtPONumN.getText().trim().isEmpty()) {
                 weightTicketDetail.setEbeln(txtPONumN.getText().trim());
             }
-            
+
             if (!txtPOSTONumN.getText().trim().isEmpty()) {
                 newWeightTicket.setPosto(txtPOSTONumN.getText().trim());
             }
-            
+
             switch (modeDetail) {
                 case OUT_SLOC_SLOC:
                     updateDataForOutSlocSloc();
@@ -2814,9 +2811,10 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             String[] soNums = txtSONumN.getText().split("-");
             int index = 0;
             newWeightTicket.getWeightTicketDetails().forEach(t -> {
-                try{
+                try {
                     t.setSoNumber(soNums[index]);
-                } catch (Exception ex) {}
+                } catch (Exception ex) {
+                }
             });
         }
 
@@ -3311,5 +3309,21 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             newWeightTicket.getWeightTicketDetail().setLoadVendor(purchaseOrder.getVendor());
             strVendor = purchaseOrder.getVendor();
         }
+    }
+
+    @Action
+    public void checkSO() {
+        String[] beforeSoNums = txtSONumN.getText().split("-");
+        String[] soNums = Stream.of(beforeSoNums)
+                .map(s -> StringUtil.paddingZero(s.trim(), 10)).distinct()
+                .toArray(String[]::new);
+
+        if (soNums.length != beforeSoNums.length) {
+            JOptionPane.showMessageDialog(rootPane,
+                    resourceMapMsg.getString("msg.duplicateSo"));
+            return;
+        }
+
+        txtSONumN.setText(String.join(" - ", soNums));
     }
 }
