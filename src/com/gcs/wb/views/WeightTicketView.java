@@ -3391,7 +3391,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         }
                     } else {
                         bapi_message = resourceMapMsg.getString("msg.postOfflien");
-                        weightTicket.setPosted(true);
+                        weightTicket.setPosted(false);
                         weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
                     }
                 }
@@ -3715,7 +3715,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     || weightTicket.getMode().equals("IN_OTHER") 
                     || weightTicket.getMode().equals("OUT_OTHER")) {
                 if (isStage2()) {
-                    weightTicket.setPosted(true);
+                    weightTicket.setPosted(false);
                 }
                 weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
             }

@@ -634,6 +634,7 @@ public class SAPService {
 
     public List<DOCheckStructure> getDONumber(String[] soNumbers, String bsXe, String soRomoc) {
         SOGetDetailBapi bapi = new SOGetDetailBapi();
+        bapi.setWerks(configuration.getWkPlant());
         List<SOCheckStructure> soChecks = new ArrayList<SOCheckStructure>();
         SOCheckStructure soCheck;
         for (int k = 0; k < soNumbers.length; k++) {

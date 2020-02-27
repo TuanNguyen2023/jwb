@@ -14,6 +14,7 @@ public interface SOGetDetailConstants extends BapiConstants {
     String BAPI_NAME = "ZSD_FM_WB_SO_CHECK_MUTIPLE";
     // for import param    
     String IT_SO_CHECK = "IT_SO_CHECK";
+    String WERKS = "WERKS";
     // for export params
     // <editor-fold defaultstate="collapsed" desc="Table Parameters">
     String TD_DO_CHECK = "TD_DO_CHECK";
