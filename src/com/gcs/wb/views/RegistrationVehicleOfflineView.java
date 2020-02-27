@@ -5,7 +5,6 @@
 package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
-import com.gcs.wb.bapi.goodsmvt.structure.DOCheckStructure;
 import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.base.constant.Constants.WeighingProcess.MODE;
 import com.gcs.wb.base.constant.Constants.WeighingProcess.MODE_DETAIL;
@@ -1455,18 +1454,7 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
     @Action(block = Task.BlockingScope.ACTION)
     public Task checkDO() {
-        String[] beforeDoNums = txtDONumN.getText().split("-");
-        String[] doNums = Stream.of(beforeDoNums)
-                .map(s -> StringUtil.paddingZero(s.trim(), 10)).distinct()
-                .toArray(String[]::new);
-
-        if (doNums.length != beforeDoNums.length) {
-            JOptionPane.showMessageDialog(rootPane,
-                    resourceMapMsg.getString("msg.duplicateDo"));
-            return null;
-        }
-
-        txtDONumN.setText(String.join(" - ", doNums));
+        txtDONumN.setText(StringUtil.paddingZero(txtDONumN.getText().trim(), 10));
 
         boolean isPlateNoValid = wtRegisValidation.validatePlateNo(txtPlateNoN.getText(), lblPlateNoN);
         if (!isPlateNoValid) {
@@ -2021,7 +2009,7 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
 
-        boolean isDOValid = wtRegisValidation.validateDO(txtDONumN.getText(), lblDONumN);
+        boolean isDOValid = wtRegisValidation.validatePO(txtDONumN.getText(), lblDONumN);
         btnDOCheckN.setEnabled(isDOValid);
         if (!isValidDO) {
             lblDONumN.setForeground(Color.red);
@@ -2079,7 +2067,7 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
 
-        boolean isDOValid = wtRegisValidation.validateDO(txtDONumN.getText(), lblDONumN);
+        boolean isDOValid = wtRegisValidation.validatePO(txtDONumN.getText(), lblDONumN);
         btnDOCheckN.setEnabled(isDOValid);
         if (!isValidDO) {
             lblDONumN.setForeground(Color.red);
@@ -2236,9 +2224,9 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
 
-        boolean isDOValid = wtRegisValidation.validateDO(txtDONumN.getText(), lblDONumN);
+        boolean isDOValid = wtRegisValidation.validatePO(txtDONumN.getText(), lblDONumN);
         btnDOCheckN.setEnabled(isDOValid);
-        boolean isSOValid = wtRegisValidation.validateDO(txtSONumN.getText(), lblSONumN);
+        boolean isSOValid = wtRegisValidation.validatePO(txtSONumN.getText(), lblSONumN);
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
         boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
@@ -3313,17 +3301,6 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
     @Action
     public void checkSO() {
-        String[] beforeSoNums = txtSONumN.getText().split("-");
-        String[] soNums = Stream.of(beforeSoNums)
-                .map(s -> StringUtil.paddingZero(s.trim(), 10)).distinct()
-                .toArray(String[]::new);
-
-        if (soNums.length != beforeSoNums.length) {
-            JOptionPane.showMessageDialog(rootPane,
-                    resourceMapMsg.getString("msg.duplicateSo"));
-            return;
-        }
-
-        txtSONumN.setText(String.join(" - ", soNums));
+        txtSONumN.setText(StringUtil.paddingZero(txtSONumN.getText().trim(), 10));
     }
 }

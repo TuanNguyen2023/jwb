@@ -43,6 +43,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Stream;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import org.apache.commons.lang.SerializationUtils;
 import org.jdesktop.application.Application;
 
@@ -95,11 +97,23 @@ public class WTRegView extends javax.swing.JInternalFrame {
         dpDateTo.setFormats(Constants.Date.FORMAT);
         initComboboxModel();
         initComboboxRenderer();
+        initTableEvent();
 
         SearchWeightTicketTask t = new SearchWeightTicketTask(WeighBridgeApp.getApplication());
         t.execute();
 
         cbxHourTo.setSelectedIndex(23);
+    }
+
+    private void initTableEvent() {
+        tabResults.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
+            selectedWeightTicket = weightTicketList.get(tabResults.convertRowIndexToModel(tabResults.getSelectedRow()));
+            if (selectedWeightTicket != null && selectedWeightTicket.getOfflineMode()) {
+                btnEdit.setEnabled(true);
+            } else {
+                btnEdit.setEnabled(false);
+            }
+        });
     }
 
     private void initComboboxRenderer() {
@@ -252,6 +266,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         tabResults = new org.jdesktop.swingx.JXTable();
         pnPrintControl = new javax.swing.JPanel();
         btnReprint = new javax.swing.JButton();
+        btnEdit = new javax.swing.JButton();
         pnRegistrationOfVehicle = new javax.swing.JPanel();
         pnROVTop = new javax.swing.JPanel();
         rbtInput = new javax.swing.JRadioButton();
@@ -539,12 +554,32 @@ public class WTRegView extends javax.swing.JInternalFrame {
         spnResult.setViewportView(tabResults);
 
         pnPrintControl.setName("pnPrintControl"); // NOI18N
-        pnPrintControl.setLayout(new javax.swing.BoxLayout(pnPrintControl, javax.swing.BoxLayout.LINE_AXIS));
 
         btnReprint.setAction(actionMap.get("reprintRecord")); // NOI18N
         btnReprint.setText(resourceMap.getString("btnReprint.text")); // NOI18N
         btnReprint.setName("btnReprint"); // NOI18N
-        pnPrintControl.add(btnReprint);
+
+        btnEdit.setAction(actionMap.get("editOfflineRecord")); // NOI18N
+        btnEdit.setText(resourceMap.getString("btnEdit.text")); // NOI18N
+        btnEdit.setEnabled(false);
+        btnEdit.setName("btnEdit"); // NOI18N
+
+        javax.swing.GroupLayout pnPrintControlLayout = new javax.swing.GroupLayout(pnPrintControl);
+        pnPrintControl.setLayout(pnPrintControlLayout);
+        pnPrintControlLayout.setHorizontalGroup(
+            pnPrintControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnPrintControlLayout.createSequentialGroup()
+                .addComponent(btnReprint)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnEdit)
+                .addGap(832, 832, 832))
+        );
+        pnPrintControlLayout.setVerticalGroup(
+            pnPrintControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnPrintControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(btnReprint)
+                .addComponent(btnEdit))
+        );
 
         pnRegistrationOfVehicle.setName("pnRegistrationOfVehicle"); // NOI18N
 
@@ -1220,7 +1255,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addComponent(pnRegistrationOfVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(pnControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(123, Short.MAX_VALUE))
+                .addContainerGap(125, Short.MAX_VALUE))
         );
 
         pack();
@@ -1447,7 +1482,7 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
     if (!plateNoValidDO.isEmpty() && !plateNo.contains(plateNoValidDO)) {
         lblPlateNoN.setForeground(Color.red);
         btnSave.setEnabled(false);
-        
+
         JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.plateNoNotResgiter", plateNo, plateNoValidDO));
     } else {
         validateForm();
@@ -1498,7 +1533,7 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         boolean isDriverNameValid = wtRegisValidation.validateLength(txtDriverName.getText(), lblDriverName, 0, 70);
         boolean isPlateNoValid = wtRegisValidation.validateLength(txtPlateNo.getText(), lblPlateNo, 0, 20);
         boolean isCreatorValid = wtRegisValidation.validateLength(txtCreator.getText(), lblCreator, 0, 12);
-        
+
         boolean isDateValid;
         try {
             dateFromToValidator.validate(dpDateFrom.getDate(), dpDateTo.getDate());
@@ -1511,7 +1546,7 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             lblDateTo.setForeground(Color.red);
             isDateValid = false;
         }
-        
+
         btnFind.setEnabled(isDriverNameValid && isPlateNoValid && isCreatorValid && isDateValid);
     }
 
@@ -2516,15 +2551,15 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 wtData[i][4] = item.getTrailerId();
                 wtData[i][5] = item.getRegType();
                 String[] regItemDescriptions = weightTicketDetails.stream()
-                    .map(t -> t.getRegItemDescription())
-                    .filter(t -> t != null)
-                    .toArray(String[]::new);
+                        .map(t -> t.getRegItemDescription())
+                        .filter(t -> t != null)
+                        .toArray(String[]::new);
                 wtData[i][6] = regItemDescriptions.length > 0 ? String.join(" - ", regItemDescriptions) : "";
                 wtData[i][7] = weightTicketDetail.getRegItemQuantity();
                 String[] doNums = weightTicketDetails.stream()
-                    .map(t -> t.getDeliveryOrderNo())
-                    .filter(t -> t != null)
-                    .toArray(String[]::new);
+                        .map(t -> t.getDeliveryOrderNo())
+                        .filter(t -> t != null)
+                        .toArray(String[]::new);
                 wtData[i][8] = doNums.length > 0 ? String.join(" - ", doNums) : "";
                 wtData[i][9] = item.getCreator();
                 wtData[i][10] = item.getSeqMonth();
@@ -2727,7 +2762,7 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
                 if (!traid.isEmpty() && !traid.startsWith(plateNo)) {
                     throw new Exception(resourceMapMsg.getString("msg.plateNoNotResgiterIO", plateNo, deliveryOrderNo));
                 }
-                
+
                 // for check edit plateNo after check DO
                 plateNoValidDO = traid.isEmpty() ? "" : plateNo;
 
@@ -2747,7 +2782,7 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             }
 
             return null;
-            
+
         }
 
         private OutboundDelivery syncOutboundDelivery(String deliveryOrderNo, OutboundDelivery outboundDelivery) {
@@ -3152,6 +3187,7 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnClear;
     private javax.swing.JButton btnDOCheckN;
+    private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnFind;
     private javax.swing.JButton btnNew;
     private javax.swing.JButton btnPOCheckN;
@@ -3556,4 +3592,63 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             }
         }
     }
+
+    @Action(block = Task.BlockingScope.ACTION)
+    public Task editOfflineRecord() {
+        return new EditOfflineRecordTask(Application.getInstance(WeighBridgeApp.class));
+    }
+
+    private class EditOfflineRecordTask extends Task<Object, Void> {
+
+        EditOfflineRecordTask(Application app) {
+            super(app);
+        }
+
+        @Override
+        protected Object doInBackground() {
+            newRecord();
+            loadModeTypeModel(selectedWeightTicket.getRegType() == 'I' ? MODE.INPUT : MODE.OUTPUT);
+            modeDetail = MODE_DETAIL.valueOf(selectedWeightTicket.getMode());
+            cbxModeType.setSelectedItem(new WeighingMode(modeDetail, null));
+
+            newWeightTicket = selectedWeightTicket;
+            WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
+
+            txtTicketIdN.setText(newWeightTicket.getTicketId());
+            txtWeightTickerRefN.setText(newWeightTicket.getWeightTicketIdRef());
+            txtRegisterIdN.setText(newWeightTicket.getRegisteredNumber());
+            txtDriverNameN.setText(newWeightTicket.getDriverName());
+            txtCMNDN.setText(newWeightTicket.getDriverIdNo());
+            txtPlateNoN.setText(newWeightTicket.getPlateNo());
+            txtTonnageN.setText("0");
+            txtTrailerNoN.setText(newWeightTicket.getTrailerId());
+            txtSlingN.setText(Integer.toString(newWeightTicket.getSling()));
+            txtPalletN.setText(Integer.toString(newWeightTicket.getPallet()));
+            txtSoNiemXaN.setText(newWeightTicket.getSoNiemXa());
+            txtProductionBatchN.setText(newWeightTicket.getBatch());
+            txtNoteN.setText(newWeightTicket.getNote());
+            txtDONumN.setText(weightTicketDetail.getDeliveryOrderNo());
+            txtPONumN.setText(weightTicketDetail.getEbeln());
+            txtPOSTONumN.setText(newWeightTicket.getPosto());
+            txtSONumN.setText(weightTicketDetail.getSoNumber());
+            cbxMaterialTypeN.setSelectedItem(weightTicketDetail.getRegItemDescription());
+            txtWeightN.setText(weightTicketDetail.getRegItemQuantity().toString());
+            cbxSlocN.setSelectedItem(new SLoc(newWeightTicket.getLgort()));
+            cbxSloc2N.setSelectedItem(new SLoc(newWeightTicket.getRecvLgort()));
+            cbxBatchStockN.setModel(new DefaultComboBoxModel());
+            cbxBatchStockN.setSelectedIndex(-1);
+            cbxBatchStock2N.setModel(new DefaultComboBoxModel());
+            cbxBatchStock2N.setSelectedIndex(-1);
+            cbxVendorLoadingN.setSelectedItem(new Vendor(weightTicketDetail.getLoadVendor()));
+            cbxVendorTransportN.setSelectedItem(new Vendor(weightTicketDetail.getTransVendor()));
+            
+            validateForm();
+            return null;  // return your result
+        }
+
+        @Override
+        protected void succeeded(Object result) {
+        }
+    }
+
 }

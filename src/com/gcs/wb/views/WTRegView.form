@@ -62,7 +62,7 @@
               <Component id="pnRegistrationOfVehicle" min="-2" pref="418" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="pnControl" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="123" max="32767" attributes="0"/>
+              <EmptySpace pref="125" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -429,7 +429,26 @@
         <Property name="name" type="java.lang.String" value="pnPrintControl" noResource="true"/>
       </Properties>
 
-      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" attributes="0">
+                  <Component id="btnReprint" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="btnEdit" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="832" max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="btnReprint" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnEdit" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
       <SubComponents>
         <Component class="javax.swing.JButton" name="btnReprint">
           <Properties>
@@ -438,6 +457,16 @@
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="btnReprint.text"/>
             <Property name="name" type="java.lang.String" value="btnReprint" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnEdit">
+          <Properties>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="com.gcs.wb.views.WTRegView" id="editOfflineRecord" methodName="editOfflineRecord"/>
+            </Property>
+            <Property name="text" type="java.lang.String" resourceKey="btnEdit.text"/>
+            <Property name="enabled" type="boolean" value="false"/>
+            <Property name="name" type="java.lang.String" value="btnEdit" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>
