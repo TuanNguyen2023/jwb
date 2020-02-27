@@ -40,10 +40,10 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="pnRegistrationOfVehicle" alignment="0" min="0" max="32767" attributes="1"/>
-                  <Component id="pnPrintControl" alignment="0" pref="970" max="32767" attributes="1"/>
-                  <Component id="spnResult" alignment="0" pref="970" max="32767" attributes="2"/>
+                  <Component id="pnPrintControl" alignment="0" pref="986" max="32767" attributes="1"/>
+                  <Component id="spnResult" alignment="0" pref="986" max="32767" attributes="2"/>
                   <Component id="pnFilter" alignment="0" max="32767" attributes="2"/>
-                  <Component id="pnControl" alignment="1" pref="970" max="32767" attributes="3"/>
+                  <Component id="pnControl" alignment="1" pref="986" max="32767" attributes="3"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -367,7 +367,7 @@
         <Component class="javax.swing.JButton" name="btnFind">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="com.gcs.wb.views.WTRegView" id="searchWeightTickets" methodName="searchWeightTickets"/>
+              <action class="com.gcs.wb.views.RegistrationVehicleOfflineView" id="searchWeightTickets" methodName="searchWeightTickets"/>
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="btnFind.text"/>
             <Property name="name" type="java.lang.String" value="btnFind" noResource="true"/>
@@ -434,7 +434,7 @@
         <Component class="javax.swing.JButton" name="btnReprint">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="com.gcs.wb.views.WTRegView" id="reprintRecord" methodName="reprintRecord"/>
+              <action class="com.gcs.wb.views.RegistrationVehicleOfflineView" id="reprintRecord" methodName="reprintRecord"/>
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="btnReprint.text"/>
             <Property name="name" type="java.lang.String" value="btnReprint" noResource="true"/>
@@ -452,10 +452,10 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="pnROVContent" alignment="0" pref="947" max="32767" attributes="3"/>
+                      <Component id="pnROVContent" alignment="0" pref="955" max="32767" attributes="3"/>
                       <Component id="pnROVTop" alignment="0" min="-2" max="-2" attributes="1"/>
                   </Group>
-                  <EmptySpace pref="23" max="32767" attributes="0"/>
+                  <EmptySpace pref="31" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -683,7 +683,7 @@
                               <Component id="txtNoteN" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="lblNoteN" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" pref="140" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="143" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -821,9 +821,6 @@
                   <Properties>
                     <Property name="name" type="java.lang.String" value="txtTrailerNoN" noResource="true"/>
                   </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtTrailerNoNKeyReleased"/>
-                  </Events>
                 </Component>
                 <Component class="javax.swing.JFormattedTextField" name="txtSlingN">
                   <Properties>
@@ -853,25 +850,16 @@
                   <Properties>
                     <Property name="name" type="java.lang.String" value="txtSoNiemXaN" noResource="true"/>
                   </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtSoNiemXaNKeyReleased"/>
-                  </Events>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtProductionBatchN">
                   <Properties>
                     <Property name="name" type="java.lang.String" value="txtProductionBatchN" noResource="true"/>
                   </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtProductionBatchNKeyReleased"/>
-                  </Events>
                 </Component>
                 <Component class="javax.swing.JTextField" name="txtNoteN">
                   <Properties>
                     <Property name="name" type="java.lang.String" value="txtNoteN" noResource="true"/>
                   </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtNoteNKeyReleased"/>
-                  </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="lblTicketIdN">
                   <Properties>
@@ -1194,7 +1182,7 @@
                 <Component class="javax.swing.JButton" name="btnDOCheckN">
                   <Properties>
                     <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                      <action class="com.gcs.wb.views.WTRegView" id="checkDO" methodName="checkDO"/>
+                      <action class="com.gcs.wb.views.RegistrationVehicleOfflineView" id="checkDO" methodName="checkDO"/>
                     </Property>
                     <Property name="text" type="java.lang.String" resourceKey="btnDOCheckN.text"/>
                     <Property name="name" type="java.lang.String" value="btnDOCheckN" noResource="true"/>
@@ -1210,9 +1198,6 @@
                 </Component>
                 <Component class="javax.swing.JButton" name="btnSOCheckN">
                   <Properties>
-                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                      <action class="com.gcs.wb.views.WTRegView" id="checkSO" methodName="checkSO"/>
-                    </Property>
                     <Property name="text" type="java.lang.String" resourceKey="btnSOCheckN.text"/>
                     <Property name="name" type="java.lang.String" value="btnSOCheckN" noResource="true"/>
                   </Properties>
@@ -1228,7 +1213,7 @@
                 <Component class="javax.swing.JButton" name="btnPOCheckN">
                   <Properties>
                     <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                      <action class="com.gcs.wb.views.WTRegView" id="checkPO" methodName="checkPO"/>
+                      <action class="com.gcs.wb.views.RegistrationVehicleOfflineView" id="checkPO" methodName="checkPO"/>
                     </Property>
                     <Property name="text" type="java.lang.String" resourceKey="btnPOCheckN.text"/>
                     <Property name="name" type="java.lang.String" value="btnPOCheckN" noResource="true"/>
@@ -1245,7 +1230,7 @@
                 <Component class="javax.swing.JButton" name="btnPOSTOCheckN">
                   <Properties>
                     <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                      <action class="com.gcs.wb.views.WTRegView" id="checkPOSTO" methodName="checkPOSTO"/>
+                      <action class="com.gcs.wb.views.RegistrationVehicleOfflineView" id="checkPOSTO" methodName="checkPOSTO"/>
                     </Property>
                     <Property name="text" type="java.lang.String" resourceKey="btnPOSTOCheckN.text"/>
                     <Property name="name" type="java.lang.String" value="btnPOSTOCheckN" noResource="true"/>
@@ -1331,7 +1316,7 @@
         <Component class="javax.swing.JButton" name="btnNew">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="com.gcs.wb.views.WTRegView" id="newRecord" methodName="newRecord"/>
+              <action class="com.gcs.wb.views.RegistrationVehicleOfflineView" id="newRecord" methodName="newRecord"/>
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="btnNew.text"/>
             <Property name="name" type="java.lang.String" value="btnNew" noResource="true"/>
@@ -1340,7 +1325,7 @@
         <Component class="javax.swing.JButton" name="btnClear">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="com.gcs.wb.views.WTRegView" id="clearForm" methodName="clearForm"/>
+              <action class="com.gcs.wb.views.RegistrationVehicleOfflineView" id="clearForm" methodName="clearForm"/>
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="btnClear.text"/>
             <Property name="name" type="java.lang.String" value="btnClear" noResource="true"/>
@@ -1349,7 +1334,7 @@
         <Component class="javax.swing.JButton" name="btnSave">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="com.gcs.wb.views.WTRegView" id="saveRecord" methodName="saveRecord"/>
+              <action class="com.gcs.wb.views.RegistrationVehicleOfflineView" id="saveRecord" methodName="saveRecord"/>
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="btnSave.text"/>
             <Property name="name" type="java.lang.String" value="btnSave" noResource="true"/>
