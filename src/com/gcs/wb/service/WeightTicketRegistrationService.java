@@ -26,6 +26,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.ParameterMode;
 import javax.persistence.StoredProcedureQuery;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -225,9 +226,17 @@ public class WeightTicketRegistrationService {
 
     public List<BatchStock> getBatchStocks(SLoc sloc, String[] arr_matnr) {
         List<BatchStock> batchStocks = new ArrayList<>();
+        SyncMasterDataService syncData = new SyncMasterDataService();
+        List<BatchStock> items = new ArrayList<BatchStock>();
         for (String matnr : arr_matnr) {
-            List<BatchStock> items = batchStockRepository.getListBatchStock(configuration.getWkPlant(),
+            items = batchStockRepository.getListBatchStock(configuration.getWkPlant(),
                     sloc.getLgort(), matnr);
+            
+            if(CollectionUtils.isEmpty(items)) {
+                syncData.syncBatchStock(sloc.getLgort(), matnr);
+                items = batchStockRepository.getListBatchStock(configuration.getWkPlant(),
+                    sloc.getLgort(), matnr);
+            }
 
             if (items.size() > 0) {
                 batchStocks.addAll(items);

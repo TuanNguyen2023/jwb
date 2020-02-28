@@ -308,7 +308,7 @@ public class SAPService {
      */
     public PurchaseOrder syncPurchaseOrder(PurchaseOrder sapPurchaseOrder, PurchaseOrder purchaseOrder) {
 
-        PurchaseOrder result;
+        PurchaseOrder result = new PurchaseOrder();
         if (!entityTransaction.isActive()) {
             entityTransaction.begin();
         }
