@@ -21,6 +21,7 @@ import com.gcs.wb.jpa.entity.*;
 import com.gcs.wb.jpa.repositorys.MaterialGroupRepository;
 import com.gcs.wb.jpa.repositorys.MaterialInternalRepository;
 import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
+import com.gcs.wb.jpa.repositorys.SellOrderRepository;
 import com.gcs.wb.model.WeighingMode;
 import com.gcs.wb.views.validations.WeightTicketRegistrationValidation;
 import com.sap.conn.jco.JCoException;
@@ -108,10 +109,14 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
 
     private void initTableEvent() {
         tabResults.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
-            selectedWeightTicket = weightTicketList.get(tabResults.convertRowIndexToModel(tabResults.getSelectedRow()));
-            if (selectedWeightTicket != null && selectedWeightTicket.getOfflineMode()) {
-                btnEdit.setEnabled(true);
-            } else {
+            try {
+                selectedWeightTicket = weightTicketList.get(tabResults.convertRowIndexToModel(tabResults.getSelectedRow()));
+                if (selectedWeightTicket != null && selectedWeightTicket.getOfflineMode()) {
+                    btnEdit.setEnabled(true);
+                } else {
+                    btnEdit.setEnabled(false);
+                }
+            } catch (Exception ex) {
                 btnEdit.setEnabled(false);
             }
         });
@@ -1681,44 +1686,64 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
 
     private class CheckSOTask extends org.jdesktop.application.Task<Object, Void> {
 
+        private SellOrderRepository sellOrderRepository = new SellOrderRepository();
+
         CheckSOTask(org.jdesktop.application.Application app) {
             super(app);
         }
 
         @Override
-        protected Object doInBackground() {
-            String[] val = txtSONumN.getText().trim().split("-");
+        protected Object doInBackground() throws Exception {
+            String[] soNums = txtSONumN.getText().trim().split("-");
             String bsXe = txtPlateNoN.getText().trim();
             DOCheckStructure doNumber = new DOCheckStructure();
             String bsRomoc = txtTrailerNoN.getText().trim();
 
             String doNum = "";
-            if (!WeighBridgeApp.getApplication().isOfflineMode()) {
-                // List<DOCheckStructure> doNumbers = sapService.getDONumber(val, bsXe, bsRomoc);
-                List<DOCheckStructure> doNumbers = new ArrayList<>();
 
-                if (doNumbers != null) {
-                    listDONumbers.addAll(doNumbers);
-                    for (int i = 0; i < doNumbers.size(); i++) {
-                        doNumber = doNumbers.get(i);
-                        if (!doNumber.getMessage().trim().isEmpty()) {
-                            setMessage(doNumber.getMessage());
-                            JOptionPane.showMessageDialog(rootPane, doNumber.getMessage());
-                            String msg = "SO " + doNumber.getVbelnSO() + " sai, vui lòng nhập lại!";
-                            txtDONumN.setText(null);
-                            setMessage(msg);
-                            JOptionPane.showMessageDialog(rootPane, msg);
-                            return null;
-                        } else {
-                            if (doNum.isEmpty()) {
-                                doNum = doNumber.getVbelnDO();
-                            } else {
-                                doNum += "-" + doNumber.getVbelnDO();
-                            }
-                        }
-                    }
+            for (String soNum : soNums) {
+                SellOrder sellOrder = sellOrderRepository.findBySoNumber(soNum.trim());
+
+                if (sellOrder == null) {
+                    String msg = "SO " + soNum + " sai, vui lòng nhập lại!";
+                    txtDONumN.setText(null);
+                    setMessage(msg);
+                    throw new Exception(msg);
+                }
+
+                if (doNum.isEmpty()) {
+                    doNum = doNumber.getVbelnDO();
+                } else {
+                    doNum += " - " + sellOrder.getDoNumber();
                 }
             }
+//
+//            if (!WeighBridgeApp.getApplication().isOfflineMode()) {
+//                // List<DOCheckStructure> doNumbers = sapService.getDONumber(val, bsXe, bsRomoc);
+//                List<DOCheckStructure> doNumbers = new ArrayList<>();
+//
+//                if (doNumbers != null) {
+//                    listDONumbers.addAll(doNumbers);
+//                    for (int i = 0; i < doNumbers.size(); i++) {
+//                        doNumber = doNumbers.get(i);
+//                        if (!doNumber.getMessage().trim().isEmpty()) {
+//                            setMessage(doNumber.getMessage());
+//                            JOptionPane.showMessageDialog(rootPane, doNumber.getMessage());
+//                            String msg = "SO " + doNumber.getVbelnSO() + " sai, vui lòng nhập lại!";
+//                            txtDONumN.setText(null);
+//                            setMessage(msg);
+//                            JOptionPane.showMessageDialog(rootPane, msg);
+//                            return null;
+//                        } else {
+//                            if (doNum.isEmpty()) {
+//                                doNum = doNumber.getVbelnDO();
+//                            } else {
+//                                doNum += "-" + doNumber.getVbelnDO();
+//                            }
+//                        }
+//                    }
+//                }
+//            }
 
             txtDONumN.setText(doNum);
             return null;
@@ -2218,7 +2243,7 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
                 isValid = validateOutPullStation();
                 break;
             case OUT_SELL_WATERWAY:
-                isValid = validateOutSellWateway() && isValidPO;
+                isValid = validateOutSellWateway();
                 break;
             case OUT_OTHER:
                 isValid = validateInOutOther();
@@ -2540,19 +2565,25 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
 
-        if (!WeighBridgeApp.getApplication().isOfflineMode()) {
-            boolean isSOValid = wtRegisValidation.validateDO(txtSONumN.getText(), lblSONumN);
-            btnSOCheckN.setEnabled(isSOValid);
-            if (!isValidSO) {
-                lblSONumN.setForeground(Color.red);
-            } else {
-                btnDOCheckN.setEnabled(true);
-            }
+        boolean isSOValid = wtRegisValidation.validateDO(txtSONumN.getText(), lblSONumN);
+        btnSOCheckN.setEnabled(isSOValid);
+        if (!isValidSO) {
+            lblSONumN.setForeground(Color.red);
+            txtDONumN.setEditable(true);
         } else {
-            isValidSO = true;
-            isValidDO = true;
-            lblSONumN.setForeground(Color.black);
-            lblDONumN.setForeground(Color.black);
+            btnDOCheckN.setEnabled(true);
+            txtDONumN.setEditable(false);
+        }
+
+        boolean isDOValid = wtRegisValidation.validateDO(txtDONumN.getText(), lblDONumN);
+        btnDOCheckN.setEnabled(isDOValid);
+        if (!isValidDO) {
+            cbxMaterialTypeN.setEnabled(true);
+            txtWeightN.setEditable(true);
+        } else {
+            lblMaterialTypeN.setForeground(Color.black);
+            cbxMaterialTypeN.setEnabled(false);
+            txtWeightN.setEditable(false);
         }
 
         boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
@@ -2561,9 +2592,9 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
         return isRegisterIdValid && isDriverNameValid
-                && isCMNDBLValid && isPlateNoValid
+                && isCMNDBLValid && isPlateNoValid && isSOValid && isDOValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
-                && isNoteValid && isSlocValid;
+                && isNoteValid && isSlocValid && isMaterialTypeValid && isWeightValid;
     }
 
     private void loadBatchStockModel(JComboBox slocComponent, JComboBox batchStockComponent, boolean isSloc) {
@@ -3161,7 +3192,7 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
                 weightTicketDetail.setMatnrRef(material.getMatnr());
                 weightTicketDetail.setRegItemDescription(material.getMaktx());
                 weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
-                
+
                 newWeightTicket.setPosto(txtPOSTONumN.getText().trim());
             }
         }
@@ -3235,7 +3266,7 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
             weightTicketDetail.setMatnrRef(materialInternal.getMatnr());
             weightTicketDetail.setRegItemDescription(materialInternal.getMaktx());
             weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText().trim()));
-        
+
             if (!isValidPO) {
                 weightTicketDetail.setEbeln(txtPONumN.getText().trim());
                 newWeightTicket.setPosto(txtPOSTONumN.getText().trim());
