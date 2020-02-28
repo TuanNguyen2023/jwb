@@ -100,7 +100,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         dpDateTo.setFormats(Constants.Date.FORMAT);
         initComboboxModel();
         initComboboxRenderer();
-		initTableEvent();
+	initTableEvent();
 
         SearchWeightTicketTask t = new SearchWeightTicketTask(WeighBridgeApp.getApplication());
         t.execute();
@@ -596,6 +596,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         btnEdit.setAction(actionMap.get("editOfflineRecord")); // NOI18N
         btnEdit.setText(resourceMap.getString("btnEdit.text")); // NOI18N
+        btnEdit.setEnabled(false);
         btnEdit.setName("btnEdit"); // NOI18N
 
         javax.swing.GroupLayout pnPrintControlLayout = new javax.swing.GroupLayout(pnPrintControl);
@@ -955,7 +956,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
         );
 
         btnShowHide.setAction(actionMap.get("showHideSearch")); // NOI18N
-        btnShowHide.setIcon(resourceMap.getIcon("")); // NOI18N
         btnShowHide.setText(resourceMap.getString("btnShowHide.text")); // NOI18N
         btnShowHide.setName("btnShowHide"); // NOI18N
 
@@ -1270,7 +1270,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(pnRegistrationOfVehicle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pnROVRight, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
 
         pack();

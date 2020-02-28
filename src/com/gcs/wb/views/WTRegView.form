@@ -68,7 +68,7 @@
                   <Component id="pnRegistrationOfVehicle" max="32767" attributes="1"/>
                   <Component id="pnROVRight" alignment="0" max="32767" attributes="1"/>
               </Group>
-              <EmptySpace pref="31" max="32767" attributes="0"/>
+              <EmptySpace pref="30" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -495,6 +495,7 @@
               <action class="com.gcs.wb.views.WTRegView" id="editOfflineRecord" methodName="editOfflineRecord"/>
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="btnEdit.text"/>
+            <Property name="enabled" type="boolean" value="false"/>
             <Property name="name" type="java.lang.String" value="btnEdit" noResource="true"/>
           </Properties>
         </Component>
@@ -976,7 +977,6 @@
         <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
           <action class="com.gcs.wb.views.WTRegView" id="showHideSearch" methodName="showHideSearch"/>
         </Property>
-        <Property name="icon" type="javax.swing.Icon" resourceKey=""/>
         <Property name="text" type="java.lang.String" resourceKey="btnShowHide.text"/>
         <Property name="name" type="java.lang.String" value="btnShowHide" noResource="true"/>
       </Properties>

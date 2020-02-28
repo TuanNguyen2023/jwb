@@ -26,17 +26,10 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
+          <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="103" groupAlignment="1" attributes="0">
                   <Component id="pnMySQLCon" alignment="0" max="32767" attributes="0"/>
-                  <Group type="102" alignment="1" attributes="0">
-                      <Component id="syncIconLoading" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="lblSyncData" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="350" max="32767" attributes="0"/>
-                      <Component id="btnSave" min="-2" max="-2" attributes="0"/>
-                  </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="pnSAPConfig" max="32767" attributes="2"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -46,6 +39,13 @@
                       <Component id="pnWB1Config" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="pnWB2Config" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Component id="syncIconLoading" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="lblSyncData" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="350" max="32767" attributes="0"/>
+                      <Component id="btnSave" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -57,15 +57,15 @@
           <Group type="102" alignment="0" max="-2" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Component id="pnMySQLCon" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="pnWorkingPlant" pref="141" max="32767" attributes="1"/>
+                  <Component id="pnSAPConfig" alignment="0" max="32767" attributes="1"/>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="pnSAPConfig" max="32767" attributes="1"/>
-                  <Component id="pnWorkingPlant" alignment="0" pref="90" max="32767" attributes="1"/>
-              </Group>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="pnWB1Config" max="32767" attributes="1"/>
-                  <Component id="pnWB2Config" alignment="0" min="-2" max="-2" attributes="1"/>
+                  <Component id="pnWB2Config" max="32767" attributes="1"/>
+                  <Component id="pnWB1Config" alignment="0" max="32767" attributes="1"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
@@ -257,14 +257,18 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" attributes="0">
                       <Component id="lblRString" alignment="1" min="-2" max="-2" attributes="0"/>
                       <Component id="lblHost" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblSapUsername" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblSapPassword" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="txtRString" pref="137" max="32767" attributes="2"/>
+                      <Component id="txtSapPassword" pref="137" max="32767" attributes="0"/>
+                      <Component id="txtSapUpsername" alignment="0" pref="137" max="32767" attributes="0"/>
+                      <Component id="txtRString" alignment="0" pref="137" max="32767" attributes="2"/>
                       <Component id="txtHost" alignment="0" pref="137" max="32767" attributes="2"/>
                   </Group>
                   <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
@@ -277,7 +281,7 @@
                       <Component id="txfDClient" alignment="1" min="-2" pref="34" max="-2" attributes="1"/>
                       <Component id="txfSNo" alignment="0" min="-2" pref="34" max="-2" attributes="1"/>
                   </Group>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -297,7 +301,17 @@
                       <Component id="txfDClient" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="lblDClient" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="16" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblSapUsername" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtSapUpsername" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="txtSapPassword" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblSapPassword" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace pref="13" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -360,6 +374,30 @@
           <Events>
             <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txfDClientKeyReleased"/>
           </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblSapUsername">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblSapUsername.text"/>
+            <Property name="name" type="java.lang.String" value="lblSapUsername" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblSapPassword">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblSapPassword.text"/>
+            <Property name="name" type="java.lang.String" value="lblSapPassword" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtSapUpsername">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="txtSapUpsername.text"/>
+            <Property name="name" type="java.lang.String" value="txtSapUpsername" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JPasswordField" name="txtSapPassword">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="txtSapPassword.text"/>
+            <Property name="name" type="java.lang.String" value="txtSapPassword" noResource="true"/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>
@@ -748,7 +786,7 @@
                       <Component id="txtWBID" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="16" max="32767" attributes="0"/>
+                  <EmptySpace pref="67" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
