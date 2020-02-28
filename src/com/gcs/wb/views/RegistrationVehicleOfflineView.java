@@ -60,7 +60,7 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
     private boolean isValidPO = false;
     private boolean isValidPOSTO = false;
     private boolean isValidSO = false;
-    private boolean isValidWeight = false;
+    private boolean isValidWeight = true;
     private boolean isValidVendorLoad = false;
     private boolean isValidVendorTransport = false;
     private BigDecimal numCheckWeight = BigDecimal.ZERO;
@@ -1400,7 +1400,7 @@ private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
 private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtWeightNKeyReleased
     if (modeDetail == MODE_DETAIL.IN_PO_PURCHASE) {
         boolean isWeightValid = wtRegisValidation.validateLength(txtWeightN.getText(), lblWeightN, 1, 10);
-        if (isWeightValid) {
+        if (isWeightValid && isValidPO) {
             BigDecimal weight = new BigDecimal(txtWeightN.getText());
 
             if (numCheckWeight.subtract(weight).compareTo(BigDecimal.ZERO) < 0) {
@@ -1533,6 +1533,8 @@ private void txtDONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
     }
 
     txtDONumN.setText(String.join(" - ", doNums));
+
+    validateForm();
 }//GEN-LAST:event_txtDONumNFocusLost
 
 private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSONumNFocusLost
@@ -1548,16 +1550,22 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
     }
 
     txtSONumN.setText(String.join(" - ", soNums));
+
+    validateForm();
 }//GEN-LAST:event_txtSONumNFocusLost
 
 private void txtPONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPONumNFocusLost
     String poNum = StringUtil.paddingZero(txtPONumN.getText().trim(), 10);
     txtPONumN.setText(poNum);
+
+    validateForm();
 }//GEN-LAST:event_txtPONumNFocusLost
 
 private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPOSTONumNFocusLost
     String postoNum = StringUtil.paddingZero(txtPOSTONumN.getText().trim(), 10);
     txtPOSTONumN.setText(postoNum);
+
+    validateForm();
 }//GEN-LAST:event_txtPOSTONumNFocusLost
 
     private void validateFilterForm() {
@@ -2173,7 +2181,7 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
         boolean isValid = false;
         switch (modeDetail) {
             case IN_PO_PURCHASE:
-                isValid = validateInPoPurchase() && isValidPO && isValidWeight;
+                isValid = validateInPoPurchase() && isValidWeight;
                 break;
             case IN_WAREHOUSE_TRANSFER:
                 isValid = validateInWarehouseTransfer();
@@ -2230,21 +2238,23 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
 
+        boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
         boolean isPOValid = wtRegisValidation.validatePO(txtPONumN.getText(), lblPONumN);
         btnPOCheckN.setEnabled(isPOValid);
         if (!isValidPO) {
-            lblPONumN.setForeground(Color.red);
+            cbxMaterialTypeN.setEnabled(true);
+        } else {
+            lblMaterialTypeN.setForeground(Color.black);
+            cbxMaterialTypeN.setEnabled(false);
         }
 
-        boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
         boolean isWeightValid = wtRegisValidation.validateLength(txtWeightN.getText(), lblWeightN, 1, 10);
-
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
                 && isCMNDBLValid && isPlateNoValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
-                && isNoteValid && isSlocValid;
+                && isNoteValid && isSlocValid && isMaterialTypeValid && isWeightValid;
     }
 
     private boolean validateInWarehouseTransfer() {
@@ -3080,7 +3090,16 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
         }
 
         public void updateDataForInPoPurchaseMode() {
-            newWeightTicket.getWeightTicketDetail().setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+            WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
+            weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+            if (!isValidPO) {
+                weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
+
+                Material material = (Material) cbxMaterialTypeN.getSelectedItem();
+                weightTicketDetail.setEbeln(txtPONumN.getText().trim());
+                weightTicketDetail.setMatnrRef(material.getMatnr());
+                weightTicketDetail.setRegItemDescription(material.getMaktx());
+            }
         }
 
         public void updateDataForInWarehouseTransfer() {
@@ -3234,10 +3253,11 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
         isValidPO = false;
         isValidPOSTO = false;
         isValidSO = false;
-        isValidWeight = false;
+        isValidWeight = true;
         isValidVendorLoad = false;
         isValidVendorTransport = false;
         plateNoValidDO = "";
+        numCheckWeight = BigDecimal.ZERO;
 
         txtTicketIdN.setText("");
         txtWeightTickerRefN.setText("");
