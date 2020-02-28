@@ -2176,7 +2176,7 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
                 isValid = validateInPoPurchase() && isValidPO && isValidWeight;
                 break;
             case IN_WAREHOUSE_TRANSFER:
-                isValid = validateInWarehouseTransfer() && isValidDO;
+                isValid = validateInWarehouseTransfer();
                 break;
             case IN_OTHER:
                 isValid = validateInOutOther();
@@ -2264,21 +2264,27 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
 
+        boolean isMaterialTypeValid = isValidDO || wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
         boolean isDOValid = wtRegisValidation.validateDO(txtDONumN.getText(), lblDONumN);
         btnDOCheckN.setEnabled(isDOValid);
         if (!isValidDO) {
-            lblDONumN.setForeground(Color.red);
+            cbxMaterialTypeN.setEnabled(true);
+            txtWeightN.setEditable(true);
+            txtWeightTickerRefN.setEditable(true);
+        } else {
+            lblMaterialTypeN.setForeground(Color.black);
+            cbxMaterialTypeN.setEnabled(false);
+            txtWeightN.setEditable(false);
+            txtWeightTickerRefN.setEditable(false);
         }
 
-        boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
         boolean isWeightValid = wtRegisValidation.validateLength(txtWeightN.getText(), lblWeightN, 1, 10);
-
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
                 && isCMNDBLValid && isPlateNoValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
-                && isNoteValid && isSlocValid;
+                && isNoteValid && isSlocValid && isMaterialTypeValid && isWeightValid;
     }
 
     private boolean validateInOutOther() {
@@ -3013,6 +3019,9 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
                 case IN_PO_PURCHASE:
                     updateDataForInPoPurchaseMode();
                     break;
+                case IN_WAREHOUSE_TRANSFER:
+                    updateDataForInWarehouseTransfer();
+                    break;
                 case IN_OTHER:
                     updateDataForOtherMode();
                     break;
@@ -3072,6 +3081,22 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
 
         public void updateDataForInPoPurchaseMode() {
             newWeightTicket.getWeightTicketDetail().setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+        }
+
+        public void updateDataForInWarehouseTransfer() {
+            if (!isValidDO) {
+                WeightTicketDetail weightTicketDetail = new WeightTicketDetail();
+                weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
+
+                Material material = (Material) cbxMaterialTypeN.getSelectedItem();
+                weightTicketDetail.setDeliveryOrderNo(txtDONumN.getText().trim());
+                weightTicketDetail.setMatnrRef(material.getMatnr());
+                weightTicketDetail.setRegItemDescription(material.getMaktx());
+                weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+
+                newWeightTicket.addWeightTicketDetail(weightTicketDetail);
+                newWeightTicket.setWeightTicketIdRef(txtWeightTickerRefN.getText().trim());
+            }
         }
 
         public void updateDataForPrepareOutPullStation() {
