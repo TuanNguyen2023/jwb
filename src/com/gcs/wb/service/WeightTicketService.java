@@ -390,7 +390,7 @@ public class WeightTicketService {
         tab_wa.setStge_loc(wt.getLgort());
         tab_wa.setBatch(wt.getCharg());
         tab_wa.setGr_rcpt(wt.getSCreator());
-        if (outbDel == null) {
+        if (outbDel == null || kl_total == BigDecimal.ZERO) {
             tab_wa.setEntry_qnt(wt.getGQty());
         } else {
             tab_wa.setEntry_qnt(kl_total);
