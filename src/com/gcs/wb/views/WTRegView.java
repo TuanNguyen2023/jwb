@@ -1252,8 +1252,8 @@ public class WTRegView extends javax.swing.JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(pnROVRight, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(btnShowHide)
-                    .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 1088, Short.MAX_VALUE)
-                    .addComponent(pnPrintControl, javax.swing.GroupLayout.DEFAULT_SIZE, 1088, Short.MAX_VALUE))
+                    .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 1111, Short.MAX_VALUE)
+                    .addComponent(pnPrintControl, javax.swing.GroupLayout.DEFAULT_SIZE, 1111, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -1270,7 +1270,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(pnRegistrationOfVehicle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pnROVRight, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(27, Short.MAX_VALUE))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
 
         pack();
@@ -3404,16 +3404,17 @@ private void cbxModeSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 purchaseOrder = syncPurchaseOrder(poNum, purchaseOrder);
             }
 
+            // check exist PO
+            if (purchaseOrder == null) {
+                throw new Exception(resourceMapMsg.getString("msg.poNotExist", poNum));
+            }
+
             //Check PO Plant with Configuration parameter.
             if ((modeDetail == MODE_DETAIL.IN_PO_PURCHASE)
                     && (!(purchaseOrder.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant()))) {
                 throw new Exception(resourceMapMsg.getString("msg.poIsDenied"));
             }
 
-            // check exist PO
-            if (purchaseOrder == null) {
-                throw new Exception(resourceMapMsg.getString("msg.poNotExist", poNum));
-            }
 
             updateWeightTicket(purchaseOrder);
 

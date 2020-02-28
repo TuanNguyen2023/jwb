@@ -46,8 +46,8 @@
                       <Component id="pnROVRight" max="32767" attributes="0"/>
                   </Group>
                   <Component id="btnShowHide" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="spnResult" alignment="0" pref="1088" max="32767" attributes="2"/>
-                  <Component id="pnPrintControl" alignment="0" pref="1088" max="32767" attributes="1"/>
+                  <Component id="spnResult" alignment="0" pref="1111" max="32767" attributes="2"/>
+                  <Component id="pnPrintControl" alignment="0" pref="1111" max="32767" attributes="1"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -68,7 +68,7 @@
                   <Component id="pnRegistrationOfVehicle" max="32767" attributes="1"/>
                   <Component id="pnROVRight" alignment="0" max="32767" attributes="1"/>
               </Group>
-              <EmptySpace pref="27" max="32767" attributes="0"/>
+              <EmptySpace pref="31" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
