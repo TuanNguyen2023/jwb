@@ -102,7 +102,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         dpDateTo.setFormats(Constants.Date.FORMAT);
         initComboboxModel();
         initComboboxRenderer();
-	initTableEvent();
+	    initTableEvent();
 
         SearchWeightTicketTask t = new SearchWeightTicketTask(WeighBridgeApp.getApplication());
         t.execute();
@@ -110,12 +110,16 @@ public class WTRegView extends javax.swing.JInternalFrame {
         cbxHourTo.setSelectedIndex(23);
     }
 
-	private void initTableEvent() {
+    private void initTableEvent() {
         tabResults.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
-            selectedWeightTicket = weightTicketList.get(tabResults.convertRowIndexToModel(tabResults.getSelectedRow()));
-            if (selectedWeightTicket != null && selectedWeightTicket.getOfflineMode()) {
-                btnEdit.setEnabled(true);
-            } else {
+            try {
+                selectedWeightTicket = weightTicketList.get(tabResults.convertRowIndexToModel(tabResults.getSelectedRow()));
+                if (selectedWeightTicket != null && selectedWeightTicket.getOfflineMode()) {
+                    btnEdit.setEnabled(true);
+                } else {
+                    btnEdit.setEnabled(false);
+                }
+            } catch (Exception ex) {
                 btnEdit.setEnabled(false);
             }
         });
