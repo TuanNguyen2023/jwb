@@ -336,10 +336,10 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         lblWTNum.setName("lblWTNum"); // NOI18N
 
         txtWTNum.setFont(txtWTNum.getFont().deriveFont(txtWTNum.getFont().getStyle() | java.awt.Font.BOLD, txtWTNum.getFont().getSize()+2));
+        txtWTNum.setForeground(resourceMap.getColor("txtWTNum.foreground")); // NOI18N
         txtWTNum.setText(resourceMap.getString("txtWTNum.text")); // NOI18N
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getActionMap(WeightTicketView.class, this);
         txtWTNum.setAction(actionMap.get("readWT")); // NOI18N
-        txtWTNum.setForeground(resourceMap.getColor("txtWTNum.foreground")); // NOI18N
         txtWTNum.setName("txtWTNum"); // NOI18N
         txtWTNum.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -423,13 +423,13 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         pnCurScaleData.setName("pnCurScaleData"); // NOI18N
         pnCurScaleData.setPreferredSize(new java.awt.Dimension(280, 95));
 
+        rbtBridge1.setBackground(resourceMap.getColor("rbtBridge1.background")); // NOI18N
         grbBridge.add(rbtBridge1);
         rbtBridge1.setFont(resourceMap.getFont("rbtBridge2.font")); // NOI18N
-        rbtBridge1.setText(resourceMap.getString("rbtBridge1.text")); // NOI18N
-        rbtBridge1.setBackground(resourceMap.getColor("rbtBridge1.background")); // NOI18N
         rbtBridge1.setForeground(resourceMap.getColor("rbtBridge2.foreground")); // NOI18N
-        rbtBridge1.setName("rbtBridge1"); // NOI18N
+        rbtBridge1.setText(resourceMap.getString("rbtBridge1.text")); // NOI18N
         rbtBridge1.setToolTipText(resourceMap.getString("rbtBridge1.toolTipText")); // NOI18N
+        rbtBridge1.setName("rbtBridge1"); // NOI18N
 
         org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${bridge1}"), rbtBridge1, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
         bindingGroup.addBinding(binding);
@@ -441,11 +441,11 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         });
 
         rbtBridge2.setAction(actionMap.get("checkedBridge2")); // NOI18N
+        rbtBridge2.setBackground(resourceMap.getColor("rbtBridge2.background")); // NOI18N
         grbBridge.add(rbtBridge2);
         rbtBridge2.setFont(resourceMap.getFont("rbtBridge2.font")); // NOI18N
-        rbtBridge2.setText(resourceMap.getString("rbtBridge2.text")); // NOI18N
-        rbtBridge2.setBackground(resourceMap.getColor("rbtBridge2.background")); // NOI18N
         rbtBridge2.setForeground(resourceMap.getColor("rbtBridge2.foreground")); // NOI18N
+        rbtBridge2.setText(resourceMap.getString("rbtBridge2.text")); // NOI18N
         rbtBridge2.setName("rbtBridge2"); // NOI18N
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${bridge2}"), rbtBridge2, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
@@ -457,12 +457,12 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             }
         });
 
-        txfCurScale.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
-        txfCurScale.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txfCurScale.setBackground(resourceMap.getColor("txfCurScale.background")); // NOI18N
         txfCurScale.setBorder(null);
-        txfCurScale.setFont(resourceMap.getFont("txfCurScale.font")); // NOI18N
         txfCurScale.setForeground(resourceMap.getColor("txfCurScale.foreground")); // NOI18N
+        txfCurScale.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
+        txfCurScale.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txfCurScale.setFont(resourceMap.getFont("txfCurScale.font")); // NOI18N
         txfCurScale.setName("txfCurScale"); // NOI18N
         txfCurScale.setPreferredSize(new java.awt.Dimension(227, 38));
         txfCurScale.setValue((Number)0);
@@ -540,37 +540,37 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         lblGScale.setText(resourceMap.getString("lblGScale.text")); // NOI18N
         lblGScale.setName("lblGScale"); // NOI18N
 
+        txfInQty.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         txfInQty.setEditable(false);
+        txfInQty.setForeground(resourceMap.getColor("txfInQty.foreground")); // NOI18N
         txfInQty.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
         txfInQty.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txfInQty.setText(resourceMap.getString("txfInQty.text")); // NOI18N
-        txfInQty.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         txfInQty.setFont(resourceMap.getFont("txfGoodsQty.font")); // NOI18N
-        txfInQty.setForeground(resourceMap.getColor("txfInQty.foreground")); // NOI18N
         txfInQty.setName("txfInQty"); // NOI18N
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${weightTicket.FScale}"), txfInQty, org.jdesktop.beansbinding.BeanProperty.create("value"));
         bindingGroup.addBinding(binding);
 
+        txfOutQty.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         txfOutQty.setEditable(false);
+        txfOutQty.setForeground(resourceMap.getColor("txfOutQty.foreground")); // NOI18N
         txfOutQty.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
         txfOutQty.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txfOutQty.setText(resourceMap.getString("txfOutQty.text")); // NOI18N
-        txfOutQty.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         txfOutQty.setFont(resourceMap.getFont("txfGoodsQty.font")); // NOI18N
-        txfOutQty.setForeground(resourceMap.getColor("txfOutQty.foreground")); // NOI18N
         txfOutQty.setName("txfOutQty"); // NOI18N
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${weightTicket.SScale}"), txfOutQty, org.jdesktop.beansbinding.BeanProperty.create("value"));
         bindingGroup.addBinding(binding);
 
+        txfGoodsQty.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         txfGoodsQty.setEditable(false);
+        txfGoodsQty.setForeground(resourceMap.getColor("txfGoodsQty.foreground")); // NOI18N
         txfGoodsQty.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
         txfGoodsQty.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txfGoodsQty.setText(resourceMap.getString("txfGoodsQty.text")); // NOI18N
-        txfGoodsQty.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         txfGoodsQty.setFont(resourceMap.getFont("txfGoodsQty.font")); // NOI18N
-        txfGoodsQty.setForeground(resourceMap.getColor("txfGoodsQty.foreground")); // NOI18N
         txfGoodsQty.setName("txfGoodsQty"); // NOI18N
 
         lblIUnit.setText(resourceMap.getString("lblIUnit.text")); // NOI18N
@@ -588,12 +588,12 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         lblGUnit.setText(resourceMap.getString("lblGUnit.text")); // NOI18N
         lblGUnit.setName("lblGUnit"); // NOI18N
 
+        txtInTime.setBackground(resourceMap.getColor("txtInTime.background")); // NOI18N
         txtInTime.setEditable(false);
         txtInTime.setFont(txtInTime.getFont().deriveFont(txtInTime.getFont().getStyle() | java.awt.Font.BOLD, txtInTime.getFont().getSize()+1));
-        txtInTime.setText(resourceMap.getString("txtInTime.text")); // NOI18N
-        txtInTime.setBackground(resourceMap.getColor("txtInTime.background")); // NOI18N
-        txtInTime.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         txtInTime.setForeground(resourceMap.getColor("txtInTime.foreground")); // NOI18N
+        txtInTime.setText(resourceMap.getString("txtInTime.text")); // NOI18N
+        txtInTime.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         txtInTime.setName("txtInTime"); // NOI18N
         txtInTime.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -601,12 +601,12 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             }
         });
 
+        txtOutTime.setBackground(resourceMap.getColor("txtOutTime.background")); // NOI18N
         txtOutTime.setEditable(false);
         txtOutTime.setFont(txtOutTime.getFont().deriveFont(txtOutTime.getFont().getStyle() | java.awt.Font.BOLD, txtOutTime.getFont().getSize()+1));
-        txtOutTime.setText(resourceMap.getString("txtOutTime.text")); // NOI18N
-        txtOutTime.setBackground(resourceMap.getColor("txtOutTime.background")); // NOI18N
-        txtOutTime.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         txtOutTime.setForeground(resourceMap.getColor("txtInTime.foreground")); // NOI18N
+        txtOutTime.setText(resourceMap.getString("txtOutTime.text")); // NOI18N
+        txtOutTime.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         txtOutTime.setName("txtOutTime"); // NOI18N
         txtOutTime.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -722,11 +722,12 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         rbtOutward.setEnabled(false);
         rbtOutward.setName("rbtOutward"); // NOI18N
 
+        txtRegistrationNo.setBackground(resourceMap.getColor("txtTicketId.background")); // NOI18N
         txtRegistrationNo.setEditable(false);
         txtRegistrationNo.setText(resourceMap.getString("txtRegistrationNo.text")); // NOI18N
-        txtRegistrationNo.setBackground(resourceMap.getColor("txtRegistrationNo.background")); // NOI18N
         txtRegistrationNo.setName("txtRegistrationNo"); // NOI18N
 
+        txtDName.setBackground(resourceMap.getColor("txtTicketId.background")); // NOI18N
         txtDName.setEditable(false);
         txtDName.setName("txtDName"); // NOI18N
 
@@ -739,21 +740,25 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         lblCMNDBL.setText(resourceMap.getString("lblCMNDBL.text")); // NOI18N
         lblCMNDBL.setName("lblCMNDBL"); // NOI18N
 
+        txtCMNDBL.setBackground(resourceMap.getColor("txtTicketId.background")); // NOI18N
         txtCMNDBL.setEditable(false);
         txtCMNDBL.setName("txtCMNDBL"); // NOI18N
 
         lblLicPlate.setText(resourceMap.getString("lblLicPlate.text")); // NOI18N
         lblLicPlate.setName("lblLicPlate"); // NOI18N
 
+        txtLicPlate.setBackground(resourceMap.getColor("txtTicketId.background")); // NOI18N
         txtLicPlate.setEditable(false);
         txtLicPlate.setName("txtLicPlate"); // NOI18N
 
         lblTrailerPlate.setText(resourceMap.getString("lblTrailerPlate.text")); // NOI18N
         lblTrailerPlate.setName("lblTrailerPlate"); // NOI18N
 
+        txtTrailerPlate.setBackground(resourceMap.getColor("txtTicketId.background")); // NOI18N
         txtTrailerPlate.setEditable(false);
         txtTrailerPlate.setName("txtTrailerPlate"); // NOI18N
 
+        txtSling.setBackground(resourceMap.getColor("txtTicketId.background")); // NOI18N
         txtSling.setEditable(false);
         txtSling.setName("txtSling"); // NOI18N
 
@@ -763,12 +768,14 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         lblPallet.setText(resourceMap.getString("lblPallet.text")); // NOI18N
         lblPallet.setName("lblPallet"); // NOI18N
 
+        txtPallet.setBackground(resourceMap.getColor("txtTicketId.background")); // NOI18N
         txtPallet.setEditable(false);
         txtPallet.setName("txtPallet"); // NOI18N
 
         lblGRText.setText(resourceMap.getString("lblGRText.text")); // NOI18N
         lblGRText.setName("lblGRText"); // NOI18N
 
+        txtGRText.setBackground(resourceMap.getColor("txtTicketId.background")); // NOI18N
         txtGRText.setEditable(false);
         txtGRText.setName("txtGRText"); // NOI18N
         txtGRText.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -777,6 +784,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             }
         });
 
+        txtCementDesc.setBackground(resourceMap.getColor("txtTicketId.background")); // NOI18N
         txtCementDesc.setText(resourceMap.getString("txtCementDesc.text")); // NOI18N
         txtCementDesc.setName("txtCementDesc"); // NOI18N
         txtCementDesc.addActionListener(new java.awt.event.ActionListener() {
@@ -796,6 +804,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         lblBatchProduce.setText(resourceMap.getString("lblBatchProduce.text")); // NOI18N
         lblBatchProduce.setName("lblBatchProduce"); // NOI18N
 
+        txtBatchProduce.setBackground(resourceMap.getColor("txtTicketId.background")); // NOI18N
         txtBatchProduce.setName("txtBatchProduce"); // NOI18N
         txtBatchProduce.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -808,12 +817,14 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             }
         });
 
+        txtTicketId.setBackground(resourceMap.getColor("txtTicketId.background")); // NOI18N
         txtTicketId.setEditable(false);
         txtTicketId.setName("txtTicketId"); // NOI18N
 
         lblTicketId.setText(resourceMap.getString("lblTicketId.text")); // NOI18N
         lblTicketId.setName("lblTicketId"); // NOI18N
 
+        txtWeightTicketIdRef.setBackground(resourceMap.getColor("txtTicketId.background")); // NOI18N
         txtWeightTicketIdRef.setEditable(false);
         txtWeightTicketIdRef.setName("txtWeightTicketIdRef"); // NOI18N
 
@@ -824,8 +835,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         lblProcedure.setToolTipText(resourceMap.getString("lblProcedure.toolTipText")); // NOI18N
         lblProcedure.setName("lblProcedure"); // NOI18N
 
+        txtProcedure.setBackground(resourceMap.getColor("txtTicketId.background")); // NOI18N
         txtProcedure.setEditable(false);
-        txtProcedure.setBackground(resourceMap.getColor("txtProcedure.background")); // NOI18N
         txtProcedure.setName("txtProcedure"); // NOI18N
 
         lblRemark.setText(resourceMap.getString("lblRemark.text")); // NOI18N
@@ -950,9 +961,11 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
         pnWTRight.setName("pnWTRight"); // NOI18N
 
+        txtDelNum.setBackground(resourceMap.getColor("txtDelNum.background")); // NOI18N
         txtDelNum.setEditable(false);
         txtDelNum.setName("txtDelNum"); // NOI18N
 
+        txtPONo.setBackground(resourceMap.getColor("txtDelNum.background")); // NOI18N
         txtPONo.setEditable(false);
         txtPONo.setAction(actionMap.get("readPO")); // NOI18N
         txtPONo.setName("txtPONo"); // NOI18N
@@ -971,13 +984,16 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             }
         });
 
+        txtRegItem.setBackground(resourceMap.getColor("txtDelNum.background")); // NOI18N
         txtRegItem.setEditable(false);
         txtRegItem.setName("txtRegItem"); // NOI18N
 
+        txtMatnr.setBackground(resourceMap.getColor("txtDelNum.background")); // NOI18N
         txtMatnr.setEditable(false);
         txtMatnr.setText(resourceMap.getString("txtMatnr.text")); // NOI18N
         txtMatnr.setName("txtMatnr"); // NOI18N
 
+        txtWeight.setBackground(resourceMap.getColor("txtDelNum.background")); // NOI18N
         txtWeight.setEditable(false);
         txtWeight.setName("txtWeight"); // NOI18N
 
@@ -1008,6 +1024,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             }
         });
 
+        txtLgortIn.setBackground(resourceMap.getColor("txtDelNum.background")); // NOI18N
         txtLgortIn.setEditable(false);
         txtLgortIn.setName("txtLgortIn"); // NOI18N
         txtLgortIn.setRequestFocusEnabled(false);
@@ -1020,9 +1037,11 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             }
         });
 
+        txtChargIn.setBackground(resourceMap.getColor("txtDelNum.background")); // NOI18N
         txtChargIn.setEditable(false);
         txtChargIn.setName("txtChargIn"); // NOI18N
 
+        txtPoPosto.setBackground(resourceMap.getColor("txtDelNum.background")); // NOI18N
         txtPoPosto.setEditable(false);
         txtPoPosto.setName("txtPoPosto"); // NOI18N
         txtPoPosto.addActionListener(new java.awt.event.ActionListener() {
@@ -1121,6 +1140,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         lblSO.setText(resourceMap.getString("lblSO.text")); // NOI18N
         lblSO.setName("lblSO"); // NOI18N
 
+        txtSO.setBackground(resourceMap.getColor("txtDelNum.background")); // NOI18N
         txtSO.setEditable(false);
         txtSO.setText(resourceMap.getString("txtSO.text")); // NOI18N
         txtSO.setName("txtSO"); // NOI18N
@@ -2383,7 +2403,8 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 if (Constants.WeighingProcess.MODE_DETAIL.OUT_SELL_ROAD.name().equals(weightTicket.getMode())
                         || Constants.WeighingProcess.MODE_DETAIL.OUT_PLANT_PLANT.name().equals(weightTicket.getMode())
                         || Constants.WeighingProcess.MODE_DETAIL.OUT_SELL_WATERWAY.name().equals(weightTicket.getMode())
-                        || Constants.WeighingProcess.MODE_DETAIL.OUT_OTHER.name().equals(weightTicket.getMode())) {
+                        || Constants.WeighingProcess.MODE_DETAIL.OUT_OTHER.name().equals(weightTicket.getMode())
+                        || Constants.WeighingProcess.MODE_DETAIL.IN_OTHER.name().equals(weightTicket.getMode())) {
                     txtSling.setText(String.valueOf(weightTicket.getSling()));
                     txtPallet.setText(String.valueOf(weightTicket.getPallet()));
                 }
@@ -2807,6 +2828,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         btnPostAgain.setEnabled(false);
         btnReprint.setEnabled(false);
         btnSave.setEnabled(false);
+        txtRemark.setEnabled(true);
         if (ModeEnum.IN_PO_PURCHASE.name().equals(mode)) {
             lblWeightTicketIdRef.setVisible(false);
             lblSling.setVisible(false);
@@ -4198,6 +4220,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         if (components.length > 0) {
             for (Component component : components) {
                 component.setVisible(true);
+                component.setEnabled(false);
             }
         }
     }
@@ -4349,7 +4372,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         }
         //}
         bBatch = true;
-        txtGRText.setEnabled(true);
+        //txtGRText.setEnabled(true);
         if (weightTicket.getWeightTicketDetail() != null && weightTicket.getWeightTicketDetail().getMatnrRef()!= null) {
             materialConstraint = weightTicketController.getMaterialConstraintByMatnr(weightTicket.getWeightTicketDetail().getMatnrRef());
             if (isStage2()
@@ -4363,6 +4386,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             } else {
                 lblCementDesc.setForeground(Color.red);
                 txtCementDesc.setEditable(true);
+                txtCementDesc.setEnabled(true);
             }
             if (isStage2()
                     && materialConstraint != null && materialConstraint.getRequiredBatch() 
@@ -4375,6 +4399,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             } else {
                 lblBatchProduce.setForeground(Color.red);
                 txtBatchProduce.setEditable(true);
+                txtBatchProduce.setEnabled(true);
             }
         }
         isRemark = validateLength(txtRemark.getText().trim(), lblRemark, 0, 128);
