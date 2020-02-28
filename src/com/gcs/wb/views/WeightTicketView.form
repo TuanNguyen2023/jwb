@@ -137,11 +137,11 @@
                 <Font bold="true" component="txtWTNum" property="font" relativeSize="true" size="2"/>
               </FontInfo>
             </Property>
+            <Property name="foreground" type="java.awt.Color" resourceKey="txtWTNum.foreground"/>
             <Property name="text" type="java.lang.String" resourceKey="txtWTNum.text"/>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
               <action class="com.gcs.wb.views.WeightTicketView" id="readWT" methodName="readWT"/>
             </Property>
-            <Property name="foreground" type="java.awt.Color" resourceKey="txtWTNum.foreground"/>
             <Property name="name" type="java.lang.String" value="txtWTNum" noResource="true"/>
           </Properties>
           <Events>
@@ -266,15 +266,15 @@
           <SubComponents>
             <Component class="javax.swing.JRadioButton" name="rbtBridge1">
               <Properties>
+                <Property name="background" type="java.awt.Color" resourceKey="rbtBridge1.background"/>
                 <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
                   <ComponentRef name="grbBridge"/>
                 </Property>
                 <Property name="font" type="java.awt.Font" resourceKey="rbtBridge2.font"/>
-                <Property name="text" type="java.lang.String" resourceKey="rbtBridge1.text"/>
-                <Property name="background" type="java.awt.Color" resourceKey="rbtBridge1.background"/>
                 <Property name="foreground" type="java.awt.Color" resourceKey="rbtBridge2.foreground"/>
-                <Property name="name" type="java.lang.String" value="rbtBridge1" noResource="true"/>
+                <Property name="text" type="java.lang.String" resourceKey="rbtBridge1.text"/>
                 <Property name="toolTipText" type="java.lang.String" resourceKey="rbtBridge1.toolTipText"/>
+                <Property name="name" type="java.lang.String" value="rbtBridge1" noResource="true"/>
               </Properties>
               <BindingProperties>
                 <BindingProperty name="enabled" source="Form" sourcePath="${bridge1}" target="rbtBridge1" targetPath="enabled" updateStrategy="0" immediately="false"/>
@@ -288,13 +288,13 @@
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="com.gcs.wb.views.GIView" id="checkedBridge2" methodName="checkedBridge2"/>
                 </Property>
+                <Property name="background" type="java.awt.Color" resourceKey="rbtBridge2.background"/>
                 <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
                   <ComponentRef name="grbBridge"/>
                 </Property>
                 <Property name="font" type="java.awt.Font" resourceKey="rbtBridge2.font"/>
-                <Property name="text" type="java.lang.String" resourceKey="rbtBridge2.text"/>
-                <Property name="background" type="java.awt.Color" resourceKey="rbtBridge2.background"/>
                 <Property name="foreground" type="java.awt.Color" resourceKey="rbtBridge2.foreground"/>
+                <Property name="text" type="java.lang.String" resourceKey="rbtBridge2.text"/>
                 <Property name="name" type="java.lang.String" value="rbtBridge2" noResource="true"/>
               </Properties>
               <BindingProperties>
@@ -306,16 +306,16 @@
             </Component>
             <Component class="javax.swing.JFormattedTextField" name="txfCurScale">
               <Properties>
-                <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-                  <Format subtype="0" type="0"/>
-                </Property>
-                <Property name="horizontalAlignment" type="int" value="4"/>
                 <Property name="background" type="java.awt.Color" resourceKey="txfCurScale.background"/>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="null"/>
                 </Property>
-                <Property name="font" type="java.awt.Font" resourceKey="txfCurScale.font"/>
                 <Property name="foreground" type="java.awt.Color" resourceKey="txfCurScale.foreground"/>
+                <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+                  <Format subtype="0" type="0"/>
+                </Property>
+                <Property name="horizontalAlignment" type="int" value="4"/>
+                <Property name="font" type="java.awt.Font" resourceKey="txfCurScale.font"/>
                 <Property name="name" type="java.lang.String" value="txfCurScale" noResource="true"/>
                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[227, 38]"/>
@@ -466,19 +466,19 @@
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="txfInQty">
           <Properties>
-            <Property name="editable" type="boolean" value="false"/>
-            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-              <Format subtype="0" type="0"/>
-            </Property>
-            <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" resourceKey="txfInQty.text"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
                 <EmptyBorder/>
               </Border>
             </Property>
-            <Property name="font" type="java.awt.Font" resourceKey="txfGoodsQty.font"/>
+            <Property name="editable" type="boolean" value="false"/>
             <Property name="foreground" type="java.awt.Color" resourceKey="txfInQty.foreground"/>
+            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+              <Format subtype="0" type="0"/>
+            </Property>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" resourceKey="txfInQty.text"/>
+            <Property name="font" type="java.awt.Font" resourceKey="txfGoodsQty.font"/>
             <Property name="name" type="java.lang.String" value="txfInQty" noResource="true"/>
           </Properties>
           <BindingProperties>
@@ -487,19 +487,19 @@
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="txfOutQty">
           <Properties>
-            <Property name="editable" type="boolean" value="false"/>
-            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-              <Format subtype="0" type="0"/>
-            </Property>
-            <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" resourceKey="txfOutQty.text"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
                 <EmptyBorder/>
               </Border>
             </Property>
-            <Property name="font" type="java.awt.Font" resourceKey="txfGoodsQty.font"/>
+            <Property name="editable" type="boolean" value="false"/>
             <Property name="foreground" type="java.awt.Color" resourceKey="txfOutQty.foreground"/>
+            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+              <Format subtype="0" type="0"/>
+            </Property>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" resourceKey="txfOutQty.text"/>
+            <Property name="font" type="java.awt.Font" resourceKey="txfGoodsQty.font"/>
             <Property name="name" type="java.lang.String" value="txfOutQty" noResource="true"/>
           </Properties>
           <BindingProperties>
@@ -508,19 +508,19 @@
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="txfGoodsQty">
           <Properties>
-            <Property name="editable" type="boolean" value="false"/>
-            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-              <Format subtype="0" type="0"/>
-            </Property>
-            <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" resourceKey="txfGoodsQty.text"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
                 <EmptyBorder/>
               </Border>
             </Property>
-            <Property name="font" type="java.awt.Font" resourceKey="txfGoodsQty.font"/>
+            <Property name="editable" type="boolean" value="false"/>
             <Property name="foreground" type="java.awt.Color" resourceKey="txfGoodsQty.foreground"/>
+            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+              <Format subtype="0" type="0"/>
+            </Property>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" resourceKey="txfGoodsQty.text"/>
+            <Property name="font" type="java.awt.Font" resourceKey="txfGoodsQty.font"/>
             <Property name="name" type="java.lang.String" value="txfGoodsQty" noResource="true"/>
           </Properties>
         </Component>
@@ -556,20 +556,20 @@
         </Component>
         <Component class="javax.swing.JTextField" name="txtInTime">
           <Properties>
+            <Property name="background" type="java.awt.Color" resourceKey="txtInTime.background"/>
             <Property name="editable" type="boolean" value="false"/>
             <Property name="font" type="java.awt.Font" noResource="true" editor="org.netbeans.modules.form.editors2.FontEditor">
               <FontInfo relative="true">
                 <Font bold="true" component="txtInTime" property="font" relativeSize="true" size="1"/>
               </FontInfo>
             </Property>
+            <Property name="foreground" type="java.awt.Color" resourceKey="txtInTime.foreground"/>
             <Property name="text" type="java.lang.String" resourceKey="txtInTime.text"/>
-            <Property name="background" type="java.awt.Color" resourceKey="txtInTime.background"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
                 <EmptyBorder/>
               </Border>
             </Property>
-            <Property name="foreground" type="java.awt.Color" resourceKey="txtInTime.foreground"/>
             <Property name="name" type="java.lang.String" value="txtInTime" noResource="true"/>
           </Properties>
           <Events>
@@ -578,20 +578,20 @@
         </Component>
         <Component class="javax.swing.JTextField" name="txtOutTime">
           <Properties>
+            <Property name="background" type="java.awt.Color" resourceKey="txtOutTime.background"/>
             <Property name="editable" type="boolean" value="false"/>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.modules.form.editors2.FontEditor">
               <FontInfo relative="true">
                 <Font bold="true" component="txtOutTime" property="font" relativeSize="true" size="1"/>
               </FontInfo>
             </Property>
+            <Property name="foreground" type="java.awt.Color" resourceKey="txtInTime.foreground"/>
             <Property name="text" type="java.lang.String" resourceKey="txtOutTime.text"/>
-            <Property name="background" type="java.awt.Color" resourceKey="txtOutTime.background"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
                 <EmptyBorder/>
               </Border>
             </Property>
-            <Property name="foreground" type="java.awt.Color" resourceKey="txtInTime.foreground"/>
             <Property name="name" type="java.lang.String" value="txtOutTime" noResource="true"/>
           </Properties>
           <Events>
@@ -839,14 +839,15 @@
             </Component>
             <Component class="javax.swing.JTextField" name="txtRegistrationNo">
               <Properties>
+                <Property name="background" type="java.awt.Color" resourceKey="txtTicketId.background"/>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="text" type="java.lang.String" resourceKey="txtRegistrationNo.text"/>
-                <Property name="background" type="java.awt.Color" resourceKey="txtRegistrationNo.background"/>
                 <Property name="name" type="java.lang.String" value="txtRegistrationNo" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtDName">
               <Properties>
+                <Property name="background" type="java.awt.Color" resourceKey="txtTicketId.background"/>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="txtDName" noResource="true"/>
               </Properties>
@@ -871,6 +872,7 @@
             </Component>
             <Component class="javax.swing.JTextField" name="txtCMNDBL">
               <Properties>
+                <Property name="background" type="java.awt.Color" resourceKey="txtTicketId.background"/>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="txtCMNDBL" noResource="true"/>
               </Properties>
@@ -883,6 +885,7 @@
             </Component>
             <Component class="javax.swing.JFormattedTextField" name="txtLicPlate">
               <Properties>
+                <Property name="background" type="java.awt.Color" resourceKey="txtTicketId.background"/>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="txtLicPlate" noResource="true"/>
               </Properties>
@@ -898,6 +901,7 @@
             </Component>
             <Component class="javax.swing.JFormattedTextField" name="txtTrailerPlate">
               <Properties>
+                <Property name="background" type="java.awt.Color" resourceKey="txtTicketId.background"/>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="txtTrailerPlate" noResource="true"/>
               </Properties>
@@ -907,6 +911,7 @@
             </Component>
             <Component class="javax.swing.JFormattedTextField" name="txtSling">
               <Properties>
+                <Property name="background" type="java.awt.Color" resourceKey="txtTicketId.background"/>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="txtSling" noResource="true"/>
               </Properties>
@@ -928,6 +933,7 @@
             </Component>
             <Component class="javax.swing.JFormattedTextField" name="txtPallet">
               <Properties>
+                <Property name="background" type="java.awt.Color" resourceKey="txtTicketId.background"/>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="txtPallet" noResource="true"/>
               </Properties>
@@ -943,6 +949,7 @@
             </Component>
             <Component class="javax.swing.JTextField" name="txtGRText">
               <Properties>
+                <Property name="background" type="java.awt.Color" resourceKey="txtTicketId.background"/>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="txtGRText" noResource="true"/>
               </Properties>
@@ -952,6 +959,7 @@
             </Component>
             <Component class="javax.swing.JTextField" name="txtCementDesc">
               <Properties>
+                <Property name="background" type="java.awt.Color" resourceKey="txtTicketId.background"/>
                 <Property name="text" type="java.lang.String" resourceKey="txtCementDesc.text"/>
                 <Property name="name" type="java.lang.String" value="txtCementDesc" noResource="true"/>
               </Properties>
@@ -974,6 +982,7 @@
             </Component>
             <Component class="javax.swing.JFormattedTextField" name="txtBatchProduce">
               <Properties>
+                <Property name="background" type="java.awt.Color" resourceKey="txtTicketId.background"/>
                 <Property name="name" type="java.lang.String" value="txtBatchProduce" noResource="true"/>
               </Properties>
               <Events>
@@ -983,6 +992,7 @@
             </Component>
             <Component class="javax.swing.JFormattedTextField" name="txtTicketId">
               <Properties>
+                <Property name="background" type="java.awt.Color" resourceKey="txtTicketId.background"/>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="txtTicketId" noResource="true"/>
               </Properties>
@@ -998,6 +1008,7 @@
             </Component>
             <Component class="javax.swing.JFormattedTextField" name="txtWeightTicketIdRef">
               <Properties>
+                <Property name="background" type="java.awt.Color" resourceKey="txtTicketId.background"/>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="txtWeightTicketIdRef" noResource="true"/>
               </Properties>
@@ -1020,8 +1031,8 @@
             </Component>
             <Component class="javax.swing.JTextField" name="txtProcedure">
               <Properties>
+                <Property name="background" type="java.awt.Color" resourceKey="txtTicketId.background"/>
                 <Property name="editable" type="boolean" value="false"/>
-                <Property name="background" type="java.awt.Color" resourceKey="txtProcedure.background"/>
                 <Property name="name" type="java.lang.String" value="txtProcedure" noResource="true"/>
               </Properties>
             </Component>
@@ -1181,12 +1192,14 @@
           <SubComponents>
             <Component class="javax.swing.JTextField" name="txtDelNum">
               <Properties>
+                <Property name="background" type="java.awt.Color" resourceKey="txtDelNum.background"/>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="txtDelNum" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtPONo">
               <Properties>
+                <Property name="background" type="java.awt.Color" resourceKey="txtDelNum.background"/>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="com.gcs.wb.views.WeightTicketView" id="readPO" methodName="readPO"/>
@@ -1199,12 +1212,14 @@
             </Component>
             <Component class="javax.swing.JTextField" name="txtRegItem">
               <Properties>
+                <Property name="background" type="java.awt.Color" resourceKey="txtDelNum.background"/>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="txtRegItem" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtMatnr">
               <Properties>
+                <Property name="background" type="java.awt.Color" resourceKey="txtDelNum.background"/>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="text" type="java.lang.String" resourceKey="txtMatnr.text"/>
                 <Property name="name" type="java.lang.String" value="txtMatnr" noResource="true"/>
@@ -1215,6 +1230,7 @@
             </Component>
             <Component class="javax.swing.JTextField" name="txtWeight">
               <Properties>
+                <Property name="background" type="java.awt.Color" resourceKey="txtDelNum.background"/>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="txtWeight" noResource="true"/>
               </Properties>
@@ -1241,6 +1257,7 @@
             </Component>
             <Component class="javax.swing.JTextField" name="txtLgortIn">
               <Properties>
+                <Property name="background" type="java.awt.Color" resourceKey="txtDelNum.background"/>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="txtLgortIn" noResource="true"/>
                 <Property name="requestFocusEnabled" type="boolean" value="false"/>
@@ -1259,12 +1276,14 @@
             </Component>
             <Component class="javax.swing.JTextField" name="txtChargIn">
               <Properties>
+                <Property name="background" type="java.awt.Color" resourceKey="txtDelNum.background"/>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="txtChargIn" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtPoPosto">
               <Properties>
+                <Property name="background" type="java.awt.Color" resourceKey="txtDelNum.background"/>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="name" type="java.lang.String" value="txtPoPosto" noResource="true"/>
               </Properties>
@@ -1388,6 +1407,7 @@
             </Component>
             <Component class="javax.swing.JTextField" name="txtSO">
               <Properties>
+                <Property name="background" type="java.awt.Color" resourceKey="txtDelNum.background"/>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="text" type="java.lang.String" resourceKey="txtSO.text"/>
                 <Property name="name" type="java.lang.String" value="txtSO" noResource="true"/>
