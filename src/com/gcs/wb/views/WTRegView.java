@@ -135,6 +135,15 @@ public class WTRegView extends javax.swing.JInternalFrame {
                         setText(materialInternal.getMaktg());
                     }
                 }
+                if (value instanceof Material) {
+                    Material material = (Material) value;
+                    setToolTipText(material.getMatnr());
+                    if (material.getMaktx().trim() != null) {
+                        setText(material.getMaktx());
+                    } else {
+                        setText(material.getMaktg());
+                    }
+                }
                 return this;
             }
         });
@@ -1366,9 +1375,15 @@ private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//
 
     validateForm();
 
-    MaterialInternal materialInternal = (MaterialInternal) cbxMaterialTypeN.getSelectedItem();
     if (newWeightTicket != null) {
-        newWeightTicket.setRecvMatnr(materialInternal.getMatnr());
+        Object obj = cbxMaterialTypeN.getSelectedItem();
+        if (obj instanceof MaterialInternal) {
+            MaterialInternal materialInternal = (MaterialInternal) obj;
+            newWeightTicket.setRecvMatnr(materialInternal.getMatnr());
+        } else if (obj instanceof Material) {
+            Material material = (Material) obj;
+            newWeightTicket.setRecvMatnr(material.getMatnr());
+        }
     }
 
     loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
@@ -2021,7 +2036,7 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
         showComponent(cbxVendorTransportN, lblVendorTransportN, isShowPOV, false);
         showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
 
-        cbxMaterialTypeN.setModel(sapService.getMaterialModel());
+        cbxMaterialTypeN.setModel(weightTicketRegistarationController.getListMaterial());
         cbxMaterialTypeN.setSelectedIndex(-1);
     }
 
@@ -3020,10 +3035,10 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             newWeightTicket.setMoveType("311");
             newWeightTicket.setMoveReas(null);
             WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
-            MaterialInternal materialInternal = (MaterialInternal) cbxMaterialTypeN.getSelectedItem();
+            Material material = (Material) cbxMaterialTypeN.getSelectedItem();
 
-            weightTicketDetail.setMatnrRef(materialInternal.getMatnr());
-            weightTicketDetail.setRegItemDescription(materialInternal.getMaktx());
+            weightTicketDetail.setMatnrRef(material.getMatnr());
+            weightTicketDetail.setRegItemDescription(material.getMaktx());
             weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText().trim()));
         }
 
@@ -3351,7 +3366,7 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             }
 
             //Check PO Plant with Configuration parameter.
-            if ((modeDetail == MODE_DETAIL.IN_PO_PURCHASE)
+            if ((modeDetail == MODE_DETAIL.IN_PO_PURCHASE || modeDetail == MODE_DETAIL.OUT_SLOC_SLOC)
                     && (!(purchaseOrderPO.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant()))) {
                 throw new Exception(resourceMapMsg.getString("msg.poIsDenied"));
             }
@@ -3507,7 +3522,8 @@ private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             }
 
             //Check matnr for PO-POSTO
-            if(!purchaseOrderPOSTO.getPurchaseOrderDetail().getMaterial().equals(purchaseOrderPO.getPurchaseOrderDetail().getMaterial())) {
+            if((modeDetail == MODE_DETAIL.OUT_PULL_STATION)
+                && (!purchaseOrderPOSTO.getPurchaseOrderDetail().getMaterial().equals(purchaseOrderPO.getPurchaseOrderDetail().getMaterial()))) {
                 throw new Exception(resourceMapMsg.getString("msg.postoIsMatnr"));
             }
 
