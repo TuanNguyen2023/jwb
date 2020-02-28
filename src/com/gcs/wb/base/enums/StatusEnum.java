@@ -6,8 +6,10 @@ package com.gcs.wb.base.enums;
 public enum StatusEnum {
     ALL(0),
 
-    POSTED(1);
-
+    POSTED(1),
+    
+    UNFINISH(2);
+    
     public final int VALUE;
 
     StatusEnum(int VALUE) {

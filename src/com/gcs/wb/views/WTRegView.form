@@ -39,11 +39,15 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="pnRegistrationOfVehicle" alignment="0" min="0" max="32767" attributes="1"/>
-                  <Component id="pnPrintControl" alignment="0" pref="970" max="32767" attributes="1"/>
-                  <Component id="spnResult" alignment="0" pref="970" max="32767" attributes="2"/>
-                  <Component id="pnFilter" alignment="0" max="32767" attributes="2"/>
-                  <Component id="pnControl" alignment="1" pref="970" max="32767" attributes="3"/>
+                  <Component id="pnFilter" alignment="1" max="32767" attributes="2"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="pnRegistrationOfVehicle" min="-2" max="-2" attributes="1"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="pnROVRight" max="32767" attributes="0"/>
+                  </Group>
+                  <Component id="btnShowHide" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="spnResult" alignment="0" pref="1111" max="32767" attributes="2"/>
+                  <Component id="pnPrintControl" alignment="0" pref="1111" max="32767" attributes="1"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -51,18 +55,20 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+          <Group type="102" alignment="1" attributes="0">
               <Component id="pnFilter" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="btnShowHide" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="spnResult" min="-2" pref="236" max="-2" attributes="0"/>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="pnPrintControl" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="pnRegistrationOfVehicle" min="-2" pref="418" max="-2" attributes="0"/>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="pnControl" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="123" max="32767" attributes="0"/>
+              <Component id="pnPrintControl" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="pnRegistrationOfVehicle" max="32767" attributes="1"/>
+                  <Component id="pnROVRight" alignment="0" max="32767" attributes="1"/>
+              </Group>
+              <EmptySpace pref="30" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -110,17 +116,19 @@
                           </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="cbxStatus" pref="181" max="32767" attributes="0"/>
-                              <Component id="txtPlateNo" pref="181" max="32767" attributes="1"/>
-                              <Component id="dpDateTo" alignment="0" pref="181" max="32767" attributes="1"/>
+                              <Component id="cbxStatus" pref="201" max="32767" attributes="0"/>
+                              <Component id="txtPlateNo" pref="201" max="32767" attributes="1"/>
+                              <Component id="dpDateTo" alignment="0" pref="201" max="32767" attributes="1"/>
                           </Group>
                           <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
                               <Component id="lblHourFrom" min="-2" max="-2" attributes="0"/>
                               <Component id="lblCreator" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblMode" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="cbxModeSearch" max="32767" attributes="1"/>
                               <Group type="102" attributes="0">
                                   <Component id="cbxHourFrom" min="-2" pref="63" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
@@ -130,9 +138,10 @@
                               </Group>
                               <Component id="txtCreator" max="32767" attributes="1"/>
                           </Group>
+                          <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace min="-2" pref="117" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="194" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -166,6 +175,8 @@
                               <Component id="cbxStatus" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="cbxMaterialType" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="lblMaterialType" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblMode" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="cbxModeSearch" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <Group type="103" alignment="0" groupAlignment="3" attributes="0">
@@ -382,13 +393,32 @@
         <Component class="javax.swing.JComboBox" name="cbxStatus">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="2">
+              <StringArray count="3">
                 <StringItem index="0" value="T&#x1ea5;t c&#x1ea3;"/>
                 <StringItem index="1" value="Ho&#xe0;n t&#x1ea5;t"/>
+                <StringItem index="2" value="Ch&#x1b0;a ho&#xe0;n t&#x1ea5;t"/>
               </StringArray>
             </Property>
             <Property name="name" type="java.lang.String" value="cbxStatus" noResource="true"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblMode">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblMode.text"/>
+            <Property name="name" type="java.lang.String" value="lblMode" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbxModeSearch">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="0"/>
+            </Property>
+            <Property name="actionCommand" type="java.lang.String" resourceKey="cbxModeSearch.actionCommand"/>
+            <Property name="name" type="java.lang.String" value="cbxModeSearch" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxModeSearchActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -429,7 +459,26 @@
         <Property name="name" type="java.lang.String" value="pnPrintControl" noResource="true"/>
       </Properties>
 
-      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" attributes="0">
+                  <Component id="btnReprint" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="btnEdit" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="832" max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="btnReprint" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnEdit" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
       <SubComponents>
         <Component class="javax.swing.JButton" name="btnReprint">
           <Properties>
@@ -438,6 +487,16 @@
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="btnReprint.text"/>
             <Property name="name" type="java.lang.String" value="btnReprint" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnEdit">
+          <Properties>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="com.gcs.wb.views.WTRegView" id="editOfflineRecord" methodName="editOfflineRecord"/>
+            </Property>
+            <Property name="text" type="java.lang.String" resourceKey="btnEdit.text"/>
+            <Property name="enabled" type="boolean" value="false"/>
+            <Property name="name" type="java.lang.String" value="btnEdit" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>
@@ -450,60 +509,368 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
-                  <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="pnROVContent" alignment="0" pref="947" max="32767" attributes="3"/>
-                      <Component id="pnROVTop" alignment="0" min="-2" max="-2" attributes="1"/>
+              <Group type="102" alignment="1" attributes="0">
+                  <EmptySpace pref="14" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="pnControl" alignment="0" pref="464" max="32767" attributes="3"/>
+                      <Component id="pnROVLeft" alignment="1" min="-2" max="-2" attributes="1"/>
                   </Group>
-                  <EmptySpace pref="23" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="pnROVTop" min="-2" pref="24" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="pnROVContent" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Component id="pnROVLeft" min="-2" max="-2" attributes="1"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="pnControl" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="41" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Container class="javax.swing.JPanel" name="pnROVTop">
+        <Container class="javax.swing.JPanel" name="pnROVLeft">
           <Properties>
-            <Property name="name" type="java.lang.String" value="pnROVTop" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="pnROVLeft" noResource="true"/>
           </Properties>
 
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                      <Component id="rbtInput" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Component id="lblNoteN" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblProductionBatchN" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblSoNiemXaN" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblTicketIdN" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblWeightTickerRefN" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblRegisterIdN" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblDriverNameN" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblCMNDN" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblPlateNoN" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblTrailerNoN" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblSlingN" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Component id="rbtInput" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="rbtOutput" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="rbtOutput" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="cbxModeType" min="-2" pref="286" max="-2" attributes="0"/>
-                      <EmptySpace pref="317" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="cbxModeType" alignment="0" pref="299" max="32767" attributes="0"/>
+                          <Component id="txtNoteN" alignment="0" pref="299" max="32767" attributes="1"/>
+                          <Component id="txtProductionBatchN" alignment="0" pref="299" max="32767" attributes="1"/>
+                          <Component id="txtSoNiemXaN" alignment="0" pref="299" max="32767" attributes="1"/>
+                          <Component id="txtTicketIdN" alignment="0" pref="299" max="32767" attributes="1"/>
+                          <Component id="txtCMNDN" alignment="0" pref="299" max="32767" attributes="1"/>
+                          <Component id="txtTrailerNoN" alignment="0" pref="299" max="32767" attributes="1"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="txtPlateNoN" min="-2" pref="90" max="-2" attributes="1"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="lblTonnageN" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="txtTonnageN" min="-2" pref="79" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="lblTonngageUnitN" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="txtWeightTickerRefN" alignment="0" pref="299" max="32767" attributes="1"/>
+                          <Component id="txtDriverNameN" alignment="0" pref="299" max="32767" attributes="1"/>
+                          <Component id="txtRegisterIdN" alignment="0" pref="299" max="32767" attributes="1"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="txtSlingN" min="-2" pref="90" max="-2" attributes="1"/>
+                              <EmptySpace pref="44" max="32767" attributes="0"/>
+                              <Component id="lblPalletN" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="txtPalletN" min="-2" pref="90" max="-2" attributes="1"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="cbxModeType" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="rbtOutput" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="rbtInput" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="lblTicketIdN" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtTicketIdN" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="lblWeightTickerRefN" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtWeightTickerRefN" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="txtRegisterIdN" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblRegisterIdN" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="txtDriverNameN" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblDriverNameN" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="txtCMNDN" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblCMNDN" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="txtPlateNoN" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblTonnageN" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtTonnageN" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblPlateNoN" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblTonngageUnitN" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="txtTrailerNoN" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblTrailerNoN" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="txtSlingN" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblSlingN" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtPalletN" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblPalletN" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="lblSoNiemXaN" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtSoNiemXaN" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="lblProductionBatchN" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtProductionBatchN" alignment="3" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="lblNoteN" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtNoteN" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
+            <Component class="javax.swing.JLabel" name="lblWeightTickerRefN">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblWeightTickerRefN.text"/>
+                <Property name="name" type="java.lang.String" value="lblWeightTickerRefN" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblRegisterIdN">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblRegisterIdN.text"/>
+                <Property name="name" type="java.lang.String" value="lblRegisterIdN" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblDriverNameN">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblDriverNameN.text"/>
+                <Property name="name" type="java.lang.String" value="lblDriverNameN" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblCMNDN">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblCMNDN.text"/>
+                <Property name="name" type="java.lang.String" value="lblCMNDN" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblPlateNoN">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblPlateNoN.text"/>
+                <Property name="name" type="java.lang.String" value="lblPlateNoN" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblTonnageN">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblTonnageN.text"/>
+                <Property name="name" type="java.lang.String" value="lblTonnageN" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblTonngageUnitN">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblTonngageUnitN.text"/>
+                <Property name="name" type="java.lang.String" value="lblTonngageUnitN" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblTrailerNoN">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblTrailerNoN.text"/>
+                <Property name="name" type="java.lang.String" value="lblTrailerNoN" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblSlingN">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblSlingN.text"/>
+                <Property name="name" type="java.lang.String" value="lblSlingN" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblPalletN">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblPalletN.text"/>
+                <Property name="name" type="java.lang.String" value="lblPalletN" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblSoNiemXaN">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblSoNiemXaN.text"/>
+                <Property name="name" type="java.lang.String" value="lblSoNiemXaN" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblProductionBatchN">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblProductionBatchN.text"/>
+                <Property name="name" type="java.lang.String" value="lblProductionBatchN" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblNoteN">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblNoteN.text"/>
+                <Property name="name" type="java.lang.String" value="lblNoteN" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtWeightTickerRefN">
+              <Properties>
+                <Property name="name" type="java.lang.String" value="txtWeightTickerRefN" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtWeightTickerRefNKeyReleased"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtRegisterIdN">
+              <Properties>
+                <Property name="name" type="java.lang.String" value="txtRegisterIdN" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtRegisterIdNKeyReleased"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtDriverNameN">
+              <Properties>
+                <Property name="name" type="java.lang.String" value="txtDriverNameN" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtDriverNameNKeyReleased"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtCMNDN">
+              <Properties>
+                <Property name="name" type="java.lang.String" value="txtCMNDN" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtCMNDNKeyReleased"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtPlateNoN">
+              <Properties>
+                <Property name="name" type="java.lang.String" value="txtPlateNoN" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtPlateNoNFocusLost"/>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtPlateNoNKeyReleased"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JFormattedTextField" name="txtTonnageN">
+              <Properties>
+                <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+                  <Format subtype="0" type="0"/>
+                </Property>
+                <Property name="text" type="java.lang.String" resourceKey="txtTonnageN.text"/>
+                <Property name="name" type="java.lang.String" value="txtTonnageN" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtTrailerNoN">
+              <Properties>
+                <Property name="name" type="java.lang.String" value="txtTrailerNoN" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtTrailerNoNKeyReleased"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JFormattedTextField" name="txtSlingN">
+              <Properties>
+                <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+                  <Format subtype="1" type="0"/>
+                </Property>
+                <Property name="text" type="java.lang.String" resourceKey="txtSlingN.text"/>
+                <Property name="name" type="java.lang.String" value="txtSlingN" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtSlingNKeyReleased"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JFormattedTextField" name="txtPalletN">
+              <Properties>
+                <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+                  <Format subtype="1" type="0"/>
+                </Property>
+                <Property name="text" type="java.lang.String" resourceKey="txtPalletN.text"/>
+                <Property name="name" type="java.lang.String" value="txtPalletN" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtPalletNKeyReleased"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtSoNiemXaN">
+              <Properties>
+                <Property name="name" type="java.lang.String" value="txtSoNiemXaN" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtSoNiemXaNKeyReleased"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtProductionBatchN">
+              <Properties>
+                <Property name="name" type="java.lang.String" value="txtProductionBatchN" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtProductionBatchNKeyReleased"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtNoteN">
+              <Properties>
+                <Property name="name" type="java.lang.String" value="txtNoteN" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtNoteNKeyReleased"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblTicketIdN">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblTicketIdN.text"/>
+                <Property name="name" type="java.lang.String" value="lblTicketIdN" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtTicketIdN">
+              <Properties>
+                <Property name="name" type="java.lang.String" value="txtTicketIdN" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtTicketIdNKeyReleased"/>
+              </Events>
+            </Component>
             <Component class="javax.swing.JRadioButton" name="rbtInput">
               <Properties>
                 <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
@@ -542,818 +909,478 @@
             </Component>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="pnROVContent">
+        <Container class="javax.swing.JPanel" name="pnControl">
           <Properties>
-            <Property name="name" type="java.lang.String" value="pnROVContent" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="pnControl" noResource="true"/>
           </Properties>
 
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <Component id="pnROVLeft" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnNew" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="pnROVRight" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="btnClear" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="btnSave" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="241" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="pnROVRight" alignment="0" max="32767" attributes="1"/>
-                  <Component id="pnROVLeft" alignment="0" max="32767" attributes="1"/>
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="1" pref="1" max="1" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="btnNew" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnClear" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnSave" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Container class="javax.swing.JPanel" name="pnROVLeft">
+            <Component class="javax.swing.JButton" name="btnNew">
               <Properties>
-                <Property name="name" type="java.lang.String" value="pnROVLeft" noResource="true"/>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="com.gcs.wb.views.WTRegView" id="newRecord" methodName="newRecord"/>
+                </Property>
+                <Property name="text" type="java.lang.String" resourceKey="btnNew.text"/>
+                <Property name="name" type="java.lang.String" value="btnNew" noResource="true"/>
               </Properties>
-
-              <Layout>
-                <DimensionLayout dim="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="lblTicketIdN" alignment="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblWeightTickerRefN" alignment="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblRegisterIdN" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblDriverNameN" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblCMNDN" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblPlateNoN" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblTrailerNoN" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblSlingN" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblPalletN" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblSoNiemXaN" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblProductionBatchN" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblNoteN" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="txtTicketIdN" pref="279" max="32767" attributes="1"/>
-                              <Component id="txtNoteN" pref="279" max="32767" attributes="1"/>
-                              <Component id="txtProductionBatchN" alignment="0" pref="279" max="32767" attributes="1"/>
-                              <Component id="txtCMNDN" alignment="0" pref="279" max="32767" attributes="1"/>
-                              <Component id="txtTrailerNoN" alignment="0" pref="279" max="32767" attributes="1"/>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="txtPlateNoN" min="-2" pref="90" max="-2" attributes="1"/>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="lblTonnageN" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Component id="txtTonnageN" min="-2" pref="65" max="-2" attributes="0"/>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Component id="lblTonngageUnitN" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <Component id="txtWeightTickerRefN" alignment="0" pref="279" max="32767" attributes="1"/>
-                              <Component id="txtDriverNameN" alignment="0" pref="279" max="32767" attributes="1"/>
-                              <Component id="txtRegisterIdN" alignment="0" pref="279" max="32767" attributes="1"/>
-                              <Component id="txtSlingN" alignment="0" pref="279" max="32767" attributes="1"/>
-                              <Component id="txtPalletN" alignment="0" pref="279" max="32767" attributes="1"/>
-                              <Component id="txtSoNiemXaN" pref="279" max="32767" attributes="1"/>
-                          </Group>
-                          <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                </DimensionLayout>
-                <DimensionLayout dim="1">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lblTicketIdN" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtTicketIdN" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lblWeightTickerRefN" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtWeightTickerRefN" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txtRegisterIdN" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblRegisterIdN" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txtDriverNameN" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblDriverNameN" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txtCMNDN" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblCMNDN" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txtPlateNoN" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblTonnageN" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtTonnageN" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblTonngageUnitN" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblPlateNoN" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txtTrailerNoN" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblTrailerNoN" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txtSlingN" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblSlingN" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txtPalletN" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblPalletN" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txtSoNiemXaN" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblSoNiemXaN" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txtProductionBatchN" alignment="3" max="32767" attributes="0"/>
-                              <Component id="lblProductionBatchN" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txtNoteN" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblNoteN" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="-2" pref="140" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                </DimensionLayout>
-              </Layout>
-              <SubComponents>
-                <Component class="javax.swing.JLabel" name="lblWeightTickerRefN">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="lblWeightTickerRefN.text"/>
-                    <Property name="name" type="java.lang.String" value="lblWeightTickerRefN" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblRegisterIdN">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="lblRegisterIdN.text"/>
-                    <Property name="name" type="java.lang.String" value="lblRegisterIdN" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblDriverNameN">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="lblDriverNameN.text"/>
-                    <Property name="name" type="java.lang.String" value="lblDriverNameN" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblCMNDN">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="lblCMNDN.text"/>
-                    <Property name="name" type="java.lang.String" value="lblCMNDN" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblPlateNoN">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="lblPlateNoN.text"/>
-                    <Property name="name" type="java.lang.String" value="lblPlateNoN" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblTonnageN">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="lblTonnageN.text"/>
-                    <Property name="name" type="java.lang.String" value="lblTonnageN" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblTonngageUnitN">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="lblTonngageUnitN.text"/>
-                    <Property name="name" type="java.lang.String" value="lblTonngageUnitN" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblTrailerNoN">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="lblTrailerNoN.text"/>
-                    <Property name="name" type="java.lang.String" value="lblTrailerNoN" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblSlingN">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="lblSlingN.text"/>
-                    <Property name="name" type="java.lang.String" value="lblSlingN" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblPalletN">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="lblPalletN.text"/>
-                    <Property name="name" type="java.lang.String" value="lblPalletN" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblSoNiemXaN">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="lblSoNiemXaN.text"/>
-                    <Property name="name" type="java.lang.String" value="lblSoNiemXaN" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblProductionBatchN">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="lblProductionBatchN.text"/>
-                    <Property name="name" type="java.lang.String" value="lblProductionBatchN" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblNoteN">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="lblNoteN.text"/>
-                    <Property name="name" type="java.lang.String" value="lblNoteN" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="txtWeightTickerRefN">
-                  <Properties>
-                    <Property name="name" type="java.lang.String" value="txtWeightTickerRefN" noResource="true"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtWeightTickerRefNKeyReleased"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JTextField" name="txtRegisterIdN">
-                  <Properties>
-                    <Property name="name" type="java.lang.String" value="txtRegisterIdN" noResource="true"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtRegisterIdNKeyReleased"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JTextField" name="txtDriverNameN">
-                  <Properties>
-                    <Property name="name" type="java.lang.String" value="txtDriverNameN" noResource="true"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtDriverNameNKeyReleased"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JTextField" name="txtCMNDN">
-                  <Properties>
-                    <Property name="name" type="java.lang.String" value="txtCMNDN" noResource="true"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtCMNDNKeyReleased"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JTextField" name="txtPlateNoN">
-                  <Properties>
-                    <Property name="name" type="java.lang.String" value="txtPlateNoN" noResource="true"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtPlateNoNFocusLost"/>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtPlateNoNKeyReleased"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JFormattedTextField" name="txtTonnageN">
-                  <Properties>
-                    <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-                      <Format subtype="0" type="0"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" resourceKey="txtTonnageN.text"/>
-                    <Property name="name" type="java.lang.String" value="txtTonnageN" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="txtTrailerNoN">
-                  <Properties>
-                    <Property name="name" type="java.lang.String" value="txtTrailerNoN" noResource="true"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtTrailerNoNKeyReleased"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JFormattedTextField" name="txtSlingN">
-                  <Properties>
-                    <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-                      <Format subtype="1" type="0"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" resourceKey="txtSlingN.text"/>
-                    <Property name="name" type="java.lang.String" value="txtSlingN" noResource="true"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtSlingNKeyReleased"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JFormattedTextField" name="txtPalletN">
-                  <Properties>
-                    <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-                      <Format subtype="1" type="0"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" resourceKey="txtPalletN.text"/>
-                    <Property name="name" type="java.lang.String" value="txtPalletN" noResource="true"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtPalletNKeyReleased"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JTextField" name="txtSoNiemXaN">
-                  <Properties>
-                    <Property name="name" type="java.lang.String" value="txtSoNiemXaN" noResource="true"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtSoNiemXaNKeyReleased"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JTextField" name="txtProductionBatchN">
-                  <Properties>
-                    <Property name="name" type="java.lang.String" value="txtProductionBatchN" noResource="true"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtProductionBatchNKeyReleased"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JTextField" name="txtNoteN">
-                  <Properties>
-                    <Property name="name" type="java.lang.String" value="txtNoteN" noResource="true"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtNoteNKeyReleased"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblTicketIdN">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="lblTicketIdN.text"/>
-                    <Property name="name" type="java.lang.String" value="lblTicketIdN" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="txtTicketIdN">
-                  <Properties>
-                    <Property name="name" type="java.lang.String" value="txtTicketIdN" noResource="true"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtTicketIdNKeyReleased"/>
-                  </Events>
-                </Component>
-              </SubComponents>
-            </Container>
-            <Container class="javax.swing.JPanel" name="pnROVRight">
+            </Component>
+            <Component class="javax.swing.JButton" name="btnClear">
               <Properties>
-                <Property name="name" type="java.lang.String" value="pnROVRight" noResource="true"/>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="com.gcs.wb.views.WTRegView" id="clearForm" methodName="clearForm"/>
+                </Property>
+                <Property name="text" type="java.lang.String" resourceKey="btnClear.text"/>
+                <Property name="name" type="java.lang.String" value="btnClear" noResource="true"/>
               </Properties>
-
-              <Layout>
-                <DimensionLayout dim="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="1" attributes="0">
-                              <Component id="lblSloc2N" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblBatchStockN" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblBatchStock2N" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblSlocN" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblMaterialTypeN" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblPOSTONumN" alignment="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblPONumN" alignment="1" min="-2" max="-2" attributes="0"/>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Group type="103" groupAlignment="1" attributes="0">
-                                      <Component id="lblDONumN" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lblSONumN" alignment="1" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
-                              </Group>
-                              <Component id="lblVendorLoadingN" alignment="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblVendorTransportN" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblWeightN" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblSuppliesIdN" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="cbxSuppliesIdN" pref="271" max="32767" attributes="1"/>
-                              <Component id="cbxVendorTransportN" pref="271" max="32767" attributes="1"/>
-                              <Component id="cbxVendorLoadingN" pref="271" max="32767" attributes="1"/>
-                              <Component id="txtSONumN" alignment="0" pref="271" max="32767" attributes="1"/>
-                              <Component id="txtPONumN" alignment="0" pref="271" max="32767" attributes="1"/>
-                              <Component id="txtPOSTONumN" alignment="0" pref="271" max="32767" attributes="0"/>
-                              <Component id="cbxMaterialTypeN" alignment="0" pref="271" max="32767" attributes="1"/>
-                              <Component id="cbxBatchStock2N" alignment="0" pref="271" max="32767" attributes="1"/>
-                              <Component id="cbxBatchStockN" alignment="0" pref="271" max="32767" attributes="1"/>
-                              <Component id="cbxSloc2N" alignment="0" pref="271" max="32767" attributes="1"/>
-                              <Component id="cbxSlocN" alignment="0" pref="271" max="32767" attributes="1"/>
-                              <Component id="txtWeightN" alignment="0" pref="271" max="32767" attributes="1"/>
-                              <Component id="txtDONumN" alignment="0" pref="271" max="32767" attributes="1"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="btnSOCheckN" min="-2" max="-2" attributes="0"/>
-                              <Component id="btnDOCheckN" min="-2" max="-2" attributes="0"/>
-                              <Component id="btnPOCheckN" min="-2" max="-2" attributes="0"/>
-                              <Component id="btnPOSTOCheckN" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblWeightUnitN" alignment="0" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                </DimensionLayout>
-                <DimensionLayout dim="1">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lblDONumN" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtDONumN" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btnDOCheckN" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lblSONumN" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtSONumN" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btnSOCheckN" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lblPONumN" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtPONumN" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btnPOCheckN" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lblPOSTONumN" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtPOSTONumN" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btnPOSTOCheckN" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="cbxMaterialTypeN" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
-                              <Component id="lblMaterialTypeN" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                                  <Component id="txtWeightN" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lblWeightN" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
-                                  <Component id="lblWeightUnitN" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="cbxSlocN" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
-                              <Component id="lblSlocN" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="cbxSloc2N" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
-                              <Component id="lblSloc2N" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="cbxBatchStockN" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
-                              <Component id="lblBatchStockN" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="cbxBatchStock2N" alignment="3" min="-2" pref="27" max="-2" attributes="0"/>
-                              <Component id="lblBatchStock2N" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="lblVendorLoadingN" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="cbxVendorLoadingN" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="cbxVendorTransportN" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
-                              <Component id="lblVendorTransportN" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="cbxSuppliesIdN" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
-                              <Component id="lblSuppliesIdN" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace pref="39" max="32767" attributes="0"/>
-                      </Group>
-                  </Group>
-                </DimensionLayout>
-              </Layout>
-              <SubComponents>
-                <Component class="javax.swing.JLabel" name="lblMaterialTypeN">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="lblMaterialTypeN.text"/>
-                    <Property name="name" type="java.lang.String" value="lblMaterialTypeN" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblWeightN">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="lblWeightN.text"/>
-                    <Property name="name" type="java.lang.String" value="lblWeightN" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblWeightUnitN">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="lblWeightUnitN.text"/>
-                    <Property name="name" type="java.lang.String" value="lblWeightUnitN" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblSlocN">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="lblSlocN.text"/>
-                    <Property name="name" type="java.lang.String" value="lblSlocN" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblSloc2N">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="lblSloc2N.text"/>
-                    <Property name="name" type="java.lang.String" value="lblSloc2N" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblBatchStockN">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="lblBatchStockN.text"/>
-                    <Property name="name" type="java.lang.String" value="lblBatchStockN" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblBatchStock2N">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="lblBatchStock2N.text"/>
-                    <Property name="name" type="java.lang.String" value="lblBatchStock2N" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblDONumN">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="lblDONumN.text"/>
-                    <Property name="name" type="java.lang.String" value="lblDONumN" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblSONumN">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="lblSONumN.text"/>
-                    <Property name="name" type="java.lang.String" value="lblSONumN" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblPONumN">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="lblPONumN.text"/>
-                    <Property name="name" type="java.lang.String" value="lblPONumN" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblPOSTONumN">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="lblPOSTONumN.text"/>
-                    <Property name="name" type="java.lang.String" value="lblPOSTONumN" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblVendorLoadingN">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="lblVendorLoadingN.text"/>
-                    <Property name="name" type="java.lang.String" value="lblVendorLoadingN" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblVendorTransportN">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="lblVendorTransportN.text"/>
-                    <Property name="name" type="java.lang.String" value="lblVendorTransportN" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JLabel" name="lblSuppliesIdN">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="lblSuppliesIdN.text"/>
-                    <Property name="name" type="java.lang.String" value="lblSuppliesIdN" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="cbxMaterialTypeN">
-                  <Properties>
-                    <Property name="editable" type="boolean" value="true"/>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="0"/>
-                    </Property>
-                    <Property name="name" type="java.lang.String" value="cbxMaterialTypeN" noResource="true"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxMaterialTypeNActionPerformed"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JFormattedTextField" name="txtWeightN">
-                  <Properties>
-                    <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-                      <Format subtype="0" type="0"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" resourceKey="txtWeightN.text"/>
-                    <Property name="name" type="java.lang.String" value="txtWeightN" noResource="true"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtWeightNKeyReleased"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="cbxSlocN">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="0"/>
-                    </Property>
-                    <Property name="name" type="java.lang.String" value="cbxSlocN" noResource="true"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxSlocNActionPerformed"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="cbxSloc2N">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="0"/>
-                    </Property>
-                    <Property name="name" type="java.lang.String" value="cbxSloc2N" noResource="true"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxSloc2NActionPerformed"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="cbxBatchStockN">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="0"/>
-                    </Property>
-                    <Property name="name" type="java.lang.String" value="cbxBatchStockN" noResource="true"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxBatchStockNActionPerformed"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="cbxBatchStock2N">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="0"/>
-                    </Property>
-                    <Property name="name" type="java.lang.String" value="cbxBatchStock2N" noResource="true"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxBatchStock2NActionPerformed"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JTextField" name="txtDONumN">
-                  <Properties>
-                    <Property name="name" type="java.lang.String" value="txtDONumN" noResource="true"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtDONumNKeyReleased"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JButton" name="btnDOCheckN">
-                  <Properties>
-                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                      <action class="com.gcs.wb.views.WTRegView" id="checkDO" methodName="checkDO"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" resourceKey="btnDOCheckN.text"/>
-                    <Property name="name" type="java.lang.String" value="btnDOCheckN" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="txtSONumN">
-                  <Properties>
-                    <Property name="name" type="java.lang.String" value="txtSONumN" noResource="true"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtSONumNKeyReleased"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JButton" name="btnSOCheckN">
-                  <Properties>
-                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                      <action class="com.gcs.wb.views.WTRegView" id="checkSO" methodName="checkSO"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" resourceKey="btnSOCheckN.text"/>
-                    <Property name="name" type="java.lang.String" value="btnSOCheckN" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="txtPONumN">
-                  <Properties>
-                    <Property name="name" type="java.lang.String" value="txtPONumN" noResource="true"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtPONumNKeyReleased"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JButton" name="btnPOCheckN">
-                  <Properties>
-                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                      <action class="com.gcs.wb.views.WTRegView" id="checkPO" methodName="checkPO"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" resourceKey="btnPOCheckN.text"/>
-                    <Property name="name" type="java.lang.String" value="btnPOCheckN" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JTextField" name="txtPOSTONumN">
-                  <Properties>
-                    <Property name="name" type="java.lang.String" value="txtPOSTONumN" noResource="true"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtPOSTONumNKeyReleased"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JButton" name="btnPOSTOCheckN">
-                  <Properties>
-                    <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-                      <action class="com.gcs.wb.views.WTRegView" id="checkPOSTO" methodName="checkPOSTO"/>
-                    </Property>
-                    <Property name="text" type="java.lang.String" resourceKey="btnPOSTOCheckN.text"/>
-                    <Property name="name" type="java.lang.String" value="btnPOSTOCheckN" noResource="true"/>
-                  </Properties>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="cbxVendorLoadingN">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="0"/>
-                    </Property>
-                    <Property name="name" type="java.lang.String" value="cbxVendorLoadingN" noResource="true"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxVendorLoadingNActionPerformed"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="cbxVendorTransportN">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="0"/>
-                    </Property>
-                    <Property name="name" type="java.lang.String" value="cbxVendorTransportN" noResource="true"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxVendorTransportNActionPerformed"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JComboBox" name="cbxSuppliesIdN">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="0"/>
-                    </Property>
-                    <Property name="name" type="java.lang.String" value="cbxSuppliesIdN" noResource="true"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxSuppliesIdNActionPerformed"/>
-                  </Events>
-                </Component>
-              </SubComponents>
-            </Container>
+            </Component>
+            <Component class="javax.swing.JButton" name="btnSave">
+              <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="com.gcs.wb.views.WTRegView" id="saveRecord" methodName="saveRecord"/>
+                </Property>
+                <Property name="text" type="java.lang.String" resourceKey="btnSave.text"/>
+                <Property name="name" type="java.lang.String" value="btnSave" noResource="true"/>
+              </Properties>
+            </Component>
           </SubComponents>
         </Container>
       </SubComponents>
     </Container>
-    <Container class="javax.swing.JPanel" name="pnControl">
+    <Component class="javax.swing.JToggleButton" name="btnShowHide">
       <Properties>
-        <Property name="name" type="java.lang.String" value="pnControl" noResource="true"/>
+        <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+          <action class="com.gcs.wb.views.WTRegView" id="showHideSearch" methodName="showHideSearch"/>
+        </Property>
+        <Property name="text" type="java.lang.String" resourceKey="btnShowHide.text"/>
+        <Property name="name" type="java.lang.String" value="btnShowHide" noResource="true"/>
+      </Properties>
+    </Component>
+    <Container class="javax.swing.JPanel" name="pnROVRight">
+      <Properties>
+        <Property name="name" type="java.lang.String" value="pnROVRight" noResource="true"/>
       </Properties>
 
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
-                  <Component id="btnNew" min="-2" max="-2" attributes="0"/>
+              <Group type="102" alignment="0" attributes="0">
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Component id="lblSloc2N" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblBatchStockN" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblBatchStock2N" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblSlocN" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblMaterialTypeN" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblPOSTONumN" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblPONumN" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="lblDONumN" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblSONumN" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblWeightTicketNo" alignment="1" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
+                      </Group>
+                      <Component id="lblVendorLoadingN" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblVendorTransportN" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblWeightN" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblSuppliesIdN" min="-2" max="-2" attributes="0"/>
+                  </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="btnClear" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="btnSave" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="102" max="-2" attributes="0"/>
-                  <Component id="lblWeightTicketNo" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="txtWeightTicketNo" min="-2" pref="145" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="391" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="cbxSuppliesIdN" pref="292" max="32767" attributes="1"/>
+                      <Component id="cbxVendorTransportN" pref="292" max="32767" attributes="1"/>
+                      <Component id="cbxVendorLoadingN" pref="292" max="32767" attributes="1"/>
+                      <Component id="txtSONumN" alignment="0" pref="292" max="32767" attributes="1"/>
+                      <Component id="txtPONumN" alignment="0" pref="292" max="32767" attributes="1"/>
+                      <Component id="txtPOSTONumN" alignment="0" pref="292" max="32767" attributes="0"/>
+                      <Component id="cbxMaterialTypeN" alignment="0" pref="292" max="32767" attributes="1"/>
+                      <Component id="cbxBatchStock2N" alignment="0" pref="292" max="32767" attributes="1"/>
+                      <Component id="cbxBatchStockN" alignment="0" pref="292" max="32767" attributes="1"/>
+                      <Component id="cbxSloc2N" alignment="0" pref="292" max="32767" attributes="1"/>
+                      <Component id="cbxSlocN" alignment="0" pref="292" max="32767" attributes="1"/>
+                      <Component id="txtWeightN" alignment="0" pref="292" max="32767" attributes="1"/>
+                      <Component id="txtDONumN" alignment="0" pref="292" max="32767" attributes="1"/>
+                      <Component id="txtWeightTicketNo" alignment="0" pref="292" max="32767" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="btnSOCheckN" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnDOCheckN" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnPOCheckN" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnPOSTOCheckN" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblWeightUnitN" alignment="0" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" pref="155" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
-                  <EmptySpace min="1" pref="1" max="1" attributes="0"/>
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="btnNew" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnClear" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnSave" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblWeightTicketNo" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="txtWeightTicketNo" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
+                      <Component id="lblWeightTicketNo" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblDONumN" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtDONumN" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnDOCheckN" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblSONumN" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtSONumN" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnSOCheckN" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblPONumN" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtPONumN" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnPOCheckN" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblPOSTONumN" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtPOSTONumN" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnPOSTOCheckN" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="cbxMaterialTypeN" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
+                      <Component id="lblMaterialTypeN" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                          <Component id="txtWeightN" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblWeightN" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
+                          <Component id="lblWeightUnitN" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="cbxSlocN" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
+                      <Component id="lblSlocN" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="cbxSloc2N" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
+                      <Component id="lblSloc2N" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="cbxBatchStockN" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
+                      <Component id="lblBatchStockN" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="cbxBatchStock2N" alignment="3" min="-2" pref="27" max="-2" attributes="0"/>
+                      <Component id="lblBatchStock2N" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblVendorLoadingN" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="cbxVendorLoadingN" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="cbxVendorTransportN" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
+                      <Component id="lblVendorTransportN" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="cbxSuppliesIdN" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
+                      <Component id="lblSuppliesIdN" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JButton" name="btnNew">
+        <Component class="javax.swing.JLabel" name="lblMaterialTypeN">
           <Properties>
-            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="com.gcs.wb.views.WTRegView" id="newRecord" methodName="newRecord"/>
-            </Property>
-            <Property name="text" type="java.lang.String" resourceKey="btnNew.text"/>
-            <Property name="name" type="java.lang.String" value="btnNew" noResource="true"/>
+            <Property name="text" type="java.lang.String" resourceKey="lblMaterialTypeN.text"/>
+            <Property name="name" type="java.lang.String" value="lblMaterialTypeN" noResource="true"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="btnClear">
+        <Component class="javax.swing.JLabel" name="lblWeightN">
           <Properties>
-            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="com.gcs.wb.views.WTRegView" id="clearForm" methodName="clearForm"/>
-            </Property>
-            <Property name="text" type="java.lang.String" resourceKey="btnClear.text"/>
-            <Property name="name" type="java.lang.String" value="btnClear" noResource="true"/>
+            <Property name="text" type="java.lang.String" resourceKey="lblWeightN.text"/>
+            <Property name="name" type="java.lang.String" value="lblWeightN" noResource="true"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="btnSave">
+        <Component class="javax.swing.JLabel" name="lblWeightUnitN">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblWeightUnitN.text"/>
+            <Property name="name" type="java.lang.String" value="lblWeightUnitN" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblSlocN">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblSlocN.text"/>
+            <Property name="name" type="java.lang.String" value="lblSlocN" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblSloc2N">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblSloc2N.text"/>
+            <Property name="name" type="java.lang.String" value="lblSloc2N" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblBatchStockN">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblBatchStockN.text"/>
+            <Property name="name" type="java.lang.String" value="lblBatchStockN" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblBatchStock2N">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblBatchStock2N.text"/>
+            <Property name="name" type="java.lang.String" value="lblBatchStock2N" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblDONumN">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblDONumN.text"/>
+            <Property name="name" type="java.lang.String" value="lblDONumN" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblSONumN">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblSONumN.text"/>
+            <Property name="name" type="java.lang.String" value="lblSONumN" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblPONumN">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblPONumN.text"/>
+            <Property name="name" type="java.lang.String" value="lblPONumN" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblPOSTONumN">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblPOSTONumN.text"/>
+            <Property name="name" type="java.lang.String" value="lblPOSTONumN" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblVendorLoadingN">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblVendorLoadingN.text"/>
+            <Property name="name" type="java.lang.String" value="lblVendorLoadingN" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblVendorTransportN">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblVendorTransportN.text"/>
+            <Property name="name" type="java.lang.String" value="lblVendorTransportN" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblSuppliesIdN">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblSuppliesIdN.text"/>
+            <Property name="name" type="java.lang.String" value="lblSuppliesIdN" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbxMaterialTypeN">
+          <Properties>
+            <Property name="editable" type="boolean" value="true"/>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="0"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="cbxMaterialTypeN" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxMaterialTypeNActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JFormattedTextField" name="txtWeightN">
+          <Properties>
+            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+              <Format subtype="0" type="0"/>
+            </Property>
+            <Property name="text" type="java.lang.String" resourceKey="txtWeightN.text"/>
+            <Property name="name" type="java.lang.String" value="txtWeightN" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtWeightNKeyReleased"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbxSlocN">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="0"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="cbxSlocN" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxSlocNActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbxSloc2N">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="0"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="cbxSloc2N" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxSloc2NActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbxBatchStockN">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="0"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="cbxBatchStockN" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxBatchStockNActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbxBatchStock2N">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="0"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="cbxBatchStock2N" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxBatchStock2NActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtDONumN">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="txtDONumN" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtDONumNKeyReleased"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnDOCheckN">
           <Properties>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
-              <action class="com.gcs.wb.views.WTRegView" id="saveRecord" methodName="saveRecord"/>
+              <action class="com.gcs.wb.views.WTRegView" id="checkDO" methodName="checkDO"/>
             </Property>
-            <Property name="text" type="java.lang.String" resourceKey="btnSave.text"/>
-            <Property name="name" type="java.lang.String" value="btnSave" noResource="true"/>
+            <Property name="text" type="java.lang.String" resourceKey="btnDOCheckN.text"/>
+            <Property name="name" type="java.lang.String" value="btnDOCheckN" noResource="true"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtSONumN">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="txtSONumN" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtSONumNKeyReleased"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnSOCheckN">
+          <Properties>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="com.gcs.wb.views.WTRegView" id="checkSO" methodName="checkSO"/>
+            </Property>
+            <Property name="text" type="java.lang.String" resourceKey="btnSOCheckN.text"/>
+            <Property name="name" type="java.lang.String" value="btnSOCheckN" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtPONumN">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="txtPONumN" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtPONumNKeyReleased"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnPOCheckN">
+          <Properties>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="com.gcs.wb.views.WTRegView" id="checkPO" methodName="checkPO"/>
+            </Property>
+            <Property name="text" type="java.lang.String" resourceKey="btnPOCheckN.text"/>
+            <Property name="name" type="java.lang.String" value="btnPOCheckN" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtPOSTONumN">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="txtPOSTONumN" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtPOSTONumNKeyReleased"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnPOSTOCheckN">
+          <Properties>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="com.gcs.wb.views.WTRegView" id="checkPOSTO" methodName="checkPOSTO"/>
+            </Property>
+            <Property name="text" type="java.lang.String" resourceKey="btnPOSTOCheckN.text"/>
+            <Property name="name" type="java.lang.String" value="btnPOSTOCheckN" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbxVendorLoadingN">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="0"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="cbxVendorLoadingN" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxVendorLoadingNActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbxVendorTransportN">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="0"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="cbxVendorTransportN" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxVendorTransportNActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbxSuppliesIdN">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="0"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="cbxSuppliesIdN" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxSuppliesIdNActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="lblWeightTicketNo">
           <Properties>

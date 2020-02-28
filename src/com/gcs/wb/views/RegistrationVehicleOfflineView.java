@@ -10,6 +10,7 @@ import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.base.constant.Constants.WeighingProcess.MODE;
 import com.gcs.wb.base.constant.Constants.WeighingProcess.MODE_DETAIL;
 import com.gcs.wb.base.enums.MaterialEnum;
+import com.gcs.wb.base.enums.ModeEnum;
 import com.gcs.wb.base.enums.StatusEnum;
 import com.gcs.wb.base.util.StringUtil;
 import com.gcs.wb.base.validator.DateFromToValidator;
@@ -28,6 +29,7 @@ import org.hibersap.HibersapException;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.Task;
+import javax.swing.event.ListSelectionEvent;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -57,6 +59,7 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
     private boolean isValidDO = false;
     private boolean isValidPO = false;
     private boolean isValidPOSTO = false;
+    private boolean isValidSO = false;
     private boolean isValidWeight = false;
     private boolean isValidVendorLoad = false;
     private boolean isValidVendorTransport = false;
@@ -80,7 +83,9 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
     MaterialInternalRepository materialInternalRepository = new MaterialInternalRepository();
     WeightTicketController weightTicketController = new WeightTicketController();
     MaterialGroupRepository materialGroupRepository = new MaterialGroupRepository();
-    List<String> cbxSlocs = new ArrayList<String>();
+    List<String> cbxSlocs = new ArrayList<>();
+    private boolean isShow = true;
+    private String modeSearch = null;
 
     public RegistrationVehicleOfflineView() {
         newWeightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
@@ -92,11 +97,24 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
         dpDateTo.setFormats(Constants.Date.FORMAT);
         initComboboxModel();
         initComboboxRenderer();
+        initTableEvent();
+        btnEdit.setEnabled(false);
 
         SearchWeightTicketTask t = new SearchWeightTicketTask(WeighBridgeApp.getApplication());
         t.execute();
 
         cbxHourTo.setSelectedIndex(23);
+    }
+
+    private void initTableEvent() {
+        tabResults.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
+            selectedWeightTicket = weightTicketList.get(tabResults.convertRowIndexToModel(tabResults.getSelectedRow()));
+            if (selectedWeightTicket != null && selectedWeightTicket.getOfflineMode()) {
+                btnEdit.setEnabled(true);
+            } else {
+                btnEdit.setEnabled(false);
+            }
+        });
     }
 
     private void initComboboxRenderer() {
@@ -110,6 +128,20 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
                     WeighingMode mod = (WeighingMode) value;
                     setText(mod.getTitle());
                     setToolTipText(mod.getTitle());
+                }
+                return this;
+            }
+        });
+
+        cbxModeSearch.setRenderer(new DefaultListCellRenderer() {
+
+            @Override
+            public Component getListCellRendererComponent(
+                    JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof ModeEnum) {
+                    ModeEnum mod = (ModeEnum) value;
+                    setText(mod.getName());
                 }
                 return this;
             }
@@ -212,6 +244,7 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
         DefaultComboBoxModel vendor2Model = (DefaultComboBoxModel) SerializationUtils.clone(vendorModel);
         cbxVendorLoadingN.setModel(vendorModel);
         cbxVendorTransportN.setModel(vendor2Model);
+        cbxModeSearch.setModel(new DefaultComboBoxModel<>(ModeEnum.values()));
     }
 
     /**
@@ -245,16 +278,14 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
         btnFind = new javax.swing.JButton();
         lblStatus = new javax.swing.JLabel();
         cbxStatus = new javax.swing.JComboBox();
+        lblMode = new javax.swing.JLabel();
+        cbxModeSearch = new javax.swing.JComboBox();
         spnResult = new javax.swing.JScrollPane();
         tabResults = new org.jdesktop.swingx.JXTable();
         pnPrintControl = new javax.swing.JPanel();
         btnReprint = new javax.swing.JButton();
+        btnEdit = new javax.swing.JButton();
         pnRegistrationOfVehicle = new javax.swing.JPanel();
-        pnROVTop = new javax.swing.JPanel();
-        rbtInput = new javax.swing.JRadioButton();
-        rbtOutput = new javax.swing.JRadioButton();
-        cbxModeType = new javax.swing.JComboBox();
-        pnROVContent = new javax.swing.JPanel();
         pnROVLeft = new javax.swing.JPanel();
         lblWeightTickerRefN = new javax.swing.JLabel();
         lblRegisterIdN = new javax.swing.JLabel();
@@ -283,6 +314,14 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
         txtNoteN = new javax.swing.JTextField();
         lblTicketIdN = new javax.swing.JLabel();
         txtTicketIdN = new javax.swing.JTextField();
+        rbtInput = new javax.swing.JRadioButton();
+        rbtOutput = new javax.swing.JRadioButton();
+        cbxModeType = new javax.swing.JComboBox();
+        pnControl = new javax.swing.JPanel();
+        btnNew = new javax.swing.JButton();
+        btnClear = new javax.swing.JButton();
+        btnSave = new javax.swing.JButton();
+        btnShowHide = new javax.swing.JToggleButton();
         pnROVRight = new javax.swing.JPanel();
         lblMaterialTypeN = new javax.swing.JLabel();
         lblWeightN = new javax.swing.JLabel();
@@ -315,10 +354,6 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
         cbxVendorLoadingN = new javax.swing.JComboBox();
         cbxVendorTransportN = new javax.swing.JComboBox();
         cbxSuppliesIdN = new javax.swing.JComboBox();
-        pnControl = new javax.swing.JPanel();
-        btnNew = new javax.swing.JButton();
-        btnClear = new javax.swing.JButton();
-        btnSave = new javax.swing.JButton();
         lblWeightTicketNo = new javax.swing.JLabel();
         txtWeightTicketNo = new javax.swing.JTextField();
 
@@ -435,8 +470,17 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
         lblStatus.setText(resourceMap.getString("lblStatus.text")); // NOI18N
         lblStatus.setName("lblStatus"); // NOI18N
 
-        cbxStatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tất cả", "Hoàn tất" }));
+        cbxStatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tất cả", "Hoàn tất", "Chưa hoàn tất" }));
         cbxStatus.setName("cbxStatus"); // NOI18N
+
+        lblMode.setName("lblMode"); // NOI18N
+
+        cbxModeSearch.setName("cbxModeSearch"); // NOI18N
+        cbxModeSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxModeSearchActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnFilterLayout = new javax.swing.GroupLayout(pnFilter);
         pnFilter.setLayout(pnFilterLayout);
@@ -463,23 +507,26 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
                             .addComponent(lblStatus))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbxStatus, 0, 181, Short.MAX_VALUE)
-                            .addComponent(txtPlateNo, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
-                            .addComponent(dpDateTo, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE))
+                            .addComponent(cbxStatus, 0, 231, Short.MAX_VALUE)
+                            .addComponent(txtPlateNo, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
+                            .addComponent(dpDateTo, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
                         .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(lblHourFrom)
-                            .addComponent(lblCreator))
+                            .addComponent(lblCreator)
+                            .addComponent(lblMode))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(cbxModeSearch, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(pnFilterLayout.createSequentialGroup()
                                 .addComponent(cbxHourFrom, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(12, 12, 12)
                                 .addComponent(lblHourTo)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(cbxHourTo, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(txtCreator))))
-                .addGap(117, 117, 117))
+                            .addComponent(txtCreator))
+                        .addGap(14, 14, 14)))
+                .addGap(194, 194, 194))
         );
         pnFilterLayout.setVerticalGroup(
             pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -507,7 +554,9 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
                             .addComponent(lblStatus)
                             .addComponent(cbxStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(cbxMaterialType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblMaterialType)))
+                            .addComponent(lblMaterialType)
+                            .addComponent(lblMode)
+                            .addComponent(cbxModeSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(dpDateTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(lblDateTo)))
@@ -536,67 +585,33 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
         spnResult.setViewportView(tabResults);
 
         pnPrintControl.setName("pnPrintControl"); // NOI18N
-        pnPrintControl.setLayout(new javax.swing.BoxLayout(pnPrintControl, javax.swing.BoxLayout.LINE_AXIS));
 
         btnReprint.setAction(actionMap.get("reprintRecord")); // NOI18N
         btnReprint.setText(resourceMap.getString("btnReprint.text")); // NOI18N
         btnReprint.setName("btnReprint"); // NOI18N
-        pnPrintControl.add(btnReprint);
+
+        btnEdit.setAction(actionMap.get("editOfflineRecord")); // NOI18N
+        btnEdit.setText(resourceMap.getString("btnEdit.text")); // NOI18N
+        btnEdit.setName("btnEdit"); // NOI18N
+
+        javax.swing.GroupLayout pnPrintControlLayout = new javax.swing.GroupLayout(pnPrintControl);
+        pnPrintControl.setLayout(pnPrintControlLayout);
+        pnPrintControlLayout.setHorizontalGroup(
+            pnPrintControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnPrintControlLayout.createSequentialGroup()
+                .addComponent(btnReprint)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnEdit)
+                .addGap(832, 832, 832))
+        );
+        pnPrintControlLayout.setVerticalGroup(
+            pnPrintControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnPrintControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(btnReprint)
+                .addComponent(btnEdit))
+        );
 
         pnRegistrationOfVehicle.setName("pnRegistrationOfVehicle"); // NOI18N
-
-        pnROVTop.setName("pnROVTop"); // NOI18N
-
-        rbtRegCatGroup.add(rbtInput);
-        rbtInput.setText(resourceMap.getString("rbtInput.text")); // NOI18N
-        rbtInput.setName("rbtInput"); // NOI18N
-        rbtInput.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rbtInputActionPerformed(evt);
-            }
-        });
-
-        rbtRegCatGroup.add(rbtOutput);
-        rbtOutput.setSelected(true);
-        rbtOutput.setText(resourceMap.getString("rbtOutput.text")); // NOI18N
-        rbtOutput.setName("rbtOutput"); // NOI18N
-        rbtOutput.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rbtOutputActionPerformed(evt);
-            }
-        });
-
-        cbxModeType.setName("cbxModeType"); // NOI18N
-        cbxModeType.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbxModeTypeActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout pnROVTopLayout = new javax.swing.GroupLayout(pnROVTop);
-        pnROVTop.setLayout(pnROVTopLayout);
-        pnROVTopLayout.setHorizontalGroup(
-            pnROVTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnROVTopLayout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addComponent(rbtInput)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(rbtOutput)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cbxModeType, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(317, Short.MAX_VALUE))
-        );
-        pnROVTopLayout.setVerticalGroup(
-            pnROVTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnROVTopLayout.createSequentialGroup()
-                .addGroup(pnROVTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbxModeType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(rbtOutput)
-                    .addComponent(rbtInput))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        pnROVContent.setName("pnROVContent"); // NOI18N
 
         pnROVLeft.setName("pnROVLeft"); // NOI18N
 
@@ -684,6 +699,11 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
         txtTonnageN.setName("txtTonnageN"); // NOI18N
 
         txtTrailerNoN.setName("txtTrailerNoN"); // NOI18N
+        txtTrailerNoN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtTrailerNoNKeyReleased(evt);
+            }
+        });
 
         txtSlingN.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
         txtSlingN.setText(resourceMap.getString("txtSlingN.text")); // NOI18N
@@ -704,10 +724,25 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
         });
 
         txtSoNiemXaN.setName("txtSoNiemXaN"); // NOI18N
+        txtSoNiemXaN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtSoNiemXaNKeyReleased(evt);
+            }
+        });
 
         txtProductionBatchN.setName("txtProductionBatchN"); // NOI18N
+        txtProductionBatchN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtProductionBatchNKeyReleased(evt);
+            }
+        });
 
         txtNoteN.setName("txtNoteN"); // NOI18N
+        txtNoteN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtNoteNKeyReleased(evt);
+            }
+        });
 
         lblTicketIdN.setText(resourceMap.getString("lblTicketIdN.text")); // NOI18N
         lblTicketIdN.setName("lblTicketIdN"); // NOI18N
@@ -719,52 +754,94 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
             }
         });
 
+        rbtRegCatGroup.add(rbtInput);
+        rbtInput.setText(resourceMap.getString("rbtInput.text")); // NOI18N
+        rbtInput.setName("rbtInput"); // NOI18N
+        rbtInput.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbtInputActionPerformed(evt);
+            }
+        });
+
+        rbtRegCatGroup.add(rbtOutput);
+        rbtOutput.setSelected(true);
+        rbtOutput.setText(resourceMap.getString("rbtOutput.text")); // NOI18N
+        rbtOutput.setName("rbtOutput"); // NOI18N
+        rbtOutput.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbtOutputActionPerformed(evt);
+            }
+        });
+
+        cbxModeType.setName("cbxModeType"); // NOI18N
+        cbxModeType.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxModeTypeActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnROVLeftLayout = new javax.swing.GroupLayout(pnROVLeft);
         pnROVLeft.setLayout(pnROVLeftLayout);
         pnROVLeftLayout.setHorizontalGroup(
             pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnROVLeftLayout.createSequentialGroup()
-                .addGap(32, 32, 32)
-                .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblTicketIdN)
-                    .addComponent(lblWeightTickerRefN)
-                    .addComponent(lblRegisterIdN)
-                    .addComponent(lblDriverNameN)
-                    .addComponent(lblCMNDN)
-                    .addComponent(lblPlateNoN)
-                    .addComponent(lblTrailerNoN)
-                    .addComponent(lblSlingN)
-                    .addComponent(lblPalletN)
-                    .addComponent(lblSoNiemXaN)
-                    .addComponent(lblProductionBatchN)
-                    .addComponent(lblNoteN))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(19, 19, 19)
                 .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtTicketIdN, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
-                    .addComponent(txtNoteN, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
-                    .addComponent(txtProductionBatchN, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
-                    .addComponent(txtCMNDN, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
-                    .addComponent(txtTrailerNoN, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
                     .addGroup(pnROVLeftLayout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblNoteN)
+                            .addComponent(lblProductionBatchN)
+                            .addComponent(lblSoNiemXaN)
+                            .addComponent(lblTicketIdN)
+                            .addComponent(lblWeightTickerRefN)
+                            .addComponent(lblRegisterIdN)
+                            .addComponent(lblDriverNameN)
+                            .addComponent(lblCMNDN)
+                            .addComponent(lblPlateNoN)
+                            .addComponent(lblTrailerNoN)
+                            .addComponent(lblSlingN)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnROVLeftLayout.createSequentialGroup()
+                        .addComponent(rbtInput)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(rbtOutput)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(cbxModeType, javax.swing.GroupLayout.Alignment.LEADING, 0, 299, Short.MAX_VALUE)
+                    .addComponent(txtNoteN, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
+                    .addComponent(txtProductionBatchN, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
+                    .addComponent(txtSoNiemXaN, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
+                    .addComponent(txtTicketIdN, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
+                    .addComponent(txtCMNDN, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
+                    .addComponent(txtTrailerNoN, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnROVLeftLayout.createSequentialGroup()
                         .addComponent(txtPlateNoN, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(lblTonnageN)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtTonnageN, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtTonnageN, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblTonngageUnitN))
-                    .addComponent(txtWeightTickerRefN, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
-                    .addComponent(txtDriverNameN, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
-                    .addComponent(txtRegisterIdN, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
-                    .addComponent(txtSlingN, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
-                    .addComponent(txtPalletN, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
-                    .addComponent(txtSoNiemXaN, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE))
-                .addGap(35, 35, 35))
+                    .addComponent(txtWeightTickerRefN, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
+                    .addComponent(txtDriverNameN, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
+                    .addComponent(txtRegisterIdN, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnROVLeftLayout.createSequentialGroup()
+                        .addComponent(txtSlingN, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                        .addComponent(lblPalletN)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtPalletN, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(36, 36, 36))
         );
         pnROVLeftLayout.setVerticalGroup(
             pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnROVLeftLayout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbxModeType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(rbtOutput)
+                    .addComponent(rbtInput))
+                .addGap(15, 15, 15)
                 .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblTicketIdN)
                     .addComponent(txtTicketIdN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -789,8 +866,8 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
                     .addComponent(txtPlateNoN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblTonnageN)
                     .addComponent(txtTonnageN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblTonngageUnitN)
-                    .addComponent(lblPlateNoN))
+                    .addComponent(lblPlateNoN)
+                    .addComponent(lblTonngageUnitN))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtTrailerNoN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -798,25 +875,84 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtSlingN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblSlingN))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblSlingN)
                     .addComponent(txtPalletN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblPalletN))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtSoNiemXaN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblSoNiemXaN))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(lblSoNiemXaN)
+                    .addComponent(txtSoNiemXaN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtProductionBatchN)
-                    .addComponent(lblProductionBatchN))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(lblProductionBatchN)
+                    .addComponent(txtProductionBatchN))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtNoteN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblNoteN))
-                .addGap(143, 143, 143))
+                    .addComponent(lblNoteN)
+                    .addComponent(txtNoteN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(41, 41, 41))
         );
+
+        pnControl.setName("pnControl"); // NOI18N
+
+        btnNew.setAction(actionMap.get("newRecord")); // NOI18N
+        btnNew.setText(resourceMap.getString("btnNew.text")); // NOI18N
+        btnNew.setName("btnNew"); // NOI18N
+
+        btnClear.setAction(actionMap.get("clearForm")); // NOI18N
+        btnClear.setText(resourceMap.getString("btnClear.text")); // NOI18N
+        btnClear.setName("btnClear"); // NOI18N
+
+        btnSave.setAction(actionMap.get("saveRecord")); // NOI18N
+        btnSave.setText(resourceMap.getString("btnSave.text")); // NOI18N
+        btnSave.setName("btnSave"); // NOI18N
+
+        javax.swing.GroupLayout pnControlLayout = new javax.swing.GroupLayout(pnControl);
+        pnControl.setLayout(pnControlLayout);
+        pnControlLayout.setHorizontalGroup(
+            pnControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnControlLayout.createSequentialGroup()
+                .addComponent(btnNew)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnClear)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnSave)
+                .addGap(241, 241, 241))
+        );
+        pnControlLayout.setVerticalGroup(
+            pnControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnControlLayout.createSequentialGroup()
+                .addGap(1, 1, 1)
+                .addGroup(pnControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnNew)
+                    .addComponent(btnClear)
+                    .addComponent(btnSave)))
+        );
+
+        javax.swing.GroupLayout pnRegistrationOfVehicleLayout = new javax.swing.GroupLayout(pnRegistrationOfVehicle);
+        pnRegistrationOfVehicle.setLayout(pnRegistrationOfVehicleLayout);
+        pnRegistrationOfVehicleLayout.setHorizontalGroup(
+            pnRegistrationOfVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnRegistrationOfVehicleLayout.createSequentialGroup()
+                .addContainerGap(14, Short.MAX_VALUE)
+                .addGroup(pnRegistrationOfVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pnControl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnROVLeft, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+        pnRegistrationOfVehicleLayout.setVerticalGroup(
+            pnRegistrationOfVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnRegistrationOfVehicleLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(pnROVLeft, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(41, Short.MAX_VALUE))
+        );
+
+        btnShowHide.setAction(actionMap.get("showHideSearch")); // NOI18N
+        btnShowHide.setText(resourceMap.getString("btnShowHide.text")); // NOI18N
+        btnShowHide.setName("btnShowHide"); // NOI18N
 
         pnROVRight.setName("pnROVRight"); // NOI18N
 
@@ -908,6 +1044,11 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
         });
 
         txtDONumN.setName("txtDONumN"); // NOI18N
+        txtDONumN.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtDONumNFocusLost(evt);
+            }
+        });
         txtDONumN.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtDONumNKeyReleased(evt);
@@ -919,16 +1060,27 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
         btnDOCheckN.setName("btnDOCheckN"); // NOI18N
 
         txtSONumN.setName("txtSONumN"); // NOI18N
+        txtSONumN.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtSONumNFocusLost(evt);
+            }
+        });
         txtSONumN.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtSONumNKeyReleased(evt);
             }
         });
 
+        btnSOCheckN.setAction(actionMap.get("checkSO")); // NOI18N
         btnSOCheckN.setText(resourceMap.getString("btnSOCheckN.text")); // NOI18N
         btnSOCheckN.setName("btnSOCheckN"); // NOI18N
 
         txtPONumN.setName("txtPONumN"); // NOI18N
+        txtPONumN.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtPONumNFocusLost(evt);
+            }
+        });
         txtPONumN.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtPONumNKeyReleased(evt);
@@ -940,6 +1092,11 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
         btnPOCheckN.setName("btnPOCheckN"); // NOI18N
 
         txtPOSTONumN.setName("txtPOSTONumN"); // NOI18N
+        txtPOSTONumN.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtPOSTONumNFocusLost(evt);
+            }
+        });
         txtPOSTONumN.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtPOSTONumNKeyReleased(evt);
@@ -971,12 +1128,19 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
             }
         });
 
+        lblWeightTicketNo.setText(resourceMap.getString("lblWeightTicketNo.text")); // NOI18N
+        lblWeightTicketNo.setName("lblWeightTicketNo"); // NOI18N
+
+        txtWeightTicketNo.setEditable(false);
+        txtWeightTicketNo.setAutoscrolls(false);
+        txtWeightTicketNo.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        txtWeightTicketNo.setName("txtWeightTicketNo"); // NOI18N
+
         javax.swing.GroupLayout pnROVRightLayout = new javax.swing.GroupLayout(pnROVRight);
         pnROVRight.setLayout(pnROVRightLayout);
         pnROVRightLayout.setHorizontalGroup(
             pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnROVRightLayout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lblSloc2N)
                     .addComponent(lblBatchStockN)
@@ -988,7 +1152,8 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
                     .addGroup(pnROVRightLayout.createSequentialGroup()
                         .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(lblDONumN)
-                            .addComponent(lblSONumN))
+                            .addComponent(lblSONumN)
+                            .addComponent(lblWeightTicketNo))
                         .addGap(1, 1, 1))
                     .addComponent(lblVendorLoadingN)
                     .addComponent(lblVendorTransportN)
@@ -996,19 +1161,20 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
                     .addComponent(lblSuppliesIdN))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cbxSuppliesIdN, 0, 271, Short.MAX_VALUE)
-                    .addComponent(cbxVendorTransportN, 0, 271, Short.MAX_VALUE)
-                    .addComponent(cbxVendorLoadingN, 0, 271, Short.MAX_VALUE)
-                    .addComponent(txtSONumN, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
-                    .addComponent(txtPONumN, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
-                    .addComponent(txtPOSTONumN, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
-                    .addComponent(cbxMaterialTypeN, 0, 271, Short.MAX_VALUE)
-                    .addComponent(cbxBatchStock2N, 0, 271, Short.MAX_VALUE)
-                    .addComponent(cbxBatchStockN, 0, 271, Short.MAX_VALUE)
-                    .addComponent(cbxSloc2N, 0, 271, Short.MAX_VALUE)
-                    .addComponent(cbxSlocN, 0, 271, Short.MAX_VALUE)
-                    .addComponent(txtWeightN, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
-                    .addComponent(txtDONumN, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE))
+                    .addComponent(cbxSuppliesIdN, 0, 292, Short.MAX_VALUE)
+                    .addComponent(cbxVendorTransportN, 0, 292, Short.MAX_VALUE)
+                    .addComponent(cbxVendorLoadingN, 0, 292, Short.MAX_VALUE)
+                    .addComponent(txtSONumN, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
+                    .addComponent(txtPONumN, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
+                    .addComponent(txtPOSTONumN, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
+                    .addComponent(cbxMaterialTypeN, 0, 292, Short.MAX_VALUE)
+                    .addComponent(cbxBatchStock2N, 0, 292, Short.MAX_VALUE)
+                    .addComponent(cbxBatchStockN, 0, 292, Short.MAX_VALUE)
+                    .addComponent(cbxSloc2N, 0, 292, Short.MAX_VALUE)
+                    .addComponent(cbxSlocN, 0, 292, Short.MAX_VALUE)
+                    .addComponent(txtWeightN, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
+                    .addComponent(txtDONumN, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
+                    .addComponent(txtWeightTicketNo, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnSOCheckN)
@@ -1016,12 +1182,16 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
                     .addComponent(btnPOCheckN)
                     .addComponent(btnPOSTOCheckN)
                     .addComponent(lblWeightUnitN))
-                .addGap(29, 29, 29))
+                .addGap(155, 155, 155))
         );
         pnROVRightLayout.setVerticalGroup(
             pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnROVRightLayout.createSequentialGroup()
                 .addContainerGap()
+                .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtWeightTicketNo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblWeightTicketNo))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblDONumN)
                     .addComponent(txtDONumN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1081,92 +1251,7 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
                 .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbxSuppliesIdN, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblSuppliesIdN))
-                .addContainerGap(39, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout pnROVContentLayout = new javax.swing.GroupLayout(pnROVContent);
-        pnROVContent.setLayout(pnROVContentLayout);
-        pnROVContentLayout.setHorizontalGroup(
-            pnROVContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnROVContentLayout.createSequentialGroup()
-                .addComponent(pnROVLeft, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(pnROVRight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        pnROVContentLayout.setVerticalGroup(
-            pnROVContentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnROVRight, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(pnROVLeft, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-
-        javax.swing.GroupLayout pnRegistrationOfVehicleLayout = new javax.swing.GroupLayout(pnRegistrationOfVehicle);
-        pnRegistrationOfVehicle.setLayout(pnRegistrationOfVehicleLayout);
-        pnRegistrationOfVehicleLayout.setHorizontalGroup(
-            pnRegistrationOfVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnRegistrationOfVehicleLayout.createSequentialGroup()
-                .addGroup(pnRegistrationOfVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(pnROVContent, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 955, Short.MAX_VALUE)
-                    .addComponent(pnROVTop, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(31, Short.MAX_VALUE))
-        );
-        pnRegistrationOfVehicleLayout.setVerticalGroup(
-            pnRegistrationOfVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnRegistrationOfVehicleLayout.createSequentialGroup()
-                .addComponent(pnROVTop, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnROVContent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-
-        pnControl.setName("pnControl"); // NOI18N
-
-        btnNew.setAction(actionMap.get("newRecord")); // NOI18N
-        btnNew.setText(resourceMap.getString("btnNew.text")); // NOI18N
-        btnNew.setName("btnNew"); // NOI18N
-
-        btnClear.setAction(actionMap.get("clearForm")); // NOI18N
-        btnClear.setText(resourceMap.getString("btnClear.text")); // NOI18N
-        btnClear.setName("btnClear"); // NOI18N
-
-        btnSave.setAction(actionMap.get("saveRecord")); // NOI18N
-        btnSave.setText(resourceMap.getString("btnSave.text")); // NOI18N
-        btnSave.setName("btnSave"); // NOI18N
-
-        lblWeightTicketNo.setText(resourceMap.getString("lblWeightTicketNo.text")); // NOI18N
-        lblWeightTicketNo.setName("lblWeightTicketNo"); // NOI18N
-
-        txtWeightTicketNo.setEditable(false);
-        txtWeightTicketNo.setAutoscrolls(false);
-        txtWeightTicketNo.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        txtWeightTicketNo.setName("txtWeightTicketNo"); // NOI18N
-
-        javax.swing.GroupLayout pnControlLayout = new javax.swing.GroupLayout(pnControl);
-        pnControl.setLayout(pnControlLayout);
-        pnControlLayout.setHorizontalGroup(
-            pnControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnControlLayout.createSequentialGroup()
-                .addComponent(btnNew)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnClear)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnSave)
-                .addGap(102, 102, 102)
-                .addComponent(lblWeightTicketNo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtWeightTicketNo, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(391, 391, 391))
-        );
-        pnControlLayout.setVerticalGroup(
-            pnControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnControlLayout.createSequentialGroup()
-                .addGap(1, 1, 1)
-                .addGroup(pnControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnNew)
-                    .addComponent(btnClear)
-                    .addComponent(btnSave)
-                    .addComponent(lblWeightTicketNo)
-                    .addComponent(txtWeightTicketNo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -1176,27 +1261,31 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnRegistrationOfVehicle, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnPrintControl, javax.swing.GroupLayout.DEFAULT_SIZE, 986, Short.MAX_VALUE)
-                    .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 986, Short.MAX_VALUE)
-                    .addComponent(pnFilter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnControl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 986, Short.MAX_VALUE))
+                    .addComponent(pnFilter, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(pnRegistrationOfVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(pnROVRight, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnShowHide)
+                    .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 1111, Short.MAX_VALUE)
+                    .addComponent(pnPrintControl, javax.swing.GroupLayout.DEFAULT_SIZE, 1111, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(pnFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnShowHide)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(spnResult, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnPrintControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnRegistrationOfVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(pnControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(123, Short.MAX_VALUE))
+                .addGap(13, 13, 13)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(pnRegistrationOfVehicle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnROVRight, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         pack();
@@ -1357,17 +1446,19 @@ private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//
 
 private void cbxVendorLoadingNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxVendorLoadingNActionPerformed
     if (cbxVendorLoadingN.getSelectedItem() != null && !cbxVendorLoadingN.getSelectedItem().toString().equals("")) {
+        Vendor vendor = (Vendor) cbxVendorLoadingN.getSelectedItem();
+        newWeightTicket.getWeightTicketDetail().setLoadVendor(vendor.getLifnr());
+
         validateForm();
-    } else {
-        isValidVendorLoad = true;
     }
 }//GEN-LAST:event_cbxVendorLoadingNActionPerformed
 
 private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxVendorTransportNActionPerformed
     if (cbxVendorTransportN.getSelectedItem() != null && !cbxVendorTransportN.getSelectedItem().toString().equals("")) {
+        Vendor vendor = (Vendor) cbxVendorTransportN.getSelectedItem();
+        newWeightTicket.getWeightTicketDetail().setTransVendor(vendor.getLifnr());
+
         validateForm();
-    } else {
-        isValidVendorTransport = true;
     }
 }//GEN-LAST:event_cbxVendorTransportNActionPerformed
 
@@ -1408,6 +1499,66 @@ private void txtPlateNoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCreatorKeyReleased
     validateFilterForm();
 }//GEN-LAST:event_txtCreatorKeyReleased
+
+private void txtTrailerNoNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTrailerNoNKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtTrailerNoNKeyReleased
+
+private void txtSoNiemXaNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSoNiemXaNKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtSoNiemXaNKeyReleased
+
+private void txtProductionBatchNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtProductionBatchNKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtProductionBatchNKeyReleased
+
+private void txtNoteNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNoteNKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtNoteNKeyReleased
+
+private void cbxModeSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxModeSearchActionPerformed
+
+}//GEN-LAST:event_cbxModeSearchActionPerformed
+
+private void txtDONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtDONumNFocusLost
+    String[] beforeDoNums = txtDONumN.getText().split("-");
+    String[] doNums = Stream.of(beforeDoNums)
+            .map(s -> StringUtil.paddingZero(s.trim(), 10)).distinct()
+            .toArray(String[]::new);
+
+    if (doNums.length != beforeDoNums.length) {
+        JOptionPane.showMessageDialog(rootPane,
+                resourceMapMsg.getString("msg.duplicateDo"));
+        return;
+    }
+
+    txtDONumN.setText(String.join(" - ", doNums));
+}//GEN-LAST:event_txtDONumNFocusLost
+
+private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSONumNFocusLost
+    String[] beforeSoNums = txtSONumN.getText().split("-");
+    String[] soNums = Stream.of(beforeSoNums)
+            .map(s -> StringUtil.paddingZero(s.trim(), 10)).distinct()
+            .toArray(String[]::new);
+
+    if (soNums.length != beforeSoNums.length) {
+        JOptionPane.showMessageDialog(rootPane,
+                resourceMapMsg.getString("msg.duplicateSo"));
+        return;
+    }
+
+    txtSONumN.setText(String.join(" - ", soNums));
+}//GEN-LAST:event_txtSONumNFocusLost
+
+private void txtPONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPONumNFocusLost
+    String poNum = StringUtil.paddingZero(txtPONumN.getText().trim(), 10);
+    txtPONumN.setText(poNum);
+}//GEN-LAST:event_txtPONumNFocusLost
+
+private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPOSTONumNFocusLost
+    String postoNum = StringUtil.paddingZero(txtPOSTONumN.getText().trim(), 10);
+    txtPOSTONumN.setText(postoNum);
+}//GEN-LAST:event_txtPOSTONumNFocusLost
 
     private void validateFilterForm() {
         boolean isDriverNameValid = wtRegisValidation.validateLength(txtDriverName.getText(), lblDriverName, 0, 70);
@@ -1484,6 +1635,89 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         return new CheckDOTask(WeighBridgeApp.getApplication());
     }
 
+    @Action(block = Task.BlockingScope.ACTION)
+    public Task checkSO() {
+        String[] beforeSoNums = txtSONumN.getText().split("-");
+        String[] soNums = Stream.of(beforeSoNums)
+                .map(s -> StringUtil.paddingZero(s.trim(), 10)).distinct()
+                .toArray(String[]::new);
+
+        if (soNums.length != beforeSoNums.length) {
+            JOptionPane.showMessageDialog(rootPane,
+                    resourceMapMsg.getString("msg.duplicateSo"));
+            return null;
+        }
+
+        txtSONumN.setText(String.join(" - ", soNums));
+
+        return new CheckSOTask(WeighBridgeApp.getApplication());
+    }
+
+    List<DOCheckStructure> listDONumbers = new ArrayList<>();
+
+    private class CheckSOTask extends org.jdesktop.application.Task<Object, Void> {
+
+        CheckSOTask(org.jdesktop.application.Application app) {
+            super(app);
+        }
+
+        @Override
+        protected Object doInBackground() {
+            String[] val = txtSONumN.getText().trim().split("-");
+            String bsXe = txtPlateNoN.getText().trim();
+            DOCheckStructure doNumber = new DOCheckStructure();
+            String bsRomoc = txtTrailerNoN.getText().trim();
+
+            String doNum = "";
+            if (!WeighBridgeApp.getApplication().isOfflineMode()) {
+                // List<DOCheckStructure> doNumbers = sapService.getDONumber(val, bsXe, bsRomoc);
+                List<DOCheckStructure> doNumbers = new ArrayList<>();
+
+                if (doNumbers != null) {
+                    listDONumbers.addAll(doNumbers);
+                    for (int i = 0; i < doNumbers.size(); i++) {
+                        doNumber = doNumbers.get(i);
+                        if (!doNumber.getMessage().trim().isEmpty()) {
+                            setMessage(doNumber.getMessage());
+                            JOptionPane.showMessageDialog(rootPane, doNumber.getMessage());
+                            String msg = "SO " + doNumber.getVbelnSO() + " sai, vui lòng nhập lại!";
+                            txtDONumN.setText(null);
+                            setMessage(msg);
+                            JOptionPane.showMessageDialog(rootPane, msg);
+                            return null;
+                        } else {
+                            if (doNum.isEmpty()) {
+                                doNum = doNumber.getVbelnDO();
+                            } else {
+                                doNum += "-" + doNumber.getVbelnDO();
+                            }
+                        }
+                    }
+                }
+            }
+
+            txtDONumN.setText(doNum);
+            return null;
+        }
+
+        @Override
+        protected void failed(Throwable cause) {
+            isValidSO = false;
+
+            if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
+                cause = cause.getCause();
+            }
+            logger.error(null, cause);
+            JOptionPane.showMessageDialog(rootPane, cause.getMessage());
+        }
+
+        @Override
+        protected void finished() {
+            isValidSO = true;
+            btnDOCheckN.setEnabled(true);
+        }
+    }
+
     @Action(enabledProperty = "creatable")
     public void newRecord() {
         setFormEditable(true);
@@ -1534,6 +1768,7 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         isValidDO = false;
         isValidPO = false;
         isValidPOSTO = false;
+        isValidSO = false;
         disableAllInForm();
         prepareEditableForm(modeDetail);
     }
@@ -1688,7 +1923,7 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         showComponent(txtSONumN, lblSONumN, btnSOCheckN, false, false);
         showComponent(txtPONumN, lblPONumN, btnPOCheckN, true, true);
         showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, false, false);
-        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, true);
+        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, false);
         showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, true);
         showComponent(cbxSlocN, lblSlocN, true, true);
         showComponent(cbxSloc2N, lblSloc2N, false, false);
@@ -1704,7 +1939,7 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
     private void prepareInWarehouseTransfer() {
         showComponent(txtTicketIdN, lblTicketIdN, true, true);
-        showComponent(txtWeightTickerRefN, lblWeightTickerRefN, true, true);
+        showComponent(txtWeightTickerRefN, lblWeightTickerRefN, true, false);
         showComponent(txtRegisterIdN, lblRegisterIdN, true, true);
         showComponent(txtDriverNameN, lblDriverNameN, true, true);
         showComponent(txtCMNDN, lblCMNDN, true, true);
@@ -1720,8 +1955,8 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         showComponent(txtSONumN, lblSONumN, btnSOCheckN, false, false);
         showComponent(txtPONumN, lblPONumN, btnPOCheckN, false, false);
         showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, false, false);
-        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, true);
-        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, true);
+        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, false);
+        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, false);
         showComponent(cbxSlocN, lblSlocN, true, true);
         showComponent(cbxSloc2N, lblSloc2N, false, false);
         showComponent(cbxBatchStockN, lblBatchStockN, true, true);
@@ -1784,8 +2019,8 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         showComponent(txtSONumN, lblSONumN, btnSOCheckN, false, false);
         showComponent(txtPONumN, lblPONumN, btnPOCheckN, false, false);
         showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, false, false);
-        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, true);
-        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, true);
+        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, false);
+        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, false);
         showComponent(cbxSlocN, lblSlocN, true, true);
         showComponent(cbxSloc2N, lblSloc2N, false, false);
         showComponent(cbxBatchStockN, lblBatchStockN, true, true);
@@ -1816,8 +2051,8 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         showComponent(txtSONumN, lblSONumN, btnSOCheckN, false, false);
         showComponent(txtPONumN, lblPONumN, btnPOCheckN, true, true);
         showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, false, false);
-        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, true);
-        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, true);
+        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, false);
+        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, false);
         showComponent(cbxSlocN, lblSlocN, true, true);
         showComponent(cbxSloc2N, lblSloc2N, false, false);
         showComponent(cbxBatchStockN, lblBatchStockN, true, true);
@@ -1859,8 +2094,8 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         showComponent(cbxBatchStock2N, lblBatchStock2N, true, true);
 
         boolean isShowPOV = WeighBridgeApp.getApplication().getSapSetting().getCheckPov();
-        showComponent(cbxVendorLoadingN, lblVendorLoadingN, isShowPOV, true);
-        showComponent(cbxVendorTransportN, lblVendorTransportN, isShowPOV, true);
+        showComponent(cbxVendorLoadingN, lblVendorLoadingN, isShowPOV, false);
+        showComponent(cbxVendorTransportN, lblVendorTransportN, isShowPOV, false);
         showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
 
         cbxMaterialTypeN.setModel(weightTicketRegistarationController.getListMaterialInternal());
@@ -1885,8 +2120,8 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         showComponent(txtSONumN, lblSONumN, btnSOCheckN, false, false);
         showComponent(txtPONumN, lblPONumN, btnPOCheckN, true, true);
         showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, true, true);
-        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, true);
-        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, true);
+        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, false);
+        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, false);
         showComponent(cbxSlocN, lblSlocN, true, true);
         showComponent(cbxSloc2N, lblSloc2N, false, false);
         showComponent(cbxBatchStockN, lblBatchStockN, true, true);
@@ -1916,12 +2151,12 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
         showComponent(txtProductionBatchN, lblProductionBatchN, true, true);
         showComponent(txtNoteN, lblNoteN, true, true);
-        showComponent(txtDONumN, lblDONumN, btnDOCheckN, true, true);
-        showComponent(txtSONumN, lblSONumN, btnSOCheckN, true, true);
+        showComponent(txtDONumN, lblDONumN, btnDOCheckN, true, false);
+        showComponent(txtSONumN, lblSONumN, btnSOCheckN, true, !WeighBridgeApp.getApplication().isOfflineMode());
         showComponent(txtPONumN, lblPONumN, btnPOCheckN, false, false);
         showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, false, false);
-        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, true);
-        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, true);
+        showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, false);
+        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, false);
         showComponent(cbxSlocN, lblSlocN, true, true);
         showComponent(cbxSloc2N, lblSloc2N, false, false);
         showComponent(cbxBatchStockN, lblBatchStockN, true, true);
@@ -1947,7 +2182,7 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                 isValid = validateInOutOther();
                 break;
             case OUT_SELL_ROAD:
-                isValid = validateOutSellRoad() && isValidDO;
+                isValid = validateOutSellRoad();
                 break;
             case OUT_PLANT_PLANT:
                 isValid = validateOutPlantPlant() && isValidPO && isValidVendorLoad && isValidVendorTransport;
@@ -2001,6 +2236,9 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             lblPONumN.setForeground(Color.red);
         }
 
+        boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
+        boolean isWeightValid = wtRegisValidation.validateLength(txtWeightN.getText(), lblWeightN, 1, 10);
+
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
@@ -2031,6 +2269,9 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         if (!isValidDO) {
             lblDONumN.setForeground(Color.red);
         }
+
+        boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
+        boolean isWeightValid = wtRegisValidation.validateLength(txtWeightN.getText(), lblWeightN, 1, 10);
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
@@ -2084,17 +2325,25 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
 
+        boolean isMaterialTypeValid = isValidDO || wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
         boolean isDOValid = wtRegisValidation.validateDO(txtDONumN.getText(), lblDONumN);
         btnDOCheckN.setEnabled(isDOValid);
         if (!isValidDO) {
-            lblDONumN.setForeground(Color.red);
+            cbxMaterialTypeN.setEnabled(true);
+            txtWeightN.setEditable(true);
+        } else {
+            lblMaterialTypeN.setForeground(Color.black);
+            cbxMaterialTypeN.setEnabled(false);
+            txtWeightN.setEditable(false);
         }
+
+        boolean isWeightValid = wtRegisValidation.validateLength(txtWeightN.getText(), lblWeightN, 1, 10);
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
         return isRegisterIdValid && isDriverNameValid && isCMNDBLValid && isPlateNoValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
-                && isNoteValid && isSlocValid;
+                && isNoteValid && isSlocValid && isDOValid && isMaterialTypeValid && isWeightValid;
     }
 
     private boolean validateOutPlantPlant() {
@@ -2128,6 +2377,9 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         if (!isValidPO) {
             lblPONumN.setForeground(Color.red);
         }
+
+        boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
+        boolean isWeightValid = wtRegisValidation.validateLength(txtWeightN.getText(), lblWeightN, 1, 10);
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
@@ -2214,6 +2466,9 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             lblPONumN.setForeground(Color.red);
         }
 
+        boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
+        boolean isWeightValid = wtRegisValidation.validateLength(txtWeightN.getText(), lblWeightN, 1, 10);
+
         boolean isPOSTOValid = wtRegisValidation.validatePO(txtPOSTONumN.getText(), lblPOSTONumN);
         btnPOSTOCheckN.setEnabled(isPOSTOValid);
 
@@ -2241,14 +2496,30 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
 
-        boolean isSOValid = wtRegisValidation.validateDO(txtSONumN.getText(), lblSONumN);
+        if (!WeighBridgeApp.getApplication().isOfflineMode()) {
+            boolean isSOValid = wtRegisValidation.validateDO(txtSONumN.getText(), lblSONumN);
+            btnSOCheckN.setEnabled(isSOValid);
+            if (!isValidSO) {
+                lblSONumN.setForeground(Color.red);
+            } else {
+                btnDOCheckN.setEnabled(true);
+            }
+        } else {
+            isValidSO = true;
+            isValidDO = true;
+            lblSONumN.setForeground(Color.black);
+            lblDONumN.setForeground(Color.black);
+        }
+
+        boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
+        boolean isWeightValid = wtRegisValidation.validateLength(txtWeightN.getText(), lblWeightN, 1, 10);
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
         return isRegisterIdValid && isDriverNameValid
                 && isCMNDBLValid && isPlateNoValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
-                && isNoteValid && isSlocValid && isSOValid;
+                && isNoteValid && isSlocValid;
     }
 
     private void loadBatchStockModel(JComboBox slocComponent, JComboBox batchStockComponent, boolean isSloc) {
@@ -2309,9 +2580,11 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         private List<WeightTicket> getWeightTicketWithOtherType(String from, String to) throws Exception {
             List<WeightTicket> data = null;
             if (cbxStatus.getSelectedIndex() == StatusEnum.POSTED.VALUE) {
-                data = weightTicketRegistarationController.findByDatePostedNull(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
+                data = weightTicketRegistarationController.findByDatePostedNull(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim(), modeSearch);
             } else if (cbxStatus.getSelectedIndex() == StatusEnum.ALL.VALUE) {
-                data = weightTicketRegistarationController.findByDateAllNull(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
+                data = weightTicketRegistarationController.findByDateAllNull(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim(), modeSearch);
+            } else if (cbxStatus.getSelectedIndex() == StatusEnum.ALL.UNFINISH.VALUE) {
+                data = weightTicketRegistarationController.findByDateUnfinishNull(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim(), modeSearch);
             }
 
             return filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
@@ -2320,20 +2593,23 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         private List<WeightTicket> getWeightTicketWithAllType(String from, String to) throws Exception {
             List<WeightTicket> data = null;
             if (cbxStatus.getSelectedIndex() == StatusEnum.POSTED.VALUE) {
-                data = weightTicketRegistarationController.findByDatePostedNullAll(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
+                data = weightTicketRegistarationController.findByDatePostedNullAll(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim(), modeSearch);
             } else if (cbxStatus.getSelectedIndex() == StatusEnum.ALL.VALUE) {
-                data = weightTicketRegistarationController.findByDateAllNullAll(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim());
+                data = weightTicketRegistarationController.findByDateAllNullAll(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim(), modeSearch);
+            } else if (cbxStatus.getSelectedIndex() == StatusEnum.ALL.UNFINISH.VALUE) {
+                data = weightTicketRegistarationController.findByDateUnfinishNullAll(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim(), modeSearch);
             }
-
             return filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
         }
 
         private List<WeightTicket> getWeightTicketWithSelectedType(String from, String to, String matnr) throws Exception {
             List<WeightTicket> data = null;
             if (cbxStatus.getSelectedIndex() == StatusEnum.POSTED.VALUE) {
-                data = weightTicketRegistarationController.findByDatePosted(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), matnr, txtPlateNo.getText().trim());
+                data = weightTicketRegistarationController.findByDatePosted(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), matnr, txtPlateNo.getText().trim(), modeSearch);
             } else if (cbxStatus.getSelectedIndex() == StatusEnum.ALL.VALUE) {
-                data = weightTicketRegistarationController.findByDateAll(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), matnr, txtPlateNo.getText().trim());
+                data = weightTicketRegistarationController.findByDateAll(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), matnr, txtPlateNo.getText().trim(), modeSearch);
+            } else if (cbxStatus.getSelectedIndex() == StatusEnum.ALL.UNFINISH.VALUE) {
+                data = weightTicketRegistarationController.findByDateUnfinish(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), matnr, txtPlateNo.getText().trim(), modeSearch);
             }
 
             return filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
@@ -2395,7 +2671,7 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                 String from = format.format(dpDateFrom.getDate());
                 String to = format.format(dpDateTo.getDate());
                 List<WeightTicket> result;
-
+                modeSearch = cbxModeSearch.getSelectedItem().toString();
                 if (material.getMatnr().equals(MaterialEnum.OTHER.VALUE)) {
                     result = getWeightTicketWithOtherType(from, to);
                 } else if (material.getMatnr().equals(MaterialEnum.ALL.VALUE)) {
@@ -2659,8 +2935,10 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         @Override
         protected void failed(Throwable cause) {
             newWeightTicket.setWeightTicketDetails(new ArrayList<>());
+            cbxMaterialTypeN.setSelectedItem("");
+            txtWeightN.setText("0");
 
-            isValidDO = true;
+            isValidDO = false;
             // for check edit plateNo after check DO
             plateNoValidDO = "";
             if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
@@ -2730,37 +3008,17 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             newWeightTicket.setSoNiemXa(txtSoNiemXaN.getText().trim());
             newWeightTicket.setBatch(txtProductionBatchN.getText().trim());
             newWeightTicket.setNote(txtNoteN.getText().trim());
-            newWeightTicket.setTicketId(newWeightTicket.getId());
-
-            WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
-            Object obj = cbxMaterialTypeN.getSelectedItem();
-            if (obj instanceof MaterialInternal) {
-                MaterialInternal materialInternal = (MaterialInternal) obj;
-                newWeightTicket.setRecvMatnr(materialInternal.getMatnr());
-                weightTicketDetail.setMatnrRef(materialInternal.getMatnr());
-                weightTicketDetail.setRegItemDescription(materialInternal.getMaktx());
-            } else if (obj instanceof Material) {
-                Material material = (Material) obj;
-                newWeightTicket.setRecvMatnr(material.getMatnr());
-                weightTicketDetail.setMatnrRef(material.getMatnr());
-                weightTicketDetail.setRegItemDescription(material.getMaktx());
-            }
-
-            weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText().trim()));
-
-            if (!txtDONumN.getText().trim().isEmpty()) {
-                weightTicketDetail.setDeliveryOrderNo(txtDONumN.getText().trim());
-            }
-            
-            if (!txtPONumN.getText().trim().isEmpty()) {
-                weightTicketDetail.setEbeln(txtPONumN.getText().trim());
-            }
-            
-            if (!txtPOSTONumN.getText().trim().isEmpty()) {
-                newWeightTicket.setPosto(txtPOSTONumN.getText().trim());
-            }
-            
+            newWeightTicket.setTicketId(txtTicketIdN.getText().trim());
             switch (modeDetail) {
+                case IN_PO_PURCHASE:
+                    updateDataForInPoPurchaseMode();
+                    break;
+                case IN_OTHER:
+                    updateDataForOtherMode();
+                    break;
+                case OUT_SELL_ROAD:
+                    updateDataForOutSellRoad();
+                    break;
                 case OUT_SLOC_SLOC:
                     updateDataForOutSlocSloc();
                     break;
@@ -2770,13 +3028,19 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                 case OUT_PULL_STATION:
                     updateDataForPrepareOutPullStation();
                     break;
+                case OUT_OTHER:
+                    updateDataForOtherMode();
+                    break;
             }
 
-            newWeightTicket.getWeightTicketDetails().forEach(t -> {
-                t.setCreatedTime(createdTime);
-                t.setDocYear(year);
-                t.setCreatedDate(now);
-            });
+            List<WeightTicketDetail> weightTicketDetails = newWeightTicket.getWeightTicketDetails();
+            if (weightTicketDetails.size() > 0) {
+                weightTicketDetails.forEach(weightTicketDetail -> {
+                    weightTicketDetail.setCreatedTime(createdTime);
+                    weightTicketDetail.setDocYear(year);
+                    weightTicketDetail.setCreatedDate(now);
+                });
+            }
 
             setMessage(resourceMapMsg.getString("msg.saveData"));
             try {
@@ -2806,23 +3070,71 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             return null;
         }
 
+        public void updateDataForInPoPurchaseMode() {
+            newWeightTicket.getWeightTicketDetail().setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+        }
+
         public void updateDataForPrepareOutPullStation() {
             newWeightTicket.setMoveType("101");
+            newWeightTicket.getWeightTicketDetail().setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
         }
 
         public void updateDataForOutSellWateway() {
-            String[] soNums = txtSONumN.getText().split("-");
-            int index = 0;
-            newWeightTicket.getWeightTicketDetails().forEach(t -> {
-                try{
-                    t.setSoNumber(soNums[index]);
-                } catch (Exception ex) {}
-            });
+            if (WeighBridgeApp.getApplication().isOfflineMode()) {
+                WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
+                weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+                weightTicketDetail.setSoNumber(txtSONumN.getText().trim());
+            } else {
+                if (listDONumbers != null) {
+                    for (WeightTicketDetail weightTicketDetail : newWeightTicket.getWeightTicketDetails()) {
+                        DOCheckStructure dOCheckStructure = listDONumbers.stream()
+                                .filter(t -> t.getVbelnDO().equalsIgnoreCase(weightTicketDetail.getDeliveryOrderNo()))
+                                .findFirst().get();
+
+                        if (dOCheckStructure != null) {
+                            weightTicketDetail.setSoNumber(dOCheckStructure.getVbelnSO());
+                        }
+                    }
+                }
+            }
+        }
+
+        public void updateDataForOtherMode() {
+            WeightTicketDetail weightTicketDetail = new WeightTicketDetail();
+            weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
+
+            MaterialInternal material = (MaterialInternal) cbxMaterialTypeN.getSelectedItem();
+            weightTicketDetail.setMatnrRef(material.getMatnr());
+            weightTicketDetail.setRegItemDescription(material.getMaktx());
+            weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+
+            newWeightTicket.addWeightTicketDetail(weightTicketDetail);
+        }
+
+        public void updateDataForOutSellRoad() {
+            if (!isValidDO) {
+                WeightTicketDetail weightTicketDetail = new WeightTicketDetail();
+                weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
+
+                Material material = (Material) cbxMaterialTypeN.getSelectedItem();
+                weightTicketDetail.setDeliveryOrderNo(txtDONumN.getText().trim());
+                weightTicketDetail.setMatnrRef(material.getMatnr());
+                weightTicketDetail.setRegItemDescription(material.getMaktx());
+                weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+
+                newWeightTicket.addWeightTicketDetail(weightTicketDetail);
+            }
         }
 
         public void updateDataForOutSlocSloc() {
             newWeightTicket.setMoveType("311");
             newWeightTicket.setMoveReas(null);
+            WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
+            MaterialInternal materialInternal = (MaterialInternal) cbxMaterialTypeN.getSelectedItem();
+
+            weightTicketDetail.setMatnrRef(materialInternal.getMatnr());
+            weightTicketDetail.setRegItemDescription(materialInternal.getMaktx());
+            weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText().trim()));
         }
 
         @Override
@@ -2896,6 +3208,7 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         isValidDO = false;
         isValidPO = false;
         isValidPOSTO = false;
+        isValidSO = false;
         isValidWeight = false;
         isValidVendorLoad = false;
         isValidVendorTransport = false;
@@ -2951,6 +3264,7 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnClear;
     private javax.swing.JButton btnDOCheckN;
+    private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnFind;
     private javax.swing.JButton btnNew;
     private javax.swing.JButton btnPOCheckN;
@@ -2958,12 +3272,14 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
     private javax.swing.JButton btnReprint;
     private javax.swing.JButton btnSOCheckN;
     private javax.swing.JButton btnSave;
+    private javax.swing.JToggleButton btnShowHide;
     private javax.swing.JComboBox cbxBatchStock2N;
     private javax.swing.JComboBox cbxBatchStockN;
     private javax.swing.JComboBox cbxHourFrom;
     private javax.swing.JComboBox cbxHourTo;
     private javax.swing.JComboBox cbxMaterialType;
     private javax.swing.JComboBox cbxMaterialTypeN;
+    private javax.swing.JComboBox cbxModeSearch;
     private javax.swing.JComboBox cbxModeType;
     private javax.swing.JComboBox cbxSloc2N;
     private javax.swing.JComboBox cbxSlocN;
@@ -2987,6 +3303,7 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
     private javax.swing.JLabel lblHourTo;
     private javax.swing.JLabel lblMaterialType;
     private javax.swing.JLabel lblMaterialTypeN;
+    private javax.swing.JLabel lblMode;
     private javax.swing.JLabel lblNoteN;
     private javax.swing.JLabel lblPONumN;
     private javax.swing.JLabel lblPOSTONumN;
@@ -3015,10 +3332,8 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
     private javax.swing.JPanel pnControl;
     private javax.swing.JPanel pnFilter;
     private javax.swing.JPanel pnPrintControl;
-    private javax.swing.JPanel pnROVContent;
     private javax.swing.JPanel pnROVLeft;
     private javax.swing.JPanel pnROVRight;
-    private javax.swing.JPanel pnROVTop;
     private javax.swing.JPanel pnRegistrationOfVehicle;
     private javax.swing.JRadioButton rbtInput;
     private javax.swing.JRadioButton rbtOutput;
@@ -3137,15 +3452,15 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             setStep(1, resourceMapMsg.getString("msg.checkPOInDB"));
             PurchaseOrder purchaseOrder = purchaseOrderRepository.findByPoNumber(poNum);
 
-            //Check PO Plant with Configuration parameter.
-            if ((modeDetail == MODE_DETAIL.IN_PO_PURCHASE)
-                    && (!(purchaseOrder.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant()))) {
-                throw new Exception("msg.poIsDenied");
-            }
-
             // check exist PO
             if (purchaseOrder == null) {
                 throw new Exception(resourceMapMsg.getString("msg.poNotExist", poNum));
+            }
+
+            //Check PO Plant with Configuration parameter.
+            if ((modeDetail == MODE_DETAIL.IN_PO_PURCHASE)
+                    && (!(purchaseOrder.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant()))) {
+                throw new Exception(resourceMapMsg.getString("msg.poIsDenied"));
             }
 
             updateWeightTicket(purchaseOrder);
@@ -3174,8 +3489,10 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
         @Override
         protected void failed(Throwable cause) {
             newWeightTicket.setWeightTicketDetails(new ArrayList<>());
+            cbxMaterialTypeN.setSelectedIndex(-1);
+            cbxVendorTransportN.setSelectedIndex(-1);
 
-            isValidPO = true;
+            isValidPO = false;
             if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
                 cause = cause.getCause();
             }
@@ -3205,7 +3522,7 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
             strMatnr = purchaseOrderDetail.getMaterial();
 
-            weightTicketDetail.setTransVendor(purchaseOrder.getVendor());
+            newWeightTicket.getWeightTicketDetail().setTransVendor(purchaseOrder.getVendor());
             strVendor = purchaseOrder.getVendor();
             totalWeight = purchaseOrderDetail.getQuantity();
 
@@ -3227,7 +3544,7 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
                     isValidWeight = true;
                     break;
                 case OUT_SLOC_SLOC:
-                    weightTicketDetail.setTransVendor(purchaseOrder.getVendor());
+                    newWeightTicket.getWeightTicketDetail().setTransVendor(purchaseOrder.getVendor());
                     break;
             }
         }
@@ -3265,7 +3582,7 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             //Check PO Plant with Configuration parameter.
             if ((modeDetail == MODE_DETAIL.IN_PO_PURCHASE)
                     && (!(purchaseOrder.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant()))) {
-                throw new Exception("msg.postoIsDenied");
+                throw new Exception(resourceMapMsg.getString("msg.postoIsDenied"));
             }
 
             updateWeightTicket(purchaseOrder);
@@ -3288,7 +3605,8 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 
         @Override
         protected void failed(Throwable cause) {
-            isValidPOSTO = true;
+            isValidPOSTO = false;
+            cbxVendorLoadingN.setSelectedIndex(-1);
 
             if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
                 cause = cause.getCause();
@@ -3310,6 +3628,81 @@ private void txtCreatorKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
             newWeightTicket.setPosto(purchaseOrder.getPoNumber());
             newWeightTicket.getWeightTicketDetail().setLoadVendor(purchaseOrder.getVendor());
             strVendor = purchaseOrder.getVendor();
+            switch (modeDetail) {
+                case OUT_SLOC_SLOC:
+                    newWeightTicket.getWeightTicketDetail().setLoadVendor(purchaseOrder.getVendor());
+                    break;
+            }
         }
     }
+
+    @Action
+    public void showHideSearch() {
+        isShow = !isShow;
+        pnFilter.setVisible(isShow);
+        if (isShow) {
+            btnShowHide.setText("Ẩn tìm kiếm");
+        } else {
+            btnShowHide.setText("Hiện tìm kiếm");
+        }
+    }
+
+    @Action(block = Task.BlockingScope.ACTION)
+    public Task editOfflineRecord() {
+        return new EditOfflineRecordTask(Application.getInstance(WeighBridgeApp.class));
+    }
+
+    private class EditOfflineRecordTask extends Task<Object, Void> {
+
+        EditOfflineRecordTask(Application app) {
+            super(app);
+        }
+
+        @Override
+        protected Object doInBackground() {
+            newRecord();
+            loadModeTypeModel(selectedWeightTicket.getRegType() == 'I' ? MODE.INPUT : MODE.OUTPUT);
+            modeDetail = MODE_DETAIL.valueOf(selectedWeightTicket.getMode());
+            cbxModeType.setSelectedItem(new WeighingMode(modeDetail, null));
+
+            newWeightTicket = selectedWeightTicket;
+            WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
+
+            txtTicketIdN.setText(newWeightTicket.getTicketId());
+            txtWeightTickerRefN.setText(newWeightTicket.getWeightTicketIdRef());
+            txtRegisterIdN.setText(newWeightTicket.getRegisteredNumber());
+            txtDriverNameN.setText(newWeightTicket.getDriverName());
+            txtCMNDN.setText(newWeightTicket.getDriverIdNo());
+            txtPlateNoN.setText(newWeightTicket.getPlateNo());
+            txtTonnageN.setText("0");
+            txtTrailerNoN.setText(newWeightTicket.getTrailerId());
+            txtSlingN.setText(Integer.toString(newWeightTicket.getSling()));
+            txtPalletN.setText(Integer.toString(newWeightTicket.getPallet()));
+            txtSoNiemXaN.setText(newWeightTicket.getSoNiemXa());
+            txtProductionBatchN.setText(newWeightTicket.getBatch());
+            txtNoteN.setText(newWeightTicket.getNote());
+            txtDONumN.setText(weightTicketDetail.getDeliveryOrderNo());
+            txtPONumN.setText(weightTicketDetail.getEbeln());
+            txtPOSTONumN.setText(newWeightTicket.getPosto());
+            txtSONumN.setText(weightTicketDetail.getSoNumber());
+            cbxMaterialTypeN.setSelectedItem(weightTicketDetail.getRegItemDescription());
+            txtWeightN.setText(weightTicketDetail.getRegItemQuantity().toString());
+            cbxSlocN.setSelectedItem(new SLoc(newWeightTicket.getLgort()));
+            cbxSloc2N.setSelectedItem(new SLoc(newWeightTicket.getRecvLgort()));
+            cbxBatchStockN.setModel(new DefaultComboBoxModel());
+            cbxBatchStockN.setSelectedIndex(-1);
+            cbxBatchStock2N.setModel(new DefaultComboBoxModel());
+            cbxBatchStock2N.setSelectedIndex(-1);
+            cbxVendorLoadingN.setSelectedItem(new Vendor(weightTicketDetail.getLoadVendor()));
+            cbxVendorTransportN.setSelectedItem(new Vendor(weightTicketDetail.getTransVendor()));
+
+            validateForm();
+            return null;  // return your result
+        }
+
+        @Override
+        protected void succeeded(Object result) {
+        }
+    }
+
 }
