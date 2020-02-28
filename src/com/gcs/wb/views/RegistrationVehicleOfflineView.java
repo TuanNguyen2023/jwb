@@ -2176,7 +2176,7 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
         showComponent(txtProductionBatchN, lblProductionBatchN, true, true);
         showComponent(txtNoteN, lblNoteN, true, true);
         showComponent(txtDONumN, lblDONumN, btnDOCheckN, true, false);
-        showComponent(txtSONumN, lblSONumN, btnSOCheckN, true, !WeighBridgeApp.getApplication().isOfflineMode());
+        showComponent(txtSONumN, lblSONumN, btnSOCheckN, true, true);
         showComponent(txtPONumN, lblPONumN, btnPOCheckN, false, false);
         showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, false, false);
         showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, false);
