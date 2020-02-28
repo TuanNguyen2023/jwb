@@ -207,6 +207,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         DefaultComboBoxModel vendorTModel = (DefaultComboBoxModel) SerializationUtils.clone(vendorLModel);
         cbxVendorLoading.setModel(vendorLModel);
         cbxVendorTransport.setModel(vendorTModel);
+        setAllChildPanelsVisible(pnWTLeft);
+        setAllChildPanelsVisible(pnWTRight);
     }
 
     /**
