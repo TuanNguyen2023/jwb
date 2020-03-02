@@ -10,7 +10,6 @@ import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.base.constant.Constants.WeighingProcess.MODE;
 import com.gcs.wb.base.constant.Constants.WeighingProcess.MODE_DETAIL;
-import com.gcs.wb.base.enums.MaterialEnum;
 import com.gcs.wb.base.enums.ModeEnum;
 import com.gcs.wb.base.enums.StatusEnum;
 import com.gcs.wb.base.util.StringUtil;
@@ -31,7 +30,6 @@ import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.Task;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -136,6 +134,20 @@ public class WTRegView extends javax.swing.JInternalFrame {
                     WeighingMode mod = (WeighingMode) value;
                     setText(mod.getTitle());
                     setToolTipText(mod.getTitle());
+                }
+                return this;
+            }
+        });
+
+        cbxStatus.setRenderer(new DefaultListCellRenderer() {
+
+            @Override
+            public Component getListCellRendererComponent(
+                    JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof StatusEnum) {
+                    StatusEnum status = (StatusEnum) value;
+                    setText(status.getValue());
                 }
                 return this;
             }
@@ -262,6 +274,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         cbxVendorLoadingN.setModel(vendorModel);
         cbxVendorTransportN.setModel(vendor2Model);
         cbxModeSearch.setModel(new DefaultComboBoxModel<>(ModeEnum.values()));
+        cbxStatus.setModel(new DefaultComboBoxModel<>(StatusEnum.values()));
     }
 
     /**
@@ -487,7 +500,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
         lblStatus.setText(resourceMap.getString("lblStatus.text")); // NOI18N
         lblStatus.setName("lblStatus"); // NOI18N
 
-        cbxStatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Tất cả", "Hoàn tất", "Chưa hoàn tất" }));
         cbxStatus.setName("cbxStatus"); // NOI18N
 
         lblMode.setText(resourceMap.getString("lblMode.text")); // NOI18N
@@ -611,7 +623,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         btnEdit.setAction(actionMap.get("editOfflineRecord")); // NOI18N
         btnEdit.setText(resourceMap.getString("btnEdit.text")); // NOI18N
-        btnEdit.setEnabled(false);
         btnEdit.setName("btnEdit"); // NOI18N
 
         javax.swing.GroupLayout pnPrintControlLayout = new javax.swing.GroupLayout(pnPrintControl);
@@ -1285,7 +1296,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(pnRegistrationOfVehicle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pnROVRight, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
 
         pack();
@@ -2546,44 +2557,6 @@ private void cbxModeSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             super(app);
         }
 
-        private List<WeightTicket> getWeightTicketWithOtherType(String from, String to) throws Exception {
-            List<WeightTicket> data = null;
-            if (cbxStatus.getSelectedIndex() == StatusEnum.POSTED.VALUE) {
-                data = weightTicketRegistarationController.findByDatePostedNull(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim(), modeSearch);
-            } else if (cbxStatus.getSelectedIndex() == StatusEnum.ALL.VALUE) {
-                data = weightTicketRegistarationController.findByDateAllNull(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim(), modeSearch);
-            } else if (cbxStatus.getSelectedIndex() == StatusEnum.ALL.UNFINISH.VALUE) {
-                data = weightTicketRegistarationController.findByDateUnfinishNull(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim(), modeSearch);
-            }
-
-            return filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
-        }
-
-        private List<WeightTicket> getWeightTicketWithAllType(String from, String to) throws Exception {
-            List<WeightTicket> data = null;
-            if (cbxStatus.getSelectedIndex() == StatusEnum.POSTED.VALUE) {
-                data = weightTicketRegistarationController.findByDatePostedNullAll(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim(), modeSearch);
-            } else if (cbxStatus.getSelectedIndex() == StatusEnum.ALL.VALUE) {
-                data = weightTicketRegistarationController.findByDateAllNullAll(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim(), modeSearch);
-            } else if (cbxStatus.getSelectedIndex() == StatusEnum.ALL.UNFINISH.VALUE) {
-                data = weightTicketRegistarationController.findByDateUnfinishNullAll(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim(), modeSearch);
-            }
-            return filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
-        }
-
-        private List<WeightTicket> getWeightTicketWithSelectedType(String from, String to, String matnr) throws Exception {
-            List<WeightTicket> data = null;
-            if (cbxStatus.getSelectedIndex() == StatusEnum.POSTED.VALUE) {
-                data = weightTicketRegistarationController.findByDatePosted(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), matnr, txtPlateNo.getText().trim(), modeSearch);
-            } else if (cbxStatus.getSelectedIndex() == StatusEnum.ALL.VALUE) {
-                data = weightTicketRegistarationController.findByDateAll(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), matnr, txtPlateNo.getText().trim(), modeSearch);
-            } else if (cbxStatus.getSelectedIndex() == StatusEnum.ALL.UNFINISH.VALUE) {
-                data = weightTicketRegistarationController.findByDateUnfinish(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), matnr, txtPlateNo.getText().trim(), modeSearch);
-            }
-
-            return filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
-        }
-
         private void setWeightTicketData() {
             for (int i = 0; i < weightTicketList.size(); i++) {
                 WeightTicket item = weightTicketList.get(i);
@@ -2639,15 +2612,12 @@ private void cbxModeSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                 String from = format.format(dpDateFrom.getDate());
                 String to = format.format(dpDateTo.getDate());
-                List<WeightTicket> result;
-                modeSearch = cbxModeSearch.getSelectedItem().toString();
-                if (material.getMatnr().equals(MaterialEnum.OTHER.VALUE)) {
-                    result = getWeightTicketWithOtherType(from, to);
-                } else if (material.getMatnr().equals(MaterialEnum.ALL.VALUE)) {
-                    result = getWeightTicketWithAllType(from, to);
-                } else {
-                    result = getWeightTicketWithSelectedType(from, to, material.getMatnr());
-                }
+                List<WeightTicket> result = weightTicketRegistarationController.findListWeightTicket(from, to,
+                        txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim(),
+                        material.getMatnr(), (StatusEnum) cbxStatus.getSelectedItem(),
+                        (ModeEnum) cbxModeSearch.getSelectedItem());
+
+                result = filterHours(result, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
 
                 setProgress(2, 0, 4);
                 setMessage(resourceMapMsg.getString("msg.handleDate"));

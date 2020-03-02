@@ -6,6 +6,8 @@ package com.gcs.wb.controller;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.base.constant.Constants;
+import com.gcs.wb.base.enums.ModeEnum;
+import com.gcs.wb.base.enums.StatusEnum;
 import com.gcs.wb.jpa.JReportService;
 import com.gcs.wb.jpa.entity.*;
 import com.gcs.wb.jpa.entity.OutboundDeliveryDetail;
@@ -84,17 +86,17 @@ public class WeightTicketRegistarationController {
             map.put("P_ADDRESS", configuration.getRptId());
             map.put("P_DO", weightTicketDetail.getDeliveryOrderNo());
             String reportName;
-    //        if (configuration.isModeNormal()) {
-    //            //reportName = "./rpt/rptBT/RegWT_HP.jasper";
-    //            reportName = "./rpt/rptBT/RegWT_HP.jasper";
-    //        } else {
-    //            //reportName = "./rpt/rptPQ/RegWT.jasper";
-    //            reportName = "./rpt/rptPQ/RegWT.jasper";
-    //        }
+            //        if (configuration.isModeNormal()) {
+            //            //reportName = "./rpt/rptBT/RegWT_HP.jasper";
+            //            reportName = "./rpt/rptBT/RegWT_HP.jasper";
+            //        } else {
+            //            //reportName = "./rpt/rptPQ/RegWT.jasper";
+            //            reportName = "./rpt/rptPQ/RegWT.jasper";
+            //        }
             reportName = "./rpt/rptBT/RegWT_HP.jasper";
             jreportService.printReport(map, reportName);
         }
-        
+
     }
 
     public boolean checkExistDO(String doNumber) {
@@ -175,27 +177,6 @@ public class WeightTicketRegistarationController {
         return wTRegService.findByVehicleId(vehicleId);
     }
 
-    public List<WeightTicket> findByDatePostedNull(String sfrom, String sto, String creator, String taixe, String bienso, String mode) throws Exception {
-        return wTRegService.findByDatePostedNull(sfrom, sto, creator, taixe, bienso, mode);
-    }
-
-    public List<WeightTicket> findByDatePostedNullAll(String sfrom, String sto, String creator, String taixe, String bienso, String mode) throws Exception {
-        return wTRegService.findByDatePostedNullAll(sfrom, sto, creator, taixe, bienso, mode);
-    }
-
-    public List<WeightTicket> findByDatePosted(String sfrom, String sto, String creator, String taixe, String loaihang, String bienso, String mode) throws Exception {
-        return wTRegService.findByDatePosted(sfrom, sto, creator, taixe, loaihang, bienso, mode);
-    }
-
-    public List<WeightTicket> findByDateAll(String sfrom, String sto, String creator, String taixe, String loaihang, String bienso, String mode) throws Exception {
-        return wTRegService.findByDateAll(sfrom, sto, creator, taixe, loaihang, bienso, mode);
-    }
-
-    public List<WeightTicket> findByDateAllNull(String sfrom, String sto, String creator, String taixe, String bienso, String mode) throws Exception {
-
-        return wTRegService.findByDateAllNull(sfrom, sto, creator, taixe, bienso, mode);
-    }
-
     public Date getServerDate() {
         Date date = null;
         try {
@@ -216,10 +197,6 @@ public class WeightTicketRegistarationController {
         String plant = configuration.getWkPlant();
         int count = wTRegService.getCountTicketDay(plant);
         return count;
-    }
-
-    public List<WeightTicket> findByDateAllNullAll(String sfrom, String sto, String creator, String taixe, String bienso, String mode) throws Exception {
-        return wTRegService.findByDateAllNullAll(sfrom, sto, creator, taixe, bienso, mode);
     }
 
     public List<OutboundDeliveryDetail> findByMandtDelivNumb(String deliv_numb) throws Exception {
@@ -258,7 +235,7 @@ public class WeightTicketRegistarationController {
 
         return 0f;
     }
-    
+
     public List<BatchStock> getBatchStocks(SLoc sloc, String[] arr_matnr) {
         return wTRegService.getBatchStocks(sloc, arr_matnr);
     }
@@ -266,45 +243,46 @@ public class WeightTicketRegistarationController {
     public void getSyncBatchStocks(SLoc sloc, String[] arr_matnr) {
         wTRegService.getSyncBatchStocks(sloc, arr_matnr);
     }
-    
+
     public DefaultComboBoxModel getBatchStockModel(List<BatchStock> batchStocks) {
         return new DefaultComboBoxModel(batchStocks.toArray());
     }
-    
+
     public Vendor getVendor(String strVendor) {
         return vendorRepository.findByLifnr(strVendor);
     }
-    
+
     public boolean checkPlateNoInVendor(String abbr, String plateNo) {
         return transportAgentVehicleRepository.findByAbbrAndPlateNo(abbr, plateNo) != null;
     }
-    
+
     public DefaultComboBoxModel getMaterialInternalModel() {
         return new DefaultComboBoxModel(materialInternalRepository.getMaterialInternals().toArray());
     }
-    
+
     public MaterialInternal getMaterialInternal(String matnr) {
         return materialInternalRepository.findByMatnr(matnr);
     }
-    
+
     public Material getMaterial(String matnr) {
         return materialRepository.findByMatnr(matnr);
     }
-    
+
     public BigDecimal getSumQuantityWithPoNo(String poNo) {
         BigDecimal result = BigDecimal.ZERO;
-        
+
         List<WeightTicketDetail> weightTicketDetails = weightTicketDetailRepository.findByPoNo(poNo);
-        for (WeightTicketDetail weightTicketDetail: weightTicketDetails) {
+        for (WeightTicketDetail weightTicketDetail : weightTicketDetails) {
             result = result.add(weightTicketDetail.getRegItemQuantity());
         }
-        
+
         return result;
     }
 
     /**
      * Get list material inter for mode Other
-     * @return 
+     *
+     * @return
      */
     public DefaultComboBoxModel getListMaterialInternal() {
 
@@ -318,28 +296,24 @@ public class WeightTicketRegistarationController {
         }
         return result;
     }
-    
+
     public DefaultComboBoxModel getSlocModel() {
         return new DefaultComboBoxModel(sLocRepository.getListSLoc().toArray());
     }
-    
+
     public DefaultComboBoxModel getVendorModel() {
         return new DefaultComboBoxModel(vendorRepository.getListVendor().toArray());
     }
-    
-    public Unit getUnit(){
+
+    public Unit getUnit() {
         return wTRegService.getUnit();
     }
 
-    public List<WeightTicket> findByDateUnfinishNull(String sfrom, String sto, String creator, String taixe, String bienso, String mode) throws Exception {
-        return wTRegService.findByDateUnfinishNull(sfrom, sto, creator, taixe, bienso, mode);
-    }
-
-    public List<WeightTicket> findByDateUnfinishNullAll(String sfrom, String sto, String creator, String taixe, String bienso, String mode) throws Exception {
-        return wTRegService.findByDateUnfinishNullAll(sfrom, sto, creator, taixe, bienso, mode);
-    }
-
-    public List<WeightTicket> findByDateUnfinish(String sfrom, String sto, String creator, String taixe, String loaihang, String bienso, String mode) throws Exception {
-        return wTRegService.findByDateUnfinish(sfrom, sto, creator, taixe, loaihang, bienso, mode);
+    public List<WeightTicket> findListWeightTicket(String sfrom, String sto,
+            String creator, String driverName, String plateNo,
+            String material, StatusEnum status, ModeEnum mode) throws Exception {
+        java.sql.Date from = java.sql.Date.valueOf(sfrom);
+        java.sql.Date to = java.sql.Date.valueOf(sto);
+        return wTRegService.findListWeightTicket(from, to, creator, driverName, plateNo, material, status, mode);
     }
 }

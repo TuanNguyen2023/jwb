@@ -68,7 +68,7 @@
                   <Component id="pnRegistrationOfVehicle" max="32767" attributes="1"/>
                   <Component id="pnROVRight" alignment="0" max="32767" attributes="1"/>
               </Group>
-              <EmptySpace pref="18" max="32767" attributes="0"/>
+              <EmptySpace pref="22" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -392,13 +392,6 @@
         </Component>
         <Component class="javax.swing.JComboBox" name="cbxStatus">
           <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="3">
-                <StringItem index="0" value="T&#x1ea5;t c&#x1ea3;"/>
-                <StringItem index="1" value="Ho&#xe0;n t&#x1ea5;t"/>
-                <StringItem index="2" value="Ch&#x1b0;a ho&#xe0;n t&#x1ea5;t"/>
-              </StringArray>
-            </Property>
             <Property name="name" type="java.lang.String" value="cbxStatus" noResource="true"/>
           </Properties>
         </Component>
@@ -509,7 +502,7 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace pref="14" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="pnControl" alignment="0" max="32767" attributes="3"/>
+                      <Component id="pnControl" alignment="0" pref="464" max="32767" attributes="3"/>
                       <Component id="pnROVLeft" alignment="1" min="-2" max="-2" attributes="1"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>

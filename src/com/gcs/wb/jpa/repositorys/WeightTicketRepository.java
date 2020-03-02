@@ -6,6 +6,9 @@ package com.gcs.wb.jpa.repositorys;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.base.constant.Constants;
+import com.gcs.wb.base.enums.MaterialEnum;
+import com.gcs.wb.base.enums.ModeEnum;
+import com.gcs.wb.base.enums.StatusEnum;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.jpa.entity.WeightTicket;
@@ -30,7 +33,7 @@ public class WeightTicketRepository {
         TypedQuery<WeightTicket> query = entityManager.createNamedQuery("WeightTicket.findAll", WeightTicket.class);
         return query.getResultList();
     }
-    
+
     public WeightTicket findByIdSeqDay(int id, int seqDay) {
         WeightTicket weightTicket = null;
         TypedQuery<WeightTicket> query = entityManager.createNamedQuery("WeightTicket.findByIdSeqDay", WeightTicket.class);
@@ -51,7 +54,7 @@ public class WeightTicketRepository {
         }
         return weightTicket;
     }
-    
+
     public List<WeightTicket> getListByDeliveryOrderNo(String deliverNumber) {
         List<WeightTicket> wt = new ArrayList<WeightTicket>();
         TypedQuery<WeightTicket> query = entityManager.createNamedQuery("WeightTicket.findByDeliveryOrderNo", WeightTicket.class);
@@ -206,141 +209,6 @@ public class WeightTicketRepository {
         return list;
     }
 
-    public List<WeightTicket> findByDatePosted(
-            Date from, Date to,
-            String creator, String driverName,
-            String loaihang, String plateNo, String mode) {
-        List<WeightTicket> list = new ArrayList<WeightTicket>();
-        try {
-            TypedQuery<WeightTicket> nq = entityManager.createNamedQuery("WeightTicket.findByDatePosted", WeightTicket.class);
-            nq.setParameter("from", from);
-            nq.setParameter("to", to);
-            nq.setParameter("creator", "%" + creator + "%");
-            nq.setParameter("driverName", "%" + driverName + "%");
-            nq.setParameter("loaihang", loaihang);
-            nq.setParameter("plateNo", "%" + plateNo + "%");
-            nq.setParameter("mandt", configuration.getSapClient());
-            nq.setParameter("wplant", configuration.getWkPlant());
-            nq.setParameter("mode", mode);
-            list = nq.getResultList();
-        } catch (Exception ex) {
-            logger.error(null, ex);
-        }
-        return list;
-    }
-
-    public List<WeightTicket> findByDatePostedNull(
-            Date from, Date to,
-            String creator, String driverName,
-            String plateNo, String mode) {
-        List<WeightTicket> list = new ArrayList<WeightTicket>();
-        try {
-            TypedQuery<WeightTicket> nq = entityManager.createNamedQuery("WeightTicket.findByDatePostedNull", WeightTicket.class);
-            nq.setParameter("from", from);
-            nq.setParameter("to", to);
-            nq.setParameter("creator", "%" + creator + "%");
-            nq.setParameter("driverName", "%" + driverName + "%");
-            nq.setParameter("plateNo", "%" + plateNo + "%");
-            nq.setParameter("mandt", configuration.getSapClient());
-            nq.setParameter("wplant", configuration.getWkPlant());
-            nq.setParameter("mode", mode);
-            list = nq.getResultList();
-        } catch (Exception ex) {
-            logger.error(null, ex);
-        }
-        return list;
-    }
-
-    public List<WeightTicket> findByDatePostedNullAll(
-            Date from, Date to,
-            String creator, String driverName,
-            String plateNo, String mode) {
-        List<WeightTicket> list = new ArrayList<WeightTicket>();
-        try {
-            TypedQuery<WeightTicket> nq = entityManager.createNamedQuery("WeightTicket.findByDatePostedNullAll", WeightTicket.class);
-            nq.setParameter("from", from);
-            nq.setParameter("to", to);
-            nq.setParameter("creator", "%" + creator + "%");
-            nq.setParameter("driverName", "%" + driverName + "%");
-            nq.setParameter("plateNo", "%" + plateNo + "%");
-            nq.setParameter("mandt", configuration.getSapClient());
-            nq.setParameter("wplant", configuration.getWkPlant());
-            nq.setParameter("mode", mode);
-            list = nq.getResultList();
-        } catch (Exception ex) {
-            logger.error(null, ex);
-        }
-        return list;
-    }
-
-    public List<WeightTicket> findByDateAll(
-            Date from, Date to,
-            String creator, String driverName,
-            String loaihang, String plateNo, String mode) {
-        List<WeightTicket> list = new ArrayList<WeightTicket>();
-        try {
-            TypedQuery<WeightTicket> nq = entityManager.createNamedQuery("WeightTicket.findByDateAll", WeightTicket.class);
-            nq.setParameter("from", from);
-            nq.setParameter("to", to);
-            nq.setParameter("creator", "%" + creator + "%");
-            nq.setParameter("driverName", "%" + driverName + "%");
-            nq.setParameter("loaihang", loaihang);
-            nq.setParameter("plateNo", "%" + plateNo + "%");
-            nq.setParameter("mandt", configuration.getSapClient());
-            nq.setParameter("wplant", configuration.getWkPlant());
-            nq.setParameter("mode", mode);
-            list = nq.getResultList();
-        } catch (Exception ex) {
-            logger.error(null, ex);
-        }
-        return list;
-    }
-
-    public List<WeightTicket> findByDateAllNull(
-            Date from, Date to,
-            String creator, String driverName,
-            String plateNo, String mode) throws Exception {
-        List<WeightTicket> list = new ArrayList<WeightTicket>();
-        try {
-            TypedQuery<WeightTicket> nq = entityManager.createNamedQuery("WeightTicket.findByDateAllNull", WeightTicket.class);
-            nq.setParameter("from", from);
-            nq.setParameter("to", to);
-            nq.setParameter("creator", "%" + creator + "%");
-            nq.setParameter("driverName", "%" + driverName + "%");
-            nq.setParameter("plateNo", "%" + plateNo + "%");
-            nq.setParameter("mandt", configuration.getSapClient());
-            nq.setParameter("wplant", configuration.getWkPlant());
-            nq.setParameter("mode", mode);
-            list = nq.getResultList();
-        } catch (Exception ex) {
-            logger.error(null, ex);
-        }
-        return list;
-    }
-
-    public List<WeightTicket> findByDateAllNullAll(
-            Date from, Date to,
-            String creator, String driverName,
-            String plateNo, String mode) {
-        List<WeightTicket> list = new ArrayList<WeightTicket>();
-
-        try {
-            TypedQuery<WeightTicket> nq = entityManager.createNamedQuery("WeightTicket.findByDateAllNullAll", WeightTicket.class);
-            nq.setParameter("from", from);
-            nq.setParameter("to", to);
-            nq.setParameter("creator", "%" + creator + "%");
-            nq.setParameter("driverName", "%" + driverName + "%");
-            nq.setParameter("plateNo", "%" + plateNo + "%");
-            nq.setParameter("mandt", configuration.getSapClient());
-            nq.setParameter("wplant", configuration.getWkPlant());
-            nq.setParameter("mode", mode);
-            list = nq.getResultList();
-        } catch (Exception ex) {
-            logger.error(null, ex);
-        }
-        return list;
-    }
-    
     public List<WeightTicket> findListWeightTicket(String month, String year, String tagent, String matnr, List<Character> modes, boolean isPosted) throws Exception {
         String query = "SELECT w FROM WeightTicket w "
                 + " , IN(w.weightTicketDetails) wd "
@@ -383,7 +251,56 @@ public class WeightTicketRepository {
             throw ex;
         }
     }
-    
+
+    public List<WeightTicket> findListWeightTicket(Date from, Date to,
+            String creator, String driverName, String plateNo,
+            String material, StatusEnum status, ModeEnum mode) throws Exception {
+
+        String query = "SELECT w FROM WeightTicket w "
+                + " , IN(w.weightTicketDetails) wd "
+                + "WHERE w.createdDate BETWEEN :from AND :to"
+                + "  AND w.creator LIKE :creator"
+                + "  AND (w.plateNo LIKE :plateNo OR w.trailerId LIKE :plateNo)"
+                + "  AND w.driverName LIKE :driverName"
+                + "  AND w.mandt = :mandt"
+                + "  AND w.wplant = :wplant";
+
+        if (mode != ModeEnum.ALL) {
+            query += "  AND w.mode = '" + mode + "'";
+        }
+
+        switch (status) {
+            case POSTED:
+                query += "  AND w.status = '" + Constants.WeightTicket.STATUS_POSTED + "'";
+                break;
+            case UNFINISH:
+                query += "  AND w.status IS NULL";
+                break;
+        }
+
+        if (material.equals(MaterialEnum.OTHER.VALUE)) {
+            query += "  AND wd.matnrRef IS NULL";
+        } else if (!material.equals(MaterialEnum.ALL.VALUE)) {
+            query += "  AND wd.matnrRef = '" + material + "'";
+        }
+
+        try {
+            TypedQuery<WeightTicket> nq = entityManager.createQuery(query, WeightTicket.class);
+            nq.setParameter("from", from);
+            nq.setParameter("to", to);
+            nq.setParameter("creator", "%" + creator + "%");
+            nq.setParameter("driverName", "%" + driverName + "%");
+            nq.setParameter("plateNo", "%" + plateNo + "%");
+            nq.setParameter("mandt", configuration.getSapClient());
+            nq.setParameter("wplant", configuration.getWkPlant());
+
+            return nq.getResultList();
+        } catch (NumberFormatException ex) {
+            logger.error(null, ex);
+            throw ex;
+        }
+    }
+
     public WeightTicket getWeightTicketByIdAndMandtAndWplant(String id, String mandt, String wplant) {
         WeightTicket weightTicket = null;
         TypedQuery<WeightTicket> query = entityManager.createNamedQuery("WeightTicket.findByIdAndMandtAndWplant", WeightTicket.class);
@@ -395,71 +312,5 @@ public class WeightTicketRepository {
             weightTicket = weightTickets.get(0);
         }
         return weightTicket;
-    }
-
-    public List<WeightTicket> findByDateUnfinishNull(Date from, Date to,
-            String creator, String driverName,
-            String plateNo, String mode) {
-        List<WeightTicket> list = new ArrayList<>();
-        try {
-            TypedQuery<WeightTicket> nq = entityManager.createNamedQuery("WeightTicket.findByDateUnfinishNull", WeightTicket.class);
-            nq.setParameter("from", from);
-            nq.setParameter("to", to);
-            nq.setParameter("creator", "%" + creator + "%");
-            nq.setParameter("driverName", "%" + driverName + "%");
-            nq.setParameter("plateNo", "%" + plateNo + "%");
-            nq.setParameter("mandt", configuration.getSapClient());
-            nq.setParameter("wplant", configuration.getWkPlant());
-            nq.setParameter("mode", mode);
-            list = nq.getResultList();
-        } catch (Exception ex) {
-            logger.error(null, ex);
-        }
-        return list;
-    }
-
-    public List<WeightTicket> findByDateUnfinishNullAll(
-            Date from, Date to,
-            String creator, String driverName,
-            String plateNo, String mode) {
-        List<WeightTicket> list = new ArrayList<>();
-        try {
-            TypedQuery<WeightTicket> nq = entityManager.createNamedQuery("WeightTicket.findByDateUnfinishNullAll", WeightTicket.class);
-            nq.setParameter("from", from);
-            nq.setParameter("to", to);
-            nq.setParameter("creator", "%" + creator + "%");
-            nq.setParameter("driverName", "%" + driverName + "%");
-            nq.setParameter("plateNo", "%" + plateNo + "%");
-            nq.setParameter("mandt", configuration.getSapClient());
-            nq.setParameter("wplant", configuration.getWkPlant());
-            nq.setParameter("mode", mode);
-            list = nq.getResultList();
-        } catch (Exception ex) {
-            logger.error(null, ex);
-        }
-        return list;
-    }
-
-    public List<WeightTicket> findByDateUnfinish(
-            Date from, Date to,
-            String creator, String driverName,
-            String loaihang, String plateNo, String mode) {
-        List<WeightTicket> list = new ArrayList<>();
-        try {
-            TypedQuery<WeightTicket> nq = entityManager.createNamedQuery("WeightTicket.findByDateUnfinish", WeightTicket.class);
-            nq.setParameter("from", from);
-            nq.setParameter("to", to);
-            nq.setParameter("creator", "%" + creator + "%");
-            nq.setParameter("driverName", "%" + driverName + "%");
-            nq.setParameter("loaihang", loaihang);
-            nq.setParameter("plateNo", "%" + plateNo + "%");
-            nq.setParameter("mandt", configuration.getSapClient());
-            nq.setParameter("wplant", configuration.getWkPlant());
-            nq.setParameter("mode", mode);
-            list = nq.getResultList();
-        } catch (Exception ex) {
-            logger.error(null, ex);
-        }
-        return list;
     }
 }
