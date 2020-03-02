@@ -23,7 +23,7 @@ import javax.persistence.Table;
 @Table(name = "tbl_sell_order")
 @NamedQueries({
     @NamedQuery(name = "SellOrder.findAll", query = "SELECT so FROM SellOrder so"),
-    @NamedQuery(name = "SellOrder.findSoNumber", query = "SELECT so FROM SellOrder so WHERE so.soNumber = :soNumber")
+    @NamedQuery(name = "SellOrder.findBySoNumber", query = "SELECT so FROM SellOrder so WHERE so.soNumber = :soNumber")
 })
 public class SellOrder implements Serializable {
 

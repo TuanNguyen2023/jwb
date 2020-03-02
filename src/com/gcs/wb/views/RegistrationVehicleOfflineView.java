@@ -1682,7 +1682,7 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
         return new CheckSOTask(WeighBridgeApp.getApplication());
     }
 
-    List<DOCheckStructure> listDONumbers = new ArrayList<>();
+    List<SellOrder> sellOrders = new ArrayList<>();
 
     private class CheckSOTask extends org.jdesktop.application.Task<Object, Void> {
 
@@ -1711,8 +1711,10 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
                     throw new Exception(msg);
                 }
 
+                sellOrders.add(sellOrder);
+
                 if (doNum.isEmpty()) {
-                    doNum = doNumber.getVbelnDO();
+                    doNum = sellOrder.getDoNumber();
                 } else {
                     doNum += " - " + sellOrder.getDoNumber();
                 }
@@ -1723,7 +1725,7 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
 //                List<DOCheckStructure> doNumbers = new ArrayList<>();
 //
 //                if (doNumbers != null) {
-//                    listDONumbers.addAll(doNumbers);
+//                    sellOrders.addAll(doNumbers);
 //                    for (int i = 0; i < doNumbers.size(); i++) {
 //                        doNumber = doNumbers.get(i);
 //                        if (!doNumber.getMessage().trim().isEmpty()) {
@@ -2568,7 +2570,6 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
         boolean isSOValid = wtRegisValidation.validateDO(txtSONumN.getText(), lblSONumN);
         btnSOCheckN.setEnabled(isSOValid);
         if (!isValidSO) {
-            lblSONumN.setForeground(Color.red);
             txtDONumN.setEditable(true);
         } else {
             btnDOCheckN.setEnabled(true);
@@ -3198,19 +3199,23 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
         }
 
         public void updateDataForOutSellWateway() {
-            if (WeighBridgeApp.getApplication().isOfflineMode()) {
+            if (!isValidSO) {
                 WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
+
+                Material material = (Material) cbxMaterialTypeN.getSelectedItem();
+                weightTicketDetail.setMatnrRef(material.getMatnr());
+                weightTicketDetail.setRegItemDescription(material.getMaktx());
                 weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
                 weightTicketDetail.setSoNumber(txtSONumN.getText().trim());
             } else {
-                if (listDONumbers != null) {
+                if (sellOrders != null) {
                     for (WeightTicketDetail weightTicketDetail : newWeightTicket.getWeightTicketDetails()) {
-                        DOCheckStructure dOCheckStructure = listDONumbers.stream()
-                                .filter(t -> t.getVbelnDO().equalsIgnoreCase(weightTicketDetail.getDeliveryOrderNo()))
+                        SellOrder sellOrder = sellOrders.stream()
+                                .filter(t -> t.getDoNumber().equalsIgnoreCase(weightTicketDetail.getDeliveryOrderNo()))
                                 .findFirst().get();
 
-                        if (dOCheckStructure != null) {
-                            weightTicketDetail.setSoNumber(dOCheckStructure.getVbelnSO());
+                        if (sellOrder != null) {
+                            weightTicketDetail.setSoNumber(sellOrder.getSoNumber());
                         }
                     }
                 }
