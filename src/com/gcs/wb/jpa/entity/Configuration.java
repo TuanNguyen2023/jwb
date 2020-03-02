@@ -92,7 +92,7 @@ public class Configuration implements Serializable {
     @Column(name = "updated_date")
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date updatedDate;
-    
+
     @Column(name = "wb1_delay")
     private int wb1Delay;
     @Column(name = "wb2_delay")
@@ -110,6 +110,15 @@ public class Configuration implements Serializable {
     @Column(name = "tolerance")
     private BigDecimal tolerance = Constants.Configuration.TOLERANCE;
 
+    @Column(name = "wb1_auto_signal")
+    private Boolean wb1AutoSignal;
+    @Column(name = "wb2_auto_signal")
+    private Boolean wb2AutoSignal;
+    @Column(name = "sap_user")
+    private String sapUser;
+    @Column(name = "sap_pass")
+    private String sapPass;
+
     public Configuration() {
     }
 
@@ -120,7 +129,7 @@ public class Configuration implements Serializable {
     public void setWplantMap(String wplantMap) {
         this.wplantMap = wplantMap;
     }
-    
+
     public int getId() {
         return id;
     }
@@ -377,6 +386,38 @@ public class Configuration implements Serializable {
         this.tolerance = tolerance;
     }
 
+    public Boolean getWb1AutoSignal() {
+        return wb1AutoSignal;
+    }
+
+    public void setWb1AutoSignal(Boolean wb1AutoSignal) {
+        this.wb1AutoSignal = wb1AutoSignal;
+    }
+
+    public Boolean getWb2AutoSignal() {
+        return wb2AutoSignal;
+    }
+
+    public void setWb2AutoSignal(Boolean wb2AutoSignal) {
+        this.wb2AutoSignal = wb2AutoSignal;
+    }
+
+    public String getSapUser() {
+        return sapUser;
+    }
+
+    public void setSapUser(String sapUser) {
+        this.sapUser = sapUser;
+    }
+
+    public String getSapPass() {
+        return sapPass;
+    }
+
+    public void setSapPass(String sapPass) {
+        this.sapPass = sapPass;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -424,7 +465,7 @@ public class Configuration implements Serializable {
         hash = 97 * hash + Objects.hashCode(this.wb2Step);
         hash = 97 * hash + Objects.hashCode(this.wb1MettlerParam);
         hash = 97 * hash + Objects.hashCode(this.wb2MettlerParam);
-        
+
         return hash;
     }
 

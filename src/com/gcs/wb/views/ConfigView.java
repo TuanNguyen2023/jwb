@@ -20,10 +20,14 @@ import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.service.SyncMasterDataService;
 import java.awt.Color;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.HashSet;
+import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.lang.SerializationUtils;
 import org.apache.log4j.Logger;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Application;
@@ -42,6 +46,8 @@ public class ConfigView extends javax.swing.JDialog {
     private boolean validForm = false;
     public ConfigController configController = new ConfigController();
     ResourceMap resourceMap = Application.getInstance(WeighBridgeApp.class).getContext().getResourceMap(ConfigView.class);
+    private DefaultComboBoxModel port1Model = null;
+    private DefaultComboBoxModel port2Model = null;
 
     // <editor-fold defaultstate="collapsed" desc="Class Constructors">
     /**
@@ -81,11 +87,11 @@ public class ConfigView extends javax.swing.JDialog {
         lblHost = new javax.swing.JLabel();
         txtHost = new javax.swing.JTextField();
         lblSId = new javax.swing.JLabel();
-        txfSNo = new javax.swing.JFormattedTextField();
+        txtSNo = new javax.swing.JFormattedTextField();
         lblRString = new javax.swing.JLabel();
         txtRString = new javax.swing.JTextField();
         lblDClient = new javax.swing.JLabel();
-        txfDClient = new javax.swing.JFormattedTextField();
+        txtDClient = new javax.swing.JFormattedTextField();
         lblSapUsername = new javax.swing.JLabel();
         lblSapPassword = new javax.swing.JLabel();
         txtSapUpsername = new javax.swing.JTextField();
@@ -102,6 +108,7 @@ public class ConfigView extends javax.swing.JDialog {
         lblPControl1 = new javax.swing.JLabel();
         cbxPControl1 = new javax.swing.JComboBox();
         chbMettler1 = new javax.swing.JCheckBox();
+        chbAutoSignal1 = new javax.swing.JCheckBox();
         pnWB2Config = new javax.swing.JPanel();
         lblPort2 = new javax.swing.JLabel();
         cbxPort2 = new javax.swing.JComboBox();
@@ -114,6 +121,7 @@ public class ConfigView extends javax.swing.JDialog {
         lblPControl2 = new javax.swing.JLabel();
         cbxPControl2 = new javax.swing.JComboBox();
         chbMettler2 = new javax.swing.JCheckBox();
+        chbAutoSignal2 = new javax.swing.JCheckBox();
         pnWorkingPlant = new javax.swing.JPanel();
         lblPlant = new javax.swing.JLabel();
         txtPlant = new javax.swing.JTextField();
@@ -252,11 +260,11 @@ public class ConfigView extends javax.swing.JDialog {
         lblSId.setText(resourceMap.getString("lblSId.text")); // NOI18N
         lblSId.setName("lblSId"); // NOI18N
 
-        txfSNo.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txfSNo.setName("txfSNo"); // NOI18N
-        txfSNo.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtSNo.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtSNo.setName("txtSNo"); // NOI18N
+        txtSNo.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                txfSNoKeyReleased(evt);
+                txtSNoKeyReleased(evt);
             }
         });
 
@@ -273,11 +281,11 @@ public class ConfigView extends javax.swing.JDialog {
         lblDClient.setText(resourceMap.getString("lblDClient.text")); // NOI18N
         lblDClient.setName("lblDClient"); // NOI18N
 
-        txfDClient.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txfDClient.setName("txfDClient"); // NOI18N
-        txfDClient.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtDClient.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtDClient.setName("txtDClient"); // NOI18N
+        txtDClient.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                txfDClientKeyReleased(evt);
+                txtDClientKeyReleased(evt);
             }
         });
 
@@ -289,9 +297,19 @@ public class ConfigView extends javax.swing.JDialog {
 
         txtSapUpsername.setText(resourceMap.getString("txtSapUpsername.text")); // NOI18N
         txtSapUpsername.setName("txtSapUpsername"); // NOI18N
+        txtSapUpsername.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtSapUpsernameKeyReleased(evt);
+            }
+        });
 
         txtSapPassword.setText(resourceMap.getString("txtSapPassword.text")); // NOI18N
         txtSapPassword.setName("txtSapPassword"); // NOI18N
+        txtSapPassword.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtSapPasswordKeyReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnSAPConfigLayout = new javax.swing.GroupLayout(pnSAPConfig);
         pnSAPConfig.setLayout(pnSAPConfigLayout);
@@ -316,8 +334,8 @@ public class ConfigView extends javax.swing.JDialog {
                     .addComponent(lblSId))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnSAPConfigLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txfDClient, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txfSNo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtDClient, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtSNo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         pnSAPConfigLayout.setVerticalGroup(
@@ -326,13 +344,13 @@ public class ConfigView extends javax.swing.JDialog {
                 .addGroup(pnSAPConfigLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblHost)
                     .addComponent(txtHost, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txfSNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtSNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblSId))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnSAPConfigLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblRString)
                     .addComponent(txtRString, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txfDClient, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtDClient, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblDClient))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnSAPConfigLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -342,7 +360,7 @@ public class ConfigView extends javax.swing.JDialog {
                 .addGroup(pnSAPConfigLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtSapPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblSapPassword))
-                .addContainerGap(13, Short.MAX_VALUE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         pnWB1Config.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("pnWB1Config.border.title"))); // NOI18N
@@ -353,7 +371,6 @@ public class ConfigView extends javax.swing.JDialog {
         lblPort1.setName("lblPort1"); // NOI18N
 
         cbxPort1.setEditable(true);
-        cbxPort1.setModel(getPortModel());
         cbxPort1.setName("cbxPort1"); // NOI18N
         cbxPort1.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -364,7 +381,6 @@ public class ConfigView extends javax.swing.JDialog {
         lblSpeed1.setText(resourceMap.getString("lblSpeed1.text")); // NOI18N
         lblSpeed1.setName("lblSpeed1"); // NOI18N
 
-        cbxSpeed1.setEditable(true);
         cbxSpeed1.setModel(getSpeedModel());
         cbxSpeed1.setName("cbxSpeed1"); // NOI18N
         cbxSpeed1.addItemListener(new java.awt.event.ItemListener() {
@@ -409,6 +425,9 @@ public class ConfigView extends javax.swing.JDialog {
         chbMettler1.setText(resourceMap.getString("chbMettler1.text")); // NOI18N
         chbMettler1.setName("chbMettler1"); // NOI18N
 
+        chbAutoSignal1.setText(resourceMap.getString("chbAutoSignal1.text")); // NOI18N
+        chbAutoSignal1.setName("chbAutoSignal1"); // NOI18N
+
         javax.swing.GroupLayout pnWB1ConfigLayout = new javax.swing.GroupLayout(pnWB1Config);
         pnWB1Config.setLayout(pnWB1ConfigLayout);
         pnWB1ConfigLayout.setHorizontalGroup(
@@ -423,6 +442,7 @@ public class ConfigView extends javax.swing.JDialog {
                     .addComponent(lblPControl1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWB1ConfigLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(chbAutoSignal1)
                     .addComponent(chbMettler1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(cbxSpeed1, 0, 165, Short.MAX_VALUE)
                     .addComponent(cbxPort1, 0, 165, Short.MAX_VALUE)
@@ -455,7 +475,9 @@ public class ConfigView extends javax.swing.JDialog {
                     .addComponent(cbxPControl1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(chbMettler1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(chbAutoSignal1)
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         pnWB2Config.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("pnWB2Config.border.title"))); // NOI18N
@@ -466,7 +488,6 @@ public class ConfigView extends javax.swing.JDialog {
         lblPort2.setName("lblPort2"); // NOI18N
 
         cbxPort2.setEditable(true);
-        cbxPort2.setModel(getPortModel());
         cbxPort2.setName("cbxPort2"); // NOI18N
         cbxPort2.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -477,7 +498,6 @@ public class ConfigView extends javax.swing.JDialog {
         lblSpeed2.setText(resourceMap.getString("lblSpeed2.text")); // NOI18N
         lblSpeed2.setName("lblSpeed2"); // NOI18N
 
-        cbxSpeed2.setEditable(true);
         cbxSpeed2.setModel(getSpeedModel());
         cbxSpeed2.setName("cbxSpeed2"); // NOI18N
         cbxSpeed2.addItemListener(new java.awt.event.ItemListener() {
@@ -522,6 +542,9 @@ public class ConfigView extends javax.swing.JDialog {
         chbMettler2.setText(resourceMap.getString("chbMettler2.text")); // NOI18N
         chbMettler2.setName("chbMettler2"); // NOI18N
 
+        chbAutoSignal2.setText(resourceMap.getString("chbAutoSignal2.text")); // NOI18N
+        chbAutoSignal2.setName("chbAutoSignal2"); // NOI18N
+
         javax.swing.GroupLayout pnWB2ConfigLayout = new javax.swing.GroupLayout(pnWB2Config);
         pnWB2Config.setLayout(pnWB2ConfigLayout);
         pnWB2ConfigLayout.setHorizontalGroup(
@@ -536,6 +559,7 @@ public class ConfigView extends javax.swing.JDialog {
                     .addComponent(lblPControl2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWB2ConfigLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(chbAutoSignal2)
                     .addComponent(chbMettler2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(cbxSpeed2, 0, 165, Short.MAX_VALUE)
                     .addComponent(cbxPort2, 0, 165, Short.MAX_VALUE)
@@ -568,7 +592,9 @@ public class ConfigView extends javax.swing.JDialog {
                     .addComponent(cbxPControl2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(chbMettler2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(chbAutoSignal2)
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         pnWorkingPlant.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("pnWorkingPlant.border.title"))); // NOI18N
@@ -615,7 +641,7 @@ public class ConfigView extends javax.swing.JDialog {
                 .addGroup(pnWorkingPlantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtWBID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
-                .addContainerGap(67, Short.MAX_VALUE))
+                .addContainerGap(72, Short.MAX_VALUE))
         );
 
         btnSave.setAction(actionMap.get("saveConfig")); // NOI18N
@@ -661,9 +687,9 @@ public class ConfigView extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(pnMySQLCon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(1, 1, 1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(pnWorkingPlant, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
+                    .addComponent(pnWorkingPlant, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
                     .addComponent(pnSAPConfig, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -675,7 +701,7 @@ public class ConfigView extends javax.swing.JDialog {
                         .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(lblSyncData))
                     .addComponent(syncIconLoading, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -726,13 +752,13 @@ public class ConfigView extends javax.swing.JDialog {
         validateForm();
     }//GEN-LAST:event_cbxPControl2ItemStateChanged
 
-    private void txfSNoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txfSNoKeyReleased
+    private void txtSNoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSNoKeyReleased
         validateForm();
-    }//GEN-LAST:event_txfSNoKeyReleased
+    }//GEN-LAST:event_txtSNoKeyReleased
 
-    private void txfDClientKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txfDClientKeyReleased
+    private void txtDClientKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDClientKeyReleased
         validateForm();
-    }//GEN-LAST:event_txfDClientKeyReleased
+    }//GEN-LAST:event_txtDClientKeyReleased
 
     private void txtDBHostKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDBHostKeyReleased
         validateFormDB();
@@ -762,11 +788,19 @@ public class ConfigView extends javax.swing.JDialog {
         validateForm();
     }//GEN-LAST:event_txtPlantKeyReleased
 
+private void txtSapUpsernameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSapUpsernameKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtSapUpsernameKeyReleased
+
+private void txtSapPasswordKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSapPasswordKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtSapPasswordKeyReleased
+
     private void setFormEditable(boolean editable) {
         txtHost.setEnabled(editable);
         txtRString.setEnabled(editable);
-        txfSNo.setEnabled(editable);
-        txfDClient.setEnabled(editable);
+        txtSNo.setEnabled(editable);
+        txtDClient.setEnabled(editable);
 
         txtPlant.setEnabled(editable);
         txtWBID.setEnabled(editable);
@@ -794,10 +828,16 @@ public class ConfigView extends javax.swing.JDialog {
 
     private void initController() {
         config = WeighBridgeApp.getApplication().getConfig();
+        port1Model = getPortModel();
+        port2Model = (DefaultComboBoxModel) SerializationUtils.clone(port1Model);
+
         if (config != null) {
             objBinding();
             validateFormDB();
             validateForm();
+        } else {
+            cbxPort1.setModel(port1Model);
+            cbxPort2.setModel(port2Model);
         }
 
         iconLoading.setVisible(false);
@@ -833,184 +873,115 @@ public class ConfigView extends javax.swing.JDialog {
     private void validateFormDB() {
         boolean bDBHost, bDBName, bDBUsr, bDBPwd;
 
-        bDBHost = !(txtDBHost.getText().trim().length() == 0);
-        if (bDBHost) {
-            lblDBHost.setForeground(Color.BLACK);
-        } else {
-            lblDBHost.setForeground(Color.RED);
-        }
+        bDBHost = !txtDBHost.getText().trim().isEmpty();
+        lblDBHost.setForeground(bDBHost ? Color.black : Color.red);
 
-        bDBName = !(txtDBName.getText().trim().length() == 0);
-        if (bDBName) {
-            lblDBName.setForeground(Color.BLACK);
-        } else {
-            lblDBName.setForeground(Color.RED);
-        }
+        bDBName = !txtDBName.getText().trim().isEmpty();
+        lblDBName.setForeground(bDBName ? Color.black : Color.red);
 
-        bDBUsr = !(txtDBUsr.getText().trim().length() == 0);
-        if (bDBUsr) {
-            lblDBUsr.setForeground(Color.BLACK);
-        } else {
-            lblDBUsr.setForeground(Color.RED);
-        }
+        bDBUsr = !txtDBUsr.getText().trim().isEmpty();
+        lblDBUsr.setForeground(bDBUsr ? Color.black : Color.red);
 
-        bDBPwd = !((new String(txtDBPwd.getPassword())).trim().length() == 0);
-        if (bDBPwd) {
-            lblDBPwd.setForeground(Color.BLACK);
-        } else {
-            lblDBPwd.setForeground(Color.RED);
-        }
+        bDBPwd = !(new String(txtDBPwd.getPassword())).trim().isEmpty();
+        lblDBPwd.setForeground(bDBPwd ? Color.black : Color.red);
 
         validFormDB = bDBHost && bDBName && bDBUsr && bDBPwd;
         btnCheckDbConnection.setEnabled(validFormDB);
     }
 
     private void validateForm() {
-        boolean //SAP Checks
-                bSHost, bSNo, bSClient,
-                //Bridge 1 Checks,
-                bCOM1, bSpeed1,
-                //Bridge 1 Checks,
-                bCOM2, bSpeed2,
-                bWPlant;
+        boolean bSHost, bSNo, bSClient, bSUser, bSPass,
+                bCOM1, bSpeed1, bCOM2, bSpeed2, bWPlant;
 
-        bSHost = !(txtHost.getText().trim().length() == 0);
-        if (bSHost) {// && checkString(txtHost.getText().trim())) {
-            lblHost.setForeground(Color.black);
-        } else {
-            lblHost.setForeground(Color.red);
-        }
+        bSHost = !txtHost.getText().trim().isEmpty();
+        lblHost.setForeground(bSHost ? Color.black : Color.red);
 
-        bSNo = !(txfSNo.getText().trim().length() == 0);
-        if (bSNo) {
-            lblSId.setForeground(Color.black);
-        } else {
-            lblSId.setForeground(Color.red);
-        }
+        bSNo = !txtSNo.getText().trim().isEmpty();
+        lblSId.setForeground(bSNo ? Color.black : Color.red);
 
-        bSClient = !(txfDClient.getText().trim().length() == 0);
-        if (bSClient) {
-            lblDClient.setForeground(Color.black);
-        } else {
-            lblDClient.setForeground(Color.red);
-        }
+        bSClient = !txtDClient.getText().trim().isEmpty();
+        lblDClient.setForeground(bSClient ? Color.black : Color.red);
 
-        bCOM1 = !(cbxPort1.getSelectedItem() instanceof String && (cbxPort1.getSelectedItem() == null || ((String) cbxPort1.getSelectedItem()).isEmpty()));
-        if (bCOM1) {
-            lblPort1.setForeground(Color.black);
-        } else {
-            lblPort1.setForeground(Color.red);
-        }
+        bSPass = !(new String(txtSapPassword.getPassword())).trim().isEmpty();
+        lblSapPassword.setForeground(bSPass ? Color.black : Color.red);
 
-        bCOM2 = !(cbxPort2.getSelectedItem() instanceof String && (cbxPort2.getSelectedItem() == null || ((String) cbxPort2.getSelectedItem()).isEmpty()));
-        if (bCOM2) {
-            lblPort2.setForeground(Color.black);
-        } else {
-            lblPort2.setForeground(Color.red);
-        }
+        bSUser = !txtSapUpsername.getText().trim().isEmpty();
+        lblSapUsername.setForeground(bSUser ? Color.black : Color.red);
 
-        bSpeed1 = !(cbxSpeed1.getSelectedItem() == null);
-        if (bSpeed1) {
-            lblSpeed1.setForeground(Color.black);
-        } else {
-            lblSpeed1.setForeground(Color.red);
-        }
+        bCOM1 = !(cbxPort1.getSelectedItem() == null || ((String) cbxPort1.getSelectedItem()).isEmpty());
+        lblPort1.setForeground(bCOM1 ? Color.black : Color.red);
 
-        bSpeed2 = !(cbxSpeed2.getSelectedItem() == null);
-        if (bSpeed2) {
-            lblSpeed2.setForeground(Color.black);
-        } else {
-            lblSpeed2.setForeground(Color.red);
-        }
+        bCOM2 = !(cbxPort2.getSelectedItem() == null || ((String) cbxPort2.getSelectedItem()).isEmpty());
+        lblPort2.setForeground(bCOM2 ? Color.black : Color.red);
 
-        bWPlant = !(txtPlant.getText().trim().length() == 0);
-        if (bWPlant) {
-            lblPlant.setForeground(Color.black);
-        } else {
-            lblPlant.setForeground(Color.red);
-        }
+        bSpeed1 = cbxSpeed1.getSelectedItem() != null;
+        lblSpeed1.setForeground(bSpeed1 ? Color.black : Color.red);
+
+        bSpeed2 = cbxSpeed2.getSelectedItem() != null;
+        lblSpeed2.setForeground(bSpeed2 ? Color.black : Color.red);
+
+        bWPlant = !txtPlant.getText().trim().isEmpty();
+        lblPlant.setForeground(bWPlant ? Color.black : Color.red);
 
         boolean bB1 = bCOM1 && bSpeed1, bB2 = bCOM2 && bSpeed2;
 
         validForm = (bSHost && bSNo && bSClient
-                && (bB1 || bB2)
+                && (bB1 || bB2) && bSUser && bSPass
                 && bWPlant);
         btnSave.setEnabled(validForm);
     }
 
     private AppConfig objMapping() {
         if (config == null) {
-            config = WeighBridgeApp.getApplication().getConfig();
-        }
-        String wbId = txtWBID.getText();
-        wbId = wbId.trim().length() == 0 ? "" : wbId.trim();
-        String dbHost = txtDBHost.getText();
-        dbHost = dbHost.trim().length() == 0 ? "" : dbHost.trim();
-        String dbName = txtDBName.getText();
-        dbName = dbName.trim().length() == 0 ? "" : dbName.trim();
-        String dbUsr = txtDBUsr.getText();
-        dbUsr = dbUsr.trim().length() == 0 ? "" : dbUsr.trim();
-        String dbPwd = new String(txtDBPwd.getPassword());
-        dbPwd = dbPwd.trim().length() == 0 ? "" : dbPwd.trim();
-
-        String sHost = txtHost.getText();
-        sHost = sHost.trim().length() == 0 ? "" : sHost;
-        String sRoute = txtRString.getText();
-        sRoute = sRoute.trim().length() == 0 ? "" : sRoute;
-        String sNo = txfSNo.getText().trim().length() == 0 ? "" : txfSNo.getText().trim();
-        String sDClient = txfDClient.getText().trim().length() == 0 ? "" : txfDClient.getText().trim();
-
-        Object port1 = cbxPort1.getSelectedItem();
-        port1 = port1.toString().trim().length() == 0 ? null : port1.toString().trim();
-        Integer speed1 = 0;
-        if (port1 == null) {
-            speed1 = null;
-        } else if (cbxSpeed1.getSelectedItem() instanceof Short) {
-            speed1 = ((Short) cbxSpeed1.getSelectedItem()).intValue();
-        } else if (cbxSpeed1.getSelectedItem() instanceof Integer) {
-            speed1 = (Integer) cbxSpeed1.getSelectedItem();
-        } else if (cbxSpeed1.getSelectedItem() instanceof String) {
-            try {
-                speed1 = Integer.valueOf(String.valueOf(cbxSpeed1.getSelectedItem()));
-            } catch (NumberFormatException ex) {
-                speed1 = null;
-            }
-        } else if (cbxSpeed1.getSelectedItem() == null) {
-            speed1 = Integer.valueOf(String.valueOf(cbxSpeed1.getEditor().getItem()));
+            config = new AppConfig();
         }
 
-        Float sbit1 = 0f;
-        sbit1 = (Float) cbxStopBits1.getSelectedItem();
-        sbit1 = (sbit1 == 1.5f ? sbit1 * 2f : sbit1);
+        config.setDbHost(txtDBHost.getText().trim());
+        config.setDbName(txtDBName.getText().trim());
+        config.setDbUsername(txtDBUsr.getText().trim());
+        config.setDbPassword(new String(txtDBPwd.getPassword()).trim());
 
-        Object port2 = cbxPort2.getSelectedItem();
-        port2 = port2.toString().trim().length() == 0 ? null : port2.toString().trim();
-        Integer speed2 = 0;
-        if (port2 == null) {
-            speed2 = null;
-        } else if (cbxSpeed2.getSelectedItem() instanceof Short) {
-            speed2 = ((Short) cbxSpeed2.getSelectedItem()).intValue();
-        } else if (cbxSpeed2.getSelectedItem() instanceof Integer) {
-            speed2 = (Integer) cbxSpeed2.getSelectedItem();
-        } else if (cbxSpeed2.getSelectedItem() instanceof String) {
-            try {
-                speed2 = Integer.valueOf(String.valueOf(cbxSpeed2.getSelectedItem()));
-            } catch (NumberFormatException ex) {
-                speed2 = null;
-            }
-        } else if (cbxSpeed2.getSelectedItem() == null) {
-            speed2 = Integer.valueOf(String.valueOf(cbxSpeed2.getEditor().getItem()));
+        Configuration configuration = config.getConfiguration();
+        if (configuration == null) {
+            configuration = new Configuration();
+        } else {
+            configuration.setUpdatedDate(new Date());
         }
 
-        Float sbit2 = 0f;
-        sbit2 = (Float) cbxStopBits2.getSelectedItem();
-        sbit2 = (sbit2 == 1.5f ? sbit2 * 2f : sbit2);
+        configuration.setSapHost(txtHost.getText().trim());
+        configuration.setSapGwHost(txtHost.getText().trim());
+        configuration.setSapRouteString(txtRString.getText().trim());
+        configuration.setSapSystemNumber(txtSNo.getText().trim());
+        configuration.setSapClient(txtDClient.getText().trim());
+        configuration.setSapUser(txtSapUpsername.getText().trim());
+        configuration.setSapPass(new String(txtSapPassword.getPassword()).trim());
 
-        String wPlant = txtPlant.getText();
-        wPlant = wPlant == null || wPlant.trim().isEmpty() ? "" : wPlant;
+        configuration.setWkPlant(txtPlant.getText().trim());
+        String wbId = txtWBID.getText().trim();
+        configuration.setWbId(wbId);
+        config.setWbId(wbId);
 
-        return configController.objMapping(config, wbId, dbHost, dbName, dbUsr, dbPwd, sHost, sRoute, sNo, sDClient, speed1, port1,
-                sbit1, port2, speed2, sbit2, wPlant, cbxDataBits1, cbxPControl1, chbMettler1, cbxDataBits2, cbxPControl2, chbMettler2);
+        configuration.setWb1Port(cbxPort1.getSelectedItem().toString().trim());
+        configuration.setWb1BaudRate((Integer) cbxSpeed1.getSelectedItem());
+        configuration.setWb1DataBit((Short) cbxDataBits1.getSelectedItem());
+        Float sbit1 = (Float) cbxStopBits1.getSelectedItem();
+        configuration.setWb1StopBit(new BigDecimal(sbit1 == 1.5f ? sbit1 * 2f : sbit1));
+        configuration.setWb1ParityControl(((ParityEnum) cbxPControl1.getSelectedItem()).ordinal());
+        configuration.setWb1Mettler(chbMettler1.isSelected());
+        configuration.setWb1AutoSignal(chbAutoSignal1.isSelected());
+
+        configuration.setWb2Port(cbxPort2.getSelectedItem().toString().trim());
+        configuration.setWb2BaudRate((Integer) cbxSpeed2.getSelectedItem());
+        configuration.setWb2DataBit((Short) cbxDataBits2.getSelectedItem());
+        Float sbit2 = (Float) cbxStopBits2.getSelectedItem();
+        configuration.setWb2StopBit(new BigDecimal(sbit2 == 1.5f ? sbit2 * 2f : sbit2));
+        configuration.setWb2ParityControl(((ParityEnum) cbxPControl2.getSelectedItem()).ordinal());
+        configuration.setWb2Mettler(chbMettler2.isSelected());
+        configuration.setWb2AutoSignal(chbAutoSignal2.isSelected());
+
+        config.setConfiguration(configuration);
+
+        return config;
     }
 
     private void objBinding() {
@@ -1024,19 +995,20 @@ public class ConfigView extends javax.swing.JDialog {
         Configuration configuration = config.getConfiguration();
         if (configuration != null) {
             txtHost.setText(configuration.getSapHost());
-            txfSNo.setValue(configuration.getSapSystemNumber());
+            txtSNo.setValue(configuration.getSapSystemNumber());
             txtRString.setText(configuration.getSapRouteString());
-            txfDClient.setValue(configuration.getSapClient());
+            txtDClient.setValue(configuration.getSapClient());
+            txtSapUpsername.setText(configuration.getSapUser());
+            txtSapPassword.setText(configuration.getSapPass());
 
             txtPlant.setText(configuration.getWkPlant());
             txtWBID.setText(configuration.getWbId());
 
-            DefaultComboBoxModel port1Model = getPortModel();
             String port1 = configuration.getWb1Port();
             if (port1Model.getIndexOf(port1) < 0) {
                 port1Model.addElement(port1);
-                cbxPort1.setModel(port1Model);
             }
+            cbxPort1.setModel(port1Model);
             cbxPort1.setSelectedItem(port1);
 
             DefaultComboBoxModel speed1Model = getSpeedModel();
@@ -1060,13 +1032,13 @@ public class ConfigView extends javax.swing.JDialog {
 
             cbxPControl1.setSelectedItem(p1Control);
             chbMettler1.setSelected(configuration.getWb1Mettler());
+            chbAutoSignal1.setSelected(configuration.getWb1AutoSignal());
 
-            DefaultComboBoxModel port2Model = getPortModel();
             String port2 = configuration.getWb2Port();
             if (port2Model.getIndexOf(port2) < 0) {
                 port2Model.addElement(port2);
-                cbxPort2.setModel(port2Model);
             }
+            cbxPort2.setModel(port2Model);
             cbxPort2.setSelectedItem(port2);
 
             DefaultComboBoxModel speed2Model = getSpeedModel();
@@ -1090,6 +1062,7 @@ public class ConfigView extends javax.swing.JDialog {
 
             cbxPControl2.setSelectedItem(p2Control);
             chbMettler2.setSelected(configuration.getWb2Mettler());
+            chbAutoSignal2.setSelected(configuration.getWb2AutoSignal());
         } else {
             txtWBID.setText(config.getWbId());
         }
@@ -1097,12 +1070,12 @@ public class ConfigView extends javax.swing.JDialog {
 
     @Action
     public Task saveConfig() {
-        return new SaveConfigTask(org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class));
+        return new SaveConfigTask(Application.getInstance(WeighBridgeApp.class));
     }
 
-    private class SaveConfigTask extends org.jdesktop.application.Task<Object, Void> {
+    private class SaveConfigTask extends Task<Object, Void> {
 
-        SaveConfigTask(org.jdesktop.application.Application app) {
+        SaveConfigTask(Application app) {
             super(app);
             syncIconLoading.setVisible(true);
             lblSyncData.setVisible(true);
@@ -1119,7 +1092,7 @@ public class ConfigView extends javax.swing.JDialog {
             objMapping();
             try {
                 config.save();
-                
+
                 SyncMasterDataService syncMasterDataService = new SyncMasterDataService();
                 syncMasterDataService.syncMasterDataWhenLogin();
             } catch (ConfigurationException ex) {
@@ -1185,7 +1158,6 @@ public class ConfigView extends javax.swing.JDialog {
             btnCheckDbConnection.setEnabled(true);
         }
     }
-
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Variables declaration">
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1201,6 +1173,8 @@ public class ConfigView extends javax.swing.JDialog {
     private javax.swing.JComboBox cbxSpeed2;
     private javax.swing.JComboBox cbxStopBits1;
     private javax.swing.JComboBox cbxStopBits2;
+    private javax.swing.JCheckBox chbAutoSignal1;
+    private javax.swing.JCheckBox chbAutoSignal2;
     private javax.swing.JCheckBox chbMettler1;
     private javax.swing.JCheckBox chbMettler2;
     private org.jdesktop.swingx.JXBusyLabel iconLoading;
@@ -1233,15 +1207,15 @@ public class ConfigView extends javax.swing.JDialog {
     private javax.swing.JPanel pnWB2Config;
     private javax.swing.JPanel pnWorkingPlant;
     private org.jdesktop.swingx.JXBusyLabel syncIconLoading;
-    private javax.swing.JFormattedTextField txfDClient;
-    private javax.swing.JFormattedTextField txfSNo;
     private javax.swing.JTextField txtDBHost;
     private javax.swing.JTextField txtDBName;
     private javax.swing.JPasswordField txtDBPwd;
     private javax.swing.JTextField txtDBUsr;
+    private javax.swing.JFormattedTextField txtDClient;
     private javax.swing.JTextField txtHost;
     private javax.swing.JTextField txtPlant;
     private javax.swing.JTextField txtRString;
+    private javax.swing.JFormattedTextField txtSNo;
     private javax.swing.JPasswordField txtSapPassword;
     private javax.swing.JTextField txtSapUpsername;
     private javax.swing.JTextField txtWBID;

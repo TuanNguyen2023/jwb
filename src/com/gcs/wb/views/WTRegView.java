@@ -102,7 +102,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         dpDateTo.setFormats(Constants.Date.FORMAT);
         initComboboxModel();
         initComboboxRenderer();
-	    initTableEvent();
+        initTableEvent();
 
         SearchWeightTicketTask t = new SearchWeightTicketTask(WeighBridgeApp.getApplication());
         t.execute();
@@ -1518,7 +1518,7 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
     if (!plateNoValidDO.isEmpty() && !plateNo.contains(plateNoValidDO)) {
         lblPlateNoN.setForeground(Color.red);
         btnSave.setEnabled(false);
-        
+
         JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.plateNoNotResgiter", plateNo, plateNoValidDO));
     } else {
         validateForm();
@@ -1573,7 +1573,7 @@ private void cbxModeSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         boolean isDriverNameValid = wtRegisValidation.validateLength(txtDriverName.getText(), lblDriverName, 0, 70);
         boolean isPlateNoValid = wtRegisValidation.validateLength(txtPlateNo.getText(), lblPlateNo, 0, 20);
         boolean isCreatorValid = wtRegisValidation.validateLength(txtCreator.getText(), lblCreator, 0, 12);
-        
+
         boolean isDateValid;
         try {
             dateFromToValidator.validate(dpDateFrom.getDate(), dpDateTo.getDate());
@@ -1586,7 +1586,7 @@ private void cbxModeSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             lblDateTo.setForeground(Color.red);
             isDateValid = false;
         }
-        
+
         btnFind.setEnabled(isDriverNameValid && isPlateNoValid && isCreatorValid && isDateValid);
     }
 
@@ -2552,7 +2552,7 @@ private void cbxModeSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 data = weightTicketRegistarationController.findByDatePostedNull(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim(), modeSearch);
             } else if (cbxStatus.getSelectedIndex() == StatusEnum.ALL.VALUE) {
                 data = weightTicketRegistarationController.findByDateAllNull(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim(), modeSearch);
-            }else if(cbxStatus.getSelectedIndex() == StatusEnum.ALL.UNFINISH.VALUE) {
+            } else if (cbxStatus.getSelectedIndex() == StatusEnum.ALL.UNFINISH.VALUE) {
                 data = weightTicketRegistarationController.findByDateUnfinishNull(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim(), modeSearch);
             }
 
@@ -2565,7 +2565,7 @@ private void cbxModeSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 data = weightTicketRegistarationController.findByDatePostedNullAll(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim(), modeSearch);
             } else if (cbxStatus.getSelectedIndex() == StatusEnum.ALL.VALUE) {
                 data = weightTicketRegistarationController.findByDateAllNullAll(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim(), modeSearch);
-            }else if(cbxStatus.getSelectedIndex() == StatusEnum.ALL.UNFINISH.VALUE) {
+            } else if (cbxStatus.getSelectedIndex() == StatusEnum.ALL.UNFINISH.VALUE) {
                 data = weightTicketRegistarationController.findByDateUnfinishNullAll(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim(), modeSearch);
             }
             return filterHours(data, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
@@ -2577,7 +2577,7 @@ private void cbxModeSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 data = weightTicketRegistarationController.findByDatePosted(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), matnr, txtPlateNo.getText().trim(), modeSearch);
             } else if (cbxStatus.getSelectedIndex() == StatusEnum.ALL.VALUE) {
                 data = weightTicketRegistarationController.findByDateAll(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), matnr, txtPlateNo.getText().trim(), modeSearch);
-            }else if(cbxStatus.getSelectedIndex() == StatusEnum.ALL.UNFINISH.VALUE) {
+            } else if (cbxStatus.getSelectedIndex() == StatusEnum.ALL.UNFINISH.VALUE) {
                 data = weightTicketRegistarationController.findByDateUnfinish(from, to, txtCreator.getText().trim(), txtDriverName.getText().trim(), matnr, txtPlateNo.getText().trim(), modeSearch);
             }
 
@@ -2596,15 +2596,15 @@ private void cbxModeSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 wtData[i][4] = item.getTrailerId();
                 wtData[i][5] = item.getRegType();
                 String[] regItemDescriptions = weightTicketDetails.stream()
-                    .map(t -> t.getRegItemDescription())
-                    .filter(t -> t != null)
-                    .toArray(String[]::new);
+                        .map(t -> t.getRegItemDescription())
+                        .filter(t -> t != null)
+                        .toArray(String[]::new);
                 wtData[i][6] = regItemDescriptions.length > 0 ? String.join(" - ", regItemDescriptions) : "";
                 wtData[i][7] = weightTicketDetail.getRegItemQuantity();
                 String[] doNums = weightTicketDetails.stream()
-                    .map(t -> t.getDeliveryOrderNo())
-                    .filter(t -> t != null)
-                    .toArray(String[]::new);
+                        .map(t -> t.getDeliveryOrderNo())
+                        .filter(t -> t != null)
+                        .toArray(String[]::new);
                 wtData[i][8] = doNums.length > 0 ? String.join(" - ", doNums) : "";
                 wtData[i][9] = item.getCreator();
                 wtData[i][10] = item.getSeqMonth();
@@ -2807,7 +2807,7 @@ private void cbxModeSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 if (!traid.isEmpty() && !traid.startsWith(plateNo)) {
                     throw new Exception(resourceMapMsg.getString("msg.plateNoNotResgiterIO", plateNo, deliveryOrderNo));
                 }
-                
+
                 // for check edit plateNo after check DO
                 plateNoValidDO = traid.isEmpty() ? "" : plateNo;
 
@@ -2827,7 +2827,7 @@ private void cbxModeSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             }
 
             return null;
-            
+
         }
 
         private OutboundDelivery syncOutboundDelivery(String deliveryOrderNo, OutboundDelivery outboundDelivery) {
@@ -3582,13 +3582,13 @@ private void cbxModeSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             }
 
             //Check POSTO Plant with PO plant
-            if(!purchaseOrderPOSTO.getPurchaseOrderDetail().getPlant().equals(configuration.getWkPlant())) {
+            if (!purchaseOrderPOSTO.getPurchaseOrderDetail().getPlant().equals(configuration.getWkPlant())) {
                 throw new Exception(resourceMapMsg.getString("msg.postoIsPlant"));
             }
 
             //Check matnr for PO-POSTO
-            if((modeDetail == MODE_DETAIL.OUT_PULL_STATION)
-                && (!purchaseOrderPOSTO.getPurchaseOrderDetail().getMaterial().equals(purchaseOrderPO.getPurchaseOrderDetail().getMaterial()))) {
+            if ((modeDetail == MODE_DETAIL.OUT_PULL_STATION)
+                    && (!purchaseOrderPOSTO.getPurchaseOrderDetail().getMaterial().equals(purchaseOrderPO.getPurchaseOrderDetail().getMaterial()))) {
                 throw new Exception(resourceMapMsg.getString("msg.postoIsMatnr"));
             }
 
@@ -3659,10 +3659,9 @@ private void cbxModeSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     public void showHideSearch() {
         isShow = !isShow;
         pnFilter.setVisible(isShow);
-        if(isShow){
+        if (isShow) {
             btnShowHide.setText("Ẩn tìm kiếm");
-        }
-        else{
+        } else {
             btnShowHide.setText("Hiện tìm kiếm");
         }
     }

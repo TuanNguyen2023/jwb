@@ -58,7 +58,6 @@ public class BAPIConfiguration {
      * @return
      */
     public static SessionManager getSessionManager(AppConfig config, Credentials credential) {
-        SessionManager sessionManager = null;
         SessionManagerConfig sessionConfig = new SessionManagerConfig("tafico");
         Configuration configuration = config.getConfiguration();
 
@@ -67,7 +66,7 @@ public class BAPIConfiguration {
         if (configuration.getSapGwHost() != null && !configuration.getSapGwHost().isEmpty()) {
             sessionConfig.setProperty(DestinationDataProvider.JCO_GWHOST, configuration.getSapGwHost());
         }        
-        sessionConfig.setProperty(DestinationDataProvider.JCO_SYSNR, configuration.getSapSystemNumber().toString());
+        sessionConfig.setProperty(DestinationDataProvider.JCO_SYSNR, configuration.getSapSystemNumber());
         sessionConfig.setProperty(DestinationDataProvider.JCO_CLIENT, configuration.getSapClient());
         sessionConfig.setProperty(DestinationDataProvider.JCO_USER, credential.getUser());
         sessionConfig.setProperty(DestinationDataProvider.JCO_PASSWD, credential.getPassword());
@@ -110,7 +109,6 @@ public class BAPIConfiguration {
         sessionConfig.addAnnotatedClass(SOGetDetailBapi.class);
         
         AnnotationConfiguration conf = new AnnotationConfiguration(sessionConfig);
-        sessionManager = conf.buildSessionManager();
-        return sessionManager;
+        return conf.buildSessionManager();
     }
 }
