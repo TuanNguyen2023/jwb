@@ -479,7 +479,7 @@
                   <Component id="chbMettler1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="chbAutoSignal1" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="22" max="32767" attributes="0"/>
+                  <EmptySpace pref="17" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -576,6 +576,7 @@
         </Component>
         <Component class="javax.swing.JCheckBox" name="chbAutoSignal1">
           <Properties>
+            <Property name="selected" type="boolean" value="true"/>
             <Property name="text" type="java.lang.String" resourceKey="chbAutoSignal1.text"/>
             <Property name="name" type="java.lang.String" value="chbAutoSignal1" noResource="true"/>
           </Properties>
@@ -751,6 +752,7 @@
         </Component>
         <Component class="javax.swing.JCheckBox" name="chbAutoSignal2">
           <Properties>
+            <Property name="selected" type="boolean" value="true"/>
             <Property name="text" type="java.lang.String" resourceKey="chbAutoSignal2.text"/>
             <Property name="name" type="java.lang.String" value="chbAutoSignal2" noResource="true"/>
           </Properties>

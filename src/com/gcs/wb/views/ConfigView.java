@@ -425,6 +425,7 @@ public class ConfigView extends javax.swing.JDialog {
         chbMettler1.setText(resourceMap.getString("chbMettler1.text")); // NOI18N
         chbMettler1.setName("chbMettler1"); // NOI18N
 
+        chbAutoSignal1.setSelected(true);
         chbAutoSignal1.setText(resourceMap.getString("chbAutoSignal1.text")); // NOI18N
         chbAutoSignal1.setName("chbAutoSignal1"); // NOI18N
 
@@ -477,7 +478,7 @@ public class ConfigView extends javax.swing.JDialog {
                 .addComponent(chbMettler1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(chbAutoSignal1)
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
         pnWB2Config.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("pnWB2Config.border.title"))); // NOI18N
@@ -542,6 +543,7 @@ public class ConfigView extends javax.swing.JDialog {
         chbMettler2.setText(resourceMap.getString("chbMettler2.text")); // NOI18N
         chbMettler2.setName("chbMettler2"); // NOI18N
 
+        chbAutoSignal2.setSelected(true);
         chbAutoSignal2.setText(resourceMap.getString("chbAutoSignal2.text")); // NOI18N
         chbAutoSignal2.setName("chbAutoSignal2"); // NOI18N
 
@@ -830,15 +832,15 @@ private void txtSapPasswordKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         config = WeighBridgeApp.getApplication().getConfig();
         port1Model = getPortModel();
         port2Model = (DefaultComboBoxModel) SerializationUtils.clone(port1Model);
+        cbxPort1.setModel(port1Model);
+        cbxPort2.setModel(port2Model);
 
         if (config != null) {
             objBinding();
-            validateFormDB();
-            validateForm();
-        } else {
-            cbxPort1.setModel(port1Model);
-            cbxPort2.setModel(port2Model);
         }
+
+        validateFormDB();
+        validateForm();
 
         iconLoading.setVisible(false);
         syncIconLoading.setVisible(false);
@@ -1108,6 +1110,8 @@ private void txtSapPasswordKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 app.restartApplication();
             } else {
                 JOptionPane.showMessageDialog(rootPane, msg.toString(), "Error", JOptionPane.ERROR_MESSAGE);
+                syncIconLoading.setVisible(false);
+                lblSyncData.setVisible(false);
                 btnSave.setEnabled(true);
             }
 
