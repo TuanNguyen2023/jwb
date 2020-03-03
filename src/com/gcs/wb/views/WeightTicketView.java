@@ -136,7 +136,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         setBridge2(configuration.getWb2Port() != null);
 
         formatter = new SimpleDateFormat();
-        cbxSLoc.setSelectedIndex(-1);
         txfCurScale.setEditable(true);
         txtInTime.setEditable(true);
         txtOutTime.setEditable(true);
@@ -203,10 +202,13 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         }
 
         cbxSLoc.setModel(weightTicketController.getSlocModel());
+        cbxSLoc.setSelectedIndex(-1);
         DefaultComboBoxModel vendorLModel = weightTicketController.getVendorModel();
         DefaultComboBoxModel vendorTModel = (DefaultComboBoxModel) SerializationUtils.clone(vendorLModel);
         cbxVendorLoading.setModel(vendorLModel);
+        cbxVendorLoading.setSelectedIndex(-1);
         cbxVendorTransport.setModel(vendorTModel);
+        cbxVendorTransport.setSelectedIndex(-1);
         setAllChildPanelsVisible(pnWTLeft);
         setAllChildPanelsVisible(pnWTRight);
     }
@@ -4184,8 +4186,8 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         txtRemark.setText(null);
         txtWeight.setText(null);
         txtPoPosto.setText(null);
-        cbxVendorLoading.setSelectedItem(new DefaultComboBoxModel());
-        cbxVendorTransport.setSelectedItem(new DefaultComboBoxModel());
+        cbxVendorLoading.setSelectedIndex(-1);
+        cbxVendorTransport.setSelectedIndex(-1);
 
         setAllChildPanelsVisible(pnWTLeft);
         setAllChildPanelsVisible(pnWTRight);
