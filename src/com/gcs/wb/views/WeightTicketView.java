@@ -201,7 +201,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             lblVendorLoading.setVisible(false);
             lblVendorTransport.setVisible(false);
         }
-        
+
         cbxSLoc.setModel(weightTicketController.getSlocModel());
         DefaultComboBoxModel vendorLModel = weightTicketController.getVendorModel();
         DefaultComboBoxModel vendorTModel = (DefaultComboBoxModel) SerializationUtils.clone(vendorLModel);
@@ -394,7 +394,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(88, 88, 88))
+                .addGap(100, 100, 100))
         );
         pnWTFilterLayout.setVerticalGroup(
             pnWTFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -491,36 +491,32 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         pnCurScaleDataLayout.setHorizontalGroup(
             pnCurScaleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnCurScaleDataLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(pnCurScaleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnCurScaleDataLayout.createSequentialGroup()
                         .addComponent(rbtBridge1)
                         .addGap(18, 18, 18)
                         .addComponent(rbtBridge2))
                     .addGroup(pnCurScaleDataLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(pnCurScaleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(pnCurScaleDataLayout.createSequentialGroup()
-                                .addGap(167, 167, 167)
-                                .addComponent(btnAccept, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE))
-                            .addGroup(pnCurScaleDataLayout.createSequentialGroup()
-                                .addComponent(txfCurScale, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(4, 4, 4)
-                                .addComponent(lblKG)))))
-                .addGap(54, 54, 54))
+                        .addComponent(txfCurScale, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblKG))
+                    .addComponent(btnAccept, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30))
         );
         pnCurScaleDataLayout.setVerticalGroup(
             pnCurScaleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnCurScaleDataLayout.createSequentialGroup()
-                .addGroup(pnCurScaleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pnCurScaleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(rbtBridge1)
                     .addComponent(rbtBridge2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnCurScaleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txfCurScale, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblKG))
-                .addGap(8, 8, 8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnAccept)
-                .addContainerGap())
+                .addGap(24, 24, 24))
         );
 
         pnCurScale.add(pnCurScaleData, java.awt.BorderLayout.CENTER);
@@ -656,9 +652,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     .addComponent(lblIScale, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnScaleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txfGoodsQty, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)
-                    .addComponent(txfOutQty, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)
-                    .addComponent(txfInQty, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE))
+                    .addComponent(txfGoodsQty, javax.swing.GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE)
+                    .addComponent(txfOutQty, javax.swing.GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE)
+                    .addComponent(txfInQty, javax.swing.GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnScaleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnScaleDataLayout.createSequentialGroup()
@@ -671,8 +667,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                             .addComponent(lblOTime))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(pnScaleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtOutTime, javax.swing.GroupLayout.DEFAULT_SIZE, 390, Short.MAX_VALUE)
-                            .addComponent(txtInTime, javax.swing.GroupLayout.DEFAULT_SIZE, 390, Short.MAX_VALUE))
+                            .addComponent(txtOutTime, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE)
+                            .addComponent(txtInTime, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(pnScaleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(btnIScaleReset, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -724,12 +720,10 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         rbtOutward.setEnabled(false);
         rbtOutward.setName("rbtOutward"); // NOI18N
 
-        txtRegistrationNo.setBackground(resourceMap.getColor("txtTicketId.background")); // NOI18N
         txtRegistrationNo.setEditable(false);
         txtRegistrationNo.setText(resourceMap.getString("txtRegistrationNo.text")); // NOI18N
         txtRegistrationNo.setName("txtRegistrationNo"); // NOI18N
 
-        txtDName.setBackground(resourceMap.getColor("txtTicketId.background")); // NOI18N
         txtDName.setEditable(false);
         txtDName.setName("txtDName"); // NOI18N
 
@@ -742,25 +736,21 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         lblCMNDBL.setText(resourceMap.getString("lblCMNDBL.text")); // NOI18N
         lblCMNDBL.setName("lblCMNDBL"); // NOI18N
 
-        txtCMNDBL.setBackground(resourceMap.getColor("txtTicketId.background")); // NOI18N
         txtCMNDBL.setEditable(false);
         txtCMNDBL.setName("txtCMNDBL"); // NOI18N
 
         lblLicPlate.setText(resourceMap.getString("lblLicPlate.text")); // NOI18N
         lblLicPlate.setName("lblLicPlate"); // NOI18N
 
-        txtLicPlate.setBackground(resourceMap.getColor("txtTicketId.background")); // NOI18N
         txtLicPlate.setEditable(false);
         txtLicPlate.setName("txtLicPlate"); // NOI18N
 
         lblTrailerPlate.setText(resourceMap.getString("lblTrailerPlate.text")); // NOI18N
         lblTrailerPlate.setName("lblTrailerPlate"); // NOI18N
 
-        txtTrailerPlate.setBackground(resourceMap.getColor("txtTicketId.background")); // NOI18N
         txtTrailerPlate.setEditable(false);
         txtTrailerPlate.setName("txtTrailerPlate"); // NOI18N
 
-        txtSling.setBackground(resourceMap.getColor("txtTicketId.background")); // NOI18N
         txtSling.setEditable(false);
         txtSling.setName("txtSling"); // NOI18N
 
@@ -770,14 +760,12 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         lblPallet.setText(resourceMap.getString("lblPallet.text")); // NOI18N
         lblPallet.setName("lblPallet"); // NOI18N
 
-        txtPallet.setBackground(resourceMap.getColor("txtTicketId.background")); // NOI18N
         txtPallet.setEditable(false);
         txtPallet.setName("txtPallet"); // NOI18N
 
         lblGRText.setText(resourceMap.getString("lblGRText.text")); // NOI18N
         lblGRText.setName("lblGRText"); // NOI18N
 
-        txtGRText.setBackground(resourceMap.getColor("txtTicketId.background")); // NOI18N
         txtGRText.setEditable(false);
         txtGRText.setName("txtGRText"); // NOI18N
         txtGRText.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -786,7 +774,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             }
         });
 
-        txtCementDesc.setBackground(resourceMap.getColor("txtTicketId.background")); // NOI18N
         txtCementDesc.setText(resourceMap.getString("txtCementDesc.text")); // NOI18N
         txtCementDesc.setName("txtCementDesc"); // NOI18N
         txtCementDesc.addActionListener(new java.awt.event.ActionListener() {
@@ -806,7 +793,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         lblBatchProduce.setText(resourceMap.getString("lblBatchProduce.text")); // NOI18N
         lblBatchProduce.setName("lblBatchProduce"); // NOI18N
 
-        txtBatchProduce.setBackground(resourceMap.getColor("txtTicketId.background")); // NOI18N
         txtBatchProduce.setName("txtBatchProduce"); // NOI18N
         txtBatchProduce.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -819,14 +805,12 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             }
         });
 
-        txtTicketId.setBackground(resourceMap.getColor("txtTicketId.background")); // NOI18N
         txtTicketId.setEditable(false);
         txtTicketId.setName("txtTicketId"); // NOI18N
 
         lblTicketId.setText(resourceMap.getString("lblTicketId.text")); // NOI18N
         lblTicketId.setName("lblTicketId"); // NOI18N
 
-        txtWeightTicketIdRef.setBackground(resourceMap.getColor("txtTicketId.background")); // NOI18N
         txtWeightTicketIdRef.setEditable(false);
         txtWeightTicketIdRef.setName("txtWeightTicketIdRef"); // NOI18N
 
@@ -837,7 +821,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         lblProcedure.setToolTipText(resourceMap.getString("lblProcedure.toolTipText")); // NOI18N
         lblProcedure.setName("lblProcedure"); // NOI18N
 
-        txtProcedure.setBackground(resourceMap.getColor("txtTicketId.background")); // NOI18N
         txtProcedure.setEditable(false);
         txtProcedure.setName("txtProcedure"); // NOI18N
 
@@ -873,7 +856,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     .addComponent(lblLicPlate))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtRemark, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
+                    .addComponent(txtRemark, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
                     .addGroup(pnWTLeftLayout.createSequentialGroup()
                         .addComponent(rbtInward)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -881,19 +864,19 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblProcedure)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtProcedure, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE))
-                    .addComponent(txtRegistrationNo, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
-                    .addComponent(txtDName, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
-                    .addComponent(txtGRText, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
-                    .addComponent(txtTrailerPlate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
-                    .addComponent(txtSling, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
-                    .addComponent(txtLicPlate, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
-                    .addComponent(txtCMNDBL, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
-                    .addComponent(txtPallet, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
-                    .addComponent(txtTicketId, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
-                    .addComponent(txtBatchProduce, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
-                    .addComponent(txtCementDesc, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
-                    .addComponent(txtWeightTicketIdRef, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE))
+                        .addComponent(txtProcedure, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE))
+                    .addComponent(txtRegistrationNo, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
+                    .addComponent(txtDName, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
+                    .addComponent(txtGRText, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
+                    .addComponent(txtTrailerPlate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
+                    .addComponent(txtSling, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
+                    .addComponent(txtLicPlate, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
+                    .addComponent(txtCMNDBL, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
+                    .addComponent(txtPallet, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
+                    .addComponent(txtTicketId, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
+                    .addComponent(txtBatchProduce, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
+                    .addComponent(txtCementDesc, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
+                    .addComponent(txtWeightTicketIdRef, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE))
                 .addContainerGap())
         );
         pnWTLeftLayout.setVerticalGroup(
@@ -958,16 +941,14 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblRemark)
                     .addComponent(txtRemark, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
 
         pnWTRight.setName("pnWTRight"); // NOI18N
 
-        txtDelNum.setBackground(resourceMap.getColor("txtDelNum.background")); // NOI18N
         txtDelNum.setEditable(false);
         txtDelNum.setName("txtDelNum"); // NOI18N
 
-        txtPONo.setBackground(resourceMap.getColor("txtDelNum.background")); // NOI18N
         txtPONo.setEditable(false);
         txtPONo.setAction(actionMap.get("readPO")); // NOI18N
         txtPONo.setName("txtPONo"); // NOI18N
@@ -986,16 +967,13 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             }
         });
 
-        txtRegItem.setBackground(resourceMap.getColor("txtDelNum.background")); // NOI18N
         txtRegItem.setEditable(false);
         txtRegItem.setName("txtRegItem"); // NOI18N
 
-        txtMatnr.setBackground(resourceMap.getColor("txtDelNum.background")); // NOI18N
         txtMatnr.setEditable(false);
         txtMatnr.setText(resourceMap.getString("txtMatnr.text")); // NOI18N
         txtMatnr.setName("txtMatnr"); // NOI18N
 
-        txtWeight.setBackground(resourceMap.getColor("txtDelNum.background")); // NOI18N
         txtWeight.setEditable(false);
         txtWeight.setName("txtWeight"); // NOI18N
 
@@ -1026,7 +1004,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             }
         });
 
-        txtLgortIn.setBackground(resourceMap.getColor("txtDelNum.background")); // NOI18N
         txtLgortIn.setEditable(false);
         txtLgortIn.setName("txtLgortIn"); // NOI18N
         txtLgortIn.setRequestFocusEnabled(false);
@@ -1039,11 +1016,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             }
         });
 
-        txtChargIn.setBackground(resourceMap.getColor("txtDelNum.background")); // NOI18N
         txtChargIn.setEditable(false);
         txtChargIn.setName("txtChargIn"); // NOI18N
 
-        txtPoPosto.setBackground(resourceMap.getColor("txtDelNum.background")); // NOI18N
         txtPoPosto.setEditable(false);
         txtPoPosto.setName("txtPoPosto"); // NOI18N
         txtPoPosto.addActionListener(new java.awt.event.ActionListener() {
@@ -1142,7 +1117,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         lblSO.setText(resourceMap.getString("lblSO.text")); // NOI18N
         lblSO.setName("lblSO"); // NOI18N
 
-        txtSO.setBackground(resourceMap.getColor("txtDelNum.background")); // NOI18N
         txtSO.setEditable(false);
         txtSO.setText(resourceMap.getString("txtSO.text")); // NOI18N
         txtSO.setName("txtSO"); // NOI18N
@@ -1177,23 +1151,23 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                 .addComponent(lblDelNum, javax.swing.GroupLayout.Alignment.TRAILING)))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cbxVendorTransport, 0, 359, Short.MAX_VALUE)
-                    .addComponent(cbxCharg, 0, 359, Short.MAX_VALUE)
-                    .addComponent(cbxVendorLoading, 0, 359, Short.MAX_VALUE)
-                    .addComponent(cbxSLoc, 0, 359, Short.MAX_VALUE)
-                    .addComponent(txtSO, javax.swing.GroupLayout.DEFAULT_SIZE, 359, Short.MAX_VALUE)
-                    .addComponent(txtMatnr, javax.swing.GroupLayout.DEFAULT_SIZE, 359, Short.MAX_VALUE)
-                    .addComponent(txtPONo, javax.swing.GroupLayout.DEFAULT_SIZE, 359, Short.MAX_VALUE)
-                    .addComponent(txtChargIn, javax.swing.GroupLayout.DEFAULT_SIZE, 359, Short.MAX_VALUE)
-                    .addComponent(txtPoPosto, javax.swing.GroupLayout.DEFAULT_SIZE, 359, Short.MAX_VALUE)
-                    .addComponent(txtLgortIn, javax.swing.GroupLayout.DEFAULT_SIZE, 359, Short.MAX_VALUE)
-                    .addComponent(txtRegItem, javax.swing.GroupLayout.DEFAULT_SIZE, 359, Short.MAX_VALUE)
-                    .addComponent(txtDelNum, javax.swing.GroupLayout.DEFAULT_SIZE, 359, Short.MAX_VALUE)
+                    .addComponent(cbxVendorTransport, 0, 361, Short.MAX_VALUE)
+                    .addComponent(cbxCharg, 0, 361, Short.MAX_VALUE)
+                    .addComponent(cbxVendorLoading, 0, 361, Short.MAX_VALUE)
+                    .addComponent(cbxSLoc, 0, 361, Short.MAX_VALUE)
+                    .addComponent(txtSO, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
+                    .addComponent(txtMatnr, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
+                    .addComponent(txtPONo, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
+                    .addComponent(txtChargIn, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
+                    .addComponent(txtPoPosto, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
+                    .addComponent(txtLgortIn, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
+                    .addComponent(txtRegItem, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
+                    .addComponent(txtDelNum, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnWTRightLayout.createSequentialGroup()
-                        .addComponent(txtWeight, javax.swing.GroupLayout.DEFAULT_SIZE, 333, Short.MAX_VALUE)
+                        .addComponent(txtWeight, javax.swing.GroupLayout.DEFAULT_SIZE, 335, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(cbxKunnr, 0, 359, Short.MAX_VALUE))
+                    .addComponent(cbxKunnr, 0, 361, Short.MAX_VALUE))
                 .addContainerGap())
         );
         pnWTRightLayout.setVerticalGroup(
@@ -1256,7 +1230,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbxVendorTransport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblVendorTransport))
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addContainerGap(47, Short.MAX_VALUE))
         );
 
         txtMatnr.getAccessibleContext().setAccessibleName(resourceMap.getString("txtMatnr.AccessibleContext.accessibleName")); // NOI18N
@@ -1291,7 +1265,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(699, Short.MAX_VALUE)
+                .addContainerGap(674, Short.MAX_VALUE)
                 .addComponent(btnPostAgain)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnReprint)
@@ -1313,20 +1287,20 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnWTicketLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(pnWTicketLayout.createSequentialGroup()
                         .addComponent(pnWTLeft, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(pnWTRight, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(pnWTRight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(10, 10, 10))
         );
         pnWTicketLayout.setVerticalGroup(
             pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnWTicketLayout.createSequentialGroup()
-                .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(pnWTRight, javax.swing.GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE)
-                    .addComponent(pnWTLeft, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(pnWTLeft, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnWTRight, javax.swing.GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -1341,23 +1315,23 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     .addComponent(pnWTicket, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pnScaleData, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(pnWTFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE)
+                        .addComponent(pnWTFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 641, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(pnCurScale, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)))
+                        .addComponent(pnCurScale, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(pnCurScale, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
-                    .addComponent(pnWTFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pnCurScale, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pnWTFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnScaleData, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnScaleData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(1, 1, 1)
                 .addComponent(pnWTicket, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         bindingGroup.bind();
@@ -1595,7 +1569,7 @@ private void txtBatchProduceActionPerformed(java.awt.event.ActionEvent evt) {//G
 }//GEN-LAST:event_txtBatchProduceActionPerformed
 
 private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBatchProduceKeyReleased
- if (weightTicket != null) {
+    if (weightTicket != null) {
         weightTicket.setBatch(txtBatchProduce.getText());
     }
     setSaveNeeded(isValidated());
@@ -1714,7 +1688,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
     @Action
     public void selectRbtPO() {
 
-            /* try{
+        /* try{
             String sql = "call pvc_getTicketIndex ( ? ) " ;
             Query qx = (Query) entityManager.createNativeQuery(sql);
             qx.setParameter(1,txtWTNum.getText().toString());
@@ -1736,8 +1710,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             
             }
              * 
-             */
-
+         */
         setSaveNeeded(isValidated());
     }
 
@@ -1833,8 +1806,8 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             return null;
         }
     }
-    
-    private void checkWTNum(String wtNum){
+
+    private void checkWTNum(String wtNum) {
         boolean valid = wtNum.matches("^[a-zA-Z0-9]{10}$");  //
         setEnteredValidWTNum(valid);
         if (valid) {
@@ -1843,7 +1816,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             lblWTNum.setForeground(Color.RED);
         }
     }
-    
+
     @Action(block = Task.BlockingScope.ACTION)
     public Task readPO() {
         if (isEnteredValidPONum()) {
@@ -2383,7 +2356,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             } else {
                 //show hide text and label
                 switchShowHideMode(weightTicket.getMode());
-                
+
                 if (weightTicket.getRegType() == 'I') {
                     rbtInward.setSelected(true);
                 } else {
@@ -2391,7 +2364,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 }
                 String Posto = "";
                 txtCementDesc.setText(weightTicket.getSoNiemXa());
-                
+
                 if (txtCementDesc.getText() != null || !"".equals(txtCementDesc.getText())) {
                     txtCementDesc.setEditable(false);
                 }
@@ -2463,10 +2436,10 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 // <editor-fold defaultstate="collapsed" desc="Load D.O/P.O details">
                 List<WeightTicketDetail> weightTicketDetails = weightTicket.getWeightTicketDetails();
                 List<String> do_list = new ArrayList<>();
-                for(WeightTicketDetail weightTicketDetail: weightTicketDetails) {
+                for (WeightTicketDetail weightTicketDetail : weightTicketDetails) {
                     if ((weightTicketDetail.getDeliveryOrderNo() == null || weightTicketDetail.getDeliveryOrderNo().trim().isEmpty())
-                        || (!weightTicket.isPosted() && (weightTicketDetail.getEbeln() != null && !weightTicketDetail.getEbeln().trim().isEmpty()))
-                        || (weightTicketDetail.getDeliveryOrderNo() == null && weightTicketDetail.getEbeln() == null)) {
+                            || (!weightTicket.isPosted() && (weightTicketDetail.getEbeln() != null && !weightTicketDetail.getEbeln().trim().isEmpty()))
+                            || (weightTicketDetail.getDeliveryOrderNo() == null && weightTicketDetail.getEbeln() == null)) {
                         setWithoutDO(true);
                     } else {
                         List<OutboundDeliveryDetail> odt = null;
@@ -2511,7 +2484,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         setWithoutDO(false);
                     }
                 }
-                
+
                 if (WeighBridgeApp.getApplication().isOfflineMode()
                         && od == null //HLD18
                         ) {
@@ -2527,7 +2500,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     outbDel_list.clear();
                     outDetails_lits.clear();
                     for (int index = 0; index < do_list.size(); index++) {
-                        WeightTicketDetail weightTicketDetail= weightTicketDetailRepository.findBydeliveryOrderNo(do_list.get(index));
+                        WeightTicketDetail weightTicketDetail = weightTicketDetailRepository.findBydeliveryOrderNo(do_list.get(index));
                         try {
                             //outbDel = entityManager.find(OutboundDelivery.class, new OutbDelPK(config.getsClient(), do_list[i]));
                             outbDel = weightTicketController.findByMandtOutDel(do_list.get(index));
@@ -2566,7 +2539,6 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
 //                                }
 //
 //                            }
-
 //                            if (outbDel.getLfimg() == null) {
 //                            } else {
 //                                if (isStage2()) {
@@ -2584,7 +2556,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
 //                            weightTicketDetail.setItem(outbDel.getDeliveryItem());
 //                            weightTicketDetail.setUnit(outbDel.getVrkme());
                             total_qty_goods = total_qty_goods.add(outbDel.getLfimg());
-                            if(doNums.equals("")) {
+                            if (doNums.equals("")) {
                                 doNums = weightTicketDetail.getDeliveryOrderNo();
                             } else {
                                 doNums += " - " + weightTicketDetail.getDeliveryOrderNo();
@@ -2595,7 +2567,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                 } else if (!regItemDescription.contains(outboundDeliveryDetail.getArktx())) {
                                     regItemDescription += " - " + outboundDeliveryDetail.getArktx();
                                 }
-                            } 
+                            }
                         }
                         //weightTicket.setUnit("TO");
                         try {
@@ -2612,7 +2584,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     txtWeight.setText(total_qty_goods.toString());
                     txtDelNum.setText(doNums);
                     txtRegItem.setText(regItemDescription);
-                    
+
                     if (weightTicket.getWeightTicketDetail().getEbeln() != null && !weightTicket.getWeightTicketDetail().getEbeln().trim().isEmpty()) {
 
                         purOrder = weightTicketController.findByPoNumber(weightTicket.getWeightTicketDetail().getEbeln());
@@ -2643,9 +2615,9 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         setSubContract(true);
                     }
                 }
-                if(Constants.WeighingProcess.MODE_DETAIL.OUT_SLOC_SLOC.name().equals(weightTicket.getMode())) {
-                   Material mat = materialRepository.findByMatnr(weightTicket.getRecvMatnr());
-                   txtRegItem.setText(mat.getMaktx());
+                if (Constants.WeighingProcess.MODE_DETAIL.OUT_SLOC_SLOC.name().equals(weightTicket.getMode())) {
+                    Material mat = materialRepository.findByMatnr(weightTicket.getRecvMatnr());
+                    txtRegItem.setText(mat.getMaktx());
                 }
 
                 formatter.applyPattern(WeighBridgeApp.DATE_TIME_DISPLAY_FORMAT);
@@ -2776,11 +2748,11 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 cbxVendorTransport.setEnabled(false);
 
                 if (Constants.WeighingProcess.MODE_DETAIL.IN_OTHER.name().equals(weightTicket.getMode())
-                    || Constants.WeighingProcess.MODE_DETAIL.OUT_OTHER.name().equals(weightTicket.getMode())) {
+                        || Constants.WeighingProcess.MODE_DETAIL.OUT_OTHER.name().equals(weightTicket.getMode())) {
                     btnSave.setEnabled(true);
-                }        
+                }
             }
-            
+
             return null;  // return your result
         }
 
@@ -2845,7 +2817,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             lblVendorLoading.setVisible(false);
             lblVendorTransport.setVisible(false);
             lblSO.setVisible(false);
-            
+
             txtSO.setVisible(false);
             txtWeightTicketIdRef.setVisible(false);
             txtSling.setVisible(false);
@@ -2871,7 +2843,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             lblVendorLoading.setVisible(false);
             lblVendorTransport.setVisible(false);
             lblSO.setVisible(false);
-            
+
             txtSO.setVisible(false);
             txtPONo.setVisible(false);
             txtMatnr.setVisible(false);
@@ -2896,7 +2868,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             lblBatchProduce.setVisible(false);
             lblTicketId.setVisible(false);
             lblWeightTicketIdRef.setVisible(false);
-            
+
             txtSO.setVisible(false);
             txtDelNum.setVisible(false);
             txtPONo.setVisible(false);
@@ -2923,7 +2895,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             lblVendorLoading.setVisible(false);
             lblVendorTransport.setVisible(false);
             lblSO.setVisible(false);
-            
+
             txtSO.setVisible(false);
             txtTicketId.setVisible(false);
             txtWeightTicketIdRef.setVisible(false);
@@ -2947,7 +2919,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
 //            lblVendorLoading.setVisible(false);
 //            lblVendorTransport.setVisible(false);
             lblSO.setVisible(false);
-            
+
             txtSO.setVisible(false);
             txtWeightTicketIdRef.setVisible(false);
             txtDelNum.setVisible(false);
@@ -2968,7 +2940,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             lblMatnr.setVisible(false);
             //lbKunnr.setVisible(false);
             lblSO.setVisible(false);
-            
+
             txtSO.setVisible(false);
             txtSling.setVisible(false);
             txtPallet.setVisible(false);
@@ -2989,7 +2961,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             lblSO.setVisible(false);
             lblLgortIn.setVisible(false);
             lblChargIn.setVisible(false);
-            
+
             txtSO.setVisible(false);
             txtSling.setVisible(false);
             txtPallet.setVisible(false);
@@ -3002,7 +2974,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             txtChargIn.setVisible(false);
         }
         if (ModeEnum.OUT_SELL_WATERWAY.name().equals(mode)) {
-           
+
             lblTicketId.setVisible(false);
             lblWeightTicketIdRef.setVisible(false);
             //so SO
@@ -3243,11 +3215,11 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             boolean flgGqty = false;
             WeightTicketDetail weightTicketDetail = weightTicket.getWeightTicketDetail();
             if (((isStage2() || (!isStage1() && !isStage2())) && !weightTicket.isDissolved())
-                        || (!isStage1() && !isStage2() && !weightTicket.isDissolved()
-                        && (weightTicket != null && !weightTicket.isPosted()))) {
+                    || (!isStage1() && !isStage2() && !weightTicket.isDissolved()
+                    && (weightTicket != null && !weightTicket.isPosted()))) {
 
                 // <editor-fold defaultstate="collapsed" desc="Input PO">
-                if(weightTicket.getWeightTicketDetail().getEbeln() != null) {
+                if (weightTicket.getWeightTicketDetail().getEbeln() != null) {
                     purchaseOrder = purchaseOrderRepository.findByPoNumber(weightTicket.getWeightTicketDetail().getEbeln());
                     // nhap mua hang
                     if (weightTicket.getMode().equals("IN_PO_PURCHASE")) {
@@ -3280,7 +3252,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     if (weightTicket.getMode().equals("OUT_PULL_STATION") && weightTicket.getPosto() != null) {
                         objBapi = getMvtPOSTOCreatePGI(weightTicket, weightTicket.getPosto());
                     }
-                    
+
                     if (WeighBridgeApp.getApplication().isOfflineMode() == false) {
                         if (objBapi != null) {
                             try {
@@ -3380,7 +3352,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     weightTicket.setPosted(true);
                                     completedDO.add(weightTicketDetail.getDeliveryOrderNo());
                                 }
-                                
+
                             } catch (Exception ex) {
                                 if (objBapi instanceof WsDeliveryUpdateBapi) {
                                     if (((WsDeliveryUpdateBapi) objBapi).getReturn() != null
@@ -3412,21 +3384,21 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     }
                 }
                 // </editor-fold>
-                
+
                 // <editor-fold defaultstate="collapsed" desc="Input DO">
                 BigDecimal sumQtyReg = BigDecimal.ZERO;
                 // sum trọng lượng đăng ký
                 for (int i = 0; i < outbDel_list.size(); i++) {
-                     outbDel = outbDel_list.get(i);
-                     sumQtyReg = sumQtyReg.add(outbDel.getLfimg());
+                    outbDel = outbDel_list.get(i);
+                    sumQtyReg = sumQtyReg.add(outbDel.getLfimg());
                 }
                 // post SAP
                 String ivWbidNosave = "";
                 for (int i = 0; i < outbDel_list.size(); i++) {
-                     outbDel = outbDel_list.get(i);
-                     if(i != 0) {
-                         ivWbidNosave = "X";
-                     }
+                    outbDel = outbDel_list.get(i);
+                    if (i != 0) {
+                        ivWbidNosave = "X";
+                    }
                     // validate trọng lượng DO
                     flgGqty = validateTolerance(null, outbDel);
 
@@ -3462,261 +3434,261 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     }
 
                     if (WeighBridgeApp.getApplication().isOfflineMode() == false) {
-                            if (objBapi != null) {
-                                try {
-                                    sapSession.execute(objBapi);
+                        if (objBapi != null) {
+                            try {
+                                sapSession.execute(objBapi);
 
-                                    OutboundDeliveryDetail details_item = null;
+                                OutboundDeliveryDetail details_item = null;
 
-                                    if (objBapi instanceof DOCreate2PGIBapi) {
-                                        weightTicketDetail.setDeliveryOrderNo(((DOCreate2PGIBapi) objBapi).getDelivery());
-                                        weightTicketDetail.setMatDoc(((DOCreate2PGIBapi) objBapi).getMatDoc());
-                                        weightTicketDetail.setDocYear(Integer.valueOf(((DOCreate2PGIBapi) objBapi).getDocYear()));
-                                        try {
-                                            bapi_message = ((DOCreate2PGIBapi) objBapi).getReturn().get(0).getMessage().toString();
-                                        } catch (Exception Ex) {
-                                            bapi_message = resourceMapMsg.getString("msg.errorSAP3048");
-                                        }
-                                        for (int k = 0; k < outDetails_lits.size(); k++) {
-                                            details_item = outDetails_lits.get(k);
-                                            if (details_item.getDeliveryOrderNo().equals(outbDel.getDeliveryOrderNo())) {
-                                                details_item.setMatDoc(((DOCreate2PGIBapi) objBapi).getMatDoc());
-                                                details_item.setDocYear(((DOCreate2PGIBapi) objBapi).getDocYear());
-                                                outbDel.setMatDoc(((DOCreate2PGIBapi) objBapi).getMatDoc());
-                                            }
-                                            if (((DOCreate2PGIBapi) objBapi).getMatDoc() == null) {
-                                                details_item.setPosted(false);
-                                                outbDel.setPosted(false);
-                                                flag_fail = true;
-                                            } else {
-                                                details_item.setPosted(true);
-                                                outbDel.setPosted(true);
-                                            }
-
-                                            if (!entityManager.getTransaction().isActive()) {
-                                                entityManager.getTransaction().begin();
-                                            }
-                                            entityManager.merge(details_item);
-                                            entityManager.getTransaction().commit();
+                                if (objBapi instanceof DOCreate2PGIBapi) {
+                                    weightTicketDetail.setDeliveryOrderNo(((DOCreate2PGIBapi) objBapi).getDelivery());
+                                    weightTicketDetail.setMatDoc(((DOCreate2PGIBapi) objBapi).getMatDoc());
+                                    weightTicketDetail.setDocYear(Integer.valueOf(((DOCreate2PGIBapi) objBapi).getDocYear()));
+                                    try {
+                                        bapi_message = ((DOCreate2PGIBapi) objBapi).getReturn().get(0).getMessage().toString();
+                                    } catch (Exception Ex) {
+                                        bapi_message = resourceMapMsg.getString("msg.errorSAP3048");
+                                    }
+                                    for (int k = 0; k < outDetails_lits.size(); k++) {
+                                        details_item = outDetails_lits.get(k);
+                                        if (details_item.getDeliveryOrderNo().equals(outbDel.getDeliveryOrderNo())) {
+                                            details_item.setMatDoc(((DOCreate2PGIBapi) objBapi).getMatDoc());
+                                            details_item.setDocYear(((DOCreate2PGIBapi) objBapi).getDocYear());
+                                            outbDel.setMatDoc(((DOCreate2PGIBapi) objBapi).getMatDoc());
                                         }
                                         if (((DOCreate2PGIBapi) objBapi).getMatDoc() == null) {
+                                            details_item.setPosted(false);
                                             outbDel.setPosted(false);
                                             flag_fail = true;
                                         } else {
+                                            details_item.setPosted(true);
                                             outbDel.setPosted(true);
                                         }
-                                    }
-                                    if (objBapi instanceof GoodsMvtPoCreateBapi) {
-                                        weightTicketDetail.setMatDoc(((GoodsMvtPoCreateBapi) objBapi).getMatDoc());
-                                        weightTicketDetail.setDocYear(Integer.valueOf(((GoodsMvtPoCreateBapi) objBapi).getMatYear()));
-                                        try {
-                                            bapi_message = ((GoodsMvtPoCreateBapi) objBapi).getReturn().get(0).getMessage().toString();
-                                        } catch (Exception Ex) {
-                                            bapi_message = resourceMapMsg.getString("msg.errorSAP3086");
+
+                                        if (!entityManager.getTransaction().isActive()) {
+                                            entityManager.getTransaction().begin();
                                         }
-                                        for (int k = 0; k < outDetails_lits.size(); k++) {
-                                            details_item = outDetails_lits.get(k);
-                                            if (details_item.getDeliveryOrderNo().equals(outbDel.getDeliveryOrderNo())) {
-                                                details_item.setMatDoc(((GoodsMvtPoCreateBapi) objBapi).getMatDoc());
-                                                details_item.setDocYear(((GoodsMvtPoCreateBapi) objBapi).getMatYear());
-                                                outbDel.setMatDoc(((GoodsMvtPoCreateBapi) objBapi).getMatDoc());
-                                            }
-                                            if (((GoodsMvtPoCreateBapi) objBapi).getMatDoc() == null) {
-                                                details_item.setPosted(false);
-                                                outbDel.setPosted(false);
-                                                flag_fail = true;
-                                            } else {
-                                                details_item.setPosted(true);
-                                                outbDel.setPosted(true);
-                                            }
-                                            if (!entityManager.getTransaction().isActive()) {
-                                                entityManager.getTransaction().begin();
-                                            }
-                                            entityManager.merge(details_item);
-                                            entityManager.getTransaction().commit();
+                                        entityManager.merge(details_item);
+                                        entityManager.getTransaction().commit();
+                                    }
+                                    if (((DOCreate2PGIBapi) objBapi).getMatDoc() == null) {
+                                        outbDel.setPosted(false);
+                                        flag_fail = true;
+                                    } else {
+                                        outbDel.setPosted(true);
+                                    }
+                                }
+                                if (objBapi instanceof GoodsMvtPoCreateBapi) {
+                                    weightTicketDetail.setMatDoc(((GoodsMvtPoCreateBapi) objBapi).getMatDoc());
+                                    weightTicketDetail.setDocYear(Integer.valueOf(((GoodsMvtPoCreateBapi) objBapi).getMatYear()));
+                                    try {
+                                        bapi_message = ((GoodsMvtPoCreateBapi) objBapi).getReturn().get(0).getMessage().toString();
+                                    } catch (Exception Ex) {
+                                        bapi_message = resourceMapMsg.getString("msg.errorSAP3086");
+                                    }
+                                    for (int k = 0; k < outDetails_lits.size(); k++) {
+                                        details_item = outDetails_lits.get(k);
+                                        if (details_item.getDeliveryOrderNo().equals(outbDel.getDeliveryOrderNo())) {
+                                            details_item.setMatDoc(((GoodsMvtPoCreateBapi) objBapi).getMatDoc());
+                                            details_item.setDocYear(((GoodsMvtPoCreateBapi) objBapi).getMatYear());
+                                            outbDel.setMatDoc(((GoodsMvtPoCreateBapi) objBapi).getMatDoc());
                                         }
                                         if (((GoodsMvtPoCreateBapi) objBapi).getMatDoc() == null) {
+                                            details_item.setPosted(false);
                                             outbDel.setPosted(false);
-
                                             flag_fail = true;
                                         } else {
+                                            details_item.setPosted(true);
                                             outbDel.setPosted(true);
                                         }
-                                    }
-                                    if (objBapi instanceof GoodsMvtDoCreateBapi) {
-                                        weightTicketDetail.setMatDoc(((GoodsMvtDoCreateBapi) objBapi).getMatDoc());
-                                        weightTicketDetail.setDocYear(Integer.valueOf(((GoodsMvtDoCreateBapi) objBapi).getMatYear()));
-                                        try {
-                                            bapi_message = ((GoodsMvtDoCreateBapi) objBapi).getReturn().get(0).getMessage().toString();
-                                        } catch (Exception Ex) {
-                                            bapi_message = resourceMapMsg.getString("msg.errorSAP3123");
+                                        if (!entityManager.getTransaction().isActive()) {
+                                            entityManager.getTransaction().begin();
                                         }
-                                        for (int k = 0; k < outDetails_lits.size(); k++) {
-                                            details_item = outDetails_lits.get(k);
-                                            if (details_item.getDeliveryOrderNo().equals(outbDel.getDeliveryOrderNo())) {
-                                                details_item.setMatDoc(((GoodsMvtDoCreateBapi) objBapi).getMatDoc());
-                                                details_item.setDocYear(((GoodsMvtDoCreateBapi) objBapi).getMatYear());
-                                                outbDel.setMatDoc(((GoodsMvtDoCreateBapi) objBapi).getMatDoc());
-                                            }
-                                            if (((GoodsMvtDoCreateBapi) objBapi).getMatDoc() == null) {
-                                                details_item.setPosted(false);
-                                                outbDel.setPosted(false);
-                                                flag_fail = true;
-                                            } else {
-                                                details_item.setPosted(true);
-                                                outbDel.setPosted(true);
-                                            }
-                                            if (!entityManager.getTransaction().isActive()) {
-                                                entityManager.getTransaction().begin();
-                                            }
-                                            entityManager.merge(details_item);
-                                            entityManager.getTransaction().commit();
+                                        entityManager.merge(details_item);
+                                        entityManager.getTransaction().commit();
+                                    }
+                                    if (((GoodsMvtPoCreateBapi) objBapi).getMatDoc() == null) {
+                                        outbDel.setPosted(false);
+
+                                        flag_fail = true;
+                                    } else {
+                                        outbDel.setPosted(true);
+                                    }
+                                }
+                                if (objBapi instanceof GoodsMvtDoCreateBapi) {
+                                    weightTicketDetail.setMatDoc(((GoodsMvtDoCreateBapi) objBapi).getMatDoc());
+                                    weightTicketDetail.setDocYear(Integer.valueOf(((GoodsMvtDoCreateBapi) objBapi).getMatYear()));
+                                    try {
+                                        bapi_message = ((GoodsMvtDoCreateBapi) objBapi).getReturn().get(0).getMessage().toString();
+                                    } catch (Exception Ex) {
+                                        bapi_message = resourceMapMsg.getString("msg.errorSAP3123");
+                                    }
+                                    for (int k = 0; k < outDetails_lits.size(); k++) {
+                                        details_item = outDetails_lits.get(k);
+                                        if (details_item.getDeliveryOrderNo().equals(outbDel.getDeliveryOrderNo())) {
+                                            details_item.setMatDoc(((GoodsMvtDoCreateBapi) objBapi).getMatDoc());
+                                            details_item.setDocYear(((GoodsMvtDoCreateBapi) objBapi).getMatYear());
+                                            outbDel.setMatDoc(((GoodsMvtDoCreateBapi) objBapi).getMatDoc());
                                         }
                                         if (((GoodsMvtDoCreateBapi) objBapi).getMatDoc() == null) {
+                                            details_item.setPosted(false);
                                             outbDel.setPosted(false);
                                             flag_fail = true;
                                         } else {
+                                            details_item.setPosted(true);
                                             outbDel.setPosted(true);
                                         }
-                                    }
-                                    if (objBapi instanceof WsDeliveryUpdateBapi) {
-                                        weightTicketDetail.setMatDoc(((WsDeliveryUpdateBapi) objBapi).getMat_doc());
-                                        weightTicketDetail.setDocYear(Integer.valueOf(((WsDeliveryUpdateBapi) objBapi).getDoc_year()));
-
-                                        try {
-                                            bapi_message = ((WsDeliveryUpdateBapi) objBapi).getReturn().get(0).getMessage().toString();
-                                        } catch (Exception Ex) {
-                                            bapi_message = resourceMapMsg.getString("msg.errorSAP3160");
+                                        if (!entityManager.getTransaction().isActive()) {
+                                            entityManager.getTransaction().begin();
                                         }
+                                        entityManager.merge(details_item);
+                                        entityManager.getTransaction().commit();
+                                    }
+                                    if (((GoodsMvtDoCreateBapi) objBapi).getMatDoc() == null) {
+                                        outbDel.setPosted(false);
+                                        flag_fail = true;
+                                    } else {
+                                        outbDel.setPosted(true);
+                                    }
+                                }
+                                if (objBapi instanceof WsDeliveryUpdateBapi) {
+                                    weightTicketDetail.setMatDoc(((WsDeliveryUpdateBapi) objBapi).getMat_doc());
+                                    weightTicketDetail.setDocYear(Integer.valueOf(((WsDeliveryUpdateBapi) objBapi).getDoc_year()));
+
+                                    try {
+                                        bapi_message = ((WsDeliveryUpdateBapi) objBapi).getReturn().get(0).getMessage().toString();
+                                    } catch (Exception Ex) {
+                                        bapi_message = resourceMapMsg.getString("msg.errorSAP3160");
+                                    }
 //                                        if (weightTicketDetail.getPpProcord() != null && weightTicketDetail.getPpProcord().length() == 12) {
 //                                            weightTicketDetail.setPpProcordcnf(((WsDeliveryUpdateBapi) objBapi).getConf_no());
 //                                            weightTicketDetail.setPpProcordcnfcnt(((WsDeliveryUpdateBapi) objBapi).getConf_cnt());
 //                                        }
-                                        for (int k = 0; k < outDetails_lits.size(); k++) {
-                                            details_item = outDetails_lits.get(k);
-                                            if (details_item.getDeliveryOrderNo().equals(outbDel.getDeliveryOrderNo())) {
-                                                details_item.setMatDoc(((WsDeliveryUpdateBapi) objBapi).getMat_doc());
-                                                details_item.setDocYear(((WsDeliveryUpdateBapi) objBapi).getDoc_year());
-                                                outbDel.setMatDoc(((WsDeliveryUpdateBapi) objBapi).getMat_doc());
-                                            }
-                                            if (((WsDeliveryUpdateBapi) objBapi).getMat_doc() == null) {
-                                                details_item.setPosted(false);
-                                                outbDel.setPosted(false);
-                                                flag_fail = true;
-                                            } else {
-                                                details_item.setPosted(true);
-                                                outbDel.setPosted(true);
-                                            }
-
-                                            if (!entityManager.getTransaction().isActive()) {
-                                                entityManager.getTransaction().begin();
-                                            }
-                                            entityManager.merge(outbDel);
-                                            entityManager.merge(details_item);
-                                            entityManager.getTransaction().commit();
+                                    for (int k = 0; k < outDetails_lits.size(); k++) {
+                                        details_item = outDetails_lits.get(k);
+                                        if (details_item.getDeliveryOrderNo().equals(outbDel.getDeliveryOrderNo())) {
+                                            details_item.setMatDoc(((WsDeliveryUpdateBapi) objBapi).getMat_doc());
+                                            details_item.setDocYear(((WsDeliveryUpdateBapi) objBapi).getDoc_year());
+                                            outbDel.setMatDoc(((WsDeliveryUpdateBapi) objBapi).getMat_doc());
                                         }
                                         if (((WsDeliveryUpdateBapi) objBapi).getMat_doc() == null) {
+                                            details_item.setPosted(false);
                                             outbDel.setPosted(false);
                                             flag_fail = true;
                                         } else {
+                                            details_item.setPosted(true);
                                             outbDel.setPosted(true);
                                         }
-                                    }
 
-                                    if (flag_fail || weightTicketDetail.getMatDoc() == null || weightTicketDetail.getMatDoc().equals("")) {
-                                        revertCompletedDO(completedDO, outDetails_lits, outbDel_list);
-                                        weightTicket.setPosted(false);
-                                        if (bapi_message == "") {
-                                            bapi_message = resourceMapMsg.getString("msg.errorBAPI");
+                                        if (!entityManager.getTransaction().isActive()) {
+                                            entityManager.getTransaction().begin();
                                         }
-                                        JOptionPane.showMessageDialog(rootPane, bapi_message);
-                                        completed = false;
-                                        entityManager.clear();
-                                    } else if (!flag_fail) {
-                                        weightTicket.setPosted(true);
-                                        completedDO.add(weightTicketDetail.getDeliveryOrderNo());
+                                        entityManager.merge(outbDel);
+                                        entityManager.merge(details_item);
+                                        entityManager.getTransaction().commit();
                                     }
+                                    if (((WsDeliveryUpdateBapi) objBapi).getMat_doc() == null) {
+                                        outbDel.setPosted(false);
+                                        flag_fail = true;
+                                    } else {
+                                        outbDel.setPosted(true);
+                                    }
+                                }
 
-                                    // <editor-fold defaultstate="collapsed" desc="Update D.O from SAP to DB">
-                                    if (outbDel != null) {
-                                        OutboundDelivery sapOutb = sapService.getOutboundDelivery(outbDel.getDeliveryOrderNo());
-                                        Customer kunnr = null, sapKunnr = null, kunag = null, sapKunag = null;
-                                        Vendor lifnr = null, sapLifnr = null;
-                                        if (sapOutb != null) {
-                                            if (sapOutb.getKunnr() != null && !sapOutb.getKunnr().trim().isEmpty()) {
-                                                kunnr = weightTicketRegistarationController.findByKunnr(sapOutb.getKunnr());
-                                                sapKunnr = sapService.getCustomer(sapOutb.getKunnr());
-                                            }
-                                            if (sapOutb.getKunag() != null && !sapOutb.getKunag().trim().isEmpty()) {
-                                                kunag = weightTicketRegistarationController.findByKunnr(sapOutb.getKunag());
-                                                sapKunag = sapService.getCustomer(sapOutb.getKunag());
-                                            }
-                                            if (sapOutb.getLifnr() != null && !sapOutb.getLifnr().trim().isEmpty()) {
-                                                lifnr = weightTicketRegistarationController.findByLifnr(sapOutb.getLifnr());
-                                                sapLifnr = sapService.getVendor(sapOutb.getLifnr());
-                                            }
-                                        }
-                                        //Store Ship to party Info
-                                        if (sapKunnr != null && kunnr == null) {
-                                            entityManager.persist(sapKunnr);
-                                        } else if (sapKunnr != null && kunnr != null) {
-                                            sapKunnr.setId(kunnr.getId());
-                                            entityManager.merge(sapKunnr);
-                                        } else if (sapKunnr == null && kunnr != null) {
-                                            entityManager.remove(kunnr);
-                                        }
-                                        //Store Sold to party Info
-                                        if (sapKunag != null && kunag == null && !sapKunnr.getKunnr().equalsIgnoreCase(sapKunag.getKunnr())) {
-                                            entityManager.persist(sapKunag);
-                                        } else if (sapKunag != null && kunag != null) {
-                                            sapKunag.setId(kunag.getId());
-                                            entityManager.merge(sapKunag);
-                                        } else if (sapKunag == null && kunag != null && !sapKunnr.getKunnr().equalsIgnoreCase(sapKunag.getKunnr())) {
-                                            entityManager.remove(kunag);
-                                        }
-                                        //Store Vendor Info
-                                        if (sapLifnr != null && lifnr == null) {
-                                            entityManager.persist(sapLifnr);
-                                        } else if (sapLifnr != null && lifnr != null) {
-                                            sapLifnr.setId(lifnr.getId());
-                                            entityManager.merge(sapLifnr);
-                                        } else if (sapLifnr == null && lifnr != null) {
-                                            entityManager.remove(lifnr);
-                                        }
-                                        // 120518_17h keep values(posted, mat_doc) which are gotten from Save SAP at the first time
-                                        sapOutb.setId(outbDel.getId());
-                                        sapOutb.setPosted(outbDel.isPosted());
-                                        sapOutb.setMatDoc(outbDel.getMatDoc());
-                                        entityManager.merge(sapOutb);
-                                        outbDel = sapOutb;
-                                    }
-                                    // </editor-fold>
-//                    }
-                                } catch (Exception e) {
-                                    if (objBapi instanceof WsDeliveryUpdateBapi) {
-                                        if (((WsDeliveryUpdateBapi) objBapi).getReturn() != null
-                                                && (((WsDeliveryUpdateBapi) objBapi).getReturn().get(0)) != null
-                                                && (((WsDeliveryUpdateBapi) objBapi).getReturn().get(0)).getId() != null
-                                                && (((WsDeliveryUpdateBapi) objBapi).getReturn().get(0)).getId().equals("NOREVERT")) {
-                                        } else {
-
-                                            revertCompletedDO(completedDO, outDetails_lits, outbDel_list);
-                                            outbDel.setPosted(false);
-                                        }
-                                    }
+                                if (flag_fail || weightTicketDetail.getMatDoc() == null || weightTicketDetail.getMatDoc().equals("")) {
+                                    revertCompletedDO(completedDO, outDetails_lits, outbDel_list);
                                     weightTicket.setPosted(false);
-                                    failed(e);
+                                    if (bapi_message == "") {
+                                        bapi_message = resourceMapMsg.getString("msg.errorBAPI");
+                                    }
+                                    JOptionPane.showMessageDialog(rootPane, bapi_message);
                                     completed = false;
                                     entityManager.clear();
+                                } else if (!flag_fail) {
+                                    weightTicket.setPosted(true);
+                                    completedDO.add(weightTicketDetail.getDeliveryOrderNo());
                                 }
+
+                                // <editor-fold defaultstate="collapsed" desc="Update D.O from SAP to DB">
+                                if (outbDel != null) {
+                                    OutboundDelivery sapOutb = sapService.getOutboundDelivery(outbDel.getDeliveryOrderNo());
+                                    Customer kunnr = null, sapKunnr = null, kunag = null, sapKunag = null;
+                                    Vendor lifnr = null, sapLifnr = null;
+                                    if (sapOutb != null) {
+                                        if (sapOutb.getKunnr() != null && !sapOutb.getKunnr().trim().isEmpty()) {
+                                            kunnr = weightTicketRegistarationController.findByKunnr(sapOutb.getKunnr());
+                                            sapKunnr = sapService.getCustomer(sapOutb.getKunnr());
+                                        }
+                                        if (sapOutb.getKunag() != null && !sapOutb.getKunag().trim().isEmpty()) {
+                                            kunag = weightTicketRegistarationController.findByKunnr(sapOutb.getKunag());
+                                            sapKunag = sapService.getCustomer(sapOutb.getKunag());
+                                        }
+                                        if (sapOutb.getLifnr() != null && !sapOutb.getLifnr().trim().isEmpty()) {
+                                            lifnr = weightTicketRegistarationController.findByLifnr(sapOutb.getLifnr());
+                                            sapLifnr = sapService.getVendor(sapOutb.getLifnr());
+                                        }
+                                    }
+                                    //Store Ship to party Info
+                                    if (sapKunnr != null && kunnr == null) {
+                                        entityManager.persist(sapKunnr);
+                                    } else if (sapKunnr != null && kunnr != null) {
+                                        sapKunnr.setId(kunnr.getId());
+                                        entityManager.merge(sapKunnr);
+                                    } else if (sapKunnr == null && kunnr != null) {
+                                        entityManager.remove(kunnr);
+                                    }
+                                    //Store Sold to party Info
+                                    if (sapKunag != null && kunag == null && !sapKunnr.getKunnr().equalsIgnoreCase(sapKunag.getKunnr())) {
+                                        entityManager.persist(sapKunag);
+                                    } else if (sapKunag != null && kunag != null) {
+                                        sapKunag.setId(kunag.getId());
+                                        entityManager.merge(sapKunag);
+                                    } else if (sapKunag == null && kunag != null && !sapKunnr.getKunnr().equalsIgnoreCase(sapKunag.getKunnr())) {
+                                        entityManager.remove(kunag);
+                                    }
+                                    //Store Vendor Info
+                                    if (sapLifnr != null && lifnr == null) {
+                                        entityManager.persist(sapLifnr);
+                                    } else if (sapLifnr != null && lifnr != null) {
+                                        sapLifnr.setId(lifnr.getId());
+                                        entityManager.merge(sapLifnr);
+                                    } else if (sapLifnr == null && lifnr != null) {
+                                        entityManager.remove(lifnr);
+                                    }
+                                    // 120518_17h keep values(posted, mat_doc) which are gotten from Save SAP at the first time
+                                    sapOutb.setId(outbDel.getId());
+                                    sapOutb.setPosted(outbDel.isPosted());
+                                    sapOutb.setMatDoc(outbDel.getMatDoc());
+                                    entityManager.merge(sapOutb);
+                                    outbDel = sapOutb;
+                                }
+                                // </editor-fold>
+//                    }
+                            } catch (Exception e) {
+                                if (objBapi instanceof WsDeliveryUpdateBapi) {
+                                    if (((WsDeliveryUpdateBapi) objBapi).getReturn() != null
+                                            && (((WsDeliveryUpdateBapi) objBapi).getReturn().get(0)) != null
+                                            && (((WsDeliveryUpdateBapi) objBapi).getReturn().get(0)).getId() != null
+                                            && (((WsDeliveryUpdateBapi) objBapi).getReturn().get(0)).getId().equals("NOREVERT")) {
+                                    } else {
+
+                                        revertCompletedDO(completedDO, outDetails_lits, outbDel_list);
+                                        outbDel.setPosted(false);
+                                    }
+                                }
+                                weightTicket.setPosted(false);
+                                failed(e);
+                                completed = false;
+                                entityManager.clear();
                             }
-                        } else if(WeighBridgeApp.getApplication().isOfflineMode()) {
-                            weightTicket.setPosted(false);
-                            weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
-                        } else {
-                            weightTicket.setPosted(false);
                         }
-                    
+                    } else if (WeighBridgeApp.getApplication().isOfflineMode()) {
+                        weightTicket.setPosted(false);
+                        weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
+                    } else {
+                        weightTicket.setPosted(false);
+                    }
+
                     if (!entityManager.getTransaction().isActive()) {
                         entityManager.getTransaction().begin();
                     }
@@ -3724,11 +3696,11 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     entityManager.getTransaction().commit();
                 }
                 // </editor-fold>
-                
+
             }
 
-            if (WeighBridgeApp.getApplication().isOfflineMode() 
-                    || weightTicket.getMode().equals("IN_OTHER") 
+            if (WeighBridgeApp.getApplication().isOfflineMode()
+                    || weightTicket.getMode().equals("IN_OTHER")
                     || weightTicket.getMode().equals("OUT_OTHER")) {
                 if (isStage2()) {
                     weightTicket.setPosted(false);
@@ -3817,7 +3789,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 ).subtract(weightTicketRegistarationController.getSumQuantityWithPoNo(purchaseOrder.getPoNumber()));
 
                 BigDecimal result = numCheckWeight.subtract(weightTicket.getGQty());
-                if(result.compareTo(BigDecimal.ZERO) <= 0) {
+                if (result.compareTo(BigDecimal.ZERO) <= 0) {
                     return false;
                 }
             }
@@ -4000,7 +3972,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                             weightTicket.setGQty(new BigDecimal(Double.toString(result)));
                         } else {
                             String msg = "Chênh lệch vượt dung sai cho phép!";
-                           // TODO review to remove this message
+                            // TODO review to remove this message
 //                            try {
 //                                msg = weightTicketController.getMsg();
 //                            } catch (Exception ex) {
@@ -4015,7 +3987,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                             // Tuanna add 14.01.2013 - Check logic when input value not match require condition  
                             btnOScaleReset.setEnabled(true);
                             return null;
-                       }
+                        }
                     } else {
                         txfGoodsQty.setValue(result);
                         weightTicket.setGQty(new BigDecimal(Double.toString(result)));
@@ -4222,7 +4194,9 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         if (components.length > 0) {
             for (Component component : components) {
                 component.setVisible(true);
-                component.setEnabled(false);
+                if (!(component instanceof JLabel) && (!(component instanceof JTextField))) {
+                    component.setEnabled(false);
+                }
             }
         }
     }
@@ -4248,7 +4222,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
     }
 
     private Object getPgmVl02nBapi(WeightTicket wt, OutboundDelivery outbDel, String modeFlg, String ivWbidNosave) {
-        return weightTicketController.getPgmVl02nBapi(wt, outbDel, weightTicket,modeFlg, timeFrom, timeTo, outDetails_lits, ivWbidNosave);
+        return weightTicketController.getPgmVl02nBapi(wt, outbDel, weightTicket, modeFlg, timeFrom, timeTo, outDetails_lits, ivWbidNosave);
     }
 
     private Object getMvtPOSTOCreatePGI(WeightTicket wt, String number) {
@@ -4375,10 +4349,10 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         //}
         bBatch = true;
         //txtGRText.setEnabled(true);
-        if (weightTicket.getWeightTicketDetail() != null && weightTicket.getWeightTicketDetail().getMatnrRef()!= null) {
+        if (weightTicket.getWeightTicketDetail() != null && weightTicket.getWeightTicketDetail().getMatnrRef() != null) {
             materialConstraint = weightTicketController.getMaterialConstraintByMatnr(weightTicket.getWeightTicketDetail().getMatnrRef());
             if (isStage2()
-                    && materialConstraint != null && materialConstraint.getRequiredNiemXa() 
+                    && materialConstraint != null && materialConstraint.getRequiredNiemXa()
                     && (txtCementDesc.getText().trim() == null || txtCementDesc.getText().trim().equals(""))
                     && validateLength(txtCementDesc.getText().trim(), lblCementDesc, 0, 60)) {
                 bNiemXa = false;
@@ -4391,7 +4365,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 txtCementDesc.setEnabled(true);
             }
             if (isStage2()
-                    && materialConstraint != null && materialConstraint.getRequiredBatch() 
+                    && materialConstraint != null && materialConstraint.getRequiredBatch()
                     && (txtBatchProduce.getText().trim() == null || txtBatchProduce.getText().trim().equals(""))
                     && validateLength(txtBatchProduce.getText().trim(), lblBatchProduce, 0, 128)) {
                 bBatchProduce = false;
@@ -4406,9 +4380,9 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         }
         isRemark = validateLength(txtRemark.getText().trim(), lblRemark, 0, 128);
         result = (bMisc || bPO || bMB1B || bMvt311)
-                && bScale && bSLoc && bBatch && bBatchProduce && bNiemXa &&
-                (isStage1() || isStage2() || (!isStage1() && !isStage2() &&
-                weightTicket != null && weightTicket.isPosted())) && isRemark;
+                && bScale && bSLoc && bBatch && bBatchProduce && bNiemXa
+                && (isStage1() || isStage2() || (!isStage1() && !isStage2()
+                && weightTicket != null && weightTicket.isPosted())) && isRemark;
         return result;
     }
 
