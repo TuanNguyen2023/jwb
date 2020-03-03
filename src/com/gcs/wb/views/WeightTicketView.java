@@ -339,7 +339,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
         txtWTNum.setFont(txtWTNum.getFont().deriveFont(txtWTNum.getFont().getStyle() | java.awt.Font.BOLD, txtWTNum.getFont().getSize()+2));
         txtWTNum.setForeground(resourceMap.getColor("txtWTNum.foreground")); // NOI18N
-        txtWTNum.setText(resourceMap.getString("txtWTNum.text")); // NOI18N
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getActionMap(WeightTicketView.class, this);
         txtWTNum.setAction(actionMap.get("readWT")); // NOI18N
         txtWTNum.setName("txtWTNum"); // NOI18N
@@ -430,7 +429,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         rbtBridge1.setFont(resourceMap.getFont("rbtBridge2.font")); // NOI18N
         rbtBridge1.setForeground(resourceMap.getColor("rbtBridge2.foreground")); // NOI18N
         rbtBridge1.setText(resourceMap.getString("rbtBridge1.text")); // NOI18N
-        rbtBridge1.setToolTipText(resourceMap.getString("rbtBridge1.toolTipText")); // NOI18N
         rbtBridge1.setName("rbtBridge1"); // NOI18N
 
         org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, this, org.jdesktop.beansbinding.ELProperty.create("${bridge1}"), rbtBridge1, org.jdesktop.beansbinding.BeanProperty.create("enabled"));
@@ -522,7 +520,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         pnCurScale.add(pnCurScaleData, java.awt.BorderLayout.CENTER);
 
         pnScaleData.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("pnScaleData.border.title"))); // NOI18N
-        pnScaleData.setToolTipText(resourceMap.getString("pnScaleData.toolTipText")); // NOI18N
         pnScaleData.setFocusable(false);
         pnScaleData.setName("pnScaleData"); // NOI18N
 
@@ -543,7 +540,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         txfInQty.setForeground(resourceMap.getColor("txfInQty.foreground")); // NOI18N
         txfInQty.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
         txfInQty.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txfInQty.setText(resourceMap.getString("txfInQty.text")); // NOI18N
         txfInQty.setFont(resourceMap.getFont("txfGoodsQty.font")); // NOI18N
         txfInQty.setName("txfInQty"); // NOI18N
 
@@ -555,7 +551,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         txfOutQty.setForeground(resourceMap.getColor("txfOutQty.foreground")); // NOI18N
         txfOutQty.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
         txfOutQty.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txfOutQty.setText(resourceMap.getString("txfOutQty.text")); // NOI18N
         txfOutQty.setFont(resourceMap.getFont("txfGoodsQty.font")); // NOI18N
         txfOutQty.setName("txfOutQty"); // NOI18N
 
@@ -567,7 +562,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         txfGoodsQty.setForeground(resourceMap.getColor("txfGoodsQty.foreground")); // NOI18N
         txfGoodsQty.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
         txfGoodsQty.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txfGoodsQty.setText(resourceMap.getString("txfGoodsQty.text")); // NOI18N
         txfGoodsQty.setFont(resourceMap.getFont("txfGoodsQty.font")); // NOI18N
         txfGoodsQty.setName("txfGoodsQty"); // NOI18N
 
@@ -590,7 +584,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         txtInTime.setEditable(false);
         txtInTime.setFont(txtInTime.getFont().deriveFont(txtInTime.getFont().getStyle() | java.awt.Font.BOLD, txtInTime.getFont().getSize()+1));
         txtInTime.setForeground(resourceMap.getColor("txtInTime.foreground")); // NOI18N
-        txtInTime.setText(resourceMap.getString("txtInTime.text")); // NOI18N
         txtInTime.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         txtInTime.setName("txtInTime"); // NOI18N
         txtInTime.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -603,7 +596,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         txtOutTime.setEditable(false);
         txtOutTime.setFont(txtOutTime.getFont().deriveFont(txtOutTime.getFont().getStyle() | java.awt.Font.BOLD, txtOutTime.getFont().getSize()+1));
         txtOutTime.setForeground(resourceMap.getColor("txtInTime.foreground")); // NOI18N
-        txtOutTime.setText(resourceMap.getString("txtOutTime.text")); // NOI18N
         txtOutTime.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         txtOutTime.setName("txtOutTime"); // NOI18N
         txtOutTime.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -721,10 +713,11 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         rbtOutward.setName("rbtOutward"); // NOI18N
 
         txtRegistrationNo.setEditable(false);
-        txtRegistrationNo.setText(resourceMap.getString("txtRegistrationNo.text")); // NOI18N
+        txtRegistrationNo.setDisabledTextColor(resourceMap.getColor("txtGRText.disabledTextColor")); // NOI18N
         txtRegistrationNo.setName("txtRegistrationNo"); // NOI18N
 
         txtDName.setEditable(false);
+        txtDName.setDisabledTextColor(resourceMap.getColor("txtGRText.disabledTextColor")); // NOI18N
         txtDName.setName("txtDName"); // NOI18N
 
         lblRegistrationNo.setText(resourceMap.getString("lblRegistrationNo.text")); // NOI18N
@@ -737,21 +730,25 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         lblCMNDBL.setName("lblCMNDBL"); // NOI18N
 
         txtCMNDBL.setEditable(false);
+        txtCMNDBL.setDisabledTextColor(resourceMap.getColor("txtGRText.disabledTextColor")); // NOI18N
         txtCMNDBL.setName("txtCMNDBL"); // NOI18N
 
         lblLicPlate.setText(resourceMap.getString("lblLicPlate.text")); // NOI18N
         lblLicPlate.setName("lblLicPlate"); // NOI18N
 
         txtLicPlate.setEditable(false);
+        txtLicPlate.setDisabledTextColor(resourceMap.getColor("txtGRText.disabledTextColor")); // NOI18N
         txtLicPlate.setName("txtLicPlate"); // NOI18N
 
         lblTrailerPlate.setText(resourceMap.getString("lblTrailerPlate.text")); // NOI18N
         lblTrailerPlate.setName("lblTrailerPlate"); // NOI18N
 
         txtTrailerPlate.setEditable(false);
+        txtTrailerPlate.setDisabledTextColor(resourceMap.getColor("txtGRText.disabledTextColor")); // NOI18N
         txtTrailerPlate.setName("txtTrailerPlate"); // NOI18N
 
         txtSling.setEditable(false);
+        txtSling.setDisabledTextColor(resourceMap.getColor("txtGRText.disabledTextColor")); // NOI18N
         txtSling.setName("txtSling"); // NOI18N
 
         lblSling.setText(resourceMap.getString("lblSling.text")); // NOI18N
@@ -761,12 +758,14 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         lblPallet.setName("lblPallet"); // NOI18N
 
         txtPallet.setEditable(false);
+        txtPallet.setDisabledTextColor(resourceMap.getColor("txtGRText.disabledTextColor")); // NOI18N
         txtPallet.setName("txtPallet"); // NOI18N
 
         lblGRText.setText(resourceMap.getString("lblGRText.text")); // NOI18N
         lblGRText.setName("lblGRText"); // NOI18N
 
         txtGRText.setEditable(false);
+        txtGRText.setDisabledTextColor(resourceMap.getColor("txtGRText.disabledTextColor")); // NOI18N
         txtGRText.setName("txtGRText"); // NOI18N
         txtGRText.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -806,22 +805,24 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         });
 
         txtTicketId.setEditable(false);
+        txtTicketId.setDisabledTextColor(resourceMap.getColor("txtGRText.disabledTextColor")); // NOI18N
         txtTicketId.setName("txtTicketId"); // NOI18N
 
         lblTicketId.setText(resourceMap.getString("lblTicketId.text")); // NOI18N
         lblTicketId.setName("lblTicketId"); // NOI18N
 
         txtWeightTicketIdRef.setEditable(false);
+        txtWeightTicketIdRef.setDisabledTextColor(resourceMap.getColor("txtGRText.disabledTextColor")); // NOI18N
         txtWeightTicketIdRef.setName("txtWeightTicketIdRef"); // NOI18N
 
         lblWeightTicketIdRef.setText(resourceMap.getString("lblWeightTicketIdRef.text")); // NOI18N
         lblWeightTicketIdRef.setName("lblWeightTicketIdRef"); // NOI18N
 
         lblProcedure.setText(resourceMap.getString("lblProcedure.text")); // NOI18N
-        lblProcedure.setToolTipText(resourceMap.getString("lblProcedure.toolTipText")); // NOI18N
         lblProcedure.setName("lblProcedure"); // NOI18N
 
         txtProcedure.setEditable(false);
+        txtProcedure.setDisabledTextColor(resourceMap.getColor("txtGRText.disabledTextColor")); // NOI18N
         txtProcedure.setName("txtProcedure"); // NOI18N
 
         lblRemark.setText(resourceMap.getString("lblRemark.text")); // NOI18N
@@ -947,10 +948,12 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         pnWTRight.setName("pnWTRight"); // NOI18N
 
         txtDelNum.setEditable(false);
+        txtDelNum.setDisabledTextColor(resourceMap.getColor("txtGRText.disabledTextColor")); // NOI18N
         txtDelNum.setName("txtDelNum"); // NOI18N
 
         txtPONo.setEditable(false);
         txtPONo.setAction(actionMap.get("readPO")); // NOI18N
+        txtPONo.setDisabledTextColor(resourceMap.getColor("txtGRText.disabledTextColor")); // NOI18N
         txtPONo.setName("txtPONo"); // NOI18N
         txtPONo.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -968,13 +971,15 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         });
 
         txtRegItem.setEditable(false);
+        txtRegItem.setDisabledTextColor(resourceMap.getColor("txtGRText.disabledTextColor")); // NOI18N
         txtRegItem.setName("txtRegItem"); // NOI18N
 
         txtMatnr.setEditable(false);
-        txtMatnr.setText(resourceMap.getString("txtMatnr.text")); // NOI18N
+        txtMatnr.setDisabledTextColor(resourceMap.getColor("txtGRText.disabledTextColor")); // NOI18N
         txtMatnr.setName("txtMatnr"); // NOI18N
 
         txtWeight.setEditable(false);
+        txtWeight.setDisabledTextColor(resourceMap.getColor("txtGRText.disabledTextColor")); // NOI18N
         txtWeight.setName("txtWeight"); // NOI18N
 
         cbxKunnr.setName("cbxKunnr"); // NOI18N
@@ -1005,6 +1010,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         });
 
         txtLgortIn.setEditable(false);
+        txtLgortIn.setDisabledTextColor(resourceMap.getColor("txtGRText.disabledTextColor")); // NOI18N
         txtLgortIn.setName("txtLgortIn"); // NOI18N
         txtLgortIn.setRequestFocusEnabled(false);
 
@@ -1017,9 +1023,11 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         });
 
         txtChargIn.setEditable(false);
+        txtChargIn.setDisabledTextColor(resourceMap.getColor("txtGRText.disabledTextColor")); // NOI18N
         txtChargIn.setName("txtChargIn"); // NOI18N
 
         txtPoPosto.setEditable(false);
+        txtPoPosto.setDisabledTextColor(resourceMap.getColor("txtGRText.disabledTextColor")); // NOI18N
         txtPoPosto.setName("txtPoPosto"); // NOI18N
         txtPoPosto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1118,7 +1126,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         lblSO.setName("lblSO"); // NOI18N
 
         txtSO.setEditable(false);
-        txtSO.setText(resourceMap.getString("txtSO.text")); // NOI18N
+        txtSO.setDisabledTextColor(resourceMap.getColor("txtGRText.disabledTextColor")); // NOI18N
         txtSO.setName("txtSO"); // NOI18N
 
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
@@ -1232,8 +1240,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     .addComponent(lblVendorTransport))
                 .addContainerGap(47, Short.MAX_VALUE))
         );
-
-        txtMatnr.getAccessibleContext().setAccessibleName(resourceMap.getString("txtMatnr.AccessibleContext.accessibleName")); // NOI18N
 
         jPanel1.setName("jPanel1"); // NOI18N
 
@@ -4194,8 +4200,9 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         if (components.length > 0) {
             for (Component component : components) {
                 component.setVisible(true);
-                if (!(component instanceof JLabel) && (!(component instanceof JTextField))) {
+                if (!(component instanceof JLabel)) {
                     component.setEnabled(false);
+                    component.setForeground(Color.black);
                 }
             }
         }

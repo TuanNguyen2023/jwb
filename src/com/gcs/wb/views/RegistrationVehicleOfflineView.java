@@ -1884,6 +1884,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     }
 
     private void disableAllInForm() {
+        rbtInput.setForeground(Color.black);
+        rbtOutput.setForeground(Color.black);
         txtTicketIdN.setEnabled(false);
         lblTicketIdN.setForeground(Color.black);
         txtWeightTickerRefN.setEnabled(false);

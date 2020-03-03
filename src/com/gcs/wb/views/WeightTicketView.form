@@ -138,7 +138,6 @@
               </FontInfo>
             </Property>
             <Property name="foreground" type="java.awt.Color" resourceKey="txtWTNum.foreground"/>
-            <Property name="text" type="java.lang.String" resourceKey="txtWTNum.text"/>
             <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
               <action class="com.gcs.wb.views.WeightTicketView" id="readWT" methodName="readWT"/>
             </Property>
@@ -266,7 +265,6 @@
                 <Property name="font" type="java.awt.Font" resourceKey="rbtBridge2.font"/>
                 <Property name="foreground" type="java.awt.Color" resourceKey="rbtBridge2.foreground"/>
                 <Property name="text" type="java.lang.String" resourceKey="rbtBridge1.text"/>
-                <Property name="toolTipText" type="java.lang.String" resourceKey="rbtBridge1.toolTipText"/>
                 <Property name="name" type="java.lang.String" value="rbtBridge1" noResource="true"/>
               </Properties>
               <BindingProperties>
@@ -354,7 +352,6 @@
             </TitledBorder>
           </Border>
         </Property>
-        <Property name="toolTipText" type="java.lang.String" resourceKey="pnScaleData.toolTipText"/>
         <Property name="focusable" type="boolean" value="false"/>
         <Property name="name" type="java.lang.String" value="pnScaleData" noResource="true"/>
       </Properties>
@@ -470,7 +467,6 @@
               <Format subtype="0" type="0"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" resourceKey="txfInQty.text"/>
             <Property name="font" type="java.awt.Font" resourceKey="txfGoodsQty.font"/>
             <Property name="name" type="java.lang.String" value="txfInQty" noResource="true"/>
           </Properties>
@@ -491,7 +487,6 @@
               <Format subtype="0" type="0"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" resourceKey="txfOutQty.text"/>
             <Property name="font" type="java.awt.Font" resourceKey="txfGoodsQty.font"/>
             <Property name="name" type="java.lang.String" value="txfOutQty" noResource="true"/>
           </Properties>
@@ -512,7 +507,6 @@
               <Format subtype="0" type="0"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" resourceKey="txfGoodsQty.text"/>
             <Property name="font" type="java.awt.Font" resourceKey="txfGoodsQty.font"/>
             <Property name="name" type="java.lang.String" value="txfGoodsQty" noResource="true"/>
           </Properties>
@@ -557,7 +551,6 @@
               </FontInfo>
             </Property>
             <Property name="foreground" type="java.awt.Color" resourceKey="txtInTime.foreground"/>
-            <Property name="text" type="java.lang.String" resourceKey="txtInTime.text"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
                 <EmptyBorder/>
@@ -579,7 +572,6 @@
               </FontInfo>
             </Property>
             <Property name="foreground" type="java.awt.Color" resourceKey="txtInTime.foreground"/>
-            <Property name="text" type="java.lang.String" resourceKey="txtOutTime.text"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
                 <EmptyBorder/>
@@ -833,13 +825,14 @@
             <Component class="javax.swing.JTextField" name="txtRegistrationNo">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
-                <Property name="text" type="java.lang.String" resourceKey="txtRegistrationNo.text"/>
+                <Property name="disabledTextColor" type="java.awt.Color" resourceKey="txtGRText.disabledTextColor"/>
                 <Property name="name" type="java.lang.String" value="txtRegistrationNo" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtDName">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
+                <Property name="disabledTextColor" type="java.awt.Color" resourceKey="txtGRText.disabledTextColor"/>
                 <Property name="name" type="java.lang.String" value="txtDName" noResource="true"/>
               </Properties>
             </Component>
@@ -864,6 +857,7 @@
             <Component class="javax.swing.JTextField" name="txtCMNDBL">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
+                <Property name="disabledTextColor" type="java.awt.Color" resourceKey="txtGRText.disabledTextColor"/>
                 <Property name="name" type="java.lang.String" value="txtCMNDBL" noResource="true"/>
               </Properties>
             </Component>
@@ -876,6 +870,7 @@
             <Component class="javax.swing.JFormattedTextField" name="txtLicPlate">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
+                <Property name="disabledTextColor" type="java.awt.Color" resourceKey="txtGRText.disabledTextColor"/>
                 <Property name="name" type="java.lang.String" value="txtLicPlate" noResource="true"/>
               </Properties>
               <AuxValues>
@@ -891,6 +886,7 @@
             <Component class="javax.swing.JFormattedTextField" name="txtTrailerPlate">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
+                <Property name="disabledTextColor" type="java.awt.Color" resourceKey="txtGRText.disabledTextColor"/>
                 <Property name="name" type="java.lang.String" value="txtTrailerPlate" noResource="true"/>
               </Properties>
               <AuxValues>
@@ -900,6 +896,7 @@
             <Component class="javax.swing.JFormattedTextField" name="txtSling">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
+                <Property name="disabledTextColor" type="java.awt.Color" resourceKey="txtGRText.disabledTextColor"/>
                 <Property name="name" type="java.lang.String" value="txtSling" noResource="true"/>
               </Properties>
               <AuxValues>
@@ -921,6 +918,7 @@
             <Component class="javax.swing.JFormattedTextField" name="txtPallet">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
+                <Property name="disabledTextColor" type="java.awt.Color" resourceKey="txtGRText.disabledTextColor"/>
                 <Property name="name" type="java.lang.String" value="txtPallet" noResource="true"/>
               </Properties>
               <AuxValues>
@@ -936,6 +934,7 @@
             <Component class="javax.swing.JTextField" name="txtGRText">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
+                <Property name="disabledTextColor" type="java.awt.Color" resourceKey="txtGRText.disabledTextColor"/>
                 <Property name="name" type="java.lang.String" value="txtGRText" noResource="true"/>
               </Properties>
               <Events>
@@ -976,6 +975,7 @@
             <Component class="javax.swing.JFormattedTextField" name="txtTicketId">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
+                <Property name="disabledTextColor" type="java.awt.Color" resourceKey="txtGRText.disabledTextColor"/>
                 <Property name="name" type="java.lang.String" value="txtTicketId" noResource="true"/>
               </Properties>
               <AuxValues>
@@ -991,6 +991,7 @@
             <Component class="javax.swing.JFormattedTextField" name="txtWeightTicketIdRef">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
+                <Property name="disabledTextColor" type="java.awt.Color" resourceKey="txtGRText.disabledTextColor"/>
                 <Property name="name" type="java.lang.String" value="txtWeightTicketIdRef" noResource="true"/>
               </Properties>
               <AuxValues>
@@ -1006,13 +1007,13 @@
             <Component class="javax.swing.JLabel" name="lblProcedure">
               <Properties>
                 <Property name="text" type="java.lang.String" resourceKey="lblProcedure.text"/>
-                <Property name="toolTipText" type="java.lang.String" resourceKey="lblProcedure.toolTipText"/>
                 <Property name="name" type="java.lang.String" value="lblProcedure" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtProcedure">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
+                <Property name="disabledTextColor" type="java.awt.Color" resourceKey="txtGRText.disabledTextColor"/>
                 <Property name="name" type="java.lang.String" value="txtProcedure" noResource="true"/>
               </Properties>
             </Component>
@@ -1173,6 +1174,7 @@
             <Component class="javax.swing.JTextField" name="txtDelNum">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
+                <Property name="disabledTextColor" type="java.awt.Color" resourceKey="txtGRText.disabledTextColor"/>
                 <Property name="name" type="java.lang.String" value="txtDelNum" noResource="true"/>
               </Properties>
             </Component>
@@ -1182,6 +1184,7 @@
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="com.gcs.wb.views.WeightTicketView" id="readPO" methodName="readPO"/>
                 </Property>
+                <Property name="disabledTextColor" type="java.awt.Color" resourceKey="txtGRText.disabledTextColor"/>
                 <Property name="name" type="java.lang.String" value="txtPONo" noResource="true"/>
               </Properties>
               <AuxValues>
@@ -1191,22 +1194,21 @@
             <Component class="javax.swing.JTextField" name="txtRegItem">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
+                <Property name="disabledTextColor" type="java.awt.Color" resourceKey="txtGRText.disabledTextColor"/>
                 <Property name="name" type="java.lang.String" value="txtRegItem" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtMatnr">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
-                <Property name="text" type="java.lang.String" resourceKey="txtMatnr.text"/>
+                <Property name="disabledTextColor" type="java.awt.Color" resourceKey="txtGRText.disabledTextColor"/>
                 <Property name="name" type="java.lang.String" value="txtMatnr" noResource="true"/>
               </Properties>
-              <AccessibilityProperties>
-                <Property name="AccessibleContext.accessibleName" type="java.lang.String" resourceKey="txtMatnr.AccessibleContext.accessibleName"/>
-              </AccessibilityProperties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtWeight">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
+                <Property name="disabledTextColor" type="java.awt.Color" resourceKey="txtGRText.disabledTextColor"/>
                 <Property name="name" type="java.lang.String" value="txtWeight" noResource="true"/>
               </Properties>
             </Component>
@@ -1233,6 +1235,7 @@
             <Component class="javax.swing.JTextField" name="txtLgortIn">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
+                <Property name="disabledTextColor" type="java.awt.Color" resourceKey="txtGRText.disabledTextColor"/>
                 <Property name="name" type="java.lang.String" value="txtLgortIn" noResource="true"/>
                 <Property name="requestFocusEnabled" type="boolean" value="false"/>
               </Properties>
@@ -1251,12 +1254,14 @@
             <Component class="javax.swing.JTextField" name="txtChargIn">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
+                <Property name="disabledTextColor" type="java.awt.Color" resourceKey="txtGRText.disabledTextColor"/>
                 <Property name="name" type="java.lang.String" value="txtChargIn" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtPoPosto">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
+                <Property name="disabledTextColor" type="java.awt.Color" resourceKey="txtGRText.disabledTextColor"/>
                 <Property name="name" type="java.lang.String" value="txtPoPosto" noResource="true"/>
               </Properties>
               <Events>
@@ -1380,7 +1385,7 @@
             <Component class="javax.swing.JTextField" name="txtSO">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
-                <Property name="text" type="java.lang.String" resourceKey="txtSO.text"/>
+                <Property name="disabledTextColor" type="java.awt.Color" resourceKey="txtGRText.disabledTextColor"/>
                 <Property name="name" type="java.lang.String" value="txtSO" noResource="true"/>
               </Properties>
             </Component>
