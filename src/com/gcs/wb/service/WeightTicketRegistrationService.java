@@ -6,6 +6,8 @@ package com.gcs.wb.service;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.service.SAPService;
+import com.gcs.wb.base.enums.ModeEnum;
+import com.gcs.wb.base.enums.StatusEnum;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.*;
 import com.gcs.wb.jpa.entity.OutboundDeliveryDetail;
@@ -20,6 +22,7 @@ import com.gcs.wb.jpa.repositorys.UnitRepository;
 import com.gcs.wb.jpa.repositorys.VehicleRepository;
 import com.gcs.wb.jpa.repositorys.VendorRepository;
 import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -132,38 +135,6 @@ public class WeightTicketRegistrationService {
         return weightTicketRepository.findByDateDissolvedNullAll(from, to, creator, taixe, bienso);
     }
 
-    public List<WeightTicket> findByDatePosted(String sfrom, String sto, String creator, String taixe, String loaihang, String bienso, String mode) throws Exception {
-        java.sql.Date from = java.sql.Date.valueOf(sfrom);
-        java.sql.Date to = java.sql.Date.valueOf(sto);
-        return weightTicketRepository.findByDatePosted(from, to, creator, taixe, loaihang, bienso, mode);
-    }
-
-    public List<WeightTicket> findByDatePostedNull(String sfrom, String sto, String creator, String taixe, String bienso, String mode) throws Exception {
-        java.sql.Date from = java.sql.Date.valueOf(sfrom);
-        java.sql.Date to = java.sql.Date.valueOf(sto);
-        return weightTicketRepository.findByDatePostedNull(from, to, creator, taixe, bienso, mode);
-    }
-
-    public List<WeightTicket> findByDatePostedNullAll(String sfrom, String sto, String creator, String taixe, String bienso, String mode) throws Exception {
-        java.sql.Date from = java.sql.Date.valueOf(sfrom);
-        java.sql.Date to = java.sql.Date.valueOf(sto);
-        return weightTicketRepository.findByDatePostedNullAll(from, to, creator, taixe, bienso, mode);
-    }
-
-    public List<WeightTicket> findByDateAll(String sfrom, String sto, String creator, String taixe, String loaihang, String bienso, String mode) throws Exception {
-        WeightTicketRepository repository = new WeightTicketRepository();
-        java.sql.Date from = java.sql.Date.valueOf(sfrom);
-        java.sql.Date to = java.sql.Date.valueOf(sto);
-        return repository.findByDateAll(from, to, creator, taixe, loaihang, bienso, mode);
-    }
-
-    public List<WeightTicket> findByDateAllNull(String sfrom, String sto, String creator, String taixe, String bienso, String mode) throws Exception {
-        WeightTicketRepository repository = new WeightTicketRepository();
-        java.sql.Date from = java.sql.Date.valueOf(sfrom);
-        java.sql.Date to = java.sql.Date.valueOf(sto);
-        return repository.findByDateAllNull(from, to, creator, taixe, bienso, mode);
-    }
-
     public int getCountTicketMonth(String plant) {
         int count = 0;
         try {
@@ -211,13 +182,6 @@ public class WeightTicketRegistrationService {
         return count;
     }
 
-    public List<WeightTicket> findByDateAllNullAll(String sfrom, String sto, String creator, String taixe, String bienso, String mode) throws Exception {
-        WeightTicketRepository repository = new WeightTicketRepository();
-        java.sql.Date from = java.sql.Date.valueOf(sfrom);
-        java.sql.Date to = java.sql.Date.valueOf(sto);
-        return repository.findByDateAllNullAll(from, to, creator, taixe, bienso, mode);
-    }
-
     public List<OutboundDeliveryDetail> findByMandtDelivNumb(String deliv_numb) throws Exception {
         String devNumber = "%" + deliv_numb + "%";
         OutboundDetailRepository repo = new OutboundDetailRepository();
@@ -231,11 +195,11 @@ public class WeightTicketRegistrationService {
         for (String matnr : arr_matnr) {
             items = batchStockRepository.getListBatchStock(configuration.getWkPlant(),
                     sloc.getLgort(), matnr);
-            
-            if(CollectionUtils.isEmpty(items)) {
+
+            if (CollectionUtils.isEmpty(items)) {
                 syncData.syncBatchStock(sloc.getLgort(), matnr);
                 items = batchStockRepository.getListBatchStock(configuration.getWkPlant(),
-                    sloc.getLgort(), matnr);
+                        sloc.getLgort(), matnr);
             }
 
             if (items.size() > 0) {
@@ -251,27 +215,15 @@ public class WeightTicketRegistrationService {
             sAPService.syncBatchStocks(sloc.getLgort(), matnr);
         }
     }
-    
-    public Unit getUnit(){
+
+    public Unit getUnit() {
         List<Unit> units = unitRepository.getListUnit();
         return units.get(0);
     }
 
-    public List<WeightTicket> findByDateUnfinishNull(String sfrom, String sto, String creator, String taixe, String bienso, String mode) {
-        java.sql.Date from = java.sql.Date.valueOf(sfrom);
-        java.sql.Date to = java.sql.Date.valueOf(sto);
-        return weightTicketRepository.findByDateUnfinishNull(from, to, creator, taixe, bienso, mode);
-    }
-
-    public List<WeightTicket> findByDateUnfinishNullAll(String sfrom, String sto, String creator, String taixe, String bienso, String mode) {
-        java.sql.Date from = java.sql.Date.valueOf(sfrom);
-        java.sql.Date to = java.sql.Date.valueOf(sto);
-        return weightTicketRepository.findByDateUnfinishNullAll(from, to, creator, taixe, bienso, mode);
-    }
-
-    public List<WeightTicket> findByDateUnfinish(String sfrom, String sto, String creator, String taixe, String loaihang, String bienso, String mode) {
-        java.sql.Date from = java.sql.Date.valueOf(sfrom);
-        java.sql.Date to = java.sql.Date.valueOf(sto);
-        return weightTicketRepository.findByDateUnfinish(from, to, creator, taixe, loaihang, bienso, mode);
+    public List<WeightTicket> findListWeightTicket(Date from, Date to,
+            String creator, String driverName, String plateNo,
+            String material, StatusEnum status, ModeEnum mode) throws Exception {
+        return weightTicketRepository.findListWeightTicket(from, to, creator, driverName, plateNo, material, status, mode);
     }
 }

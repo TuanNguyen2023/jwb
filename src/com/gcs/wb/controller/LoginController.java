@@ -37,7 +37,6 @@ public class LoginController {
     private Configuration configuration;
     private Credentials credentials = null;
     private User user = null;
-    private String lclient = null;
     private String username = null;
     private String password = null;
     private boolean offlineMode = false;
@@ -52,14 +51,13 @@ public class LoginController {
 
         appConfig = WeighBridgeApp.getApplication().getConfig();
         configuration = appConfig.getConfiguration();
-        lclient = configuration.getSapClient();
         this.username = username;
         this.password = password;
 
         credentials = new Credentials();
-        credentials.setClient(lclient);
-        credentials.setUser(this.username);
-        credentials.setPassword(this.password);
+        credentials.setClient(configuration.getSapClient());
+        credentials.setUser(configuration.getSapUser());
+        credentials.setPassword(configuration.getSapPass());
     }
 
     public Credentials getCredentials() {
@@ -79,6 +77,12 @@ public class LoginController {
         userGetDetailBapi.setUserName(username);
 
         try {
+            user = userRepository.findByUid(username);
+
+            if ((user == null) || (user != null && !user.getPassword().equals(password))) {
+                throw new Exception(resourceMap.getString("msg.offlineUsernameOrPasswordInvalid"));
+            }
+
             Session session = loginService.getSapSession(credentials);
             boolean onlineMode = true;
             try {
@@ -89,19 +93,20 @@ public class LoginController {
                 if (ex.getCause() instanceof JCoException) {
                     jcoException = (JCoException) ex.getCause();
                     if (jcoException.getGroup() == JCoException.JCO_ERROR_LOGON_FAILURE) {
-                        throw new Exception(resourceMap.getString("msg.onlineUsernameOrPasswordInvalid"));
+                        JOptionPane.showMessageDialog(mainFrame, resourceMap.getString("msg.onlineUsernameOrPasswordInvalid"));
                     } else if (jcoException.getGroup() == JCoException.JCO_ERROR_COMMUNICATION) {
                         JOptionPane.showMessageDialog(mainFrame, resourceMap.getString("msg.connectToSAPFail"));
                     }
                 }
             }
 
-            user = userRepository.findByUid(username);
             if (onlineMode) {
                 UserGetDetailAddrStructure userGetDetailAddrStructure = userGetDetailBapi.getAddress();
                 String roles = loginService.getRoles(userGetDetailBapi);
 
-                user = loginService.asyncUser(session, userGetDetailAddrStructure, roles, user, username, password);
+                loginService.asyncUser(session, userGetDetailAddrStructure, roles,
+                        userRepository.findByUid(configuration.getSapUser()),
+                        configuration.getSapUser(), configuration.getSapPass());
 
                 SyncMasterDataService syncMasterDataService = new SyncMasterDataService();
                 syncMasterDataService.syncMasterDataWhenLogin();
@@ -111,10 +116,6 @@ public class LoginController {
             } else {
                 SAPSetting sapSetting = sapSettingRepository.findByMandtAndWplant(configuration.getSapClient(), configuration.getWkPlant());
                 WeighBridgeApp.getApplication().setSapSetting(sapSetting);
-            }
-
-            if ((user == null) || (user != null && !user.getPassword().equals(password))) {
-                throw new Exception(resourceMap.getString("msg.offlineUsernameOrPasswordInvalid"));
             }
 
             offlineMode = !onlineMode;

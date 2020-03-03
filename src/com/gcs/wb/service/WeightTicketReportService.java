@@ -5,6 +5,7 @@
 package com.gcs.wb.service;
 
 import com.gcs.wb.base.constant.Constants;
+import com.gcs.wb.base.enums.StatusEnum;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.WeightTicket;
@@ -69,8 +70,8 @@ public class WeightTicketReportService {
         return result;
     }
 
-    public Object[][] findWeightTickets(Object[][] wtDatas, String month, String year, String tAgent, String matnr, List<Character> modes, int status, String transportAgentName) throws Exception {
-        List<WeightTicket> weightTickets = findListWeightTicket(month, year, tAgent, matnr, modes, status == 1);
+    public Object[][] findWeightTickets(Object[][] wtDatas, String month, String year, String tAgent, String matnr, List<Character> modes, StatusEnum status, String transportAgentName) throws Exception {
+        List<WeightTicket> weightTickets = findListWeightTicket(month, year, tAgent, matnr, modes, status);
         wtDatas = new Object[weightTickets.size()][wtColNames.length];
         for (int i = 0; i < weightTickets.size(); i++) {
             WeightTicket item = weightTickets.get(i);
@@ -153,8 +154,8 @@ public class WeightTicketReportService {
         return comboBoxModel;
     }
 
-    public List<WeightTicket> findListWeightTicket(String month, String year, String tagent, String matnr, List<Character> modes, boolean isPosted) throws Exception {
+    public List<WeightTicket> findListWeightTicket(String month, String year, String tagent, String matnr, List<Character> modes, StatusEnum status) throws Exception {
         WeightTicketRepository repository = new WeightTicketRepository();
-        return repository.findListWeightTicket(month, year, tagent, matnr, modes, isPosted);
+        return repository.findListWeightTicket(month, year, tagent, matnr, modes, status);
     }
 }

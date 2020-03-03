@@ -4,12 +4,8 @@
 package com.gcs.wb.views;
 
 import com.gcs.wb.*;
-import com.gcs.wb.base.util.StringUtil;
 import com.gcs.wb.controller.WeighBridgeController;
-import com.gcs.wb.jpa.JReportConnector;
-import com.gcs.wb.jpa.entity.SAPSetting;
 import com.gcs.wb.jpa.entity.User;
-import com.gcs.wb.service.SyncMasterDataService;
 import java.awt.event.WindowEvent;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
@@ -20,7 +16,6 @@ import org.jdesktop.application.TaskMonitor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
-import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.Timer;
@@ -29,12 +24,6 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.design.JasperDesign;
-import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import net.sf.jasperreports.view.JasperViewer;
 import org.apache.log4j.Logger;
 import org.jdesktop.application.Application;
@@ -44,7 +33,6 @@ import org.jdesktop.application.Application;
  */
 public class WeighBridgeView extends FrameView {
 
-    private final SAPSetting sapSetting;
     private final User login;
     private final WeighBridgeController weighBridgeController = new WeighBridgeController();
     public ResourceMap resourceMapMsg = Application.getInstance(WeighBridgeApp.class).getContext().getResourceMap(WeighBridgeView.class);
@@ -52,10 +40,7 @@ public class WeighBridgeView extends FrameView {
     public WeighBridgeView(SingleFrameApplication app) {
         super(app);
         initComponents();
-        //txfCurScale.setEditable(true); //Set manual input qty in wheighing
-        sapSetting = WeighBridgeApp.getApplication().getSapSetting();
         login = WeighBridgeApp.getApplication().getLogin();
-//        WeighBridgeView.txt_status.setText(sapSetting.getName1()+" - User:"+login.getFullName());
         weighBridgeController.setStatus(login, txt_status);
         
         app.getMainFrame().setSize(800, 600);
@@ -160,7 +145,6 @@ public class WeighBridgeView extends FrameView {
         jSeparator1 = new javax.swing.JSeparator();
         javax.swing.JMenuItem miExit = new javax.swing.JMenuItem();
         javax.swing.JMenu mHelp = new javax.swing.JMenu();
-        miSyncMasterData = new javax.swing.JMenuItem();
         javax.swing.JMenuItem miAbout = new javax.swing.JMenuItem();
         statusPanel = new javax.swing.JPanel();
         javax.swing.JSeparator statusPanelSeparator = new javax.swing.JSeparator();
@@ -331,11 +315,6 @@ public class WeighBridgeView extends FrameView {
 
         mHelp.setText(resourceMap.getString("mHelp.text")); // NOI18N
         mHelp.setName("mHelp"); // NOI18N
-
-        miSyncMasterData.setAction(actionMap.get("syncMasterData")); // NOI18N
-        miSyncMasterData.setText(resourceMap.getString("miSyncMasterData.text")); // NOI18N
-        miSyncMasterData.setName("miSyncMasterData"); // NOI18N
-        mHelp.add(miSyncMasterData);
 
         miAbout.setAction(actionMap.get("showAboutBox")); // NOI18N
         miAbout.setName("miAbout"); // NOI18N
@@ -634,40 +613,6 @@ public class WeighBridgeView extends FrameView {
         WeighBridgeApp.getApplication().show(dpSetting);
     }
 
-    @Action(block = Task.BlockingScope.ACTION)
-    public Task syncMasterData() {
-        return new SyncMasterDataTask(getApplication());
-    }
-
-    private class SyncMasterDataTask extends Task<Object, Void> {
-        SyncMasterDataTask(Application app) {
-            super(app);
-        }
-
-        @Override protected Object doInBackground() {
-            setStep(1, resourceMapMsg.getString("msg.isSyncMasterData"));
-            SyncMasterDataService syncMasterDataService = new SyncMasterDataService();
-            syncMasterDataService.syncMasterData();
-            return null;  // return your result
-        }
-
-        @Override protected void succeeded(Object result) {
-            setStep(2, resourceMapMsg.getString("msg.syncMasterDataSuccess"));
-        }
-
-        @Override
-        protected void failed(Throwable thrwbl) {
-            setStep(2, resourceMapMsg.getString("msg.syncMasterDataFailed"));
-        }
-        
-        private void setStep(int step, String msg) {
-            if (StringUtil.isNotEmptyString(msg)) {
-                setMessage(msg);
-            }
-            setProgress(step, 1, 2);
-        }
-    }
-
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Variables declaration Area">
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -682,7 +627,6 @@ public class WeighBridgeView extends FrameView {
     javax.swing.JMenuBar menuBar;
     javax.swing.JMenuItem miConfig;
     javax.swing.JMenuItem miSetting;
-    javax.swing.JMenuItem miSyncMasterData;
     javax.swing.JProgressBar progressBar;
     javax.swing.JScrollPane scrollPane;
     javax.swing.JLabel statusAnimationLabel;

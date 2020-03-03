@@ -4,15 +4,17 @@ package com.gcs.wb.base.enums;
  * Created by PHUCPH on 1/31/2020.
  */
 public enum StatusEnum {
-    ALL(0),
+    ALL("Tất cả"),
+    POSTED("Hoàn tất"),
+    UNFINISH("Chưa hoàn tất");
 
-    POSTED(1),
-    
-    UNFINISH(2);
-    
-    public final int VALUE;
+    public final String VALUE;
 
-    StatusEnum(int VALUE) {
+    StatusEnum(String VALUE) {
         this.VALUE = VALUE;
+    }
+
+    public String getValue() {
+        return VALUE;
     }
 }
