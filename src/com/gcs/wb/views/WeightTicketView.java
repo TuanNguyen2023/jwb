@@ -1569,7 +1569,7 @@ private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 }//GEN-LAST:event_txtPoPostoKeyReleased
 
 private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRemarkKeyReleased
-// TODO add your handling code here:
+    setSaveNeeded(isValidated());
 }//GEN-LAST:event_txtRemarkKeyReleased
 
 private void txtBatchProduceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBatchProduceActionPerformed
