@@ -15,6 +15,7 @@ import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.base.enums.ParityEnum;
 import com.gcs.wb.base.serials.SerialHelper;
+import com.gcs.wb.base.util.StringUtil;
 import com.gcs.wb.controller.ConfigController;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.Configuration;
@@ -130,6 +131,7 @@ public class ConfigView extends javax.swing.JDialog {
         btnSave = new javax.swing.JButton();
         syncIconLoading = new org.jdesktop.swingx.JXBusyLabel();
         lblSyncData = new javax.swing.JLabel();
+        btnSyncData = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(ConfigView.class);
@@ -478,7 +480,7 @@ public class ConfigView extends javax.swing.JDialog {
                 .addComponent(chbMettler1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(chbAutoSignal1)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         pnWB2Config.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("pnWB2Config.border.title"))); // NOI18N
@@ -596,7 +598,7 @@ public class ConfigView extends javax.swing.JDialog {
                 .addComponent(chbMettler2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(chbAutoSignal2)
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         pnWorkingPlant.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("pnWorkingPlant.border.title"))); // NOI18N
@@ -660,6 +662,10 @@ public class ConfigView extends javax.swing.JDialog {
         lblSyncData.setText(resourceMap.getString("lblSyncData.text")); // NOI18N
         lblSyncData.setName("lblSyncData"); // NOI18N
 
+        btnSyncData.setAction(actionMap.get("syncMasterData")); // NOI18N
+        btnSyncData.setText(resourceMap.getString("btnSyncData.text")); // NOI18N
+        btnSyncData.setName("btnSyncData"); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -680,7 +686,9 @@ public class ConfigView extends javax.swing.JDialog {
                         .addComponent(syncIconLoading, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblSyncData)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 350, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 217, Short.MAX_VALUE)
+                        .addComponent(btnSyncData)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -701,7 +709,8 @@ public class ConfigView extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblSyncData))
+                        .addComponent(lblSyncData)
+                        .addComponent(btnSyncData))
                     .addComponent(syncIconLoading, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -1162,11 +1171,52 @@ private void txtSapPasswordKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             btnCheckDbConnection.setEnabled(true);
         }
     }
+
+    @Action(block = Task.BlockingScope.ACTION)
+    public Task syncMasterData() {
+        return new SyncMasterDataTask(Application.getInstance(WeighBridgeApp.class));
+    }
+
+    private class SyncMasterDataTask extends Task<Object, Void> {
+
+        SyncMasterDataTask(Application app) {
+            super(app);
+
+            syncIconLoading.setVisible(true);
+            lblSyncData.setVisible(true);
+            btnSyncData.setEnabled(false);
+            btnSave.setEnabled(false);
+        }
+
+        @Override
+        protected Object doInBackground() {
+            SyncMasterDataService syncMasterDataService = new SyncMasterDataService();
+            syncMasterDataService.syncMasterData();
+            return null;  // return your result
+        }
+
+        @Override
+        protected void succeeded(Object result) {
+            syncIconLoading.setVisible(false);
+            lblSyncData.setVisible(false);
+            btnSyncData.setEnabled(true);
+            btnSave.setEnabled(true);
+        }
+
+        @Override
+        protected void failed(Throwable thrwbl) {
+            syncIconLoading.setVisible(false);
+            lblSyncData.setVisible(false);
+            btnSyncData.setEnabled(true);
+            btnSave.setEnabled(true);
+        }
+    }
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Variables declaration">
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCheckDbConnection;
     private javax.swing.JButton btnSave;
+    private javax.swing.JButton btnSyncData;
     private javax.swing.JComboBox cbxDataBits1;
     private javax.swing.JComboBox cbxDataBits2;
     private javax.swing.JComboBox cbxPControl1;

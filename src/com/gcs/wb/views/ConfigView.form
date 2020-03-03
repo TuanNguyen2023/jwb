@@ -44,7 +44,9 @@
                       <Component id="syncIconLoading" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="lblSyncData" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="350" max="32767" attributes="0"/>
+                      <EmptySpace pref="217" max="32767" attributes="0"/>
+                      <Component id="btnSyncData" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="btnSave" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -72,6 +74,7 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btnSave" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="lblSyncData" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btnSyncData" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Component id="syncIconLoading" min="-2" max="-2" attributes="0"/>
               </Group>
@@ -479,7 +482,7 @@
                   <Component id="chbMettler1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="chbAutoSignal1" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="17" max="32767" attributes="0"/>
+                  <EmptySpace pref="12" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -655,7 +658,7 @@
                   <Component id="chbMettler2" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="chbAutoSignal2" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="22" max="32767" attributes="0"/>
+                  <EmptySpace pref="12" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -868,6 +871,15 @@
       <Properties>
         <Property name="text" type="java.lang.String" resourceKey="lblSyncData.text"/>
         <Property name="name" type="java.lang.String" value="lblSyncData" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnSyncData">
+      <Properties>
+        <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+          <action class="com.gcs.wb.views.ConfigView" id="syncMasterData" methodName="syncMasterData"/>
+        </Property>
+        <Property name="text" type="java.lang.String" resourceKey="btnSyncData.text"/>
+        <Property name="name" type="java.lang.String" value="btnSyncData" noResource="true"/>
       </Properties>
     </Component>
   </SubComponents>
