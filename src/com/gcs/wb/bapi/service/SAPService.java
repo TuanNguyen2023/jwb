@@ -18,6 +18,7 @@ import com.gcs.wb.bapi.helper.MatGetDetailBapi;
 import com.gcs.wb.bapi.helper.MaterialGetListBapi;
 import com.gcs.wb.bapi.helper.PlantGetDetailBapi;
 import com.gcs.wb.bapi.helper.PoGetDetailBapi;
+import com.gcs.wb.bapi.helper.PoPostGetListBapi;
 import com.gcs.wb.bapi.helper.SLocsGetListBapi;
 import com.gcs.wb.bapi.helper.VendorGetDetailBapi;
 import com.gcs.wb.bapi.helper.VendorValiationCheckBapi;
@@ -25,6 +26,7 @@ import com.gcs.wb.bapi.helper.constants.PlantGeDetailConstants;
 import com.gcs.wb.bapi.helper.structure.CustomerGetDetailStructure;
 import com.gcs.wb.bapi.helper.structure.MatGetDetailStructure;
 import com.gcs.wb.bapi.helper.structure.MaterialGetListStructure;
+import com.gcs.wb.bapi.helper.structure.PODataOuboundStructure;
 import com.gcs.wb.bapi.helper.structure.SLocsGetListStructure;
 import com.gcs.wb.bapi.helper.structure.TransportagentGetListStructure;
 import com.gcs.wb.bapi.helper.structure.VendorGetDetailStructure;
@@ -59,7 +61,11 @@ import com.gcs.wb.jpa.repositorys.VendorRepository;
 import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.service.LookupMaterialService;
 import com.gcs.wb.views.TransportAgentView;
+import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
@@ -69,6 +75,7 @@ import javax.persistence.EntityTransaction;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import org.exolab.castor.types.DateTime;
 import org.hibersap.session.Session;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.ResourceMap;
@@ -711,6 +718,33 @@ public class SAPService {
             if (entityTransaction.isActive()) {
                 entityTransaction.rollback();
             }
+        }
+
+        return null;
+    }
+    
+    public List<Object> syncListPoPosto() {
+        try {
+            PoPostGetListBapi poPostGetListBapi = new PoPostGetListBapi();
+            Date date = new Date();
+            Calendar calendarStart = Calendar.getInstance();
+            calendarStart.set(1900, 1, 1, 6, 20, 0);
+            Calendar calendarEnd = Calendar.getInstance();
+            calendarEnd.set(1900, 1, 1, 11, 50, 0);
+            
+            SimpleDateFormat formatDate = new SimpleDateFormat("yyyymmdd");
+            SimpleDateFormat formatTime = new SimpleDateFormat("hhmmss");
+            poPostGetListBapi.setIvStartDate(date);
+            poPostGetListBapi.setIvStartTime(formatTime.format(calendarStart.getTime()));
+            poPostGetListBapi.setIvEndDate(date);
+            poPostGetListBapi.setIvEndTime(formatTime.format(calendarEnd.getTime()));
+            session.execute(poPostGetListBapi);
+
+            List<PODataOuboundStructure> listPO = poPostGetListBapi.getListPODataOubound();
+            
+           
+        } catch (Exception ex) {
+            System.out.println("PoPostGetListBapi đang lỗi!");
         }
 
         return null;

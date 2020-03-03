@@ -22,6 +22,7 @@ import com.gcs.wb.bapi.helper.MvtGetDetailBapi;
 import com.gcs.wb.bapi.helper.MvtReasonsGetListBapi;
 import com.gcs.wb.bapi.helper.PlantGetDetailBapi;
 import com.gcs.wb.bapi.helper.PoGetDetailBapi;
+import com.gcs.wb.bapi.helper.PoPostGetListBapi;
 import com.gcs.wb.bapi.helper.SLocsGetListBapi;
 import com.gcs.wb.bapi.helper.StoGetListBapi;
 import com.gcs.wb.bapi.helper.TransportagentGetListBapi;
@@ -108,6 +109,7 @@ public class BAPIConfiguration {
         sessionConfig.addAnnotatedClass(GoodsMvtPOSTOCreatePGIBapi.class);
         sessionConfig.addAnnotatedClass(VendorValiationCheckBapi.class);
         sessionConfig.addAnnotatedClass(SOGetDetailBapi.class);
+        sessionConfig.addAnnotatedClass(PoPostGetListBapi.class);
         
         AnnotationConfiguration conf = new AnnotationConfiguration(sessionConfig);
         sessionManager = conf.buildSessionManager();

@@ -43,7 +43,7 @@ public class SyncMasterDataService {
 
         logger.info("Sync vendor...");
         syncVendor();
-
+        
         logger.info("Sync material...");
         List<Material> materials = syncMaterial();
 
@@ -71,7 +71,7 @@ public class SyncMasterDataService {
         logger.info("Sync SAP setting...");
         SAPSetting sapSetting = syncSapSetting();
         WeighBridgeApp.getApplication().setSapSetting(sapSetting);
-
+        
         logger.info("Sync vendor...");
         if (vendorRepository.getListVendor().isEmpty()) {
             syncVendor();
@@ -121,5 +121,10 @@ public class SyncMasterDataService {
 
     public void syncBatchStock(String lgort, String matnr) {
         sapService.syncBatchStocks(lgort, matnr);
+    }
+
+    // sync for offline
+    public List<Object> syncListPOPOSTO() {
+        return sapService.syncListPoPosto();
     }
 }
