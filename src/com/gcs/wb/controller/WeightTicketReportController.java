@@ -6,6 +6,7 @@ package com.gcs.wb.controller;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.base.constant.Constants;
+import com.gcs.wb.base.enums.StatusEnum;
 import com.gcs.wb.jpa.JReportService;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.service.WeightTicketReportService;
@@ -33,7 +34,7 @@ public class WeightTicketReportController {
         return weightTicketReportService.getMaterialsModel();
     }
 
-    public Object[][] findWeightTickets(Object[][] wtDatas, String month, String year, String tAgent, String matnr, List<Character> modes, int status, String transportAgentName) throws Exception {
+    public Object[][] findWeightTickets(Object[][] wtDatas, String month, String year, String tAgent, String matnr, List<Character> modes, StatusEnum status, String transportAgentName) throws Exception {
         return weightTicketReportService.findWeightTickets(wtDatas, month, year, tAgent, matnr, modes, status, transportAgentName);
     }
 

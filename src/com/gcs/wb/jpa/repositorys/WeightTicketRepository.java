@@ -209,7 +209,7 @@ public class WeightTicketRepository {
         return list;
     }
 
-    public List<WeightTicket> findListWeightTicket(String month, String year, String tagent, String matnr, List<Character> modes, boolean isPosted) throws Exception {
+    public List<WeightTicket> findListWeightTicket(String month, String year, String tagent, String matnr, List<Character> modes, StatusEnum status) throws Exception {
         String query = "SELECT w FROM WeightTicket w "
                 + " , IN(w.weightTicketDetails) wd "
                 + "WHERE FUNC('YEAR', w.createdDate) = :year "
@@ -217,9 +217,11 @@ public class WeightTicketRepository {
                 + " AND w.regType IN :regType "
                 + " AND w.mandt = :mandt"
                 + "  AND w.wplant = :wplant";
+
         if (!tagent.equalsIgnoreCase("-2")) {
             query += " AND wd.transVendor = :taAbbr";
         }
+
         if (!matnr.equalsIgnoreCase("-2")) {
             if (!matnr.equalsIgnoreCase("-1")) {
                 query += " AND wd.matnrRef = :matnrRef ";
@@ -227,9 +229,16 @@ public class WeightTicketRepository {
                 query += " AND wd.matnrRef IS NULL ";
             }
         }
-        if (isPosted) {
-            query += " AND w.status = '" + Constants.WeightTicket.STATUS_POSTED + "' ";
+
+        switch (status) {
+            case POSTED:
+                query += "  AND w.status = '" + Constants.WeightTicket.STATUS_POSTED + "'";
+                break;
+            case UNFINISH:
+                query += "  AND w.status IS NULL";
+                break;
         }
+
         try {
             TypedQuery<WeightTicket> nq = entityManager.createQuery(query, WeightTicket.class);
             nq.setParameter("year", Integer.parseInt(year));
