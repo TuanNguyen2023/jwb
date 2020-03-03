@@ -2623,7 +2623,9 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         setSubContract(true);
                     }
                 }
-                if (Constants.WeighingProcess.MODE_DETAIL.OUT_SLOC_SLOC.name().equals(weightTicket.getMode())) {
+                if ((Constants.WeighingProcess.MODE_DETAIL.IN_OTHER.name().equals(weightTicket.getMode()))
+                        || (Constants.WeighingProcess.MODE_DETAIL.OUT_SLOC_SLOC.name().equals(weightTicket.getMode()))
+                        || (Constants.WeighingProcess.MODE_DETAIL.OUT_OTHER.name().equals(weightTicket.getMode()))) {
                     Material mat = materialRepository.findByMatnr(weightTicket.getRecvMatnr());
                     txtRegItem.setText(mat.getMaktx());
                 }
@@ -2872,8 +2874,6 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             lblVendorLoading.setVisible(false);
             lblVendorTransport.setVisible(false);
             lblSO.setVisible(false);
-            lblCementDesc.setVisible(false);
-            lblBatchProduce.setVisible(false);
             lblTicketId.setVisible(false);
             lblWeightTicketIdRef.setVisible(false);
 
@@ -2886,8 +2886,6 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             txtPoPosto.setVisible(false);
             cbxVendorLoading.setVisible(false);
             cbxVendorTransport.setVisible(false);
-            txtCementDesc.setVisible(false);
-            txtBatchProduce.setVisible(false);
             txtTicketId.setVisible(false);
             txtWeightTicketIdRef.setVisible(false);
         }
