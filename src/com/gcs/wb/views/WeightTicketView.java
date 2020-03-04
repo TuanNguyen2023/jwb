@@ -1354,6 +1354,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         try {
 
             btnAccept.setEnabled(WeighBridgeApp.getApplication().connectWB(
+                    configuration.getWb1AutoSignal(),
                     configuration.getWb1Port(), //string
                     configuration.getWb1BaudRate(), //int 
                     configuration.getWb1DataBit().shortValue(), //short 
@@ -1377,6 +1378,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         configuration = config.getConfiguration();
         try {
             btnAccept.setEnabled(WeighBridgeApp.getApplication().connectWB(
+                    configuration.getWb2AutoSignal(),
                     configuration.getWb2Port(), //string
                     configuration.getWb2BaudRate(), //int 
                     configuration.getWb2DataBit().shortValue(), //short 
