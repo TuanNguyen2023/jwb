@@ -3961,17 +3961,26 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                             param = purchaseOrderDetail.getMaterial();
                         }
                     }
-                    Variant vari = weightTicketController.findByParam(Constants.WeightTicketView.PROCESS_ORDER_CF);
-                    double valu = 0;
+                    Variant vari = weightTicketController.findByParam(param);
+//                    double valu = 0;
+                    double valueUp = 0;
+                    double valueDown = 0;
 
                     if (vari != null) {
-
-                        if (vari.getValue() != null && !vari.getValue().isEmpty()) {
-                            valu = Double.parseDouble(vari.getValue());
+                        
+//                        if (vari.getValue() != null && !vari.getValue().isEmpty()) {
+//                            valu = Double.parseDouble(vari.getValue());
+//                        }
+                        if (vari.getValueUp()!= null && !vari.getValueUp().isEmpty()) {
+                            valueUp = Double.parseDouble(vari.getValueUp());
                         }
 
-                        double upper = qty + (qty * valu) / 100;
-                        double lower = qty - (qty * valu) / 100;
+                        if (vari.getValueDown()!= null && !vari.getValueDown().isEmpty()) {
+                            valueDown = Double.parseDouble(vari.getValueDown());
+                        }
+
+                        double upper = qty + (qty * valueUp) / 100;
+                        double lower = qty - (qty * valueDown) / 100;
 
                         if ((lower <= result && result <= upper)) {
                             txfGoodsQty.setValue(result);
