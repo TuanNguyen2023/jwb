@@ -34,4 +34,21 @@ public class VariantRepository {
         }
         return result;
     }
+    
+    public Variant findByParamMandtWplant(String param, String mandt, String wplant) {
+        Variant result = null;
+        try {
+            TypedQuery<Variant> query = entityManager.createNamedQuery("Variant.findByParamMandtWplant", Variant.class);
+            query.setParameter("param", param);
+            query.setParameter("mandt", mandt);
+            query.setParameter("wplant", wplant);
+            List<Variant> variants = query.getResultList();
+            if (variants != null && variants.size() > 0) {
+                return variants.get(0);
+            }
+        } catch (Exception ex) {
+            logger.error(null, ex);
+        }
+        return result;
+    }
 }

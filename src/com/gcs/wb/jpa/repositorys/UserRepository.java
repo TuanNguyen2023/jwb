@@ -23,7 +23,7 @@ public class UserRepository {
         typedQuery.setParameter("uid", uid);
         List<User> users = typedQuery.getResultList();
 
-        if (users != null && users.size() == 1) {
+        if (users != null && users.size() >= 1) {
             return users.get(0);
         }
 

@@ -22,7 +22,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tbl_variant")
 @NamedQueries({
-    @NamedQuery(name = "Variant.findByParam", query = "SELECT v FROM Variant v WHERE v.param = :param")})
+    @NamedQuery(name = "Variant.findByParam", query = "SELECT v FROM Variant v WHERE v.param = :param"),
+    @NamedQuery(name = "Variant.findByParamMandtWplant", query = "SELECT v FROM Variant v WHERE v.param = :param AND v.mandt = :mandt AND v.wplant = :wplant")})
 public class Variant implements Serializable {
 
     private static final long serialVersionUID = 1L;

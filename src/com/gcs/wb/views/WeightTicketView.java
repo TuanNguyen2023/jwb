@@ -3418,8 +3418,10 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         } else {
                             objBapi = getGrDoMigoBapi(weightTicket, outbDel);
                         }
-                    } else if ((!weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER"))
-                            && (flgGqty && (!toleranceUtil.isInvalidTolerance(sumQtyReg, weightTicket.getGQty(), configuration.getTolerance())))) {
+                    } 
+//                    else if ((!weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER"))
+//                            && (flgGqty && (!toleranceUtil.isInvalidTolerance(sumQtyReg, weightTicket.getGQty(), configuration.getTolerance())))) {
+                      else if ((!weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER")) && (flgGqty)) {
                         // xuat DO
                         if (weightTicket.getMode().equals("OUT_SELL_ROAD")) {
                             modeFlg = "Z001";
@@ -3961,16 +3963,12 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                             param = purchaseOrderDetail.getMaterial();
                         }
                     }
-                    Variant vari = weightTicketController.findByParam(param);
-//                    double valu = 0;
+
+                    Variant vari = weightTicketController.findByParamMandtWplant(param, configuration.getSapClient(), configuration.getWkPlant());
                     double valueUp = 0;
                     double valueDown = 0;
 
                     if (vari != null) {
-                        
-//                        if (vari.getValue() != null && !vari.getValue().isEmpty()) {
-//                            valu = Double.parseDouble(vari.getValue());
-//                        }
                         if (vari.getValueUp()!= null && !vari.getValueUp().isEmpty()) {
                             valueUp = Double.parseDouble(vari.getValueUp());
                         }

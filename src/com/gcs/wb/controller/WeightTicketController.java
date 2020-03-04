@@ -150,8 +150,8 @@ public class WeightTicketController {
         return weightTicketService.findByLgort(lgort);
     }
 
-    public Variant findByParam(String param) {
-        return weightTicketService.findByParam(param);
+    public Variant findByParamMandtWplant(String param, String mandt, String wplant) {
+        return weightTicketService.findByParamMandtWplant(param, mandt, wplant);
     }
 
     public BatchStock findByWerksLgortMatnrCharg(String werks, String lgort, String matnr, String charg) {
