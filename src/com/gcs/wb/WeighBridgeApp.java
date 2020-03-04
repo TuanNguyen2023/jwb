@@ -10,6 +10,7 @@ import com.gcs.wb.base.serials.SerialComm;
 import com.gcs.wb.batch.CronTriggerService;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.JReportConnector;
+import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.jpa.entity.SAPSetting;
 import com.gcs.wb.jpa.entity.User;
 import com.gcs.wb.jpa.repositorys.ConfigurationRepository;
@@ -181,8 +182,8 @@ public class WeighBridgeApp extends SingleFrameApplication {
         return Application.getInstance(WeighBridgeApp.class);
     }
 
-    public boolean connectWB(String portName, Integer speed, Short dataBits, Short stopBits, Short parity, boolean isMettlerScale, JFormattedTextField control) throws SerialPortInvalidPortException, IllegalPortException, IOException, TooManyListenersException {
-
+    public boolean connectWB(boolean autoSignal, String portName, Integer speed, Short dataBits, Short stopBits, Short parity, boolean isMettlerScale, JFormattedTextField control) throws SerialPortInvalidPortException, IllegalPortException, IOException, TooManyListenersException {
+       
         boolean connected = false;
         Logger.getLogger(this.getClass()).info("@jSerialComm, connect to weight bridge, " + (isMettlerScale ? "@ScaleMettler" : "@SerialComm"));
         Logger.getLogger(this.getClass()).info("@jSerialComm, port: " + portName + " speed: " + speed + " databit: " + dataBits + " stopbit: " + stopBits);
@@ -191,14 +192,19 @@ public class WeighBridgeApp extends SingleFrameApplication {
                 if (mettlerScale != null) {
                     mettlerScale.disconnect();
                 }
-                mettlerScale = new ScaleMettler(portName, speed, dataBits, stopBits, parity, control);
-                mettlerScale.connect();
+                 if (autoSignal) {
+                    mettlerScale = new ScaleMettler(portName, speed, dataBits, stopBits, parity, control);
+                    mettlerScale.connect();
+                }
+
             } else {
                 if (normScale != null) {
                     normScale.disconnect();
                 }
-                normScale = new SerialComm(portName, speed, dataBits, stopBits, parity, control);
-                normScale.connect();
+                if (autoSignal) {
+                    normScale = new SerialComm(portName, speed, dataBits, stopBits, parity, control);
+                    normScale.connect();                
+                }
             }
             connected = true;
         } catch (SerialPortInvalidPortException ex) {

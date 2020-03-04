@@ -30,12 +30,12 @@ public class TransportagentGetListBapi implements Serializable{
     /**Import Parameter: IV_START_TIME */
     @Import
     @Parameter(TransportagentGetListConstants.IV_START_TIME)
-    private Date _ivStartTime = null;
+    private String _ivStartTime = null;
     
     /**Import Parameter: IV_END_TIME */
     @Import
     @Parameter(TransportagentGetListConstants.IV_END_TIME)
-    private Date _ivEndTime;
+    private String _ivEndTime;
     
     /**Import Parameter: IV_INDICATOR */
     @Import
@@ -66,7 +66,7 @@ public class TransportagentGetListBapi implements Serializable{
      * Import Parameter: IV_START_TIME
      * @param ivStartDate the _ivStartDate to set
      */
-    public void setIvStartTime(Date ivStartTime) {
+    public void setIvStartTime(String ivStartTime) {
         this._ivStartTime = ivStartTime;
     }
     
@@ -74,7 +74,7 @@ public class TransportagentGetListBapi implements Serializable{
      * Import Parameter: IV_END_DATE
      * @param ivEndTime the _ivEndTime to set
      */
-    public void setIvEndTime(Date ivEndTime) {
+    public void setIvEndTime(String ivEndTime) {
         this._ivEndTime = ivEndTime;
     }
     

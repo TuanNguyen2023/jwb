@@ -33,4 +33,8 @@ public class PurchaseOrderRepository {
 
         return null;
     }
+    
+    public boolean hasData() {
+        return getListPurchaseOrder().size() > 0;
+    }
 }
