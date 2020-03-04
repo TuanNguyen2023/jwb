@@ -243,6 +243,7 @@ public class SAPService {
                     venSaps.add(ven);
                 }
             } catch (Exception ex) {
+                ex.printStackTrace();
             }
 
             entityTransaction = entityManager.getTransaction();
@@ -403,6 +404,7 @@ public class SAPService {
             entityTransaction.commit();
             entityManager.clear();
         } catch (Exception ex) {
+            ex.printStackTrace();
             if (entityTransaction.isActive()) {
                 entityTransaction.rollback();
             }
@@ -461,7 +463,7 @@ public class SAPService {
                     slocSaps.add(sloc);
                 }
             } catch (Exception ex) {
-                // NOP
+                ex.printStackTrace();
             }
 
             // sync data
@@ -718,6 +720,7 @@ public class SAPService {
                 return sapSetting;
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
             if (entityTransaction.isActive()) {
                 entityTransaction.rollback();
             }
