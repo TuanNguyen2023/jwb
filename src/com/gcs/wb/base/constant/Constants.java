@@ -298,4 +298,10 @@ public class Constants {
 
         public static final String FORMAT = "dd/MM/yyyy";
     }
+    
+    public static final class SyncMasterData {
+
+        public static final String CRON_EXPRESSION = "0 0 0 ? * * *"; // 00:00:00 every day
+        public static final String TIME_SYNC = "000000"; // 00:00:00
+    }
 }
