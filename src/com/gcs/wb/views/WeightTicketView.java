@@ -31,6 +31,7 @@ import com.gcs.wb.controller.WeightTicketController;
 import com.gcs.wb.controller.WeightTicketRegistarationController;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.*;
+import com.gcs.wb.jpa.repositorys.MaterialInternalRepository;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
 import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
 import com.gcs.wb.jpa.repositorys.VendorRepository;
@@ -85,7 +86,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     private int timeFrom = 0;
     private int timeTo = 0;
     private String ximang = null;
-    public ResourceMap resourceMapMsg = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(WeightTicketView.class);
+    public ResourceMap resourceMapMsg = Application.getInstance(WeighBridgeApp.class).getContext().getResourceMap(WeightTicketView.class);
     private com.gcs.wb.jpa.entity.Material material;
     private com.gcs.wb.jpa.entity.OutboundDelivery outbDel;
     private com.gcs.wb.jpa.entity.PurchaseOrder purOrder;
@@ -97,6 +98,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     EntityManager entityManager = JPAConnector.getInstance();
     ToleranceUtil toleranceUtil = new ToleranceUtil();
     MaterialRepository materialRepository = new MaterialRepository();
+    MaterialInternalRepository materialInternalRepository = new MaterialInternalRepository();
 
     WeightTicketController weightTicketController = new WeightTicketController();
     WeightTicketRegistarationController weightTicketRegistarationController = new WeightTicketRegistarationController();
@@ -2360,6 +2362,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             grbType.clearSelection();
             grbCat.clearSelection();
             config = WeighBridgeApp.getApplication().getConfig();
+            btnSave.setEnabled(false);
 
         }
 
@@ -2633,7 +2636,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 if ((Constants.WeighingProcess.MODE_DETAIL.IN_OTHER.name().equals(weightTicket.getMode()))
                         || (Constants.WeighingProcess.MODE_DETAIL.OUT_SLOC_SLOC.name().equals(weightTicket.getMode()))
                         || (Constants.WeighingProcess.MODE_DETAIL.OUT_OTHER.name().equals(weightTicket.getMode()))) {
-                    Material mat = materialRepository.findByMatnr(weightTicket.getRecvMatnr());
+                    MaterialInternal mat = materialInternalRepository.findByMatnr(weightTicket.getRecvMatnr());
                     txtRegItem.setText(mat.getMaktx());
                 }
 
@@ -2763,11 +2766,6 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 cbxCharg.setEnabled(false);
                 cbxVendorLoading.setEnabled(false);
                 cbxVendorTransport.setEnabled(false);
-
-                if (Constants.WeighingProcess.MODE_DETAIL.IN_OTHER.name().equals(weightTicket.getMode())
-                        || Constants.WeighingProcess.MODE_DETAIL.OUT_OTHER.name().equals(weightTicket.getMode())) {
-                    btnSave.setEnabled(true);
-                }
             }
 
             return null;  // return your result
@@ -2799,16 +2797,16 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
 
         @Override
         protected void finished() {
-            setSaveNeeded(isValidated());
             if (weightTicket != null) {
-                if (weightTicket.isDissolved()) {
-                    setSaveNeeded(false);
-                }
                 if (!weightTicket.isPosted() && !isStage1() && !isStage2()) {
                     btnPostAgain.setEnabled(true);
                 } else {
                     btnPostAgain.setEnabled(false);
                 }
+            }
+
+            if (weightTicket.isPosted()) {
+                btnSave.setEnabled(false);
             }
         }
     }
@@ -3425,10 +3423,9 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         } else {
                             objBapi = getGrDoMigoBapi(weightTicket, outbDel);
                         }
-                    } 
-//                    else if ((!weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER"))
-//                            && (flgGqty && (!toleranceUtil.isInvalidTolerance(sumQtyReg, weightTicket.getGQty(), configuration.getTolerance())))) {
-                      else if ((!weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER")) && (flgGqty)) {
+                    } //                    else if ((!weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER"))
+                    //                            && (flgGqty && (!toleranceUtil.isInvalidTolerance(sumQtyReg, weightTicket.getGQty(), configuration.getTolerance())))) {
+                    else if ((!weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER")) && (flgGqty)) {
                         // xuat DO
                         if (weightTicket.getMode().equals("OUT_SELL_ROAD")) {
                             modeFlg = "Z001";
@@ -3976,11 +3973,11 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     double valueDown = 0;
 
                     if (vari != null) {
-                        if (vari.getValueUp()!= null && !vari.getValueUp().isEmpty()) {
+                        if (vari.getValueUp() != null && !vari.getValueUp().isEmpty()) {
                             valueUp = Double.parseDouble(vari.getValueUp());
                         }
 
-                        if (vari.getValueDown()!= null && !vari.getValueDown().isEmpty()) {
+                        if (vari.getValueDown() != null && !vari.getValueDown().isEmpty()) {
                             valueDown = Double.parseDouble(vari.getValueDown());
                         }
 
