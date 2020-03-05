@@ -7,6 +7,7 @@ package com.gcs.wb.bapi.helper.structure;
 
 import com.gcs.wb.bapi.helper.constants.SyncContractSOGetListConstants;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import org.hibersap.annotations.BapiStructure;
 import org.hibersap.annotations.Parameter;
 
@@ -25,9 +26,9 @@ public class SalesOrderStructure implements Serializable {
     @Parameter(SyncContractSOGetListConstants.KWMENG)
     private String _kwmeng;
     @Parameter(SyncContractSOGetListConstants.FREE_QUA)
-    private String _freeQua;
+    private BigDecimal _freeQua;
     @Parameter(SyncContractSOGetListConstants.REC_QUA)
-    private String _recQua;
+    private BigDecimal _recQua;
     @Parameter(SyncContractSOGetListConstants.W_NAME)
     private String _wName;
     @Parameter(SyncContractSOGetListConstants.SHIP_TO_NAME)
@@ -53,11 +54,11 @@ public class SalesOrderStructure implements Serializable {
         return _kwmeng;
     }
     
-    public String getFreeQua() {
+    public BigDecimal getFreeQua() {
         return _freeQua;
     }
     
-     public String getRecQua() {
+     public BigDecimal getRecQua() {
         return _recQua;
     }
     
