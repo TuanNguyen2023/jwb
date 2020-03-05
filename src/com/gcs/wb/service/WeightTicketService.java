@@ -1008,8 +1008,8 @@ public class WeightTicketService {
         return sLocRepository.findByLgort(lgort);
     }
 
-    public Variant findByParam(String param) {
-        return variantRepository.findByParam(param);
+    public Variant findByParamMandtWplant(String param, String mandt, String wplant) {
+        return variantRepository.findByParamMandtWplant(param, mandt, wplant);
     }
 
     public BatchStock findByWerksLgortMatnrCharg(String werks, String lgort, String matnr, String charg) {

@@ -13,6 +13,7 @@ import com.gcs.wb.jpa.entity.SAPSetting;
 import com.gcs.wb.jpa.entity.SLoc;
 import com.gcs.wb.jpa.repositorys.BatchStockRepository;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
+import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
 import com.gcs.wb.jpa.repositorys.SLocRepository;
 import com.gcs.wb.jpa.repositorys.VendorRepository;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class SyncMasterDataService {
     private MaterialRepository materialRepository = new MaterialRepository();
     private SLocRepository sLocRepository = new SLocRepository();
     private BatchStockRepository batchStockRepository = new BatchStockRepository();
+    private PurchaseOrderRepository purchaseOrderRepository = new PurchaseOrderRepository();
 
     private SAPService sapService = new SAPService();
     private Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
@@ -43,7 +45,7 @@ public class SyncMasterDataService {
 
         logger.info("Sync vendor...");
         syncVendor();
-        
+
         logger.info("Sync material...");
         List<Material> materials = syncMaterial();
 
@@ -59,6 +61,9 @@ public class SyncMasterDataService {
             }
         }
 
+        logger.info("Sync PO, POSTO...");
+        syncPoPostoDatas();
+
         logger.info("Sync master data is finished...");
     }
 
@@ -71,8 +76,7 @@ public class SyncMasterDataService {
         logger.info("Sync SAP setting...");
         SAPSetting sapSetting = syncSapSetting();
         WeighBridgeApp.getApplication().setSapSetting(sapSetting);
-        //syncListSalesOrder();
-        
+
         logger.info("Sync vendor...");
         if (vendorRepository.getListVendor().isEmpty()) {
             syncVendor();
@@ -101,6 +105,11 @@ public class SyncMasterDataService {
             }
         }
 
+        logger.info("Sync PO, POSTO...");
+        if (!purchaseOrderRepository.hasData()) {
+            syncPoPostoDatas();
+        }
+
         logger.info("Sync master data is finished...");
     }
 
@@ -125,12 +134,7 @@ public class SyncMasterDataService {
     }
 
     // sync for offline
-    public List<Object> syncListPOPOSTO() {
-        return sapService.syncListPoPosto();
-    }
-    
-    // sync for offline
-    public List<Object> syncListSalesOrder() {
-        return sapService.syncListSalesOrder();
+    public void syncPoPostoDatas() {
+        sapService.syncPoPostoDatas();
     }
 }

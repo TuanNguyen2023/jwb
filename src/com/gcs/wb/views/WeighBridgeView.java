@@ -4,8 +4,10 @@
 package com.gcs.wb.views;
 
 import com.gcs.wb.*;
+import com.gcs.wb.base.util.StringUtil;
 import com.gcs.wb.controller.WeighBridgeController;
 import com.gcs.wb.jpa.entity.User;
+import com.gcs.wb.service.SyncMasterDataService;
 import java.awt.event.WindowEvent;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
@@ -142,6 +144,7 @@ public class WeighBridgeView extends FrameView {
         javax.swing.JMenu mFile = new javax.swing.JMenu();
         miConfig = new javax.swing.JMenuItem();
         miSetting = new javax.swing.JMenuItem();
+        miSyncMasterData = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JSeparator();
         javax.swing.JMenuItem miExit = new javax.swing.JMenuItem();
         javax.swing.JMenu mHelp = new javax.swing.JMenu();
@@ -294,6 +297,13 @@ public class WeighBridgeView extends FrameView {
         miSetting.setName("miSetting"); // NOI18N
         if(WeighBridgeApp.getApplication().getLogin().getRoles().toUpperCase().indexOf("Z_JWB_ADMIN") >= 0 ){
             mFile.add(miSetting);
+        }
+
+        miSyncMasterData.setAction(actionMap.get("syncMasterData")); // NOI18N
+        miSyncMasterData.setText(resourceMap.getString("miSyncMasterData.text")); // NOI18N
+        miSyncMasterData.setName("miSyncMasterData"); // NOI18N
+        if(WeighBridgeApp.getApplication().getLogin().getRoles().toUpperCase().indexOf("Z_JWB_ADMIN") >= 0 ){
+            mFile.add(miSyncMasterData);
         }
 
         jSeparator1.setName("jSeparator1"); // NOI18N
@@ -612,6 +622,40 @@ public class WeighBridgeView extends FrameView {
         dpSetting.setLocationRelativeTo(mainFrame);
         WeighBridgeApp.getApplication().show(dpSetting);
     }
+    
+     @Action(block = Task.BlockingScope.ACTION)
+    public Task syncMasterData() {
+        return new SyncMasterDataTask(getApplication());
+    }
+
+    private class SyncMasterDataTask extends Task<Object, Void> {
+        SyncMasterDataTask(Application app) {
+            super(app);
+        }
+
+        @Override protected Object doInBackground() {
+            setStep(1, resourceMapMsg.getString("msg.isSyncMasterData"));
+            SyncMasterDataService syncMasterDataService = new SyncMasterDataService();
+            syncMasterDataService.syncMasterData();
+            return null;  // return your result
+        }
+
+        @Override protected void succeeded(Object result) {
+            setStep(2, resourceMapMsg.getString("msg.syncMasterDataSuccess"));
+        }
+
+        @Override
+        protected void failed(Throwable thrwbl) {
+            setStep(2, resourceMapMsg.getString("msg.syncMasterDataFailed"));
+        }
+        
+        private void setStep(int step, String msg) {
+            if (StringUtil.isNotEmptyString(msg)) {
+                setMessage(msg);
+            }
+            setProgress(step, 1, 2);
+        }
+    }
 
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Variables declaration Area">
@@ -627,6 +671,7 @@ public class WeighBridgeView extends FrameView {
     javax.swing.JMenuBar menuBar;
     javax.swing.JMenuItem miConfig;
     javax.swing.JMenuItem miSetting;
+    javax.swing.JMenuItem miSyncMasterData;
     javax.swing.JProgressBar progressBar;
     javax.swing.JScrollPane scrollPane;
     javax.swing.JLabel statusAnimationLabel;

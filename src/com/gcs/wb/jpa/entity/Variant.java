@@ -22,7 +22,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tbl_variant")
 @NamedQueries({
-    @NamedQuery(name = "Variant.findByParam", query = "SELECT v FROM Variant v WHERE v.param = :param")})
+    @NamedQuery(name = "Variant.findByParam", query = "SELECT v FROM Variant v WHERE v.param = :param"),
+    @NamedQuery(name = "Variant.findByParamMandtWplant", query = "SELECT v FROM Variant v WHERE v.param = :param AND v.mandt = :mandt AND v.wplant = :wplant")})
 public class Variant implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -38,6 +39,10 @@ public class Variant implements Serializable {
     private String wplant;
     @Column(name = "value")
     private String value;
+    @Column(name = "value_up")
+    private String value_up;
+    @Column(name = "value_down")
+    private String value_down;
     @Column(name = "created_date")
     private Date createdDate;
     @Column(name = "updated_date")
@@ -88,6 +93,22 @@ public class Variant implements Serializable {
 
     public void setValue(String value) {
         this.value = value;
+    }
+    
+    public String getValueUp() {
+        return value_up;
+    }
+
+    public void setValueUp(String value_up) {
+        this.value_up = value_up;
+    }
+    
+    public String getValueDown() {
+        return value_down;
+    }
+
+    public void setValueDown(String value_down) {
+        this.value_down = value_down;
     }
 
     public Date getCreatedDate() {

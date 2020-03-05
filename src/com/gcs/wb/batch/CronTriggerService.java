@@ -1,5 +1,6 @@
 package com.gcs.wb.batch;
 
+import com.gcs.wb.base.constant.Constants;
 import org.quartz.CronTrigger;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
@@ -13,8 +14,6 @@ import java.text.ParseException;
  */
 public class CronTriggerService {
 
-    private final String CRON_EXPRESSION = "0 0 0 ? * * *"; // 00:00:00 every day
-
     public void execute() throws ParseException, SchedulerException {
         // Init Job
         JobDetail syncMasterDataJob = new JobDetail();
@@ -23,7 +22,7 @@ public class CronTriggerService {
 
         CronTrigger syncMasterDataTrigger = new CronTrigger();
         syncMasterDataTrigger.setName("sync-master-data-trigger");
-        syncMasterDataTrigger.setCronExpression(CRON_EXPRESSION);
+        syncMasterDataTrigger.setCronExpression(Constants.SyncMasterData.CRON_EXPRESSION);
 
         // Execute
         Scheduler scheduler = new StdSchedulerFactory().getScheduler();

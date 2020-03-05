@@ -33,6 +33,7 @@ import java.math.BigInteger;
 import java.text.ParseException;
 import java.util.TooManyListenersException;
 import java.util.logging.Level;
+import javax.swing.UIManager;
 import org.apache.log4j.Logger;
 import org.quartz.SchedulerException;
 
@@ -181,8 +182,8 @@ public class WeighBridgeApp extends SingleFrameApplication {
         return Application.getInstance(WeighBridgeApp.class);
     }
 
-    public boolean connectWB(String portName, Integer speed, Short dataBits, Short stopBits, Short parity, boolean isMettlerScale, JFormattedTextField control) throws SerialPortInvalidPortException, IllegalPortException, IOException, TooManyListenersException {
-
+    public boolean connectWB(boolean autoSignal, String portName, Integer speed, Short dataBits, Short stopBits, Short parity, boolean isMettlerScale, JFormattedTextField control) throws SerialPortInvalidPortException, IllegalPortException, IOException, TooManyListenersException {
+       
         boolean connected = false;
         Logger.getLogger(this.getClass()).info("@jSerialComm, connect to weight bridge, " + (isMettlerScale ? "@ScaleMettler" : "@SerialComm"));
         Logger.getLogger(this.getClass()).info("@jSerialComm, port: " + portName + " speed: " + speed + " databit: " + dataBits + " stopbit: " + stopBits);
@@ -191,14 +192,19 @@ public class WeighBridgeApp extends SingleFrameApplication {
                 if (mettlerScale != null) {
                     mettlerScale.disconnect();
                 }
-                mettlerScale = new ScaleMettler(portName, speed, dataBits, stopBits, parity, control);
-                mettlerScale.connect();
+                 if (autoSignal) {
+                    mettlerScale = new ScaleMettler(portName, speed, dataBits, stopBits, parity, control);
+                    mettlerScale.connect();
+                }
+
             } else {
                 if (normScale != null) {
                     normScale.disconnect();
                 }
-                normScale = new SerialComm(portName, speed, dataBits, stopBits, parity, control);
-                normScale.connect();
+                if (autoSignal) {
+                    normScale = new SerialComm(portName, speed, dataBits, stopBits, parity, control);
+                    normScale.connect();                
+                }
             }
             connected = true;
         } catch (SerialPortInvalidPortException ex) {
@@ -258,6 +264,7 @@ public class WeighBridgeApp extends SingleFrameApplication {
      * @param args
      */
     public static void main(String[] args) {
+        UIManager.put("Button.defaultButtonFollowsFocus", Boolean.TRUE);
         launch(WeighBridgeApp.class, args);
     }
 

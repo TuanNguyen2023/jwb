@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.util.List;
 import org.hibersap.annotations.BapiStructure;
 import org.hibersap.annotations.Parameter;
+import org.hibersap.annotations.ParameterType;
 
 /**
  *
@@ -18,7 +19,7 @@ import org.hibersap.annotations.Parameter;
 @BapiStructure
 public class PODataOuboundStructure implements Serializable{
     /**Header*/
-    @Parameter(PoPostGetListConstants.PO_HEADER)
+    @Parameter(value = PoPostGetListConstants.PO_HEADER, type = ParameterType.STRUCTURE)
     private List<POHeaderGetListStructure> _poHeader;
 
     /**Item*/

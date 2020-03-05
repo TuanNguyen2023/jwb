@@ -32,6 +32,7 @@ import com.gcs.wb.bapi.helper.structure.SLocsGetListStructure;
 import com.gcs.wb.bapi.helper.structure.SalesOrderStructure;
 import com.gcs.wb.bapi.helper.structure.TransportagentGetListStructure;
 import com.gcs.wb.bapi.helper.structure.VendorGetDetailStructure;
+import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.base.converter.CustomerConverter;
 import com.gcs.wb.base.converter.MaterialConverter;
 import com.gcs.wb.base.converter.MaterialsV2Converter;
@@ -55,6 +56,7 @@ import com.gcs.wb.jpa.entity.Vendor;
 import com.gcs.wb.jpa.repositorys.BatchStockRepository;
 import com.gcs.wb.jpa.repositorys.MaterialInternalRepository;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
+import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
 import com.gcs.wb.jpa.repositorys.SAPSettingRepository;
 import com.gcs.wb.jpa.repositorys.SLocRepository;
 import com.gcs.wb.jpa.repositorys.TransportAgentRepository;
@@ -63,7 +65,6 @@ import com.gcs.wb.jpa.repositorys.VendorRepository;
 import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.service.LookupMaterialService;
 import com.gcs.wb.views.TransportAgentView;
-import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -72,12 +73,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import org.exolab.castor.types.DateTime;
 import org.hibersap.session.Session;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.ResourceMap;
@@ -101,6 +102,7 @@ public class SAPService {
     MaterialInternalRepository materialInternalRepository = new MaterialInternalRepository();
     MaterialRepository materialRepository = new MaterialRepository();
     SAPSettingRepository sapSettingRepository = new SAPSettingRepository();
+    PurchaseOrderRepository purchaseOrderRepository = new PurchaseOrderRepository();
 
     AppConfig config = WeighBridgeApp.getApplication().getConfig();
     Configuration configuration = config.getConfiguration();
@@ -175,6 +177,7 @@ public class SAPService {
                 MaterialsV2Converter materialsV2Converter = new MaterialsV2Converter();
                 matsSap = materialsV2Converter.convert(mats);
             } catch (Exception ex) {
+                ex.printStackTrace();
             }
 
             //sync DB SAP
@@ -242,6 +245,7 @@ public class SAPService {
                     venSaps.add(ven);
                 }
             } catch (Exception ex) {
+                ex.printStackTrace();
             }
 
             entityTransaction = entityManager.getTransaction();
@@ -402,6 +406,7 @@ public class SAPService {
             entityTransaction.commit();
             entityManager.clear();
         } catch (Exception ex) {
+            ex.printStackTrace();
             if (entityTransaction.isActive()) {
                 entityTransaction.rollback();
             }
@@ -460,7 +465,7 @@ public class SAPService {
                     slocSaps.add(sloc);
                 }
             } catch (Exception ex) {
-                // NOP
+                ex.printStackTrace();
             }
 
             // sync data
@@ -717,6 +722,7 @@ public class SAPService {
                 return sapSetting;
             }
         } catch (Exception ex) {
+            ex.printStackTrace();
             if (entityTransaction.isActive()) {
                 entityTransaction.rollback();
             }
@@ -724,32 +730,56 @@ public class SAPService {
 
         return null;
     }
-    
-    public List<Object> syncListPoPosto() {
+
+    public List<String> getListPoPostoNumber() {
+        List<String> poPostoNumbers = new ArrayList<>();
         try {
-            PoPostGetListBapi poPostGetListBapi = new PoPostGetListBapi();
-            Date date = new Date();
-            Calendar calendarStart = Calendar.getInstance();
-            calendarStart.set(1900, 1, 1, 6, 20, 0);
-            Calendar calendarEnd = Calendar.getInstance();
-            calendarEnd.set(1900, 1, 1, 11, 50, 0);
-            
-            SimpleDateFormat formatDate = new SimpleDateFormat("yyyymmdd");
+            Date now = new Date();
             SimpleDateFormat formatTime = new SimpleDateFormat("hhmmss");
-            poPostGetListBapi.setIvStartDate(date);
-            poPostGetListBapi.setIvStartTime(formatTime.format(calendarStart.getTime()));
-            poPostGetListBapi.setIvEndDate(date);
-            poPostGetListBapi.setIvEndTime(formatTime.format(calendarEnd.getTime()));
+
+            Calendar calendarStart = Calendar.getInstance();
+            calendarStart.setTime(now);
+            calendarStart.add(Calendar.DATE, -1);
+
+            PoPostGetListBapi poPostGetListBapi = new PoPostGetListBapi();
+            poPostGetListBapi.setIvStartDate(calendarStart.getTime());
+            poPostGetListBapi.setIvStartTime(Constants.SyncMasterData.TIME_SYNC);
+            poPostGetListBapi.setIvEndDate(now);
+            poPostGetListBapi.setIvEndTime(formatTime.format(now));
             session.execute(poPostGetListBapi);
 
             List<PODataOuboundStructure> listPO = poPostGetListBapi.getListPODataOubound();
-            
-           
+            if (listPO != null) {
+                poPostoNumbers = listPO.stream()
+                        .flatMap(t -> {
+                            if (t.getPoHeader() != null) {
+                                return t.getPoHeader().stream().map(s -> s.getEbeln());
+                            }
+
+                            return null;
+                        })
+                        .filter(t -> t != null && !t.isEmpty())
+                        .collect(Collectors.toCollection(ArrayList::new));
+            }
         } catch (Exception ex) {
             System.out.println("PoPostGetListBapi đang lỗi!");
         }
 
-        return null;
+        return poPostoNumbers;
+    }
+
+    public void syncPoPostoDatas() {
+        List<String> poPostoNumbers = getListPoPostoNumber();
+
+        poPostoNumbers.stream().forEach(number -> {
+            try {
+                PurchaseOrder sapPurchaseOrder = getPurchaseOrder(number);
+                PurchaseOrder purchaseOrder = purchaseOrderRepository.findByPoNumber(number);
+                syncPurchaseOrder(sapPurchaseOrder, purchaseOrder);
+            } catch (Exception ex) {
+                Logger.getLogger(SAPService.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
     }
 
     public List<Object> syncListSalesOrder() {
