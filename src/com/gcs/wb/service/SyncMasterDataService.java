@@ -71,6 +71,7 @@ public class SyncMasterDataService {
         logger.info("Sync SAP setting...");
         SAPSetting sapSetting = syncSapSetting();
         WeighBridgeApp.getApplication().setSapSetting(sapSetting);
+        //syncListSalesOrder();
         
         logger.info("Sync vendor...");
         if (vendorRepository.getListVendor().isEmpty()) {
@@ -126,5 +127,10 @@ public class SyncMasterDataService {
     // sync for offline
     public List<Object> syncListPOPOSTO() {
         return sapService.syncListPoPosto();
+    }
+    
+    // sync for offline
+    public List<Object> syncListSalesOrder() {
+        return sapService.syncListSalesOrder();
     }
 }

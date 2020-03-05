@@ -20,6 +20,7 @@ import com.gcs.wb.bapi.helper.PlantGetDetailBapi;
 import com.gcs.wb.bapi.helper.PoGetDetailBapi;
 import com.gcs.wb.bapi.helper.PoPostGetListBapi;
 import com.gcs.wb.bapi.helper.SLocsGetListBapi;
+import com.gcs.wb.bapi.helper.SyncContractSOGetListBapi;
 import com.gcs.wb.bapi.helper.VendorGetDetailBapi;
 import com.gcs.wb.bapi.helper.VendorValiationCheckBapi;
 import com.gcs.wb.bapi.helper.constants.PlantGeDetailConstants;
@@ -28,6 +29,7 @@ import com.gcs.wb.bapi.helper.structure.MatGetDetailStructure;
 import com.gcs.wb.bapi.helper.structure.MaterialGetListStructure;
 import com.gcs.wb.bapi.helper.structure.PODataOuboundStructure;
 import com.gcs.wb.bapi.helper.structure.SLocsGetListStructure;
+import com.gcs.wb.bapi.helper.structure.SalesOrderStructure;
 import com.gcs.wb.bapi.helper.structure.TransportagentGetListStructure;
 import com.gcs.wb.bapi.helper.structure.VendorGetDetailStructure;
 import com.gcs.wb.base.converter.CustomerConverter;
@@ -745,6 +747,26 @@ public class SAPService {
            
         } catch (Exception ex) {
             System.out.println("PoPostGetListBapi đang lỗi!");
+        }
+
+        return null;
+    }
+
+    public List<Object> syncListSalesOrder() {
+        try {
+            SyncContractSOGetListBapi syncContractSOGetListBapi = new SyncContractSOGetListBapi();
+            Date dateF = new Date(2020, 2, 0);
+            Date dateT = new Date(2020, 4, 0);
+
+            syncContractSOGetListBapi.setIvDateF(dateF);
+            syncContractSOGetListBapi.setIvDateT(dateT);
+            syncContractSOGetListBapi.setIvOption("WB");
+            session.execute(syncContractSOGetListBapi);
+
+            List<SalesOrderStructure> listSO = syncContractSOGetListBapi.getListSalesOrder();
+
+        } catch (Exception ex) {
+            System.out.println("SyncContractSOGetListBapi đang lỗi!");
         }
 
         return null;
