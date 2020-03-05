@@ -2637,7 +2637,9 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         || (Constants.WeighingProcess.MODE_DETAIL.OUT_SLOC_SLOC.name().equals(weightTicket.getMode()))
                         || (Constants.WeighingProcess.MODE_DETAIL.OUT_OTHER.name().equals(weightTicket.getMode()))) {
                     MaterialInternal mat = materialInternalRepository.findByMatnr(weightTicket.getRecvMatnr());
-                    txtRegItem.setText(mat.getMaktx());
+                    if (mat != null) {
+                        txtRegItem.setText(mat.getMaktx());
+                    }
                 }
 
                 formatter.applyPattern(WeighBridgeApp.DATE_TIME_DISPLAY_FORMAT);
