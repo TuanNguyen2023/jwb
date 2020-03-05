@@ -42,7 +42,7 @@
                   <Component id="pnWTicket" alignment="0" max="32767" attributes="0"/>
                   <Component id="pnScaleData" alignment="0" max="32767" attributes="2"/>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="pnWTFilter" pref="657" max="32767" attributes="0"/>
+                      <Component id="pnWTFilter" pref="661" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="pnCurScale" min="-2" pref="310" max="-2" attributes="2"/>
                   </Group>
@@ -99,7 +99,7 @@
                   <Component id="jButton1" min="-2" pref="58" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="jButton2" min="-2" pref="56" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="116" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="120" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -368,9 +368,9 @@
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="txfGoodsQty" alignment="0" pref="391" max="32767" attributes="2"/>
-                      <Component id="txfOutQty" alignment="0" pref="391" max="32767" attributes="2"/>
-                      <Component id="txfInQty" alignment="0" pref="391" max="32767" attributes="2"/>
+                      <Component id="txfGoodsQty" alignment="0" pref="393" max="32767" attributes="2"/>
+                      <Component id="txfOutQty" alignment="0" pref="393" max="32767" attributes="2"/>
+                      <Component id="txfInQty" alignment="0" pref="393" max="32767" attributes="2"/>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -386,8 +386,8 @@
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="txtOutTime" pref="385" max="32767" attributes="2"/>
-                              <Component id="txtInTime" alignment="0" pref="385" max="32767" attributes="2"/>
+                              <Component id="txtOutTime" pref="387" max="32767" attributes="2"/>
+                              <Component id="txtInTime" alignment="0" pref="387" max="32767" attributes="2"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
@@ -638,7 +638,7 @@
                       <Component id="jPanel1" alignment="0" max="32767" attributes="1"/>
                       <Group type="102" alignment="1" attributes="0">
                           <Component id="pnWTLeft" max="32767" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="pnWTRight" max="32767" attributes="0"/>
                       </Group>
                   </Group>
@@ -649,11 +649,11 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="pnWTLeft" max="32767" attributes="1"/>
-                      <Component id="pnWTRight" alignment="0" max="32767" attributes="1"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="pnWTLeft" min="-2" max="-2" attributes="1"/>
+                      <Component id="pnWTRight" pref="427" max="32767" attributes="1"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -798,7 +798,7 @@
                           <Component id="lblRemark" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="txtRemark" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="65" max="32767" attributes="0"/>
+                      <EmptySpace pref="59" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1050,12 +1050,11 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Component id="lblWeight" min="-2" max="-2" attributes="0"/>
                           <Component id="lblRegItem" min="-2" max="-2" attributes="0"/>
                           <Component id="lblPONo" min="-2" max="-2" attributes="0"/>
-                          <Component id="lblSO" min="-2" max="-2" attributes="0"/>
                           <Component id="lblVendorTransport" min="-2" max="-2" attributes="0"/>
                           <Component id="lblVendorLoading" min="-2" max="-2" attributes="0"/>
                           <Group type="103" alignment="1" groupAlignment="1" attributes="0">
@@ -1069,10 +1068,11 @@
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="lbKunnr" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="lblLgortIn" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="lblDelNum" alignment="1" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
+                          <Component id="lblDelNum" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblSO" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
@@ -1080,22 +1080,22 @@
                           <Component id="cbxCharg" alignment="0" pref="361" max="32767" attributes="2"/>
                           <Component id="cbxVendorLoading" alignment="0" pref="361" max="32767" attributes="2"/>
                           <Component id="cbxSLoc" alignment="0" pref="361" max="32767" attributes="2"/>
-                          <Component id="txtSO" alignment="0" pref="361" max="32767" attributes="2"/>
                           <Component id="txtMatnr" alignment="0" pref="361" max="32767" attributes="2"/>
                           <Component id="txtPONo" alignment="0" pref="361" max="32767" attributes="2"/>
                           <Component id="txtChargIn" alignment="0" pref="361" max="32767" attributes="2"/>
                           <Component id="txtPoPosto" alignment="0" pref="361" max="32767" attributes="2"/>
                           <Component id="txtLgortIn" alignment="0" pref="361" max="32767" attributes="2"/>
                           <Component id="txtRegItem" alignment="0" pref="361" max="32767" attributes="2"/>
-                          <Component id="txtDelNum" alignment="0" pref="361" max="32767" attributes="2"/>
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="txtWeight" pref="335" max="32767" attributes="2"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jLabel1" min="-2" pref="22" max="-2" attributes="0"/>
                           </Group>
                           <Component id="cbxKunnr" alignment="0" pref="361" max="32767" attributes="2"/>
+                          <Component id="txtDelNum" pref="361" max="32767" attributes="2"/>
+                          <Component id="txtSO" alignment="0" pref="361" max="32767" attributes="2"/>
                       </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1103,16 +1103,16 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" max="-2" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" max="-2" attributes="0">
-                          <Component id="lblDelNum" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtDelNum" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="txtSO" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="lblSO" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="txtDelNum" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblDelNum" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="txtPONo" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="lblPONo" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -1384,10 +1384,10 @@
                 <Property name="name" type="java.lang.String" value="lblDelNum" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="lblSO">
+            <Component class="javax.swing.JLabel" name="jLabel1">
               <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="lblSO.text"/>
-                <Property name="name" type="java.lang.String" value="lblSO" noResource="true"/>
+                <Property name="text" type="java.lang.String" resourceKey="jLabel1.text"/>
+                <Property name="name" type="java.lang.String" value="jLabel1" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="txtSO">
@@ -1397,10 +1397,10 @@
                 <Property name="name" type="java.lang.String" value="txtSO" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="jLabel1">
+            <Component class="javax.swing.JLabel" name="lblSO">
               <Properties>
-                <Property name="text" type="java.lang.String" resourceKey="jLabel1.text"/>
-                <Property name="name" type="java.lang.String" value="jLabel1" noResource="true"/>
+                <Property name="text" type="java.lang.String" resourceKey="lblSO.text"/>
+                <Property name="name" type="java.lang.String" value="lblSO" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -1414,7 +1414,7 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace pref="690" max="32767" attributes="0"/>
+                      <EmptySpace pref="694" max="32767" attributes="0"/>
                       <Component id="btnPostAgain" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="btnReprint" min="-2" max="-2" attributes="0"/>
