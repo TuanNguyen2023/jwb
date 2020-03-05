@@ -785,8 +785,13 @@ public class SAPService {
     public List<Object> syncListSalesOrder() {
         try {
             SyncContractSOGetListBapi syncContractSOGetListBapi = new SyncContractSOGetListBapi();
-            Date dateF = new Date(2020, 2, 0);
-            Date dateT = new Date(2020, 4, 0);
+            Date dateF = null;
+            Date dateT = new Date();
+            
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date());
+            calendar.add(Calendar.DATE, -3);
+            dateF = calendar.getTime();
 
             syncContractSOGetListBapi.setIvDateF(dateF);
             syncContractSOGetListBapi.setIvDateT(dateT);

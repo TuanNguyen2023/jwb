@@ -15,6 +15,7 @@ import org.hibersap.annotations.Export;
 import org.hibersap.annotations.Import;
 import org.hibersap.annotations.Parameter;
 import org.hibersap.annotations.ParameterType;
+import org.hibersap.annotations.Table;
 
 /**
  *
@@ -42,7 +43,7 @@ public class SyncContractSOGetListBapi implements Serializable {
     @Parameter(SyncContractSOGetListConstants.IV_OPTION)
     private String _ivOption;
     
-    @Export
+    @Table
     @Parameter(value = SyncContractSOGetListConstants.ET_SALESORDER, type = ParameterType.STRUCTURE)
     private List<SalesOrderStructure> _etSalesOrder;
     
@@ -53,7 +54,7 @@ public class SyncContractSOGetListBapi implements Serializable {
     }
     
     public void setIvDateF(Date ivDateF) {
-        this._ivDateF = _ivDateF;
+        this._ivDateF = ivDateF;
     }
     
     public void setIvDateT(Date ivDateT) {
