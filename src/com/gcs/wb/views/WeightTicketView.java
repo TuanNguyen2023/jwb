@@ -2823,9 +2823,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             lblSling.setVisible(false);
             lblPallet.setVisible(false);
             lblDelNum.setVisible(false);
-            //lblWeight.setVisible(false);
             lblMatnr.setVisible(false);
-            lbKunnr.setVisible(false);
             lblLgortIn.setVisible(false);
             lblChargIn.setVisible(false);
             lblPoPosto.setVisible(false);
@@ -2838,9 +2836,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             txtSling.setVisible(false);
             txtPallet.setVisible(false);
             txtDelNum.setVisible(false);
-            //txtWeight.setVisible(false);
             txtMatnr.setVisible(false);
-            cbxKunnr.setVisible(false);
             txtLgortIn.setVisible(false);
             txtChargIn.setVisible(false);
             txtPoPosto.setVisible(false);
@@ -2851,7 +2847,6 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
 
             lblPONo.setVisible(false);
             lblMatnr.setVisible(false);
-            lbKunnr.setVisible(false);
             lblLgortIn.setVisible(false);
             lblChargIn.setVisible(false);
             lblPoPosto.setVisible(false);
@@ -2862,7 +2857,6 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             txtSO.setVisible(false);
             txtPONo.setVisible(false);
             txtMatnr.setVisible(false);
-            cbxKunnr.setVisible(false);
             txtLgortIn.setVisible(false);
             txtChargIn.setVisible(false);
             txtPoPosto.setVisible(false);
@@ -2899,7 +2893,6 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             lblWeightTicketIdRef.setVisible(false);
             lblPONo.setVisible(false);
             lblMatnr.setVisible(false);
-            lbKunnr.setVisible(false);
             lblLgortIn.setVisible(false);
             lblChargIn.setVisible(false);
             lblPoPosto.setVisible(false);
@@ -2912,7 +2905,6 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             txtWeightTicketIdRef.setVisible(false);
             txtPONo.setVisible(false);
             txtMatnr.setVisible(false);
-            cbxKunnr.setVisible(false);
             txtLgortIn.setVisible(false);
             txtChargIn.setVisible(false);
             txtPoPosto.setVisible(false);
@@ -2923,24 +2915,18 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             lblWeightTicketIdRef.setVisible(false);
             lblDelNum.setVisible(false);
             lblMatnr.setVisible(false);
-            //lbKunnr.setVisible(false);
             lblLgortIn.setVisible(false);
             lblChargIn.setVisible(false);
             lblPoPosto.setVisible(false);
-//            lblVendorLoading.setVisible(false);
-//            lblVendorTransport.setVisible(false);
             lblSO.setVisible(false);
 
             txtSO.setVisible(false);
             txtWeightTicketIdRef.setVisible(false);
             txtDelNum.setVisible(false);
             txtMatnr.setVisible(false);
-            //cbxKunnr.setVisible(false);
             txtLgortIn.setVisible(false);
             txtChargIn.setVisible(false);
             txtPoPosto.setVisible(false);
-//            cbxVendorLoading.setVisible(false);
-//            cbxVendorTransport.setVisible(false);
 
         }
         if (ModeEnum.OUT_SLOC_SLOC.name().equals(mode)) {
@@ -2949,7 +2935,6 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             lblWeightTicketIdRef.setVisible(false);
             lblDelNum.setVisible(false);
             lblMatnr.setVisible(false);
-            //lbKunnr.setVisible(false);
             lblSO.setVisible(false);
 
             txtSO.setVisible(false);
@@ -2958,8 +2943,6 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             txtWeightTicketIdRef.setVisible(false);
             txtDelNum.setVisible(false);
             txtMatnr.setVisible(false);
-            //cbxKunnr.setVisible(false);
-            //ma vat tu
         }
         if (ModeEnum.OUT_PULL_STATION.name().equals(mode)) {
             lblSling.setVisible(false);
@@ -2967,8 +2950,6 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             lblWeightTicketIdRef.setVisible(false);
             lblDelNum.setVisible(false);
             lblMatnr.setVisible(false);
-            //lblVendorLoading.setVisible(false);
-            //lblVendorTransport.setVisible(false);
             lblSO.setVisible(false);
             lblLgortIn.setVisible(false);
             lblChargIn.setVisible(false);
@@ -2979,8 +2960,6 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             txtWeightTicketIdRef.setVisible(false);
             txtDelNum.setVisible(false);
             txtMatnr.setVisible(false);
-            //cbxVendorLoading.setVisible(false);
-            //cbxVendorTransport.setVisible(false);
             txtLgortIn.setVisible(false);
             txtChargIn.setVisible(false);
         }

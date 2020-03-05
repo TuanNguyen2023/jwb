@@ -428,6 +428,40 @@ public class SAPService {
         return customerConverter.convert(strucCust);
     }
 
+    public Customer syncCustomer(Customer sapCustomer, Customer customer) {
+        Customer result;
+        if (!entityTransaction.isActive()) {
+            entityTransaction.begin();
+        }
+
+        try {
+            if (sapCustomer != null && customer == null) {
+                entityManager.persist(sapCustomer);
+                result = sapCustomer;
+            } else if (sapCustomer != null && customer != null) {
+                sapCustomer.setId(customer.getId());
+                entityManager.merge(sapCustomer);
+                result = sapCustomer;
+            } else {
+                if (customer != null) {
+                    entityManager.remove(customer);
+                }
+                result = null;
+            }
+
+            entityTransaction.commit();
+            entityManager.clear();
+        } catch (Exception ex) {
+            if (entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
+            Logger.getLogger(SAPService.class.getName()).log(Level.SEVERE, null, ex);
+            result = null;
+        }
+
+        return result;
+    }
+
     /**
      * get data Vendor detail
      *
@@ -787,7 +821,7 @@ public class SAPService {
             SyncContractSOGetListBapi syncContractSOGetListBapi = new SyncContractSOGetListBapi();
             Date dateF = null;
             Date dateT = new Date();
-            
+
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(new Date());
             calendar.add(Calendar.DATE, -3);

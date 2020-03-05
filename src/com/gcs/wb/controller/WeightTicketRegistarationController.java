@@ -11,6 +11,7 @@ import com.gcs.wb.base.enums.StatusEnum;
 import com.gcs.wb.jpa.JReportService;
 import com.gcs.wb.jpa.entity.*;
 import com.gcs.wb.jpa.entity.OutboundDeliveryDetail;
+import com.gcs.wb.jpa.repositorys.CustomerRepository;
 import com.gcs.wb.jpa.repositorys.MaterialInternalRepository;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
 import com.gcs.wb.jpa.repositorys.SLocRepository;
@@ -46,6 +47,7 @@ public class WeightTicketRegistarationController {
     WeightTicketDetailRepository weightTicketDetailRepository = new WeightTicketDetailRepository();
     MaterialRepository materialRepository = new MaterialRepository();
     SLocRepository sLocRepository = new SLocRepository();
+    CustomerRepository customerRepository = new CustomerRepository();
 
     public String getReportName() {
         String reportName = null;
@@ -303,6 +305,10 @@ public class WeightTicketRegistarationController {
 
     public DefaultComboBoxModel getVendorModel() {
         return new DefaultComboBoxModel(vendorRepository.getListVendor().toArray());
+    }
+    
+    public DefaultComboBoxModel getCustomerModel() {
+        return new DefaultComboBoxModel(customerRepository.getListCustomer().toArray());
     }
 
     public Unit getUnit() {

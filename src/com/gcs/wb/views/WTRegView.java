@@ -248,15 +248,20 @@ public class WTRegView extends javax.swing.JInternalFrame {
         cbxVendorLoadingN.setRenderer(cellRendererVendor);
         cbxVendorTransportN.setRenderer(cellRendererVendor);
 
-        cbxSuppliesIdN.setRenderer(new DefaultListCellRenderer() {
+        cbxCustomerN.setRenderer(new DefaultListCellRenderer() {
 
             @Override
             public Component getListCellRendererComponent(
                     JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if (value instanceof MaterialInternal) {
-                    MaterialInternal materialInternal = (MaterialInternal) value;
-                    setText(materialInternal.getMatnr());
+                if (value instanceof Customer) {
+                    Customer customer = (Customer) value;
+                    String name = customer.getName1();
+                    if (customer.getName2() != null && !customer.getName2().isEmpty()) {
+                        name += " - " + customer.getName2();
+                    }
+                    setText(name);
+                    setToolTipText(customer.getKunnr());
                 }
                 return this;
             }
@@ -366,7 +371,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
         lblPOSTONumN = new javax.swing.JLabel();
         lblVendorLoadingN = new javax.swing.JLabel();
         lblVendorTransportN = new javax.swing.JLabel();
-        lblSuppliesIdN = new javax.swing.JLabel();
         cbxMaterialTypeN = new javax.swing.JComboBox();
         txtWeightN = new javax.swing.JFormattedTextField();
         cbxSlocN = new javax.swing.JComboBox();
@@ -383,9 +387,10 @@ public class WTRegView extends javax.swing.JInternalFrame {
         btnPOSTOCheckN = new javax.swing.JButton();
         cbxVendorLoadingN = new javax.swing.JComboBox();
         cbxVendorTransportN = new javax.swing.JComboBox();
-        cbxSuppliesIdN = new javax.swing.JComboBox();
         lblWeightTicketNo = new javax.swing.JLabel();
         txtWeightTicketNo = new javax.swing.JTextField();
+        lblCustomerN = new javax.swing.JLabel();
+        cbxCustomerN = new javax.swing.JComboBox();
         pnShowFilter = new javax.swing.JPanel();
         btnShowFilter = new javax.swing.JButton();
 
@@ -981,10 +986,10 @@ public class WTRegView extends javax.swing.JInternalFrame {
             .addGroup(pnRegistrationOfVehicleLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnRegistrationOfVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnRegistrationOfVehicleLayout.createSequentialGroup()
+                    .addGroup(pnRegistrationOfVehicleLayout.createSequentialGroup()
                         .addComponent(pnROVLeft, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnRegistrationOfVehicleLayout.createSequentialGroup()
+                    .addGroup(pnRegistrationOfVehicleLayout.createSequentialGroup()
                         .addComponent(pnControl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(11, 11, 11))))
         );
@@ -992,9 +997,9 @@ public class WTRegView extends javax.swing.JInternalFrame {
             pnRegistrationOfVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnRegistrationOfVehicleLayout.createSequentialGroup()
                 .addComponent(pnROVLeft, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(pnControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(118, Short.MAX_VALUE))
+                .addContainerGap(125, Short.MAX_VALUE))
         );
 
         pnROVRight.setName("pnROVRight"); // NOI18N
@@ -1037,9 +1042,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         lblVendorTransportN.setText(resourceMap.getString("lblVendorTransportN.text")); // NOI18N
         lblVendorTransportN.setName("lblVendorTransportN"); // NOI18N
-
-        lblSuppliesIdN.setText(resourceMap.getString("lblSuppliesIdN.text")); // NOI18N
-        lblSuppliesIdN.setName("lblSuppliesIdN"); // NOI18N
 
         cbxMaterialTypeN.setEditable(true);
         cbxMaterialTypeN.setName("cbxMaterialTypeN"); // NOI18N
@@ -1144,13 +1146,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
             }
         });
 
-        cbxSuppliesIdN.setName("cbxSuppliesIdN"); // NOI18N
-        cbxSuppliesIdN.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbxSuppliesIdNActionPerformed(evt);
-            }
-        });
-
         lblWeightTicketNo.setText(resourceMap.getString("lblWeightTicketNo.text")); // NOI18N
         lblWeightTicketNo.setName("lblWeightTicketNo"); // NOI18N
 
@@ -1158,43 +1153,53 @@ public class WTRegView extends javax.swing.JInternalFrame {
         txtWeightTicketNo.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         txtWeightTicketNo.setName("txtWeightTicketNo"); // NOI18N
 
+        lblCustomerN.setText(resourceMap.getString("lblCustomerN.text")); // NOI18N
+        lblCustomerN.setName("lblCustomerN"); // NOI18N
+
+        cbxCustomerN.setName("cbxCustomerN"); // NOI18N
+        cbxCustomerN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxCustomerNActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnROVRightLayout = new javax.swing.GroupLayout(pnROVRight);
         pnROVRight.setLayout(pnROVRightLayout);
         pnROVRightLayout.setHorizontalGroup(
             pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnROVRightLayout.createSequentialGroup()
+            .addGroup(pnROVRightLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblWeightTicketNo)
-                    .addComponent(lblSloc2N)
-                    .addComponent(lblBatchStockN)
                     .addComponent(lblBatchStock2N)
-                    .addComponent(lblSlocN)
+                    .addComponent(lblVendorLoadingN)
+                    .addComponent(lblVendorTransportN)
+                    .addComponent(lblWeightTicketNo)
                     .addComponent(lblMaterialTypeN)
                     .addComponent(lblPOSTONumN)
                     .addComponent(lblPONumN)
-                    .addComponent(lblVendorLoadingN)
-                    .addComponent(lblVendorTransportN)
                     .addComponent(lblWeightN)
-                    .addComponent(lblSuppliesIdN)
                     .addComponent(lblSONumN)
-                    .addComponent(lblDONumN))
+                    .addComponent(lblDONumN)
+                    .addComponent(lblCustomerN)
+                    .addComponent(lblSlocN)
+                    .addComponent(lblSloc2N)
+                    .addComponent(lblBatchStockN))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cbxSuppliesIdN, 0, 374, Short.MAX_VALUE)
                     .addComponent(cbxVendorTransportN, 0, 374, Short.MAX_VALUE)
-                    .addComponent(cbxVendorLoadingN, 0, 374, Short.MAX_VALUE)
+                    .addComponent(cbxCustomerN, 0, 374, Short.MAX_VALUE)
                     .addComponent(txtPONumN, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
                     .addComponent(txtPOSTONumN, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
                     .addComponent(cbxMaterialTypeN, 0, 374, Short.MAX_VALUE)
-                    .addComponent(cbxBatchStock2N, 0, 374, Short.MAX_VALUE)
-                    .addComponent(cbxBatchStockN, 0, 374, Short.MAX_VALUE)
-                    .addComponent(cbxSloc2N, 0, 374, Short.MAX_VALUE)
-                    .addComponent(cbxSlocN, 0, 374, Short.MAX_VALUE)
                     .addComponent(txtWeightN, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
                     .addComponent(txtWeightTicketNo, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
                     .addComponent(txtSONumN, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
-                    .addComponent(txtDONumN, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE))
+                    .addComponent(txtDONumN, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
+                    .addComponent(cbxSlocN, 0, 374, Short.MAX_VALUE)
+                    .addComponent(cbxSloc2N, 0, 374, Short.MAX_VALUE)
+                    .addComponent(cbxBatchStockN, 0, 374, Short.MAX_VALUE)
+                    .addComponent(cbxBatchStock2N, 0, 374, Short.MAX_VALUE)
+                    .addComponent(cbxVendorLoadingN, 0, 374, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnPOCheckN)
@@ -1243,35 +1248,35 @@ public class WTRegView extends javax.swing.JInternalFrame {
                     .addGroup(pnROVRightLayout.createSequentialGroup()
                         .addGap(6, 6, 6)
                         .addComponent(lblWeightUnitN)))
+                .addGap(8, 8, 8)
+                .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbxCustomerN, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblCustomerN))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbxSlocN, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblSlocN))
+                    .addComponent(lblSlocN)
+                    .addComponent(cbxSlocN, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbxSloc2N, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblSloc2N))
+                    .addComponent(lblSloc2N)
+                    .addComponent(cbxSloc2N, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbxBatchStockN, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblBatchStockN))
+                    .addComponent(lblBatchStockN)
+                    .addComponent(cbxBatchStockN, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbxBatchStock2N, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblBatchStock2N))
+                    .addComponent(lblBatchStock2N)
+                    .addComponent(cbxBatchStock2N, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblVendorLoadingN)
                     .addComponent(cbxVendorLoadingN, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbxVendorTransportN, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblVendorTransportN))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbxSuppliesIdN, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblSuppliesIdN))
-                .addContainerGap())
+                    .addComponent(lblVendorTransportN)
+                    .addComponent(cbxVendorTransportN, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(16, 16, 16))
         );
 
         pnShowFilter.setName("pnShowFilter"); // NOI18N
@@ -1323,7 +1328,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnShowFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(13, 13, 13)
-                .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
+                .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnPrintControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(13, 13, 13)
@@ -1436,9 +1441,13 @@ private void txtPOSTONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
     validateForm();
 }//GEN-LAST:event_txtPOSTONumNKeyReleased
 
-private void cbxSuppliesIdNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxSuppliesIdNActionPerformed
+private void cbxCustomerNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxCustomerNActionPerformed
+    if (cbxCustomerN.getSelectedIndex() == -1) {
+        return;
+    }
 
-}//GEN-LAST:event_cbxSuppliesIdNActionPerformed
+    validateForm();
+}//GEN-LAST:event_cbxCustomerNActionPerformed
 
 private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTicketIdNKeyReleased
     validateForm();
@@ -1895,8 +1904,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         lblVendorLoadingN.setForeground(Color.black);
         cbxVendorTransportN.setEnabled(false);
         lblVendorTransportN.setForeground(Color.black);
-        cbxSuppliesIdN.setEnabled(false);
-        lblSuppliesIdN.setForeground(Color.black);
+        cbxCustomerN.setEnabled(false);
+        lblCustomerN.setForeground(Color.black);
     }
 
     private void prepareEditableForm(MODE_DETAIL modeDetail) {
@@ -1998,7 +2007,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         showComponent(cbxBatchStock2N, lblBatchStock2N, false, false);
         showComponent(cbxVendorLoadingN, lblVendorLoadingN, false, false);
         showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
-        showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
+        showComponent(cbxCustomerN, lblCustomerN, true, false);
     }
 
     private void prepareInWarehouseTransfer() {
@@ -2027,7 +2036,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         showComponent(cbxBatchStock2N, lblBatchStock2N, false, false);
         showComponent(cbxVendorLoadingN, lblVendorLoadingN, false, false);
         showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
-        showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
+        showComponent(cbxCustomerN, lblCustomerN, true, false);
     }
 
     private void prepareInOutOther() {
@@ -2056,10 +2065,13 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         showComponent(cbxBatchStock2N, lblBatchStock2N, false, false);
         showComponent(cbxVendorLoadingN, lblVendorLoadingN, false, false);
         showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
-        showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
+        showComponent(cbxCustomerN, lblCustomerN, true, true);
 
         cbxMaterialTypeN.setModel(weightTicketRegistarationController.getListMaterialInternal());
         cbxMaterialTypeN.setSelectedIndex(-1);
+
+        cbxCustomerN.setModel(weightTicketRegistarationController.getCustomerModel());
+        cbxCustomerN.setSelectedIndex(-1);
     }
 
     private void prepareOutSellRoad() {
@@ -2088,7 +2100,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         showComponent(cbxBatchStock2N, lblBatchStock2N, false, false);
         showComponent(cbxVendorLoadingN, lblVendorLoadingN, false, false);
         showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
-        showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
+        showComponent(cbxCustomerN, lblCustomerN, true, false);
     }
 
     private void prepareOutPlantPlant() {
@@ -2120,7 +2132,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         showComponent(cbxVendorLoadingN, lblVendorLoadingN, isShowPOV, true);
         showComponent(cbxVendorTransportN, lblVendorTransportN, isShowPOV, true);
 
-        showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
+        showComponent(cbxCustomerN, lblCustomerN, true, false);
     }
 
     private void prepareOutSlocSloc() {
@@ -2151,7 +2163,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         boolean isShowPOV = WeighBridgeApp.getApplication().getSapSetting().getCheckPov();
         showComponent(cbxVendorLoadingN, lblVendorLoadingN, isShowPOV, false);
         showComponent(cbxVendorTransportN, lblVendorTransportN, isShowPOV, false);
-        showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
+        showComponent(cbxCustomerN, lblCustomerN, true, false);
 
         cbxMaterialTypeN.setModel(weightTicketRegistarationController.getListMaterial());
         cbxMaterialTypeN.setSelectedIndex(-1);
@@ -2186,7 +2198,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         showComponent(cbxVendorLoadingN, lblVendorLoadingN, isShowPOV, true);
         showComponent(cbxVendorTransportN, lblVendorTransportN, isShowPOV, true);
 
-        showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
+        showComponent(cbxCustomerN, lblCustomerN, true, false);
     }
 
     private void prepareOutSellWateway() {
@@ -2215,7 +2227,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         showComponent(cbxBatchStock2N, lblBatchStock2N, false, false);
         showComponent(cbxVendorLoadingN, lblVendorLoadingN, false, false);
         showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
-        showComponent(cbxSuppliesIdN, lblSuppliesIdN, false, false);
+        showComponent(cbxCustomerN, lblCustomerN, true, false);
 
         txtDONumN.setText("");
     }
@@ -2347,9 +2359,10 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
         boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
+        boolean isCustomerValid = wtRegisValidation.validateCbxSelected(cbxCustomerN.getSelectedIndex(), lblCustomerN);
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
-                && isCMNDBLValid && isPlateNoValid
+                && isCMNDBLValid && isPlateNoValid && isCustomerValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isMaterialTypeValid && isSlocValid && isWeightValid;
     }
@@ -2784,6 +2797,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
         private List<String> strMaterial = new ArrayList<>();
         private BigDecimal totalWeight = BigDecimal.ZERO;
+        private Customer customer = null;
 
         CheckDOTask(org.jdesktop.application.Application app) {
             super(app);
@@ -2801,6 +2815,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 // sync from SAP
                 if (!WeighBridgeApp.getApplication().isOfflineMode()) {
                     outboundDelivery = syncOutboundDelivery(deliveryOrderNo, outboundDelivery);
+
+                    String kunnr = outboundDelivery.getKunnr();
+                    if (outboundDelivery != null && kunnr != null && !kunnr.trim().isEmpty()) {
+                        customer = syncCustomer(kunnr.trim());
+                    }
                 }
 
                 // check exist DO
@@ -2855,6 +2874,16 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
                 setStep(3, resourceMapMsg.getString("msg.saveDataDOToDb"));
                 return sapService.syncOutboundDelivery(sapOutboundDelivery, outboundDelivery, deliveryOrderNo);
+            } catch (Exception ex) {
+                return null;
+            }
+        }
+
+        private Customer syncCustomer(String kunnr) {
+            try {
+                Customer dbCustomer = weightTicketRegistarationController.findByKunnr(kunnr);
+                Customer sapCustomer = sapService.getCustomer(kunnr);
+                return sapService.syncCustomer(sapCustomer, dbCustomer);
             } catch (Exception ex) {
                 return null;
             }
@@ -2926,6 +2955,13 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             cbxMaterialTypeN.setSelectedItem(String.join(" - ", strMaterial));
             txtWeightN.setText(totalWeight.toString());
 
+            if (customer != null) {
+                cbxCustomerN.setModel(weightTicketRegistarationController.getCustomerModel());
+                cbxCustomerN.setSelectedItem(customer);
+            } else {
+                cbxCustomerN.setSelectedIndex(-1);
+            }
+
             validateForm();
 
             switch (modeDetail) {
@@ -2941,6 +2977,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             newWeightTicket.setWeightTicketDetails(new ArrayList<>());
             cbxMaterialTypeN.setSelectedItem("");
             txtWeightN.setText("0");
+            cbxCustomerN.setSelectedIndex(-1);
 
             isValidDO = false;
             // for check edit plateNo after check DO
@@ -3109,6 +3146,9 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             weightTicketDetail.setRegItemDescription(material.getMaktx());
             weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
 
+            Customer customer = (Customer) cbxCustomerN.getSelectedItem();
+            weightTicketDetail.setKunnr(customer.getKunnr());
+
             newWeightTicket.addWeightTicketDetail(weightTicketDetail);
         }
 
@@ -3227,7 +3267,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         cbxBatchStock2N.setSelectedIndex(-1);
         cbxVendorLoadingN.setSelectedIndex(-1);
         cbxVendorTransportN.setSelectedIndex(-1);
-        cbxSuppliesIdN.setSelectedIndex(-1);
+        cbxCustomerN.setSelectedIndex(-1);
     }
 
     private List<WeightTicket> filterHours(List<WeightTicket> data, String timeFrom, String timeTo) {
@@ -3262,6 +3302,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     private javax.swing.JButton btnShowFilter;
     private javax.swing.JComboBox cbxBatchStock2N;
     private javax.swing.JComboBox cbxBatchStockN;
+    private javax.swing.JComboBox cbxCustomerN;
     private javax.swing.JComboBox cbxHourFrom;
     private javax.swing.JComboBox cbxHourTo;
     private javax.swing.JComboBox cbxMaterialType;
@@ -3271,7 +3312,6 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     private javax.swing.JComboBox cbxSloc2N;
     private javax.swing.JComboBox cbxSlocN;
     private javax.swing.JComboBox cbxStatus;
-    private javax.swing.JComboBox cbxSuppliesIdN;
     private javax.swing.JComboBox cbxVendorLoadingN;
     private javax.swing.JComboBox cbxVendorTransportN;
     private org.jdesktop.swingx.JXDatePicker dpDateFrom;
@@ -3281,6 +3321,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     private javax.swing.JLabel lblBatchStockN;
     private javax.swing.JLabel lblCMNDN;
     private javax.swing.JLabel lblCreator;
+    private javax.swing.JLabel lblCustomerN;
     private javax.swing.JLabel lblDONumN;
     private javax.swing.JLabel lblDateFrom;
     private javax.swing.JLabel lblDateTo;
@@ -3305,7 +3346,6 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     private javax.swing.JLabel lblSlocN;
     private javax.swing.JLabel lblSoNiemXaN;
     private javax.swing.JLabel lblStatus;
-    private javax.swing.JLabel lblSuppliesIdN;
     private javax.swing.JLabel lblTicketIdN;
     private javax.swing.JLabel lblTonnageN;
     private javax.swing.JLabel lblTonngageUnitN;
@@ -3427,6 +3467,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         private String strVendor = "";
         private String strMatnr = null;
         private BigDecimal totalWeight = BigDecimal.ZERO;
+        private Customer customer = null;
 
         CheckPOTask(Application app) {
             super(app);
@@ -3443,6 +3484,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             // sync from SAP
             if (!WeighBridgeApp.getApplication().isOfflineMode()) {
                 purchaseOrderPO = syncPurchaseOrder(poNum, purchaseOrderPO);
+
+                String kunnr = purchaseOrderPO.getCustomer();
+                if (purchaseOrderPO != null && kunnr != null && !kunnr.trim().isEmpty()) {
+                    customer = syncCustomer(kunnr.trim());
+                }
             }
 
             // check exist PO
@@ -3475,6 +3521,13 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
             loadBatchStockModel(cbxSloc2N, cbxBatchStock2N, false);
 
+            if (customer != null) {
+                cbxCustomerN.setModel(weightTicketRegistarationController.getCustomerModel());
+                cbxCustomerN.setSelectedItem(customer);
+            } else {
+                cbxCustomerN.setSelectedIndex(-1);
+            }
+
             switch (modeDetail) {
                 case OUT_SLOC_SLOC:
                     cbxVendorTransportN.setSelectedItem(weightTicketRegistarationController.getVendor(strVendor));
@@ -3489,6 +3542,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             newWeightTicket.setWeightTicketDetails(new ArrayList<>());
             cbxMaterialTypeN.setSelectedIndex(-1);
             cbxVendorTransportN.setSelectedIndex(-1);
+            cbxCustomerN.setSelectedIndex(-1);
 
             isValidPO = false;
             if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
@@ -3515,6 +3569,16 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
                 setStep(3, resourceMapMsg.getString("msg.saveDataPOToDb"));
                 return sapService.syncPurchaseOrder(sapPurchaseOrder, purchaseOrder);
+            } catch (Exception ex) {
+                return null;
+            }
+        }
+
+        private Customer syncCustomer(String kunnr) {
+            try {
+                Customer dbCustomer = weightTicketRegistarationController.findByKunnr(kunnr);
+                Customer sapCustomer = sapService.getCustomer(kunnr);
+                return sapService.syncCustomer(sapCustomer, dbCustomer);
             } catch (Exception ex) {
                 return null;
             }
