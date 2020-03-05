@@ -2804,7 +2804,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 if (weightTicket.isDissolved()) {
                     setSaveNeeded(false);
                 }
-                if (!weightTicket.isPosted()) {
+                if (!weightTicket.isPosted() && !isStage1() && !isStage2()) {
                     btnPostAgain.setEnabled(true);
                 } else {
                     btnPostAgain.setEnabled(false);
