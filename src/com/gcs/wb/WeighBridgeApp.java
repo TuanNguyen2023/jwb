@@ -10,7 +10,6 @@ import com.gcs.wb.base.serials.SerialComm;
 import com.gcs.wb.batch.CronTriggerService;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.JReportConnector;
-import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.jpa.entity.SAPSetting;
 import com.gcs.wb.jpa.entity.User;
 import com.gcs.wb.jpa.repositorys.ConfigurationRepository;
@@ -34,6 +33,7 @@ import java.math.BigInteger;
 import java.text.ParseException;
 import java.util.TooManyListenersException;
 import java.util.logging.Level;
+import javax.swing.UIManager;
 import org.apache.log4j.Logger;
 import org.quartz.SchedulerException;
 
@@ -264,6 +264,7 @@ public class WeighBridgeApp extends SingleFrameApplication {
      * @param args
      */
     public static void main(String[] args) {
+        UIManager.put("Button.defaultButtonFollowsFocus", Boolean.TRUE);
         launch(WeighBridgeApp.class, args);
     }
 
