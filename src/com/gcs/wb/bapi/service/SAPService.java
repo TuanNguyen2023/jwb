@@ -698,11 +698,15 @@ public class SAPService {
 
         //soCheck.setVbeln(soNumber);
         bapi.setSOCheck(soChecks);
-        WeighBridgeApp.getApplication().getSAPSession().execute(bapi);
-        List<DOCheckStructure> dos = bapi.getDOCheck();
-        if (dos != null) {
-            return dos;
-        }
+        try {
+            WeighBridgeApp.getApplication().getSAPSession().execute(bapi);
+            List<DOCheckStructure> dos = bapi.getDOCheck();
+            if (dos != null) {
+                return dos;
+            }
+        } catch (Exception ex) {
+            java.util.logging.Logger.getLogger(WeighBridgeApp.class.getName()).log(Level.SEVERE, null, ex);
+        }     
         return null;
     }
 
