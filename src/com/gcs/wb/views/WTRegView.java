@@ -3788,7 +3788,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             txtPONumN.setText(weightTicketDetail.getEbeln());
             txtPOSTONumN.setText(newWeightTicket.getPosto());
             txtSONumN.setText(weightTicketDetail.getSoNumber());
-            cbxMaterialTypeN.setSelectedItem(weightTicketDetail.getRegItemDescription());
+            cbxMaterialTypeN.setSelectedItem(weightTicketRegistarationController.getMaterial(weightTicketDetail.getMatnrRef()));
             txtWeightN.setText(weightTicketDetail.getRegItemQuantity().toString());
             cbxSlocN.setSelectedItem(new SLoc(newWeightTicket.getLgort()));
             cbxSloc2N.setSelectedItem(new SLoc(newWeightTicket.getRecvLgort()));

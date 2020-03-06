@@ -55,7 +55,7 @@ public class WeightTicketRegistrationValidation {
 
         return result;
     }
-    
+
     public boolean validatePlateNoWithDB(String value, JComponent label) {
         value = value.trim();
 
@@ -117,6 +117,22 @@ public class WeightTicketRegistrationValidation {
         try {
             Long.parseLong(value);
             result = true;
+        } catch (NumberFormatException ex) {
+            result = false;
+        }
+
+        label.setForeground(result ? Color.black : Color.red);
+
+        return result;
+    }
+
+    public boolean validateSingleSODO(String value, JComponent label) {
+        boolean result;
+        value = value.trim();
+
+        try {
+            Long.parseLong(value);
+            result = value.length() == 10;
         } catch (NumberFormatException ex) {
             result = false;
         }

@@ -25,6 +25,7 @@ public interface SyncContractSOGetListConstants extends BapiConstants {
     String VBELN = "VBELN";
     String MATNR = "MATNR";
     String MAKTX = "MAKTX";
+    String KUNNR = "KUNNR";
     // số lượng bán
     String KWMENG = "KWMENG";
     // số lượng KM

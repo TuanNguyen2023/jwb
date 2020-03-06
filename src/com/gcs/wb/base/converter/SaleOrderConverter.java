@@ -20,6 +20,7 @@ public class SaleOrderConverter extends AbstractThrowableConverter<SalesOrderStr
             to.setSoNumber(from.getVbeln());
             to.setMatnr(from.getMatnr());
             to.setMaktx(from.getMaktx());
+            to.setKunnr(from.getKunnr());
             to.setKwmeng(from.getKwmeng());
             to.setFreeQuantity(from.getFreeQua());
             to.setRecQuantity(from.getRecQua());

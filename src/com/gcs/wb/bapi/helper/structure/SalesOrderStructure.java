@@ -17,12 +17,15 @@ import org.hibersap.annotations.Parameter;
  */
 @BapiStructure
 public class SalesOrderStructure implements Serializable {
+
     @Parameter(SyncContractSOGetListConstants.VBELN)
     private String _vbeln;
     @Parameter(SyncContractSOGetListConstants.MATNR)
     private String _matnr;
     @Parameter(SyncContractSOGetListConstants.MAKTX)
     private String _maktx;
+    @Parameter(SyncContractSOGetListConstants.KUNNR)
+    private String _kunnr;
     @Parameter(SyncContractSOGetListConstants.KWMENG)
     private BigDecimal _kwmeng;
     @Parameter(SyncContractSOGetListConstants.FREE_QUA)
@@ -35,9 +38,10 @@ public class SalesOrderStructure implements Serializable {
     private String _shipToName;
     @Parameter(SyncContractSOGetListConstants.NOTE)
     private String _note;
-    
-    public SalesOrderStructure() {}
-    
+
+    public SalesOrderStructure() {
+    }
+
     public String getVbeln() {
         return _vbeln;
     }
@@ -45,31 +49,35 @@ public class SalesOrderStructure implements Serializable {
     public String getMatnr() {
         return _matnr;
     }
-    
+
     public String getMaktx() {
         return _maktx;
     }
-    
+
+    public String getKunnr() {
+        return _kunnr;
+    }
+
     public BigDecimal getKwmeng() {
         return _kwmeng;
     }
-    
+
     public BigDecimal getFreeQua() {
         return _freeQua;
     }
-    
-     public BigDecimal getRecQua() {
+
+    public BigDecimal getRecQua() {
         return _recQua;
     }
-    
+
     public String getWName() {
         return _wName;
     }
-    
+
     public String getShipToName() {
         return _shipToName;
     }
-    
+
     public String getNote() {
         return _note;
     }

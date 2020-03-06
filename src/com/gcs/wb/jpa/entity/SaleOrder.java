@@ -40,6 +40,8 @@ public class SaleOrder implements Serializable {
     private String matnr;
     @Column(name = "maktx")
     private String maktx;
+    @Column(name = "kunnr")
+    private String kunnr;
     @Column(name = "kwmeng")
     private BigDecimal kwmeng;
     @Column(name = "free_quantity")
@@ -100,6 +102,14 @@ public class SaleOrder implements Serializable {
 
     public void setMaktx(String maktx) {
         this.maktx = maktx;
+    }
+
+    public String getKunnr() {
+        return kunnr;
+    }
+
+    public void setKunnr(String kunnr) {
+        this.kunnr = kunnr;
     }
 
     public BigDecimal getKwmeng() {
