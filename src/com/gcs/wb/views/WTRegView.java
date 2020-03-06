@@ -2359,10 +2359,9 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
         boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
-        boolean isCustomerValid = wtRegisValidation.validateCbxSelected(cbxCustomerN.getSelectedIndex(), lblCustomerN);
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
-                && isCMNDBLValid && isPlateNoValid && isCustomerValid
+                && isCMNDBLValid && isPlateNoValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isMaterialTypeValid && isSlocValid && isWeightValid;
     }
@@ -3487,9 +3486,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             if (!WeighBridgeApp.getApplication().isOfflineMode()) {
                 purchaseOrderPO = syncPurchaseOrder(poNum, purchaseOrderPO);
 
-                String kunnr = purchaseOrderPO.getCustomer();
-                if (purchaseOrderPO != null && kunnr != null && !kunnr.trim().isEmpty()) {
-                    customer = syncCustomer(kunnr.trim());
+                if (purchaseOrderPO != null) {
+                    String kunnr = purchaseOrderPO.getCustomer();
+                    if (kunnr != null && !kunnr.trim().isEmpty()) {
+                        customer = syncCustomer(kunnr.trim());
+                    }
                 }
             }
 

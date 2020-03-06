@@ -196,8 +196,8 @@ public class WeightTicketRegistrationService {
             items = batchStockRepository.getListBatchStock(configuration.getWkPlant(),
                     sloc.getLgort(), matnr);
 
-            if (CollectionUtils.isEmpty(items)) {
-                syncData.syncBatchStock(sloc.getLgort(), matnr);
+            if (CollectionUtils.isEmpty(items) && !WeighBridgeApp.getApplication().isOfflineMode()) {
+                sAPService.syncBatchStocks(sloc.getLgort(), matnr);
                 items = batchStockRepository.getListBatchStock(configuration.getWkPlant(),
                         sloc.getLgort(), matnr);
             }
