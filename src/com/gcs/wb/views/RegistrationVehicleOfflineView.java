@@ -2935,7 +2935,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 String plateNo = txtPlateNoN.getText().trim();
                 String traid = outboundDelivery.getTraid().trim();
                 if (!traid.isEmpty() && !traid.startsWith(plateNo)) {
-                    throw new Exception(resourceMapMsg.getString("msg.plateNoNotResgiterIO", plateNo, deliveryOrderNo));
+                    throw new Exception(resourceMapMsg.getString("msg.plateNoNotMappingWithDO", plateNo));
                 }
 
                 // for check edit plateNo after check DO

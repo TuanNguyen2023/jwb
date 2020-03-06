@@ -2816,9 +2816,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 if (!WeighBridgeApp.getApplication().isOfflineMode()) {
                     outboundDelivery = syncOutboundDelivery(deliveryOrderNo, outboundDelivery);
 
-                    String kunnr = outboundDelivery.getKunnr();
-                    if (outboundDelivery != null && kunnr != null && !kunnr.trim().isEmpty()) {
-                        customer = syncCustomer(kunnr.trim());
+                    if (outboundDelivery != null) {
+                        String kunnr = outboundDelivery.getKunnr();
+                        if (kunnr != null && !kunnr.trim().isEmpty()) {
+                            customer = syncCustomer(kunnr.trim());
+                        }
                     }
                 }
 
@@ -2842,7 +2844,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 String plateNo = txtPlateNoN.getText().trim();
                 String traid = outboundDelivery.getTraid().trim();
                 if (!traid.isEmpty() && !traid.startsWith(plateNo)) {
-                    throw new Exception(resourceMapMsg.getString("msg.plateNoNotResgiterIO", plateNo, deliveryOrderNo));
+                    throw new Exception(resourceMapMsg.getString("msg.plateNoNotMappingWithDO", plateNo));
                 }
 
                 // for check edit plateNo after check DO
