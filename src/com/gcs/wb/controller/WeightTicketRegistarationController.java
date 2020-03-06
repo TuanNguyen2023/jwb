@@ -322,4 +322,8 @@ public class WeightTicketRegistarationController {
         java.sql.Date to = java.sql.Date.valueOf(sto);
         return wTRegService.findListWeightTicket(from, to, creator, driverName, plateNo, material, status, mode);
     }
+
+    public SLoc getSloc(String sloc) {
+        return sLocRepository.findByLgort(sloc);
+    }
 }

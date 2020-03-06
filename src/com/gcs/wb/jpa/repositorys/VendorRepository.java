@@ -38,4 +38,15 @@ public class VendorRepository {
 
         return null;
     }
+    
+    public boolean hasData(String mandt) {
+        TypedQuery<Vendor> typedQuery = entityManager.createNamedQuery("Vendor.findByMandt", Vendor.class);
+        typedQuery.setParameter("mandt", mandt);
+        List<Vendor> vendors = typedQuery.getResultList();
+        if (vendors != null && vendors.size() > 0) {
+            return true;
+        }
+
+        return false;
+    }
 }

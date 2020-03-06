@@ -3534,6 +3534,9 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 case OUT_SLOC_SLOC:
                     cbxVendorTransportN.setSelectedItem(weightTicketRegistarationController.getVendor(strVendor));
                     break;
+                case OUT_PLANT_PLANT:
+                    String sloc = purchaseOrderPO.getPurchaseOrderDetail().getStgeLoc();
+                    cbxSlocN.setSelectedItem(weightTicketRegistarationController.getSloc(sloc));
             }
 
             validateForm();

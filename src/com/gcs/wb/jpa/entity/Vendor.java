@@ -25,7 +25,8 @@ import javax.persistence.Id;
     @NamedQuery(name = "Vendor.findAll", query = "SELECT v FROM Vendor v"),
     @NamedQuery(name = "Vendor.findByLifnr", query = "SELECT v FROM Vendor v WHERE v.lifnr = :lifnr"),
     @NamedQuery(name = "Vendor.findByName1", query = "SELECT v FROM Vendor v WHERE v.name1 = :name1"),
-    @NamedQuery(name = "Vendor.findByName2", query = "SELECT v FROM Vendor v WHERE v.name2 = :name2")})
+    @NamedQuery(name = "Vendor.findByName2", query = "SELECT v FROM Vendor v WHERE v.name2 = :name2"),
+    @NamedQuery(name = "Vendor.findByMandt", query = "SELECT v FROM Vendor v WHERE v.mandt = :mandt")})
 public class Vendor implements Serializable {
 
     private static final long serialVersionUID = 1L;
