@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Weight Ticket" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true">
-	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="48"/>
 	<parameter name="P_MANDT" class="java.lang.String"/>
 	<parameter name="P_WPlant" class="java.lang.String"/>
 	<parameter name="P_ID" class="java.lang.String"/>
@@ -235,25 +235,23 @@
 				<rectangle>
 					<reportElement x="36" y="0" width="59" height="20"/>
 				</rectangle>
-				<staticText>
+				<textField>
 					<reportElement x="36" y="0" width="59" height="20"/>
-					<box leftPadding="2" rightPadding="0"/>
-					<textElement verticalAlignment="Middle">
+					<textElement verticalAlignment="Middle" markup="none">
 						<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 					</textElement>
-					<text><![CDATA[Mã số khách hàng]]></text>
-				</staticText>
+					<textFieldExpression><![CDATA[$F{REG_CATEGORY}.equals("O") ? "Mã số khách hàng" : "Mã nhà cung cấp"]]></textFieldExpression>
+				</textField>
 				<rectangle>
 					<reportElement x="36" y="20" width="59" height="20"/>
 				</rectangle>
-				<staticText>
+				<textField>
 					<reportElement x="36" y="20" width="59" height="20"/>
-					<box leftPadding="2" rightPadding="0"/>
-					<textElement verticalAlignment="Middle">
+					<textElement verticalAlignment="Middle" markup="none">
 						<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 					</textElement>
-					<text><![CDATA[Tên khách hàng]]></text>
-				</staticText>
+					<textFieldExpression><![CDATA[$F{REG_CATEGORY}.equals("O") ? "Tên khách hàng" : "Tên nhà cung cấp"]]></textFieldExpression>
+				</textField>
 				<rectangle>
 					<reportElement x="95" y="0" width="196" height="20"/>
 				</rectangle>
@@ -693,7 +691,7 @@ $F{RECV_LGORT} != null ? $F{RECV_LGORT} : null]]></textFieldExpression>
 					<reportElement x="460" y="40" width="84" height="20"/>
 				</rectangle>
 				<textField isBlankWhenNull="true">
-					<reportElement x="460" y="40" width="84" height="20"/>
+					<reportElement x="462" y="40" width="82" height="20"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
