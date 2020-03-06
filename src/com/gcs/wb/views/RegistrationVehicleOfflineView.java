@@ -1832,7 +1832,6 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         @Override
         protected void finished() {
             isValidSO = true;
-            btnDOCheckN.setEnabled(true);
         }
     }
 
@@ -2071,8 +2070,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
         showComponent(txtProductionBatchN, lblProductionBatchN, true, true);
         showComponent(txtNoteN, lblNoteN, true, true);
-        showComponent(txtDONumN, lblDONumN, btnDOCheckN, true, true);
-        showComponent(txtSONumN, lblSONumN, btnSOCheckN, false, false);
+        showComponent(txtDONumN, lblDONumN, btnDOCheckN, true, false);
+        showComponent(txtSONumN, lblSONumN, btnSOCheckN, true, true);
         showComponent(txtPONumN, lblPONumN, btnPOCheckN, false, false);
         showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, false, false);
         showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, false);
@@ -2135,8 +2134,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
         showComponent(txtProductionBatchN, lblProductionBatchN, true, true);
         showComponent(txtNoteN, lblNoteN, true, true);
-        showComponent(txtDONumN, lblDONumN, btnDOCheckN, true, true);
-        showComponent(txtSONumN, lblSONumN, btnSOCheckN, false, false);
+        showComponent(txtDONumN, lblDONumN, btnDOCheckN, true, false);
+        showComponent(txtSONumN, lblSONumN, btnSOCheckN, true, true);
         showComponent(txtPONumN, lblPONumN, btnPOCheckN, false, false);
         showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, false, false);
         showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, false);
@@ -2355,9 +2354,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         btnPOCheckN.setEnabled(isPOValid);
         if (!isValidPO) {
             cbxMaterialTypeN.setEnabled(true);
+            cbxCustomerN.setEnabled(true);
         } else {
             lblMaterialTypeN.setForeground(Color.black);
             cbxMaterialTypeN.setEnabled(false);
+            cbxCustomerN.setEnabled(false);
         }
 
         boolean isWeightValid = wtRegisValidation.validateLength(txtWeightN.getText(), lblWeightN, 1, 10);
@@ -2387,24 +2388,26 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
 
         boolean isMaterialTypeValid = isValidDO || wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
-        boolean isDOValid = wtRegisValidation.validateDO(txtDONumN.getText(), lblDONumN);
-        btnDOCheckN.setEnabled(isDOValid);
-        if (!isValidDO) {
+        boolean isSOValid = wtRegisValidation.validateDO(txtDONumN.getText(), lblSONumN);
+        btnSOCheckN.setEnabled(isSOValid);
+        if (!isValidSO) {
             cbxMaterialTypeN.setEnabled(true);
             txtWeightN.setEditable(true);
             txtWeightTickerRefN.setEditable(true);
+            cbxCustomerN.setEnabled(true);
         } else {
             lblMaterialTypeN.setForeground(Color.black);
             cbxMaterialTypeN.setEnabled(false);
             txtWeightN.setEditable(false);
             txtWeightTickerRefN.setEditable(false);
+            cbxCustomerN.setEnabled(false);
         }
 
         boolean isWeightValid = wtRegisValidation.validateLength(txtWeightN.getText(), lblWeightN, 1, 10);
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
-                && isCMNDBLValid && isPlateNoValid && isDOValid
+                && isCMNDBLValid && isPlateNoValid && isSOValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isSlocValid && isMaterialTypeValid && isWeightValid;
     }
@@ -2454,15 +2457,17 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
 
         boolean isMaterialTypeValid = isValidDO || wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
-        boolean isDOValid = wtRegisValidation.validateDO(txtDONumN.getText(), lblDONumN);
-        btnDOCheckN.setEnabled(isDOValid);
-        if (!isValidDO) {
+        boolean isSOValid = wtRegisValidation.validateDO(txtSONumN.getText(), lblSONumN);
+        btnSOCheckN.setEnabled(isSOValid);
+        if (!isValidSO) {
             cbxMaterialTypeN.setEnabled(true);
             txtWeightN.setEditable(true);
+            cbxCustomerN.setEnabled(true);
         } else {
             lblMaterialTypeN.setForeground(Color.black);
             cbxMaterialTypeN.setEnabled(false);
             txtWeightN.setEditable(false);
+            cbxCustomerN.setEnabled(false);
         }
 
         boolean isWeightValid = wtRegisValidation.validateLength(txtWeightN.getText(), lblWeightN, 1, 10);
@@ -2471,7 +2476,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
         return isRegisterIdValid && isDriverNameValid && isCMNDBLValid && isPlateNoValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
-                && isNoteValid && isSlocValid && isDOValid && isMaterialTypeValid && isWeightValid;
+                && isNoteValid && isSlocValid && isSOValid && isMaterialTypeValid && isWeightValid;
     }
 
     private boolean validateOutPlantPlant() {
@@ -2506,10 +2511,12 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         if (!isValidPO) {
             cbxMaterialTypeN.setEnabled(true);
             txtWeightN.setEditable(true);
+            cbxCustomerN.setEnabled(true);
         } else {
             lblMaterialTypeN.setForeground(Color.black);
             cbxMaterialTypeN.setEnabled(false);
             txtWeightN.setEditable(false);
+            cbxCustomerN.setEnabled(false);
         }
 
         boolean isWeightValid = wtRegisValidation.validateLength(txtWeightN.getText(), lblWeightN, 1, 10);
@@ -2552,9 +2559,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         if (!isValidPO) {
             cbxVendorLoadingN.setEnabled(true);
             cbxVendorTransportN.setEnabled(true);
+            cbxCustomerN.setEnabled(true);
         } else {
             cbxVendorLoadingN.setEnabled(false);
             cbxVendorTransportN.setEnabled(false);
+            cbxCustomerN.setEnabled(false);
         }
 
         boolean isPOSTOValid = wtRegisValidation.validatePO(txtPOSTONumN.getText(), lblPOSTONumN);
@@ -2602,10 +2611,12 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         if (!isValidPO) {
             cbxMaterialTypeN.setEnabled(true);
             txtWeightN.setEditable(true);
+            cbxCustomerN.setEnabled(true);
         } else {
             lblMaterialTypeN.setForeground(Color.black);
             cbxMaterialTypeN.setEnabled(false);
             txtWeightN.setEditable(false);
+            cbxCustomerN.setEnabled(false);
         }
 
         boolean isWeightValid = wtRegisValidation.validateLength(txtWeightN.getText(), lblWeightN, 1, 10);
@@ -2639,10 +2650,9 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         boolean isSOValid = wtRegisValidation.validateDO(txtSONumN.getText(), lblSONumN);
         btnSOCheckN.setEnabled(isSOValid);
         if (!isValidSO) {
-            txtDONumN.setEditable(true);
+            cbxCustomerN.setEnabled(true);
         } else {
-            btnDOCheckN.setEnabled(true);
-            txtDONumN.setEditable(false);
+            cbxCustomerN.setEnabled(false);
         }
 
         boolean isDOValid = wtRegisValidation.validateDO(txtDONumN.getText(), lblDONumN);
@@ -2901,6 +2911,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
         private List<String> strMaterial = new ArrayList<>();
         private BigDecimal totalWeight = BigDecimal.ZERO;
+        private String kunnr = "";
 
         CheckDOTask(org.jdesktop.application.Application app) {
             super(app);
@@ -2987,6 +2998,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             }
 
             totalWeight = totalWeight.add(outboundDelivery.getLfimg());
+            kunnr = outboundDelivery.getKunnr();
         }
 
         private boolean checkMaterial(OutboundDelivery outboundDelivery) {
@@ -3026,6 +3038,12 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             cbxMaterialTypeN.setSelectedItem(String.join(" - ", strMaterial));
             txtWeightN.setText(totalWeight.toString());
 
+            if (kunnr != null && !kunnr.isEmpty()) {
+                cbxCustomerN.setSelectedItem(weightTicketRegistarationController.findByKunnr(kunnr));
+            } else {
+                cbxCustomerN.setSelectedIndex(-1);
+            }
+
             validateForm();
 
             switch (modeDetail) {
@@ -3041,6 +3059,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             newWeightTicket.setWeightTicketDetails(new ArrayList<>());
             cbxMaterialTypeN.setSelectedItem("");
             txtWeightN.setText("0");
+            cbxCustomerN.setSelectedIndex(-1);
 
             isValidDO = false;
             // for check edit plateNo after check DO
@@ -3190,12 +3209,17 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 weightTicketDetail.setEbeln(txtPONumN.getText().trim());
                 weightTicketDetail.setMatnrRef(material.getMatnr());
                 weightTicketDetail.setRegItemDescription(material.getMaktx());
+
+                Customer customer = (Customer) cbxCustomerN.getSelectedItem();
+                if (customer != null) {
+                    weightTicketDetail.setKunnr(customer.getKunnr());
+                }
             }
         }
 
         public void updateDataForInWarehouseTransfer() {
             if (!isValidDO) {
-                WeightTicketDetail weightTicketDetail = new WeightTicketDetail();
+                WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
                 weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
 
                 Material material = (Material) cbxMaterialTypeN.getSelectedItem();
@@ -3204,7 +3228,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 weightTicketDetail.setRegItemDescription(material.getMaktx());
                 weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
 
-                newWeightTicket.addWeightTicketDetail(weightTicketDetail);
+                Customer customer = (Customer) cbxCustomerN.getSelectedItem();
+                if (customer != null) {
+                    weightTicketDetail.setKunnr(customer.getKunnr());
+                }
+
                 newWeightTicket.setWeightTicketIdRef(txtWeightTickerRefN.getText().trim());
             }
         }
@@ -3222,6 +3250,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 weightTicketDetail.setRegItemDescription(material.getMaktx());
                 weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
 
+                Customer customer = (Customer) cbxCustomerN.getSelectedItem();
+                if (customer != null) {
+                    weightTicketDetail.setKunnr(customer.getKunnr());
+                }
+
                 newWeightTicket.setPosto(txtPOSTONumN.getText().trim());
             }
         }
@@ -3235,6 +3268,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 weightTicketDetail.setRegItemDescription(material.getMaktx());
                 weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
                 weightTicketDetail.setSoNumber(txtSONumN.getText().trim());
+
+                Customer customer = (Customer) cbxCustomerN.getSelectedItem();
+                if (customer != null) {
+                    weightTicketDetail.setKunnr(customer.getKunnr());
+                }
             } else {
                 if (sellOrders != null) {
                     for (WeightTicketDetail weightTicketDetail : newWeightTicket.getWeightTicketDetails()) {
@@ -3259,6 +3297,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             weightTicketDetail.setRegItemDescription(material.getMaktx());
             weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
 
+            Customer customer = (Customer) cbxCustomerN.getSelectedItem();
+            if (customer != null) {
+                weightTicketDetail.setKunnr(customer.getKunnr());
+            }
+
             newWeightTicket.addWeightTicketDetail(weightTicketDetail);
         }
 
@@ -3272,6 +3315,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 weightTicketDetail.setMatnrRef(material.getMatnr());
                 weightTicketDetail.setRegItemDescription(material.getMaktx());
                 weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+
+                Customer customer = (Customer) cbxCustomerN.getSelectedItem();
+                if (customer != null) {
+                    weightTicketDetail.setKunnr(customer.getKunnr());
+                }
 
                 newWeightTicket.addWeightTicketDetail(weightTicketDetail);
             }
@@ -3287,6 +3335,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 weightTicketDetail.setMatnrRef(material.getMatnr());
                 weightTicketDetail.setRegItemDescription(material.getMaktx());
                 weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+
+                Customer customer = (Customer) cbxCustomerN.getSelectedItem();
+                if (customer != null) {
+                    weightTicketDetail.setKunnr(customer.getKunnr());
+                }
             }
         }
 
@@ -3303,6 +3356,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             if (!isValidPO) {
                 weightTicketDetail.setEbeln(txtPONumN.getText().trim());
                 newWeightTicket.setPosto(txtPOSTONumN.getText().trim());
+
+                Customer customer = (Customer) cbxCustomerN.getSelectedItem();
+                if (customer != null) {
+                    weightTicketDetail.setKunnr(customer.getKunnr());
+                }
             }
         }
 
@@ -3611,6 +3669,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         private String strVendor = "";
         private String strMatnr = null;
         private BigDecimal totalWeight = BigDecimal.ZERO;
+        private String kunnr = "";
 
         CheckPOTask(Application app) {
             super(app);
@@ -3649,6 +3708,12 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
             loadBatchStockModel(cbxSloc2N, cbxBatchStock2N, false);
 
+            if (kunnr != null && !kunnr.isEmpty()) {
+                cbxCustomerN.setSelectedItem(weightTicketRegistarationController.findByKunnr(kunnr));
+            } else {
+                cbxCustomerN.setSelectedIndex(-1);
+            }
+
             switch (modeDetail) {
                 case OUT_SLOC_SLOC:
                     cbxVendorTransportN.setSelectedItem(weightTicketRegistarationController.getVendor(strVendor));
@@ -3663,6 +3728,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             newWeightTicket.setWeightTicketDetails(new ArrayList<>());
             cbxMaterialTypeN.setSelectedIndex(-1);
             cbxVendorTransportN.setSelectedIndex(-1);
+            cbxCustomerN.setSelectedIndex(-1);
 
             isValidPO = false;
             if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
@@ -3697,6 +3763,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             newWeightTicket.getWeightTicketDetail().setTransVendor(purchaseOrder.getVendor());
             strVendor = purchaseOrder.getVendor();
             totalWeight = purchaseOrderDetail.getQuantity();
+            kunnr = purchaseOrder.getCustomer();
 
             switch (modeDetail) {
                 case IN_PO_PURCHASE:
