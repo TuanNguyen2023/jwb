@@ -57,13 +57,13 @@
 				<reportElement x="470" y="0" width="85" height="65"/>
 				<imageExpression><![CDATA["./rpt/TaFiCo_TM2.jpg"]]></imageExpression>
 			</image>
-			<staticText>
+			<textField>
 				<reportElement x="0" y="83" width="275" height="26"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" size="16" isBold="true" isUnderline="true" pdfEncoding="Identity-H"/>
 				</textElement>
-				<text><![CDATA[PHIẾU YÊU CẦU XUẤT HÀNG]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$F{REG_CATEGORY}.equals("O") ? "PHIẾU YÊU CẦU XUẤT HÀNG" : "PHIẾU YÊU CẦU NHẬP HÀNG"]]></textFieldExpression>
+			</textField>
 			<componentElement>
 				<reportElement stretchType="RelativeToBandHeight" x="275" y="77" width="121" height="32"/>
 				<jr:Code128 xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" textPosition="none">
