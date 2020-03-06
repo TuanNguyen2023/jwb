@@ -20,7 +20,7 @@ import com.gcs.wb.jpa.entity.*;
 import com.gcs.wb.jpa.repositorys.MaterialGroupRepository;
 import com.gcs.wb.jpa.repositorys.MaterialInternalRepository;
 import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
-import com.gcs.wb.jpa.repositorys.SellOrderRepository;
+import com.gcs.wb.jpa.repositorys.SaleOrderRepository;
 import com.gcs.wb.model.WeighingMode;
 import com.gcs.wb.views.validations.WeightTicketRegistrationValidation;
 import com.sap.conn.jco.JCoException;
@@ -1749,11 +1749,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         return new CheckSOTask(WeighBridgeApp.getApplication());
     }
 
-    List<SellOrder> sellOrders = new ArrayList<>();
+    List<SaleOrder> sellOrders = new ArrayList<>();
 
     private class CheckSOTask extends org.jdesktop.application.Task<Object, Void> {
 
-        private SellOrderRepository sellOrderRepository = new SellOrderRepository();
+        private SaleOrderRepository sellOrderRepository = new SaleOrderRepository();
 
         CheckSOTask(org.jdesktop.application.Application app) {
             super(app);
@@ -1769,7 +1769,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             String doNum = "";
 
             for (String soNum : soNums) {
-                SellOrder sellOrder = sellOrderRepository.findBySoNumber(soNum.trim());
+                SaleOrder sellOrder = sellOrderRepository.findBySoNumber(soNum.trim());
 
                 if (sellOrder == null) {
                     String msg = "SO " + soNum + " sai, vui lòng nhập lại!";
@@ -1780,11 +1780,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
                 sellOrders.add(sellOrder);
 
-                if (doNum.isEmpty()) {
-                    doNum = sellOrder.getDoNumber();
-                } else {
-                    doNum += " - " + sellOrder.getDoNumber();
-                }
+//                if (doNum.isEmpty()) {
+//                    doNum = sellOrder.getDoNumber();
+//                } else {
+//                    doNum += " - " + sellOrder.getDoNumber();
+//                }
             }
 //
 //            if (!WeighBridgeApp.getApplication().isOfflineMode()) {
@@ -3276,13 +3276,13 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             } else {
                 if (sellOrders != null) {
                     for (WeightTicketDetail weightTicketDetail : newWeightTicket.getWeightTicketDetails()) {
-                        SellOrder sellOrder = sellOrders.stream()
-                                .filter(t -> t.getDoNumber().equalsIgnoreCase(weightTicketDetail.getDeliveryOrderNo()))
-                                .findFirst().get();
-
-                        if (sellOrder != null) {
-                            weightTicketDetail.setSoNumber(sellOrder.getSoNumber());
-                        }
+//                        SaleOrder sellOrder = sellOrders.stream()
+//                                .filter(t -> t.getDoNumber().equalsIgnoreCase(weightTicketDetail.getDeliveryOrderNo()))
+//                                .findFirst().get();
+//
+//                        if (sellOrder != null) {
+//                            weightTicketDetail.setSoNumber(sellOrder.getSoNumber());
+//                        }
                     }
                 }
             }

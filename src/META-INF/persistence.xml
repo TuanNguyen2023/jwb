@@ -25,7 +25,7 @@
     <class>com.gcs.wb.jpa.entity.MaterialConstraint</class>
     <class>com.gcs.wb.jpa.entity.MaterialGroup</class>
     <class>com.gcs.wb.jpa.entity.Unit</class>
-    <class>com.gcs.wb.jpa.entity.SellOrder</class>
+    <class>com.gcs.wb.jpa.entity.SaleOrder</class>
     <properties>
       <property name="eclipselink.logging.level.sql" value="FINE"/>
       <property name="hibernate.show_sql" value="true"/>

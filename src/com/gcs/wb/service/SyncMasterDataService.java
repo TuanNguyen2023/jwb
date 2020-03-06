@@ -15,6 +15,7 @@ import com.gcs.wb.jpa.repositorys.BatchStockRepository;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
 import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
 import com.gcs.wb.jpa.repositorys.SLocRepository;
+import com.gcs.wb.jpa.repositorys.SaleOrderRepository;
 import com.gcs.wb.jpa.repositorys.VendorRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,7 @@ public class SyncMasterDataService {
     private SLocRepository sLocRepository = new SLocRepository();
     private BatchStockRepository batchStockRepository = new BatchStockRepository();
     private PurchaseOrderRepository purchaseOrderRepository = new PurchaseOrderRepository();
+    private SaleOrderRepository saleOrderRepository = new SaleOrderRepository();
 
     private SAPService sapService = new SAPService();
     private Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
@@ -63,6 +65,9 @@ public class SyncMasterDataService {
 
         logger.info("Sync PO, POSTO...");
         syncPoPostoDatas();
+        
+        logger.info("Sync SO...");
+        syncSoDatas();
 
         logger.info("Sync master data is finished...");
     }
@@ -109,6 +114,11 @@ public class SyncMasterDataService {
         if (!purchaseOrderRepository.hasData()) {
             syncPoPostoDatas();
         }
+        
+        logger.info("Sync SO...");
+        if (!saleOrderRepository.hasData()) {
+            syncSoDatas();
+        }
 
         logger.info("Sync master data is finished...");
     }
@@ -138,7 +148,7 @@ public class SyncMasterDataService {
         sapService.syncPoPostoDatas();
     }
     
-    public void syncListSalesOrder() {
-        sapService.syncListSalesOrder();
+    public void syncSoDatas() {
+        sapService.syncSoDatas();
     }
 }

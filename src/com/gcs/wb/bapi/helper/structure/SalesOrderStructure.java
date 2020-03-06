@@ -24,7 +24,7 @@ public class SalesOrderStructure implements Serializable {
     @Parameter(SyncContractSOGetListConstants.MAKTX)
     private String _maktx;
     @Parameter(SyncContractSOGetListConstants.KWMENG)
-    private String _kwmeng;
+    private BigDecimal _kwmeng;
     @Parameter(SyncContractSOGetListConstants.FREE_QUA)
     private BigDecimal _freeQua;
     @Parameter(SyncContractSOGetListConstants.REC_QUA)
@@ -50,7 +50,7 @@ public class SalesOrderStructure implements Serializable {
         return _maktx;
     }
     
-    public String getKwmeng() {
+    public BigDecimal getKwmeng() {
         return _kwmeng;
     }
     

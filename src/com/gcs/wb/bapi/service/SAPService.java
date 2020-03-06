@@ -38,6 +38,7 @@ import com.gcs.wb.base.converter.MaterialConverter;
 import com.gcs.wb.base.converter.MaterialsV2Converter;
 import com.gcs.wb.base.converter.OutboundDeliveryConverter;
 import com.gcs.wb.base.converter.PurchaseOrderConverter;
+import com.gcs.wb.base.converter.SaleOrderConverter;
 import com.gcs.wb.base.converter.TransportAgentsConverter;
 import com.gcs.wb.base.converter.VendorConverter;
 import com.gcs.wb.base.util.StringUtil;
@@ -50,6 +51,7 @@ import com.gcs.wb.jpa.entity.OutboundDelivery;
 import com.gcs.wb.jpa.entity.PurchaseOrder;
 import com.gcs.wb.jpa.entity.SAPSetting;
 import com.gcs.wb.jpa.entity.SLoc;
+import com.gcs.wb.jpa.entity.SaleOrder;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.TransportAgentVehicle;
 import com.gcs.wb.jpa.entity.Vendor;
@@ -59,6 +61,7 @@ import com.gcs.wb.jpa.repositorys.MaterialRepository;
 import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
 import com.gcs.wb.jpa.repositorys.SAPSettingRepository;
 import com.gcs.wb.jpa.repositorys.SLocRepository;
+import com.gcs.wb.jpa.repositorys.SaleOrderRepository;
 import com.gcs.wb.jpa.repositorys.TransportAgentRepository;
 import com.gcs.wb.jpa.repositorys.TransportAgentVehicleRepository;
 import com.gcs.wb.jpa.repositorys.VendorRepository;
@@ -103,6 +106,7 @@ public class SAPService {
     MaterialRepository materialRepository = new MaterialRepository();
     SAPSettingRepository sapSettingRepository = new SAPSettingRepository();
     PurchaseOrderRepository purchaseOrderRepository = new PurchaseOrderRepository();
+    SaleOrderRepository saleOrderRepository = new SaleOrderRepository();
 
     AppConfig config = WeighBridgeApp.getApplication().getConfig();
     Configuration configuration = config.getConfiguration();
@@ -816,17 +820,15 @@ public class SAPService {
         });
     }
 
-    public List<Object> syncListSalesOrder() {
+    public List<SaleOrder> getListSalesOrder() {
         try {
-            SyncContractSOGetListBapi syncContractSOGetListBapi = new SyncContractSOGetListBapi();
-            Date dateF = null;
-            Date dateT = new Date();
-
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(new Date());
-            calendar.add(Calendar.DATE, -3);
-            dateF = calendar.getTime();
+            calendar.add(Calendar.DATE, -1);
+            Date dateF = calendar.getTime();
+            Date dateT = new Date();
 
+            SyncContractSOGetListBapi syncContractSOGetListBapi = new SyncContractSOGetListBapi();
             syncContractSOGetListBapi.setIvDateF(dateF);
             syncContractSOGetListBapi.setIvDateT(dateT);
             syncContractSOGetListBapi.setIvOption("WB");
@@ -834,10 +836,42 @@ public class SAPService {
 
             List<SalesOrderStructure> listSO = syncContractSOGetListBapi.getListSalesOrder();
 
+            SaleOrderConverter saleOrderConverter = new SaleOrderConverter();
+            return listSO.stream()
+                    .map(t -> saleOrderConverter.convert(t))
+                    .collect(Collectors.toCollection(ArrayList::new));
         } catch (Exception ex) {
             System.out.println("SyncContractSOGetListBapi đang lỗi!");
         }
 
         return null;
+    }
+
+    public void syncSoDatas() {
+        List<SaleOrder> saleOrders = getListSalesOrder();
+
+        saleOrders.forEach(sapSaleOrder -> {
+            try {
+                SaleOrder saleOrder = saleOrderRepository.findBySoNumber(sapSaleOrder.getwName());
+
+                if (!entityTransaction.isActive()) {
+                    entityTransaction.begin();
+                }
+
+                if (saleOrder == null) {
+                    sapSaleOrder.setCreatedDate(new Date());
+                    entityManager.persist(sapSaleOrder);
+                } else {
+                    sapSaleOrder.setId(saleOrder.getId());
+                    sapSaleOrder.setUpdatedDate(new Date());
+                    entityManager.merge(sapSaleOrder);
+                }
+
+                entityTransaction.commit();
+                entityManager.clear();
+            } catch (Exception ex) {
+                Logger.getLogger(SAPService.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
     }
 }
