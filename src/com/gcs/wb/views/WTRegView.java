@@ -3520,7 +3520,12 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         protected void succeeded(Object t) {
             isValidPO = true;
             txtWeightN.setText(totalWeight.toString());
-            cbxMaterialTypeN.setSelectedItem(weightTicketRegistarationController.getMaterial(strMatnr));
+            Material temp = weightTicketRegistarationController.getMaterial(strMatnr);
+            if(temp == null) {
+                sapService.syncMaterial();
+                temp = weightTicketRegistarationController.getMaterial(strMatnr);
+            }
+            cbxMaterialTypeN.setSelectedItem(temp);
             loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
             loadBatchStockModel(cbxSloc2N, cbxBatchStock2N, false);
 
