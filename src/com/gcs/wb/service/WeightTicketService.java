@@ -317,7 +317,7 @@ public class WeightTicketService {
         }
         String plateCombine = wt.getPlateNo();
         if (wt.getTrailerId() != null && !wt.getTrailerId().trim().isEmpty()) {
-            plateCombine += wt.getTrailerId();
+            plateCombine += "|" + wt.getTrailerId();
         }
 
         GoodsMvtDoCreateBapi bapi = new GoodsMvtDoCreateBapi();
@@ -414,7 +414,7 @@ public class WeightTicketService {
     public Object getGrPoMigoBapi(WeightTicket wt, WeightTicket weightTicket, PurchaseOrder purchaseOrder, int timeFrom, int timeTo) {
         String plateCombine = wt.getPlateNo();
         if (wt.getTrailerId() != null && !wt.getTrailerId().trim().isEmpty()) {
-            plateCombine += wt.getTrailerId();
+            plateCombine += "|" + wt.getTrailerId();
         }
         GoodsMvtPoCreateBapi bapi = new GoodsMvtPoCreateBapi();
         GoodsMvtHeaderStructure header = new GoodsMvtHeaderStructure();
@@ -522,7 +522,7 @@ public class WeightTicketService {
         String headertxt;
         String plateCombine = wt.getPlateNo();
         if (wt.getTrailerId() != null && !wt.getTrailerId().trim().isEmpty()) {
-            plateCombine += wt.getTrailerId();
+            plateCombine += "|" + wt.getTrailerId();
         }
         GoodsMvtPoCreateBapi bapi = new GoodsMvtPoCreateBapi(new GoodsMvtCodeStructure("04"));
         GoodsMvtHeaderStructure header = new GoodsMvtHeaderStructure();
