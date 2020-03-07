@@ -47,6 +47,9 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
     public TransportAgentView() {
         initComponents();
 
+        dpValidFrom.setFormats(Constants.Date.FORMAT);
+        dpValidTo.setFormats(Constants.Date.FORMAT);
+
         lstTransportAgent.setCellRenderer(new DefaultListCellRenderer() {
 
             @Override
@@ -424,16 +427,13 @@ private void txtLicensePlateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRS
                 btnVehicleSave.setEnabled(true);
             }
         } catch (IllegalArgumentException ex) {
-            if (dpValidFrom.getDate() == null) {
-                lblValidFrom.setForeground(Color.black);
-            } else {
+            lblValidFrom.setForeground(dpValidFrom.getDate() != null ? Color.black : Color.red);
+            lblValidTo.setForeground(dpValidTo.getDate() != null ? Color.black : Color.red);
+            if (dpValidFrom.getDate() != null && dpValidTo.getDate() != null) {
                 lblValidFrom.setForeground(Color.red);
-            }
-            if (dpValidTo.getDate() == null) {
-                lblValidTo.setForeground(Color.black);
-            } else {
                 lblValidTo.setForeground(Color.red);
             }
+
             btnVehicleSave.setEnabled(false);
         }
     }

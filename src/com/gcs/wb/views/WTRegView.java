@@ -1913,6 +1913,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
     private void prepareEditableForm(MODE_DETAIL modeDetail) {
         cleanData();
+        initComboboxModel();
 
         lblPONumN.setText(resourceMapMsg.getString("lblPONumN.text"));
         lblPOSTONumN.setText(resourceMapMsg.getString("lblPOSTONumN.text"));
