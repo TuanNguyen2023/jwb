@@ -16,6 +16,7 @@ import com.gcs.wb.base.validator.DateFromToValidator;
 import com.gcs.wb.controller.TransportAgentController;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.Vehicle;
+import com.gcs.wb.jpa.entity.VehicleType;
 import java.awt.Color;
 import java.awt.Component;
 import java.util.Calendar;
@@ -45,6 +46,37 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
      */
     public TransportAgentView() {
         initComponents();
+
+        lstTransportAgent.setCellRenderer(new DefaultListCellRenderer() {
+
+            @Override
+            public Component getListCellRendererComponent(
+                    JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof TransportAgent) {
+                    TransportAgent mod = (TransportAgent) value;
+                    setText(mod.getAbbr() + " - " + mod.getName());
+                }
+                return this;
+            }
+        });
+
+        cbxVehicleType.setRenderer(new DefaultListCellRenderer() {
+
+            @Override
+            public Component getListCellRendererComponent(
+                    JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof VehicleType) {
+                    VehicleType mod = (VehicleType) value;
+                    setText(mod.getName());
+                }
+                return this;
+            }
+        });
+
+        cbxVehicleType.setModel(transportAgentController.getVehicleTypesModel());
+        cbxVehicleType.setSelectedIndex(-1);
     }
 
     /**
@@ -71,6 +103,8 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
         lblValidTo = new javax.swing.JLabel();
         dpValidFrom = new org.jdesktop.swingx.JXDatePicker();
         dpValidTo = new org.jdesktop.swingx.JXDatePicker();
+        lblVehicleType = new javax.swing.JLabel();
+        cbxVehicleType = new javax.swing.JComboBox();
 
         setClosable(true);
         setMaximizable(true);
@@ -112,14 +146,14 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
             pnTransportAgentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnTransportAgentLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(spnTransportAgent, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
+                .addComponent(spnTransportAgent, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
                 .addContainerGap())
         );
         pnTransportAgentLayout.setVerticalGroup(
             pnTransportAgentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnTransportAgentLayout.createSequentialGroup()
                 .addComponent(spnTransportAgent, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(192, Short.MAX_VALUE))
+                .addContainerGap(197, Short.MAX_VALUE))
         );
 
         pnVehicle.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("pnVehicle.border.title"))); // NOI18N
@@ -194,6 +228,7 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
         lblValidTo.setName("lblValidTo"); // NOI18N
 
         dpValidFrom.setDate(null);
+        dpValidFrom.setEnabled(false);
         dpValidFrom.setName("dpValidFrom"); // NOI18N
         dpValidFrom.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
@@ -202,12 +237,19 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
         });
 
         dpValidTo.setDate(null);
+        dpValidTo.setEnabled(false);
         dpValidTo.setName("dpValidTo"); // NOI18N
         dpValidTo.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 dpValidToPropertyChange(evt);
             }
         });
+
+        lblVehicleType.setText(resourceMap.getString("lblVehicleType.text")); // NOI18N
+        lblVehicleType.setName("lblVehicleType"); // NOI18N
+
+        cbxVehicleType.setEnabled(false);
+        cbxVehicleType.setName("cbxVehicleType"); // NOI18N
 
         javax.swing.GroupLayout pnVehicleLayout = new javax.swing.GroupLayout(pnVehicle);
         pnVehicle.setLayout(pnVehicleLayout);
@@ -216,44 +258,50 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
             .addGroup(pnVehicleLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(spnVehicle, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnVehicleLayout.createSequentialGroup()
-                        .addComponent(btnVehicleRemove)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 143, Short.MAX_VALUE)
-                        .addComponent(btnVehicleSave))
+                    .addComponent(spnVehicle, javax.swing.GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE)
                     .addComponent(lblLicensePlate)
                     .addGroup(pnVehicleLayout.createSequentialGroup()
+                        .addComponent(btnVehicleRemove)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 145, Short.MAX_VALUE)
+                        .addComponent(btnVehicleSave))
+                    .addGroup(pnVehicleLayout.createSequentialGroup()
                         .addGroup(pnVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblVehicleType)
                             .addComponent(lblValidFrom)
                             .addComponent(lblValidTo))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(pnVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtLicensePlate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE)
-                            .addComponent(dpValidTo, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE)
-                            .addComponent(dpValidFrom, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE))))
+                            .addComponent(txtLicensePlate, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
+                            .addComponent(cbxVehicleType, 0, 190, Short.MAX_VALUE)
+                            .addComponent(dpValidFrom, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
+                            .addComponent(dpValidTo, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         pnVehicleLayout.setVerticalGroup(
             pnVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnVehicleLayout.createSequentialGroup()
-                .addComponent(spnVehicle, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
+                .addComponent(spnVehicle, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(pnVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblLicensePlate)
                     .addComponent(txtLicensePlate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblVehicleType)
+                    .addComponent(cbxVehicleType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(dpValidFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblValidFrom))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(pnVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(dpValidTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblValidTo))
                 .addGap(18, 18, 18)
                 .addGroup(pnVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblValidFrom)
-                    .addComponent(dpValidFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(pnVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblValidTo)
-                    .addComponent(dpValidTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(pnVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnVehicleSave)
-                    .addComponent(btnVehicleRemove))
-                .addGap(21, 21, 21))
+                    .addComponent(btnVehicleRemove)
+                    .addComponent(btnVehicleSave))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -269,12 +317,12 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(pnTransportAgent, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pnVehicle, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         bindingGroup.bind();
@@ -294,6 +342,10 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
             vehicleSelected = null;
             lstVehicle.clearSelection();
             lstVehicle.setModel(getVehiclesModel());
+
+            cbxVehicleType.setEnabled(true);
+            dpValidFrom.setEnabled(true);
+            dpValidTo.setEnabled(true);
         }
     }//GEN-LAST:event_lstTransportAgentValueChanged
 
@@ -304,7 +356,11 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
             txtLicensePlate.setText(vehicleSelected.getPlateNo());
             txtLicensePlate.setEditable(false);
             txtLicensePlate.setEnabled(false);
+            cbxVehicleType.setEnabled(true);
+            cbxVehicleType.setSelectedItem(vehicleSelected.getVehicleType());
+            dpValidFrom.setEnabled(true);
             dpValidFrom.setDate(vehicleSelected.getValidFrom());
+            dpValidTo.setEnabled(true);
             dpValidTo.setDate(vehicleSelected.getValidTo());
         }
     }//GEN-LAST:event_lstVehicleValueChanged
@@ -406,7 +462,8 @@ private void txtLicensePlateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRS
     public void saveVehicle() {
 
         //save vehicle
-        transportAgentController.saveVehicle(txtLicensePlate.getText().trim(), transportAgentSelected, dpValidFrom.getDate(), dpValidTo.getDate());
+        VehicleType vehicleType = (VehicleType) cbxVehicleType.getSelectedItem();
+        transportAgentController.saveVehicle(txtLicensePlate.getText().trim(), transportAgentSelected, dpValidFrom.getDate(), dpValidTo.getDate(), vehicleType);
         setVehicleCreatable(false);
         vehicleSelected = null;
         txtLicensePlate.setText("");
@@ -416,6 +473,8 @@ private void txtLicensePlateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRS
         dpValidTo.setBackground(Color.black);
         lstVehicle.clearSelection();
         lstVehicle.setModel(getVehiclesModel());
+        txtLicensePlate.setEditable(true);
+        cbxVehicleType.setSelectedIndex(-1);
     }
 
     // <editor-fold defaultstate="collapsed" desc="Form's Properties">
@@ -432,11 +491,13 @@ private void txtLicensePlateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRS
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnVehicleRemove;
     private javax.swing.JButton btnVehicleSave;
+    private javax.swing.JComboBox cbxVehicleType;
     private org.jdesktop.swingx.JXDatePicker dpValidFrom;
     private org.jdesktop.swingx.JXDatePicker dpValidTo;
     private javax.swing.JLabel lblLicensePlate;
     private javax.swing.JLabel lblValidFrom;
     private javax.swing.JLabel lblValidTo;
+    private javax.swing.JLabel lblVehicleType;
     private javax.swing.JList lstTransportAgent;
     private javax.swing.JList lstVehicle;
     private javax.swing.JPanel pnTransportAgent;

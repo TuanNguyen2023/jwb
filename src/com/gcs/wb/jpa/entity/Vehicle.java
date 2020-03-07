@@ -12,6 +12,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -45,6 +47,10 @@ public class Vehicle implements Serializable {
     private Date createdDate;
     @Column(name = "updated_date")
     private Date updatedDate;
+
+    @ManyToOne
+    @JoinColumn(name = "vehicle_type_id")
+    private VehicleType vehicleType;
 
     public Vehicle() {
     }
@@ -126,6 +132,14 @@ public class Vehicle implements Serializable {
 
         Date dateNow = new Date(calendar.getTime().getTime());
         return !(dateNow.compareTo(this.validTo) <= 0 && dateNow.compareTo(this.validFrom) >= 0);
+    }
+
+    public VehicleType getVehicleType() {
+        return vehicleType;
+    }
+
+    public void setVehicleType(VehicleType vehicleType) {
+        this.vehicleType = vehicleType;
     }
 
     @Override

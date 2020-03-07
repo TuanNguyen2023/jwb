@@ -44,6 +44,7 @@ public class WeighBridgeView extends FrameView {
         initComponents();
         login = WeighBridgeApp.getApplication().getLogin();
         weighBridgeController.setStatus(login, txt_status);
+        lblOffline.setVisible(WeighBridgeApp.getApplication().isOfflineMode());
         
         app.getMainFrame().setSize(800, 600);
         this.getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -155,6 +156,7 @@ public class WeighBridgeView extends FrameView {
         statusAnimationLabel = new javax.swing.JLabel();
         progressBar = new javax.swing.JProgressBar();
         txt_status = new javax.swing.JLabel();
+        lblOffline = new javax.swing.JLabel();
 
         mainPanel.setName("mainPanel"); // NOI18N
 
@@ -275,7 +277,7 @@ public class WeighBridgeView extends FrameView {
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
+            .addComponent(scrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 413, Short.MAX_VALUE)
         );
 
         menuBar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -346,30 +348,36 @@ public class WeighBridgeView extends FrameView {
         txt_status.setText(resourceMap.getString("txt_status.text")); // NOI18N
         txt_status.setName("txt_status"); // NOI18N
 
+        lblOffline.setFont(resourceMap.getFont("lblOffline.font")); // NOI18N
+        lblOffline.setForeground(resourceMap.getColor("lblOffline.foreground")); // NOI18N
+        lblOffline.setText(resourceMap.getString("lblOffline.text")); // NOI18N
+        lblOffline.setName("lblOffline"); // NOI18N
+
         javax.swing.GroupLayout statusPanelLayout = new javax.swing.GroupLayout(statusPanel);
         statusPanel.setLayout(statusPanelLayout);
         statusPanelLayout.setHorizontalGroup(
             statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(statusPanelLayout.createSequentialGroup()
-                .addGap(164, 164, 164)
-                .addGroup(statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(statusPanelSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, 476, Short.MAX_VALUE)
-                    .addGroup(statusPanelLayout.createSequentialGroup()
-                        .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())))
-            .addGroup(statusPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(txt_status, javax.swing.GroupLayout.PREFERRED_SIZE, 463, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(479, 479, 479)
                 .addComponent(statusMessageLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 151, Short.MAX_VALUE)
                 .addComponent(statusAnimationLabel)
                 .addContainerGap())
+            .addGroup(statusPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(txt_status)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblOffline)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 252, Short.MAX_VALUE)
+                .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addComponent(statusPanelSeparator, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 640, Short.MAX_VALUE)
         );
         statusPanelLayout.setVerticalGroup(
             statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(statusPanelLayout.createSequentialGroup()
-                .addComponent(statusPanelSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(statusPanelSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(statusPanelLayout.createSequentialGroup()
@@ -378,7 +386,9 @@ public class WeighBridgeView extends FrameView {
                         .addGroup(statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(statusMessageLabel)
                             .addComponent(statusAnimationLabel)))
-                    .addComponent(txt_status))
+                    .addGroup(statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txt_status)
+                        .addComponent(lblOffline)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -667,6 +677,7 @@ public class WeighBridgeView extends FrameView {
     javax.swing.JDesktopPane dpWTList;
     javax.swing.JSeparator jSeparator1;
     javax.swing.JToolBar jToolBar1;
+    javax.swing.JLabel lblOffline;
     javax.swing.JPanel mainPanel;
     javax.swing.JMenuBar menuBar;
     javax.swing.JMenuItem miConfig;

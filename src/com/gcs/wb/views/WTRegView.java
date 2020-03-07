@@ -1914,6 +1914,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     private void prepareEditableForm(MODE_DETAIL modeDetail) {
         cleanData();
 
+        lblPONumN.setText(resourceMapMsg.getString("lblPONumN.text"));
+        lblPOSTONumN.setText(resourceMapMsg.getString("lblPOSTONumN.text"));
+        lblSlocN.setText(resourceMapMsg.getString("lblSlocN.text"));
+        lblBatchStockN.setText(resourceMapMsg.getString("lblBatchStockN.text"));
+
         switch (modeDetail) {
             case IN_PO_PURCHASE:
                 prepareInPOPurchaseMode();
@@ -2139,6 +2144,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     }
 
     private void prepareOutSlocSloc() {
+        lblPONumN.setText(resourceMapMsg.getString("lblPoTrans"));
+        lblPOSTONumN.setText(resourceMapMsg.getString("lblPostoLoad"));
+        lblSlocN.setText(resourceMapMsg.getString("lblSlocOut"));
+        lblBatchStockN.setText(resourceMapMsg.getString("lblBatchStockOut"));
+
         showComponent(txtTicketIdN, lblTicketIdN, true, true);
         showComponent(txtWeightTickerRefN, lblWeightTickerRefN, false, false);
         showComponent(txtRegisterIdN, lblRegisterIdN, true, true);
@@ -2173,6 +2183,9 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     }
 
     private void prepareOutPullStation() {
+        lblPONumN.setText(resourceMapMsg.getString("lblPoOut"));
+        lblPOSTONumN.setText(resourceMapMsg.getString("lblPostoIn"));
+
         showComponent(txtTicketIdN, lblTicketIdN, true, true);
         showComponent(txtWeightTickerRefN, lblWeightTickerRefN, false, false);
         showComponent(txtRegisterIdN, lblRegisterIdN, true, true);
@@ -2254,7 +2267,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 isValid = validateOutPlantPlant() && isValidPO && isValidVendorLoad && isValidVendorTransport;
                 break;
             case OUT_SLOC_SLOC:
-                isValid = validateOutSlocSloc() && isValidPO;
+                isValid = validateOutSlocSloc() && isValidPO && isValidPOSTO && isValidVendorTransport;
                 break;
             case OUT_PULL_STATION:
                 isValid = validateOutPullStation() && isValidPO && isValidVendorLoad && isValidVendorTransport;
@@ -2492,7 +2505,9 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
         boolean isPOSTOValid = wtRegisValidation.validatePO(txtPOSTONumN.getText(), lblPOSTONumN);
         btnPOSTOCheckN.setEnabled(isPOSTOValid);
-        lblPOSTONumN.setForeground(Color.black);
+        if (!isValidPOSTO) {
+            lblPOSTONumN.setForeground(Color.red);
+        }
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
         boolean isSloc2Valid = wtRegisValidation.validateCbxSelected(cbxSloc2N.getSelectedIndex(), lblSloc2N);
@@ -2539,11 +2554,12 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         btnPOSTOCheckN.setEnabled(isPOSTOValid);
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
+        boolean isVendorTransValid = wtRegisValidation.validateCbxSelected(cbxVendorTransportN.getSelectedIndex(), lblVendorTransportN);
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
                 && isCMNDBLValid && isPlateNoValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
-                && isNoteValid && isSlocValid;
+                && isNoteValid && isSlocValid && isVendorTransValid;
     }
 
     private boolean validateOutSellWateway() {

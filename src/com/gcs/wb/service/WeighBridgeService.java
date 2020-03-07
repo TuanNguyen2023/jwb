@@ -21,7 +21,7 @@ public class WeighBridgeService {
     
     public void setStatus(User login,JLabel txt_status){
         if (WeighBridgeApp.getApplication().isOfflineMode()) {
-            txt_status.setText(sapSetting.getName1() + " - User: " + login.getFullname() + " - Offline Mode");
+            txt_status.setText(sapSetting.getName1() + " - User: " + login.getFullname() + " -");
         } else {
             txt_status.setText(sapSetting.getName1() + " - User: " + login.getFullname());
         }

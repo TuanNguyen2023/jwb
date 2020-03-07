@@ -10,6 +10,7 @@ import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.TransportAgentVehicle;
 import com.gcs.wb.jpa.entity.Vehicle;
+import com.gcs.wb.jpa.entity.VehicleType;
 import com.gcs.wb.jpa.repositorys.TransportAgentVehicleRepository;
 import com.gcs.wb.jpa.repositorys.VehicleRepository;
 import com.gcs.wb.views.TransportAgentView;
@@ -61,7 +62,7 @@ public class TransportAgentService {
      * @param licensePlate
      * @param transportAgentSelected
      */
-    public void saveVehicle(String licensePlate, TransportAgent transportAgentSelected, Date validFrom, Date validTo) {
+    public void saveVehicle(String licensePlate, TransportAgent transportAgentSelected, Date validFrom, Date validTo, VehicleType vehicleType) {
         Vehicle vehicle = vehicleRepository.findByPlateNo(licensePlate);
 
         TransportAgentVehicle transportAgentVehicle = new TransportAgentVehicle();
@@ -76,6 +77,7 @@ public class TransportAgentService {
             //vehicle.setProhibit(false);
             vehicle.setValidFrom(new java.sql.Date(validFrom.getTime()));
             vehicle.setValidTo(new java.sql.Date(validTo.getTime()));
+            vehicle.setVehicleType(vehicleType);
             entityManager.persist(vehicle);
 
             // insert vehicle relationship
@@ -89,6 +91,7 @@ public class TransportAgentService {
                 if (transportAgentVehicle.getVehicle().getPlateNo() != null && !transportAgentVehicle.getVehicle().getPlateNo().isEmpty()) {
                     transportAgentVehicle.getVehicle().setValidFrom(new java.sql.Date(validFrom.getTime()));
                     transportAgentVehicle.getVehicle().setValidTo(new java.sql.Date(validTo.getTime()));
+                    vehicle.setVehicleType(vehicleType);
                 } else {
                     JOptionPane.showMessageDialog(mainFrame,
                             resourceMapMsg.getString("msg.duplicationPlateNo",
@@ -100,6 +103,7 @@ public class TransportAgentService {
                 // insert vehicle relationship
                 transportAgentVehicle = new TransportAgentVehicle();
                 transportAgentVehicle.setTransportAgent(transportAgentSelected);
+                vehicle.setVehicleType(vehicleType);
                 vehicle.setValidFrom(new java.sql.Date(validFrom.getTime()));
                 vehicle.setValidTo(new java.sql.Date(validTo.getTime()));
                 transportAgentVehicle.setVehicle(vehicle);
@@ -137,7 +141,7 @@ public class TransportAgentService {
             entityManager.clear();
         }
     }
-    
+
     public Vehicle findByPlateNo(String plateNo) {
         return vehicleRepository.findByPlateNo(plateNo);
     }

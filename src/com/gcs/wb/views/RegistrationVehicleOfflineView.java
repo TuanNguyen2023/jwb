@@ -1917,6 +1917,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     private void prepareEditableForm(MODE_DETAIL modeDetail) {
         cleanData();
 
+        lblPONumN.setText(resourceMapMsg.getString("lblPONumN.text"));
+        lblPOSTONumN.setText(resourceMapMsg.getString("lblPOSTONumN.text"));
+        lblSlocN.setText(resourceMapMsg.getString("lblSlocN.text"));
+        lblBatchStockN.setText(resourceMapMsg.getString("lblBatchStockN.text"));
+
         switch (modeDetail) {
             case IN_PO_PURCHASE:
                 prepareInPOPurchaseMode();
@@ -2151,6 +2156,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     }
 
     private void prepareOutSlocSloc() {
+        lblPONumN.setText(resourceMapMsg.getString("lblPoTrans"));
+        lblPOSTONumN.setText(resourceMapMsg.getString("lblPostoLoad"));
+        lblSlocN.setText(resourceMapMsg.getString("lblSlocOut"));
+        lblBatchStockN.setText(resourceMapMsg.getString("lblBatchStockOut"));
+
         showComponent(txtTicketIdN, lblTicketIdN, true, true);
         showComponent(txtWeightTickerRefN, lblWeightTickerRefN, false, false);
         showComponent(txtRegisterIdN, lblRegisterIdN, true, true);
@@ -2185,6 +2195,9 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     }
 
     private void prepareOutPullStation() {
+        lblPONumN.setText(resourceMapMsg.getString("lblPoOut"));
+        lblPOSTONumN.setText(resourceMapMsg.getString("lblPostoIn"));
+
         showComponent(txtTicketIdN, lblTicketIdN, true, true);
         showComponent(txtWeightTickerRefN, lblWeightTickerRefN, false, false);
         showComponent(txtRegisterIdN, lblRegisterIdN, true, true);
