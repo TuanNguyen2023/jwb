@@ -57,6 +57,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
     public ResourceMap resourceMapMsg = Application.getInstance(WeighBridgeApp.class).getContext().getResourceMap(WTRegView.class);
     private static final Logger logger = Logger.getLogger(WTRegView.class);
     private final List<WeightTicket> weightTicketList;
+    private boolean isEditMode = false;
     private boolean isValidDO = false;
     private boolean isValidPO = false;
     private boolean isValidPOSTO = false;
@@ -1737,7 +1738,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         }
 
         @Override
-        protected Object doInBackground() {
+        protected Object doInBackground() throws Exception {
             String[] val = txtSONumN.getText().trim().split("-");
             String bsXe = txtPlateNoN.getText().trim();
             DOCheckStructure doNumber = new DOCheckStructure();
@@ -1757,8 +1758,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                             String msg = "SO " + doNumber.getVbelnSO() + " sai, vui lòng nhập lại!";
                             txtDONumN.setText(null);
                             setMessage(msg);
-                            JOptionPane.showMessageDialog(rootPane, msg);
-                            return null;
+                            throw new Exception(msg);
                         } else {
                             if (doNum.isEmpty()) {
                                 doNum = doNumber.getVbelnDO();
@@ -1778,6 +1778,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         protected void failed(Throwable cause) {
             isValidSO = false;
 
+            validateForm();
+
             if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
                 cause = cause.getCause();
             }
@@ -1786,9 +1788,9 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         }
 
         @Override
-        protected void finished() {
+        protected void succeeded(Object t) {
             isValidSO = true;
-            btnDOCheckN.setEnabled(true);
+            validateForm();
         }
     }
 
@@ -1802,6 +1804,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         btnSave.setEnabled(false);
 
         // TODO new ui
+        isEditMode = false;
         rbtInput.setEnabled(true);
         rbtOutput.setEnabled(true);
         cbxModeType.setEnabled(true);
@@ -2216,7 +2219,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         showComponent(txtProductionBatchN, lblProductionBatchN, true, true);
         showComponent(txtNoteN, lblNoteN, true, true);
         showComponent(txtDONumN, lblDONumN, btnDOCheckN, true, false);
-        showComponent(txtSONumN, lblSONumN, btnSOCheckN, true, !WeighBridgeApp.getApplication().isOfflineMode());
+        showComponent(txtSONumN, lblSONumN, btnSOCheckN, true, true);
         showComponent(txtPONumN, lblPONumN, btnPOCheckN, false, false);
         showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, false, false);
         showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, false);
@@ -2332,6 +2335,16 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
+        if (isEditMode) {
+            boolean isSOValid = wtRegisValidation.validateDO(txtSONumN.getText(), lblSONumN);
+            btnSOCheckN.setEnabled(isSOValid);
+            if (!isValidSO) {
+                lblSONumN.setForeground(Color.red);
+            } else {
+                btnDOCheckN.setEnabled(true);
+            }
+        }
+
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
                 && isCMNDBLValid && isPlateNoValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
@@ -2389,6 +2402,16 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         }
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
+
+        if (isEditMode) {
+            boolean isSOValid = wtRegisValidation.validateDO(txtSONumN.getText(), lblSONumN);
+            btnSOCheckN.setEnabled(isSOValid);
+            if (!isValidSO) {
+                lblSONumN.setForeground(Color.red);
+            } else {
+                btnDOCheckN.setEnabled(true);
+            }
+        }
 
         return isRegisterIdValid && isDriverNameValid && isCMNDBLValid && isPlateNoValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
@@ -2539,19 +2562,12 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
 
-        if (!WeighBridgeApp.getApplication().isOfflineMode()) {
-            boolean isSOValid = wtRegisValidation.validateDO(txtSONumN.getText(), lblSONumN);
-            btnSOCheckN.setEnabled(isSOValid);
-            if (!isValidSO) {
-                lblSONumN.setForeground(Color.red);
-            } else {
-                btnDOCheckN.setEnabled(true);
-            }
+        boolean isSOValid = wtRegisValidation.validateDO(txtSONumN.getText(), lblSONumN);
+        btnSOCheckN.setEnabled(isSOValid);
+        if (!isValidSO) {
+            lblSONumN.setForeground(Color.red);
         } else {
-            isValidSO = true;
-            isValidDO = true;
-            lblSONumN.setForeground(Color.black);
-            lblDONumN.setForeground(Color.black);
+            btnDOCheckN.setEnabled(true);
         }
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
@@ -3025,13 +3041,18 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             formatter.applyPattern("HH:mm:ss");
             String createdTime = formatter.format(now);
 
-            newWeightTicket.setId(getAutoGeneratedId(seqBMonth));
-            newWeightTicket.setMandt(configuration.getSapClient());
-            newWeightTicket.setWplant(configuration.getWkPlant());
-            newWeightTicket.setSeqDay(seqBDay);
-            newWeightTicket.setSeqMonth(seqBMonth);
-            newWeightTicket.setCreatedTime(createdTime);
-            newWeightTicket.setCreatedDate(now);
+            if (!isEditMode) {
+                newWeightTicket.setId(getAutoGeneratedId(seqBMonth));
+                newWeightTicket.setMandt(configuration.getSapClient());
+                newWeightTicket.setWplant(configuration.getWkPlant());
+                newWeightTicket.setSeqDay(seqBDay);
+                newWeightTicket.setSeqMonth(seqBMonth);
+                newWeightTicket.setCreatedTime(createdTime);
+                newWeightTicket.setCreatedDate(now);
+            } else {
+                newWeightTicket.setUpdatedDate(now);
+            }
+
             newWeightTicket.setCreator(WeighBridgeApp.getApplication().getLogin().getUid());
             newWeightTicket.setOfflineMode(WeighBridgeApp.getApplication().isOfflineMode());
             newWeightTicket.setWbId(configuration.getWbId());
@@ -3086,7 +3107,13 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 if (!entityTransaction.isActive()) {
                     entityTransaction.begin();
                 }
-                entityManager.persist(newWeightTicket);
+
+                if (!isEditMode) {
+                    entityManager.persist(newWeightTicket);
+                } else {
+                    entityManager.merge(newWeightTicket);
+                }
+
                 entityTransaction.commit();
                 entityManager.clear();
             } catch (Exception ex) {
@@ -3521,7 +3548,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             isValidPO = true;
             txtWeightN.setText(totalWeight.toString());
             Material temp = weightTicketRegistarationController.getMaterial(strMatnr);
-            if(temp == null) {
+            if (temp == null) {
                 sapService.syncMaterial();
                 temp = weightTicketRegistarationController.getMaterial(strMatnr);
             }
@@ -3768,6 +3795,15 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             modeDetail = MODE_DETAIL.valueOf(selectedWeightTicket.getMode());
             cbxModeType.setSelectedItem(new WeighingMode(modeDetail, null));
 
+            rbtInput.setEnabled(false);
+            rbtOutput.setEnabled(false);
+            cbxModeType.setEnabled(false);
+
+            if (modeDetail == MODE_DETAIL.IN_WAREHOUSE_TRANSFER || modeDetail == MODE_DETAIL.OUT_SELL_ROAD) {
+                showComponent(txtDONumN, lblDONumN, btnDOCheckN, true, false);
+                showComponent(txtSONumN, lblSONumN, btnSOCheckN, true, true);
+            }
+
             newWeightTicket = selectedWeightTicket;
             WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
 
@@ -3799,12 +3835,13 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             cbxVendorLoadingN.setSelectedItem(new Vendor(weightTicketDetail.getLoadVendor()));
             cbxVendorTransportN.setSelectedItem(new Vendor(weightTicketDetail.getTransVendor()));
 
-            validateForm();
             return null;  // return your result
         }
 
         @Override
         protected void succeeded(Object result) {
+            isEditMode = true;
+            validateForm();
         }
     }
 

@@ -699,7 +699,7 @@ public class SAPService {
         //soCheck.setVbeln(soNumber);
         bapi.setSOCheck(soChecks);
         try {
-            WeighBridgeApp.getApplication().getSAPSession().execute(bapi);
+            session.execute(bapi);
             List<DOCheckStructure> dos = bapi.getDOCheck();
             if (dos != null) {
                 return dos;
