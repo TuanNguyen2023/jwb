@@ -936,8 +936,19 @@ public class WeightTicketService {
 
                     if (outbDel.getFreeQty() != null) {
                         map.put("P_FREE", String.valueOf(outbDel.getFreeQty()));
-                        map.put("P_TOTAL_QTY_REG", String.valueOf(wt.getWeightTicketDetail().getRegItemQuantity().subtract(outbDel.getFreeQty())));        
-                        map.put("P_TOTAL_QTY", String.valueOf(wt.getWeightTicketDetail().getRegItemQuantity()));
+                        // set qty for Ghep ma
+                        BigDecimal totalQtyReg = BigDecimal.ZERO;
+                        BigDecimal totalQty = BigDecimal.ZERO;
+                        for(WeightTicketDetail wtDetail: wt.getWeightTicketDetails()) {
+                            if(outbDel.getDeliveryOrderNo().equals(wtDetail.getDeliveryOrderNo())) {
+                                totalQtyReg = wtDetail.getRegItemQuantity().subtract(outbDel.getFreeQty());
+                                totalQty = wtDetail.getRegItemQuantity();
+                                break;
+                            }
+                        }
+                        
+                        map.put("P_TOTAL_QTY_REG", String.valueOf(totalQtyReg));        
+                        map.put("P_TOTAL_QTY", String.valueOf(totalQty));
                         if (outbDel != null && (outbDel.getLfart().equalsIgnoreCase("LF") || outbDel.getLfart().equalsIgnoreCase("ZTLF") || outbDel.getLfart().equalsIgnoreCase("NL"))) {
                             Double tmp;
                             // Double tmp = ((outbDel.getLfimg().doubleValue() + outbDel.getFreeQty().doubleValue()) * 1000d) / 50d;
