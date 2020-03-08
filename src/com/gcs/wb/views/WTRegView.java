@@ -2875,7 +2875,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 // check mapping Plate No
                 String plateNo = txtPlateNoN.getText().trim();
                 String traid = outboundDelivery.getTraid().trim();
-                if (!traid.isEmpty() && !traid.startsWith(plateNo)) {
+                if ((traid.isEmpty()) || (!traid.isEmpty() && !traid.startsWith(plateNo))) {
                     throw new Exception(resourceMapMsg.getString("msg.plateNoNotMappingWithDO", plateNo));
                 }
 
