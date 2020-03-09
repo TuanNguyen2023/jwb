@@ -3248,15 +3248,24 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     if (WeighBridgeApp.getApplication().isOfflineMode() == false) {
                         if (objBapi != null) {
                             try {
-                                logger.info("[SAP] Get infor before post SAP: " + objBapi.toString());
-                                sapSession.execute(objBapi);
-                                if (objBapi_Po != null) {
-                                    logger.info("[SAP] Get infor before post SAP: " + objBapi_Po.toString());
-                                    sapSession.execute(objBapi_Po);
+                                if(!weightTicket.getMode().equals("OUT_SLOC_SLOC")) {
+                                    logger.info("[SAP] Get infor before post SAP: " + objBapi.toString());
+                                    sapSession.execute(objBapi);
                                 }
-                                if (objBapi_Posto != null) {
-                                    logger.info("[SAP] Get infor before post SAP: " + objBapi_Posto.toString());
-                                    sapSession.execute(objBapi_Posto);
+                                // check chuyen kho noi bo for post lai
+                                if (weightTicket.getMode().equals("OUT_SLOC_SLOC")) {
+                                    if (weightTicketDetail.getMatDoc() == null || weightTicketDetail.getMatDoc().equals("")) {
+                                        logger.info("[SAP] Get infor before post SAP: " + objBapi.toString());
+                                        sapSession.execute(objBapi);
+                                    } else if((objBapi_Po != null) && 
+                                            (weightTicketDetail.getMatDocGr() == null || weightTicketDetail.getMatDocGr().equals(""))) {
+                                        logger.info("[SAP] Get infor before post SAP: " + objBapi_Po.toString());
+                                        sapSession.execute(objBapi_Po);
+                                    } else if ((objBapi_Posto != null)
+                                            && (weightTicketDetail.getMatDocGi() == null || weightTicketDetail.getMatDocGi().equals(""))) {
+                                        logger.info("[SAP] Get infor before post SAP: " + objBapi_Posto.toString());
+                                        sapSession.execute(objBapi_Posto);
+                                    }
                                 }
                                 if (objBapi instanceof DOCreate2PGIBapi) {
                                     weightTicketDetail.setDeliveryOrderNo(((DOCreate2PGIBapi) objBapi).getDelivery());
