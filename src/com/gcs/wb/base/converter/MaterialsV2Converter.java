@@ -28,6 +28,7 @@ public class MaterialsV2Converter extends AbstractThrowableConverter<List<Materi
                 m = new Material(configuration.getSapClient(), mat.getWerks(), mat.getMatnr());
                 m.setMaktx(mat.getMaktx());
                 m.setMaktg(mat.getMaktxLong());
+                m.setLgort(mat.getLgort());
                 toList.add(m);
             }
         }
