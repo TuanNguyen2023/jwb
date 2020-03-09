@@ -3923,23 +3923,22 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     qty = total_qty_goods.doubleValue() + total_qty_free.doubleValue();
                 }
 
-                //add by Tuanna 5/3/2013 for bug can not accept second fart in process GI clinker for DIC 
-                String slfart = "";
-                String sMatName = "";
-                boolean bag = false;
-                boolean btype = false;
-                boolean bCompare = false;
+//                String slfart = "";
+//                String sMatName = "";
+//                boolean bag = false;
+//                boolean btype = false;
+//                boolean bCompare = false;
+//                if (outbDel != null) {
+//                    slfart = outbDel.getLfart();
+//                    sMatName = outbDel.getArktx() != null ? outbDel.getArktx().toUpperCase() : "";
+//                    bag = (outbDel.getArktx() != null && outbDel.getArktx().toUpperCase().indexOf("BAO") >= 0) ? true : false;
+//                    btype = (outbDel.getLfart() != null
+//                            && (outbDel.getLfart().equalsIgnoreCase("LF") || outbDel.getLfart().equalsIgnoreCase("ZTLF"))) ? true : false;
+//
+//                    bCompare = (bag || btype);
+//                }
+//                if (bCompare) // end add
                 if (outbDel != null) {
-                    slfart = outbDel.getLfart();
-                    sMatName = outbDel.getArktx() != null ? outbDel.getArktx().toUpperCase() : "";
-                    bag = (outbDel.getArktx() != null && outbDel.getArktx().toUpperCase().indexOf("BAO") >= 0) ? true : false;
-                    btype = (outbDel.getLfart() != null
-                            && (outbDel.getLfart().equalsIgnoreCase("LF") || outbDel.getLfart().equalsIgnoreCase("ZTLF"))) ? true : false;
-
-                    bCompare = (bag || btype);
-                }
-                if (bCompare) // end add
-                {
                     String param = (outbDel != null && outbDel.getMatnr() != null) ? outbDel.getMatnr().toString() : "";
 
                     if (param.equals("") && purOrder != null) {
@@ -3970,19 +3969,12 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                             weightTicket.setGQty(new BigDecimal(Double.toString(result)));
                         } else {
                             String msg = "Chênh lệch vượt dung sai cho phép!";
-                            // TODO review to remove this message
-//                            try {
-//                                msg = weightTicketController.getMsg();
-//                            } catch (Exception ex) {
-//                                msg = resourceMapMsg.getString("msg.massOrderOutLimit");
-//                            }
-                            JOptionPane.showMessageDialog(rootPane, msg); //variant mesage --> Tuanna
+                            JOptionPane.showMessageDialog(rootPane, msg);
                             txfOutQty.setValue(null);
                             txtOutTime.setText(null);
                             txfGoodsQty.setValue(null);
                             weightTicket.setGQty(null);
                             btnAccept.setEnabled(false);
-                            // Tuanna add 14.01.2013 - Check logic when input value not match require condition  
                             btnOScaleReset.setEnabled(true);
                             return null;
                         }
