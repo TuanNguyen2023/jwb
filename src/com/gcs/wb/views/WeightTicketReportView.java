@@ -25,6 +25,7 @@ import java.util.List;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import com.gcs.wb.base.util.FormatRenderer;
+import com.gcs.wb.base.util.StringUtil;
 import com.gcs.wb.controller.WeightTicketReportController;
 import java.util.ArrayList;
 import java.util.Map;
@@ -84,8 +85,8 @@ public class WeightTicketReportView extends javax.swing.JInternalFrame {
 
         // Init state combobox
         initStatusCombobox();
-
-        FindWeightTicketsTask findWeightTicketsTask = new FindWeightTicketsTask(WeighBridgeApp.getApplication());
+        
+        FindWeightTicketsTask findWeightTicketsTask = new FindWeightTicketsTask(Application.getInstance(WeighBridgeApp.class));
         findWeightTicketsTask.execute();
     }
 
@@ -370,7 +371,7 @@ public class WeightTicketReportView extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(pnFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE)
+                .addComponent(pnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -400,10 +401,13 @@ private void cbxModeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:
 
         FindWeightTicketsTask(Application app) {
             super(app);
+            btnFind.setEnabled(false);
         }
 
         @Override
         protected Object doInBackground() {
+            setStep(1, resourceMapMsg.getString("msg.finding"));
+
             String month = cbxMonth.getSelectedItem().toString();
             String year = cbxYear.getSelectedItem().toString();
             String tAgent = ((TransportAgent) cbxTransportAgent.getSelectedItem()).getAbbr();
@@ -420,14 +424,22 @@ private void cbxModeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:
             return null;  // return your result
         }
 
+        private void setStep(int step, String msg) {
+            if (StringUtil.isNotEmptyString(msg)) {
+                setMessage(msg);
+            }
+            setProgress(step, 1, 2);
+        }
+
         @Override
         protected void failed(Throwable cause) {
         }
 
         @Override
         protected void finished() {
-            setMessage(resourceMapMsg.getString("msg.finished"));
+            setStep(2, resourceMapMsg.getString("msg.finished"));
             WeighBridgeApp.getApplication().bindJTableModel(tabWeightTicket, wtDatas, wtColNames, wtColTypes, editable);
+            btnFind.setEnabled(true);
         }
     }
 
@@ -444,14 +456,37 @@ private void cbxModeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:
 
         @Override
         protected Object doInBackground() {
+            String month = cbxMonth.getSelectedItem().toString();
+            String year = cbxYear.getSelectedItem().toString();
+            String tAgent = ((TransportAgent) cbxTransportAgent.getSelectedItem()).getAbbr();
+            String matnr = ((Material) cbxMaterial.getSelectedItem()).getMatnr();
+
             try {
+                setStep(1, resourceMapMsg.getString("msg.finding"));
+
+                wtDatas = weighTicketReportController.findWeightTickets(wtDatas, month, year, tAgent, matnr, modes, (StatusEnum) cbxStatus.getSelectedItem(), ((TransportAgent) cbxTransportAgent.getSelectedItem()).getName());
+                editable = new boolean[wtColNames.length];
+                for (int i = 0; i < editable.length; i++) {
+                    editable[i] = false;
+                }
+                WeighBridgeApp.getApplication().bindJTableModel(tabWeightTicket, wtDatas, wtColNames, wtColTypes, editable);
+
                 Map<String, Object> params = weighTicketReportController.getParamReport(cbxTransportAgent, cbxMonth, cbxYear);
                 String reportName = weighTicketReportController.getReportName();
                 weighTicketReportController.printReport(params, reportName, new JRTableModelDataSource(tabWeightTicket.getModel()));
+
+                setStep(2, resourceMapMsg.getString("msg.finished"));
             } catch (Exception ex) {
                 failed(ex);
             }
             return null;  // return your result
+        }
+
+        private void setStep(int step, String msg) {
+            if (StringUtil.isNotEmptyString(msg)) {
+                setMessage(msg);
+            }
+            setProgress(step, 1, 2);
         }
 
         @Override
