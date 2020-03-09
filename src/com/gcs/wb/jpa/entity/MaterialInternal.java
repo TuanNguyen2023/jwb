@@ -24,11 +24,9 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tbl_material_internal")
 @NamedQueries({
-    @NamedQuery(name = "MaterialInternal.findAll",
-    query = "SELECT mi FROM MaterialInternal mi"),
-    @NamedQuery(name = "MaterialInternal.findByMatnr",
-    query = "SELECT mi FROM MaterialInternal mi"
-    + " WHERE mi.matnr = :matnr")
+    @NamedQuery(name = "MaterialInternal.findAll", query = "SELECT mi FROM MaterialInternal mi"),
+    @NamedQuery(name = "MaterialInternal.findByMatnr", query = "SELECT mi FROM MaterialInternal mi WHERE mi.matnr = :matnr"),
+    @NamedQuery(name = "MaterialInternal.findByMatnrs", query = "SELECT m FROM MaterialInternal m WHERE m.matnr IN :matnrs")
 })
 public class MaterialInternal implements Serializable {
 
@@ -43,6 +41,8 @@ public class MaterialInternal implements Serializable {
     private String wplant;
     @Column(name = "matnr", unique = true)
     private String matnr;
+    @Column(name = "lgort", unique = true)
+    private String lgort;
     @Column(name = "maktx")
     private String maktx;
     @Column(name = "maktg")
@@ -54,24 +54,24 @@ public class MaterialInternal implements Serializable {
     @Column(name = "updated_date")
     private Date updatedDate;
 
-     public MaterialInternal() {
+    public MaterialInternal() {
     }
 
     public MaterialInternal(int id) {
         this.id = id;
     }
-    
+
     public MaterialInternal(String mandt, String wplant) {
         this.mandt = mandt;
         this.wplant = wplant;
     }
-    
+
     public MaterialInternal(String mandt, String wplant, String matnr) {
         this.mandt = mandt;
         this.wplant = wplant;
         this.matnr = matnr;
-     }
-    
+    }
+
     public int getId() {
         return id;
     }
@@ -102,6 +102,14 @@ public class MaterialInternal implements Serializable {
 
     public void setMatnr(String matnr) {
         this.matnr = matnr;
+    }
+
+    public String getLgort() {
+        return lgort;
+    }
+
+    public void setLgort(String lgort) {
+        this.lgort = lgort;
     }
 
     public String getMaktx() {
@@ -181,6 +189,9 @@ public class MaterialInternal implements Serializable {
         if (!Objects.equals(this.matnr, other.matnr)) {
             return false;
         }
+        if (!Objects.equals(this.lgort, other.lgort)) {
+            return false;
+        }
         return true;
     }
 
@@ -188,6 +199,5 @@ public class MaterialInternal implements Serializable {
     public String toString() {
         return maktx != null ? maktx : maktg;
     }
-    
-    
+
 }

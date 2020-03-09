@@ -6,6 +6,7 @@ package com.gcs.wb.jpa.repositorys;
 
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.SLoc;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -20,13 +21,14 @@ public class SLocRepository {
 
     /**
      * get list "Kho"
-     * @return 
+     *
+     * @return
      */
     public List<SLoc> getListSLoc() {
         TypedQuery<SLoc> typedQuery = entityManager.createNamedQuery("SLoc.findAll", SLoc.class);
         return typedQuery.getResultList();
     }
-    
+
     public SLoc findByLgort(String lgort) {
         TypedQuery<SLoc> typedQuery = entityManager.createNamedQuery("SLoc.findByLgort", SLoc.class);
         typedQuery.setParameter("lgort", lgort);
@@ -37,7 +39,7 @@ public class SLocRepository {
 
         return null;
     }
-    
+
     public boolean hasData(String mandt, String wplant) {
         TypedQuery<SLoc> typedQuery = entityManager.createNamedQuery("SLoc.findByMandtWplant", SLoc.class);
         typedQuery.setParameter("mandt", mandt);
@@ -48,5 +50,15 @@ public class SLocRepository {
         }
 
         return false;
+    }
+
+    public List<SLoc> getListSloc(List<String> lgorts) {
+        if (lgorts == null || lgorts.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        TypedQuery<SLoc> typedQuery = entityManager.createNamedQuery("SLoc.findByLgorts", SLoc.class);
+        typedQuery.setParameter("lgorts", lgorts);
+        return typedQuery.getResultList();
     }
 }
