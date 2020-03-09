@@ -2627,14 +2627,13 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     setValidPONum(true);
                     setSubContract(false);
                     PurchaseOrderDetail purchaseOrderDetail = purOrder.getPurchaseOrderDetail();
-                    txtRegItem.setText(purchaseOrderDetail.getShortText());
+                    txtRegItem.setText(weightTicket.getWeightTicketDetail().getRegItemDescription());
                     if (rbtOutward.isSelected() && purchaseOrderDetail.getItemCat() == '3' //                            && purOrder.getMaterial().equalsIgnoreCase(setting.getMatnrPcb40())
                             ) {
                         setSubContract(true);
                     }
                 }
                 if ((Constants.WeighingProcess.MODE_DETAIL.IN_OTHER.name().equals(weightTicket.getMode()))
-                        || (Constants.WeighingProcess.MODE_DETAIL.OUT_SLOC_SLOC.name().equals(weightTicket.getMode()))
                         || (Constants.WeighingProcess.MODE_DETAIL.OUT_OTHER.name().equals(weightTicket.getMode()))) {
                     MaterialInternal mat = materialInternalRepository.findByMatnr(weightTicket.getRecvMatnr());
                     if (mat != null) {

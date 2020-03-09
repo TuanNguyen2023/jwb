@@ -3641,9 +3641,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             }
             cbxMaterialTypeN.setSelectedItem(temp);
             // load sloc
-            List<String> lgorts = weightTicketRegistarationController.getListLgortByMatnr(temp.getMatnr(), false);
-            loadSLoc(lgorts);
-
+            if(temp != null) {
+                List<String> lgorts = weightTicketRegistarationController.getListLgortByMatnr(temp.getMatnr(), false);
+                loadSLoc(lgorts);
+            }
+            
             // load batch stock
             loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
             loadBatchStockModel(cbxSloc2N, cbxBatchStock2N, false);
