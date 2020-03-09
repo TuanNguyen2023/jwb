@@ -18,6 +18,7 @@ import com.gcs.wb.bapi.outbdlv.structure.OutbDeliveryCreateStoStructure;
 import com.gcs.wb.bapi.outbdlv.structure.VbkokStructure;
 import com.gcs.wb.bapi.outbdlv.structure.VbpokStructure;
 import com.gcs.wb.bapi.service.SAPService;
+import com.gcs.wb.controller.WeightTicketController;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.JReportService;
 import com.gcs.wb.jpa.entity.*;
@@ -59,6 +60,7 @@ public class WeightTicketService {
     Session session = WeighBridgeApp.getApplication().getSAPSession();
     private final Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
     WeightTicketRegistrationService weightTicketRegistrationService = new WeightTicketRegistrationService();
+    WeightTicketController weightTicketController = new WeightTicketController();
 
     public DefaultComboBoxModel getCustomerByMaNdt() {
         List<Customer> customers = this.customerRepository.getListCustomer();
@@ -713,6 +715,12 @@ public class WeightTicketService {
         BigDecimal kl = BigDecimal.ZERO;
         BigDecimal kl_km = BigDecimal.ZERO;
         BigDecimal kl_total = BigDecimal.ZERO;
+        // check dung sai -> set Qty
+        String material = (outbDel != null && outbDel.getMatnr() != null) ? outbDel.getMatnr().toString() : "";
+        if(weightTicketController.checkVariantByMaterial(wt, material, wt.getGQty())) {
+            wt.setGQty(outbDel.getLfimg());
+        }
+
         for (int i = 0; i < outDetails_lits.size(); i++) {
             item = outDetails_lits.get(i);
             if (item.getDeliveryOrderNo().contains(doNum)) {
