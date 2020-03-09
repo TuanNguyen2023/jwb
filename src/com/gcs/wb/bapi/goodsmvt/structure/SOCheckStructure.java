@@ -27,6 +27,10 @@ public class SOCheckStructure implements Serializable {
      /**Romooc to search*/
     @Parameter(SOGetDetailConstants.TRAILER)
     private String _trailer;
+
+    /** plant */
+    @Parameter(SOGetDetailConstants.WERKS)
+    private String _werks;
     
     // </editor-fold>
     
@@ -75,6 +79,13 @@ public class SOCheckStructure implements Serializable {
      */
     public void setTrailer(String trailer) {
         this._trailer = trailer;
+    }
+
+    /**
+     * @param _werks
+     */
+    public void setWerks(String _werks) {
+        this._werks = _werks;
     }
 
     // </editor-fold>

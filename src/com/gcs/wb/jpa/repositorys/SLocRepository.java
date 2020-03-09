@@ -26,7 +26,7 @@ public class SLocRepository {
         TypedQuery<SLoc> typedQuery = entityManager.createNamedQuery("SLoc.findAll", SLoc.class);
         return typedQuery.getResultList();
     }
-
+    
     public SLoc findByLgort(String lgort) {
         TypedQuery<SLoc> typedQuery = entityManager.createNamedQuery("SLoc.findByLgort", SLoc.class);
         typedQuery.setParameter("lgort", lgort);
