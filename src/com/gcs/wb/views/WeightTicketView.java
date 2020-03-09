@@ -4281,7 +4281,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             bMB1B = true;
         }
 
-        if ((weightTicket.getRecvLgort() == null || weightTicket.getWeightTicketDetail().getRecvMatnr() == null)) {
+        if (weightTicket.getRecvMatnr() == null) {
             bMvt311 = false;
         } else {
             bMvt311 = true;
