@@ -291,6 +291,26 @@ private void dpDateFromPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN
         @Override
         protected Object doInBackground() {
             try {
+                setProgress(0, 0, 4);
+                weightTicketList.clear();
+
+                setProgress(1, 0, 4);
+                setMessage(resourceMapMsg.getString("msg.getData"));
+                List<WeightTicket> weightTickets = dailyReportController.findByCreateDateRange(dpDateFrom, dpDateTo);
+
+                setProgress(2, 0, 4);
+                setMessage(resourceMapMsg.getString("msg.handleData"));
+                weightTicketList.addAll(weightTickets);
+                wtDatas = dailyReportController.handleWtDatas(wtDatas, weightTicketList);
+
+                setProgress(3, 0, 4);
+                editable = new boolean[wtColNames.length];
+                for (int i = 0; i < editable.length; i++) {
+                    editable[i] = false;
+                }
+                WeighBridgeApp.getApplication().bindJTableModel(tabResults, wtDatas, wtColNames, wtColTypes, editable);
+                setProgress(4, 0, 4);
+
                 Map<String, Object> params = dailyReportController.getParamsReport(dpDateFrom, dpDateTo);
                 String reportName = dailyReportController.getReportName();
                 dailyReportController.printReport(params, reportName, new JRTableModelDataSource(tabResults.getModel()));
