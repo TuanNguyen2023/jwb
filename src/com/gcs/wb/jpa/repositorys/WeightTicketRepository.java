@@ -210,7 +210,7 @@ public class WeightTicketRepository {
     }
 
     public List<WeightTicket> findListWeightTicket(String month, String year, String tagent, String matnr, List<Character> modes, StatusEnum status) throws Exception {
-        String query = "SELECT w FROM WeightTicket w "
+        String query = "SELECT DISTINCT w FROM WeightTicket w "
                 + " , IN(w.weightTicketDetails) wd "
                 + "WHERE FUNC('YEAR', w.createdDate) = :year "
                 + " AND FUNC('MONTH', w.createdDate) = :month "
@@ -265,7 +265,7 @@ public class WeightTicketRepository {
             String creator, String driverName, String plateNo,
             String material, StatusEnum status, ModeEnum mode) throws Exception {
 
-        String query = "SELECT w FROM WeightTicket w "
+        String query = "SELECT DISTINCT w FROM WeightTicket w "
                 + " , IN(w.weightTicketDetails) wd "
                 + "WHERE w.createdDate BETWEEN :from AND :to"
                 + "  AND w.creator LIKE :creator"
