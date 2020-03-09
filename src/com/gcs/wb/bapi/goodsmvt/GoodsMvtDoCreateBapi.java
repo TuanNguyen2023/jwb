@@ -134,4 +134,9 @@ public class GoodsMvtDoCreateBapi implements Serializable {
     public void setWeightticket(GoodsMvtWeightTicketStructure stWT) {
         _weightticket = stWT;
     }
+
+    @Override
+    public String toString() {
+        return "GoodsMvtDoCreateBapi{" + "_header=" + _header + ", _gmCode=" + _gmCode + ", _weightticket=" + _weightticket + '}';
+    }
 }

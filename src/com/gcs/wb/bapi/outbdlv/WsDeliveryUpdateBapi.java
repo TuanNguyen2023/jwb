@@ -242,4 +242,9 @@ public class WsDeliveryUpdateBapi implements Serializable {
         this._iv_wbid_nosave = ivWbidNosave;
     }
 
+    @Override
+    public String toString() {
+        return "WsDeliveryUpdateBapi{" + "_vbkok_wa=" + _vbkok_wa + ", _delivery=" + _delivery + ", _proc_ord_id=" + _proc_ord_id + ", _yield=" + _yield + ", _act1=" + _act1 + ", _act2=" + _act2 + ", _act3=" + _act3 + ", _act4=" + _act4 + ", _update_picking=" + _update_picking + ", _weightticket=" + _weightticket + ", _iv_wbid_nosave=" + _iv_wbid_nosave + '}';
+    }
+
 }

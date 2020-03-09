@@ -143,4 +143,9 @@ public class GoodsMvtPoCreateBapi implements Serializable {
     public void setIvWbidNoSave(String ivWbidNoSave) {
         this._ivWbidNoSave = ivWbidNoSave;
     }
+
+    @Override
+    public String toString() {
+        return "GoodsMvtPoCreateBapi{" + "_header=" + _header + ", _gmCode=" + _gmCode + ", _weightticket=" + _weightticket + ", _ivWbidNoSave=" + _ivWbidNoSave + '}';
+    }
 }

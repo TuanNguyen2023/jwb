@@ -214,4 +214,9 @@ public class GoodsMvtPOSTOCreatePGIBapi implements Serializable {
         return _return;
     }
 
+    @Override
+    public String toString() {
+        return "GoodsMvtPOSTOCreatePGIBapi{" + "_header=" + _header + ", _gmCode=" + _gmCode + ", _vbkok_wa=" + _vbkok_wa + ", _ivCVendor=" + _ivCVendor + ", _ivTVendor=" + _ivTVendor + ", _idParnr=" + _idParnr + ", _weightticket=" + _weightticket + '}';
+    }
+
 }
