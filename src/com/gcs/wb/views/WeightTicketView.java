@@ -3248,11 +3248,14 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     if (WeighBridgeApp.getApplication().isOfflineMode() == false) {
                         if (objBapi != null) {
                             try {
+                                logger.info("[SAP] Get infor before post SAP: " + objBapi.toString());
                                 sapSession.execute(objBapi);
                                 if (objBapi_Po != null) {
+                                    logger.info("[SAP] Get infor before post SAP: " + objBapi_Po.toString());
                                     sapSession.execute(objBapi_Po);
                                 }
                                 if (objBapi_Posto != null) {
+                                    logger.info("[SAP] Get infor before post SAP: " + objBapi_Posto.toString());
                                     sapSession.execute(objBapi_Posto);
                                 }
                                 if (objBapi instanceof DOCreate2PGIBapi) {
@@ -3346,6 +3349,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                 }
 
                             } catch (Exception ex) {
+                                logger.error(ex);
                                 if (objBapi instanceof WsDeliveryUpdateBapi) {
                                     if (((WsDeliveryUpdateBapi) objBapi).getReturn() != null
                                             && (((WsDeliveryUpdateBapi) objBapi).getReturn().get(0)) != null
@@ -3436,6 +3440,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     if (WeighBridgeApp.getApplication().isOfflineMode() == false) {
                         if (objBapi != null) {
                             try {
+                                logger.info("[SAP] Get infor before post SAP: " + objBapi.toString());
                                 sapSession.execute(objBapi);
 
                                 OutboundDeliveryDetail details_item = null;
@@ -3665,6 +3670,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                 // </editor-fold>
 //                    }
                             } catch (Exception e) {
+                                logger.error(e);
                                 if (objBapi instanceof WsDeliveryUpdateBapi) {
                                     if (((WsDeliveryUpdateBapi) objBapi).getReturn() != null
                                             && (((WsDeliveryUpdateBapi) objBapi).getReturn().get(0)) != null

@@ -1526,6 +1526,8 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
 
 private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPlateNoNFocusLost
     String plateNo = txtPlateNoN.getText().trim();
+    plateNo = plateNo.replace("-", "");
+    plateNo = plateNo.replace(".", "");
     txtPlateNoN.setText(plateNo.toUpperCase());
 
     if (!plateNoValidDO.isEmpty() && !plateNo.contains(plateNoValidDO)) {

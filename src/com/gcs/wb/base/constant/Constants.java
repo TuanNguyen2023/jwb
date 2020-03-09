@@ -151,7 +151,7 @@ public class Constants {
 
     public static final class TransportAgent {
 
-        public static final Pattern LICENSE_PLATE_PATTERN = Pattern.compile("^(\\d{2}[A-Za-z]-\\d{4})|(\\d{2}[A-Za-z]-\\d{3}\\.\\d{2})|(\\d{2}[A-Za-z]-\\d{5,10})$");
+        public static final Pattern LICENSE_PLATE_PATTERN = Pattern.compile("^(\\d{2}[A-Za-z]-\\d{4})|(\\d{2}[A-Za-z]-\\d{3}\\.\\d{2})|(\\d{2}[A-Za-z]-\\d{5,10})|(\\d{2}[A-Za-z]\\d{4,10})$");
     }
 
     public static final class ComboBox {

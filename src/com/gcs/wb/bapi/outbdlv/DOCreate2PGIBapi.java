@@ -153,4 +153,9 @@ public class DOCreate2PGIBapi implements Serializable {
     public void setIvTVendor(String ivTVendor) {
         this._ivTVendor = ivTVendor;
     }
+
+    @Override
+    public String toString() {
+        return "DOCreate2PGIBapi{" + "_vbkok_wa=" + _vbkok_wa + ", _idParnr=" + _idParnr + ", _weightticket=" + _weightticket + ", _ivCVendor=" + _ivCVendor + ", _ivTVendor=" + _ivTVendor + '}';
+    }
 }
