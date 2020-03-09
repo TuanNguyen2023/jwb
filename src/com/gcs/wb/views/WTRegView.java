@@ -2526,13 +2526,14 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             lblPOSTONumN.setForeground(Color.red);
         }
 
+        boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
         boolean isSloc2Valid = wtRegisValidation.validateCbxSelected(cbxSloc2N.getSelectedIndex(), lblSloc2N);
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
                 && isCMNDBLValid && isPlateNoValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
-                && isNoteValid && isSlocValid && isSloc2Valid;
+                && isNoteValid && isSlocValid && isSloc2Valid && isMaterialTypeValid;
     }
 
     private boolean validateOutPullStation() {
