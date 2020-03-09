@@ -3553,12 +3553,12 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             //Check PO Plant with Configuration parameter.
             if ((modeDetail == MODE_DETAIL.IN_PO_PURCHASE || modeDetail == MODE_DETAIL.OUT_SLOC_SLOC)
                     && (!(purchaseOrderPO.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant()))) {
-                throw new Exception(resourceMapMsg.getString("msg.poIsDenied"));
+                throw new Exception(resourceMapMsg.getString("msg.poIsDenied", poNum));
             }
             if ((modeDetail == MODE_DETAIL.OUT_PLANT_PLANT
                     || modeDetail == MODE_DETAIL.OUT_PULL_STATION)
                     && (!(purchaseOrderPO.getSupplPlnt()).equals(configuration.getWkPlant()))) {
-                throw new Exception(resourceMapMsg.getString("msg.poIsDenied"));
+                throw new Exception(resourceMapMsg.getString("msg.poIsDenied", poNum));
             }
 
             updateWeightTicket(purchaseOrderPO);
@@ -3723,12 +3723,12 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             //Check PO Plant with Configuration parameter.
             if ((modeDetail == MODE_DETAIL.IN_PO_PURCHASE)
                     && (!(purchaseOrderPOSTO.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant()))) {
-                throw new Exception(resourceMapMsg.getString("msg.postoIsDenied"));
+                throw new Exception(resourceMapMsg.getString("msg.postoIsDenied", postoNum));
             }
 
             //Check POSTO Plant with PO plant
             if (!purchaseOrderPOSTO.getPurchaseOrderDetail().getPlant().equals(configuration.getWkPlant())) {
-                throw new Exception(resourceMapMsg.getString("msg.postoIsPlant"));
+                throw new Exception(resourceMapMsg.getString("msg.postoIsPlant", postoNum));
             }
 
             //Check matnr for PO-POSTO
