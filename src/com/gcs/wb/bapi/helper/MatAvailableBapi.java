@@ -112,4 +112,9 @@ public class MatAvailableBapi implements Serializable {
     public List<MatAvailableStructure> getWmdvex() {
         return _wmdvex;
     }
+
+    @Override
+    public String toString() {
+        return "MatAvailableBapi{" + "_material=" + _material + ", _unit=" + _unit + ", _plant=" + _plant + ", _sloc=" + _sloc + ", _batch=" + _batch + '}';
+    }
 }

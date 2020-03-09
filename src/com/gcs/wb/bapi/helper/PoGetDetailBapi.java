@@ -77,4 +77,9 @@ public class PoGetDetailBapi implements Serializable {
     public List<BapiRet2> getReturn() {
         return _return;
     }
+
+    @Override
+    public String toString() {
+        return "PoGetDetailBapi{" + "_PURCHASEORDER=" + _PURCHASEORDER + '}';
+    }
 }

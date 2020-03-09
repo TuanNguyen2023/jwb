@@ -39,6 +39,8 @@ public class Material implements Serializable {
     private String mandt;
     @Column(name = "wplant", unique = true)
     private String wplant;
+    @Column(name = "lgort", unique = true)
+    private String lgort;
     @Column(name = "maktx")
     private String maktx;
     @Column(name = "maktg")
@@ -102,6 +104,14 @@ public class Material implements Serializable {
         this.wplant = wplant;
     }
 
+    public String getLgort() {
+        return lgort;
+    }
+
+    public void setLgort(String lgort) {
+        this.lgort = lgort;
+    }
+
     public String getMaktx() {
         return maktx;
     }
@@ -158,6 +168,9 @@ public class Material implements Serializable {
         Material material = (Material) o;
 
         if (matnr != null ? !matnr.equals(material.matnr) : material.matnr != null) return false;
+        if (mandt != null ? !mandt.equals(material.mandt) : material.mandt != null) return false;
+        if (wplant != null ? !wplant.equals(material.wplant) : material.wplant != null) return false;
+        if (lgort != null ? !lgort.equals(material.lgort) : material.lgort != null) return false;
 
         return true;
     }

@@ -72,4 +72,9 @@ public class SyncContractSOGetListBapi implements Serializable {
     public List<SalesOrderStructure> getListSalesOrder() {
         return  _etSalesOrder;
     }
+
+    @Override
+    public String toString() {
+        return "SyncContractSOGetListBapi{" + "_ivKunnr=" + _ivKunnr + ", _ivDateF=" + _ivDateF + ", _ivDateT=" + _ivDateT + ", _ivVbeln=" + _ivVbeln + ", _ivOption=" + _ivOption + '}';
+    }
 }

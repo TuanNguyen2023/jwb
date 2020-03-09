@@ -47,4 +47,9 @@ public class VendorGetDetailBapi implements Serializable {
     public VendorGetDetailStructure getEsLfa1() {
         return _esLfa1;
     }
+
+    @Override
+    public String toString() {
+        return "VendorGetDetailBapi{" + "_idLifnr=" + _idLifnr + '}';
+    }
 }

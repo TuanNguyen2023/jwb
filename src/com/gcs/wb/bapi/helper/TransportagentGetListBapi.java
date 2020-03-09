@@ -101,4 +101,9 @@ public class TransportagentGetListBapi implements Serializable{
     public List<TransportagentGetListStructure> getEtVendor() {
         return _etVendor;
     }
+
+    @Override
+    public String toString() {
+        return "TransportagentGetListBapi{" + "_ivStartTime=" + _ivStartTime + ", _ivEndTime=" + _ivEndTime + ", _ivIndicator=" + _ivIndicator + ", _ivEkorg=" + _ivEkorg + '}';
+    }
 }

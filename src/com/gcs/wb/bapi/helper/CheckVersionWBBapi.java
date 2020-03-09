@@ -49,6 +49,11 @@ public class CheckVersionWBBapi implements Serializable {
     public CheckVersionWBBapi(String versionID) {
         this.versionID = versionID;
     }
+
+    @Override
+    public String toString() {
+        return "CheckVersionWBBapi{" + "versionID=" + versionID + '}';
+    }
     /**Activity Group (Table Parameter)*/
     
 }

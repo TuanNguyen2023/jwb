@@ -70,5 +70,10 @@ public class DORevertBapi implements Serializable {
     public void setWeightticket(GoodsMvtWeightTicketStructure _weightticket) {
         this._weightticket = _weightticket;
     }
+
+    @Override
+    public String toString() {
+        return "DORevertBapi{" + "_iv_delivery=" + _iv_delivery + ", _weightticket=" + _weightticket + '}';
+    }
     
 }

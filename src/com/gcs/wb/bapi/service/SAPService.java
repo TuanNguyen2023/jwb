@@ -115,6 +115,7 @@ public class SAPService {
     public ResourceMap resourceMapMsg = Application.getInstance(WeighBridgeApp.class).getContext().getResourceMap(TransportAgentView.class);
 
     Session session = WeighBridgeApp.getApplication().getSAPSession();
+    org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(SAPService.class);
 
     /**
      * get Material model
@@ -128,11 +129,13 @@ public class SAPService {
             List<MaterialInternal> matsSap = new ArrayList<>();
             MaterialGetListBapi bapi = new MaterialGetListBapi();
             try {
+                logger.info("[SAP] Get list Materials: " + bapi.toString());
                 session.execute(bapi);
                 List<MaterialGetListStructure> mats = bapi.getEtMaterial();
                 MaterialsV2Converter materialsV2Converter = new MaterialsV2Converter();
                 matsSap = materialsV2Converter.convertMaster(mats);
             } catch (Exception ex) {
+                logger.error(ex);
             }
 
             //sync DB SAP
@@ -176,12 +179,13 @@ public class SAPService {
             List<Material> matsSap = new ArrayList<>();
             MaterialGetListBapi bapi = new MaterialGetListBapi();
             try {
+                logger.info("[SAP] Get list Materials: " + bapi.toString());
                 session.execute(bapi);
                 List<MaterialGetListStructure> mats = bapi.getEtMaterial();
                 MaterialsV2Converter materialsV2Converter = new MaterialsV2Converter();
                 matsSap = materialsV2Converter.convert(mats);
             } catch (Exception ex) {
-                ex.printStackTrace();
+                logger.error(ex);
             }
 
             //sync DB SAP
@@ -236,6 +240,7 @@ public class SAPService {
             bapi.setIvEkorg(configuration.getWkPlant());
             List<Vendor> venSaps = new ArrayList<>();
             try {
+                logger.info("[SAP] Get list Transport Agent: " + bapi.toString());
                 session.execute(bapi);
 
                 List<TransportagentGetListStructure> etVendors = bapi.getEtVendor();
@@ -249,7 +254,7 @@ public class SAPService {
                     venSaps.add(ven);
                 }
             } catch (Exception ex) {
-                ex.printStackTrace();
+                logger.error(ex);
             }
 
             entityTransaction = entityManager.getTransaction();
@@ -295,6 +300,7 @@ public class SAPService {
     public OutboundDelivery getOutboundDelivery(String number) throws Exception {
         DoGetDetailBapi bapiDO = new DoGetDetailBapi();
         bapiDO.setId_do(StringUtil.paddingZero(number, 10));
+        logger.info("[SAP] Get Outbound Delivery: " + bapiDO.toString());
         session.execute(bapiDO);
         OutboundDeliveryConverter outboundDeliveryConverter = new OutboundDeliveryConverter();
         return outboundDeliveryConverter.convertHasParameter(bapiDO, number);
@@ -310,6 +316,7 @@ public class SAPService {
     public PurchaseOrder getPurchaseOrder(String poNum) throws Exception {
         PoGetDetailBapi bPO = new PoGetDetailBapi();
         bPO.setPURCHASEORDER(poNum);
+        logger.info("[SAP] Get Purchase Order: " + bPO.toString());
         session.execute(bPO);
         PurchaseOrderConverter purchaseOrderConverter = new PurchaseOrderConverter();
         return purchaseOrderConverter.convertHasParameter(bPO, poNum);
@@ -376,6 +383,7 @@ public class SAPService {
         bBatch.setIdLgort(lgortSloc);
         bBatch.setIdMatnr(matnr);
         try {
+            logger.info("[SAP] Get list Batch Stock: " + bBatch.toString());
             session.execute(bBatch);
             List<BatchStocksStructure> bBatchStocks = bBatch.getBatchStocks();
             for (BatchStocksStructure b : bBatchStocks) {
@@ -410,7 +418,7 @@ public class SAPService {
             entityTransaction.commit();
             entityManager.clear();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
             if (entityTransaction.isActive()) {
                 entityTransaction.rollback();
             }
@@ -426,6 +434,7 @@ public class SAPService {
     public Customer getCustomer(String kunnr) {
         CustomerGetDetailBapi bapiCust = new CustomerGetDetailBapi();
         bapiCust.setIdKunnr(kunnr);
+        logger.info("[SAP] Get Customer: " + bapiCust.toString());
         session.execute(bapiCust);
         CustomerGetDetailStructure strucCust = bapiCust.getEsKna1();
         CustomerConverter customerConverter = new CustomerConverter();
@@ -475,6 +484,7 @@ public class SAPService {
     public Vendor getVendor(String lifnr) {
         VendorGetDetailBapi bapiCust = new VendorGetDetailBapi();
         bapiCust.setIdLifnr(lifnr);
+        logger.info("[SAP] Get Vendor: " + bapiCust.toString());
         session.execute(bapiCust);
         VendorGetDetailStructure strucVendor = bapiCust.getEsLfa1();
         VendorConverter vendorConverter = new VendorConverter();
@@ -495,6 +505,7 @@ public class SAPService {
             SLocsGetListBapi bSloc = new SLocsGetListBapi(mandt, wplant);
             List<SLoc> slocSaps = new ArrayList<>();
             try {
+                logger.info("[SAP] Get list Slocs: " + bSloc.toString());
                 session.execute(bSloc);
                 List<SLocsGetListStructure> tdSLocs = bSloc.getTdSLocs();
                 for (SLocsGetListStructure s : tdSLocs) {
@@ -503,7 +514,7 @@ public class SAPService {
                     slocSaps.add(sloc);
                 }
             } catch (Exception ex) {
-                ex.printStackTrace();
+                logger.error(ex);
             }
 
             // sync data
@@ -548,6 +559,7 @@ public class SAPService {
             bapi.setIvEkorg(configuration.getWkPlant());
             List<TransportAgent> transportSaps = new ArrayList<>();
             try {
+                logger.info("[SAP] Get list Transport Agent: " + bapi.toString());
                 session.execute(bapi);
                 List<TransportagentGetListStructure> transports = bapi.getEtVendor();
                 TransportAgentsConverter transportAgentsConverter = new TransportAgentsConverter();
@@ -621,7 +633,7 @@ public class SAPService {
                     }
                 }
             } catch (Exception ex) {
-                // to do
+                logger.error(ex);
             }
         }
         // return data
@@ -639,11 +651,13 @@ public class SAPService {
         MatGetDetailBapi bapi = new MatGetDetailBapi();
         bapi.setId_matnr(matnr);
         try {
+            logger.info("[SAP] Get Material detail: " + bapi.toString());
             session.execute(bapi);
             MatGetDetailStructure bapiResult = bapi.getEs_makt();
             MaterialConverter materialConverter = new MaterialConverter();
             result = materialConverter.convert(bapiResult);
         } catch (Exception e) {
+            logger.error(e);
             return null;
         }
         return result;
@@ -699,13 +713,14 @@ public class SAPService {
         //soCheck.setVbeln(soNumber);
         bapi.setSOCheck(soChecks);
         try {
+            logger.info("[SAP] Check SO: " + bapi.toString());
             session.execute(bapi);
             List<DOCheckStructure> dos = bapi.getDOCheck();
             if (dos != null) {
                 return dos;
             }
         } catch (Exception ex) {
-            java.util.logging.Logger.getLogger(WeighBridgeApp.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex);
         }     
         return null;
     }
@@ -718,12 +733,14 @@ public class SAPService {
         bapi.setIvReswk(configuration.getWkPlant());
         bapi.setIvKschl(vendorType);
         try {
-            WeighBridgeApp.getApplication().getSAPSession().execute(bapi);
+            logger.info("[SAP] Validate Vendor: " + bapi.toString());
+            session.execute(bapi);
             String bapiResult = bapi.getEvReturn();
             if (bapiResult != null) {
                 return bapiResult;
             }
         } catch (Exception ex) {
+            logger.error(ex);
         }
         return null;
     }
@@ -731,6 +748,7 @@ public class SAPService {
     public SAPSetting syncSapSetting(String mandt, String wplant) {
         try {
             PlantGetDetailBapi plantGetDetailBapi = new PlantGetDetailBapi(configuration.getSapClient(), configuration.getWkPlant());
+            logger.info("[SAP] Get SAP Setting: " + plantGetDetailBapi.toString());
             session.execute(plantGetDetailBapi);
             HashMap vals = plantGetDetailBapi.getEsPlant();
 
@@ -764,7 +782,7 @@ public class SAPService {
                 return sapSetting;
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex);
             if (entityTransaction.isActive()) {
                 entityTransaction.rollback();
             }
@@ -788,6 +806,7 @@ public class SAPService {
             poPostGetListBapi.setIvStartTime(Constants.SyncMasterData.TIME_SYNC);
             poPostGetListBapi.setIvEndDate(now);
             poPostGetListBapi.setIvEndTime(formatTime.format(now));
+            logger.info("[SAP] Get list PO/POSTO: " + poPostGetListBapi.toString());
             session.execute(poPostGetListBapi);
 
             List<PODataOuboundStructure> listPO = poPostGetListBapi.getListPODataOubound();
@@ -805,6 +824,7 @@ public class SAPService {
             }
         } catch (Exception ex) {
             System.out.println("PoPostGetListBapi đang lỗi!");
+            logger.error(ex);
         }
 
         return poPostoNumbers;
@@ -836,6 +856,7 @@ public class SAPService {
             syncContractSOGetListBapi.setIvDateF(dateF);
             syncContractSOGetListBapi.setIvDateT(dateT);
             syncContractSOGetListBapi.setIvOption("WB");
+            logger.info("[SAP] Get list SO: " + syncContractSOGetListBapi.toString());
             session.execute(syncContractSOGetListBapi);
 
             List<SalesOrderStructure> listSO = syncContractSOGetListBapi.getListSalesOrder();
@@ -846,6 +867,7 @@ public class SAPService {
                     .collect(Collectors.toCollection(ArrayList::new));
         } catch (Exception ex) {
             System.out.println("SyncContractSOGetListBapi đang lỗi!");
+            logger.error(ex);
         }
 
         return null;

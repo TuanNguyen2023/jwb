@@ -169,9 +169,10 @@ public class WeightTicketService {
 
             bapi.setWeightticket(stWT);
             try {
+                logger.info("[SAP] Check Revert DO: " + bapi.toString());
                 sapSession.execute(bapi);
             } catch (Exception ex) {
-                //do nothing
+                logger.error(ex);
             }
         }
 
@@ -304,6 +305,7 @@ public class WeightTicketService {
         bapi.setSloc(sloc);
         bapi.setBatch(batch);
         bapi.setUnit(weightTicketRegistrationService.getUnit().getPurchaseUnit());
+        logger.info("[SAP] Check Mat Stock: " + bapi.toString());
         WeighBridgeApp.getApplication().getSAPSession().execute(bapi);
         List<MatAvailableStructure> stocks = bapi.getWmdvex();
         if (!stocks.isEmpty() && stocks.get(0).getCom_qty() != null) {

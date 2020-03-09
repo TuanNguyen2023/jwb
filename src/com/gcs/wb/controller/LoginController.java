@@ -44,6 +44,7 @@ public class LoginController {
     private LoginService loginService = new LoginService();
     ResourceMap resourceMap = Application.getInstance(WeighBridgeApp.class).getContext().getResourceMap(LoginView.class);
     private JFrame mainFrame = WeighBridgeApp.getApplication().getMainFrame();
+    org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(LoginController.class);
 
     public LoginController(String username, String password) {
         userRepository = new UserRepository();
@@ -87,6 +88,7 @@ public class LoginController {
             boolean onlineMode = true;
             try {
                 loginService.checkVersionWB(session);
+                logger.info("[SAP] Get User detail: " + userGetDetailBapi.toString());
                 session.execute(userGetDetailBapi);  //Login
             } catch (Exception ex) {
                 onlineMode = false;

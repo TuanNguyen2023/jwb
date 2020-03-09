@@ -72,4 +72,9 @@ public class SLocsGetListBapi implements Serializable {
     public void setIdWerks(String idWerks) {
         this._idWerks = idWerks;
     }
+
+    @Override
+    public String toString() {
+        return "SLocsGetListBapi{" + "_idMandt=" + _idMandt + ", _idWerks=" + _idWerks + '}';
+    }
 }

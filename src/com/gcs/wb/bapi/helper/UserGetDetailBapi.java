@@ -75,4 +75,9 @@ public class UserGetDetailBapi implements Serializable {
     public List<BapiRet2> getReturn() {
         return _return;
     }
+
+    @Override
+    public String toString() {
+        return "UserGetDetailBapi{" + "_userName=" + _userName + '}';
+    }
 }

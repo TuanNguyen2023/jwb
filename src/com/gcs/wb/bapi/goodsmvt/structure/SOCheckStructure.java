@@ -90,4 +90,9 @@ public class SOCheckStructure implements Serializable {
 
     // </editor-fold>
 
+    @Override
+    public String toString() {
+        return "SOCheckStructure{" + "_vbeln=" + _vbeln + ", _traid=" + _traid + ", _trailer=" + _trailer + ", _werks=" + _werks + '}';
+    }
+
 }

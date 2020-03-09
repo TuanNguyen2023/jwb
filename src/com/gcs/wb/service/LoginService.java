@@ -37,6 +37,7 @@ public class LoginService {
     private Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
     private SAPSettingRepository sapSettingRepository = new SAPSettingRepository();
     private SAPSetting sapSetting = sapSettingRepository.getSAPSetting();
+    org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(LoginService.class);
 
     public Session getSapSession(Credentials credentials) throws Exception {
         Session session = WeighBridgeApp.getApplication().getSAPSession();
@@ -52,6 +53,7 @@ public class LoginService {
     public void checkVersionWB(Session session) throws Exception {
         CheckVersionWBBapi version = new CheckVersionWBBapi("2.40"); //09/07/2013
         try {
+            logger.info("[SAP] Check SAP version: " + version.toString());
             session.execute(version);
             if (version.getResult() != null
                     && version.getResult().getId() != null
@@ -59,7 +61,7 @@ public class LoginService {
                 throw new Exception(version.getResult().getMessage());
             }
         } catch (Exception ex) {
-            // do nothing
+            logger.error(ex);
         }
     }
 

@@ -47,4 +47,9 @@ public class CustomerGetDetailBapi implements Serializable {
     public CustomerGetDetailStructure getEsKna1() {
         return _esKna1;
     }
+
+    @Override
+    public String toString() {
+        return "CustomerGetDetailBapi{" + "_idKunnr=" + _idKunnr + '}';
+    }
 }
