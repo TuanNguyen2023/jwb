@@ -62,6 +62,23 @@ public class WeightTicketRepository {
         wt = query.getResultList();
         return wt;
     }
+    
+    public WeightTicket findByDeliveryOrderNoNotExistEbeln(String deliverNumber) {
+        WeightTicket weightTicket = null;
+        List<WeightTicket> list = getListByDeliveryOrderNoNotExistEbeln(deliverNumber);
+        if (list != null && list.size() > 0) {
+            weightTicket = list.get(0);
+        }
+        return weightTicket;
+    }
+    
+    public List<WeightTicket> getListByDeliveryOrderNoNotExistEbeln(String deliverNumber) {
+        List<WeightTicket> wt = new ArrayList<WeightTicket>();
+        TypedQuery<WeightTicket> query = entityManager.createNamedQuery("WeightTicket.findByDeliveryOrderNoNotExistEbeln", WeightTicket.class);
+        query.setParameter("deliveryOrderNo", "%" + deliverNumber + "%");
+        wt = query.getResultList();
+        return wt;
+    }
 
     public List<WeightTicket> findByCreatedDateRange(Date from, Date to) {
         List<WeightTicket> list = new ArrayList<WeightTicket>();

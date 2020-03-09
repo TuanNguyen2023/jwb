@@ -20,7 +20,10 @@ import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.*;
 import com.gcs.wb.jpa.repositorys.MaterialGroupRepository;
 import com.gcs.wb.jpa.repositorys.MaterialInternalRepository;
+import com.gcs.wb.jpa.repositorys.OutboundDeliveryRepository;
+import com.gcs.wb.jpa.repositorys.OutboundDetailRepository;
 import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
+import com.gcs.wb.jpa.repositorys.WeightTicketDetailRepository;
 import com.gcs.wb.model.WeighingMode;
 import com.gcs.wb.views.validations.WeightTicketRegistrationValidation;
 import com.sap.conn.jco.JCoException;
@@ -43,6 +46,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.stream.Stream;
 import org.apache.commons.lang.SerializationUtils;
 import org.jdesktop.application.Application;
@@ -88,6 +92,8 @@ public class WTRegView extends javax.swing.JInternalFrame {
     List<String> cbxSlocs = new ArrayList<>();
     private PurchaseOrder purchaseOrderPO = new PurchaseOrder();
     private PurchaseOrder purchaseOrderPOSTO = new PurchaseOrder();
+    OutboundDetailRepository detailRepository = new OutboundDetailRepository();
+    WeightTicketDetailRepository weightTicketDetailRepository = new WeightTicketDetailRepository();
 
     public WTRegView() {
         newWeightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
@@ -2860,7 +2866,13 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         @Override
         protected Object doInBackground() throws Exception {
             String[] deliveryOrderNos = txtDONumN.getText().split("-");
-            for (String deliveryOrderNo : deliveryOrderNos) {
+            String[] salesOrderNos = txtSONumN.getText().split("-");
+            for(int index=0; index < deliveryOrderNos.length; index ++ ) {
+                String deliveryOrderNo = deliveryOrderNos[index];
+                String salesOrder = null;
+                if(salesOrderNos.length == deliveryOrderNos.length) {
+                    salesOrder = salesOrderNos[index];
+                }
                 setStep(1, resourceMapMsg.getString("msg.checkDOInDB"));
                 deliveryOrderNo = StringUtil.paddingZero(deliveryOrderNo.trim(), 10);
                 OutboundDelivery outboundDelivery = weightTicketRegistarationController.findByDeliveryOrderNumber(deliveryOrderNo);
@@ -2920,7 +2932,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 }
 
                 // set DO data to Weight ticket
-                updateWeightTicket(outboundDelivery);
+                updateWeightTicket(outboundDelivery, salesOrder);
                 btnSave.setEnabled(true);
                 setStep(4, null);
             }
@@ -2958,7 +2970,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             setProgress(step, 1, 4);
         }
 
-        private void updateWeightTicket(OutboundDelivery outboundDelivery) {
+        private void updateWeightTicket(OutboundDelivery outboundDelivery, String salesOrder) {
             WeightTicketDetail weightTicketDetail = new WeightTicketDetail();
             weightTicketDetail.setItem(outboundDelivery.getDeliveryItem());
             weightTicketDetail.setMatnrRef(outboundDelivery.getMatnr());
@@ -2967,6 +2979,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             weightTicketDetail.setKunnr(outboundDelivery.getKunnr());
             weightTicketDetail.setDeliveryOrderNo(outboundDelivery.getDeliveryOrderNo());
             weightTicketDetail.setRegItemQuantity(outboundDelivery.getLfimg());
+            weightTicketDetail.setSoNumber(salesOrder);
             newWeightTicket.addWeightTicketDetail(weightTicketDetail);
             newWeightTicket.setWeightTicketIdRef(outboundDelivery.getWtIdRef());
 
@@ -3124,6 +3137,28 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             newWeightTicket.setBatch(txtProductionBatchN.getText().trim());
             newWeightTicket.setNote(txtNoteN.getText().trim());
             newWeightTicket.setTicketId(txtTicketIdN.getText().trim());
+            
+            // set for oubdel
+            List<OutboundDeliveryDetail> deliveryDetails = null;
+            String[] val = txtSONumN.getText().trim().split("-");
+            if (!txtDONumN.getText().equals("")) {
+                String[] do_list = txtDONumN.getText().trim().split("-");
+                for (int i = 0; i < do_list.length; i++) {
+                    // save DO
+                    String doNum = do_list[i];
+                    deliveryDetails = detailRepository.findByDeliveryOrderNo(doNum);
+                    for (int j = 0; j < deliveryDetails.size(); j++) {
+                        OutboundDeliveryDetail detail = deliveryDetails.get(j);
+                        detail.setWtId(newWeightTicket.getId());
+                        if (!entityManager.getTransaction().isActive()) {
+                            entityManager.getTransaction().begin();
+                        }
+                        entityManager.merge(detail);
+                        entityManager.getTransaction().commit();
+                    }
+                }
+            }
+            
             switch (modeDetail) {
                 case IN_PO_PURCHASE:
                     updateDataForInPoPurchaseMode();

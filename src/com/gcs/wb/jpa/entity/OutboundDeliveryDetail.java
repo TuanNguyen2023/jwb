@@ -30,12 +30,11 @@ import javax.persistence.Table;
     query = "SELECT o FROM OutboundDeliveryDetail o WHERE"
     + " o.deliveryOrderNo LIKE :deliveryOrderNo"
     + " AND o.deliveryOrderItem = :deliveryOrderItem order by o.freeItem desc"),
-    @NamedQuery(name = "OutboundDeliveryDetail.findByDeliveryOrderNo",
-    query = "SELECT o FROM OutboundDeliveryDetail o WHERE"
-    + " o.deliveryOrderNo LIKE :deliveryOrderNo order by o.freeItem desc"),
     @NamedQuery(name = "OutboundDeliveryDetail.findByWtId",
     query = "SELECT o FROM OutboundDeliveryDetail o WHERE"
-    + " o.wtId LIKE :wtId order by o.freeItem desc")
+    + " o.wtId LIKE :wtId order by o.freeItem desc"),
+    @NamedQuery(name = "OutboundDeliveryDetail.findByDeliveryOrderNo", 
+        query = "SELECT d FROM OutboundDeliveryDetail d WHERE d.deliveryOrderNo = :deliveryOrderNo")
 })
 public class OutboundDeliveryDetail implements Serializable {
 
@@ -89,6 +88,8 @@ public class OutboundDeliveryDetail implements Serializable {
     private Date updatedDate;
     @Column(name = "mandt", unique = true)
     private String mandt;
+    @Column(name = "ship_to")
+    private String shipTo;
     @ManyToOne
     @JoinColumn(name = "outbound_delivery_id")
     private OutboundDelivery outboundDelivery;
@@ -295,6 +296,14 @@ public class OutboundDeliveryDetail implements Serializable {
 
     public void setWtId(String wtId) {
         this.wtId = wtId;
+    }
+
+    public String getShipTo() {
+        return shipTo;
+    }
+
+    public void setShipTo(String shipTo) {
+        this.shipTo = shipTo;
     }
     
     public boolean isPosted() {

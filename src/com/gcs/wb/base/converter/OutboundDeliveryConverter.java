@@ -99,6 +99,7 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
                 outboundDelivery.setDeliveryItem(doItem.getPosnr()); //Get position
                 //set data out details hang thuong
                 outboundDeliveryDetail.setLfimg(doItem.getLfimg());
+                outboundDeliveryDetail.setShipTo(doItem.getWerks());
 
                 if ((!outboundDeliveryDetail.isPosted())
                         || (outboundDeliveryDetail.getLfimg() == null)

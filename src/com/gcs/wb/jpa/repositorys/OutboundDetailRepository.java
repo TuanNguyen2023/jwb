@@ -26,7 +26,7 @@ public class OutboundDetailRepository {
         List<OutboundDeliveryDetail> result = new ArrayList<>();
         try {
             TypedQuery<OutboundDeliveryDetail> nq = entityManager.createNamedQuery("OutboundDeliveryDetail.findByDeliveryOrderNo", OutboundDeliveryDetail.class);
-            nq.setParameter("deliveryOrderNo", "%" + deliv_numb + "%");
+            nq.setParameter("deliveryOrderNo", deliv_numb);
             result = nq.getResultList();
         } catch (Exception ex) {
             logger.error(null, ex);

@@ -107,7 +107,12 @@ import javax.persistence.Temporal;
     @NamedQuery(name = "WeightTicket.findByIdSeqDay",
             query = "SELECT w FROM WeightTicket w "
             + "WHERE w.id = :id"
-            + "  AND w.seqDay = :seqDay")
+            + "  AND w.seqDay = :seqDay"),
+    @NamedQuery(name = "WeightTicket.findByDeliveryOrderNoNotExistEbeln",
+            query = "SELECT w FROM WeightTicket w "
+            + " , IN(w.weightTicketDetails) wd "
+            + " WHERE wd.deliveryOrderNo LIKE :deliveryOrderNo "
+            + " AND wd.ebeln IS NULL"),
 })
 public class WeightTicket implements Serializable {
 
