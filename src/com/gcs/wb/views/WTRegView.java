@@ -3045,6 +3045,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             cbxMaterialTypeN.setSelectedItem("");
             txtWeightN.setText("0");
             cbxCustomerN.setSelectedIndex(-1);
+            loadSLoc(null);
 
             isValidDO = false;
             // for check edit plateNo after check DO
@@ -3636,6 +3637,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             cbxMaterialTypeN.setSelectedIndex(-1);
             cbxVendorTransportN.setSelectedIndex(-1);
             cbxCustomerN.setSelectedIndex(-1);
+            loadSLoc(null);
 
             isValidPO = false;
             if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
