@@ -25,7 +25,8 @@ import javax.persistence.Table;
     @NamedQuery(name = "Material.findAll", query = "SELECT m FROM Material m"),
     @NamedQuery(name = "Material.findByMandtWplant", query = "SELECT m FROM Material m WHERE m.mandt = :mandt AND m.wplant = :wplant"),
     @NamedQuery(name = "Material.CheckPOSTO", query = "SELECT m FROM Material m WHERE m.matnr = :matnr"),
-    @NamedQuery(name = "Material.findByMatnr", query = "SELECT m FROM Material m WHERE m.matnr = :matnr")
+    @NamedQuery(name = "Material.findByMatnr", query = "SELECT m FROM Material m WHERE m.matnr = :matnr"),
+    @NamedQuery(name = "Material.findByMatnrs", query = "SELECT m FROM Material m WHERE m.matnr IN :matnrs")
 })
 public class Material implements Serializable {
     private static final long serialVersionUID = 1L;

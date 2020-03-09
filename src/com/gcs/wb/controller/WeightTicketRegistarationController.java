@@ -306,7 +306,7 @@ public class WeightTicketRegistarationController {
     public DefaultComboBoxModel getVendorModel() {
         return new DefaultComboBoxModel(vendorRepository.getListVendor().toArray());
     }
-    
+
     public DefaultComboBoxModel getCustomerModel() {
         return new DefaultComboBoxModel(customerRepository.getListCustomer().toArray());
     }
@@ -325,5 +325,25 @@ public class WeightTicketRegistarationController {
 
     public SLoc getSloc(String sloc) {
         return sLocRepository.findByLgort(sloc);
+    }
+
+    public List<String> getListLgortByMatnr(String matnr, boolean isInternal) {
+        if (isInternal) {
+            return materialInternalRepository.getListLgortByMatnr(matnr);
+        } else {
+            return materialRepository.getListLgortByMatnr(matnr);
+        }
+    }
+
+    public List<String> getListLgortByMatnr(List<String> matnrs, boolean isInternal) {
+        if (isInternal) {
+            return materialInternalRepository.getListLgortByMatnr(matnrs);
+        } else {
+            return materialRepository.getListLgortByMatnr(matnrs);
+        }
+    }
+
+    public DefaultComboBoxModel getSlocModel(List<String> lgorts) {
+        return new DefaultComboBoxModel(sLocRepository.getListSloc(lgorts).toArray());
     }
 }

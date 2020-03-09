@@ -6,8 +6,9 @@ package com.gcs.wb.jpa.repositorys;
 
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.Material;
-import com.gcs.wb.jpa.entity.MaterialInternal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import org.apache.log4j.Logger;
@@ -40,7 +41,7 @@ public class MaterialRepository {
         }
         return material;
     }
-    
+
     public boolean hasData(String mandt, String wplant) {
         TypedQuery<Material> typedQuery = entityManager.createNamedQuery("Material.findByMandtWplant", Material.class);
         typedQuery.setParameter("mandt", mandt);
@@ -52,7 +53,7 @@ public class MaterialRepository {
 
         return false;
     }
-    
+
     public Material findByMatnr(String matnr) {
         TypedQuery<Material> typedQuery = entityManager.createNamedQuery("Material.findByMatnr", Material.class);
         typedQuery.setParameter("matnr", matnr);
@@ -62,5 +63,29 @@ public class MaterialRepository {
         }
 
         return null;
+    }
+
+    public List<String> getListLgortByMatnr(String matnr) {
+        TypedQuery<Material> typedQuery = entityManager.createNamedQuery("Material.findByMatnr", Material.class);
+        typedQuery.setParameter("matnr", matnr);
+        List<Material> materials = typedQuery.getResultList();
+        return materials.stream()
+                .map(t -> t.getLgort())
+                .filter(t -> t != null && !t.isEmpty())
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public List<String> getListLgortByMatnr(List<String> matnrs) {
+        if (matnrs == null || matnrs.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        TypedQuery<Material> typedQuery = entityManager.createNamedQuery("Material.findByMatnrs", Material.class);
+        typedQuery.setParameter("matnrs", matnrs);
+        List<Material> materials = typedQuery.getResultList();
+        return materials.stream()
+                .map(t -> t.getLgort())
+                .filter(t -> t != null && !t.isEmpty())
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 }
