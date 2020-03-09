@@ -253,6 +253,11 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
 
         cbxVehicleType.setEnabled(false);
         cbxVehicleType.setName("cbxVehicleType"); // NOI18N
+        cbxVehicleType.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxVehicleTypeActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnVehicleLayout = new javax.swing.GroupLayout(pnVehicle);
         pnVehicle.setLayout(pnVehicleLayout);
@@ -349,6 +354,8 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
             cbxVehicleType.setEnabled(true);
             dpValidFrom.setEnabled(true);
             dpValidTo.setEnabled(true);
+            
+            validateForm();
         }
     }//GEN-LAST:event_lstTransportAgentValueChanged
 
@@ -402,14 +409,14 @@ private void btnVehicleRemoveActionPerformed(java.awt.event.ActionEvent evt) {//
 private void dpValidFromPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_dpValidFromPropertyChange
 // TODO add your handling code here:
     if (SDATE.equals(evt.getPropertyName())) {
-        validateDateForm();
+        validateForm();
     }
 }//GEN-LAST:event_dpValidFromPropertyChange
 
 private void dpValidToPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_dpValidToPropertyChange
 // TODO add your handling code here:
     if (SDATE.equals(evt.getPropertyName())) {
-        validateDateForm();
+        validateForm();
     }
 }//GEN-LAST:event_dpValidToPropertyChange
 
@@ -417,15 +424,23 @@ private void txtLicensePlateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRS
     txtLicensePlate.setText(txtLicensePlate.getText().toUpperCase());
 }//GEN-LAST:event_txtLicensePlateFocusLost
 
-    private void validateDateForm() {
+private void cbxVehicleTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxVehicleTypeActionPerformed
+    validateForm();
+}//GEN-LAST:event_cbxVehicleTypeActionPerformed
+
+    private void validateForm() {
+        if (transportAgentSelected == null) {
+            return;
+        }
+
+        boolean isValidDate;
         try {
             dateFromToValidator.validate(dpValidFrom.getDate(), dpValidTo.getDate());
 
             lblValidFrom.setForeground(Color.black);
             lblValidTo.setForeground(Color.black);
-            if (txtLicensePlate.getText() != null && dpValidFrom.getDate() != null && dpValidTo.getDate() != null) {
-                btnVehicleSave.setEnabled(true);
-            }
+
+            isValidDate = true;
         } catch (IllegalArgumentException ex) {
             lblValidFrom.setForeground(dpValidFrom.getDate() != null ? Color.black : Color.red);
             lblValidTo.setForeground(dpValidTo.getDate() != null ? Color.black : Color.red);
@@ -434,6 +449,15 @@ private void txtLicensePlateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRS
                 lblValidTo.setForeground(Color.red);
             }
 
+            isValidDate = false;
+        }
+
+        VehicleType vehicleType = (VehicleType) cbxVehicleType.getSelectedItem();
+        lblVehicleType.setForeground(vehicleType != null ? Color.black : Color.red);
+
+        if (validateLicensePlate() && isValidDate && vehicleType != null) {
+            btnVehicleSave.setEnabled(true);
+        } else {
             btnVehicleSave.setEnabled(false);
         }
     }
