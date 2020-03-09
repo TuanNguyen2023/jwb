@@ -273,12 +273,16 @@ public class WTRegView extends javax.swing.JInternalFrame {
         DefaultComboBoxModel sLocModel = weightTicketRegistarationController.getSlocModel();
         DefaultComboBoxModel sLoc2Model = (DefaultComboBoxModel) SerializationUtils.clone(sLocModel);
         cbxSlocN.setModel(sLocModel);
+        cbxSlocN.setSelectedIndex(-1);
         cbxSloc2N.setModel(sLoc2Model);
+        cbxSloc2N.setSelectedIndex(-1);
 
         DefaultComboBoxModel vendorModel = weightTicketRegistarationController.getVendorModel();
         DefaultComboBoxModel vendor2Model = (DefaultComboBoxModel) SerializationUtils.clone(vendorModel);
         cbxVendorLoadingN.setModel(vendorModel);
+        cbxVendorLoadingN.setSelectedIndex(-1);
         cbxVendorTransportN.setModel(vendor2Model);
+        cbxVendorTransportN.setSelectedIndex(-1);
         cbxModeSearch.setModel(new DefaultComboBoxModel<>(ModeEnum.values()));
         cbxStatus.setModel(new DefaultComboBoxModel<>(StatusEnum.values()));
     }
@@ -2653,7 +2657,6 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         private void setWeightTicketData() {
             for (int i = 0; i < weightTicketList.size(); i++) {
                 WeightTicket item = weightTicketList.get(i);
-                WeightTicketDetail weightTicketDetail = item.getWeightTicketDetail();
                 List<WeightTicketDetail> weightTicketDetails = item.getWeightTicketDetails();
                 wtData[i][0] = item.getSeqDay();
                 wtData[i][1] = item.getDriverName();
@@ -2666,7 +2669,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                         .filter(t -> t != null)
                         .toArray(String[]::new);
                 wtData[i][6] = regItemDescriptions.length > 0 ? String.join(" - ", regItemDescriptions) : "";
-                wtData[i][7] = weightTicketDetail.getRegItemQuantity();
+                BigDecimal sumRegQty = BigDecimal.ZERO;
+                for(WeightTicketDetail wt: weightTicketDetails) {
+                    sumRegQty = sumRegQty.add(wt.getRegItemQuantity());
+                }
+                wtData[i][7] = sumRegQty;
                 String[] doNums = weightTicketDetails.stream()
                         .map(t -> t.getDeliveryOrderNo())
                         .filter(t -> t != null)
@@ -3652,7 +3659,6 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
             strMatnr = purchaseOrderDetail.getMaterial();
 
-            newWeightTicket.getWeightTicketDetail().setTransVendor(purchaseOrder.getVendor());
             strVendor = purchaseOrder.getVendor();
             totalWeight = purchaseOrderDetail.getQuantity();
 
@@ -3784,7 +3790,6 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
         private void updateWeightTicket(PurchaseOrder purchaseOrder) {
             newWeightTicket.setPosto(purchaseOrder.getPoNumber());
-            newWeightTicket.getWeightTicketDetail().setLoadVendor(purchaseOrder.getVendor());
             strVendor = purchaseOrder.getVendor();
             switch (modeDetail) {
                 case OUT_SLOC_SLOC:
