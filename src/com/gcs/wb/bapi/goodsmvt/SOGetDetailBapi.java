@@ -54,5 +54,10 @@ public class SOGetDetailBapi implements Serializable {
     public List<DOCheckStructure> getDOCheck() {
         return _td_do_check;
     }
+
+    @Override
+    public String toString() {
+        return "SOGetDetailBapi{" + "_it_so_check=" + _it_so_check + '}';
+    }
 }
 

@@ -73,4 +73,9 @@ public class PlantGetDetailBapi implements Serializable {
     public void setIdWerks(String idWerks) {
         this._idWerks = idWerks;
     }
+
+    @Override
+    public String toString() {
+        return "PlantGetDetailBapi{" + "_idMandt=" + _idMandt + ", _idWerks=" + _idWerks + '}';
+    }
 }

@@ -100,4 +100,9 @@ public class PoPostGetListBapi implements Serializable{
         return  _ctPoPostoHeader;
     }
 
+    @Override
+    public String toString() {
+        return "PoPostGetListBapi{" + "_ivStartDate=" + _ivStartDate + ", _ivStartTime=" + _ivStartTime + ", _ivEndDate=" + _ivEndDate + ", _ivEndTime=" + _ivEndTime + ", _ivIndicator=" + _ivIndicator + '}';
+    }
+
 }

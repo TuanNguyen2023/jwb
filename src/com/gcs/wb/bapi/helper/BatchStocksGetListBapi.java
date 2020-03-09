@@ -76,4 +76,9 @@ public class BatchStocksGetListBapi implements Serializable {
     public List<BatchStocksStructure> getBatchStocks() {
         return _batchStocks;
     }
+
+    @Override
+    public String toString() {
+        return "BatchStocksGetListBapi{" + "_idMandt=" + _idMandt + ", _idWerks=" + _idWerks + ", _idLgort=" + _idLgort + ", _idMatnr=" + _idMatnr + '}';
+    }
 }

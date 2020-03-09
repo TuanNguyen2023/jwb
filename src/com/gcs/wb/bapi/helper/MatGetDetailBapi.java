@@ -43,4 +43,9 @@ public class MatGetDetailBapi implements Serializable {
     public MatGetDetailStructure getEs_makt() {
         return _es_makt;
     }
+
+    @Override
+    public String toString() {
+        return "MatGetDetailBapi{" + "_id_matnr=" + _id_matnr + '}';
+    }
 }

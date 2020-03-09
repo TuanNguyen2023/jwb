@@ -97,4 +97,9 @@ public class VendorValiationCheckBapi implements Serializable {
     public String getEvReturn() {
         return _evReturn;
     }
+
+    @Override
+    public String toString() {
+        return "VendorValiationCheckBapi{" + "_ivVendor=" + _ivVendor + ", _ivWerks=" + _ivWerks + ", _ivReswk=" + _ivReswk + ", _ivMatnr=" + _ivMatnr + ", _ivKschl=" + _ivKschl + '}';
+    }
 }

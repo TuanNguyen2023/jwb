@@ -126,4 +126,9 @@ public class DoGetDetailBapi implements Serializable {
 	public void setEs_vstel_txt(String _es_vstel_txt) {
 		this._es_vstel_txt = _es_vstel_txt;
 	}
+
+    @Override
+    public String toString() {
+        return "DoGetDetailBapi{" + "_id_do=" + _id_do + '}';
     }
+}

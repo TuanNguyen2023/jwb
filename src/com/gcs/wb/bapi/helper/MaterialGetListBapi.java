@@ -90,4 +90,9 @@ public class MaterialGetListBapi implements Serializable {
     public List<MaterialGetListStructure> getEtMaterial() {
         return _etMaterial;
     }
+
+    @Override
+    public String toString() {
+        return "MaterialGetListBapi{" + "_ivStartDate=" + _ivStartDate + ", _ivStartTime=" + _ivStartTime + ", _ivEndTime=" + _ivEndTime + ", _ivIndicator=" + _ivIndicator + '}';
+    }
 }
