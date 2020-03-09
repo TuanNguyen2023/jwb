@@ -3384,6 +3384,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     outbDel = outbDel_list.get(i);
                     sumQtyReg = sumQtyReg.add(outbDel.getLfimg());
                 }
+                
                 // post SAP
                 String ivWbidNosave = "";
                 for (int i = 0; i < outbDel_list.size(); i++) {
@@ -3393,6 +3394,12 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     }
                     // validate trọng lượng DO
                     flgGqty = validateTolerance(null, outbDel);
+                    
+                    // check dung sai -> set Qty
+                    String material = (outbDel != null && outbDel.getMatnr() != null) ? outbDel.getMatnr().toString() : "";
+                    if(checkVariantByMaterial(weightTicket, material, weightTicket.getGQty())) {
+                        weightTicket.setGQty(sumQtyReg);
+                    }
 
                     // mode nhap DO
                     if (weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER")) {
@@ -4394,6 +4401,31 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
     public GoodsMvtWeightTicketStructure fillWTStructure(WeightTicket wt,
             OutboundDelivery od, List<OutboundDeliveryDetail> od_v2_list) {
         return weightTicketController.fillWTStructure(wt, od, od_v2_list, weightTicket);
+    }
+    
+    public boolean checkVariantByMaterial(WeightTicket wt, String material, BigDecimal gQty) {
+        Variant vari = weightTicketController.findByParamMandtWplant(material, configuration.getSapClient(), configuration.getWkPlant());
+        double valueUp = 0;
+        double valueDown = 0;
+        double result = gQty.doubleValue();
+
+        if (vari != null) {
+            if (vari.getValueUp() != null && !vari.getValueUp().isEmpty()) {
+                valueUp = Double.parseDouble(vari.getValueUp());
+            }
+
+            if (vari.getValueDown() != null && !vari.getValueDown().isEmpty()) {
+                valueDown = Double.parseDouble(vari.getValueDown());
+            }
+
+            double upper = result + (result * valueUp) / 100;
+            double lower = result - (result * valueDown) / 100;
+
+            if ((lower <= result && result <= upper)) {
+                return true;
+            }
+        }
+        return false;
     }
     // </editor-fold>
     //<editor-fold defaultstate="collapsed" desc="Variables declaration Area">

@@ -191,29 +191,4 @@ public class WeightTicketController {
     public DefaultComboBoxModel getVendorModel() {
         return new DefaultComboBoxModel(vendorRepository.getListVendor().toArray());
     }
-    
-    public boolean checkVariantByMaterial(WeightTicket wt, String material, BigDecimal gQty) {
-        Variant vari = findByParamMandtWplant(material, configuration.getSapClient(), configuration.getWkPlant());
-        double valueUp = 0;
-        double valueDown = 0;
-        double result = gQty.doubleValue();
-
-        if (vari != null) {
-            if (vari.getValueUp() != null && !vari.getValueUp().isEmpty()) {
-                valueUp = Double.parseDouble(vari.getValueUp());
-            }
-
-            if (vari.getValueDown() != null && !vari.getValueDown().isEmpty()) {
-                valueDown = Double.parseDouble(vari.getValueDown());
-            }
-
-            double upper = result + (result * valueUp) / 100;
-            double lower = result - (result * valueDown) / 100;
-
-            if ((lower <= result && result <= upper)) {
-                return false;
-            }
-        }
-        return true;
-    }
 }
