@@ -26,9 +26,6 @@ public class SOGetDetailBapi implements Serializable {
     @Table
     @Parameter(value = SOGetDetailConstants.IT_SO_CHECK, type = ParameterType.STRUCTURE)
     private List<SOCheckStructure> _it_so_check;
-    @Import
-    @Parameter(SOGetDetailConstants.WERKS)
-    private String _werks;
     @Table
     @Parameter(SOGetDetailConstants.TD_DO_CHECK)
     private List<DOCheckStructure> _td_do_check;
@@ -50,12 +47,6 @@ public class SOGetDetailBapi implements Serializable {
         this._it_so_check = sOCheck;
     }
 
-    /**
-     * @param _werks
-     */
-    public void setWerks(String _werks) {
-        this._werks = _werks;
-    }
 
     /**
      * @return the _td_do_check

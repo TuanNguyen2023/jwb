@@ -2867,10 +2867,16 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 if (outboundDelivery == null) {
                     throw new Exception(resourceMapMsg.getString("msg.dONotExitst", deliveryOrderNo));
                 }
+                
+                // check register DO in WB
+                WeightTicket weightTicket = weightTicketRegistarationController.findByDeliveryOrderNo(deliveryOrderNo);
+                if (weightTicket != null) {
+                    throw new Exception(resourceMapMsg.getString("msg.doExist", deliveryOrderNo, weightTicket.getId()));
+                }
 
                 // check status post SAP
                 if (outboundDelivery.getVbelnNach() != null && !outboundDelivery.getVbelnNach().trim().isEmpty()) {
-                    throw new Exception("Số D.O \"" + deliveryOrderNo + "\" đã được nhập hàng tại chứng từ " + outboundDelivery.getVbelnNach() + "!");
+                    throw new Exception(resourceMapMsg.getString("msg.doPosted", deliveryOrderNo, outboundDelivery.getVbelnNach()));
                 }
 
                 //Check Delivery Plant with Configuration parameter.
@@ -3553,12 +3559,12 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             //Check PO Plant with Configuration parameter.
             if ((modeDetail == MODE_DETAIL.IN_PO_PURCHASE || modeDetail == MODE_DETAIL.OUT_SLOC_SLOC)
                     && (!(purchaseOrderPO.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant()))) {
-                throw new Exception(resourceMapMsg.getString("msg.poIsDenied"));
+                throw new Exception(resourceMapMsg.getString("msg.poIsDenied", poNum));
             }
             if ((modeDetail == MODE_DETAIL.OUT_PLANT_PLANT
                     || modeDetail == MODE_DETAIL.OUT_PULL_STATION)
                     && (!(purchaseOrderPO.getSupplPlnt()).equals(configuration.getWkPlant()))) {
-                throw new Exception(resourceMapMsg.getString("msg.poIsDenied"));
+                throw new Exception(resourceMapMsg.getString("msg.poIsDenied", poNum));
             }
 
             updateWeightTicket(purchaseOrderPO);
@@ -3723,12 +3729,12 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             //Check PO Plant with Configuration parameter.
             if ((modeDetail == MODE_DETAIL.IN_PO_PURCHASE)
                     && (!(purchaseOrderPOSTO.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant()))) {
-                throw new Exception(resourceMapMsg.getString("msg.postoIsDenied"));
+                throw new Exception(resourceMapMsg.getString("msg.postoIsDenied", postoNum));
             }
 
             //Check POSTO Plant with PO plant
             if (!purchaseOrderPOSTO.getPurchaseOrderDetail().getPlant().equals(configuration.getWkPlant())) {
-                throw new Exception(resourceMapMsg.getString("msg.postoIsPlant"));
+                throw new Exception(resourceMapMsg.getString("msg.postoIsPlant", postoNum));
             }
 
             //Check matnr for PO-POSTO
