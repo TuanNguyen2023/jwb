@@ -2867,10 +2867,16 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 if (outboundDelivery == null) {
                     throw new Exception(resourceMapMsg.getString("msg.dONotExitst", deliveryOrderNo));
                 }
+                
+                // check register DO in WB
+                WeightTicket weightTicket = weightTicketRegistarationController.findByDeliveryOrderNo(deliveryOrderNo);
+                if (weightTicket != null) {
+                    throw new Exception(resourceMapMsg.getString("msg.doExist", deliveryOrderNo, weightTicket.getId()));
+                }
 
                 // check status post SAP
                 if (outboundDelivery.getVbelnNach() != null && !outboundDelivery.getVbelnNach().trim().isEmpty()) {
-                    throw new Exception("Số D.O \"" + deliveryOrderNo + "\" đã được nhập hàng tại chứng từ " + outboundDelivery.getVbelnNach() + "!");
+                    throw new Exception(resourceMapMsg.getString("msg.doPosted", deliveryOrderNo, outboundDelivery.getVbelnNach()));
                 }
 
                 //Check Delivery Plant with Configuration parameter.
