@@ -354,7 +354,7 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
             cbxVehicleType.setEnabled(true);
             dpValidFrom.setEnabled(true);
             dpValidTo.setEnabled(true);
-            
+
             validateForm();
         }
     }//GEN-LAST:event_lstTransportAgentValueChanged
@@ -421,7 +421,10 @@ private void dpValidToPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-
 }//GEN-LAST:event_dpValidToPropertyChange
 
 private void txtLicensePlateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtLicensePlateFocusLost
-    txtLicensePlate.setText(txtLicensePlate.getText().toUpperCase());
+    String plateNo = txtLicensePlate.getText().trim();
+    plateNo = plateNo.replace("-", "");
+    plateNo = plateNo.replace(".", "");
+    txtLicensePlate.setText(plateNo.toUpperCase());
 }//GEN-LAST:event_txtLicensePlateFocusLost
 
 private void cbxVehicleTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxVehicleTypeActionPerformed
@@ -484,10 +487,13 @@ private void cbxVehicleTypeActionPerformed(java.awt.event.ActionEvent evt) {//GE
 
     @Action(enabledProperty = "vehicleCreatable")
     public void saveVehicle() {
+        String plateNo = txtLicensePlate.getText().trim();
+        plateNo = plateNo.replace("-", "");
+        plateNo = plateNo.replace(".", "");
 
         //save vehicle
         VehicleType vehicleType = (VehicleType) cbxVehicleType.getSelectedItem();
-        transportAgentController.saveVehicle(txtLicensePlate.getText().trim(), transportAgentSelected, dpValidFrom.getDate(), dpValidTo.getDate(), vehicleType);
+        transportAgentController.saveVehicle(plateNo, transportAgentSelected, dpValidFrom.getDate(), dpValidTo.getDate(), vehicleType);
         setVehicleCreatable(false);
         vehicleSelected = null;
         txtLicensePlate.setText("");
