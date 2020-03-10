@@ -174,13 +174,24 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
             public Component getListCellRendererComponent(
                     JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
                 if (value instanceof MaterialInternal) {
                     MaterialInternal materialInternal = (MaterialInternal) value;
-                    setToolTipText(materialInternal.getMatnr());
-                    if (materialInternal.getMaktx().trim() != null) {
-                        setText(materialInternal.getMaktx());
+                    String maktx = materialInternal.getMaktx();
+                    if (maktx != null && !maktx.isEmpty()) {
+                        setText(materialInternal.getMatnr() + " - " + materialInternal.getMaktx());
                     } else {
-                        setText(materialInternal.getMaktg());
+                        setText(materialInternal.getMatnr() + " - " + materialInternal.getMaktg());
+                    }
+                }
+
+                if (value instanceof Material) {
+                    Material material = (Material) value;
+                    String maktx = material.getMaktx();
+                    if (maktx != null && !maktx.isEmpty()) {
+                        setText(material.getMatnr() + " - " + material.getMaktx());
+                    } else {
+                        setText(material.getMatnr() + " - " + material.getMaktg());
                     }
                 }
                 return this;
@@ -2764,9 +2775,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                 String from = format.format(dpDateFrom.getDate());
                 String to = format.format(dpDateTo.getDate());
+                StatusEnum status = (StatusEnum) cbxStatus.getSelectedItem();
+                status = status != null ? status : StatusEnum.ALL;
                 List<WeightTicket> result = weightTicketRegistarationController.findListWeightTicket(from, to,
                         txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim(),
-                        material.getMatnr(), (StatusEnum) cbxStatus.getSelectedItem(),
+                        material.getMatnr(), status,
                         (ModeEnum) cbxModeSearch.getSelectedItem());
 
                 result = filterHours(result, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
@@ -3452,7 +3465,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         cbxVendorLoadingN.setSelectedIndex(-1);
         cbxVendorTransportN.setSelectedIndex(-1);
         cbxCustomerN.setSelectedIndex(-1);
-        
+
         disableAllInForm();
     }
 
