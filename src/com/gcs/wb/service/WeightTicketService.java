@@ -693,7 +693,7 @@ public class WeightTicketService {
 
     public Object getPgmVl02nBapi(WeightTicket wt, OutboundDelivery outbDel,
             WeightTicket weightTicket,String modeFlg, int timeFrom, int timeTo,
-            List<OutboundDeliveryDetail> outDetails_lits, String ivWbidNosave) {
+            List<OutboundDeliveryDetail> outDetails_lits, String ivWbidNosave, BigDecimal sumQtyReg) {
         String doNum = null;
         if (outbDel != null) {
             doNum = outbDel.getDeliveryOrderNo();
@@ -716,6 +716,15 @@ public class WeightTicketService {
         BigDecimal kl = BigDecimal.ZERO;
         BigDecimal kl_km = BigDecimal.ZERO;
         BigDecimal kl_total = BigDecimal.ZERO;
+        BigDecimal sumQtyRegWT = BigDecimal.ZERO;
+        
+        // check dung sai -> set Qty
+        String material = (outbDel != null && outbDel.getMatnr() != null) ? outbDel.getMatnr().toString() : "";
+        if(checkVariantByMaterial(wt, material, wt.getGQty())) {
+            sumQtyRegWT = sumQtyReg;
+        } else {
+            sumQtyRegWT = wt.getGQty();
+        }
 
         for (int i = 0; i < outDetails_lits.size(); i++) {
             item = outDetails_lits.get(i);
@@ -792,7 +801,7 @@ public class WeightTicketService {
             if (qtyfree == null) {
                 qtyfree = new BigDecimal(0);
             }
-            qty = wt.getGQty().subtract(qtyfree);
+            qty = sumQtyRegWT.subtract(qtyfree);
             if(kl.equals(BigDecimal.ZERO)) {
                 tab_wa.setPikmg(qty);
                 tab_wa.setLfimg(qty);
@@ -837,6 +846,31 @@ public class WeightTicketService {
         }
         bapi.setVbpok_tab(tab);
         return bapi;
+    }
+    
+    public boolean checkVariantByMaterial(WeightTicket wt, String material, BigDecimal gQty) {
+        Variant vari = findByParamMandtWplant(material, configuration.getSapClient(), configuration.getWkPlant());
+        double valueUp = 0;
+        double valueDown = 0;
+        double result = gQty.doubleValue();
+
+        if (vari != null) {
+            if (vari.getValueUp() != null && !vari.getValueUp().isEmpty()) {
+                valueUp = Double.parseDouble(vari.getValueUp());
+            }
+
+            if (vari.getValueDown() != null && !vari.getValueDown().isEmpty()) {
+                valueDown = Double.parseDouble(vari.getValueDown());
+            }
+
+            double upper = result + (result * valueUp) / 100;
+            double lower = result - (result * valueDown) / 100;
+
+            if ((lower <= result && result <= upper)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void printWT(WeightTicket wt, boolean reprint, String ximang, List<OutboundDelivery> outbDel_list, List<OutboundDeliveryDetail> outDetails_lits,
