@@ -3778,6 +3778,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         protected Object doInBackground() throws Exception {
             String postoNum = txtPOSTONumN.getText().trim();
 
+            // check compare PO with POSTO
+            if(postoNum.equals(purchaseOrderPO.getPoNumber())) {
+                throw new Exception(resourceMapMsg.getString("msg.duplicatePo"));
+            }
+            
             // get local POSTO
             setStep(1, resourceMapMsg.getString("msg.checkPOSTOInDB"));
             purchaseOrderPOSTO = purchaseOrderRepository.findByPoNumber(postoNum);
@@ -3786,7 +3791,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             if (!WeighBridgeApp.getApplication().isOfflineMode()) {
                 purchaseOrderPOSTO = syncPurchaseOrder(postoNum, purchaseOrderPOSTO);
             }
-
+            
             // check exist PO
             if (purchaseOrderPOSTO == null) {
                 throw new Exception(resourceMapMsg.getString("msg.postoNotExist", postoNum));
