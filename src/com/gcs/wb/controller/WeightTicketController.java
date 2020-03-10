@@ -130,13 +130,17 @@ public class WeightTicketController {
         return weightTicketService.getDoCreate2PGI(wt, outbDel, weightTicket, timeFrom, timeTo, outDetails_lits);
     }
 
+    public Object getDOPostingPGI(WeightTicket wt, OutboundDelivery outbDel,WeightTicket weightTicket, int timeFrom, int timeTo, List<OutboundDeliveryDetail> outDetails_lits, String deliveryNum) {
+        return weightTicketService.getDOPostingPGI(wt, outbDel,weightTicket, timeFrom, timeTo, outDetails_lits, deliveryNum);
+    }
+
     public Object getPgmVl02nBapi(WeightTicket wt, OutboundDelivery outbDel, WeightTicket weightTicket,
             String modeFlg, int timeFrom, int timeTo, List<OutboundDeliveryDetail> outDetails_lits, String ivWbidNosave, BigDecimal sumQtyReg) {
         return weightTicketService.getPgmVl02nBapi(wt, outbDel, weightTicket, modeFlg, timeFrom, timeTo, outDetails_lits, ivWbidNosave, sumQtyReg);
     }
 
-    public Object getMvtPOSTOCreatePGI(WeightTicket wt, WeightTicket weightTicket, String posto, int timeFrom, int timeTo) {
-        return weightTicketService.getMvtPOSTOCreatePGI(wt, weightTicket, posto, timeFrom, timeTo);
+    public Object getMvtPOSTOCreatePGI(WeightTicket wt, WeightTicket weightTicket, String posto, int timeFrom, int timeTo, boolean flgPost) {
+        return weightTicketService.getMvtPOSTOCreatePGI(wt, weightTicket, posto, timeFrom, timeTo, flgPost);
     }
 
     public void printWT(WeightTicket wt, boolean reprint, String ximang, List<OutboundDelivery> outbDel_list, List<OutboundDeliveryDetail> outDetails_lits,

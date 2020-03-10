@@ -2301,7 +2301,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 isValid = validateOutPullStation() && isValidPO && isValidVendorLoad && isValidVendorTransport;
                 break;
             case OUT_SELL_WATERWAY:
-                isValid = validateOutSellWateway() && isValidPO;
+                isValid = validateOutSellWateway() && isValidDO;
                 break;
             case OUT_OTHER:
                 isValid = validateInOutOther();
@@ -2874,9 +2874,9 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         protected Object doInBackground() throws Exception {
             String[] deliveryOrderNos = txtDONumN.getText().split("-");
             String[] salesOrderNos = txtSONumN.getText().split("-");
-            for (int index = 0; index < deliveryOrderNos.length; index++) {
+            String salesOrder = null;
+            for (int index = 0; index < deliveryOrderNos.length; index ++ ) {
                 String deliveryOrderNo = deliveryOrderNos[index];
-                String salesOrder = null;
                 if (salesOrderNos.length == deliveryOrderNos.length) {
                     salesOrder = salesOrderNos[index];
                 }
@@ -2936,6 +2936,16 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 // check out together
                 if (deliveryOrderNos.length > 1 && !checkMaterial(outboundDelivery)) {
                     throw new Exception(resourceMapMsg.getString("msg.materialNotTogether"));
+                }
+
+                // check customer
+                if (index > 0) {
+                    String deliveryOrderNoBefore = deliveryOrderNos[index-1];
+                    deliveryOrderNoBefore = StringUtil.paddingZero(deliveryOrderNoBefore.trim(), 10);
+                    OutboundDelivery outboundDeliveryBefore = weightTicketRegistarationController.findByDeliveryOrderNumber(deliveryOrderNoBefore);
+                    if(!outboundDelivery.getKunnr().equals(outboundDeliveryBefore.getKunnr())) {
+                        throw new Exception(resourceMapMsg.getString("msg.customerNotTogether"));
+                    }
                 }
 
                 // set DO data to Weight ticket

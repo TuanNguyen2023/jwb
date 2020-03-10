@@ -12,6 +12,7 @@ import com.gcs.wb.bapi.goodsmvt.structure.*;
 import com.gcs.wb.bapi.helper.MatAvailableBapi;
 import com.gcs.wb.bapi.helper.structure.MatAvailableStructure;
 import com.gcs.wb.bapi.outbdlv.DOCreate2PGIBapi;
+import com.gcs.wb.bapi.outbdlv.DOPostingPGIBapi;
 import com.gcs.wb.bapi.outbdlv.DORevertBapi;
 import com.gcs.wb.bapi.outbdlv.WsDeliveryUpdateBapi;
 import com.gcs.wb.bapi.outbdlv.structure.OutbDeliveryCreateStoStructure;
@@ -691,6 +692,102 @@ public class WeightTicketService {
         return bapi;
     }
 
+    public Object getDOPostingPGI(WeightTicket wt, OutboundDelivery outbDel,WeightTicket weightTicket, int timeFrom, int timeTo, List<OutboundDeliveryDetail> outDetails_lits, String deliveryNum) {
+        String doNum = null;
+        if (outbDel != null) {
+            doNum = outbDel.getDeliveryOrderNo();
+        }
+        DOPostingPGIBapi bapi = new DOPostingPGIBapi();
+        bapi.setDelivery(deliveryNum);
+        WeightTicketDetail weightTicketDetail = wt.getWeightTicketDetail();
+        String plateCombine = wt.getPlateNo();
+        if (wt.getTrailerId() != null && !wt.getTrailerId().trim().isEmpty()) {
+            plateCombine += "|" + wt.getTrailerId();
+        }
+        VbkokStructure wa = new VbkokStructure();
+        if (outbDel == null) {
+            wa.setVbeln_vl(weightTicketDetail.getDeliveryOrderNo());
+        } else {
+            wa.setVbeln_vl(doNum);
+        }
+        wa.setKodat(DateUtil.stripTime(wt.getFTime()));
+        wa.setKouhr(DateUtil.stripDate(wt.getFTime()));
+
+        wa.setKomue("X");
+        wa.setWabuc("X");
+
+        //modify lui ngay
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(wt.getSTime());
+        Date stime;
+        if (timeFrom <= cal.get(Calendar.HOUR_OF_DAY) && cal.get(Calendar.HOUR_OF_DAY) <= (timeTo - 1)) {
+            cal.add(Calendar.DATE, -1);
+            stime = cal.getTime();
+        } else {
+            stime = wt.getSTime();
+        }
+
+        wa.setWadat_ist(DateUtil.stripTime(stime));
+        wa.setWadat(DateUtil.stripTime(stime));
+        wa.setWauhr(DateUtil.stripDate(stime));
+        wa.setLfdat(DateUtil.stripTime(stime));
+        wa.setLfuhr(DateUtil.stripDate(stime));
+        wa.setTraty("Z001");
+        wa.setTraid(plateCombine);
+        wa.setLifex(wt.getDriverName());
+        bapi.setVbkok_wa(wa);
+        bapi.setIvCVendor(weightTicketDetail.getLoadVendor());
+        bapi.setIvTVendor(weightTicketDetail.getTransVendor());
+
+        //get do details for current do
+        OutboundDeliveryDetail item = null;
+        BigDecimal kl = BigDecimal.ZERO;
+        BigDecimal kl_km = BigDecimal.ZERO;
+        BigDecimal kl_total = BigDecimal.ZERO;
+        for (int i = 0; i < outDetails_lits.size(); i++) {
+            item = outDetails_lits.get(i);
+            if (item.getDeliveryOrderNo().contains(doNum)) {
+                if (item.getFreeItem() == null || item.getFreeItem().equals("")) {
+                    kl = kl.add((item.getGoodsQty() != null) ? item.getGoodsQty() : BigDecimal.ZERO);
+                } else {
+                    kl_km = kl_km.add((item.getGoodsQty() != null) ? item.getGoodsQty() : BigDecimal.ZERO);
+                }
+            }
+        }
+        kl_total = kl.add(kl_km);
+
+        GoodsMvtWeightTicketStructure stWT = fillWTStructure(weightTicket, outbDel, outDetails_lits, weightTicket);
+        bapi.setWeightticket(stWT);
+        List<VbpokStructure> tab = new ArrayList<>();
+        VbpokStructure tab_wa = new VbpokStructure();
+        if (outbDel == null) {
+            tab_wa.setVbeln_vl(weightTicketDetail.getDeliveryOrderNo());
+        } else {
+            tab_wa.setVbeln_vl(doNum);
+        }
+        tab_wa.setPosnr_vl(weightTicketDetail.getItem());
+        tab_wa.setVbeln(tab_wa.getVbeln_vl());
+        tab_wa.setPosnn(tab_wa.getPosnr_vl());
+        tab_wa.setMatnr(weightTicketDetail.getMatnrRef());
+        tab_wa.setWerks(configuration.getWkPlant());
+        tab_wa.setLgort(wt.getLgort());
+        tab_wa.setCharg(wt.getCharg());
+        tab_wa.setLianp("X");
+        if (outbDel == null) {
+            tab_wa.setPikmg(wt.getGQty());
+            tab_wa.setLfimg(wt.getGQty());
+        } else {
+            tab_wa.setPikmg(kl_total);
+            tab_wa.setLfimg(kl_total);
+        }
+        tab_wa.setVrkme(weightTicketDetail.getUnit());
+        tab_wa.setMeins(weightTicketDetail.getUnit());
+        tab.add(tab_wa);
+        bapi.setVbpok_tab(tab);
+
+        return bapi;
+    }
+
     public Object getPgmVl02nBapi(WeightTicket wt, OutboundDelivery outbDel,
             WeightTicket weightTicket,String modeFlg, int timeFrom, int timeTo,
             List<OutboundDeliveryDetail> outDetails_lits, String ivWbidNosave, BigDecimal sumQtyReg) {
@@ -1111,13 +1208,18 @@ public class WeightTicketService {
     }
 
     //nhap xuat dong thoi
-    public Object getMvtPOSTOCreatePGI(WeightTicket wt, WeightTicket weightTicket, String posto, int timeFrom, int timeTo) {
+    public Object getMvtPOSTOCreatePGI(WeightTicket wt, WeightTicket weightTicket, String posto, int timeFrom, int timeTo, boolean flgPost) {
         //config = WeighBridgeApp.getApplication().getConfig();
         GoodsMvtPOSTOCreatePGIBapi bapi = new GoodsMvtPOSTOCreatePGIBapi();
         PurchaseOrder purOrderPosto = purchaseOrderRepository.findByPoNumber(posto);
         String plateCombine = wt.getPlateNo();
         if (wt.getTrailerId()!= null && !wt.getTrailerId().trim().isEmpty()) {
             plateCombine += "|" + wt.getTrailerId();
+        }
+        if(flgPost) {
+            bapi.setIvReType("X");
+            bapi.setIvMaterialDocument(wt.getWeightTicketDetail().getIvMaterialDocument());
+            bapi.setIvMatDocumentYear(wt.getWeightTicketDetail().getIvMatDocumentYear());
         }
         //API ZJBAPI_GOODSMVT_CREATE_V2_2606 - Nhap (posto)
         bapi.setGmCode(new GoodsMvtCodeStructure("01"));

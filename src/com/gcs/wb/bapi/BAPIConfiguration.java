@@ -32,6 +32,7 @@ import com.gcs.wb.bapi.helper.UserGetDetailBapi;
 import com.gcs.wb.bapi.helper.VendorGetDetailBapi;
 import com.gcs.wb.bapi.helper.VendorValiationCheckBapi;
 import com.gcs.wb.bapi.outbdlv.DOCreate2PGIBapi;
+import com.gcs.wb.bapi.outbdlv.DOPostingPGIBapi;
 import com.gcs.wb.bapi.outbdlv.DORevertBapi;
 import com.gcs.wb.bapi.outbdlv.OutbDeliveryCreateStoBapi;
 import com.gcs.wb.bapi.outbdlv.WsDeliveryUpdateBapi;
@@ -111,6 +112,7 @@ public class BAPIConfiguration {
         sessionConfig.addAnnotatedClass(SOGetDetailBapi.class);
         sessionConfig.addAnnotatedClass(PoPostGetListBapi.class);
         sessionConfig.addAnnotatedClass(SyncContractSOGetListBapi.class);
+        sessionConfig.addAnnotatedClass(DOPostingPGIBapi.class);
         
         AnnotationConfiguration conf = new AnnotationConfiguration(sessionConfig);
         return conf.buildSessionManager();

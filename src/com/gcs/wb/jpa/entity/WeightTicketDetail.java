@@ -94,6 +94,10 @@ public class WeightTicketDetail implements Serializable {
     private String transVendor;
     @Column(name = "ship_to")
     private String shipTo;
+    @Column(name = "IvMaterialDocument")
+    private String ivMaterialDocument;
+    @Column(name = "IvMatDocumentYear")
+    private String ivMatDocumentYear;
 
     @ManyToOne
     @JoinColumn(name = "weight_ticket_id")
@@ -334,6 +338,22 @@ public class WeightTicketDetail implements Serializable {
 
     public void setShipTo(String shipTo) {
         this.shipTo = shipTo;
+    }
+    
+    public String getIvMaterialDocument() {
+        return ivMaterialDocument;
+    }
+
+    public void setIvMaterialDocument(String ivMaterialDocument) {
+        this.ivMaterialDocument = ivMaterialDocument;
+    }
+
+    public String getIvMatDocumentYear() {
+        return ivMatDocumentYear;
+    }
+
+    public void setIvMatDocumentYear(String ivMatDocumentYear) {
+        this.ivMatDocumentYear = ivMatDocumentYear;
     }
 
     @Override
