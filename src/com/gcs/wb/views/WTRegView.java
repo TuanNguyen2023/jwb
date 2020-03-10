@@ -2301,7 +2301,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 isValid = validateOutPullStation() && isValidPO && isValidVendorLoad && isValidVendorTransport;
                 break;
             case OUT_SELL_WATERWAY:
-                isValid = validateOutSellWateway() && isValidPO;
+                isValid = validateOutSellWateway() && isValidDO;
                 break;
             case OUT_OTHER:
                 isValid = validateInOutOther();
