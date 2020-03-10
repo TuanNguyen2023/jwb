@@ -70,6 +70,9 @@ public class SyncMasterDataService {
         syncSoDatas();
 
         logger.info("Sync master data is finished...");
+        
+        logger.info("Restart app...");
+        WeighBridgeApp.getApplication().restartApplication();
     }
 
     public void syncMasterDataWhenLogin() {
