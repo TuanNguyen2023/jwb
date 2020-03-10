@@ -17,6 +17,7 @@ import com.gcs.wb.jpa.repositorys.CustomerRepository;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
 import com.gcs.wb.jpa.repositorys.OutboundDeliveryRepository;
 import com.gcs.wb.jpa.repositorys.OutboundDetailRepository;
+import com.gcs.wb.jpa.repositorys.SLocRepository;
 import com.gcs.wb.jpa.repositorys.TransportAgentVehicleRepository;
 import com.gcs.wb.jpa.repositorys.UnitRepository;
 import com.gcs.wb.jpa.repositorys.VehicleRepository;
@@ -25,6 +26,7 @@ import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.ParameterMode;
@@ -49,6 +51,7 @@ public class WeightTicketRegistrationService {
     TransportAgentVehicleRepository transportAgentVehicleRepository = new TransportAgentVehicleRepository();
     BatchStockRepository batchStockRepository = new BatchStockRepository();
     UnitRepository unitRepository = new UnitRepository();
+    SLocRepository sLocRepository = new SLocRepository();
 
     SAPService sAPService = new SAPService();
     Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
@@ -225,5 +228,24 @@ public class WeightTicketRegistrationService {
             String creator, String driverName, String plateNo,
             String material, StatusEnum status, ModeEnum mode) throws Exception {
         return weightTicketRepository.findListWeightTicket(from, to, creator, driverName, plateNo, material, status, mode);
+    }
+
+    public List<SLoc> getListSLoc(List<String> lgorts) {
+        if (lgorts == null || lgorts.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        List<SLoc> sLocs = sLocRepository.getListSloc(lgorts);
+        if (sLocs.size() < lgorts.size() && !WeighBridgeApp.getApplication().isOfflineMode()) {
+            List<SLoc> sapSLocs = sAPService.syncSloc();
+
+            if (sapSLocs != null) {
+                sLocs = sapSLocs.stream()
+                        .filter(t -> lgorts.contains(t.getLgort()))
+                        .collect(Collectors.toCollection(ArrayList::new));
+            }
+        }
+
+        return sLocs;
     }
 }

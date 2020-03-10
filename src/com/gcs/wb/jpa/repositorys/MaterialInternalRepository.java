@@ -45,6 +45,7 @@ public class MaterialInternalRepository {
         return materials.stream()
                 .map(t -> t.getLgort())
                 .filter(t -> t != null && !t.isEmpty())
+                .distinct()
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -59,6 +60,7 @@ public class MaterialInternalRepository {
         return materials.stream()
                 .map(t -> t.getLgort())
                 .filter(t -> t != null && !t.isEmpty())
+                .distinct()
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 }
