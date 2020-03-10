@@ -287,6 +287,9 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
         cbxSlocN.setSelectedIndex(-1);
         cbxSloc2N.setModel(sLoc2Model);
         cbxSloc2N.setSelectedIndex(-1);
+        
+        cbxBatchStockN.setModel(new DefaultComboBoxModel());
+        cbxBatchStock2N.setModel(new DefaultComboBoxModel());
 
         validateForm();
     }
@@ -2688,7 +2691,6 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
             List<BatchStock> batchStocks = weightTicketRegistarationController.getBatchStocks(sloc, arr_matnr);
             batchStockComponent.setModel(weightTicketRegistarationController.getBatchStockModel(batchStocks));
-            batchStockComponent.setSelectedIndex(-1);
         }
 
         validateForm();
