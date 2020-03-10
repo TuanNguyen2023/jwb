@@ -186,9 +186,9 @@ public class WeightTicketRegistrationService {
     }
 
     public List<OutboundDeliveryDetail> findByMandtDelivNumb(String deliv_numb) throws Exception {
-        String devNumber = "%" + deliv_numb + "%";
+        //String devNumber = "%" + deliv_numb + "%";
         OutboundDetailRepository repo = new OutboundDetailRepository();
-        return repo.findByDeliveryOrderNo(devNumber);
+        return repo.findByDeliveryOrderNo(deliv_numb);
     }
 
     public List<BatchStock> getBatchStocks(SLoc sloc, String[] arr_matnr) {

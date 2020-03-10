@@ -92,6 +92,8 @@ public class WeightTicketDetail implements Serializable {
     private String loadVendor;
     @Column(name = "trans_vendor")
     private String transVendor;
+    @Column(name = "ship_to")
+    private String shipTo;
 
     @ManyToOne
     @JoinColumn(name = "weight_ticket_id")
@@ -324,6 +326,14 @@ public class WeightTicketDetail implements Serializable {
 
     public void setAbbr(String abbr) {
         this.abbr = abbr;
+    }
+    
+    public String getShipTo() {
+        return shipTo;
+    }
+
+    public void setShipTo(String shipTo) {
+        this.shipTo = shipTo;
     }
 
     @Override

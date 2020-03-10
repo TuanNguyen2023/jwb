@@ -3408,10 +3408,10 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     flgGqty = validateTolerance(null, outbDel);
                     
                     // check dung sai -> set Qty
-                    String material = (outbDel != null && outbDel.getMatnr() != null) ? outbDel.getMatnr().toString() : "";
-                    if(checkVariantByMaterial(weightTicket, material, weightTicket.getGQty())) {
-                        weightTicket.setGQty(sumQtyReg);
-                    }
+//                    String material = (outbDel != null && outbDel.getMatnr() != null) ? outbDel.getMatnr().toString() : "";
+//                    if(checkVariantByMaterial(weightTicket, material, weightTicket.getGQty())) {
+//                        weightTicket.setGQty(sumQtyReg);
+//                    }
 
                     // mode nhap DO
                     if (weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER")) {
@@ -3419,7 +3419,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                 || outbDel.getLfart().equalsIgnoreCase("ZRET")
                                 || outbDel.getLfart().equalsIgnoreCase("ZVND"))) {
                             modeFlg = "Z001";
-                            objBapi = getPgmVl02nBapi(weightTicket, outbDel, modeFlg, ivWbidNosave);
+                            objBapi = getPgmVl02nBapi(weightTicket, outbDel, modeFlg, ivWbidNosave, sumQtyReg);
                         } else {
                             objBapi = getGrDoMigoBapi(weightTicket, outbDel);
                         }
@@ -3429,13 +3429,13 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         // xuat DO
                         if (weightTicket.getMode().equals("OUT_SELL_ROAD")) {
                             modeFlg = "Z001";
-                            objBapi = getPgmVl02nBapi(weightTicket, outbDel, modeFlg, ivWbidNosave);
+                            objBapi = getPgmVl02nBapi(weightTicket, outbDel, modeFlg, ivWbidNosave, sumQtyReg);
                         }
 
                         // ban hang thuy
                         if (weightTicket.getMode().equals("OUT_SELL_WATERWAY")) {
                             modeFlg = "Z002";
-                            objBapi = getPgmVl02nBapi(weightTicket, outbDel, modeFlg, ivWbidNosave);
+                            objBapi = getPgmVl02nBapi(weightTicket, outbDel, modeFlg, ivWbidNosave, sumQtyReg);
                         }
                     } else {
                         JOptionPane.showMessageDialog(rootPane, "Chênh lệnh vượt dung sai cho phép!");
@@ -4233,8 +4233,8 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         return weightTicketController.getDoCreate2PGI(wt, outbDel, weightTicket, timeFrom, timeTo, outDetails_lits);
     }
 
-    private Object getPgmVl02nBapi(WeightTicket wt, OutboundDelivery outbDel, String modeFlg, String ivWbidNosave) {
-        return weightTicketController.getPgmVl02nBapi(wt, outbDel, weightTicket, modeFlg, timeFrom, timeTo, outDetails_lits, ivWbidNosave);
+    private Object getPgmVl02nBapi(WeightTicket wt, OutboundDelivery outbDel, String modeFlg, String ivWbidNosave, BigDecimal sumQtyReg) {
+        return weightTicketController.getPgmVl02nBapi(wt, outbDel, weightTicket, modeFlg, timeFrom, timeTo, outDetails_lits, ivWbidNosave, sumQtyReg);
     }
 
     private Object getMvtPOSTOCreatePGI(WeightTicket wt, String number) {
