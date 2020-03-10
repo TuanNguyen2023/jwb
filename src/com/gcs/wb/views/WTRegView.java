@@ -113,6 +113,8 @@ public class WTRegView extends javax.swing.JInternalFrame {
         t.execute();
 
         cbxHourTo.setSelectedIndex(23);
+        cbxModeSearch.setModel(new DefaultComboBoxModel<>(ModeEnum.values()));
+        cbxStatus.setModel(new DefaultComboBoxModel<>(StatusEnum.values()));
     }
 
     private void initTableEvent() {
@@ -282,8 +284,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
         cbxVendorLoadingN.setSelectedIndex(-1);
         cbxVendorTransportN.setModel(vendor2Model);
         cbxVendorTransportN.setSelectedIndex(-1);
-        cbxModeSearch.setModel(new DefaultComboBoxModel<>(ModeEnum.values()));
-        cbxStatus.setModel(new DefaultComboBoxModel<>(StatusEnum.values()));
     }
 
     private void loadSLoc(List<String> lgorts) {

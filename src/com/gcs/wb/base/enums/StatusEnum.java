@@ -6,7 +6,8 @@ package com.gcs.wb.base.enums;
 public enum StatusEnum {
     ALL("Tất cả"),
     POSTED("Hoàn tất"),
-    UNFINISH("Chưa hoàn tất");
+    UNFINISH("Chưa hoàn tất"),
+    OFFLINE("Offline");
 
     public final String VALUE;
 

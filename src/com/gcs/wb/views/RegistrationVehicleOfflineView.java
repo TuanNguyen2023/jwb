@@ -105,6 +105,8 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
         t.execute();
 
         cbxHourTo.setSelectedIndex(23);
+        cbxModeSearch.setModel(new DefaultComboBoxModel<>(ModeEnum.values()));
+        cbxStatus.setModel(new DefaultComboBoxModel<>(StatusEnum.values()));
     }
 
     private void initTableEvent() {
@@ -263,8 +265,6 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
         DefaultComboBoxModel vendor2Model = (DefaultComboBoxModel) SerializationUtils.clone(vendorModel);
         cbxVendorLoadingN.setModel(vendorModel);
         cbxVendorTransportN.setModel(vendor2Model);
-        cbxModeSearch.setModel(new DefaultComboBoxModel<>(ModeEnum.values()));
-        cbxStatus.setModel(new DefaultComboBoxModel<>(StatusEnum.values()));
 
         cbxCustomerN.setModel(weightTicketRegistarationController.getCustomerModel());
     }
