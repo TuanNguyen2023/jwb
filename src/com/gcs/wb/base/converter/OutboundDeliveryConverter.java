@@ -62,6 +62,7 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
                     outb_detail_check = findByMandtDelivNumbItem(val, doItem.getPosnr().substring(4, 5));
                     if (outb_detail_check.size() > 0) {
                         outboundDeliveryDetail = outb_detail_check.get(0);
+                        outboundDelivery.setId(outboundDeliveryDetail.getOutboundDelivery().getId());
                     } else {
                         outboundDeliveryDetail = new OutboundDeliveryDetail(val, doItem.getPosnr().substring(4, 5));
                     }

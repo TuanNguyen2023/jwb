@@ -3452,6 +3452,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         cbxVendorLoadingN.setSelectedIndex(-1);
         cbxVendorTransportN.setSelectedIndex(-1);
         cbxCustomerN.setSelectedIndex(-1);
+        
+        disableAllInForm();
     }
 
     private List<WeightTicket> filterHours(List<WeightTicket> data, String timeFrom, String timeTo) {
