@@ -3806,7 +3806,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             String postoNum = txtPOSTONumN.getText().trim();
 
             // check compare PO with POSTO
-            if (postoNum.equals(purchaseOrderPO.getPoNumber())) {
+            if ((purchaseOrderPO != null) && (postoNum.equals(purchaseOrderPO.getPoNumber()))) {
                 throw new Exception(resourceMapMsg.getString("msg.duplicatePo"));
             }
 
