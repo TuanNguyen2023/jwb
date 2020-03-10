@@ -62,7 +62,7 @@ public class WeightTicketRepository {
         wt = query.getResultList();
         return wt;
     }
-    
+
     public WeightTicket findByDeliveryOrderNoNotExistEbeln(String deliverNumber) {
         WeightTicket weightTicket = null;
         List<WeightTicket> list = getListByDeliveryOrderNoNotExistEbeln(deliverNumber);
@@ -71,7 +71,7 @@ public class WeightTicketRepository {
         }
         return weightTicket;
     }
-    
+
     public List<WeightTicket> getListByDeliveryOrderNoNotExistEbeln(String deliverNumber) {
         List<WeightTicket> wt = new ArrayList<WeightTicket>();
         TypedQuery<WeightTicket> query = entityManager.createNamedQuery("WeightTicket.findByDeliveryOrderNoNotExistEbeln", WeightTicket.class);
@@ -254,6 +254,10 @@ public class WeightTicketRepository {
             case UNFINISH:
                 query += "  AND w.status IS NULL";
                 break;
+            case OFFLINE:
+                query += "  AND w.offlineMode = 1";
+                break;
+
         }
 
         try {
@@ -301,6 +305,9 @@ public class WeightTicketRepository {
                 break;
             case UNFINISH:
                 query += "  AND w.status IS NULL";
+                break;
+            case OFFLINE:
+                query += "  AND w.offlineMode = 1";
                 break;
         }
 

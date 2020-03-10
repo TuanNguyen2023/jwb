@@ -105,6 +105,8 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
         t.execute();
 
         cbxHourTo.setSelectedIndex(23);
+        cbxModeSearch.setModel(new DefaultComboBoxModel<>(ModeEnum.values()));
+        cbxStatus.setModel(new DefaultComboBoxModel<>(StatusEnum.values()));
     }
 
     private void initTableEvent() {
@@ -172,13 +174,24 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
             public Component getListCellRendererComponent(
                     JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
                 if (value instanceof MaterialInternal) {
                     MaterialInternal materialInternal = (MaterialInternal) value;
-                    setToolTipText(materialInternal.getMatnr());
-                    if (materialInternal.getMaktx().trim() != null) {
-                        setText(materialInternal.getMaktx());
+                    String maktx = materialInternal.getMaktx();
+                    if (maktx != null && !maktx.isEmpty()) {
+                        setText(materialInternal.getMatnr() + " - " + materialInternal.getMaktx());
                     } else {
-                        setText(materialInternal.getMaktg());
+                        setText(materialInternal.getMatnr() + " - " + materialInternal.getMaktg());
+                    }
+                }
+
+                if (value instanceof Material) {
+                    Material material = (Material) value;
+                    String maktx = material.getMaktx();
+                    if (maktx != null && !maktx.isEmpty()) {
+                        setText(material.getMatnr() + " - " + material.getMaktx());
+                    } else {
+                        setText(material.getMatnr() + " - " + material.getMaktg());
                     }
                 }
                 return this;
@@ -263,8 +276,6 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
         DefaultComboBoxModel vendor2Model = (DefaultComboBoxModel) SerializationUtils.clone(vendorModel);
         cbxVendorLoadingN.setModel(vendorModel);
         cbxVendorTransportN.setModel(vendor2Model);
-        cbxModeSearch.setModel(new DefaultComboBoxModel<>(ModeEnum.values()));
-        cbxStatus.setModel(new DefaultComboBoxModel<>(StatusEnum.values()));
 
         cbxCustomerN.setModel(weightTicketRegistarationController.getCustomerModel());
     }
@@ -276,6 +287,9 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
         cbxSlocN.setSelectedIndex(-1);
         cbxSloc2N.setModel(sLoc2Model);
         cbxSloc2N.setSelectedIndex(-1);
+        
+        cbxBatchStockN.setModel(new DefaultComboBoxModel());
+        cbxBatchStock2N.setModel(new DefaultComboBoxModel());
 
         validateForm();
     }
@@ -2333,7 +2347,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             }
         }
 
-        boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 12);
+        boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
         boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
@@ -2371,7 +2385,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(plateNo).toString());
         }
 
-        boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 12);
+        boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
         boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
@@ -2411,7 +2425,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(plateNo).toString());
         }
 
-        boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 12);
+        boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
         boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
@@ -2438,7 +2452,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(plateNo).toString());
         }
 
-        boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 12);
+        boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
         boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
@@ -2487,7 +2501,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             }
         }
 
-        boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 12);
+        boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
         boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
@@ -2508,11 +2522,12 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
         boolean isWeightValid = wtRegisValidation.validateLength(txtWeightN.getText(), lblWeightN, 1, 10);
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
+        boolean isVendorTransValid = wtRegisValidation.validateCbxSelected(cbxVendorTransportN.getSelectedIndex(), lblVendorTransportN);
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
                 && isCMNDBLValid && isPlateNoValid && isPOValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
-                && isNoteValid && isSlocValid && isMaterialTypeValid && isWeightValid;
+                && isNoteValid && isSlocValid && isMaterialTypeValid && isWeightValid && isVendorTransValid;
     }
 
     private boolean validateOutSlocSloc() {
@@ -2536,7 +2551,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             }
         }
 
-        boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 12);
+        boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
         boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
@@ -2588,7 +2603,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             }
         }
 
-        boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 12);
+        boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
         boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
@@ -2630,7 +2645,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(plateNo).toString());
         }
 
-        boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 12);
+        boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
         boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
@@ -2677,7 +2692,6 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
             List<BatchStock> batchStocks = weightTicketRegistarationController.getBatchStocks(sloc, arr_matnr);
             batchStockComponent.setModel(weightTicketRegistarationController.getBatchStockModel(batchStocks));
-            batchStockComponent.setSelectedIndex(-1);
         }
 
         validateForm();
@@ -2764,9 +2778,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                 String from = format.format(dpDateFrom.getDate());
                 String to = format.format(dpDateTo.getDate());
+                StatusEnum status = (StatusEnum) cbxStatus.getSelectedItem();
+                status = status != null ? status : StatusEnum.ALL;
                 List<WeightTicket> result = weightTicketRegistarationController.findListWeightTicket(from, to,
                         txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim(),
-                        material.getMatnr(), (StatusEnum) cbxStatus.getSelectedItem(),
+                        material.getMatnr(), status,
                         (ModeEnum) cbxModeSearch.getSelectedItem());
 
                 result = filterHours(result, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
@@ -3452,7 +3468,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         cbxVendorLoadingN.setSelectedIndex(-1);
         cbxVendorTransportN.setSelectedIndex(-1);
         cbxCustomerN.setSelectedIndex(-1);
-        
+
         disableAllInForm();
     }
 
