@@ -18,6 +18,7 @@ import com.gcs.wb.bapi.goodsmvt.GoodsMvtPOSTOCreatePGIBapi;
 import com.gcs.wb.bapi.goodsmvt.GoodsMvtPoCreateBapi;
 import com.gcs.wb.bapi.goodsmvt.structure.GoodsMvtWeightTicketStructure;
 import com.gcs.wb.bapi.outbdlv.DOCreate2PGIBapi;
+import com.gcs.wb.bapi.outbdlv.DOPostingPGIBapi;
 import com.gcs.wb.bapi.outbdlv.WsDeliveryUpdateBapi;
 import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.base.constant.Constants;
@@ -106,6 +107,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     SAPService sapService = new SAPService();
     PurchaseOrderRepository purchaseOrderRepository = new PurchaseOrderRepository();
     PurchaseOrder purchaseOrder = new PurchaseOrder();
+    private boolean flgPost = false;
 
     public WeightTicketView() {
         weightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
@@ -1483,6 +1485,7 @@ private void btnPostAgainActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         btnPostAgain.setEnabled(false);
         weightTicket.setPosted(false);
         weightTicketController.savePostAgainActionPerformed(weightTicket);
+        flgPost = true;
     } else {
         setSaveNeeded(false);
     }
@@ -3250,7 +3253,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                          // check post PGI for post lai
                         if((weightTicketDetail.getDeliveryOrderNo() == null || weightTicketDetail.getDeliveryOrderNo() == "")
                                 && (weightTicketDetail.getMatDoc() == null || weightTicketDetail.getMatDoc() == "" )) {
-                            objBapi = getMvtPOSTOCreatePGI(weightTicket, weightTicket.getPosto());
+                            objBapi = getMvtPOSTOCreatePGI(weightTicket, weightTicket.getPosto(), flgPost);
                         } else {
                             objBapi = getDOPostingPGI(weightTicket, outbDel, weightTicketDetail.getDeliveryOrderNo());
                         }
@@ -3333,11 +3336,23 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     weightTicketDetail.setDeliveryOrderNo(((GoodsMvtPOSTOCreatePGIBapi) objBapi).getDelivery());
                                     weightTicketDetail.setMatDoc(((GoodsMvtPOSTOCreatePGIBapi) objBapi).getMatDoc());
                                     weightTicketDetail.setDocYear(Integer.valueOf(((GoodsMvtPOSTOCreatePGIBapi) objBapi).getMatYear()));
+                                    weightTicketDetail.setIvMaterialDocument((((GoodsMvtPOSTOCreatePGIBapi) objBapi).getMaterialDocumentOut()));
+                                    weightTicketDetail.setIvMatDocumentYear(((GoodsMvtPOSTOCreatePGIBapi) objBapi).getMatDocumentYearOut());
 
                                     try {
                                         bapi_message = ((GoodsMvtPOSTOCreatePGIBapi) objBapi).getReturn().get(0).getMessage().toString();
                                     } catch (Exception Ex) {
                                         bapi_message = " No message returned when call SAP ( GoodsMvtPOSTOCreatePGIBapi line 2899 )";
+                                    }
+                                }
+                                
+                                if (objBapi instanceof DOPostingPGIBapi) {
+                                    weightTicketDetail.setMatDoc(((DOPostingPGIBapi) objBapi).getMatDoc());
+                                    weightTicketDetail.setDocYear(Integer.valueOf(((DOPostingPGIBapi) objBapi).getDocYear()));
+                                    try {
+                                        bapi_message = ((DOPostingPGIBapi) objBapi).getReturn().get(0).getMessage();
+                                    } catch (Exception Ex) {
+                                        bapi_message = resourceMapMsg.getString("msg.errorSAP2880");
                                     }
                                 }
 
@@ -4254,8 +4269,8 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         return weightTicketController.getPgmVl02nBapi(wt, outbDel, weightTicket, modeFlg, timeFrom, timeTo, outDetails_lits, ivWbidNosave, sumQtyReg);
     }
 
-    private Object getMvtPOSTOCreatePGI(WeightTicket wt, String number) {
-        return weightTicketController.getMvtPOSTOCreatePGI(wt, weightTicket, number, timeFrom, timeTo);
+    private Object getMvtPOSTOCreatePGI(WeightTicket wt, String number, boolean flgPost) {
+        return weightTicketController.getMvtPOSTOCreatePGI(wt, weightTicket, number, timeFrom, timeTo, flgPost);
     }
 
     private void printWT(WeightTicket wt, boolean reprint) {

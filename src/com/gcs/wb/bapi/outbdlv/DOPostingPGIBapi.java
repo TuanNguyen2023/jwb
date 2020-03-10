@@ -7,6 +7,7 @@ package com.gcs.wb.bapi.outbdlv;
 
 import com.gcs.wb.bapi.goodsmvt.structure.GoodsMvtWeightTicketStructure;
 import com.gcs.wb.bapi.outbdlv.constants.DOCreate2PGIConstants;
+import com.gcs.wb.bapi.outbdlv.constants.DOPostingPGIConstants;
 import com.gcs.wb.bapi.outbdlv.constants.OutbDeliveryCreateStoConstants;
 import com.gcs.wb.bapi.outbdlv.structure.VbkokStructure;
 import com.gcs.wb.bapi.outbdlv.structure.VbpokStructure;
@@ -24,10 +25,10 @@ import org.hibersap.bapi.BapiRet2;
  *
  * @author HANGTT
  */
-@Bapi(value = DOCreate2PGIConstants.BAPI_NAME)
+@Bapi(value = DOPostingPGIConstants.BAPI_NAME)
 public class DOPostingPGIBapi implements Serializable {
     @Import
-    @Parameter(value = DOCreate2PGIConstants.DELIVERY, type = ParameterType.SIMPLE)
+    @Parameter(value = DOPostingPGIConstants.IV_DELIVERY, type = ParameterType.SIMPLE)
     private String _delivery;
     @Import
     @Parameter(value = DOCreate2PGIConstants.VBKOK_WA, type = ParameterType.STRUCTURE)

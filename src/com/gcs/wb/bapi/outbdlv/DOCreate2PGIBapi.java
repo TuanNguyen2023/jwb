@@ -26,7 +26,6 @@ import org.hibersap.bapi.BapiRet2;
  * @author vunguyent
  */
 @Bapi(value = DOCreate2PGIConstants.BAPI_NAME)
-@ThrowExceptionOnError(returnStructure = "TABLE/RETURN")
 public class DOCreate2PGIBapi implements Serializable {
 
     @Import

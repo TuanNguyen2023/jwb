@@ -13,4 +13,5 @@ import org.hibersap.bapi.BapiConstants;
  */
 public interface DOPostingPGIConstants extends BapiConstants{
     String BAPI_NAME = "ZMM_FM_WB_DO_PGI";
+    String IV_DELIVERY = "IV_DELIVERY";
 }

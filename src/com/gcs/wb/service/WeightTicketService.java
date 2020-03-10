@@ -1208,13 +1208,18 @@ public class WeightTicketService {
     }
 
     //nhap xuat dong thoi
-    public Object getMvtPOSTOCreatePGI(WeightTicket wt, WeightTicket weightTicket, String posto, int timeFrom, int timeTo) {
+    public Object getMvtPOSTOCreatePGI(WeightTicket wt, WeightTicket weightTicket, String posto, int timeFrom, int timeTo, boolean flgPost) {
         //config = WeighBridgeApp.getApplication().getConfig();
         GoodsMvtPOSTOCreatePGIBapi bapi = new GoodsMvtPOSTOCreatePGIBapi();
         PurchaseOrder purOrderPosto = purchaseOrderRepository.findByPoNumber(posto);
         String plateCombine = wt.getPlateNo();
         if (wt.getTrailerId()!= null && !wt.getTrailerId().trim().isEmpty()) {
             plateCombine += "|" + wt.getTrailerId();
+        }
+        if(flgPost) {
+            bapi.setIvReType("X");
+            bapi.setIvMaterialDocument(wt.getWeightTicketDetail().getIvMaterialDocument());
+            bapi.setIvMatDocumentYear(wt.getWeightTicketDetail().getIvMatDocumentYear());
         }
         //API ZJBAPI_GOODSMVT_CREATE_V2_2606 - Nhap (posto)
         bapi.setGmCode(new GoodsMvtCodeStructure("01"));
