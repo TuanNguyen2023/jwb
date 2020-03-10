@@ -3270,7 +3270,9 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
 
             Customer customer = (Customer) cbxCustomerN.getSelectedItem();
-            weightTicketDetail.setKunnr(customer.getKunnr());
+            if (customer != null) {
+                weightTicketDetail.setKunnr(customer.getKunnr());
+            }
 
             newWeightTicket.addWeightTicketDetail(weightTicketDetail);
         }
