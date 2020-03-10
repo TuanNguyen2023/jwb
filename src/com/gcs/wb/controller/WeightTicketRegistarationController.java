@@ -8,6 +8,7 @@ import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.base.enums.ModeEnum;
 import com.gcs.wb.base.enums.StatusEnum;
+import com.gcs.wb.base.util.FunctionalUtil;
 import com.gcs.wb.jpa.JReportService;
 import com.gcs.wb.jpa.entity.*;
 import com.gcs.wb.jpa.entity.OutboundDeliveryDetail;
@@ -26,6 +27,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.swing.DefaultComboBoxModel;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
@@ -122,6 +124,11 @@ public class WeightTicketRegistarationController {
 
         List<Material> materials = wTRegService.getListMaterial();
         DefaultComboBoxModel result = new DefaultComboBoxModel();
+
+        materials = materials.stream()
+                .filter(FunctionalUtil.distinctByKey(p -> p.getMatnr()))
+                .collect(Collectors.toList());
+
         for (Material material : materials) {
             if (result.getIndexOf(material) < 0 && material.getMatnr() != null
                     && material.getMaktx() != null && !material.getMaktx().isEmpty()) {
@@ -143,6 +150,11 @@ public class WeightTicketRegistarationController {
         mat.setMatnr("-1");
         mat.setMaktx(Constants.Label.LABEL_OTHER);
         result.addElement(mat);
+
+        materials = materials.stream()
+                .filter(FunctionalUtil.distinctByKey(p -> p.getMatnr()))
+                .collect(Collectors.toList());
+
         for (Material material : materials) {
             if (result.getIndexOf(material) < 0) {
                 result.addElement(material);
@@ -258,10 +270,6 @@ public class WeightTicketRegistarationController {
         return transportAgentVehicleRepository.findByAbbrAndPlateNo(abbr, plateNo) != null;
     }
 
-    public DefaultComboBoxModel getMaterialInternalModel() {
-        return new DefaultComboBoxModel(materialInternalRepository.getMaterialInternals().toArray());
-    }
-
     public MaterialInternal getMaterialInternal(String matnr) {
         return materialInternalRepository.findByMatnr(matnr);
     }
@@ -290,6 +298,11 @@ public class WeightTicketRegistarationController {
 
         List<MaterialInternal> materials = materialInternalRepository.getMaterialInternals();
         DefaultComboBoxModel result = new DefaultComboBoxModel();
+
+        materials = materials.stream()
+                .filter(FunctionalUtil.distinctByKey(p -> p.getMatnr()))
+                .collect(Collectors.toList());
+
         for (MaterialInternal material : materials) {
             if (result.getIndexOf(material) < 0 && material.getMatnr() != null
                     && material.getMaktx() != null && !material.getMaktx().isEmpty()) {

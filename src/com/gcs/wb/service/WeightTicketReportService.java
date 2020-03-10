@@ -6,6 +6,7 @@ package com.gcs.wb.service;
 
 import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.base.enums.StatusEnum;
+import com.gcs.wb.base.util.FunctionalUtil;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.WeightTicket;
@@ -17,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.swing.DefaultComboBoxModel;
 
 /**
@@ -60,6 +62,10 @@ public class WeightTicketReportService {
         mat.setMaktx(Constants.Label.LABEL_OTHER);
         result.addElement(mat);
 
+        materials = materials.stream()
+                .filter(FunctionalUtil.distinctByKey(p -> p.getMatnr()))
+                .collect(Collectors.toList());
+
         for (Material material : materials) {
             if (result.getIndexOf(material) < 0 && material.getMatnr() != null
                     && material.getMaktx() != null && !material.getMaktx().isEmpty()) {
@@ -77,7 +83,7 @@ public class WeightTicketReportService {
             WeightTicket item = weightTickets.get(i);
             WeightTicketDetail weightTicketDetail = item.getWeightTicketDetail();
             List<WeightTicketDetail> weightTicketDetails = item.getWeightTicketDetails();
-            
+
             String time = item.getCreatedTime().replaceAll(":", "");
             String hh = time.substring(0, 2);
             String mm = time.substring(2, 4);
