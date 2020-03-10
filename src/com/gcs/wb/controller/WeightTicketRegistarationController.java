@@ -166,7 +166,11 @@ public class WeightTicketRegistarationController {
     public WeightTicket findByDeliveryOrderNo(String doNumber) {
         return wTRegService.findByDeliveryOrderNo(doNumber);
     }
-
+    
+    public WeightTicket findByDeliveryOrderNoScale(String doNumber) {
+        return wTRegService.findByDeliveryOrderNoScale(doNumber);
+    }
+    
     public List<WeightTicket> getListByDeliveryOrderNo(String outbNumber) {
         return wTRegService.getListByDeliveryOrderNo(outbNumber);
     }

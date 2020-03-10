@@ -2902,7 +2902,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 }
 
                 // check register DO in WB
-                WeightTicket weightTicket = weightTicketRegistarationController.findByDeliveryOrderNo(deliveryOrderNo);
+                WeightTicket weightTicket = weightTicketRegistarationController.findByDeliveryOrderNoScale(deliveryOrderNo);
                 if (weightTicket != null) {
                     throw new Exception(resourceMapMsg.getString("msg.doExist", deliveryOrderNo, weightTicket.getId()));
                 }

@@ -73,7 +73,11 @@ public class WeightTicketRegistrationService {
     public WeightTicket findByDeliveryOrderNo(String doNumber) {
         return weightTicketRepository.findByDeliveryOrderNoNotExistEbeln(doNumber);
     }
-
+    
+    public WeightTicket findByDeliveryOrderNoScale(String doNumber) {
+        return weightTicketRepository.findByDeliveryOrderNoNotExistEbelnScale(doNumber);
+    }
+    
     public List<WeightTicket> getListByDeliveryOrderNo(String outbNumber) {
         return weightTicketRepository.getListByDeliveryOrderNo(outbNumber);
     }
