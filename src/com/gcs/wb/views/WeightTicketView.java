@@ -3228,7 +3228,13 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     }
                     // mode xuat plant
                     if (weightTicket.getMode().equals("OUT_PLANT_PLANT")) {
-                        objBapi = getDoCreate2PGI(weightTicket, outbDel);
+                        // check post PGI for post lai
+                        if((weightTicketDetail.getDeliveryOrderNo() == null || weightTicketDetail.getDeliveryOrderNo() == "")
+                                && (weightTicketDetail.getMatDoc() == null || weightTicketDetail.getMatDoc() == "" )) {
+                            objBapi = getDoCreate2PGI(weightTicket, outbDel);
+                        } else {
+                            objBapi = getDOPostingPGI(weightTicket, outbDel, weightTicketDetail.getDeliveryOrderNo());
+                        }
                     }
                     // chuyen kho noi bo
                     if (weightTicket.getMode().equals("OUT_SLOC_SLOC")) {
@@ -3241,7 +3247,13 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     }
                     // xuat ben keo
                     if (weightTicket.getMode().equals("OUT_PULL_STATION") && weightTicket.getPosto() != null) {
-                        objBapi = getMvtPOSTOCreatePGI(weightTicket, weightTicket.getPosto());
+                         // check post PGI for post lai
+                        if((weightTicketDetail.getDeliveryOrderNo() == null || weightTicketDetail.getDeliveryOrderNo() == "")
+                                && (weightTicketDetail.getMatDoc() == null || weightTicketDetail.getMatDoc() == "" )) {
+                            objBapi = getMvtPOSTOCreatePGI(weightTicket, weightTicket.getPosto());
+                        } else {
+                            objBapi = getDOPostingPGI(weightTicket, outbDel, weightTicketDetail.getDeliveryOrderNo());
+                        }
                     }
 
                     if (WeighBridgeApp.getApplication().isOfflineMode() == false) {
@@ -3318,6 +3330,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                 }
 
                                 if (objBapi instanceof GoodsMvtPOSTOCreatePGIBapi) {
+                                    weightTicketDetail.setDeliveryOrderNo(((GoodsMvtPOSTOCreatePGIBapi) objBapi).getDelivery());
                                     weightTicketDetail.setMatDoc(((GoodsMvtPOSTOCreatePGIBapi) objBapi).getMatDoc());
                                     weightTicketDetail.setDocYear(Integer.valueOf(((GoodsMvtPOSTOCreatePGIBapi) objBapi).getMatYear()));
 
@@ -4231,6 +4244,10 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
 
     private Object getDoCreate2PGI(WeightTicket wt, OutboundDelivery outbDel) {
         return weightTicketController.getDoCreate2PGI(wt, outbDel, weightTicket, timeFrom, timeTo, outDetails_lits);
+    }
+    
+    private Object getDOPostingPGI(WeightTicket wt, OutboundDelivery outbDel, String deliveryNum) {
+        return weightTicketController.getDOPostingPGI(wt, outbDel, weightTicket, timeFrom, timeTo, outDetails_lits, deliveryNum);
     }
 
     private Object getPgmVl02nBapi(WeightTicket wt, OutboundDelivery outbDel, String modeFlg, String ivWbidNosave, BigDecimal sumQtyReg) {
