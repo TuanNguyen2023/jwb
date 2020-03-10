@@ -3704,7 +3704,12 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         protected void succeeded(Object t) {
             isValidPO = true;
             txtWeightN.setText(totalWeight.toString());
-            cbxMaterialTypeN.setSelectedItem(weightTicketRegistarationController.getMaterial(strMatnr));
+            
+            Material material = weightTicketRegistarationController.getMaterial(strMatnr);
+            if (material == null && !strMatnr.isEmpty()) {
+                JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.materialNotExist", strMatnr));
+            }
+            cbxMaterialTypeN.setSelectedItem(material);
             // load sloc
             List<String> lgorts = weightTicketRegistarationController.getListLgortByMatnr(strMatnr, false);
             loadSLoc(lgorts);

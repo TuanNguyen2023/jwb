@@ -3661,7 +3661,13 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 sapService.syncMaterial();
                 temp = weightTicketRegistarationController.getMaterial(strMatnr);
             }
+            
+            if (temp == null && !strMatnr.isEmpty()) {
+                JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.materialNotExist", strMatnr));
+            }
+
             cbxMaterialTypeN.setSelectedItem(temp);
+
             // load sloc
             if (temp != null) {
                 List<String> lgorts = weightTicketRegistarationController.getListLgortByMatnr(temp.getMatnr(), false);
