@@ -30,11 +30,12 @@ import javax.persistence.Table;
     query = "SELECT o FROM OutboundDeliveryDetail o WHERE"
     + " o.deliveryOrderNo LIKE :deliveryOrderNo"
     + " AND o.deliveryOrderItem = :deliveryOrderItem order by o.freeItem desc"),
+    @NamedQuery(name = "OutboundDeliveryDetail.findByDeliveryOrderNo",
+    query = "SELECT o FROM OutboundDeliveryDetail o WHERE"
+    + " o.deliveryOrderNo LIKE :deliveryOrderNo order by o.freeItem desc"),
     @NamedQuery(name = "OutboundDeliveryDetail.findByWtId",
     query = "SELECT o FROM OutboundDeliveryDetail o WHERE"
-    + " o.wtId LIKE :wtId order by o.freeItem desc"),
-    @NamedQuery(name = "OutboundDeliveryDetail.findByDeliveryOrderNo", 
-        query = "SELECT d FROM OutboundDeliveryDetail d WHERE d.deliveryOrderNo = :deliveryOrderNo")
+    + " o.wtId LIKE :wtId order by o.freeItem desc")
 })
 public class OutboundDeliveryDetail implements Serializable {
 

@@ -2980,6 +2980,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             weightTicketDetail.setDeliveryOrderNo(outboundDelivery.getDeliveryOrderNo());
             weightTicketDetail.setRegItemQuantity(outboundDelivery.getLfimg());
             weightTicketDetail.setSoNumber(salesOrder);
+            weightTicketDetail.setShipTo(outboundDelivery.getOutboundDeliveryDetail().getShipTo());
             newWeightTicket.addWeightTicketDetail(weightTicketDetail);
             newWeightTicket.setWeightTicketIdRef(outboundDelivery.getWtIdRef());
 
