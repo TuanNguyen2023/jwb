@@ -24,7 +24,12 @@ import javax.persistence.Table;
 @NamedQueries({
     @NamedQuery(name = "MaterialGroup.findAll", query = "SELECT m FROM MaterialGroup m"),
     @NamedQuery(name = "MaterialGroup.findByMandtWplantMatnr", query = "SELECT m FROM MaterialGroup m WHERE m.mandt = :mandt AND m.wplant = :wplant AND m.matnr = :matnr"),
-    @NamedQuery(name = "MaterialGroup.findByMatnr", query = "SELECT m FROM MaterialGroup m WHERE m.matnr = :matnr")
+    @NamedQuery(name = "MaterialGroup.findByMatnr", query = "SELECT m FROM MaterialGroup m WHERE m.matnr = :matnr"),
+    @NamedQuery(name = "MaterialGroup.checkMaterialTogether",
+            query = "SELECT COUNT(m), COUNT(DISTINCT m.type) FROM MaterialGroup m "
+            + " WHERE m.mandt = :mandt "
+            + "      AND m.wplant = :wplant "
+            + "      AND m.matnr IN :matnrs ")
 })
 public class MaterialGroup implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -38,6 +43,8 @@ public class MaterialGroup implements Serializable {
     private String mandt;
     @Column(name = "wplant", unique = true)
     private String wplant;
+    @Column(name = "type")
+    private String type;
     @Column(name = "created_date")
     private Date createdDate;
     @Column(name = "updated_date")
@@ -91,6 +98,14 @@ public class MaterialGroup implements Serializable {
 
     public void setWplant(String wplant) {
         this.wplant = wplant;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
     
     public Date getCreatedDate() {

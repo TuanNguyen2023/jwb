@@ -2964,11 +2964,6 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 //                if (isDOInUsed(deliveryOrderNo, outboundDelivery)) {
 //                    throw new Exception(resourceMapMsg.getString("msg.typeDO", deliveryOrderNo, getMode(outboundDelivery)));
 //                }
-                // check out together
-                if (deliveryOrderNos.length > 1 && !checkMaterial(outboundDelivery)) {
-                    throw new Exception(resourceMapMsg.getString("msg.materialNotTogether"));
-                }
-
                 // check customer
                 if (index > 0) {
                     String deliveryOrderNoBefore = deliveryOrderNos[index - 1];
@@ -2983,6 +2978,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 updateWeightTicket(outboundDelivery, salesOrder);
                 btnSave.setEnabled(true);
                 setStep(4, null);
+            }
+
+            // check out together
+            if (deliveryOrderNos.length > 1 && !checkMaterial(matnrs)) {
+                throw new Exception(resourceMapMsg.getString("msg.materialNotTogether"));
             }
 
             return null;
@@ -3044,8 +3044,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             totalWeight = totalWeight.add(outboundDelivery.getLfimg());
         }
 
-        private boolean checkMaterial(OutboundDelivery outboundDelivery) {
-            return materialGroupRepository.hasData(configuration.getSapClient(), configuration.getWkPlant(), outboundDelivery.getMatnr());
+        private boolean checkMaterial(List<String> matnrs) {
+            return materialGroupRepository.checkMaterialTogether(matnrs);
         }
 
         private boolean isDOInUsed(String deliveryOrderNo, OutboundDelivery outboundDelivery) {
