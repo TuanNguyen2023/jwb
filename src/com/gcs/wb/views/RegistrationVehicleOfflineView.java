@@ -2703,6 +2703,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
             List<BatchStock> batchStocks = weightTicketRegistarationController.getBatchStocks(sloc, arr_matnr);
             batchStockComponent.setModel(weightTicketRegistarationController.getBatchStockModel(batchStocks));
+            batchStockComponent.setSelectedIndex(batchStocks.size() > 0 ? 0 : -1);
         }
 
         validateForm();
