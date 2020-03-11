@@ -2602,7 +2602,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                             outDetails_lits.add(item);
                         }
                     }
-                    txtWeight.setText(total_qty_goods.toString());
+                    //txtWeight.setText(total_qty_goods.toString());
                     txtDelNum.setText(doNums);
                     txtRegItem.setText(regItemDescription);
 
