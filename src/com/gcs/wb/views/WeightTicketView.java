@@ -3915,6 +3915,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             Date now = weightTicketController.getServerTime();
             grbBridge.clearSelection();
             btnAccept.setEnabled(false);
+            boolean checkVariant = false;
             if (isStage1()) {
                 txfInQty.setValue(txfCurScale.getValue());
                 txtInTime.setText(formatter.format(now));
@@ -4022,6 +4023,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         if ((lower <= result && result <= upper)) {
                             txfGoodsQty.setValue(result);
                             weightTicket.setGQty(new BigDecimal(Double.toString(result)));
+                            checkVariant = true;
                         } else {
                             String msg = "Chênh lệch vượt dung sai cho phép!";
                             JOptionPane.showMessageDialog(rootPane, msg);
@@ -4094,9 +4096,14 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         if (i < outDetails_lits.size() - 1) {
                             item.setGoodsQty(item.getLfimg());
                             item.setOutScale(BigDecimal.valueOf(item.getInScale().doubleValue() + item.getLfimg().doubleValue()));
-                            remain = remain - item.getLfimg().doubleValue();
+                                remain = remain - item.getLfimg().doubleValue();
                         } else {
-                            item.setGoodsQty(BigDecimal.valueOf(remain));
+                            // set lại trọng lượng cân trong dung sai cho phép
+                            if(checkVariant) {
+                                item.setGoodsQty(item.getLfimg());
+                            } else {
+                                item.setGoodsQty(BigDecimal.valueOf(remain));
+                            }
                             item.setOutScale(BigDecimal.valueOf(item.getInScale().doubleValue() + remain));
                         }
                         if (!entityManager.getTransaction().isActive()) {

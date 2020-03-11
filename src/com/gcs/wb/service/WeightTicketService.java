@@ -1098,6 +1098,7 @@ public class WeightTicketService {
                             bags = Math.round(tmp);
                         }
                     } else {
+                        map.put("P_TOTAL_QTY_REG", null);
                         map.put("P_TOTAL_QTY", String.valueOf(outbDel.getLfimg()));
                         Double tmp;
                         if (outbDel != null && (outbDel.getLfart().equalsIgnoreCase("LF") || outbDel.getLfart().equalsIgnoreCase("ZTLF") || outbDel.getLfart().equalsIgnoreCase("NL"))) {
