@@ -1528,7 +1528,7 @@ private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//
     }
 
     // load sloc
-    boolean isInternal = modeDetail == MODE_DETAIL.IN_OTHER || modeDetail == MODE_DETAIL.OUT_OTHER || modeDetail == MODE_DETAIL.OUT_SELL_WATERWAY;
+    boolean isInternal = modeDetail == MODE_DETAIL.IN_OTHER || modeDetail == MODE_DETAIL.OUT_OTHER;
     List<String> lgorts = weightTicketRegistarationController.getListLgortByMatnr(newWeightTicket.getRecvMatnr(), isInternal);
     loadSLoc(lgorts, null);
 
@@ -1785,7 +1785,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             if (val.length == listDONumbers.size()) {
                 boolean hasChecked = listDONumbers.stream()
                         .allMatch(t -> Stream.of(val).anyMatch(s -> s.trim().equals(t.getVbelnSO())));
-                
+
                 if (hasChecked) {
                     return null;
                 }
@@ -2317,7 +2317,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 isValid = validateOutPlantPlant() && isValidPO && isValidVendorLoad && isValidVendorTransport;
                 break;
             case OUT_SLOC_SLOC:
-                isValid = validateOutSlocSloc() && isValidPO && isValidPOSTO && isValidVendorTransport;
+                isValid = validateOutSlocSloc() && isValidPO && (isValidPOSTO || txtPOSTONumN.getText().trim().isEmpty()) && isValidVendorTransport;
                 break;
             case OUT_PULL_STATION:
                 isValid = validateOutPullStation() && isValidPO && isValidVendorLoad && isValidVendorTransport;
@@ -2555,9 +2555,15 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         }
 
         boolean isPOSTOValid = wtRegisValidation.validatePO(txtPOSTONumN.getText(), lblPOSTONumN);
+        if (txtPOSTONumN.getText().trim().isEmpty()) {
+            lblPOSTONumN.setForeground(Color.black);
+        }
+
         btnPOSTOCheckN.setEnabled(isPOSTOValid);
-        if (!isValidPOSTO) {
-            lblPOSTONumN.setForeground(Color.red);
+        if (isPOSTOValid && !isValidPOSTO) {
+            btnPOSTOCheckN.setForeground(Color.red);
+        } else {
+            btnPOSTOCheckN.setForeground(Color.black);
         }
 
         boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
@@ -2661,7 +2667,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
             List<WeightTicketDetail> weightTicketDetails = newWeightTicket.getWeightTicketDetails();
             String[] arr_matnr;
-            if (weightTicketDetails.size() > 0) {
+            if (weightTicketDetails.size() > 0
+                    && !(modeDetail == MODE_DETAIL.IN_OTHER || modeDetail == MODE_DETAIL.OUT_OTHER || modeDetail == MODE_DETAIL.OUT_SLOC_SLOC)) {
                 arr_matnr = weightTicketDetails.stream().map(item -> item.getMatnrRef()).toArray(String[]::new);
             } else {
                 arr_matnr = new String[]{newWeightTicket.getRecvMatnr()};
@@ -3983,7 +3990,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             txtWeightN.setText(weightTicketDetail.getRegItemQuantity().toString());
 
             // load sloc
-            boolean isInternal = modeDetail == MODE_DETAIL.IN_OTHER || modeDetail == MODE_DETAIL.OUT_OTHER || modeDetail == MODE_DETAIL.OUT_SELL_WATERWAY;
+            boolean isInternal = modeDetail == MODE_DETAIL.IN_OTHER || modeDetail == MODE_DETAIL.OUT_OTHER;
             List<String> lgorts = weightTicketRegistarationController.getListLgortByMatnr(weightTicketDetail.getMatnrRef(), isInternal);
             loadSLoc(lgorts, null);
             cbxSlocN.setSelectedItem(new SLoc(newWeightTicket.getLgort()));
