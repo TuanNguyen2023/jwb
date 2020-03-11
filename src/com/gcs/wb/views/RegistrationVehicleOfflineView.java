@@ -3473,7 +3473,9 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         txtSONumN.setText("");
         cbxMaterialTypeN.setSelectedIndex(-1);
         txtWeightN.setText("0");
+        cbxSlocN.setModel(new DefaultComboBoxModel());
         cbxSlocN.setSelectedIndex(-1);
+        cbxSloc2N.setModel(new DefaultComboBoxModel());
         cbxSloc2N.setSelectedIndex(-1);
         cbxBatchStockN.setModel(new DefaultComboBoxModel());
         cbxBatchStockN.setSelectedIndex(-1);
