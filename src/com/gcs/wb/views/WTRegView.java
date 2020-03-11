@@ -1782,6 +1782,15 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             DOCheckStructure doNumber = new DOCheckStructure();
             String bsRomoc = txtTrailerNoN.getText().trim();
 
+            if (val.length == listDONumbers.size()) {
+                boolean hasChecked = listDONumbers.stream()
+                        .allMatch(t -> Stream.of(val).anyMatch(s -> s.trim().equals(t.getVbelnSO())));
+                
+                if (hasChecked) {
+                    return null;
+                }
+            }
+
             String doNum = "";
             if (!WeighBridgeApp.getApplication().isOfflineMode()) {
                 List<DOCheckStructure> doNumbers = sapService.getDONumber(val, bsXe, bsRomoc);
@@ -1794,7 +1803,6 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                             setMessage(doNumber.getMessage());
                             JOptionPane.showMessageDialog(rootPane, doNumber.getMessage());
                             String msg = "SO " + doNumber.getVbelnSO() + " sai, vui lòng nhập lại!";
-                            txtDONumN.setText(null);
                             setMessage(msg);
                             throw new Exception(msg);
                         } else {
@@ -1815,6 +1823,9 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         @Override
         protected void failed(Throwable cause) {
             isValidSO = false;
+
+            txtDONumN.setText(null);
+            listDONumbers.clear();
 
             validateForm();
 
