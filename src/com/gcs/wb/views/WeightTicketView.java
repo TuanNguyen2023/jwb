@@ -2457,6 +2457,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 // <editor-fold defaultstate="collapsed" desc="Load D.O/P.O details">
                 List<WeightTicketDetail> weightTicketDetails = weightTicket.getWeightTicketDetails();
                 List<String> do_list = new ArrayList<>();
+                BigDecimal totalRegItemQuantity = BigDecimal.ZERO;
                 for (WeightTicketDetail weightTicketDetail : weightTicketDetails) {
                     if ((weightTicketDetail.getDeliveryOrderNo() == null || weightTicketDetail.getDeliveryOrderNo().trim().isEmpty())
                             || (!weightTicket.isPosted() && (weightTicketDetail.getEbeln() != null && !weightTicketDetail.getEbeln().trim().isEmpty()))
@@ -2465,6 +2466,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     } else {
                         List<OutboundDeliveryDetail> odt = null;
                         do_list.add(weightTicketDetail.getDeliveryOrderNo());
+                        totalRegItemQuantity = totalRegItemQuantity.add(weightTicketDetail.getRegItemQuantity());
                         try {
                             od = weightTicketController.findByMandtOutDel(weightTicketDetail.getDeliveryOrderNo());
                         } catch (Exception ex) {
@@ -2602,7 +2604,11 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                             outDetails_lits.add(item);
                         }
                     }
-                    //txtWeight.setText(total_qty_goods.toString());
+                    
+                    if(outbDel_list.size() > 1) {
+                        txtWeight.setText(totalRegItemQuantity.toString());
+                    }
+                    
                     txtDelNum.setText(doNums);
                     txtRegItem.setText(regItemDescription);
 
