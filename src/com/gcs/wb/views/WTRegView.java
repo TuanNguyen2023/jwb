@@ -288,11 +288,22 @@ public class WTRegView extends javax.swing.JInternalFrame {
         cbxVendorTransportN.setSelectedIndex(-1);
     }
 
-    private void loadSLoc(List<String> lgorts) {
-        DefaultComboBoxModel sLocModel = weightTicketRegistarationController.getSlocModel(lgorts);
+    private void loadSLoc(List<String> lgorts, String lgortSelected) {
+        List<SLoc> sLocs = weightTicketRegistarationController.getListSLoc(lgorts);
+        DefaultComboBoxModel sLocModel = new DefaultComboBoxModel(sLocs.toArray());
         DefaultComboBoxModel sLoc2Model = (DefaultComboBoxModel) SerializationUtils.clone(sLocModel);
         cbxSlocN.setModel(sLocModel);
-        cbxSlocN.setSelectedIndex(-1);
+        if (lgortSelected != null && !lgortSelected.isEmpty() && !sLocs.isEmpty()) {
+            SLoc sLoc = sLocs.stream()
+                    .filter(t -> lgortSelected.equals(t.getLgort()))
+                    .findFirst()
+                    .orElse(null);
+
+            cbxSlocN.setSelectedItem(sLoc);
+        } else {
+            cbxSlocN.setSelectedIndex(-1);
+        }
+
         cbxSloc2N.setModel(sLoc2Model);
         cbxSloc2N.setSelectedIndex(-1);
 
@@ -1519,7 +1530,7 @@ private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//
     // load sloc
     boolean isInternal = modeDetail == MODE_DETAIL.IN_OTHER || modeDetail == MODE_DETAIL.OUT_OTHER || modeDetail == MODE_DETAIL.OUT_SELL_WATERWAY;
     List<String> lgorts = weightTicketRegistarationController.getListLgortByMatnr(newWeightTicket.getRecvMatnr(), isInternal);
-    loadSLoc(lgorts);
+    loadSLoc(lgorts, null);
 
     // load batch stock
     loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
@@ -1573,7 +1584,7 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
                             newWeightTicket.getWeightTicketDetail().getMatnrRef(),
                             vendorVanchuyen, purchaseOrder.getPurchaseOrderDetail().getPlant());
                 }
-                if (!msgVendorCheck.trim().isEmpty()) {
+                if (msgVendorCheck != null && !msgVendorCheck.trim().isEmpty()) {
                     //display errror
                     JOptionPane.showMessageDialog(rootPane, msgVendorCheck);
 
@@ -1771,6 +1782,15 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             DOCheckStructure doNumber = new DOCheckStructure();
             String bsRomoc = txtTrailerNoN.getText().trim();
 
+            if (val.length == listDONumbers.size()) {
+                boolean hasChecked = listDONumbers.stream()
+                        .allMatch(t -> Stream.of(val).anyMatch(s -> s.trim().equals(t.getVbelnSO())));
+                
+                if (hasChecked) {
+                    return null;
+                }
+            }
+
             String doNum = "";
             if (!WeighBridgeApp.getApplication().isOfflineMode()) {
                 List<DOCheckStructure> doNumbers = sapService.getDONumber(val, bsXe, bsRomoc);
@@ -1783,7 +1803,6 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                             setMessage(doNumber.getMessage());
                             JOptionPane.showMessageDialog(rootPane, doNumber.getMessage());
                             String msg = "SO " + doNumber.getVbelnSO() + " sai, vui lòng nhập lại!";
-                            txtDONumN.setText(null);
                             setMessage(msg);
                             throw new Exception(msg);
                         } else {
@@ -1804,6 +1823,9 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         @Override
         protected void failed(Throwable cause) {
             isValidSO = false;
+
+            txtDONumN.setText(null);
+            listDONumbers.clear();
 
             validateForm();
 
@@ -2332,7 +2354,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             }
         }
 
-        boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 12);
+        boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
         boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
@@ -2647,6 +2669,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
             List<BatchStock> batchStocks = weightTicketRegistarationController.getBatchStocks(sloc, arr_matnr);
             batchStockComponent.setModel(weightTicketRegistarationController.getBatchStockModel(batchStocks));
+            batchStockComponent.setSelectedIndex(batchStocks.size() > 0 ? 0 : -1);
         }
 
         validateForm();
@@ -2864,6 +2887,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         private List<String> matnrs = new ArrayList<>();
         private BigDecimal totalWeight = BigDecimal.ZERO;
         private Customer customer = null;
+        private String strLgort = "";
 
         CheckDOTask(org.jdesktop.application.Application app) {
             super(app);
@@ -2875,7 +2899,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             String[] deliveryOrderNos = txtDONumN.getText().split("-");
             String[] salesOrderNos = txtSONumN.getText().split("-");
             String salesOrder = null;
-            for (int index = 0; index < deliveryOrderNos.length; index ++ ) {
+            for (int index = 0; index < deliveryOrderNos.length; index++) {
                 String deliveryOrderNo = deliveryOrderNos[index];
                 if (salesOrderNos.length == deliveryOrderNos.length) {
                     salesOrder = salesOrderNos[index];
@@ -2940,10 +2964,10 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
                 // check customer
                 if (index > 0) {
-                    String deliveryOrderNoBefore = deliveryOrderNos[index-1];
+                    String deliveryOrderNoBefore = deliveryOrderNos[index - 1];
                     deliveryOrderNoBefore = StringUtil.paddingZero(deliveryOrderNoBefore.trim(), 10);
                     OutboundDelivery outboundDeliveryBefore = weightTicketRegistarationController.findByDeliveryOrderNumber(deliveryOrderNoBefore);
-                    if(!outboundDelivery.getKunnr().equals(outboundDeliveryBefore.getKunnr())) {
+                    if (!outboundDelivery.getKunnr().equals(outboundDeliveryBefore.getKunnr())) {
                         throw new Exception(resourceMapMsg.getString("msg.customerNotTogether"));
                     }
                 }
@@ -3009,6 +3033,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 }
             }
 
+            strLgort = outboundDelivery.getLgort();
             totalWeight = totalWeight.add(outboundDelivery.getLfimg());
         }
 
@@ -3065,7 +3090,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
             // load sloc
             List<String> lgorts = weightTicketRegistarationController.getListLgortByMatnr(matnrs, false);
-            loadSLoc(lgorts);
+            loadSLoc(lgorts, strLgort);
 
             // load batch stock
             loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
@@ -3077,7 +3102,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             cbxMaterialTypeN.setSelectedItem("");
             txtWeightN.setText("0");
             cbxCustomerN.setSelectedIndex(-1);
-            loadSLoc(null);
+            loadSLoc(null, null);
 
             isValidDO = false;
             // for check edit plateNo after check DO
@@ -3394,7 +3419,9 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         txtSONumN.setText("");
         cbxMaterialTypeN.setSelectedIndex(-1);
         txtWeightN.setText("0");
+        cbxSlocN.setModel(new DefaultComboBoxModel());
         cbxSlocN.setSelectedIndex(-1);
+        cbxSloc2N.setModel(new DefaultComboBoxModel());
         cbxSloc2N.setSelectedIndex(-1);
         cbxBatchStockN.setModel(new DefaultComboBoxModel());
         cbxBatchStockN.setSelectedIndex(-1);
@@ -3605,6 +3632,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         private String strMatnr = null;
         private BigDecimal totalWeight = BigDecimal.ZERO;
         private Customer customer = null;
+        private String strLgort = "";
 
         CheckPOTask(Application app) {
             super(app);
@@ -3666,7 +3694,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 sapService.syncMaterial();
                 temp = weightTicketRegistarationController.getMaterial(strMatnr);
             }
-            
+
             if (temp == null && !strMatnr.isEmpty()) {
                 JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.materialNotExist", strMatnr));
             }
@@ -3676,7 +3704,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             // load sloc
             if (temp != null) {
                 List<String> lgorts = weightTicketRegistarationController.getListLgortByMatnr(temp.getMatnr(), false);
-                loadSLoc(lgorts);
+                loadSLoc(lgorts, strLgort);
             }
 
             // load batch stock
@@ -3708,7 +3736,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             cbxMaterialTypeN.setSelectedIndex(-1);
             cbxVendorTransportN.setSelectedIndex(-1);
             cbxCustomerN.setSelectedIndex(-1);
-            loadSLoc(null);
+            loadSLoc(null, null);
 
             isValidPO = false;
             if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
@@ -3762,6 +3790,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
 
             strMatnr = purchaseOrderDetail.getMaterial();
+            strLgort = purchaseOrderDetail.getStgeLoc();
 
             strVendor = purchaseOrder.getVendor();
             totalWeight = purchaseOrderDetail.getQuantity();
@@ -3961,7 +3990,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             // load sloc
             boolean isInternal = modeDetail == MODE_DETAIL.IN_OTHER || modeDetail == MODE_DETAIL.OUT_OTHER || modeDetail == MODE_DETAIL.OUT_SELL_WATERWAY;
             List<String> lgorts = weightTicketRegistarationController.getListLgortByMatnr(weightTicketDetail.getMatnrRef(), isInternal);
-            loadSLoc(lgorts);
+            loadSLoc(lgorts, null);
             cbxSlocN.setSelectedItem(new SLoc(newWeightTicket.getLgort()));
             cbxSloc2N.setSelectedItem(new SLoc(newWeightTicket.getRecvLgort()));
 

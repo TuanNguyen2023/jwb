@@ -361,6 +361,10 @@ public class WeightTicketRegistarationController {
     }
 
     public DefaultComboBoxModel getSlocModel(List<String> lgorts) {
-        return new DefaultComboBoxModel(wTRegService.getListSLoc(lgorts).toArray());
+        return new DefaultComboBoxModel(getListSLoc(lgorts).toArray());
+    }
+    
+    public List<SLoc> getListSLoc(List<String> lgorts) {
+        return wTRegService.getListSLoc(lgorts);
     }
 }
