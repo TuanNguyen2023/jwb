@@ -3629,6 +3629,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                     }
                 }
             }
+            
+            // check compare PO with POSTO
+            if ((!txtPOSTONumN.getText().trim().isEmpty()) && (purchaseOrderPOSTO != null) && (poNum.equals(purchaseOrderPOSTO.getPoNumber()))) {
+                throw new Exception(resourceMapMsg.getString("msg.duplicatePo"));
+            }
 
             // check exist PO
             if (purchaseOrderPO == null) {
@@ -3806,7 +3811,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             String postoNum = txtPOSTONumN.getText().trim();
 
             // check compare PO with POSTO
-            if ((purchaseOrderPO != null) && (postoNum.equals(purchaseOrderPO.getPoNumber()))) {
+            if ((!txtPONumN.getText().trim().isEmpty()) && (purchaseOrderPO != null) && (postoNum.equals(purchaseOrderPO.getPoNumber()))) {
                 throw new Exception(resourceMapMsg.getString("msg.duplicatePo"));
             }
 
