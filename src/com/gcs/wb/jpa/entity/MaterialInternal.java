@@ -25,8 +25,9 @@ import javax.persistence.Table;
 @Table(name = "tbl_material_internal")
 @NamedQueries({
     @NamedQuery(name = "MaterialInternal.findAll", query = "SELECT mi FROM MaterialInternal mi"),
+    @NamedQuery(name = "MaterialInternal.findByMandtWplant", query = "SELECT mi FROM MaterialInternal mi WHERE mi.mandt = :mandt AND mi.wplant = :wplant"),
     @NamedQuery(name = "MaterialInternal.findByMatnr", query = "SELECT mi FROM MaterialInternal mi WHERE mi.matnr = :matnr"),
-    @NamedQuery(name = "MaterialInternal.findByMatnrs", query = "SELECT m FROM MaterialInternal m WHERE m.matnr IN :matnrs")
+    @NamedQuery(name = "MaterialInternal.findByMatnrs", query = "SELECT mi FROM MaterialInternal mi WHERE mi.matnr IN :matnrs")
 })
 public class MaterialInternal implements Serializable {
 

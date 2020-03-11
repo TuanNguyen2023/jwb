@@ -4,7 +4,9 @@
  */
 package com.gcs.wb.jpa.repositorys;
 
+import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.jpa.JPAConnector;
+import com.gcs.wb.jpa.entity.Configuration;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -17,14 +19,18 @@ import com.gcs.wb.jpa.entity.Vendor;
 public class VendorRepository {
 
     EntityManager entityManager = JPAConnector.getInstance();
+    Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
 
     /**
-     * 
+     *
      * Get data for "Vendor boc xep/van chuyen"
-     * @return 
+     *
+     * @return
      */
     public List<Vendor> getListVendor() {
-        TypedQuery<Vendor> typedQuery = entityManager.createNamedQuery("Vendor.findAll", Vendor.class);
+        TypedQuery<Vendor> typedQuery = entityManager.createNamedQuery("Vendor.findByMandtWplant", Vendor.class);
+        typedQuery.setParameter("mandt", configuration.getSapClient());
+        typedQuery.setParameter("wplant", configuration.getWkPlant());
         return typedQuery.getResultList();
     }
 
@@ -38,7 +44,7 @@ public class VendorRepository {
 
         return null;
     }
-    
+
     public boolean hasData(String mandt) {
         TypedQuery<Vendor> typedQuery = entityManager.createNamedQuery("Vendor.findByMandt", Vendor.class);
         typedQuery.setParameter("mandt", mandt);
