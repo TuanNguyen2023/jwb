@@ -248,6 +248,7 @@ public class SAPService {
                 for (TransportagentGetListStructure vens : etVendors) {
                     Vendor ven = new Vendor();
                     ven.setMandt(configuration.getSapClient());
+                    ven.setWplant(configuration.getWkPlant());
                     ven.setLifnr(vens.getLifnr());
                     ven.setName1(vens.getName1());
                     ven.setName2(vens.getName2());

@@ -23,6 +23,7 @@ import javax.persistence.Id;
 @Table(name = "tbl_vendor")
 @NamedQueries({
     @NamedQuery(name = "Vendor.findAll", query = "SELECT v FROM Vendor v"),
+    @NamedQuery(name = "Vendor.findByMandtWplant", query = "SELECT v FROM Vendor v WHERE v.mandt = :mandt AND v.wplant = :wplant"),
     @NamedQuery(name = "Vendor.findByLifnr", query = "SELECT v FROM Vendor v WHERE v.lifnr = :lifnr"),
     @NamedQuery(name = "Vendor.findByName1", query = "SELECT v FROM Vendor v WHERE v.name1 = :name1"),
     @NamedQuery(name = "Vendor.findByName2", query = "SELECT v FROM Vendor v WHERE v.name2 = :name2"),
@@ -38,6 +39,8 @@ public class Vendor implements Serializable {
     private String lifnr;
     @Column(name = "mandt", unique = true)
     private String mandt;
+    @Column(name = "wplant", unique = true)
+    private String wplant;
     @Column(name = "name1")
     private String name1;
     @Column(name = "name2")
@@ -76,6 +79,14 @@ public class Vendor implements Serializable {
 
     public void setMandt(String mandt) {
         this.mandt = mandt;
+    }
+
+    public String getWplant() {
+        return wplant;
+    }
+
+    public void setWplant(String wplant) {
+        this.wplant = wplant;
     }
 
     public String getName1() {
@@ -121,6 +132,12 @@ public class Vendor implements Serializable {
 
         Vendor vendor = (Vendor) o;
         if (lifnr != null ? !lifnr.equals(vendor.lifnr) : vendor.lifnr != null) {
+            return false;
+        }
+        if (mandt != null ? !mandt.equals(vendor.mandt) : vendor.mandt != null) {
+            return false;
+        }
+        if (wplant != null ? !wplant.equals(vendor.wplant) : vendor.wplant != null) {
             return false;
         }
         return true;
