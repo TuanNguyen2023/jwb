@@ -4,7 +4,9 @@
  */
 package com.gcs.wb.jpa.repositorys;
 
+import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.jpa.JPAConnector;
+import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.jpa.entity.SLoc;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,7 @@ import javax.persistence.TypedQuery;
 public class SLocRepository {
 
     EntityManager entityManager = JPAConnector.getInstance();
+    Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
 
     /**
      * get list "Kho"
@@ -25,12 +28,16 @@ public class SLocRepository {
      * @return
      */
     public List<SLoc> getListSLoc() {
-        TypedQuery<SLoc> typedQuery = entityManager.createNamedQuery("SLoc.findAll", SLoc.class);
+        TypedQuery<SLoc> typedQuery = entityManager.createNamedQuery("SLoc.findByMandtWplant", SLoc.class);
+        typedQuery.setParameter("mandt", configuration.getSapClient());
+        typedQuery.setParameter("wplant", configuration.getWkPlant());
         return typedQuery.getResultList();
     }
 
     public SLoc findByLgort(String lgort) {
         TypedQuery<SLoc> typedQuery = entityManager.createNamedQuery("SLoc.findByLgort", SLoc.class);
+        typedQuery.setParameter("mandt", configuration.getSapClient());
+        typedQuery.setParameter("wplant", configuration.getWkPlant());
         typedQuery.setParameter("lgort", lgort);
         List<SLoc> sLocs = typedQuery.getResultList();
         if (sLocs != null && sLocs.size() > 0) {
