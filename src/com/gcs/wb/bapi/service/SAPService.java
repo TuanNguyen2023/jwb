@@ -144,11 +144,11 @@ public class SAPService {
                 entityTransaction.begin();
             }
             //update for remove DB
-            for (MaterialInternal mat : materialsDB) {
-                if (matsSap.indexOf(mat) == -1) {
-                    entityManager.remove(mat);
-                }
-            }
+//            for (MaterialInternal mat : materialsDB) {
+//                if (matsSap.indexOf(mat) == -1) {
+//                    entityManager.remove(mat);
+//                }
+//            }
             // update SAP -> DB    
             for (MaterialInternal mSap : matsSap) {
                 int index = materialsDB.indexOf(mSap);
@@ -194,11 +194,11 @@ public class SAPService {
                 entityTransaction.begin();
             }
             //update for remove DB
-            for (Material mat : materialsDB) {
-                if (matsSap.indexOf(mat) == -1) {
-                    entityManager.remove(mat);
-                }
-            }
+//            for (Material mat : materialsDB) {
+//                if (matsSap.indexOf(mat) == -1) {
+//                    entityManager.remove(mat);
+//                }
+//            }
             // update SAP -> DB
             for (Material mSap : matsSap) {
                 int index = materialsDB.indexOf(mSap);
@@ -264,11 +264,11 @@ public class SAPService {
             }
 
             // update remove DB
-            for (Vendor ven : vendorDBs) {
-                if (venSaps.indexOf(ven) == -1) {
-                    entityManager.remove(ven);
-                }
-            }
+//            for (Vendor ven : vendorDBs) {
+//                if (venSaps.indexOf(ven) == -1) {
+//                    entityManager.remove(ven);
+//                }
+//            }
 
             // update SAP - DB
             for (Vendor venSap : venSaps) {
@@ -400,11 +400,11 @@ public class SAPService {
                 entityTransaction.begin();
             }
             //case delete
-            for (BatchStock b : batchs) {
-                if (batchStockSaps.indexOf(b) == -1) {
-                    entityManager.remove(b);
-                }
-            }
+//            for (BatchStock b : batchs) {
+//                if (batchStockSaps.indexOf(b) == -1) {
+//                    entityManager.remove(b);
+//                }
+//            }
             //case persit/merge
             for (BatchStock bs : batchStockSaps) {
                 int index = batchs.indexOf(bs);
@@ -524,11 +524,11 @@ public class SAPService {
                 entityTransaction.begin();
             }
             // update case delete
-            for (SLoc slocD : slocDBs) {
-                if (slocSaps.indexOf(slocD) == -1) {
-                    entityManager.remove(slocD);
-                }
-            }
+//            for (SLoc slocD : slocDBs) {
+//                if (slocSaps.indexOf(slocD) == -1) {
+//                    entityManager.remove(slocD);
+//                }
+//            }
             // update case persit/merge
             for (SLoc sloc : slocSaps) {
                 sloc.setMandt(mandt);
