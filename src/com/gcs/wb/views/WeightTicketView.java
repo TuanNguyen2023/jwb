@@ -4099,12 +4099,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                             item.setOutScale(BigDecimal.valueOf(item.getInScale().doubleValue() + item.getLfimg().doubleValue()));
                                 remain = remain - item.getLfimg().doubleValue();
                         } else {
-                            // set lại trọng lượng cân trong dung sai cho phép
-                            if(checkVariant) {
-                                item.setGoodsQty(item.getLfimg());
-                            } else {
-                                item.setGoodsQty(BigDecimal.valueOf(remain));
-                            }
+                            item.setGoodsQty(BigDecimal.valueOf(remain));
                             item.setOutScale(BigDecimal.valueOf(item.getInScale().doubleValue() + remain));
                         }
                         if (!entityManager.getTransaction().isActive()) {
