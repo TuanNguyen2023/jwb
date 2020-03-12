@@ -2953,7 +2953,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 String plateNo = txtPlateNoN.getText().trim();
                 String traid = outboundDelivery.getTraid().trim();
                 traid = StringUtil.correctPlateNo(traid);
-                if ((traid.isEmpty()) || (!traid.isEmpty() && !traid.startsWith(plateNo))) {
+                if ((traid.isEmpty()) || (!traid.isEmpty() && !traid.equalsIgnoreCase(plateNo))) {
                     throw new Exception(resourceMapMsg.getString("msg.plateNoNotMappingWithDO", plateNo));
                 }
 
