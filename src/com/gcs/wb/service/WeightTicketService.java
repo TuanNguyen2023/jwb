@@ -19,6 +19,7 @@ import com.gcs.wb.bapi.outbdlv.structure.OutbDeliveryCreateStoStructure;
 import com.gcs.wb.bapi.outbdlv.structure.VbkokStructure;
 import com.gcs.wb.bapi.outbdlv.structure.VbpokStructure;
 import com.gcs.wb.bapi.service.SAPService;
+import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.controller.WeightTicketController;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.JReportService;
@@ -817,17 +818,18 @@ public class WeightTicketService {
         
         // check dung sai -> set Qty
         String material = (outbDel != null && outbDel.getMatnr() != null) ? outbDel.getMatnr().toString() : "";
-        if(checkVariantByMaterial(wt, material, wt.getGQty())) {
-            sumQtyRegWT = sumQtyReg;
-        } else {
-            sumQtyRegWT = wt.getGQty();
-        }
 
         for (int i = 0; i < outDetails_lits.size(); i++) {
             item = outDetails_lits.get(i);
             if (item.getDeliveryOrderNo().contains(doNum)) {
                 if (item.getFreeItem() == null || item.getFreeItem().equals("")) {
-                    kl = kl.add((item.getGoodsQty() != null) ? item.getGoodsQty() : BigDecimal.ZERO);
+                    // check chênh lệch dung sai cho phép -> set lại KL đăng ký
+                    if(checkVariantByMaterial(wt, material, wt.getGQty(), sumQtyReg)) {
+                        kl = kl.add((item.getLfimg()!= null) ? item.getLfimg(): BigDecimal.ZERO);
+                    } else {
+                        kl = kl.add((item.getGoodsQty() != null) ? item.getGoodsQty() : BigDecimal.ZERO);
+                    }
+                    
                 } else {
                     kl_km = kl_km.add((item.getGoodsQty() != null) ? item.getGoodsQty() : BigDecimal.ZERO);
                 }
@@ -898,14 +900,9 @@ public class WeightTicketService {
             if (qtyfree == null) {
                 qtyfree = new BigDecimal(0);
             }
-            qty = sumQtyRegWT.subtract(qtyfree);
-            if(kl.equals(BigDecimal.ZERO)) {
-                tab_wa.setPikmg(qty);
-                tab_wa.setLfimg(qty);
-            } else {
-                tab_wa.setPikmg(kl);
-                tab_wa.setLfimg(kl);
-            }
+            qty = wt.getGQty().subtract(qtyfree);
+            tab_wa.setPikmg(kl);
+            tab_wa.setLfimg(kl);
         }
 
         GoodsMvtWeightTicketStructure stWT = fillWTStructure(weightTicket, outbDel, outDetails_lits, weightTicket);
@@ -945,10 +942,11 @@ public class WeightTicketService {
         return bapi;
     }
     
-    public boolean checkVariantByMaterial(WeightTicket wt, String material, BigDecimal gQty) {
+    public boolean checkVariantByMaterial(WeightTicket wt, String material, BigDecimal gQty, BigDecimal sumQtyReg) {
         Variant vari = findByParamMandtWplant(material, configuration.getSapClient(), configuration.getWkPlant());
         double valueUp = 0;
         double valueDown = 0;
+        double resultReg = sumQtyReg.doubleValue();
         double result = gQty.doubleValue();
 
         if (vari != null) {
@@ -960,8 +958,8 @@ public class WeightTicketService {
                 valueDown = Double.parseDouble(vari.getValueDown());
             }
 
-            double upper = result + (result * valueUp) / 100;
-            double lower = result - (result * valueDown) / 100;
+            double upper = resultReg + (resultReg * valueUp) / 100;
+            double lower = resultReg - (resultReg * valueDown) / 100;
 
             if ((lower <= result && result <= upper)) {
                 return true;
@@ -1026,11 +1024,17 @@ public class WeightTicketService {
                     BigDecimal sscale = BigDecimal.ZERO;
                     BigDecimal gqty = BigDecimal.ZERO;
                     BigDecimal lfimg_ori = BigDecimal.ZERO;
+                    BigDecimal totalQtyReality = BigDecimal.ZERO;
                     for (int k = 0; k < outDetails_lits.size(); k++) {
                         out_detail = outDetails_lits.get(k);
                         if (out_detail.getDeliveryOrderNo().contains(item.getDeliveryOrderNo())) {
                             if (out_detail.getLfimg() != null) {
                                 lfimg_ori = lfimg_ori.add(out_detail.getLfimg());
+                            }
+                            if (out_detail.getGoodsQty() != null) {
+                                totalQtyReality = totalQtyReality.add(out_detail.getGoodsQty());
+                            } else {
+                                totalQtyReality = totalQtyReality.add(out_detail.getLfimg());
                             }
                         }
                     }
@@ -1084,7 +1088,10 @@ public class WeightTicketService {
                         
                         map.put("P_TOTAL_QTY_REG", String.valueOf(totalQtyReg));        
                         map.put("P_TOTAL_QTY", String.valueOf(totalQty));
-                        if (outbDel != null && (outbDel.getLfart().equalsIgnoreCase("LF") || outbDel.getLfart().equalsIgnoreCase("ZTLF") || outbDel.getLfart().equalsIgnoreCase("NL"))) {
+                        map.put("P_TOTAL_QTY_REALITY", String.valueOf(totalQtyReality));
+                        String sDoType = Constants.WTRegView.DO_TYPES;
+                        //if (outbDel != null && (outbDel.getLfart().equalsIgnoreCase("LF") || outbDel.getLfart().equalsIgnoreCase("ZTLF") || outbDel.getLfart().equalsIgnoreCase("NL"))) {
+                        if ((outbDel != null) && (sDoType.contains(outbDel.getLfart()))) {
                             Double tmp;
                             // Double tmp = ((outbDel.getLfimg().doubleValue() + outbDel.getFreeQty().doubleValue()) * 1000d) / 50d;
                             if (outbDel.getMatnr().equalsIgnoreCase("000000101130400008")) // Tuanna - crazy lắm lun hix ai chơi hardcode  for bag 40K 27.04.2013
@@ -1098,16 +1105,28 @@ public class WeightTicketService {
                             bags = Math.round(tmp);
                         }
                     } else {
-                        map.put("P_TOTAL_QTY_REG", null);
-                        map.put("P_TOTAL_QTY", String.valueOf(outbDel.getLfimg()));
-                        Double tmp;
-                        if (outbDel != null && (outbDel.getLfart().equalsIgnoreCase("LF") || outbDel.getLfart().equalsIgnoreCase("ZTLF") || outbDel.getLfart().equalsIgnoreCase("NL"))) {
-                            if (outbDel.getMatnr().equalsIgnoreCase("000000101130400008")) // Tuanna - for bag 40K  27.04.2013
-                            {
-                                tmp = (outbDel.getLfimg().doubleValue() * 1000d) / 40d;
-                            } else {
-                                tmp = (outbDel.getLfimg().doubleValue() * 1000d) / 50d;
+                        BigDecimal totalQtyReg = BigDecimal.ZERO;
+                        BigDecimal totalQty = BigDecimal.ZERO;
+                        for(WeightTicketDetail wtDetail: wt.getWeightTicketDetails()) {
+                            if(outbDel.getDeliveryOrderNo().equals(wtDetail.getDeliveryOrderNo())) {
+                                totalQtyReg = wtDetail.getRegItemQuantity();
+                                totalQty = wtDetail.getRegItemQuantity();
+                                break;
                             }
+                        }
+                        map.put("P_TOTAL_QTY_REG", String.valueOf(totalQtyReg));
+                        map.put("P_TOTAL_QTY", String.valueOf(totalQty));
+                        map.put("P_TOTAL_QTY_REALITY", String.valueOf(totalQtyReality));
+                        Double tmp;
+                        //if (outbDel != null && (outbDel.getLfart().equalsIgnoreCase("LF") || outbDel.getLfart().equalsIgnoreCase("ZTLF") || outbDel.getLfart().equalsIgnoreCase("NL"))) {
+                        String sDoType = Constants.WTRegView.DO_TYPES;
+                        if ((outbDel != null) && (sDoType.contains(outbDel.getLfart()))) {
+                            if (outbDel.getMatnr().equalsIgnoreCase("000000101130400008")) // Tuanna - for bag 40K  27.04.2013
+                                {
+                                    tmp = (outbDel.getLfimg().doubleValue() * 1000d) / 40d;
+                                } else {
+                                    tmp = (outbDel.getLfimg().doubleValue() * 1000d) / 50d;
+                                }
 
                             bags = Math.round(tmp);
                         }
