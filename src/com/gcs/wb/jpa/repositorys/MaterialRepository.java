@@ -36,6 +36,8 @@ public class MaterialRepository {
         Material material = new Material();
         try {
             TypedQuery<Material> query = entityManager.createNamedQuery("Material.CheckPOSTO", Material.class);
+            query.setParameter("mandt", configuration.getSapClient());
+            query.setParameter("wplant", configuration.getWkPlant());
             query.setParameter("matnr", "%" + matnr + "%");
             List<Material> list = query.getResultList();
             if (list != null && list.size() > 0) {
@@ -61,6 +63,8 @@ public class MaterialRepository {
 
     public Material findByMatnr(String matnr) {
         TypedQuery<Material> typedQuery = entityManager.createNamedQuery("Material.findByMatnr", Material.class);
+        typedQuery.setParameter("mandt", configuration.getSapClient());
+        typedQuery.setParameter("wplant", configuration.getWkPlant());
         typedQuery.setParameter("matnr", matnr);
         List<Material> materials = typedQuery.getResultList();
         if (materials != null && materials.size() > 0) {
@@ -72,6 +76,8 @@ public class MaterialRepository {
 
     public List<String> getListLgortByMatnr(String matnr) {
         TypedQuery<Material> typedQuery = entityManager.createNamedQuery("Material.findByMatnr", Material.class);
+        typedQuery.setParameter("mandt", configuration.getSapClient());
+        typedQuery.setParameter("wplant", configuration.getWkPlant());
         typedQuery.setParameter("matnr", matnr);
         List<Material> materials = typedQuery.getResultList();
         return materials.stream()
@@ -87,6 +93,8 @@ public class MaterialRepository {
         }
 
         TypedQuery<Material> typedQuery = entityManager.createNamedQuery("Material.findByMatnrs", Material.class);
+        typedQuery.setParameter("mandt", configuration.getSapClient());
+        typedQuery.setParameter("wplant", configuration.getWkPlant());
         typedQuery.setParameter("matnrs", matnrs);
         List<Material> materials = typedQuery.getResultList();
         return materials.stream()
