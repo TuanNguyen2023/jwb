@@ -65,6 +65,8 @@ public class SLocRepository {
         }
 
         TypedQuery<SLoc> typedQuery = entityManager.createNamedQuery("SLoc.findByLgorts", SLoc.class);
+        typedQuery.setParameter("mandt", configuration.getSapClient());
+        typedQuery.setParameter("wplant", configuration.getWkPlant());
         typedQuery.setParameter("lgorts", lgorts);
         return typedQuery.getResultList();
     }
