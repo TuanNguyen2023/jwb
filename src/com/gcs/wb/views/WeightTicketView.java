@@ -64,6 +64,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 import org.apache.commons.lang.SerializationUtils;
 
 /*
@@ -4090,11 +4091,31 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     remain = remain * 1;
                 }
                 remain = remain / 1000;
-                // 20120522_ fix logic_code in for_loop
+                // chia cân
                 if (outDetails_lits.size() > 1) {
-                    for (int i = 0; i < outDetails_lits.size(); i++) {
-                        item = outDetails_lits.get(i);
-                        if (i < outDetails_lits.size() - 1) {
+                    List<OutboundDeliveryDetail> outDetailFrees = outDetails_lits.stream()
+                            .filter(t -> t.getFreeItem() != null && t.getFreeItem() == 'X')
+                            .collect(Collectors.toList());
+                    
+                    for (OutboundDeliveryDetail obj : outDetailFrees) {
+                        obj.setGoodsQty(obj.getLfimg());
+                        obj.setOutScale(BigDecimal.valueOf(obj.getInScale().doubleValue() + obj.getLfimg().doubleValue()));
+                        remain = remain - obj.getLfimg().doubleValue();
+
+                        if (!entityManager.getTransaction().isActive()) {
+                            entityManager.getTransaction().begin();
+                        }
+                        entityManager.merge(obj);
+                        entityManager.getTransaction().commit();
+                    }
+                    
+                    List<OutboundDeliveryDetail> outDetails = outDetails_lits.stream()
+                            .filter(t -> t.getFreeItem() == null || t.getFreeItem() != 'X')
+                            .collect(Collectors.toList());
+
+                    for (int i = 0; i < outDetails.size(); i++) {
+                        item = outDetails.get(i);
+                        if (i < outDetails.size() - 1) {
                             item.setGoodsQty(item.getLfimg());
                             item.setOutScale(BigDecimal.valueOf(item.getInScale().doubleValue() + item.getLfimg().doubleValue()));
                                 remain = remain - item.getLfimg().doubleValue();
