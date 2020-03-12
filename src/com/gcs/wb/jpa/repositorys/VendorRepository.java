@@ -35,7 +35,9 @@ public class VendorRepository {
     }
 
     public Vendor findByLifnr(String lifnr) {
-        TypedQuery<Vendor> typedQuery = entityManager.createNamedQuery("Vendor.findByLifnr", Vendor.class);
+        TypedQuery<Vendor> typedQuery = entityManager.createNamedQuery("Vendor.findByMandtWplantLifnr", Vendor.class);
+        typedQuery.setParameter("mandt", configuration.getSapClient());
+        typedQuery.setParameter("wplant", configuration.getWkPlant());
         typedQuery.setParameter("lifnr", lifnr);
         List<Vendor> vendors = typedQuery.getResultList();
         if (vendors != null && vendors.size() > 0) {
