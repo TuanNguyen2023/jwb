@@ -3190,12 +3190,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
             // set for oubdel
             List<OutboundDeliveryDetail> deliveryDetails = null;
-            String[] val = txtSONumN.getText().trim().split("-");
             if (!txtDONumN.getText().equals("")) {
-                String[] do_list = txtDONumN.getText().trim().split("-");
+                String[] do_list = txtDONumN.getText().split("-");
                 for (int i = 0; i < do_list.length; i++) {
                     // save DO
-                    String doNum = do_list[i];
+                    String doNum = do_list[i].trim();
                     deliveryDetails = detailRepository.findByDeliveryOrderNo(doNum);
                     for (int j = 0; j < deliveryDetails.size(); j++) {
                         OutboundDeliveryDetail detail = deliveryDetails.get(j);
