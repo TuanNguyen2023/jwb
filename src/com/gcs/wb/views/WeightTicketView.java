@@ -3515,6 +3515,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                 if (flag_fail || weightTicketDetail.getMatDoc() == null || weightTicketDetail.getMatDoc().equals("")) {
                                     revertCompletedDO(completedDO, outDetails_lits, outbDel_list);
                                     weightTicket.setPosted(false);
+                                    weightTicketDetail.setPosted(false);
                                     if (bapi_message == "") {
                                         bapi_message = resourceMapMsg.getString("msg.errorBAPI");
                                     }
@@ -3523,6 +3524,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     entityManager.clear();
                                 } else if (!flag_fail) {
                                     weightTicket.setPosted(true);
+                                    weightTicketDetail.setPosted(true);
                                     completedDO.add(weightTicketDetail.getDeliveryOrderNo());
                                 }
 

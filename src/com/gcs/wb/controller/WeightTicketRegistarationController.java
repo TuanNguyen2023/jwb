@@ -323,6 +323,10 @@ public class WeightTicketRegistarationController {
     public DefaultComboBoxModel getVendorModel() {
         return new DefaultComboBoxModel(vendorRepository.getListVendor().toArray());
     }
+    
+    public DefaultComboBoxModel getVendorModelByEkorg(String ekorg) {
+        return new DefaultComboBoxModel(vendorRepository.findByEkorg(ekorg).toArray());
+    }
 
     public DefaultComboBoxModel getCustomerModel() {
         return new DefaultComboBoxModel(customerRepository.getListCustomer().toArray());

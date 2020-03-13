@@ -237,7 +237,7 @@ public class SAPService {
 
         if (!WeighBridgeApp.getApplication().isOfflineMode()) {
             TransportagentGetListBapi bapi = new TransportagentGetListBapi();
-            bapi.setIvEkorg(configuration.getWkPlant());
+            //bapi.setIvEkorg(configuration.getWkPlant());
             List<Vendor> venSaps = new ArrayList<>();
             try {
                 logger.info("[SAP] Get list Transport Agent: " + bapi.toString());
@@ -252,6 +252,7 @@ public class SAPService {
                     ven.setLifnr(vens.getLifnr());
                     ven.setName1(vens.getName1());
                     ven.setName2(vens.getName2());
+                    ven.setEkorg(vens.getEkorg());
                     venSaps.add(ven);
                 }
             } catch (Exception ex) {

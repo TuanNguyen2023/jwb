@@ -46,6 +46,14 @@ public class VendorRepository {
 
         return null;
     }
+    
+    public List<Vendor> findByEkorg(String ekorg) {
+        TypedQuery<Vendor> typedQuery = entityManager.createNamedQuery("Vendor.findByMandtWplantEkorg", Vendor.class);
+        typedQuery.setParameter("mandt", configuration.getSapClient());
+        typedQuery.setParameter("wplant", configuration.getWkPlant());
+        typedQuery.setParameter("ekorg", ekorg);
+        return typedQuery.getResultList();
+    }
 
     public boolean hasData(String mandt, String wplant) {
         TypedQuery<Vendor> typedQuery = entityManager.createNamedQuery("Vendor.findByMandtWplant", Vendor.class);
