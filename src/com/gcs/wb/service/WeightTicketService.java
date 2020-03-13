@@ -1020,6 +1020,8 @@ public class WeightTicketService {
             } else {
                 for (int i = 0; i < outbDel_list.size(); i++) {
                     item = outbDel_list.get(i);
+                    List<WeightTicketDetail> weightTicketDetails = wt.getWeightTicketDetails();
+                    
                     OutboundDeliveryDetail out_detail = null;
                     BigDecimal sscale = BigDecimal.ZERO;
                     BigDecimal gqty = BigDecimal.ZERO;
@@ -1078,7 +1080,7 @@ public class WeightTicketService {
                         // set qty for Ghep ma
                         BigDecimal totalQtyReg = BigDecimal.ZERO;
                         BigDecimal totalQty = BigDecimal.ZERO;
-                        for(WeightTicketDetail wtDetail: wt.getWeightTicketDetails()) {
+                        for(WeightTicketDetail wtDetail: weightTicketDetails) {
                             if(outbDel.getDeliveryOrderNo().equals(wtDetail.getDeliveryOrderNo())) {
                                 totalQtyReg = wtDetail.getRegItemQuantity().subtract(outbDel.getFreeQty());
                                 totalQty = wtDetail.getRegItemQuantity();
@@ -1107,7 +1109,7 @@ public class WeightTicketService {
                     } else {
                         BigDecimal totalQtyReg = BigDecimal.ZERO;
                         BigDecimal totalQty = BigDecimal.ZERO;
-                        for(WeightTicketDetail wtDetail: wt.getWeightTicketDetails()) {
+                        for(WeightTicketDetail wtDetail: weightTicketDetails) {
                             if(outbDel.getDeliveryOrderNo().equals(wtDetail.getDeliveryOrderNo())) {
                                 totalQtyReg = wtDetail.getRegItemQuantity();
                                 totalQty = wtDetail.getRegItemQuantity();
@@ -1136,9 +1138,14 @@ public class WeightTicketService {
                     if (bags != null) {
                         map.put("P_PCB40BAG", bags);
                     }
-                    if (wt.getWeightTicketDetail().getMatDoc() != null) {
-                        map.put("P_MAT_DOC", wt.getWeightTicketDetail().getMatDoc());
+                    for (WeightTicketDetail wtDetail : weightTicketDetails) {
+                        if (outbDel.getDeliveryOrderNo().equals(wtDetail.getDeliveryOrderNo())) {
+                            if (wtDetail.getMatDoc() != null) {
+                                map.put("P_MAT_DOC", wtDetail.getMatDoc());
+                            }
+                        }
                     }
+                    
 
                     String reportName = null;
                     String path = "";

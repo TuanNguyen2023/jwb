@@ -3209,19 +3209,23 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             }
             Date now = new Date();
             weightTicket.setUpdatedDate(now);
-            weightTicket.getWeightTicketDetail().setUpdatedDate(new java.sql.Date(now.getTime()));
+            List<WeightTicketDetail> weightTicketDetails = weightTicket.getWeightTicketDetails();
+            for(WeightTicketDetail wtDetail: weightTicketDetails) {
+                wtDetail.setUpdatedDate(new java.sql.Date(now.getTime()));
+            }
             entityManager.merge(weightTicket);
             OutboundDelivery outbDel = null;
             List<String> completedDO = new ArrayList<>();
             String modeFlg = null;
             boolean flgGqty = false;
-            WeightTicketDetail weightTicketDetail = weightTicket.getWeightTicketDetail();
+            
             if (((isStage2() || (!isStage1() && !isStage2())) && !weightTicket.isDissolved())
                     || (!isStage1() && !isStage2() && !weightTicket.isDissolved()
                     && (weightTicket != null && !weightTicket.isPosted()))) {
 
                 // <editor-fold defaultstate="collapsed" desc="Input PO">
                 if (weightTicket.getWeightTicketDetail().getEbeln() != null) {
+                    WeightTicketDetail weightTicketDetail = weightTicket.getWeightTicketDetail();
                     purchaseOrder = purchaseOrderRepository.findByPoNumber(weightTicket.getWeightTicketDetail().getEbeln());
                     // nhap mua hang
                     if (weightTicket.getMode().equals("IN_PO_PURCHASE")) {
@@ -3441,6 +3445,13 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     outbDel = outbDel_list.get(i);
                     if (i != 0) {
                         ivWbidNosave = "X";
+                    }
+                    
+                    WeightTicketDetail weightTicketDetail = new WeightTicketDetail();
+                    for(WeightTicketDetail wtDetail: weightTicketDetails) {
+                        if(wtDetail.getDeliveryOrderNo().equals(outbDel.getDeliveryOrderNo())) {
+                            weightTicketDetail = wtDetail;
+                        }
                     }
                     // validate trọng lượng DO
                     flgGqty = validateTolerance(null, outbDel);
@@ -3759,7 +3770,9 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 if (isStage2()) {
                     weightTicket.setPosted(false);
                 }
-                weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
+                for(WeightTicketDetail wtDetail: weightTicketDetails) {
+                    wtDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
+                }
             }
             if (!entityManager.getTransaction().isActive()) {
                 entityManager.getTransaction().begin();
