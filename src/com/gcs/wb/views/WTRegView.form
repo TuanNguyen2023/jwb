@@ -59,7 +59,7 @@
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="pnShowFilter" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
-              <Component id="spnResult" pref="220" max="32767" attributes="0"/>
+              <Component id="spnResult" pref="224" max="32767" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="pnPrintControl" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
@@ -1223,9 +1223,8 @@
         <Component class="javax.swing.JFormattedTextField" name="txtWeightN">
           <Properties>
             <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
-              <Format subtype="0" type="0"/>
+              <Format format="#,##0.000" subtype="-1" type="0"/>
             </Property>
-            <Property name="text" type="java.lang.String" resourceKey="txtWeightN.text"/>
             <Property name="name" type="java.lang.String" value="txtWeightN" noResource="true"/>
           </Properties>
           <Events>
