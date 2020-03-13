@@ -3279,11 +3279,13 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     if (weightTicketDetail.getMatDoc() == null || weightTicketDetail.getMatDoc().equals("")) {
                                         logger.info("[SAP] Get infor before post SAP: " + objBapi.toString());
                                         sapSession.execute(objBapi);
-                                    } else if((objBapi_Po != null) && 
+                                    }
+                                    if((objBapi_Po != null) && 
                                             (weightTicketDetail.getMatDocGr() == null || weightTicketDetail.getMatDocGr().equals(""))) {
                                         logger.info("[SAP] Get infor before post SAP: " + objBapi_Po.toString());
                                         sapSession.execute(objBapi_Po);
-                                    } else if ((objBapi_Posto != null)
+                                    }
+                                    if ((objBapi_Posto != null)
                                             && (weightTicketDetail.getMatDocGi() == null || weightTicketDetail.getMatDocGi().equals(""))) {
                                         logger.info("[SAP] Get infor before post SAP: " + objBapi_Posto.toString());
                                         sapSession.execute(objBapi_Posto);
