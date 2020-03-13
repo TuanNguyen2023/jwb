@@ -3716,6 +3716,17 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             // load batch stock
             loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
             loadBatchStockModel(cbxSloc2N, cbxBatchStock2N, false);
+            
+            // load data vendor
+            if (modeDetail == MODE_DETAIL.OUT_PLANT_PLANT
+                    || modeDetail == MODE_DETAIL.OUT_PULL_STATION) {
+                DefaultComboBoxModel vendorModel = weightTicketRegistarationController.getVendorModelByEkorg(purchaseOrderPO.getPurchaseOrderDetail().getPlant());
+                DefaultComboBoxModel vendor2Model = (DefaultComboBoxModel) SerializationUtils.clone(vendorModel);
+                cbxVendorLoadingN.setModel(vendorModel);
+                cbxVendorLoadingN.setSelectedIndex(-1);
+                cbxVendorTransportN.setModel(vendor2Model);
+                cbxVendorTransportN.setSelectedIndex(-1);
+            }
 
             if (customer != null) {
                 cbxCustomerN.setModel(weightTicketRegistarationController.getCustomerModel());
