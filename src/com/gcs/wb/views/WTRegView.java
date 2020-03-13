@@ -251,7 +251,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 if (value instanceof Vendor) {
                     Vendor vendor = (Vendor) value;
-                    setText(vendor.getName1());
+                    setText(vendor.getName1() + " " + vendor.getName2());
                 }
                 return this;
             }
