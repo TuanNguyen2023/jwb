@@ -33,6 +33,7 @@ import org.hibersap.util.DateUtil;
 import javax.persistence.*;
 import javax.swing.*;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.logging.Level;
@@ -823,13 +824,7 @@ public class WeightTicketService {
             item = outDetails_lits.get(i);
             if (item.getDeliveryOrderNo().contains(doNum)) {
                 if (item.getFreeItem() == null || item.getFreeItem().equals("")) {
-                    // check chênh lệch dung sai cho phép -> set lại KL đăng ký
-                    if(checkVariantByMaterial(wt, material, wt.getGQty(), sumQtyReg)) {
-                        kl = kl.add((item.getLfimg()!= null) ? item.getLfimg(): BigDecimal.ZERO);
-                    } else {
-                        kl = kl.add((item.getGoodsQty() != null) ? item.getGoodsQty() : BigDecimal.ZERO);
-                    }
-                    
+                    kl = kl.add((item.getGoodsQty() != null) ? item.getGoodsQty() : BigDecimal.ZERO);
                 } else {
                     kl_km = kl_km.add((item.getGoodsQty() != null) ? item.getGoodsQty() : BigDecimal.ZERO);
                 }
@@ -1034,9 +1029,9 @@ public class WeightTicketService {
                                 lfimg_ori = lfimg_ori.add(out_detail.getLfimg());
                             }
                             if (out_detail.getGoodsQty() != null) {
-                                totalQtyReality = totalQtyReality.add(out_detail.getGoodsQty());
+                                totalQtyReality = totalQtyReality.add(out_detail.getGoodsQty().setScale(3, RoundingMode.HALF_UP));
                             } else {
-                                totalQtyReality = totalQtyReality.add(out_detail.getLfimg());
+                                totalQtyReality = totalQtyReality.add(out_detail.getLfimg().setScale(3, RoundingMode.HALF_UP));
                             }
                         }
                     }
