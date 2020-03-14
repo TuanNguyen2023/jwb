@@ -765,22 +765,34 @@ public class ConfigView extends javax.swing.JDialog {
 
     private void txtDBHostKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDBHostKeyReleased
         validateFormDB();
-        setFormEditable(false);
+        String dbHost = txtDBHost.getText().trim();
+        if (!dbHost.equals(config.getDbHost())) {
+            setFormEditable(false);
+        }
     }//GEN-LAST:event_txtDBHostKeyReleased
 
     private void txtDBNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDBNameKeyReleased
         validateFormDB();
-        setFormEditable(false);
+        String dbName = txtDBName.getText().trim();
+        if (!dbName.equals(config.getDbName())) {
+            setFormEditable(false);
+        }
     }//GEN-LAST:event_txtDBNameKeyReleased
 
     private void txtDBUsrKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDBUsrKeyReleased
         validateFormDB();
-        setFormEditable(false);
+        String dbUser = txtDBUsr.getText().trim();
+        if (!dbUser.equals(config.getDbUsername())) {
+            setFormEditable(false);
+        }
     }//GEN-LAST:event_txtDBUsrKeyReleased
 
     private void txtDBPwdKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDBPwdKeyReleased
         validateFormDB();
-        setFormEditable(false);
+        String dbPass = new String(txtDBPwd.getPassword()).trim();
+        if (!dbPass.equals(config.getDbPassword())) {
+            setFormEditable(false);
+        }
     }//GEN-LAST:event_txtDBPwdKeyReleased
 
     private void txtHostKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtHostKeyReleased
@@ -804,6 +816,8 @@ private void txtSapPasswordKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         txtRString.setEnabled(editable);
         txtSNo.setEnabled(editable);
         txtDClient.setEnabled(editable);
+        txtSapUpsername.setEnabled(editable);
+        txtSapPassword.setEnabled(editable);
 
         txtPlant.setEnabled(editable);
         txtWBID.setEnabled(editable);
@@ -814,6 +828,7 @@ private void txtSapPasswordKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         cbxStopBits1.setEnabled(editable);
         cbxPControl1.setEnabled(editable);
         chbMettler1.setEnabled(editable);
+        chbAutoSignal1.setEnabled(editable);
 
         cbxPort2.setEnabled(editable);
         cbxSpeed2.setEnabled(editable);
@@ -821,6 +836,7 @@ private void txtSapPasswordKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         cbxStopBits2.setEnabled(editable);
         cbxPControl2.setEnabled(editable);
         chbMettler2.setEnabled(editable);
+        chbAutoSignal2.setEnabled(editable);
 
         if (!editable) {
             btnSave.setEnabled(false);
