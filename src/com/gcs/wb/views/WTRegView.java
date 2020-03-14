@@ -4028,12 +4028,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             cbxSlocN.setSelectedItem(new SLoc(newWeightTicket.getLgort()));
             cbxSloc2N.setSelectedItem(new SLoc(newWeightTicket.getRecvLgort()));
 
-            cbxBatchStockN.setModel(new DefaultComboBoxModel());
-            cbxBatchStockN.setSelectedIndex(-1);
-            cbxBatchStock2N.setModel(new DefaultComboBoxModel());
-            cbxBatchStock2N.setSelectedIndex(-1);
-            cbxVendorLoadingN.setSelectedItem(new Vendor(weightTicketDetail.getLoadVendor()));
-            cbxVendorTransportN.setSelectedItem(new Vendor(weightTicketDetail.getTransVendor()));
+            loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
+            loadBatchStockModel(cbxSlocN, cbxBatchStockN, false);
+            cbxCustomerN.setSelectedItem(weightTicketRegistarationController.getCustomer(weightTicketDetail.getKunnr()));
+            cbxVendorLoadingN.setSelectedItem(weightTicketRegistarationController.getVendor(weightTicketDetail.getLoadVendor()));
+            cbxVendorTransportN.setSelectedItem(weightTicketRegistarationController.getVendor(weightTicketDetail.getTransVendor()));
 
             return null;  // return your result
         }

@@ -2230,7 +2230,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         showComponent(cbxVendorTransportN, lblVendorTransportN, isShowPOV, false);
         showComponent(cbxCustomerN, lblCustomerN, true, false);
 
-        cbxMaterialTypeN.setModel(weightTicketRegistarationController.getListMaterialInternal());
+        cbxMaterialTypeN.setModel(weightTicketRegistarationController.getListMaterial());
         cbxMaterialTypeN.setSelectedIndex(-1);
     }
 
@@ -3361,10 +3361,10 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             newWeightTicket.setMoveType("311");
             newWeightTicket.setMoveReas(null);
             WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
-            MaterialInternal materialInternal = (MaterialInternal) cbxMaterialTypeN.getSelectedItem();
+            Material material = (Material) cbxMaterialTypeN.getSelectedItem();
 
-            weightTicketDetail.setMatnrRef(materialInternal.getMatnr());
-            weightTicketDetail.setRegItemDescription(materialInternal.getMaktx());
+            weightTicketDetail.setMatnrRef(material.getMatnr());
+            weightTicketDetail.setRegItemDescription(material.getMaktx());
             weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText().trim()));
 
             if (!isValidPO) {
@@ -3957,12 +3957,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             cbxSlocN.setSelectedItem(new SLoc(newWeightTicket.getLgort()));
             cbxSloc2N.setSelectedItem(new SLoc(newWeightTicket.getRecvLgort()));
 
-            cbxBatchStockN.setModel(new DefaultComboBoxModel());
-            cbxBatchStockN.setSelectedIndex(-1);
-            cbxBatchStock2N.setModel(new DefaultComboBoxModel());
-            cbxBatchStock2N.setSelectedIndex(-1);
-            cbxVendorLoadingN.setSelectedItem(new Vendor(weightTicketDetail.getLoadVendor()));
-            cbxVendorTransportN.setSelectedItem(new Vendor(weightTicketDetail.getTransVendor()));
+            loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
+            loadBatchStockModel(cbxSlocN, cbxBatchStockN, false);
+            cbxCustomerN.setSelectedItem(weightTicketRegistarationController.getCustomer(weightTicketDetail.getKunnr()));
+            cbxVendorLoadingN.setSelectedItem(weightTicketRegistarationController.getVendor(weightTicketDetail.getLoadVendor()));
+            cbxVendorTransportN.setSelectedItem(weightTicketRegistarationController.getVendor(weightTicketDetail.getTransVendor()));
 
             return null;  // return your result
         }
