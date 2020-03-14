@@ -3168,16 +3168,17 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     try {
                                         bapi_message = ((DOCreate2PGIBapi) objBapi).getReturn().get(0).getMessage();
                                     } catch (Exception Ex) {
-                                        bapi_message = resourceMapMsg.getString("msg.errorSAP2880");
+                                        bapi_message = resourceMapMsg.getString("msg.errorSAP");
                                     }
                                 }
-                                if (objBapi instanceof GoodsMvtPoCreateBapi) {
+                                if ((objBapi instanceof GoodsMvtPoCreateBapi) 
+                                        && (weightTicketDetail.getMatDoc() == null || weightTicketDetail.getMatDoc().equals(""))) {
                                     weightTicketDetail.setMatDoc(((GoodsMvtPoCreateBapi) objBapi).getMatDoc());
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((GoodsMvtPoCreateBapi) objBapi).getMatYear()));
                                     try {
                                         bapi_message = ((GoodsMvtPoCreateBapi) objBapi).getReturn().get(0).getMessage();
                                     } catch (Exception Ex) {
-                                        bapi_message = resourceMapMsg.getString("msg.errorSAP2889");
+                                        bapi_message = resourceMapMsg.getString("msg.errorSAP");
                                     }
                                 }
                                 if (objBapi instanceof GoodsMvtDoCreateBapi) {
@@ -3187,7 +3188,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     try {
                                         bapi_message = ((GoodsMvtDoCreateBapi) objBapi).getReturn().get(0).getMessage();
                                     } catch (Exception Ex) {
-                                        bapi_message = resourceMapMsg.getString("msg.errorSAP2899");
+                                        bapi_message = resourceMapMsg.getString("msg.errorSAP");
                                     }
                                 }
                                 if (objBapi instanceof WsDeliveryUpdateBapi) {
@@ -3197,18 +3198,19 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     try {
                                         bapi_message = ((WsDeliveryUpdateBapi) objBapi).getReturn().get(0).getMessage().toString();
                                     } catch (Exception Ex) {
-                                        bapi_message = resourceMapMsg.getString("msg.errorSAP2944");
+                                        bapi_message = resourceMapMsg.getString("msg.errorSAP");
                                     }
 
                                 }
 
-                                if (objBapi_Po instanceof GoodsMvtPoCreateBapi) {
+                                if ((objBapi_Po instanceof GoodsMvtPoCreateBapi)
+                                        && (weightTicketDetail.getMatDocGr()== null || weightTicketDetail.getMatDocGr().equals(""))) {
                                     weightTicketDetail.setMatDocGr(((GoodsMvtPoCreateBapi) objBapi_Po).getMatDoc());
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((GoodsMvtPoCreateBapi) objBapi_Po).getMatYear()));
                                     try {
                                         bapi_message = ((GoodsMvtPoCreateBapi) objBapi_Po).getReturn().get(0).getMessage().toString();
                                     } catch (Exception Ex) {
-                                        bapi_message = "No message returned when call SAP ( GoodsMvtPoCreateBapi line >>2889 ) ";
+                                        bapi_message = resourceMapMsg.getString("msg.errorSAP");
                                     }
                                 }
 
@@ -3222,7 +3224,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     try {
                                         bapi_message = ((GoodsMvtPOSTOCreatePGIBapi) objBapi).getReturn().get(0).getMessage().toString();
                                     } catch (Exception Ex) {
-                                        bapi_message = " No message returned when call SAP ( GoodsMvtPOSTOCreatePGIBapi line 2899 )";
+                                        bapi_message = resourceMapMsg.getString("msg.errorSAP");
                                     }
                                 }
                                 
@@ -3232,17 +3234,18 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     try {
                                         bapi_message = ((DOPostingPGIBapi) objBapi).getReturn().get(0).getMessage();
                                     } catch (Exception Ex) {
-                                        bapi_message = resourceMapMsg.getString("msg.errorSAP2880");
+                                        bapi_message = resourceMapMsg.getString("msg.errorSAP");
                                     }
                                 }
 
-                                if (objBapi_Posto instanceof GoodsMvtPoCreateBapi) {
+                                if ((objBapi_Posto instanceof GoodsMvtPoCreateBapi) 
+                                        && (weightTicketDetail.getMatDocGi() == null || weightTicketDetail.getMatDocGi().equals(""))) {
                                     weightTicketDetail.setMatDocGi(((GoodsMvtPoCreateBapi) objBapi_Posto).getMatDoc());
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((GoodsMvtPoCreateBapi) objBapi_Posto).getMatYear()));
                                     try {
                                         bapi_message = ((GoodsMvtPoCreateBapi) objBapi_Posto).getReturn().get(0).getMessage().toString();
                                     } catch (Exception Ex) {
-                                        bapi_message = "No message returned when call SAP ( GoodsMvtPoCreateBapi line >>2889 ) ";
+                                        bapi_message = resourceMapMsg.getString("msg.errorSAP");
                                     }
                                 }
 
@@ -3252,7 +3255,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     revertCompletedDO(completedDO, null, null);
                                     weightTicket.setPosted(false);
                                     if (bapi_message == "") {
-                                        bapi_message = resourceMapMsg.getString("msg.errorBAPI");
+                                        bapi_message = resourceMapMsg.getString("msg.errorSAP");
                                     }
                                     JOptionPane.showMessageDialog(rootPane, bapi_message);
                                     completed = false;
