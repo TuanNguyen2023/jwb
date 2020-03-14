@@ -115,7 +115,9 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
         tabResults.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
             try {
                 selectedWeightTicket = weightTicketList.get(tabResults.convertRowIndexToModel(tabResults.getSelectedRow()));
-                if (selectedWeightTicket != null && selectedWeightTicket.getOfflineMode()) {
+                if (selectedWeightTicket != null
+                        && selectedWeightTicket.getOfflineMode()
+                        && configuration.getListModePermissions().contains(MODE_DETAIL.valueOf(selectedWeightTicket.getMode()))) {
                     btnEdit.setEnabled(true);
                 } else {
                     btnEdit.setEnabled(false);
@@ -1879,9 +1881,15 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         }
 
         if (this.modeDetail == null || this.mode != mode) {
-            cbxModeType.setModel(weightTicketRegistarationController.getModeTypeModel(mode));
-            this.mode = mode;
-            this.modeDetail = ((WeighingMode) cbxModeType.getSelectedItem()).getModeDetail();
+            DefaultComboBoxModel model = weightTicketRegistarationController.getModeTypeModel(mode);
+            if (model.getSize() != 0) {
+                cbxModeType.setModel(weightTicketRegistarationController.getModeTypeModel(mode));
+                this.mode = mode;
+                this.modeDetail = ((WeighingMode) cbxModeType.getSelectedItem()).getModeDetail();
+            } else {
+                this.modeDetail = null;
+                btnNew.setEnabled(false);
+            }
         }
 
         // TODO: new ui set enable input
@@ -1961,6 +1969,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         lblPOSTONumN.setText(resourceMapMsg.getString("lblPOSTONumN.text"));
         lblSlocN.setText(resourceMapMsg.getString("lblSlocN.text"));
         lblBatchStockN.setText(resourceMapMsg.getString("lblBatchStockN.text"));
+        
+        if (modeDetail == null) {
+            disableAllInForm();
+            return;
+        }
 
         switch (modeDetail) {
             case IN_PO_PURCHASE:
@@ -2230,7 +2243,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         showComponent(cbxVendorTransportN, lblVendorTransportN, isShowPOV, false);
         showComponent(cbxCustomerN, lblCustomerN, true, false);
 
-        cbxMaterialTypeN.setModel(weightTicketRegistarationController.getListMaterialInternal());
+        cbxMaterialTypeN.setModel(weightTicketRegistarationController.getListMaterial());
         cbxMaterialTypeN.setSelectedIndex(-1);
     }
 
@@ -3361,10 +3374,10 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             newWeightTicket.setMoveType("311");
             newWeightTicket.setMoveReas(null);
             WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
-            MaterialInternal materialInternal = (MaterialInternal) cbxMaterialTypeN.getSelectedItem();
+            Material material = (Material) cbxMaterialTypeN.getSelectedItem();
 
-            weightTicketDetail.setMatnrRef(materialInternal.getMatnr());
-            weightTicketDetail.setRegItemDescription(materialInternal.getMaktx());
+            weightTicketDetail.setMatnrRef(material.getMatnr());
+            weightTicketDetail.setRegItemDescription(material.getMaktx());
             weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText().trim()));
 
             if (!isValidPO) {
@@ -3957,12 +3970,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             cbxSlocN.setSelectedItem(new SLoc(newWeightTicket.getLgort()));
             cbxSloc2N.setSelectedItem(new SLoc(newWeightTicket.getRecvLgort()));
 
-            cbxBatchStockN.setModel(new DefaultComboBoxModel());
-            cbxBatchStockN.setSelectedIndex(-1);
-            cbxBatchStock2N.setModel(new DefaultComboBoxModel());
-            cbxBatchStock2N.setSelectedIndex(-1);
-            cbxVendorLoadingN.setSelectedItem(new Vendor(weightTicketDetail.getLoadVendor()));
-            cbxVendorTransportN.setSelectedItem(new Vendor(weightTicketDetail.getTransVendor()));
+            loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
+            loadBatchStockModel(cbxSlocN, cbxBatchStockN, false);
+            cbxCustomerN.setSelectedItem(weightTicketRegistarationController.getCustomer(weightTicketDetail.getKunnr()));
+            cbxVendorLoadingN.setSelectedItem(weightTicketRegistarationController.getVendor(weightTicketDetail.getLoadVendor()));
+            cbxVendorTransportN.setSelectedItem(weightTicketRegistarationController.getVendor(weightTicketDetail.getTransVendor()));
 
             return null;  // return your result
         }

@@ -6,6 +6,7 @@ package com.gcs.wb.controller;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.base.constant.Constants;
+import com.gcs.wb.base.constant.Constants.WeighingProcess.MODE_DETAIL;
 import com.gcs.wb.base.enums.ModeEnum;
 import com.gcs.wb.base.enums.StatusEnum;
 import com.gcs.wb.base.util.FunctionalUtil;
@@ -223,13 +224,19 @@ public class WeightTicketRegistarationController {
 
     public DefaultComboBoxModel getModeTypeModel(Constants.WeighingProcess.MODE mode) {
         DefaultComboBoxModel model = new DefaultComboBoxModel();
+        List<MODE_DETAIL> permissions = configuration.getListModePermissions();
+
         if (mode == Constants.WeighingProcess.MODE.INPUT) {
             Constants.WeighingProcess.getInputModeList().forEach(item -> {
-                model.addElement(item);
+                if (permissions.contains(item.getModeDetail())) {
+                    model.addElement(item);
+                }
             });
         } else if (mode == Constants.WeighingProcess.MODE.OUTPUT) {
             Constants.WeighingProcess.getOutputModeList().forEach(item -> {
-                model.addElement(item);
+                if (permissions.contains(item.getModeDetail())) {
+                    model.addElement(item);
+                }
             });
         }
 
@@ -370,5 +377,9 @@ public class WeightTicketRegistarationController {
     
     public List<SLoc> getListSLoc(List<String> lgorts) {
         return wTRegService.getListSLoc(lgorts);
+    }
+    
+    public Customer getCustomer(String kunnr) {
+        return customerRepository.findByKunnr(kunnr);
     }
 }

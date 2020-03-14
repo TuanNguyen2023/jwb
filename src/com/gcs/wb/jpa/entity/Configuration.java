@@ -5,10 +5,15 @@
 package com.gcs.wb.jpa.entity;
 
 import com.gcs.wb.base.constant.Constants;
+import com.gcs.wb.base.constant.Constants.WeighingProcess.MODE_DETAIL;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.NamedQueries;
@@ -118,6 +123,9 @@ public class Configuration implements Serializable {
     private String sapUser;
     @Column(name = "sap_pass")
     private String sapPass;
+
+    @Column(name = "mode_permissions")
+    private String modePermissions;
 
     public Configuration() {
     }
@@ -416,6 +424,32 @@ public class Configuration implements Serializable {
 
     public void setSapPass(String sapPass) {
         this.sapPass = sapPass;
+    }
+
+    public String getModePermissions() {
+        return modePermissions;
+    }
+
+    public void setModePermissions(String modePermissions) {
+        this.modePermissions = modePermissions;
+    }
+
+    public List<MODE_DETAIL> getListModePermissions() {
+        if (modePermissions == null || modePermissions.trim().isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        return Stream.of(modePermissions.trim().split(","))
+                .map(t -> {
+                    try {
+                        return MODE_DETAIL.valueOf(t.trim());
+                    } catch (Exception ex) {
+                        return null;
+                    }
+                })
+                .filter(t -> t != null)
+                .distinct()
+                .collect(Collectors.toList());
     }
 
     @Override
