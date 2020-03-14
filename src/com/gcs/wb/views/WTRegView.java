@@ -1469,6 +1469,13 @@ private void txtPONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
 }//GEN-LAST:event_txtPONumNKeyReleased
 
 private void txtPOSTONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPOSTONumNKeyReleased
+    if (isValidPOSTO) {
+        String posto = txtPOSTONumN.getText().trim();
+        if (!posto.equals(newWeightTicket.getPosto())) {
+            isValidPOSTO = false;
+        }
+    }
+    
     validateForm();
 }//GEN-LAST:event_txtPOSTONumNKeyReleased
 
