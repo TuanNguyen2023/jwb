@@ -33,6 +33,7 @@ import org.hibersap.util.DateUtil;
 import javax.persistence.*;
 import javax.swing.*;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.logging.Level;
@@ -1034,9 +1035,9 @@ public class WeightTicketService {
                                 lfimg_ori = lfimg_ori.add(out_detail.getLfimg());
                             }
                             if (out_detail.getGoodsQty() != null) {
-                                totalQtyReality = totalQtyReality.add(out_detail.getGoodsQty());
+                                totalQtyReality = totalQtyReality.add(out_detail.getGoodsQty().setScale(3, RoundingMode.HALF_UP));
                             } else {
-                                totalQtyReality = totalQtyReality.add(out_detail.getLfimg());
+                                totalQtyReality = totalQtyReality.add(out_detail.getLfimg().setScale(3, RoundingMode.HALF_UP));
                             }
                         }
                     }
