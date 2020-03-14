@@ -121,6 +121,31 @@ public class DOPostingPGIBapi implements Serializable {
     public void setIvTVendor(String ivTVendor) {
         this._ivTVendor = ivTVendor;
     }
+    
+    public String getReturnMessage() {
+        if (_Return == null || _Return.isEmpty()) {
+            return null;
+        }
+        
+        BapiRet2 bapiRet2 = _Return.get(0);
+        if (bapiRet2.getMessage() != null && !bapiRet2.getMessage().trim().isEmpty()) {
+            return bapiRet2.getMessage().trim();
+        }
+        String msg = "";
+        if(bapiRet2.getMessageV1() != null && !bapiRet2.getMessageV1().trim().isEmpty() ) {
+            msg += bapiRet2.getMessageV1() + " ";
+        }
+        if(bapiRet2.getMessageV2() != null && !bapiRet2.getMessageV2().trim().isEmpty() ) {
+            msg += bapiRet2.getMessageV2() + " ";
+        }
+        if(bapiRet2.getMessageV3() != null && !bapiRet2.getMessageV3().trim().isEmpty() ) {
+            msg += bapiRet2.getMessageV3() + " ";
+        }
+        if(bapiRet2.getMessageV4() != null && !bapiRet2.getMessageV4().trim().isEmpty() ) {
+            msg += bapiRet2.getMessageV4() + " ";
+        }
+        return msg.trim();
+    }
 
     @Override
     public String toString() {

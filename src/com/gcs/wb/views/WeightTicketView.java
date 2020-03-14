@@ -3142,8 +3142,8 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     // mode xuat plant
                     if (weightTicket.getMode().equals("OUT_PLANT_PLANT")) {
                         // check post PGI for post lai
-                        if((weightTicketDetail.getDeliveryOrderNo() == null || weightTicketDetail.getDeliveryOrderNo() == "")
-                                && (weightTicketDetail.getMatDoc() == null || weightTicketDetail.getMatDoc() == "" )) {
+                        if(weightTicketDetail.getDeliveryOrderNo().trim().isEmpty()
+                                && (weightTicketDetail.getMatDoc().trim().isEmpty())) {
                             objBapi = getDoCreate2PGI(weightTicket, outbDel);
                         } else {
                             objBapi = getDOPostingPGI(weightTicket, outbDel, weightTicketDetail.getDeliveryOrderNo());
@@ -3161,8 +3161,8 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     // xuat ben keo
                     if (weightTicket.getMode().equals("OUT_PULL_STATION") && weightTicket.getPosto() != null) {
                          // check post PGI for post lai
-                        if((weightTicketDetail.getDeliveryOrderNo() == null || weightTicketDetail.getDeliveryOrderNo() == "")
-                                && (weightTicketDetail.getMatDoc() == null || weightTicketDetail.getMatDoc() == "" )) {
+                        if((weightTicketDetail.getDeliveryOrderNo().trim().isEmpty())
+                                && (weightTicketDetail.getMatDoc().trim().isEmpty())) {
                             objBapi = getMvtPOSTOCreatePGI(weightTicket, weightTicket.getPosto(), flgPost);
                         } else {
                             objBapi = getDOPostingPGI(weightTicket, outbDel, weightTicketDetail.getDeliveryOrderNo());
@@ -3198,7 +3198,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     weightTicketDetail.setMatDoc(((DOCreate2PGIBapi) objBapi).getMatDoc());
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((DOCreate2PGIBapi) objBapi).getDocYear()));
                                     try {
-                                        bapi_message = ((DOCreate2PGIBapi) objBapi).getReturn().get(0).getMessage();
+                                        bapi_message = ((DOCreate2PGIBapi) objBapi).getReturnMessage().toString();
                                     } catch (Exception Ex) {
                                         bapi_message = resourceMapMsg.getString("msg.errorSAP");
                                     }
@@ -3208,7 +3208,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     weightTicketDetail.setMatDoc(((GoodsMvtPoCreateBapi) objBapi).getMatDoc());
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((GoodsMvtPoCreateBapi) objBapi).getMatYear()));
                                     try {
-                                        bapi_message = ((GoodsMvtPoCreateBapi) objBapi).getReturn().get(0).getMessage();
+                                        bapi_message = ((GoodsMvtPoCreateBapi) objBapi).getReturnMessage().toString();
                                     } catch (Exception Ex) {
                                         bapi_message = resourceMapMsg.getString("msg.errorSAP");
                                     }
@@ -3218,7 +3218,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((GoodsMvtDoCreateBapi) objBapi).getMatYear()));
 
                                     try {
-                                        bapi_message = ((GoodsMvtDoCreateBapi) objBapi).getReturn().get(0).getMessage();
+                                        bapi_message = ((GoodsMvtDoCreateBapi) objBapi).getReturnMessage().toString();
                                     } catch (Exception Ex) {
                                         bapi_message = resourceMapMsg.getString("msg.errorSAP");
                                     }
@@ -3228,7 +3228,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((WsDeliveryUpdateBapi) objBapi).getDoc_year()));
 
                                     try {
-                                        bapi_message = ((WsDeliveryUpdateBapi) objBapi).getReturn().get(0).getMessage().toString();
+                                        bapi_message = ((WsDeliveryUpdateBapi) objBapi).getReturnMessage().toString();
                                     } catch (Exception Ex) {
                                         bapi_message = resourceMapMsg.getString("msg.errorSAP");
                                     }
@@ -3240,7 +3240,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     weightTicketDetail.setMatDocGr(((GoodsMvtPoCreateBapi) objBapi_Po).getMatDoc());
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((GoodsMvtPoCreateBapi) objBapi_Po).getMatYear()));
                                     try {
-                                        bapi_message = ((GoodsMvtPoCreateBapi) objBapi_Po).getReturn().get(0).getMessage().toString();
+                                        bapi_message = ((GoodsMvtPoCreateBapi) objBapi_Po).getReturnMessage().toString();
                                     } catch (Exception Ex) {
                                         bapi_message = resourceMapMsg.getString("msg.errorSAP");
                                     }
@@ -3254,7 +3254,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     weightTicketDetail.setIvMatDocumentYear(((GoodsMvtPOSTOCreatePGIBapi) objBapi).getMatDocumentYearOut());
 
                                     try {
-                                        bapi_message = ((GoodsMvtPOSTOCreatePGIBapi) objBapi).getReturn().get(0).getMessage().toString();
+                                        bapi_message = ((GoodsMvtPOSTOCreatePGIBapi) objBapi).getReturnMessage().toString();
                                     } catch (Exception Ex) {
                                         bapi_message = resourceMapMsg.getString("msg.errorSAP");
                                     }
@@ -3264,7 +3264,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     weightTicketDetail.setMatDoc(((DOPostingPGIBapi) objBapi).getMatDoc());
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((DOPostingPGIBapi) objBapi).getDocYear()));
                                     try {
-                                        bapi_message = ((DOPostingPGIBapi) objBapi).getReturn().get(0).getMessage();
+                                        bapi_message = ((DOPostingPGIBapi) objBapi).getReturnMessage().toString();
                                     } catch (Exception Ex) {
                                         bapi_message = resourceMapMsg.getString("msg.errorSAP");
                                     }
@@ -3275,7 +3275,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     weightTicketDetail.setMatDocGi(((GoodsMvtPoCreateBapi) objBapi_Posto).getMatDoc());
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((GoodsMvtPoCreateBapi) objBapi_Posto).getMatYear()));
                                     try {
-                                        bapi_message = ((GoodsMvtPoCreateBapi) objBapi_Posto).getReturn().get(0).getMessage().toString();
+                                        bapi_message = ((GoodsMvtPoCreateBapi) objBapi_Posto).getReturnMessage().toString();
                                     } catch (Exception Ex) {
                                         bapi_message = resourceMapMsg.getString("msg.errorSAP");
                                     }
@@ -3408,7 +3408,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     weightTicketDetail.setMatDoc(((DOCreate2PGIBapi) objBapi).getMatDoc());
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((DOCreate2PGIBapi) objBapi).getDocYear()));
                                     try {
-                                        bapi_message = ((DOCreate2PGIBapi) objBapi).getReturn().get(0).getMessage().toString();
+                                        bapi_message = ((DOCreate2PGIBapi) objBapi).getReturnMessage().toString();
                                     } catch (Exception Ex) {
                                         bapi_message = resourceMapMsg.getString("msg.errorSAP3048");
                                     }
@@ -3445,7 +3445,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     weightTicketDetail.setMatDoc(((GoodsMvtPoCreateBapi) objBapi).getMatDoc());
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((GoodsMvtPoCreateBapi) objBapi).getMatYear()));
                                     try {
-                                        bapi_message = ((GoodsMvtPoCreateBapi) objBapi).getReturn().get(0).getMessage().toString();
+                                        bapi_message = ((GoodsMvtPoCreateBapi) objBapi).getReturnMessage().toString();
                                     } catch (Exception Ex) {
                                         bapi_message = resourceMapMsg.getString("msg.errorSAP3086");
                                     }
@@ -3482,7 +3482,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     weightTicketDetail.setMatDoc(((GoodsMvtDoCreateBapi) objBapi).getMatDoc());
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((GoodsMvtDoCreateBapi) objBapi).getMatYear()));
                                     try {
-                                        bapi_message = ((GoodsMvtDoCreateBapi) objBapi).getReturn().get(0).getMessage().toString();
+                                        bapi_message = ((GoodsMvtDoCreateBapi) objBapi).getReturnMessage().toString();
                                     } catch (Exception Ex) {
                                         bapi_message = resourceMapMsg.getString("msg.errorSAP3123");
                                     }
@@ -3519,7 +3519,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((WsDeliveryUpdateBapi) objBapi).getDoc_year()));
 
                                     try {
-                                        bapi_message = ((WsDeliveryUpdateBapi) objBapi).getReturn().get(0).getMessage().toString();
+                                        bapi_message = ((WsDeliveryUpdateBapi) objBapi).getReturnMessage().toString();
                                     } catch (Exception Ex) {
                                         bapi_message = resourceMapMsg.getString("msg.errorSAP3160");
                                     }

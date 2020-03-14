@@ -1793,6 +1793,10 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             DOCheckStructure doNumber = new DOCheckStructure();
             String bsRomoc = txtTrailerNoN.getText().trim();
 
+            if(bsXe.isEmpty()) {
+                throw new Exception(resourceMapMsg.getString("msg.plzInputPlateNo"));
+            }
+
             if (val.length == listDONumbers.size()) {
                 boolean hasChecked = listDONumbers.stream()
                         .allMatch(t -> Stream.of(val).anyMatch(s -> s.trim().equals(t.getVbelnSO())));
