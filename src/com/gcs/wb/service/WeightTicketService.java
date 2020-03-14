@@ -981,22 +981,10 @@ public class WeightTicketService {
 
                 WeightTicketDetail weightTicketDetail = wt.getWeightTicketDetail();
                 if (!wt.isDissolved()) {
-                    Double tmp;
-
-                    if (weightTicketDetail.getMatnrRef() != null && weightTicketDetail.getMatnrRef().equalsIgnoreCase("000000101130400008")) // Tuanna - for bag 40K 27.04.2013
-                    {
-                        tmp = ((weightTicketDetail.getRegItemQuantity().doubleValue()) * 1000d) / 40d;
-                    } else {
+                    Double tmp = null;
+                    if (weightTicketDetail.getRegItemDescription() != null
+                            && (weightTicketDetail.getRegItemDescription().contains("Bag")) || weightTicketDetail.getRegItemDescription().contains("bao")) {
                         tmp = ((weightTicketDetail.getRegItemQuantity().doubleValue()) * 1000d) / 50d;
-                    }
-
-                    if ((tmp == null || tmp == 0) && weightTicketDetail.getRegItemQuantity() != null) {
-                        if (weightTicketDetail.getMatnrRef() != null && weightTicketDetail.getMatnrRef().equalsIgnoreCase("000000101130400008")) // Tuanna - for bag 40K 27.04.2013
-                        {
-                            tmp = ((weightTicketDetail.getRegItemQuantity().doubleValue()) * 1000d) / 40d;
-                        } else {
-                            tmp = ((weightTicketDetail.getRegItemQuantity().doubleValue()) * 1000d) / 50d;
-                        }
                     }
                     bags = Math.round(tmp);
                     if (bags != null) {
@@ -1004,11 +992,7 @@ public class WeightTicketService {
                     }
                 }
                 String reportName1 = "";
-                //if (configuration.isModeNormal()) {
-                    reportName1 = "./rpt/rptBT/WeightTicket.jasper";
-//                } else {
-//                    reportName1 = "./rpt/rptPQ/WeightTicket.jasper";
-//                }
+                reportName1 = "./rpt/rptBT/WeightTicket.jasper";
 
                 jreportService.printReport(map, reportName1);
 
@@ -1086,19 +1070,9 @@ public class WeightTicketService {
                         map.put("P_TOTAL_QTY_REG", String.valueOf(totalQtyReg));        
                         map.put("P_TOTAL_QTY", String.valueOf(totalQty));
                         map.put("P_TOTAL_QTY_REALITY", String.valueOf(totalQtyReality));
-                        String sDoType = Constants.WTRegView.DO_TYPES;
-                        //if (outbDel != null && (outbDel.getLfart().equalsIgnoreCase("LF") || outbDel.getLfart().equalsIgnoreCase("ZTLF") || outbDel.getLfart().equalsIgnoreCase("NL"))) {
-                        if ((outbDel != null) && (sDoType.contains(outbDel.getLfart()))) {
-                            Double tmp;
-                            // Double tmp = ((outbDel.getLfimg().doubleValue() + outbDel.getFreeQty().doubleValue()) * 1000d) / 50d;
-                            if (outbDel.getMatnr().equalsIgnoreCase("000000101130400008")) // Tuanna - crazy lắm lun hix ai chơi hardcode  for bag 40K 27.04.2013
-                            //  Double tmp = (outbDel.getLfimg().doubleValue() * 1000d) / 40d;
-                            {
-                                tmp = ((outbDel.getLfimg().doubleValue() + outbDel.getFreeQty().doubleValue()) * 1000d) / 40d;
-                            } else //  Double tmp = (outbDel.getLfimg().doubleValue() * 1000d) / 50d;
-                            {
-                                tmp = ((outbDel.getLfimg().doubleValue() + outbDel.getFreeQty().doubleValue()) * 1000d) / 50d;
-                            }
+                        Double tmp = null;
+                        if ((outbDel != null) && ((outbDel.getArktx().contains("Bag")) || (outbDel.getArktx().contains("bao")))) {
+                            tmp = ((outbDel.getLfimg().doubleValue() + outbDel.getFreeQty().doubleValue()) * 1000d) / 50d;
                             bags = Math.round(tmp);
                         }
                     } else {
@@ -1114,17 +1088,9 @@ public class WeightTicketService {
                         map.put("P_TOTAL_QTY_REG", String.valueOf(totalQtyReg));
                         map.put("P_TOTAL_QTY", String.valueOf(totalQty));
                         map.put("P_TOTAL_QTY_REALITY", String.valueOf(totalQtyReality));
-                        Double tmp;
-                        //if (outbDel != null && (outbDel.getLfart().equalsIgnoreCase("LF") || outbDel.getLfart().equalsIgnoreCase("ZTLF") || outbDel.getLfart().equalsIgnoreCase("NL"))) {
-                        String sDoType = Constants.WTRegView.DO_TYPES;
-                        if ((outbDel != null) && (sDoType.contains(outbDel.getLfart()))) {
-                            if (outbDel.getMatnr().equalsIgnoreCase("000000101130400008")) // Tuanna - for bag 40K  27.04.2013
-                                {
-                                    tmp = (outbDel.getLfimg().doubleValue() * 1000d) / 40d;
-                                } else {
-                                    tmp = (outbDel.getLfimg().doubleValue() * 1000d) / 50d;
-                                }
-
+                        Double tmp = null;
+                        if ((outbDel != null) && ((outbDel.getArktx().contains("Bag")) || (outbDel.getArktx().contains("bao")))) {
+                            tmp = (outbDel.getLfimg().doubleValue() * 1000d) / 50d;
                             bags = Math.round(tmp);
                         }
 
@@ -1141,23 +1107,9 @@ public class WeightTicketService {
                         }
                     }
                     
-
                     String reportName = null;
                     String path = "";
-                    //if (configuration.isModeNormal()) {
-                        path = "./rpt/rptBT/";  // ->> DO cai nay ne e
-//                    } else {
-//                        path = "./rpt/rptPQ/";
-//                    }
-//                    if (isOffline || (txtPONo != null || !"".equals(txtPONo))) {
-//
-//                        reportName = path.concat("WeightTicket.jasper");
-//                        //reportName = path.concat("WeightTicket.jasper");
-//                    } else {
-//
-//                        reportName = path.concat("WeightTicket_NEW.jasper");
-//                        //reportName = path.concat("WeightTicket.jasper");
-//                    }
+                    path = "./rpt/rptBT/"; 
                     reportName = path.concat("WeightTicket_NEW.jasper");
                     jreportService.printReport(map, reportName);
                 }
@@ -1168,9 +1120,6 @@ public class WeightTicketService {
         }
     }
 
-//    public int getCountSingal() {
-//        return noneRepository.getCountSingal();
-//    }
 
     public SLoc findByLgort(String lgort) {
         return sLocRepository.findByLgort(lgort);
