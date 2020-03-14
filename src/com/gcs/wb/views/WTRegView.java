@@ -41,6 +41,7 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -79,6 +80,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
     Object[][] wtData = null;
     Object[] wtCols = Constants.WTRegView.WEIGHTTICKET_COLUMS;
     Class[] wtTypes = Constants.WTRegView.WEIGHTTICKET_TYPES;
+    private DecimalFormat df = new DecimalFormat("#,##0.000");
     // TODO update ui
     private MODE mode = MODE.OUTPUT;
     private MODE_DETAIL modeDetail;
@@ -3083,7 +3085,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         protected void succeeded(Object t) {
             isValidDO = true;
             cbxMaterialTypeN.setSelectedItem(String.join(" - ", strMaterial));
-            txtWeightN.setText(totalWeight.toString());
+            txtWeightN.setText(df.format(totalWeight).toString());
 
             if (customer != null) {
                 cbxCustomerN.setModel(weightTicketRegistarationController.getCustomerModel());
@@ -3698,7 +3700,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         @Override
         protected void succeeded(Object t) {
             isValidPO = true;
-            txtWeightN.setText(totalWeight.toString());
+            txtWeightN.setText(df.format(totalWeight).toString());
             Material temp = weightTicketRegistarationController.getMaterial(strMatnr);
             if (temp == null) {
                 sapService.syncMaterial();
@@ -4006,7 +4008,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             txtPOSTONumN.setText(newWeightTicket.getPosto());
             txtSONumN.setText(weightTicketDetail.getSoNumber());
             cbxMaterialTypeN.setSelectedItem(weightTicketRegistarationController.getMaterial(weightTicketDetail.getMatnrRef()));
-            txtWeightN.setText(weightTicketDetail.getRegItemQuantity().toString());
+            txtWeightN.setText(df.format(weightTicketDetail.getRegItemQuantity()).toString());
 
             // load sloc
             boolean isInternal = modeDetail == MODE_DETAIL.IN_OTHER || modeDetail == MODE_DETAIL.OUT_OTHER;

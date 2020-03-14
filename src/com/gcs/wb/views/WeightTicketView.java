@@ -60,6 +60,7 @@ import java.awt.datatransfer.*;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
@@ -110,6 +111,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     PurchaseOrderRepository purchaseOrderRepository = new PurchaseOrderRepository();
     PurchaseOrder purchaseOrder = new PurchaseOrder();
     private boolean flgPost = false;
+    private DecimalFormat df = new DecimalFormat("#,##0.000");
 
     public WeightTicketView() {
         weightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
@@ -2298,7 +2300,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         || Constants.WeighingProcess.MODE_DETAIL.IN_PO_PURCHASE.name().equals(weightTicket.getMode())) {
                     txtPONo.setText(weightTicket.getWeightTicketDetail().getEbeln());
                 }
-                txtWeight.setText(weightTicket.getWeightTicketDetail().getRegItemQuantity().toString());
+                txtWeight.setText(df.format(weightTicket.getWeightTicketDetail().getRegItemQuantity()).toString());
                 if (Constants.WeighingProcess.MODE_DETAIL.OUT_SLOC_SLOC.name().equals(weightTicket.getMode())
                         || Constants.WeighingProcess.MODE_DETAIL.OUT_PULL_STATION.name().equals(weightTicket.getMode())) {
                     txtPoPosto.setText(weightTicket.getPosto());
@@ -2481,7 +2483,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     }
                     
                     if(outbDel_list.size() > 1) {
-                        txtWeight.setText(totalRegItemQuantity.toString());
+                        txtWeight.setText(df.format(totalRegItemQuantity).toString());
                     }
                     
                     txtDelNum.setText(doNums);
@@ -4004,7 +4006,11 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                             item.setOutScale(BigDecimal.valueOf(item.getInScale().doubleValue() + item.getLfimg().doubleValue()));
                                 remain = remain - item.getLfimg().doubleValue();
                         } else {
-                            item.setGoodsQty(BigDecimal.valueOf(remain));
+                            if(checkVariant) {
+                                item.setGoodsQty(item.getLfimg());
+                            } else {
+                                item.setGoodsQty(BigDecimal.valueOf(remain));
+                            }
                             item.setOutScale(BigDecimal.valueOf(item.getInScale().doubleValue() + remain));
                         }
                         if (!entityManager.getTransaction().isActive()) {
@@ -4087,6 +4093,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         grbType.clearSelection();
         grbCat.clearSelection();
 
+        txtSO.setText(null);
         txtPONo.setText(null);
         txfCurScale.setValue(null);
         txfInQty.setValue(null);

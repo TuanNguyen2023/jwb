@@ -824,13 +824,7 @@ public class WeightTicketService {
             item = outDetails_lits.get(i);
             if (item.getDeliveryOrderNo().contains(doNum)) {
                 if (item.getFreeItem() == null || item.getFreeItem().equals("")) {
-                    // check chênh lệch dung sai cho phép -> set lại KL đăng ký
-                    if(checkVariantByMaterial(wt, material, wt.getGQty(), sumQtyReg)) {
-                        kl = kl.add((item.getLfimg()!= null) ? item.getLfimg(): BigDecimal.ZERO);
-                    } else {
-                        kl = kl.add((item.getGoodsQty() != null) ? item.getGoodsQty() : BigDecimal.ZERO);
-                    }
-                    
+                    kl = kl.add((item.getGoodsQty() != null) ? item.getGoodsQty() : BigDecimal.ZERO);
                 } else {
                     kl_km = kl_km.add((item.getGoodsQty() != null) ? item.getGoodsQty() : BigDecimal.ZERO);
                 }
