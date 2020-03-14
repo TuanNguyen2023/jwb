@@ -1822,6 +1822,10 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                     }
                 }
             }
+            
+            if (doNum.trim().isEmpty()) {
+                throw new Exception("Không lấy được bất kỳ số DO nào, vui lòng kiểm tra lại!");
+            }
 
             txtDONumN.setText(doNum);
             return null;
