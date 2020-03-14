@@ -2335,7 +2335,16 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     txtVendorTransport.setText(vendorTransport != null ? vendorTransport.getName1() + " " + vendorTransport.getName2() : "");
                 }
                 if (Constants.WeighingProcess.MODE_DETAIL.OUT_SLOC_SLOC.name().equals(weightTicket.getMode())) {
-                    txtLgortIn.setText(weightTicket.getRecvLgort());
+                    if (weightTicket.getRecvLgort() != null && !weightTicket.getRecvLgort().trim().isEmpty()) {
+                        entityManager.clear();
+                        SLoc sloc = weightTicketController.findByLgort(weightTicket.getRecvLgort());
+                        if (sloc != null) {
+                            txtLgortIn.setText(sloc.getLgort() + " - " + sloc.getLgobe());
+                        }
+                    } else {
+                        txtSLoc.setText(null);
+                    }
+
                     txtChargIn.setText(weightTicket.getRecvCharg());
                 }
                 if (Constants.WeighingProcess.MODE_DETAIL.OUT_SELL_WATERWAY.name().equals(weightTicket.getMode())) {
@@ -2599,12 +2608,12 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     SLoc sloc = weightTicketController.findByLgort(weightTicket.getLgort());
                     if (sloc != null) {
                         lgort = sloc.getLgort();
-                        txtSLoc.setText(sloc.getLgobe());
+                        txtSLoc.setText(sloc.getLgort() + " - " + sloc.getLgobe());
                     }
                 } else if (outbDel != null && outbDel.getLgort() != null && !outbDel.getLgort().trim().isEmpty()) {
                     SLoc sloc = weightTicketController.findByLgort(outbDel.getLgort());
                     if (sloc != null) {
-                        txtSLoc.setText(sloc.getLgobe());
+                        txtSLoc.setText(sloc.getLgort() + " - " + sloc.getLgobe());
                         lgort = sloc.getLgort();
                     }
                 } else {
