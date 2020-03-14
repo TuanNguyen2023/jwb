@@ -2951,8 +2951,12 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 }
 
                 //Check Delivery Plant with Configuration parameter.
-                if ((!(outboundDelivery.getWerks()).equals(configuration.getWkPlant()))
-                        && (!(outboundDelivery.getRecvPlant()).equals(configuration.getWkPlant()))) {
+                if ((modeDetail == MODE_DETAIL.OUT_SELL_WATERWAY || modeDetail == MODE_DETAIL.OUT_SELL_ROAD)
+                    && (!(outboundDelivery.getWerks()).equals(configuration.getWkPlant()))) {
+                    throw new Exception(resourceMapMsg.getString("msg.doIsDenied"));
+                }
+
+                if((modeDetail == MODE_DETAIL.IN_WAREHOUSE_TRANSFER) && (!(outboundDelivery.getRecvPlant()).equals(configuration.getWkPlant()))) {
                     throw new Exception(resourceMapMsg.getString("msg.doIsDenied"));
                 }
 
