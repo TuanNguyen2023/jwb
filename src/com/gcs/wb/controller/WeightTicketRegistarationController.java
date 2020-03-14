@@ -378,4 +378,8 @@ public class WeightTicketRegistarationController {
     public List<SLoc> getListSLoc(List<String> lgorts) {
         return wTRegService.getListSLoc(lgorts);
     }
+    
+    public Customer getCustomer(String kunnr) {
+        return customerRepository.findByKunnr(kunnr);
+    }
 }
