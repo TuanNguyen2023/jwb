@@ -4,9 +4,13 @@
  */
 package com.gcs.wb.jpa.repositorys;
 
+import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.jpa.JPAConnector;
+import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.jpa.entity.MaterialGroup;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import org.apache.log4j.Logger;
@@ -18,6 +22,7 @@ import org.apache.log4j.Logger;
 public class MaterialGroupRepository {
 
     EntityManager entityManager = JPAConnector.getInstance();
+    Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
     Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
 
     public List<MaterialGroup> getListMaterialGroup() {
@@ -47,5 +52,22 @@ public class MaterialGroupRepository {
         }
 
         return null;
+    }
+    
+    public boolean checkMaterialTogether(List<String> matnrs) {
+        if (matnrs == null || matnrs.isEmpty()) {
+            return false;
+        }
+
+        TypedQuery<Object> typedQuery = entityManager.createNamedQuery("MaterialGroup.checkMaterialTogether", Object.class);
+        typedQuery.setParameter("mandt", configuration.getSapClient());
+        typedQuery.setParameter("wplant", configuration.getWkPlant());
+        typedQuery.setParameter("matnrs", matnrs);
+        
+        Object[] info = (Object[]) typedQuery.getResultList().get(0);
+        Long sumRecord = (Long) info[0];
+        Long sumType = (Long) info[1];
+        
+        return matnrs.size() == sumRecord && sumType == 1;
     }
 }

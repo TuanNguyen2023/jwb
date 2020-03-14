@@ -30,7 +30,6 @@ import java.util.ArrayList;
  * @author Hang Tran
  */
 @Bapi(GoodsMvtPOSTOCreatePGIConstants.BAPI_NAME)
-@ThrowExceptionOnError(returnStructure = "TABLE/RETURN")
 public class GoodsMvtPOSTOCreatePGIBapi implements Serializable {
 
     // <editor-fold defaultstate="collapsed" desc="Import Parameters">
@@ -55,6 +54,15 @@ public class GoodsMvtPOSTOCreatePGIBapi implements Serializable {
     @Import
     @Parameter(value = GoodsMvtCreateConstants.I_WEIGHTTICKET, type = ParameterType.STRUCTURE)
     private GoodsMvtWeightTicketStructure _weightticket;
+    @Import
+    @Parameter(value = GoodsMvtPOSTOCreatePGIConstants.IV_MATERIALDOCUMENT_INPUT, type = ParameterType.SIMPLE)
+    private String _ivMaterialDocument;
+    @Import
+    @Parameter(value = GoodsMvtPOSTOCreatePGIConstants.IV_MATDOCUMENTYEAR_INPUT, type = ParameterType.SIMPLE)
+    private String _ivMatDocumentYear;
+    @Import
+    @Parameter(value = GoodsMvtPOSTOCreatePGIConstants.IV_RETYPE_MODE, type = ParameterType.SIMPLE)
+    private String _ivReType;
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Export Parameters">
     @Export
@@ -69,6 +77,12 @@ public class GoodsMvtPOSTOCreatePGIBapi implements Serializable {
     @Export
     @Parameter(GoodsMvtCreateConstants.MATDOCUMENTYEAR)
     private String _matYear;
+    @Export
+    @Parameter(GoodsMvtPOSTOCreatePGIConstants.MATERIALDOCUMENT_INPUT)
+    private String _materialDocumentOut;
+    @Export
+    @Parameter(GoodsMvtPOSTOCreatePGIConstants.MATDOCUMENTYEAR_INPUT)
+    private String _matDocumentYearOut;
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Table Parameters">
     @Table
@@ -205,6 +219,26 @@ public class GoodsMvtPOSTOCreatePGIBapi implements Serializable {
      */
     public void setVbpok_tab(List<VbpokStructure> vbpok_tab) {
         this._vbpok_tab = vbpok_tab;
+    }
+    
+    public void setIvMaterialDocument(String ivMaterialDocument) {
+        this._ivMaterialDocument = ivMaterialDocument;
+    }
+    
+    public void setIvMatDocumentYear(String ivMatDocumentYear) {
+        this._ivMatDocumentYear = ivMatDocumentYear;
+    }
+    
+    public void setIvReType(String ivReType) {
+        this._ivReType = ivReType;
+    }
+
+    public String getMaterialDocumentOut() {
+        return _materialDocumentOut;
+    }
+    
+    public String getMatDocumentYearOut() {
+        return _matDocumentYearOut;
     }
 
     /**

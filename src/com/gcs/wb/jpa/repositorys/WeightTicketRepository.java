@@ -71,6 +71,23 @@ public class WeightTicketRepository {
         }
         return weightTicket;
     }
+    
+    public WeightTicket findByDeliveryOrderNoNotExistEbelnScale(String deliverNumber) {
+        WeightTicket weightTicket = null;
+        List<WeightTicket> list = getListByDeliveryOrderNoNotExistEbelnScale(deliverNumber);
+        if (list != null && list.size() > 0) {
+            weightTicket = list.get(0);
+        }
+        return weightTicket;
+    }
+    
+    public List<WeightTicket> getListByDeliveryOrderNoNotExistEbelnScale(String deliverNumber) {
+        List<WeightTicket> wt = new ArrayList<WeightTicket>();
+        TypedQuery<WeightTicket> query = entityManager.createNamedQuery("WeightTicket.findByDeliveryOrderNoNotExistEbelnScale", WeightTicket.class);
+        query.setParameter("deliveryOrderNo", "%" + deliverNumber + "%");
+        wt = query.getResultList();
+        return wt;
+    }
 
     public List<WeightTicket> getListByDeliveryOrderNoNotExistEbeln(String deliverNumber) {
         List<WeightTicket> wt = new ArrayList<WeightTicket>();

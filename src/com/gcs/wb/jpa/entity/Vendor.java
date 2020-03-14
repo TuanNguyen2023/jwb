@@ -23,10 +23,10 @@ import javax.persistence.Id;
 @Table(name = "tbl_vendor")
 @NamedQueries({
     @NamedQuery(name = "Vendor.findAll", query = "SELECT v FROM Vendor v"),
-    @NamedQuery(name = "Vendor.findByLifnr", query = "SELECT v FROM Vendor v WHERE v.lifnr = :lifnr"),
-    @NamedQuery(name = "Vendor.findByName1", query = "SELECT v FROM Vendor v WHERE v.name1 = :name1"),
-    @NamedQuery(name = "Vendor.findByName2", query = "SELECT v FROM Vendor v WHERE v.name2 = :name2"),
-    @NamedQuery(name = "Vendor.findByMandt", query = "SELECT v FROM Vendor v WHERE v.mandt = :mandt")})
+    @NamedQuery(name = "Vendor.findByMandtWplant", query = "SELECT v FROM Vendor v WHERE v.mandt = :mandt AND v.wplant = :wplant"),
+    @NamedQuery(name = "Vendor.findByMandtWplantLifnr", query = "SELECT v FROM Vendor v WHERE v.mandt = :mandt AND v.wplant = :wplant AND v.lifnr = :lifnr"),
+    @NamedQuery(name = "Vendor.findByMandtWplantEkorg", query = "SELECT v FROM Vendor v WHERE v.mandt = :mandt AND v.wplant = :wplant AND v.ekorg = :ekorg")
+})
 public class Vendor implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -38,10 +38,14 @@ public class Vendor implements Serializable {
     private String lifnr;
     @Column(name = "mandt", unique = true)
     private String mandt;
+    @Column(name = "wplant", unique = true)
+    private String wplant;
     @Column(name = "name1")
     private String name1;
     @Column(name = "name2")
     private String name2;
+    @Column(name = "ekorg", unique = true)
+    private String ekorg;
     @Column(name = "created_date")
     private Date createdDate;
     @Column(name = "updated_date")
@@ -78,6 +82,14 @@ public class Vendor implements Serializable {
         this.mandt = mandt;
     }
 
+    public String getWplant() {
+        return wplant;
+    }
+
+    public void setWplant(String wplant) {
+        this.wplant = wplant;
+    }
+
     public String getName1() {
         return name1;
     }
@@ -92,6 +104,14 @@ public class Vendor implements Serializable {
 
     public void setName2(String name2) {
         this.name2 = name2;
+    }
+    
+    public String getEkorg() {
+        return ekorg;
+    }
+
+    public void setEkorg(String ekorg) {
+        this.ekorg = ekorg;
     }
 
     public Date getCreatedDate() {
@@ -123,6 +143,15 @@ public class Vendor implements Serializable {
         if (lifnr != null ? !lifnr.equals(vendor.lifnr) : vendor.lifnr != null) {
             return false;
         }
+        if (mandt != null ? !mandt.equals(vendor.mandt) : vendor.mandt != null) {
+            return false;
+        }
+        if (wplant != null ? !wplant.equals(vendor.wplant) : vendor.wplant != null) {
+            return false;
+        }
+        if (ekorg != null ? !ekorg.equals(vendor.ekorg) : vendor.ekorg != null) {
+            return false;
+        }
         return true;
     }
 
@@ -133,6 +162,7 @@ public class Vendor implements Serializable {
         result = 31 * result + (mandt != null ? mandt.hashCode() : 0);
         result = 31 * result + (name1 != null ? name1.hashCode() : 0);
         result = 31 * result + (name2 != null ? name2.hashCode() : 0);
+        result = 31 * result + (ekorg != null ? ekorg.hashCode() : 0);
         result = 31 * result + (createdDate != null ? createdDate.hashCode() : 0);
         result = 31 * result + (updatedDate != null ? updatedDate.hashCode() : 0);
         return result;

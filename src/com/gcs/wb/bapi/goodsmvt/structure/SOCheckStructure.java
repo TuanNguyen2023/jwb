@@ -16,6 +16,11 @@ import org.hibersap.annotations.Parameter;
 @BapiStructure
 public class SOCheckStructure implements Serializable {
     // <editor-fold defaultstate="collapsed" desc="Structure Fields">
+    
+    /** plant */
+    @Parameter(SOGetDetailConstants.WERKS)
+    private String _werks;
+    
     /**SO Number to search*/
     @Parameter(SOGetDetailConstants.VBELN)
     private String _vbeln;
@@ -28,10 +33,6 @@ public class SOCheckStructure implements Serializable {
     @Parameter(SOGetDetailConstants.TRAILER)
     private String _trailer;
 
-    /** plant */
-    @Parameter(SOGetDetailConstants.WERKS)
-    private String _werks;
-    
     // </editor-fold>
     
     public SOCheckStructure() {

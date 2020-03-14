@@ -37,6 +37,7 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -73,6 +74,7 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
     Object[][] wtData = null;
     Object[] wtCols = Constants.WTRegView.WEIGHTTICKET_COLUMS;
     Class[] wtTypes = Constants.WTRegView.WEIGHTTICKET_TYPES;
+    private DecimalFormat df = new DecimalFormat("#,##0.000");
     // TODO update ui
     private MODE mode = MODE.OUTPUT;
     private MODE_DETAIL modeDetail;
@@ -245,7 +247,7 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 if (value instanceof Vendor) {
                     Vendor vendor = (Vendor) value;
-                    setText(vendor.getName1());
+                    setText(vendor.getName1() + " " + vendor.getName2());
                 }
                 return this;
             }
@@ -282,11 +284,22 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
         cbxCustomerN.setModel(weightTicketRegistarationController.getCustomerModel());
     }
 
-    private void loadSLoc(List<String> lgorts) {
-        DefaultComboBoxModel sLocModel = weightTicketRegistarationController.getSlocModel(lgorts);
+    private void loadSLoc(List<String> lgorts, String lgortSelected) {
+        List<SLoc> sLocs = weightTicketRegistarationController.getListSLoc(lgorts);
+        DefaultComboBoxModel sLocModel = new DefaultComboBoxModel(sLocs.toArray());
         DefaultComboBoxModel sLoc2Model = (DefaultComboBoxModel) SerializationUtils.clone(sLocModel);
         cbxSlocN.setModel(sLocModel);
-        cbxSlocN.setSelectedIndex(-1);
+        if (lgortSelected != null && !lgortSelected.isEmpty() && !sLocs.isEmpty()) {
+            SLoc sLoc = sLocs.stream()
+                    .filter(t -> lgortSelected.equals(t.getLgort()))
+                    .findFirst()
+                    .orElse(null);
+
+            cbxSlocN.setSelectedItem(sLoc);
+        } else {
+            cbxSlocN.setSelectedIndex(-1);
+        }
+        
         cbxSloc2N.setModel(sLoc2Model);
         cbxSloc2N.setSelectedIndex(-1);
         
@@ -1058,7 +1071,7 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
             }
         });
 
-        txtWeightN.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
+        txtWeightN.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.000"))));
         txtWeightN.setText(resourceMap.getString("txtWeightN.text")); // NOI18N
         txtWeightN.setName("txtWeightN"); // NOI18N
         txtWeightN.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -1358,7 +1371,7 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnShowFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
+                .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnPrintControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(13, 13, 13)
@@ -1527,7 +1540,7 @@ private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//
     // load sloc
     boolean isInternal = modeDetail == MODE_DETAIL.IN_OTHER || modeDetail == MODE_DETAIL.OUT_OTHER || modeDetail == MODE_DETAIL.OUT_SELL_WATERWAY;
     List<String> lgorts = weightTicketRegistarationController.getListLgortByMatnr(newWeightTicket.getRecvMatnr(), isInternal);
-    loadSLoc(lgorts);
+    loadSLoc(lgorts, null);
 
     loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
     loadBatchStockModel(cbxSloc2N, cbxBatchStock2N, false);
@@ -1802,7 +1815,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             isValidSO = true;
 
             cbxMaterialTypeN.setSelectedItem(weightTicketRegistarationController.getMaterial(strMatnr));
-            txtWeightN.setText(weight.toString());
+            txtWeightN.setText(df.format(weight).toString());
 
             if (kunnr != null && !kunnr.isEmpty()) {
                 cbxCustomerN.setSelectedItem(weightTicketRegistarationController.findByKunnr(kunnr));
@@ -2705,6 +2718,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
             List<BatchStock> batchStocks = weightTicketRegistarationController.getBatchStocks(sloc, arr_matnr);
             batchStockComponent.setModel(weightTicketRegistarationController.getBatchStockModel(batchStocks));
+            batchStockComponent.setSelectedIndex(batchStocks.size() > 0 ? 0 : -1);
         }
 
         validateForm();
@@ -2919,6 +2933,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         private List<String> matnrs = new ArrayList<>();
         private BigDecimal totalWeight = BigDecimal.ZERO;
         private String kunnr = "";
+        private String strLgort = "";
 
         CheckDOTask(org.jdesktop.application.Application app) {
             super(app);
@@ -3007,6 +3022,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
             totalWeight = totalWeight.add(outboundDelivery.getLfimg());
             kunnr = outboundDelivery.getKunnr();
+            strLgort = outboundDelivery.getLgort();
         }
 
         private boolean checkMaterial(OutboundDelivery outboundDelivery) {
@@ -3044,7 +3060,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         protected void succeeded(Object t) {
             isValidDO = true;
             cbxMaterialTypeN.setSelectedItem(String.join(" - ", strMaterial));
-            txtWeightN.setText(totalWeight.toString());
+            txtWeightN.setText(df.format(totalWeight).toString());
 
             if (kunnr != null && !kunnr.isEmpty()) {
                 cbxCustomerN.setSelectedItem(weightTicketRegistarationController.findByKunnr(kunnr));
@@ -3061,7 +3077,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
             // load sloc
             List<String> lgorts = weightTicketRegistarationController.getListLgortByMatnr(matnrs, false);
-            loadSLoc(lgorts);
+            loadSLoc(lgorts, strLgort);
 
             // load batch stock
             loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
@@ -3073,7 +3089,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             cbxMaterialTypeN.setSelectedItem("");
             txtWeightN.setText("0");
             cbxCustomerN.setSelectedIndex(-1);
-            loadSLoc(null);
+            loadSLoc(null, null);
 
             isValidDO = false;
             // for check edit plateNo after check DO
@@ -3471,8 +3487,10 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         txtPOSTONumN.setText("");
         txtSONumN.setText("");
         cbxMaterialTypeN.setSelectedIndex(-1);
-        txtWeightN.setText("0");
+        txtWeightN.setText("0.000");
+        cbxSlocN.setModel(new DefaultComboBoxModel());
         cbxSlocN.setSelectedIndex(-1);
+        cbxSloc2N.setModel(new DefaultComboBoxModel());
         cbxSloc2N.setSelectedIndex(-1);
         cbxBatchStockN.setModel(new DefaultComboBoxModel());
         cbxBatchStockN.setSelectedIndex(-1);
@@ -3683,6 +3701,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         private String strMatnr = null;
         private BigDecimal totalWeight = BigDecimal.ZERO;
         private String kunnr = "";
+        private String strLgort = "";
 
         CheckPOTask(Application app) {
             super(app);
@@ -3716,11 +3735,16 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         @Override
         protected void succeeded(Object t) {
             isValidPO = true;
-            txtWeightN.setText(totalWeight.toString());
-            cbxMaterialTypeN.setSelectedItem(weightTicketRegistarationController.getMaterial(strMatnr));
+            txtWeightN.setText(df.format(totalWeight).toString());
+            
+            Material material = weightTicketRegistarationController.getMaterial(strMatnr);
+            if (material == null && !strMatnr.isEmpty()) {
+                JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.materialNotExist", strMatnr));
+            }
+            cbxMaterialTypeN.setSelectedItem(material);
             // load sloc
             List<String> lgorts = weightTicketRegistarationController.getListLgortByMatnr(strMatnr, false);
-            loadSLoc(lgorts);
+            loadSLoc(lgorts, strLgort);
 
             // load batch stock
             loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
@@ -3747,7 +3771,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             cbxMaterialTypeN.setSelectedIndex(-1);
             cbxVendorTransportN.setSelectedIndex(-1);
             cbxCustomerN.setSelectedIndex(-1);
-            loadSLoc(null);
+            loadSLoc(null, null);
 
             isValidPO = false;
             if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
@@ -3778,6 +3802,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
 
             strMatnr = purchaseOrderDetail.getMaterial();
+            strLgort = purchaseOrderDetail.getStgeLoc();
 
             newWeightTicket.getWeightTicketDetail().setTransVendor(purchaseOrder.getVendor());
             strVendor = purchaseOrder.getVendor();
@@ -3937,11 +3962,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             txtPOSTONumN.setText(newWeightTicket.getPosto());
             txtSONumN.setText(weightTicketDetail.getSoNumber());
             cbxMaterialTypeN.setSelectedItem(weightTicketRegistarationController.getMaterial(weightTicketDetail.getMatnrRef()));
-            txtWeightN.setText(weightTicketDetail.getRegItemQuantity().toString());
+            txtWeightN.setText(df.format(weightTicketDetail.getRegItemQuantity()).toString());
             // load sloc
             boolean isInternal = modeDetail == MODE_DETAIL.IN_OTHER || modeDetail == MODE_DETAIL.OUT_OTHER || modeDetail == MODE_DETAIL.OUT_SELL_WATERWAY;
             List<String> lgorts = weightTicketRegistarationController.getListLgortByMatnr(weightTicketDetail.getMatnrRef(), isInternal);
-            loadSLoc(lgorts);
+            loadSLoc(lgorts, null);
             cbxSlocN.setSelectedItem(new SLoc(newWeightTicket.getLgort()));
             cbxSloc2N.setSelectedItem(new SLoc(newWeightTicket.getRecvLgort()));
 

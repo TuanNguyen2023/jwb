@@ -167,7 +167,11 @@ public class WeightTicketRegistarationController {
     public WeightTicket findByDeliveryOrderNo(String doNumber) {
         return wTRegService.findByDeliveryOrderNo(doNumber);
     }
-
+    
+    public WeightTicket findByDeliveryOrderNoScale(String doNumber) {
+        return wTRegService.findByDeliveryOrderNoScale(doNumber);
+    }
+    
     public List<WeightTicket> getListByDeliveryOrderNo(String outbNumber) {
         return wTRegService.getListByDeliveryOrderNo(outbNumber);
     }
@@ -326,6 +330,10 @@ public class WeightTicketRegistarationController {
     public DefaultComboBoxModel getVendorModel() {
         return new DefaultComboBoxModel(vendorRepository.getListVendor().toArray());
     }
+    
+    public DefaultComboBoxModel getVendorModelByEkorg(String ekorg) {
+        return new DefaultComboBoxModel(vendorRepository.findByEkorg(ekorg).toArray());
+    }
 
     public DefaultComboBoxModel getCustomerModel() {
         return new DefaultComboBoxModel(customerRepository.getListCustomer().toArray());
@@ -364,6 +372,10 @@ public class WeightTicketRegistarationController {
     }
 
     public DefaultComboBoxModel getSlocModel(List<String> lgorts) {
-        return new DefaultComboBoxModel(wTRegService.getListSLoc(lgorts).toArray());
+        return new DefaultComboBoxModel(getListSLoc(lgorts).toArray());
+    }
+    
+    public List<SLoc> getListSLoc(List<String> lgorts) {
+        return wTRegService.getListSLoc(lgorts);
     }
 }

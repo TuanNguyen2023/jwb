@@ -86,7 +86,7 @@ public class SyncMasterDataService {
         WeighBridgeApp.getApplication().setSapSetting(sapSetting);
         
         logger.info("Sync vendor...");
-        if (!vendorRepository.hasData(mandt)) {
+        if (!vendorRepository.hasData(mandt, wplant)) {
             syncVendor();
         }
 

@@ -257,7 +257,7 @@
 				</textElement>
 				<text><![CDATA[Trọng lượng Đk:]]></text>
 			</staticText>
-			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+			<textField pattern="#,##0.000;-#,##0.000" isBlankWhenNull="true">
 				<reportElement x="335" y="41" width="162" height="20"/>
 				<box leftPadding="5"/>
 				<textElement verticalAlignment="Middle">

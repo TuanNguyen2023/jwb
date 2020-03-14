@@ -90,6 +90,7 @@
 	<parameter name="P_ADDRESS" class="java.lang.String"/>
 	<parameter name="P_STAGE1" class="java.lang.Boolean" isForPrompting="false"/>
 	<parameter name="P_STAGE2" class="java.lang.Boolean" isForPrompting="false"/>
+	<parameter name="P_TOTAL_QTY_REALITY" class="java.lang.String" isForPrompting="false"/>
 	<queryString>
 		<![CDATA[p_report_online_or_without_po_weight_ticket $P{P_MANDT},$P{P_WPlant},$P{P_ID},$P{P_DAYSEQ},$P{P_ADDRESS},$P{P_DEL_NUM}]]>
 	</queryString>
@@ -795,7 +796,7 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 								<textElement textAlignment="Right" verticalAlignment="Middle">
 									<font fontName="DejaVu Sans" size="8"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$P{P_STAGE2} != true ? "" : ($F{outb_details_LFIMG} != null) ?$F{outb_details_LFIMG} : ($F{outb_details_LFIMG}  == null) ? "" : $F{outb_details_GOODS_QTY}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$P{P_STAGE2} != true ? "" : ($F{outb_details_GOODS_QTY} != null) ? $F{outb_details_GOODS_QTY} : ($F{outb_details_LFIMG} != null) ?$F{outb_details_LFIMG} : ""]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -908,7 +909,7 @@ $F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$P{P_STAGE2} != true ? "" : ($P{P_PCB40BAG} != null) ? $P{P_TOTAL_QTY} : ($F{G_QTY} == null) ? "" : $P{P_GQTY}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{P_STAGE2} != true ? "" : ($P{P_TOTAL_QTY_REALITY} != null) ? $P{P_TOTAL_QTY_REALITY} : ($F{G_QTY} == null) ? "" : $P{P_GQTY}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0.000;-#,##0.000" isBlankWhenNull="true">
 					<reportElement x="212" y="0" width="54" height="15"/>

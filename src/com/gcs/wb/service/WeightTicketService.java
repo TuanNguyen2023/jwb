@@ -12,12 +12,14 @@ import com.gcs.wb.bapi.goodsmvt.structure.*;
 import com.gcs.wb.bapi.helper.MatAvailableBapi;
 import com.gcs.wb.bapi.helper.structure.MatAvailableStructure;
 import com.gcs.wb.bapi.outbdlv.DOCreate2PGIBapi;
+import com.gcs.wb.bapi.outbdlv.DOPostingPGIBapi;
 import com.gcs.wb.bapi.outbdlv.DORevertBapi;
 import com.gcs.wb.bapi.outbdlv.WsDeliveryUpdateBapi;
 import com.gcs.wb.bapi.outbdlv.structure.OutbDeliveryCreateStoStructure;
 import com.gcs.wb.bapi.outbdlv.structure.VbkokStructure;
 import com.gcs.wb.bapi.outbdlv.structure.VbpokStructure;
 import com.gcs.wb.bapi.service.SAPService;
+import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.controller.WeightTicketController;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.JReportService;
@@ -31,6 +33,7 @@ import org.hibersap.util.DateUtil;
 import javax.persistence.*;
 import javax.swing.*;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.logging.Level;
@@ -691,6 +694,102 @@ public class WeightTicketService {
         return bapi;
     }
 
+    public Object getDOPostingPGI(WeightTicket wt, OutboundDelivery outbDel,WeightTicket weightTicket, int timeFrom, int timeTo, List<OutboundDeliveryDetail> outDetails_lits, String deliveryNum) {
+        String doNum = null;
+        if (outbDel != null) {
+            doNum = outbDel.getDeliveryOrderNo();
+        }
+        DOPostingPGIBapi bapi = new DOPostingPGIBapi();
+        bapi.setDelivery(deliveryNum);
+        WeightTicketDetail weightTicketDetail = wt.getWeightTicketDetail();
+        String plateCombine = wt.getPlateNo();
+        if (wt.getTrailerId() != null && !wt.getTrailerId().trim().isEmpty()) {
+            plateCombine += "|" + wt.getTrailerId();
+        }
+        VbkokStructure wa = new VbkokStructure();
+        if (outbDel == null) {
+            wa.setVbeln_vl(weightTicketDetail.getDeliveryOrderNo());
+        } else {
+            wa.setVbeln_vl(doNum);
+        }
+        wa.setKodat(DateUtil.stripTime(wt.getFTime()));
+        wa.setKouhr(DateUtil.stripDate(wt.getFTime()));
+
+        wa.setKomue("X");
+        wa.setWabuc("X");
+
+        //modify lui ngay
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(wt.getSTime());
+        Date stime;
+        if (timeFrom <= cal.get(Calendar.HOUR_OF_DAY) && cal.get(Calendar.HOUR_OF_DAY) <= (timeTo - 1)) {
+            cal.add(Calendar.DATE, -1);
+            stime = cal.getTime();
+        } else {
+            stime = wt.getSTime();
+        }
+
+        wa.setWadat_ist(DateUtil.stripTime(stime));
+        wa.setWadat(DateUtil.stripTime(stime));
+        wa.setWauhr(DateUtil.stripDate(stime));
+        wa.setLfdat(DateUtil.stripTime(stime));
+        wa.setLfuhr(DateUtil.stripDate(stime));
+        wa.setTraty("Z001");
+        wa.setTraid(plateCombine);
+        wa.setLifex(wt.getDriverName());
+        bapi.setVbkok_wa(wa);
+        bapi.setIvCVendor(weightTicketDetail.getLoadVendor());
+        bapi.setIvTVendor(weightTicketDetail.getTransVendor());
+
+        //get do details for current do
+        OutboundDeliveryDetail item = null;
+        BigDecimal kl = BigDecimal.ZERO;
+        BigDecimal kl_km = BigDecimal.ZERO;
+        BigDecimal kl_total = BigDecimal.ZERO;
+        for (int i = 0; i < outDetails_lits.size(); i++) {
+            item = outDetails_lits.get(i);
+            if (item.getDeliveryOrderNo().contains(doNum)) {
+                if (item.getFreeItem() == null || item.getFreeItem().equals("")) {
+                    kl = kl.add((item.getGoodsQty() != null) ? item.getGoodsQty() : BigDecimal.ZERO);
+                } else {
+                    kl_km = kl_km.add((item.getGoodsQty() != null) ? item.getGoodsQty() : BigDecimal.ZERO);
+                }
+            }
+        }
+        kl_total = kl.add(kl_km);
+
+        GoodsMvtWeightTicketStructure stWT = fillWTStructure(weightTicket, outbDel, outDetails_lits, weightTicket);
+        bapi.setWeightticket(stWT);
+        List<VbpokStructure> tab = new ArrayList<>();
+        VbpokStructure tab_wa = new VbpokStructure();
+        if (outbDel == null) {
+            tab_wa.setVbeln_vl(weightTicketDetail.getDeliveryOrderNo());
+        } else {
+            tab_wa.setVbeln_vl(doNum);
+        }
+        tab_wa.setPosnr_vl(weightTicketDetail.getItem());
+        tab_wa.setVbeln(tab_wa.getVbeln_vl());
+        tab_wa.setPosnn(tab_wa.getPosnr_vl());
+        tab_wa.setMatnr(weightTicketDetail.getMatnrRef());
+        tab_wa.setWerks(configuration.getWkPlant());
+        tab_wa.setLgort(wt.getLgort());
+        tab_wa.setCharg(wt.getCharg());
+        tab_wa.setLianp("X");
+        if (outbDel == null) {
+            tab_wa.setPikmg(wt.getGQty());
+            tab_wa.setLfimg(wt.getGQty());
+        } else {
+            tab_wa.setPikmg(kl_total);
+            tab_wa.setLfimg(kl_total);
+        }
+        tab_wa.setVrkme(weightTicketDetail.getUnit());
+        tab_wa.setMeins(weightTicketDetail.getUnit());
+        tab.add(tab_wa);
+        bapi.setVbpok_tab(tab);
+
+        return bapi;
+    }
+
     public Object getPgmVl02nBapi(WeightTicket wt, OutboundDelivery outbDel,
             WeightTicket weightTicket,String modeFlg, int timeFrom, int timeTo,
             List<OutboundDeliveryDetail> outDetails_lits, String ivWbidNosave, BigDecimal sumQtyReg) {
@@ -720,11 +819,6 @@ public class WeightTicketService {
         
         // check dung sai -> set Qty
         String material = (outbDel != null && outbDel.getMatnr() != null) ? outbDel.getMatnr().toString() : "";
-        if(checkVariantByMaterial(wt, material, wt.getGQty())) {
-            sumQtyRegWT = sumQtyReg;
-        } else {
-            sumQtyRegWT = wt.getGQty();
-        }
 
         for (int i = 0; i < outDetails_lits.size(); i++) {
             item = outDetails_lits.get(i);
@@ -801,14 +895,9 @@ public class WeightTicketService {
             if (qtyfree == null) {
                 qtyfree = new BigDecimal(0);
             }
-            qty = sumQtyRegWT.subtract(qtyfree);
-            if(kl.equals(BigDecimal.ZERO)) {
-                tab_wa.setPikmg(qty);
-                tab_wa.setLfimg(qty);
-            } else {
-                tab_wa.setPikmg(kl);
-                tab_wa.setLfimg(kl);
-            }
+            qty = wt.getGQty().subtract(qtyfree);
+            tab_wa.setPikmg(kl);
+            tab_wa.setLfimg(kl);
         }
 
         GoodsMvtWeightTicketStructure stWT = fillWTStructure(weightTicket, outbDel, outDetails_lits, weightTicket);
@@ -848,10 +937,11 @@ public class WeightTicketService {
         return bapi;
     }
     
-    public boolean checkVariantByMaterial(WeightTicket wt, String material, BigDecimal gQty) {
+    public boolean checkVariantByMaterial(WeightTicket wt, String material, BigDecimal gQty, BigDecimal sumQtyReg) {
         Variant vari = findByParamMandtWplant(material, configuration.getSapClient(), configuration.getWkPlant());
         double valueUp = 0;
         double valueDown = 0;
+        double resultReg = sumQtyReg.doubleValue();
         double result = gQty.doubleValue();
 
         if (vari != null) {
@@ -863,8 +953,8 @@ public class WeightTicketService {
                 valueDown = Double.parseDouble(vari.getValueDown());
             }
 
-            double upper = result + (result * valueUp) / 100;
-            double lower = result - (result * valueDown) / 100;
+            double upper = resultReg + (resultReg * valueUp) / 100;
+            double lower = resultReg - (resultReg * valueDown) / 100;
 
             if ((lower <= result && result <= upper)) {
                 return true;
@@ -891,22 +981,10 @@ public class WeightTicketService {
 
                 WeightTicketDetail weightTicketDetail = wt.getWeightTicketDetail();
                 if (!wt.isDissolved()) {
-                    Double tmp;
-
-                    if (weightTicketDetail.getMatnrRef() != null && weightTicketDetail.getMatnrRef().equalsIgnoreCase("000000101130400008")) // Tuanna - for bag 40K 27.04.2013
-                    {
-                        tmp = ((weightTicketDetail.getRegItemQuantity().doubleValue()) * 1000d) / 40d;
-                    } else {
+                    Double tmp = null;
+                    if (weightTicketDetail.getRegItemDescription() != null
+                            && (weightTicketDetail.getRegItemDescription().contains("Bag")) || weightTicketDetail.getRegItemDescription().contains("bao")) {
                         tmp = ((weightTicketDetail.getRegItemQuantity().doubleValue()) * 1000d) / 50d;
-                    }
-
-                    if ((tmp == null || tmp == 0) && weightTicketDetail.getRegItemQuantity() != null) {
-                        if (weightTicketDetail.getMatnrRef() != null && weightTicketDetail.getMatnrRef().equalsIgnoreCase("000000101130400008")) // Tuanna - for bag 40K 27.04.2013
-                        {
-                            tmp = ((weightTicketDetail.getRegItemQuantity().doubleValue()) * 1000d) / 40d;
-                        } else {
-                            tmp = ((weightTicketDetail.getRegItemQuantity().doubleValue()) * 1000d) / 50d;
-                        }
                     }
                     bags = Math.round(tmp);
                     if (bags != null) {
@@ -914,26 +992,30 @@ public class WeightTicketService {
                     }
                 }
                 String reportName1 = "";
-                //if (configuration.isModeNormal()) {
-                    reportName1 = "./rpt/rptBT/WeightTicket.jasper";
-//                } else {
-//                    reportName1 = "./rpt/rptPQ/WeightTicket.jasper";
-//                }
+                reportName1 = "./rpt/rptBT/WeightTicket.jasper";
 
                 jreportService.printReport(map, reportName1);
 
             } else {
                 for (int i = 0; i < outbDel_list.size(); i++) {
                     item = outbDel_list.get(i);
+                    List<WeightTicketDetail> weightTicketDetails = wt.getWeightTicketDetails();
+                    
                     OutboundDeliveryDetail out_detail = null;
                     BigDecimal sscale = BigDecimal.ZERO;
                     BigDecimal gqty = BigDecimal.ZERO;
                     BigDecimal lfimg_ori = BigDecimal.ZERO;
+                    BigDecimal totalQtyReality = BigDecimal.ZERO;
                     for (int k = 0; k < outDetails_lits.size(); k++) {
                         out_detail = outDetails_lits.get(k);
                         if (out_detail.getDeliveryOrderNo().contains(item.getDeliveryOrderNo())) {
                             if (out_detail.getLfimg() != null) {
                                 lfimg_ori = lfimg_ori.add(out_detail.getLfimg());
+                            }
+                            if (out_detail.getGoodsQty() != null) {
+                                totalQtyReality = totalQtyReality.add(out_detail.getGoodsQty().setScale(3, RoundingMode.HALF_UP));
+                            } else {
+                                totalQtyReality = totalQtyReality.add(out_detail.getLfimg().setScale(3, RoundingMode.HALF_UP));
                             }
                         }
                     }
@@ -977,7 +1059,7 @@ public class WeightTicketService {
                         // set qty for Ghep ma
                         BigDecimal totalQtyReg = BigDecimal.ZERO;
                         BigDecimal totalQty = BigDecimal.ZERO;
-                        for(WeightTicketDetail wtDetail: wt.getWeightTicketDetails()) {
+                        for(WeightTicketDetail wtDetail: weightTicketDetails) {
                             if(outbDel.getDeliveryOrderNo().equals(wtDetail.getDeliveryOrderNo())) {
                                 totalQtyReg = wtDetail.getRegItemQuantity().subtract(outbDel.getFreeQty());
                                 totalQty = wtDetail.getRegItemQuantity();
@@ -987,30 +1069,28 @@ public class WeightTicketService {
                         
                         map.put("P_TOTAL_QTY_REG", String.valueOf(totalQtyReg));        
                         map.put("P_TOTAL_QTY", String.valueOf(totalQty));
-                        if (outbDel != null && (outbDel.getLfart().equalsIgnoreCase("LF") || outbDel.getLfart().equalsIgnoreCase("ZTLF") || outbDel.getLfart().equalsIgnoreCase("NL"))) {
-                            Double tmp;
-                            // Double tmp = ((outbDel.getLfimg().doubleValue() + outbDel.getFreeQty().doubleValue()) * 1000d) / 50d;
-                            if (outbDel.getMatnr().equalsIgnoreCase("000000101130400008")) // Tuanna - crazy lắm lun hix ai chơi hardcode  for bag 40K 27.04.2013
-                            //  Double tmp = (outbDel.getLfimg().doubleValue() * 1000d) / 40d;
-                            {
-                                tmp = ((outbDel.getLfimg().doubleValue() + outbDel.getFreeQty().doubleValue()) * 1000d) / 40d;
-                            } else //  Double tmp = (outbDel.getLfimg().doubleValue() * 1000d) / 50d;
-                            {
-                                tmp = ((outbDel.getLfimg().doubleValue() + outbDel.getFreeQty().doubleValue()) * 1000d) / 50d;
-                            }
+                        map.put("P_TOTAL_QTY_REALITY", String.valueOf(totalQtyReality));
+                        Double tmp = null;
+                        if ((outbDel != null) && ((outbDel.getArktx().contains("Bag")) || (outbDel.getArktx().contains("bao")))) {
+                            tmp = ((outbDel.getLfimg().doubleValue() + outbDel.getFreeQty().doubleValue()) * 1000d) / 50d;
                             bags = Math.round(tmp);
                         }
                     } else {
-                        map.put("P_TOTAL_QTY", String.valueOf(outbDel.getLfimg()));
-                        Double tmp;
-                        if (outbDel != null && (outbDel.getLfart().equalsIgnoreCase("LF") || outbDel.getLfart().equalsIgnoreCase("ZTLF") || outbDel.getLfart().equalsIgnoreCase("NL"))) {
-                            if (outbDel.getMatnr().equalsIgnoreCase("000000101130400008")) // Tuanna - for bag 40K  27.04.2013
-                            {
-                                tmp = (outbDel.getLfimg().doubleValue() * 1000d) / 40d;
-                            } else {
-                                tmp = (outbDel.getLfimg().doubleValue() * 1000d) / 50d;
+                        BigDecimal totalQtyReg = BigDecimal.ZERO;
+                        BigDecimal totalQty = BigDecimal.ZERO;
+                        for(WeightTicketDetail wtDetail: weightTicketDetails) {
+                            if(outbDel.getDeliveryOrderNo().equals(wtDetail.getDeliveryOrderNo())) {
+                                totalQtyReg = wtDetail.getRegItemQuantity();
+                                totalQty = wtDetail.getRegItemQuantity();
+                                break;
                             }
-
+                        }
+                        map.put("P_TOTAL_QTY_REG", String.valueOf(totalQtyReg));
+                        map.put("P_TOTAL_QTY", String.valueOf(totalQty));
+                        map.put("P_TOTAL_QTY_REALITY", String.valueOf(totalQtyReality));
+                        Double tmp = null;
+                        if ((outbDel != null) && ((outbDel.getArktx().contains("Bag")) || (outbDel.getArktx().contains("bao")))) {
+                            tmp = (outbDel.getLfimg().doubleValue() * 1000d) / 50d;
                             bags = Math.round(tmp);
                         }
 
@@ -1019,26 +1099,17 @@ public class WeightTicketService {
                     if (bags != null) {
                         map.put("P_PCB40BAG", bags);
                     }
-                    if (wt.getWeightTicketDetail().getMatDoc() != null) {
-                        map.put("P_MAT_DOC", wt.getWeightTicketDetail().getMatDoc());
+                    for (WeightTicketDetail wtDetail : weightTicketDetails) {
+                        if (outbDel.getDeliveryOrderNo().equals(wtDetail.getDeliveryOrderNo())) {
+                            if (wtDetail.getMatDoc() != null) {
+                                map.put("P_MAT_DOC", wtDetail.getMatDoc());
+                            }
+                        }
                     }
-
+                    
                     String reportName = null;
                     String path = "";
-                    //if (configuration.isModeNormal()) {
-                        path = "./rpt/rptBT/";  // ->> DO cai nay ne e
-//                    } else {
-//                        path = "./rpt/rptPQ/";
-//                    }
-//                    if (isOffline || (txtPONo != null || !"".equals(txtPONo))) {
-//
-//                        reportName = path.concat("WeightTicket.jasper");
-//                        //reportName = path.concat("WeightTicket.jasper");
-//                    } else {
-//
-//                        reportName = path.concat("WeightTicket_NEW.jasper");
-//                        //reportName = path.concat("WeightTicket.jasper");
-//                    }
+                    path = "./rpt/rptBT/"; 
                     reportName = path.concat("WeightTicket_NEW.jasper");
                     jreportService.printReport(map, reportName);
                 }
@@ -1049,9 +1120,6 @@ public class WeightTicketService {
         }
     }
 
-//    public int getCountSingal() {
-//        return noneRepository.getCountSingal();
-//    }
 
     public SLoc findByLgort(String lgort) {
         return sLocRepository.findByLgort(lgort);
@@ -1111,13 +1179,18 @@ public class WeightTicketService {
     }
 
     //nhap xuat dong thoi
-    public Object getMvtPOSTOCreatePGI(WeightTicket wt, WeightTicket weightTicket, String posto, int timeFrom, int timeTo) {
+    public Object getMvtPOSTOCreatePGI(WeightTicket wt, WeightTicket weightTicket, String posto, int timeFrom, int timeTo, boolean flgPost) {
         //config = WeighBridgeApp.getApplication().getConfig();
         GoodsMvtPOSTOCreatePGIBapi bapi = new GoodsMvtPOSTOCreatePGIBapi();
         PurchaseOrder purOrderPosto = purchaseOrderRepository.findByPoNumber(posto);
         String plateCombine = wt.getPlateNo();
         if (wt.getTrailerId()!= null && !wt.getTrailerId().trim().isEmpty()) {
             plateCombine += "|" + wt.getTrailerId();
+        }
+        if(flgPost) {
+            bapi.setIvReType("X");
+            bapi.setIvMaterialDocument(wt.getWeightTicketDetail().getIvMaterialDocument());
+            bapi.setIvMatDocumentYear(wt.getWeightTicketDetail().getIvMatDocumentYear());
         }
         //API ZJBAPI_GOODSMVT_CREATE_V2_2606 - Nhap (posto)
         bapi.setGmCode(new GoodsMvtCodeStructure("01"));

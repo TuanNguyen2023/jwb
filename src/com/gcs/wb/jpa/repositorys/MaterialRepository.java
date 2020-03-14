@@ -4,7 +4,9 @@
  */
 package com.gcs.wb.jpa.repositorys;
 
+import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.jpa.JPAConnector;
+import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.jpa.entity.Material;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,10 +22,13 @@ import org.apache.log4j.Logger;
 public class MaterialRepository {
 
     EntityManager entityManager = JPAConnector.getInstance();
-    Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
+    Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
+    Logger logger = Logger.getLogger(this.getClass());
 
     public List<Material> getListMaterial() {
-        TypedQuery<Material> typedQuery = entityManager.createNamedQuery("Material.findAll", Material.class);
+        TypedQuery<Material> typedQuery = entityManager.createNamedQuery("Material.findByMandtWplant", Material.class);
+        typedQuery.setParameter("mandt", configuration.getSapClient());
+        typedQuery.setParameter("wplant", configuration.getWkPlant());
         return typedQuery.getResultList();
     }
 
@@ -31,6 +36,8 @@ public class MaterialRepository {
         Material material = new Material();
         try {
             TypedQuery<Material> query = entityManager.createNamedQuery("Material.CheckPOSTO", Material.class);
+            query.setParameter("mandt", configuration.getSapClient());
+            query.setParameter("wplant", configuration.getWkPlant());
             query.setParameter("matnr", "%" + matnr + "%");
             List<Material> list = query.getResultList();
             if (list != null && list.size() > 0) {
@@ -56,6 +63,8 @@ public class MaterialRepository {
 
     public Material findByMatnr(String matnr) {
         TypedQuery<Material> typedQuery = entityManager.createNamedQuery("Material.findByMatnr", Material.class);
+        typedQuery.setParameter("mandt", configuration.getSapClient());
+        typedQuery.setParameter("wplant", configuration.getWkPlant());
         typedQuery.setParameter("matnr", matnr);
         List<Material> materials = typedQuery.getResultList();
         if (materials != null && materials.size() > 0) {
@@ -67,6 +76,8 @@ public class MaterialRepository {
 
     public List<String> getListLgortByMatnr(String matnr) {
         TypedQuery<Material> typedQuery = entityManager.createNamedQuery("Material.findByMatnr", Material.class);
+        typedQuery.setParameter("mandt", configuration.getSapClient());
+        typedQuery.setParameter("wplant", configuration.getWkPlant());
         typedQuery.setParameter("matnr", matnr);
         List<Material> materials = typedQuery.getResultList();
         return materials.stream()
@@ -82,6 +93,8 @@ public class MaterialRepository {
         }
 
         TypedQuery<Material> typedQuery = entityManager.createNamedQuery("Material.findByMatnrs", Material.class);
+        typedQuery.setParameter("mandt", configuration.getSapClient());
+        typedQuery.setParameter("wplant", configuration.getWkPlant());
         typedQuery.setParameter("matnrs", matnrs);
         List<Material> materials = typedQuery.getResultList();
         return materials.stream()

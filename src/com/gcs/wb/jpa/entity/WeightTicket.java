@@ -113,6 +113,12 @@ import javax.persistence.Temporal;
             + " , IN(w.weightTicketDetails) wd "
             + " WHERE wd.deliveryOrderNo LIKE :deliveryOrderNo "
             + " AND wd.ebeln IS NULL"),
+    @NamedQuery(name = "WeightTicket.findByDeliveryOrderNoNotExistEbelnScale",
+            query = "SELECT w FROM WeightTicket w "
+            + " , IN(w.weightTicketDetails) wd "
+            + " WHERE wd.deliveryOrderNo LIKE :deliveryOrderNo "
+            + " AND wd.ebeln IS NULL" 
+            + " AND w.fScale IS NOT NULL"),
 })
 public class WeightTicket implements Serializable {
 
