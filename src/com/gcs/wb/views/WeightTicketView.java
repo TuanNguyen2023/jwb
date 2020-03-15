@@ -1339,8 +1339,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         txfOutQty.setValue(null);
         txtOutTime.setText(null);
         txfGoodsQty.setValue(null);
-        //  Temporary enable Accept Button
-//        btnAccept.setEnabled(true);
+        // enable button print
+        btnReprint.setEnabled(true);
         grbBridge.clearSelection();
         setSaveNeeded(isValidated());
     }//GEN-LAST:event_btnOScaleResetActionPerformed
@@ -4060,6 +4060,8 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     entityManager.merge(item);
                     entityManager.getTransaction().commit();
                 }
+                // set enable for button print
+                btnReprint.setEnabled(false);
             }
             return null;
         }
