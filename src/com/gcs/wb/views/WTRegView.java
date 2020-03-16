@@ -3719,7 +3719,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             }
 
             // check compare PO with POSTO
-            if ((!txtPOSTONumN.getText().trim().isEmpty()) && (purchaseOrderPOSTO != null) && (poNum.equals(purchaseOrderPOSTO.getPoNumber()))) {
+            String postoNumN = txtPOSTONumN.getText().trim();
+            if ((!postoNumN.isEmpty()) && (poNum.equals(postoNumN))) {
                 throw new Exception(resourceMapMsg.getString("msg.duplicatePo"));
             }
 
@@ -3741,7 +3742,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             
             //Check matnr for PO-POSTO
             if ((modeDetail == MODE_DETAIL.OUT_PULL_STATION)
-                    && (!txtPOSTONumN.getText().trim().isEmpty())
+                    && (!postoNumN.isEmpty())
                     && (purchaseOrderPOSTO != null)
                     && (!purchaseOrderPO.getPurchaseOrderDetail().getMaterial().equals(purchaseOrderPOSTO.getPurchaseOrderDetail().getMaterial()))) {
                 throw new Exception(resourceMapMsg.getString("msg.postoIsMatnr"));
@@ -3917,7 +3918,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             String postoNum = txtPOSTONumN.getText().trim();
 
             // check compare PO with POSTO
-            if ((!txtPONumN.getText().trim().isEmpty()) && (purchaseOrderPO != null) && (postoNum.equals(purchaseOrderPO.getPoNumber()))) {
+            String poNumN = txtPONumN.getText().trim();
+            if ((!poNumN.isEmpty()) && (postoNum.equals(poNumN))) {
                 throw new Exception(resourceMapMsg.getString("msg.duplicatePo"));
             }
 
@@ -3948,7 +3950,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
             //Check matnr for PO-POSTO
             if ((modeDetail == MODE_DETAIL.OUT_PULL_STATION)
-                    && (!txtPONumN.getText().trim().isEmpty())
+                    && (!poNumN.isEmpty())
                     && (purchaseOrderPO != null)
                     && (!purchaseOrderPOSTO.getPurchaseOrderDetail().getMaterial().equals(purchaseOrderPO.getPurchaseOrderDetail().getMaterial()))) {
                 throw new Exception(resourceMapMsg.getString("msg.postoIsMatnr"));
