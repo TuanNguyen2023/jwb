@@ -6,6 +6,7 @@ package com.gcs.wb.service;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.BAPIConfiguration;
+import com.gcs.wb.bapi.SAPSession;
 import com.gcs.wb.bapi.helper.CheckVersionWBBapi;
 import com.gcs.wb.bapi.helper.UserGetDetailBapi;
 import com.gcs.wb.bapi.helper.structure.UserGetDetailAGRStructure;
@@ -23,6 +24,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import org.hibersap.session.Credentials;
 import org.hibersap.session.Session;
+import org.hibersap.session.SessionImpl;
 import org.hibersap.session.SessionManager;
 
 /**
@@ -40,13 +42,14 @@ public class LoginService {
     org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(LoginService.class);
 
     public Session getSapSession(Credentials credentials) throws Exception {
-        Session session = WeighBridgeApp.getApplication().getSAPSession();
+        SAPSession sapSession = WeighBridgeApp.getApplication().getSAPSession();
+        Session session = sapSession != null ? sapSession.getSession() : null;
         if (session != null) {
             session.close();
         }
         SessionManager sessionManager = BAPIConfiguration.getSessionManager(appConfig, credentials);
         session = sessionManager.openSession(credentials);
-        WeighBridgeApp.getApplication().setSAPSession(session);
+        WeighBridgeApp.getApplication().setSAPSession(new SAPSession(session));
         return session;
     }
 

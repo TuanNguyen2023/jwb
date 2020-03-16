@@ -5,6 +5,7 @@
 package com.gcs.wb.service;
 
 import com.gcs.wb.WeighBridgeApp;
+import com.gcs.wb.bapi.SAPSession;
 import com.gcs.wb.bapi.goodsmvt.GoodsMvtDoCreateBapi;
 import com.gcs.wb.bapi.goodsmvt.GoodsMvtPOSTOCreatePGIBapi;
 import com.gcs.wb.bapi.goodsmvt.GoodsMvtPoCreateBapi;
@@ -19,8 +20,6 @@ import com.gcs.wb.bapi.outbdlv.structure.OutbDeliveryCreateStoStructure;
 import com.gcs.wb.bapi.outbdlv.structure.VbkokStructure;
 import com.gcs.wb.bapi.outbdlv.structure.VbpokStructure;
 import com.gcs.wb.bapi.service.SAPService;
-import com.gcs.wb.base.constant.Constants;
-import com.gcs.wb.controller.WeightTicketController;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.JReportService;
 import com.gcs.wb.jpa.entity.*;
@@ -60,7 +59,6 @@ public class WeightTicketService {
     JReportService jreportService = new JReportService();
     PurchaseOrderRepository purchaseOrderRepository = new PurchaseOrderRepository();
     EntityTransaction entityTransaction = entityManager.getTransaction();
-    Session session = WeighBridgeApp.getApplication().getSAPSession();
     private final Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
     WeightTicketRegistrationService weightTicketRegistrationService = new WeightTicketRegistrationService();
 
@@ -161,7 +159,7 @@ public class WeightTicketService {
         return sapService.getPurchaseOrder(poNum);
     }
 
-    public void revertCompletedDO(List<String> completedDOs, List<OutboundDeliveryDetail> OutbDetailsV2, List<OutboundDelivery> outbDels, WeightTicket weightTicket, List<OutboundDeliveryDetail> outDetails_lits, Session sapSession) {
+    public void revertCompletedDO(List<String> completedDOs, List<OutboundDeliveryDetail> OutbDetailsV2, List<OutboundDelivery> outbDels, WeightTicket weightTicket, List<OutboundDeliveryDetail> outDetails_lits, SAPSession sapSession) {
         DORevertBapi bapi = null;
         for (String item : completedDOs) {
             bapi = new DORevertBapi(item);

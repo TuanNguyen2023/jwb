@@ -188,14 +188,11 @@ public class LookupMaterialView extends javax.swing.JDialog {
 
     private class LookupMatTask extends org.jdesktop.application.Task<Object, Void> {
 
-        Session sapSession = null;
-
         LookupMatTask(org.jdesktop.application.Application app) {
             // Runs on the EDT.  Copy GUI state that
             // doInBackground() depends on from parameters
             // to LookupMatTask fields, here.
             super(app);
-            sapSession = WeighBridgeApp.getApplication().getSAPSession();
             if (materials == null) {
                 materials = new ArrayList<>();
             }
