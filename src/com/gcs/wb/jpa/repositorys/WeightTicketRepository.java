@@ -363,4 +363,12 @@ public class WeightTicketRepository {
         }
         return weightTicket;
     }
+    
+    public List<WeightTicket> findQtyByPoNo(String poNo) {
+        String status = "POSTED";
+        TypedQuery<WeightTicket> typedQuery = entityManager.createNamedQuery("WeightTicket.findByQtyPOisPOSTED", WeightTicket.class);
+        typedQuery.setParameter("ebeln", poNo);
+        typedQuery.setParameter("status", status);
+        return typedQuery.getResultList();
+    }
 }

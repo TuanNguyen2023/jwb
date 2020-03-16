@@ -27,6 +27,7 @@ import com.gcs.wb.base.exceptions.IllegalPortException;
 import com.gcs.wb.base.util.Base64_Utils;
 import com.gcs.wb.base.util.IntegerUtil;
 import com.gcs.wb.base.util.RegexFormatter;
+import com.gcs.wb.base.util.StringUtil;
 import com.gcs.wb.base.util.ToleranceUtil;
 import com.gcs.wb.base.validator.LengthValidator;
 import com.gcs.wb.controller.WeightTicketController;
@@ -3142,8 +3143,8 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     // mode xuat plant
                     if (weightTicket.getMode().equals("OUT_PLANT_PLANT")) {
                         // check post PGI for post lai
-                        if(weightTicketDetail.getDeliveryOrderNo().trim().isEmpty()
-                                && (weightTicketDetail.getMatDoc().trim().isEmpty())) {
+                        if(StringUtil.isEmptyString(weightTicketDetail.getDeliveryOrderNo())
+                                && (StringUtil.isEmptyString(weightTicketDetail.getMatDoc()))) {
                             objBapi = getDoCreate2PGI(weightTicket, outbDel);
                         } else {
                             objBapi = getDOPostingPGI(weightTicket, outbDel, weightTicketDetail.getDeliveryOrderNo());
@@ -3161,8 +3162,8 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     // xuat ben keo
                     if (weightTicket.getMode().equals("OUT_PULL_STATION") && weightTicket.getPosto() != null) {
                          // check post PGI for post lai
-                        if((weightTicketDetail.getDeliveryOrderNo().trim().isEmpty())
-                                && (weightTicketDetail.getMatDoc().trim().isEmpty())) {
+                        if((StringUtil.isEmptyString(weightTicketDetail.getDeliveryOrderNo()))
+                                && (StringUtil.isEmptyString(weightTicketDetail.getMatDoc()))) {
                             objBapi = getMvtPOSTOCreatePGI(weightTicket, weightTicket.getPosto(), flgPost);
                         } else {
                             objBapi = getDOPostingPGI(weightTicket, outbDel, weightTicketDetail.getDeliveryOrderNo());
@@ -3295,6 +3296,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                 } else if ((weightTicketDetail.getMatDoc() != null) && (!weightTicketDetail.getMatDoc().equals(""))
                                         && ((objBapi_Po == null) || (objBapi_Po != null && weightTicketDetail.getMatDocGr() != null && !weightTicketDetail.getMatDocGr().equals("")))
                                         || ((objBapi_Posto == null) || (objBapi_Posto != null && weightTicketDetail.getMatDocGi() != null && !weightTicketDetail.getMatDocGi().equals("")))) {
+                                    weightTicketDetail.setPosted(true);
                                     weightTicket.setPosted(true);
                                     completedDO.add(weightTicketDetail.getDeliveryOrderNo());
                                 }
@@ -3313,12 +3315,14 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     revertCompletedDO(completedDO, null, null);
                                 }
 
+                                weightTicketDetail.setPosted(false);
                                 weightTicket.setPosted(false);
                                 failed(ex);
                                 completed = false;
                                 entityManager.clear();
                             }
                         } else if (WeighBridgeApp.getApplication().isOfflineMode()) {
+                            weightTicketDetail.setPosted(false);
                             weightTicket.setPosted(false);
                             weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
                         } else {
@@ -3326,6 +3330,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         }
                     } else {
                         bapi_message = resourceMapMsg.getString("msg.postOfflien");
+                        weightTicketDetail.setPosted(false);
                         weightTicket.setPosted(false);
                         weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
                     }
@@ -3739,44 +3744,6 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             clearForm();
             setSaveNeeded(false);
         }
-
-        private boolean validateTolerance(PurchaseOrder purchaseOrder, OutboundDelivery outboundDelivery) {
-            BigDecimal numCheckWeight = BigDecimal.ZERO;
-            BigDecimal quantity = BigDecimal.ZERO;
-            BigDecimal tolerance = BigDecimal.ZERO;
-            BigDecimal freeQty = BigDecimal.ZERO;
-            // check for PO
-            if (purchaseOrder != null) {
-                PurchaseOrderDetail purchaseOrderDetail = purchaseOrder.getPurchaseOrderDetail();
-
-                quantity = purchaseOrderDetail.getQuantity() != null ? purchaseOrderDetail.getQuantity() : BigDecimal.ZERO;
-                tolerance = purchaseOrderDetail.getOverDlvTol() != null ? purchaseOrderDetail.getOverDlvTol() : BigDecimal.ZERO;
-
-                numCheckWeight = quantity.add(
-                        quantity.multiply(tolerance).divide(new BigDecimal(100))
-                ).subtract(weightTicketRegistarationController.getSumQuantityWithPoNo(purchaseOrder.getPoNumber()));
-
-                BigDecimal result = numCheckWeight.subtract(weightTicket.getGQty());
-                if (result.compareTo(BigDecimal.ZERO) <= 0) {
-                    return false;
-                }
-            }
-
-            // check for DO hàng tặng
-            if (outboundDelivery != null) {
-                numCheckWeight = outboundDelivery.getLfimg() != null ? outboundDelivery.getLfimg() : BigDecimal.ZERO;
-                freeQty = outboundDelivery.getFreeQty();
-
-                if (freeQty != null) {
-                    BigDecimal resultFree = freeQty.subtract(weightTicket.getGQty());
-                    if (resultFree.compareTo(BigDecimal.ZERO) > 0) {
-                        return false;
-                    }
-                }
-
-            }
-            return true;
-        }
     }
 
     private class AcceptBatchTask extends org.jdesktop.application.Task<Object, Void> {
@@ -3882,6 +3849,23 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 }
                 //  Conver result from KG unit to TON unit
 
+                // check tolorance for PO mua hang
+//                 if (weightTicket.getMode().equals("IN_PO_PURCHASE")) {
+//                    if(validateQuantityPO(purchaseOrder, new BigDecimal(Double.toString(result)))) {
+//                        txfGoodsQty.setValue(result);
+//                        weightTicket.setGQty(new BigDecimal(Double.toString(result)));
+//                    } else {
+//                        String msg = "Không thể nhập hàng vì trọng lượng vượt quá đăng ký!";
+//                        JOptionPane.showMessageDialog(rootPane, msg);
+//                        txfOutQty.setValue(null);
+//                        txtOutTime.setText(null);
+//                        txfGoodsQty.setValue(null);
+//                        weightTicket.setGQty(null);
+//                        btnAccept.setEnabled(false);
+//                        btnOScaleReset.setEnabled(true);
+//                        return null;
+//                        }
+//                 }
                 double main_qty = 0;
                 double qty = 0;
                 if (outbDel != null) {
@@ -4426,6 +4410,68 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         }
         return false;
     }
+    
+    private boolean validateTolerance(PurchaseOrder purchaseOrder, OutboundDelivery outboundDelivery) {
+            BigDecimal numCheckWeight = BigDecimal.ZERO;
+            BigDecimal quantity = BigDecimal.ZERO;
+            BigDecimal tolerance = BigDecimal.ZERO;
+            BigDecimal freeQty = BigDecimal.ZERO;
+            // check for PO
+            if (purchaseOrder != null) {
+                PurchaseOrderDetail purchaseOrderDetail = purchaseOrder.getPurchaseOrderDetail();
+
+                quantity = purchaseOrderDetail.getQuantity() != null ? purchaseOrderDetail.getQuantity() : BigDecimal.ZERO;
+                tolerance = purchaseOrderDetail.getOverDlvTol() != null ? purchaseOrderDetail.getOverDlvTol() : BigDecimal.ZERO;
+
+                numCheckWeight = quantity.add(
+                        quantity.multiply(tolerance).divide(new BigDecimal(100))
+                ).subtract(weightTicketRegistarationController.getSumGqtyWithPoNo(purchaseOrder.getPoNumber()));
+
+                BigDecimal result = numCheckWeight.subtract(weightTicket.getGQty());
+                if (result.compareTo(BigDecimal.ZERO) <= 0) {
+                    return false;
+                }
+            }
+
+            // check for DO hàng tặng
+            if (outboundDelivery != null) {
+                numCheckWeight = outboundDelivery.getLfimg() != null ? outboundDelivery.getLfimg() : BigDecimal.ZERO;
+                freeQty = outboundDelivery.getFreeQty();
+
+                if (freeQty != null) {
+                    BigDecimal resultFree = freeQty.subtract(weightTicket.getGQty());
+                    if (resultFree.compareTo(BigDecimal.ZERO) > 0) {
+                        return false;
+                    }
+                }
+
+            }
+            return true;
+        }
+    
+    private boolean validateQuantityPO(PurchaseOrder purchaseOrder, BigDecimal qty) {
+            BigDecimal numCheckWeight = BigDecimal.ZERO;
+            BigDecimal quantity = BigDecimal.ZERO;
+            BigDecimal tolerance = BigDecimal.ZERO;
+            BigDecimal freeQty = BigDecimal.ZERO;
+            // check for PO
+            if (purchaseOrder != null) {
+                PurchaseOrderDetail purchaseOrderDetail = purchaseOrder.getPurchaseOrderDetail();
+
+                quantity = purchaseOrderDetail.getQuantity() != null ? purchaseOrderDetail.getQuantity() : BigDecimal.ZERO;
+                tolerance = purchaseOrderDetail.getOverDlvTol() != null ? purchaseOrderDetail.getOverDlvTol() : BigDecimal.ZERO;
+
+                numCheckWeight = quantity.add(
+                        quantity.multiply(tolerance).divide(new BigDecimal(100))
+                ).subtract(weightTicketRegistarationController.getSumGqtyWithPoNo(purchaseOrder.getPoNumber()));
+
+                BigDecimal result = numCheckWeight.subtract(qty);
+                if (result.compareTo(BigDecimal.ZERO) <= 0) {
+                    return false;
+                }
+            }
+            return true;
+        }
     // </editor-fold>
     //<editor-fold defaultstate="collapsed" desc="Variables declaration Area">
     // Variables declaration - do not modify//GEN-BEGIN:variables

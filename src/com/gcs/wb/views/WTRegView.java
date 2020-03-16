@@ -3839,7 +3839,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             weightTicketDetail.setMatnrRef(purchaseOrderDetail.getMaterial());
             weightTicketDetail.setKunnr(purchaseOrder.getCustomer());
             weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
-
+            
             strMatnr = purchaseOrderDetail.getMaterial();
             strLgort = purchaseOrderDetail.getStgeLoc();
 
@@ -3849,18 +3849,16 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             switch (modeDetail) {
                 case IN_PO_PURCHASE:
                     BigDecimal quantity = purchaseOrderDetail.getQuantity() != null ? purchaseOrderDetail.getQuantity() : BigDecimal.ZERO;
-                    //BigDecimal tolerance = purchaseOrderDetail.getUnderDlvTol() != null ? purchaseOrderDetail.getUnderDlvTol() : BigDecimal.ZERO;
-                    BigDecimal tolerance = purchaseOrderDetail.getOverDlvTol() != null ? purchaseOrderDetail.getOverDlvTol() : BigDecimal.ZERO;
+                    //BigDecimal tolerance = purchaseOrderDetail.getOverDlvTol() != null ? purchaseOrderDetail.getOverDlvTol() : BigDecimal.ZERO;
 
-                    numCheckWeight = quantity.add(
-                            quantity.multiply(tolerance).divide(new BigDecimal(100))
-                    ).subtract(weightTicketRegistarationController.getSumQuantityWithPoNo(purchaseOrder.getPoNumber()));
+                    numCheckWeight = quantity.subtract(weightTicketRegistarationController.getSumGqtyWithPoNo(purchaseOrder.getPoNumber()));
 
                     if (numCheckWeight.compareTo(BigDecimal.ZERO) < 0) {
                         numCheckWeight = BigDecimal.ZERO;
                     }
 
                     totalWeight = numCheckWeight;
+                    weightTicketDetail.setRegItemQuantity(totalWeight);
                     isValidWeight = true;
                     break;
                 case OUT_SLOC_SLOC:
