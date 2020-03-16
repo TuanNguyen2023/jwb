@@ -3725,6 +3725,14 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                     && (!(purchaseOrderPO.getSupplPlnt()).equals(configuration.getWkPlant()))) {
                 throw new Exception(resourceMapMsg.getString("msg.poIsDenied", poNum));
             }
+            
+            //Check matnr for PO-POSTO
+            if ((modeDetail == MODE_DETAIL.OUT_PULL_STATION)
+                    && (!txtPOSTONumN.getText().trim().isEmpty())
+                    && (purchaseOrderPOSTO != null)
+                    && (!purchaseOrderPO.getPurchaseOrderDetail().getMaterial().equals(purchaseOrderPOSTO.getPurchaseOrderDetail().getMaterial()))) {
+                throw new Exception(resourceMapMsg.getString("msg.postoIsMatnr"));
+            }
 
             updateWeightTicket(purchaseOrderPO);
 
@@ -3927,6 +3935,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
             //Check matnr for PO-POSTO
             if ((modeDetail == MODE_DETAIL.OUT_PULL_STATION)
+                    && (!txtPONumN.getText().trim().isEmpty())
+                    && (purchaseOrderPO != null)
                     && (!purchaseOrderPOSTO.getPurchaseOrderDetail().getMaterial().equals(purchaseOrderPO.getPurchaseOrderDetail().getMaterial()))) {
                 throw new Exception(resourceMapMsg.getString("msg.postoIsMatnr"));
             }
