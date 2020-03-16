@@ -1479,7 +1479,7 @@ private void txtPOSTONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
             isValidPOSTO = false;
         }
     }
-    
+
     validateForm();
 }//GEN-LAST:event_txtPOSTONumNKeyReleased
 
@@ -1793,7 +1793,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             DOCheckStructure doNumber = new DOCheckStructure();
             String bsRomoc = txtTrailerNoN.getText().trim();
 
-            if(bsXe.isEmpty()) {
+            if (bsXe.isEmpty()) {
                 throw new Exception(resourceMapMsg.getString("msg.plzInputPlateNo"));
             }
 
@@ -1830,7 +1830,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                     }
                 }
             }
-            
+
             if (doNum.trim().isEmpty()) {
                 throw new Exception("Không lấy được bất kỳ số DO nào, vui lòng kiểm tra lại!");
             }
@@ -2748,11 +2748,13 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 wtData[i][3] = item.getPlateNo();
                 wtData[i][4] = item.getTrailerId();
                 wtData[i][5] = item.getRegType();
-                String[] regItemDescriptions = weightTicketDetails.stream()
-                        .map(t -> t.getRegItemDescription())
+
+                String[] regItemDescriptions = weightTicketDetails == null ? null : weightTicketDetails.stream()
+                        .map(t -> t != null ? t.getRegItemDescription() : null)
                         .filter(t -> t != null)
                         .toArray(String[]::new);
-                wtData[i][6] = regItemDescriptions.length > 0 ? String.join(" - ", regItemDescriptions) : "";
+                wtData[i][6] = regItemDescriptions != null && regItemDescriptions.length > 0 ? String.join(" - ", regItemDescriptions) : "";
+
                 BigDecimal sumRegQty = BigDecimal.ZERO;
                 for (WeightTicketDetail wt : weightTicketDetails) {
                     sumRegQty = sumRegQty.add(wt.getRegItemQuantity());
@@ -2975,11 +2977,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
                 //Check Delivery Plant with Configuration parameter.
                 if ((modeDetail == MODE_DETAIL.OUT_SELL_WATERWAY || modeDetail == MODE_DETAIL.OUT_SELL_ROAD)
-                    && (!(outboundDelivery.getWerks()).equals(configuration.getWkPlant()))) {
+                        && (!(outboundDelivery.getWerks()).equals(configuration.getWkPlant()))) {
                     throw new Exception(resourceMapMsg.getString("msg.doIsDenied"));
                 }
 
-                if((modeDetail == MODE_DETAIL.IN_WAREHOUSE_TRANSFER) && (!(outboundDelivery.getRecvPlant()).equals(configuration.getWkPlant()))) {
+                if ((modeDetail == MODE_DETAIL.IN_WAREHOUSE_TRANSFER) && (!(outboundDelivery.getRecvPlant()).equals(configuration.getWkPlant()))) {
                     throw new Exception(resourceMapMsg.getString("msg.doIsDenied"));
                 }
 
@@ -3307,20 +3309,20 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         }
 
         public void updateDataForInPoPurchaseMode() {
-            String val = txtWeightN.getText().trim().replace(",", "").replace(".", "");
+            String val = txtWeightN.getText().trim().replace(",", "");
             newWeightTicket.getWeightTicketDetail().setRegItemQuantity(new BigDecimal(val));
         }
 
         public void updateDataForPrepareOutPullStation() {
             newWeightTicket.setMoveType("101");
-            String val = txtWeightN.getText().trim().replace(",", "").replace(".", "");
+            String val = txtWeightN.getText().trim().replace(",", "");
             newWeightTicket.getWeightTicketDetail().setRegItemQuantity(new BigDecimal(val));
         }
 
         public void updateDataForOutSellWateway() {
             if (WeighBridgeApp.getApplication().isOfflineMode()) {
                 WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
-                String val = txtWeightN.getText().trim().replace(",", "").replace(".", "");
+                String val = txtWeightN.getText().trim().replace(",", "");
                 weightTicketDetail.setRegItemQuantity(new BigDecimal(val));
                 weightTicketDetail.setSoNumber(txtSONumN.getText().trim());
             } else {
@@ -3345,7 +3347,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             MaterialInternal material = (MaterialInternal) cbxMaterialTypeN.getSelectedItem();
             weightTicketDetail.setMatnrRef(material.getMatnr());
             weightTicketDetail.setRegItemDescription(material.getMaktx());
-            String val = txtWeightN.getText().trim().replace(",", "").replace(".", "");
+            String val = txtWeightN.getText().trim().replace(",", "");
             weightTicketDetail.setRegItemQuantity(new BigDecimal(val));
 
             Customer customer = (Customer) cbxCustomerN.getSelectedItem();
@@ -3364,7 +3366,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
             weightTicketDetail.setMatnrRef(material.getMatnr());
             weightTicketDetail.setRegItemDescription(material.getMaktx());
-            String val = txtWeightN.getText().trim().replace(",", "").replace(".", "");
+            String val = txtWeightN.getText().trim().replace(",", "");
             weightTicketDetail.setRegItemQuantity(new BigDecimal(val));
         }
 
@@ -3702,7 +3704,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                     }
                 }
             }
-            
+
             // check compare PO with POSTO
             if ((!txtPOSTONumN.getText().trim().isEmpty()) && (purchaseOrderPOSTO != null) && (poNum.equals(purchaseOrderPOSTO.getPoNumber()))) {
                 throw new Exception(resourceMapMsg.getString("msg.duplicatePo"));
@@ -3755,7 +3757,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             // load batch stock
             loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
             loadBatchStockModel(cbxSloc2N, cbxBatchStock2N, false);
-            
+
             // load data vendor
             if (modeDetail == MODE_DETAIL.OUT_PLANT_PLANT
                     || modeDetail == MODE_DETAIL.OUT_PULL_STATION) {
