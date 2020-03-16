@@ -123,7 +123,9 @@ import javax.persistence.Temporal;
             query = "SELECT DISTINCT w FROM WeightTicket w "
             + " , IN(w.weightTicketDetails) wd "
             + " WHERE wd.ebeln LIKE :ebeln" 
-            + " AND w.status LIKE :status"),
+            + " AND w.status LIKE :status"
+            + " AND w.mandt LIKE :mandt"
+            + " AND w.wplant LIKE :wplant"),
 })
 public class WeightTicket implements Serializable {
 

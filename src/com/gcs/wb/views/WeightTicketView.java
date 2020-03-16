@@ -3128,17 +3128,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     purchaseOrder = purchaseOrderRepository.findByPoNumber(weightTicket.getWeightTicketDetail().getEbeln());
                     // nhap mua hang
                     if (weightTicket.getMode().equals("IN_PO_PURCHASE")) {
-                        // validate trọng lượng
-                        flgGqty = validateTolerance(purchaseOrder, null);
-                        if (flgGqty) {
                             objBapi = getGrPoMigoBapi(weightTicket, purchaseOrder);
-                        } else {
-                            JOptionPane.showMessageDialog(rootPane, "Không thể nhập hàng vì trọng lượng vượt quá đăng ký!");
-                            weightTicket.setPosted(false);
-                            return null;
-//                            completed = false;
-//                            entityManager.clear();
-                        }
                     }
                     // mode xuat plant
                     if (weightTicket.getMode().equals("OUT_PLANT_PLANT")) {
@@ -3850,22 +3840,23 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 //  Conver result from KG unit to TON unit
 
                 // check tolorance for PO mua hang
-//                 if (weightTicket.getMode().equals("IN_PO_PURCHASE")) {
-//                    if(validateQuantityPO(purchaseOrder, new BigDecimal(Double.toString(result)))) {
-//                        txfGoodsQty.setValue(result);
-//                        weightTicket.setGQty(new BigDecimal(Double.toString(result)));
-//                    } else {
-//                        String msg = "Không thể nhập hàng vì trọng lượng vượt quá đăng ký!";
-//                        JOptionPane.showMessageDialog(rootPane, msg);
-//                        txfOutQty.setValue(null);
-//                        txtOutTime.setText(null);
-//                        txfGoodsQty.setValue(null);
-//                        weightTicket.setGQty(null);
-//                        btnAccept.setEnabled(false);
-//                        btnOScaleReset.setEnabled(true);
-//                        return null;
-//                        }
-//                 }
+                 if (weightTicket.getMode().equals("IN_PO_PURCHASE")) {
+                     purchaseOrder = purchaseOrderRepository.findByPoNumber(weightTicket.getWeightTicketDetail().getEbeln());
+                    if(validateQuantityPO(purchaseOrder, new BigDecimal(Double.toString(result)))) {
+                        txfGoodsQty.setValue(result);
+                        weightTicket.setGQty(new BigDecimal(Double.toString(result)));
+                    } else {
+                        String msg = "Không thể nhập hàng vì trọng lượng vượt quá đăng ký!";
+                        JOptionPane.showMessageDialog(rootPane, msg);
+                        txfOutQty.setValue(null);
+                        txtOutTime.setText(null);
+                        txfGoodsQty.setValue(null);
+                        weightTicket.setGQty(null);
+                        btnAccept.setEnabled(false);
+                        btnOScaleReset.setEnabled(true);
+                        return null;
+                        }
+                 }
                 double main_qty = 0;
                 double qty = 0;
                 if (outbDel != null) {

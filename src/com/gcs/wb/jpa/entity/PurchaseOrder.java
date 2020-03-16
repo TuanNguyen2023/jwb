@@ -6,8 +6,10 @@ package com.gcs.wb.jpa.entity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -221,7 +223,9 @@ public class PurchaseOrder implements Serializable {
             purchaseOrderDetail.setPurchaseOrder(this);
             purchaseOrderDetails.add(purchaseOrderDetail);
         }
-        return purchaseOrderDetails.get(0);
+        return purchaseOrderDetails.stream()
+		.sorted(Comparator.comparing(PurchaseOrderDetail::getPoItem))
+		.collect(Collectors.toList()).get(0);
     }
 
     @Override
