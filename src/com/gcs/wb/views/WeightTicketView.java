@@ -3144,7 +3144,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     if (weightTicket.getMode().equals("OUT_PLANT_PLANT")) {
                         // check post PGI for post lai
                         if(StringUtil.isEmptyString(weightTicketDetail.getDeliveryOrderNo())
-                                && (StringUtil.isEmptyString(weightTicketDetail.getMatDoc()))) {
+                                && StringUtil.isEmptyString(weightTicketDetail.getMatDoc())) {
                             objBapi = getDoCreate2PGI(weightTicket, outbDel);
                         } else {
                             objBapi = getDOPostingPGI(weightTicket, outbDel, weightTicketDetail.getDeliveryOrderNo());
@@ -3162,8 +3162,8 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     // xuat ben keo
                     if (weightTicket.getMode().equals("OUT_PULL_STATION") && weightTicket.getPosto() != null) {
                          // check post PGI for post lai
-                        if((StringUtil.isEmptyString(weightTicketDetail.getDeliveryOrderNo()))
-                                && (StringUtil.isEmptyString(weightTicketDetail.getMatDoc()))) {
+                        if(StringUtil.isEmptyString(weightTicketDetail.getDeliveryOrderNo())
+                                && StringUtil.isEmptyString(weightTicketDetail.getMatDoc())) {
                             objBapi = getMvtPOSTOCreatePGI(weightTicket, weightTicket.getPosto(), flgPost);
                         } else {
                             objBapi = getDOPostingPGI(weightTicket, outbDel, weightTicketDetail.getDeliveryOrderNo());
@@ -4410,7 +4410,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         }
         return false;
     }
-    
+
     private boolean validateTolerance(PurchaseOrder purchaseOrder, OutboundDelivery outboundDelivery) {
             BigDecimal numCheckWeight = BigDecimal.ZERO;
             BigDecimal quantity = BigDecimal.ZERO;
@@ -4448,7 +4448,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             }
             return true;
         }
-    
+
     private boolean validateQuantityPO(PurchaseOrder purchaseOrder, BigDecimal qty) {
             BigDecimal numCheckWeight = BigDecimal.ZERO;
             BigDecimal quantity = BigDecimal.ZERO;

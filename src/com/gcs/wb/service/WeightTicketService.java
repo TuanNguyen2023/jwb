@@ -986,8 +986,9 @@ public class WeightTicketService {
                             && (weightTicketDetail.getRegItemDescription().contains("Bag")) || weightTicketDetail.getRegItemDescription().contains("bao")) {
                         tmp = ((weightTicketDetail.getRegItemQuantity().doubleValue()) * 1000d) / 50d;
                     }
-                    bags = Math.round(tmp);
-                    if (bags != null) {
+                    
+                    if (tmp != null) {
+                        bags = Math.round(tmp);
                         map.put("P_PCB40BAG", bags);
                     }
                 }
