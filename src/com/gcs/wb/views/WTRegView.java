@@ -2388,7 +2388,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 isValid = validateOutPullStation() && isValidPO && isValidVendorLoad && isValidVendorTransport && isValidPlateNo;
                 break;
             case OUT_SELL_WATERWAY:
-                isValid = validateOutSellWateway() && isValidDO;
+                isValid = validateOutSellWateway() && isValidSO && isValidDO;
                 break;
             case OUT_OTHER:
                 isValid = validateInOutOther();
@@ -2636,6 +2636,12 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
         boolean isPOSTOValid = wtRegisValidation.validatePO(txtPOSTONumN.getText(), lblPOSTONumN);
         btnPOSTOCheckN.setEnabled(isPOSTOValid);
+        btnPOSTOCheckN.setEnabled(isPOSTOValid);
+        if (isPOSTOValid && !isValidPOSTO) {
+            btnPOSTOCheckN.setForeground(Color.red);
+        } else {
+            btnPOSTOCheckN.setForeground(Color.black);
+        }
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
         boolean isVendorTransValid = wtRegisValidation.validateCbxSelected(cbxVendorTransportN.getSelectedIndex(), lblVendorTransportN);
@@ -2652,7 +2658,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
 
         String plateNo = txtPlateNoN.getText().trim();
-        boolean isPlateNoValid = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
+        boolean isPlateNoValid = wtRegisValidation.validatePlateNoWater(plateNo, lblPlateNoN);
         if (isPlateNoValid) {
             txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(plateNo).toString());
         }
@@ -2664,10 +2670,9 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
         boolean isSOValid = wtRegisValidation.validateDO(txtSONumN.getText(), lblSONumN);
         btnSOCheckN.setEnabled(isSOValid);
+        btnDOCheckN.setEnabled(isValidSO);
         if (!isValidSO) {
             lblSONumN.setForeground(Color.red);
-        } else {
-            btnDOCheckN.setEnabled(true);
         }
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
