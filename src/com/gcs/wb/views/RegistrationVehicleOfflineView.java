@@ -66,6 +66,7 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
     private boolean isValidVendorTransport = false;
     private BigDecimal numCheckWeight = BigDecimal.ZERO;
     private String plateNoValidDO = "";
+    private boolean isValidPlateNo = false;
 
     private boolean formValid;
     private com.gcs.wb.jpa.entity.WeightTicket newWeightTicket;
@@ -299,10 +300,10 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
         } else {
             cbxSlocN.setSelectedIndex(-1);
         }
-        
+
         cbxSloc2N.setModel(sLoc2Model);
         cbxSloc2N.setSelectedIndex(-1);
-        
+
         cbxBatchStockN.setModel(new DefaultComboBoxModel());
         cbxBatchStock2N.setModel(new DefaultComboBoxModel());
 
@@ -1560,6 +1561,8 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
         Vendor vendor = (Vendor) cbxVendorTransportN.getSelectedItem();
         newWeightTicket.getWeightTicketDetail().setTransVendor(vendor.getLifnr());
 
+        checkPlateWithVendor();
+
         validateForm();
     }
 }//GEN-LAST:event_cbxVendorTransportNActionPerformed
@@ -1570,6 +1573,10 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
     plateNo = plateNo.replace(".", "");
     txtPlateNoN.setText(plateNo.toUpperCase());
 
+    if (!checkPlateWithVendor()) {
+        return;
+    }
+
     if (!plateNoValidDO.isEmpty() && !plateNo.contains(plateNoValidDO)) {
         lblPlateNoN.setForeground(Color.red);
         btnSave.setEnabled(false);
@@ -1579,6 +1586,36 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
         validateForm();
     }
 }//GEN-LAST:event_txtPlateNoNFocusLost
+
+    private boolean checkPlateWithVendor() throws HeadlessException {
+        String plateNo = txtPlateNoN.getText().trim();
+        isValidPlateNo = true;
+        if (modeDetail == MODE_DETAIL.OUT_PLANT_PLANT || modeDetail == MODE_DETAIL.OUT_SLOC_SLOC || modeDetail == MODE_DETAIL.OUT_PULL_STATION) {
+            Vendor transportVendor = (Vendor) cbxVendorTransportN.getSelectedItem();
+
+            boolean isPlateNoValid;
+            if (modeDetail == MODE_DETAIL.OUT_SLOC_SLOC) {
+                isPlateNoValid = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
+            } else {
+                isPlateNoValid = wtRegisValidation.validatePlateNoWithDB(plateNo, lblPlateNoN);
+            }
+
+            if (!isPlateNoValid) {
+                isValidPlateNo = false;
+            } else {
+                txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(plateNo).toString());
+
+                if (transportVendor != null && !weightTicketRegistarationController.checkPlateNoInVendor(transportVendor.getLifnr(), plateNo)) {
+                    lblPlateNoN.setForeground(Color.red);
+                    btnSave.setEnabled(false);
+                    JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.validateBSxe"));
+                    isValidPlateNo = false;
+                }
+            }
+        }
+
+        return isValidPlateNo;
+    }
 
 private void dpDateToPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_dpDateToPropertyChange
     if (SDATE.equals(evt.getPropertyName())) {
@@ -1969,7 +2006,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         lblPOSTONumN.setText(resourceMapMsg.getString("lblPOSTONumN.text"));
         lblSlocN.setText(resourceMapMsg.getString("lblSlocN.text"));
         lblBatchStockN.setText(resourceMapMsg.getString("lblBatchStockN.text"));
-        
+
         if (modeDetail == null) {
             disableAllInForm();
             return;
@@ -2513,18 +2550,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
 
         String plateNo = txtPlateNoN.getText().trim();
-        boolean isPlateNoValid = wtRegisValidation.validatePlateNoWithDB(plateNo, lblPlateNoN);
-        if (isPlateNoValid) {
-            txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(plateNo).toString());
-
-            Vendor transportVendor = (Vendor) cbxVendorTransportN.getSelectedItem();
-            if (transportVendor != null) {
-                if (!weightTicketRegistarationController.checkPlateNoInVendor(transportVendor.getLifnr(), plateNo)) {
-                    isPlateNoValid = false;
-                    lblPlateNoN.setForeground(Color.red);
-                    JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.validateBSxe"));
-                }
-            }
+        if (plateNo.isEmpty()) {
+            lblPlateNoN.setForeground(Color.red);
         }
 
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
@@ -2551,7 +2578,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         boolean isVendorTransValid = wtRegisValidation.validateCbxSelected(cbxVendorTransportN.getSelectedIndex(), lblVendorTransportN);
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
-                && isCMNDBLValid && isPlateNoValid && isPOValid
+                && isCMNDBLValid && isPOValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isSlocValid && isMaterialTypeValid && isWeightValid && isVendorTransValid;
     }
@@ -2563,18 +2590,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
 
         String plateNo = txtPlateNoN.getText().trim();
-        boolean isPlateNoValid = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
-        if (isPlateNoValid) {
-            txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(plateNo).toString());
-
-            Vendor transportVendor = (Vendor) cbxVendorTransportN.getSelectedItem();
-            if (transportVendor != null) {
-                if (!weightTicketRegistarationController.checkPlateNoInVendor(transportVendor.getLifnr(), plateNo)) {
-                    isPlateNoValid = false;
-                    lblPlateNoN.setForeground(Color.red);
-                    JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.validateBSxe"));
-                }
-            }
+        if (plateNo.isEmpty()) {
+            lblPlateNoN.setForeground(Color.red);
         }
 
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
@@ -2603,7 +2620,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         boolean isSloc2Valid = wtRegisValidation.validateCbxSelected(cbxSloc2N.getSelectedIndex(), lblSloc2N);
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
-                && isCMNDBLValid && isPlateNoValid && isPOValid
+                && isCMNDBLValid && isPOValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isSlocValid && isSloc2Valid && isMaterialTypeValid;
     }
@@ -2615,18 +2632,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
 
         String plateNo = txtPlateNoN.getText().trim();
-        boolean isPlateNoValid = wtRegisValidation.validatePlateNoWithDB(plateNo, lblPlateNoN);
-        if (isPlateNoValid) {
-            txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(plateNo).toString());
-
-            Vendor transportVendor = (Vendor) cbxVendorTransportN.getSelectedItem();
-            if (transportVendor != null) {
-                if (!weightTicketRegistarationController.checkPlateNoInVendor(transportVendor.getLifnr(), plateNo)) {
-                    isPlateNoValid = false;
-                    lblPlateNoN.setForeground(Color.red);
-                    JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.validateBSxe"));
-                }
-            }
+        if (plateNo.isEmpty()) {
+            lblPlateNoN.setForeground(Color.red);
         }
 
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
@@ -2655,7 +2662,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
-                && isCMNDBLValid && isPlateNoValid && isPOValid
+                && isCMNDBLValid && isPOValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isSlocValid && isMaterialTypeValid && isWeightValid;
     }
@@ -2666,7 +2673,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
 
         String plateNo = txtPlateNoN.getText().trim();
-        boolean isPlateNoValid = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
+        boolean isPlateNoValid = wtRegisValidation.validatePlateNoWater(plateNo, lblPlateNoN);
         if (isPlateNoValid) {
             txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(plateNo).toString());
         }
@@ -3467,6 +3474,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         isValidVendorLoad = false;
         isValidVendorTransport = false;
         plateNoValidDO = "";
+        isValidPlateNo = false;
         numCheckWeight = BigDecimal.ZERO;
 
         txtTicketIdN.setText("");
@@ -3736,7 +3744,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         protected void succeeded(Object t) {
             isValidPO = true;
             txtWeightN.setText(df.format(totalWeight).toString());
-            
+
             Material material = weightTicketRegistarationController.getMaterial(strMatnr);
             if (material == null && !strMatnr.isEmpty()) {
                 JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.materialNotExist", strMatnr));
