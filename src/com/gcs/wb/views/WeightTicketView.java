@@ -27,6 +27,7 @@ import com.gcs.wb.base.exceptions.IllegalPortException;
 import com.gcs.wb.base.util.Base64_Utils;
 import com.gcs.wb.base.util.IntegerUtil;
 import com.gcs.wb.base.util.RegexFormatter;
+import com.gcs.wb.base.util.StringUtil;
 import com.gcs.wb.base.util.ToleranceUtil;
 import com.gcs.wb.base.validator.LengthValidator;
 import com.gcs.wb.controller.WeightTicketController;
@@ -3142,8 +3143,8 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     // mode xuat plant
                     if (weightTicket.getMode().equals("OUT_PLANT_PLANT")) {
                         // check post PGI for post lai
-                        if(weightTicketDetail.getDeliveryOrderNo().trim().isEmpty()
-                                && (weightTicketDetail.getMatDoc().trim().isEmpty())) {
+                        if(StringUtil.isEmptyString(weightTicketDetail.getDeliveryOrderNo())
+                                && StringUtil.isEmptyString(weightTicketDetail.getMatDoc())) {
                             objBapi = getDoCreate2PGI(weightTicket, outbDel);
                         } else {
                             objBapi = getDOPostingPGI(weightTicket, outbDel, weightTicketDetail.getDeliveryOrderNo());
@@ -3161,8 +3162,8 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     // xuat ben keo
                     if (weightTicket.getMode().equals("OUT_PULL_STATION") && weightTicket.getPosto() != null) {
                          // check post PGI for post lai
-                        if((weightTicketDetail.getDeliveryOrderNo().trim().isEmpty())
-                                && (weightTicketDetail.getMatDoc().trim().isEmpty())) {
+                        if(StringUtil.isEmptyString(weightTicketDetail.getDeliveryOrderNo())
+                                && StringUtil.isEmptyString(weightTicketDetail.getMatDoc())) {
                             objBapi = getMvtPOSTOCreatePGI(weightTicket, weightTicket.getPosto(), flgPost);
                         } else {
                             objBapi = getDOPostingPGI(weightTicket, outbDel, weightTicketDetail.getDeliveryOrderNo());
