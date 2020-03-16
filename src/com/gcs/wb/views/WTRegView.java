@@ -3307,18 +3307,21 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         }
 
         public void updateDataForInPoPurchaseMode() {
-            newWeightTicket.getWeightTicketDetail().setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+            String val = txtWeightN.getText().trim().replace(",", "").replace(".", "");
+            newWeightTicket.getWeightTicketDetail().setRegItemQuantity(new BigDecimal(val));
         }
 
         public void updateDataForPrepareOutPullStation() {
             newWeightTicket.setMoveType("101");
-            newWeightTicket.getWeightTicketDetail().setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+            String val = txtWeightN.getText().trim().replace(",", "").replace(".", "");
+            newWeightTicket.getWeightTicketDetail().setRegItemQuantity(new BigDecimal(val));
         }
 
         public void updateDataForOutSellWateway() {
             if (WeighBridgeApp.getApplication().isOfflineMode()) {
                 WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
-                weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+                String val = txtWeightN.getText().trim().replace(",", "").replace(".", "");
+                weightTicketDetail.setRegItemQuantity(new BigDecimal(val));
                 weightTicketDetail.setSoNumber(txtSONumN.getText().trim());
             } else {
                 if (listDONumbers != null) {
@@ -3342,7 +3345,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             MaterialInternal material = (MaterialInternal) cbxMaterialTypeN.getSelectedItem();
             weightTicketDetail.setMatnrRef(material.getMatnr());
             weightTicketDetail.setRegItemDescription(material.getMaktx());
-            weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+            String val = txtWeightN.getText().trim().replace(",", "").replace(".", "");
+            weightTicketDetail.setRegItemQuantity(new BigDecimal(val));
 
             Customer customer = (Customer) cbxCustomerN.getSelectedItem();
             if (customer != null) {
@@ -3360,7 +3364,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
             weightTicketDetail.setMatnrRef(material.getMatnr());
             weightTicketDetail.setRegItemDescription(material.getMaktx());
-            weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText().trim()));
+            String val = txtWeightN.getText().trim().replace(",", "").replace(".", "");
+            weightTicketDetail.setRegItemQuantity(new BigDecimal(val));
         }
 
         @Override
