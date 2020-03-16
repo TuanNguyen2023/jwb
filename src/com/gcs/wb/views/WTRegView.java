@@ -1566,6 +1566,7 @@ private void cbxVendorLoadingNActionPerformed(java.awt.event.ActionEvent evt) {/
                     JOptionPane.showMessageDialog(rootPane, msgVendorCheck);
                     lblVendorLoadingN.setForeground(Color.red);
                     isValidVendorLoad = false;
+                    return;
                 } else {
                     isValidVendorLoad = true;
                     lblVendorLoadingN.setForeground(Color.black);
@@ -1600,6 +1601,7 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
 
                     lblVendorTransportN.setForeground(Color.red);
                     isValidVendorTransport = false;
+                    return;
                 } else {
                     isValidVendorTransport = true;
                     lblVendorTransportN.setForeground(Color.black);
@@ -2385,7 +2387,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 isValid = validateOutSlocSloc() && isValidPO && (isValidPOSTO || txtPOSTONumN.getText().trim().isEmpty()) && isValidVendorTransport && isValidPlateNo;
                 break;
             case OUT_PULL_STATION:
-                isValid = validateOutPullStation() && isValidPO && isValidVendorLoad && isValidVendorTransport && isValidPlateNo;
+                isValid = validateOutPullStation() && isValidPO && isValidPOSTO && isValidVendorLoad && isValidVendorTransport && isValidPlateNo;
                 break;
             case OUT_SELL_WATERWAY:
                 isValid = validateOutSellWateway() && isValidSO && isValidDO;
@@ -2561,6 +2563,9 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
         boolean isVendorTransValid = wtRegisValidation.validateCbxSelected(cbxVendorTransportN.getSelectedIndex(), lblVendorTransportN);
+        if (!isValidVendorTransport) {
+            lblVendorTransportN.setForeground(Color.red);
+        }
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
                 && isCMNDBLValid
@@ -2598,8 +2603,10 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         btnPOSTOCheckN.setEnabled(isPOSTOValid);
         if (isPOSTOValid && !isValidPOSTO) {
             btnPOSTOCheckN.setForeground(Color.red);
-        } else {
+        } else if (isPOSTOValid && isValidPOSTO) {
             btnPOSTOCheckN.setForeground(Color.black);
+        } else {
+            btnPOSTOCheckN.setForeground(new Color(115, 115, 115));
         }
 
         boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
@@ -2636,15 +2643,19 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
         boolean isPOSTOValid = wtRegisValidation.validatePO(txtPOSTONumN.getText(), lblPOSTONumN);
         btnPOSTOCheckN.setEnabled(isPOSTOValid);
-        btnPOSTOCheckN.setEnabled(isPOSTOValid);
         if (isPOSTOValid && !isValidPOSTO) {
             btnPOSTOCheckN.setForeground(Color.red);
-        } else {
+        } else if (isPOSTOValid && isValidPOSTO) {
             btnPOSTOCheckN.setForeground(Color.black);
+        } else {
+            btnPOSTOCheckN.setForeground(new Color(115, 115, 115));
         }
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
         boolean isVendorTransValid = wtRegisValidation.validateCbxSelected(cbxVendorTransportN.getSelectedIndex(), lblVendorTransportN);
+        if (!isValidVendorTransport) {
+            lblVendorTransportN.setForeground(Color.red);
+        }
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
                 && isCMNDBLValid
@@ -3848,7 +3859,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             weightTicketDetail.setMatnrRef(purchaseOrderDetail.getMaterial());
             weightTicketDetail.setKunnr(purchaseOrder.getCustomer());
             weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
-            
+
             strMatnr = purchaseOrderDetail.getMaterial();
             strLgort = purchaseOrderDetail.getStgeLoc();
 
