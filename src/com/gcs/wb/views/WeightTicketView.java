@@ -3948,12 +3948,35 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     for (int i = 0; i < outDetails_lits.size(); i++) {
                         item = outDetails_lits.get(i);
                         item.setInScale(new BigDecimal(((Number) txfInQty.getValue()).doubleValue() / 1000));
+                        
+                        // tinh toan cho Nhap kho tu tay ninh > ben keo
+//                    if(weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER") && configuration.getWkPlant().equals("G112")
+//                            && (item.getArktx().contains("Bag") || item.getArktx().contains("bao"))) {
+//                        //WeightTicketDetail wtDetail = weightTicketDetailRepository.findBydeliveryOrderNo(outbDel.getDeliveryOrderNo());
+//                        WeightTicket wtPlant = weightTicketRepository.findByDOFromPO(outbDel.getDeliveryOrderNo());
+//                        BigDecimal inFScalePlant = BigDecimal.ZERO;
+//                        BigDecimal outSScalePlant = BigDecimal.ZERO;
+//                        if(wtPlant!= null) {
+//                            String poNum = wtPlant.getWeightTicketDetail().getEbeln();
+//                            PurchaseOrder purchaseOrder = purchaseOrderRepository.findByPoNumber(poNum);
+//                            if(purchaseOrder.getSupplPlnt().equals(configuration.getWkPlant())) {
+//                                inFScalePlant = wtPlant.getFScale();
+//                                outSScalePlant = wtPlant.getSScale();
+//                                // check outScalePO va txfInQty.getValue() chenh lech 1%
+//                                
+//                                // -> set weightTicket.setSScale = inScalePO
+//                                // post SAP
+//
+//                            }
+//                        }
+//                    }
                         if (!entityManager.getTransaction().isActive()) {
                             entityManager.getTransaction().begin();
                         }
                         entityManager.merge(item);
                         entityManager.getTransaction().commit();
                     }
+                    
                 }
             } else if (isStage2()) {
                 txfOutQty.setValue(txfCurScale.getValue());

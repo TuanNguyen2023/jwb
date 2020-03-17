@@ -126,6 +126,12 @@ import javax.persistence.Temporal;
             + " AND w.status LIKE :status"
             + " AND w.mandt LIKE :mandt"
             + " AND w.wplant LIKE :wplant"),
+    @NamedQuery(name = "WeightTicket.findByDOFromPO",
+            query = "SELECT DISTINCT w FROM WeightTicket w "
+            + " , IN(w.weightTicketDetails) wd "
+            + " WHERE wd.deliveryOrderNo LIKE :deliveryOrderNo" 
+            + " AND w.mode LIKE :mode"
+            + " AND w.mandt LIKE :mandt")
 })
 public class WeightTicket implements Serializable {
 
