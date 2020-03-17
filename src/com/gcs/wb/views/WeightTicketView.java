@@ -39,6 +39,7 @@ import com.gcs.wb.jpa.repositorys.MaterialRepository;
 import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
 import com.gcs.wb.jpa.repositorys.VendorRepository;
 import com.gcs.wb.jpa.repositorys.WeightTicketDetailRepository;
+import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.views.validations.WeightTicketRegistrationValidation;
 import com.sap.conn.jco.JCoException;
@@ -104,6 +105,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     ToleranceUtil toleranceUtil = new ToleranceUtil();
     MaterialRepository materialRepository = new MaterialRepository();
     MaterialInternalRepository materialInternalRepository = new MaterialInternalRepository();
+    WeightTicketRepository weightTicketRepository = new WeightTicketRepository();
 
     WeightTicketController weightTicketController = new WeightTicketController();
     WeightTicketRegistarationController weightTicketRegistarationController = new WeightTicketRegistarationController();
@@ -2433,7 +2435,6 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     for (int index = 0; index < do_list.size(); index++) {
                         WeightTicketDetail weightTicketDetail = weightTicketDetailRepository.findBydeliveryOrderNo(do_list.get(index));
                         try {
-                            //outbDel = entityManager.find(OutboundDelivery.class, new OutbDelPK(config.getsClient(), do_list[i]));
                             outbDel = weightTicketController.findByMandtOutDel(do_list.get(index));
                         } catch (Exception ex) {
                             java.util.logging.Logger.getLogger(WeightTicketView.class.getName()).log(Level.SEVERE, null, ex);
@@ -3872,21 +3873,6 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     qty = total_qty_goods.doubleValue() + total_qty_free.doubleValue();
                 }
 
-//                String slfart = "";
-//                String sMatName = "";
-//                boolean bag = false;
-//                boolean btype = false;
-//                boolean bCompare = false;
-//                if (outbDel != null) {
-//                    slfart = outbDel.getLfart();
-//                    sMatName = outbDel.getArktx() != null ? outbDel.getArktx().toUpperCase() : "";
-//                    bag = (outbDel.getArktx() != null && outbDel.getArktx().toUpperCase().indexOf("BAO") >= 0) ? true : false;
-//                    btype = (outbDel.getLfart() != null
-//                            && (outbDel.getLfart().equalsIgnoreCase("LF") || outbDel.getLfart().equalsIgnoreCase("ZTLF"))) ? true : false;
-//
-//                    bCompare = (bag || btype);
-//                }
-//                if (bCompare) // end add
                 if (outbDel != null) {
                     String param = (outbDel != null && outbDel.getMatnr() != null) ? outbDel.getMatnr().toString() : "";
 
@@ -4028,7 +4014,11 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     BigDecimal div = BigDecimal.valueOf(1000);
                     item = outDetails_lits.get(0);
                     item.setOutScale(weightTicket.getSScale().divide(div));
-                    item.setGoodsQty(weightTicket.getSScale().subtract(weightTicket.getFScale()).divide(div).abs());
+                    if (checkVariant) {
+                        item.setGoodsQty(item.getLfimg());
+                    } else {
+                        item.setGoodsQty(weightTicket.getSScale().subtract(weightTicket.getFScale()).divide(div).abs());
+                    }
                     if (!entityManager.getTransaction().isActive()) {
                         entityManager.getTransaction().begin();
                     }
