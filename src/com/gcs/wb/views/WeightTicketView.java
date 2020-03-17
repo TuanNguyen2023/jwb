@@ -2263,6 +2263,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 lblPoPosto.setText(resourceMapMsg.getString("lblPoPosto.text"));
                 lblSLoc.setText(resourceMapMsg.getString("lblSLoc.text"));
                 lblCharg.setText(resourceMapMsg.getString("lblCharg.text"));
+                lblLicPlate.setText(resourceMapMsg.getString("lblLicPlate.text"));
                 
                 if (Constants.WeighingProcess.MODE_DETAIL.OUT_SLOC_SLOC.name().equals(weightTicket.getMode())) {
                     lblPONo.setText(resourceMapMsg.getString("lblPoTrans"));
@@ -2274,6 +2275,10 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 if (Constants.WeighingProcess.MODE_DETAIL.OUT_PULL_STATION.name().equals(weightTicket.getMode())) {
                     lblPONo.setText(resourceMapMsg.getString("lblPoOut"));
                     lblPoPosto.setText(resourceMapMsg.getString("lblPostoIn"));
+                }
+                
+                if (Constants.WeighingProcess.MODE_DETAIL.OUT_SELL_WATERWAY.name().equals(weightTicket.getMode())) {
+                    lblLicPlate.setText(resourceMapMsg.getString("lblPlateNoWater"));
                 }
 
                 if (weightTicket.getRegType() == 'I') {

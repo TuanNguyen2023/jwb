@@ -2006,6 +2006,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         lblPOSTONumN.setText(resourceMapMsg.getString("lblPOSTONumN.text"));
         lblSlocN.setText(resourceMapMsg.getString("lblSlocN.text"));
         lblBatchStockN.setText(resourceMapMsg.getString("lblBatchStockN.text"));
+        lblPlateNoN.setText(resourceMapMsg.getString("lblPlateNoN.text"));
 
         if (modeDetail == null) {
             disableAllInForm();
@@ -2323,6 +2324,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     }
 
     private void prepareOutSellWateway() {
+        lblPlateNoN.setText(resourceMapMsg.getString("lblPlateNoWater"));
+
         showComponent(txtTicketIdN, lblTicketIdN, false, false);
         showComponent(txtWeightTickerRefN, lblWeightTickerRefN, false, false);
         showComponent(txtRegisterIdN, lblRegisterIdN, true, true);
