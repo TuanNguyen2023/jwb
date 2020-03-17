@@ -1581,7 +1581,11 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
         lblPlateNoN.setForeground(Color.red);
         btnSave.setEnabled(false);
 
-        JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.plateNoNotResgiter", plateNo, plateNoValidDO));
+        String plateName = "xe";
+        if (modeDetail == MODE_DETAIL.OUT_SELL_WATERWAY) {
+            plateName = "ghe";
+        }
+        JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.plateNoNotResgiter", plateName, plateNo, plateNoValidDO));
     } else {
         validateForm();
     }
@@ -1790,11 +1794,21 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
         txtDONumN.setText(String.join(" - ", doNums));
 
-        boolean isPlateNoValid = wtRegisValidation.validatePlateNo(txtPlateNoN.getText(), lblPlateNoN);
-        if (!isPlateNoValid) {
-            JOptionPane.showMessageDialog(rootPane,
-                    resourceMapMsg.getString("msg.plzInputPlateNo"));
-            return null;
+        boolean isPlateNoValid;
+        if (modeDetail == MODE_DETAIL.OUT_SELL_WATERWAY) {
+            isPlateNoValid = wtRegisValidation.validatePlateNoWater(txtPlateNoN.getText(), lblPlateNoN);
+            if (!isPlateNoValid) {
+                JOptionPane.showMessageDialog(rootPane,
+                        resourceMapMsg.getString("msg.plzInputPlateNo", "ghe"));
+                return null;
+            }
+        } else {
+            isPlateNoValid = wtRegisValidation.validatePlateNo(txtPlateNoN.getText(), lblPlateNoN);
+            if (!isPlateNoValid) {
+                JOptionPane.showMessageDialog(rootPane,
+                        resourceMapMsg.getString("msg.plzInputPlateNo", "xe"));
+                return null;
+            }
         }
 
         return new CheckDOTask(WeighBridgeApp.getApplication());
@@ -2006,6 +2020,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         lblPOSTONumN.setText(resourceMapMsg.getString("lblPOSTONumN.text"));
         lblSlocN.setText(resourceMapMsg.getString("lblSlocN.text"));
         lblBatchStockN.setText(resourceMapMsg.getString("lblBatchStockN.text"));
+        lblPlateNoN.setText(resourceMapMsg.getString("lblPlateNoN.text"));
 
         if (modeDetail == null) {
             disableAllInForm();
@@ -2323,6 +2338,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     }
 
     private void prepareOutSellWateway() {
+        lblPlateNoN.setText(resourceMapMsg.getString("lblPlateNoWater"));
+
         showComponent(txtTicketIdN, lblTicketIdN, false, false);
         showComponent(txtWeightTickerRefN, lblWeightTickerRefN, false, false);
         showComponent(txtRegisterIdN, lblRegisterIdN, true, true);
@@ -2976,7 +2993,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 String traid = outboundDelivery.getTraid().trim();
                 traid = StringUtil.correctPlateNo(traid);
                 if (!traid.isEmpty() && !traid.startsWith(plateNo)) {
-                    throw new Exception(resourceMapMsg.getString("msg.plateNoNotMappingWithDO", plateNo));
+                    String plateName = "xe";
+                    if (modeDetail == MODE_DETAIL.OUT_SELL_WATERWAY) {
+                        plateName = "ghe";
+                    }
+                    throw new Exception(resourceMapMsg.getString("msg.plateNoNotMappingWithDO", plateName, plateNo));
                 }
 
                 // for check edit plateNo after check DO
