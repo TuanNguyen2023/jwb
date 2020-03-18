@@ -454,7 +454,7 @@ public class WeightTicketService {
         tab_wa.setPo_item(purchaseOrder.getPurchaseOrderDetail().getPoItem());
         tab_wa.setMove_type("101");
         tab_wa.setPlant(configuration.getWkPlant());
-        tab_wa.setStge_loc(purchaseOrder.getPurchaseOrderDetail().getStgeLoc());
+        tab_wa.setStge_loc(wt.getLgort());
         tab_wa.setBatch(wt.getCharg());
         tab_wa.setGr_rcpt(wt.getSCreator());
         tab_wa.setEntry_qnt(wt.getGQty());
