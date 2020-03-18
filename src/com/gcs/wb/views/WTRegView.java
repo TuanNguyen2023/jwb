@@ -2140,7 +2140,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         showComponent(txtPONumN, lblPONumN, btnPOCheckN, true, true);
         showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, false, false);
         showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, false);
-        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, true);
+        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, false);
         showComponent(cbxSlocN, lblSlocN, true, true);
         showComponent(cbxSloc2N, lblSloc2N, false, false);
         showComponent(cbxBatchStockN, lblBatchStockN, true, true);
@@ -3899,9 +3899,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             switch (modeDetail) {
                 case IN_PO_PURCHASE:
                     BigDecimal quantity = purchaseOrderDetail.getQuantity() != null ? purchaseOrderDetail.getQuantity() : BigDecimal.ZERO;
-                    //BigDecimal tolerance = purchaseOrderDetail.getOverDlvTol() != null ? purchaseOrderDetail.getOverDlvTol() : BigDecimal.ZERO;
+                    BigDecimal tolerance = purchaseOrderDetail.getOverDlvTol() != null ? purchaseOrderDetail.getOverDlvTol() : BigDecimal.ZERO;
 
-                    numCheckWeight = quantity.subtract(weightTicketRegistarationController.getSumGqtyWithPoNo(purchaseOrder.getPoNumber()));
+                    numCheckWeight = quantity.add(
+                            quantity.multiply(tolerance).divide(new BigDecimal(100))
+                    ).subtract(weightTicketRegistarationController.getSumGqtyWithPoNo(purchaseOrder.getPoNumber()));
 
                     if (numCheckWeight.compareTo(BigDecimal.ZERO) < 0) {
                         numCheckWeight = BigDecimal.ZERO;
