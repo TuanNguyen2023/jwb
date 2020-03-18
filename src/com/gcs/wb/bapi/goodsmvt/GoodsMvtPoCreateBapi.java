@@ -28,7 +28,7 @@ import org.hibersap.bapi.BapiRet2;
  * @author Tran-Vu
  */
 @Bapi(GoodsMvtPoCreateConstants.BAPI_NAME)
-@ThrowExceptionOnError(returnStructure = "TABLE/RETURN")
+//@ThrowExceptionOnError(returnStructure = "TABLE/RETURN")
 public class GoodsMvtPoCreateBapi implements Serializable {
 
     // <editor-fold defaultstate="collapsed" desc="Import Parameters">
