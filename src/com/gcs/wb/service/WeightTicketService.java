@@ -146,8 +146,8 @@ public class WeightTicketService {
     }
 
     public WeightTicket findWeightTicket(WeightTicket weightTicket, String id, String mandt, String wplant) {
-        return entityManager.find(WeightTicket.class, id);
-        //return weightTicketRepository.getWeightTicketByIdAndMandtAndWplant(id, mandt, wplant);
+        //return entityManager.find(WeightTicket.class, id);
+        return weightTicketRepository.getWeightTicketByIdAndMandtAndWplant(id, mandt, wplant);
     }
 
     public PurchaseOrder findPurOrder(String poNum) {
@@ -452,7 +452,7 @@ public class WeightTicketService {
         tab_wa.setPo_item(purchaseOrder.getPurchaseOrderDetail().getPoItem());
         tab_wa.setMove_type("101");
         tab_wa.setPlant(configuration.getWkPlant());
-        tab_wa.setStge_loc(purchaseOrder.getPurchaseOrderDetail().getStgeLoc());
+        tab_wa.setStge_loc(wt.getLgort());
         tab_wa.setBatch(wt.getCharg());
         tab_wa.setGr_rcpt(wt.getSCreator());
         tab_wa.setEntry_qnt(wt.getGQty());

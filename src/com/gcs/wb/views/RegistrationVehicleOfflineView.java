@@ -66,6 +66,8 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
     private boolean isValidVendorTransport = false;
     private BigDecimal numCheckWeight = BigDecimal.ZERO;
     private String plateNoValidDO = "";
+    private boolean isValidPlateNo = false;
+    private String checkedCharg = "";
 
     private boolean formValid;
     private com.gcs.wb.jpa.entity.WeightTicket newWeightTicket;
@@ -299,12 +301,9 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
         } else {
             cbxSlocN.setSelectedIndex(-1);
         }
-        
+
         cbxSloc2N.setModel(sLoc2Model);
         cbxSloc2N.setSelectedIndex(-1);
-        
-        cbxBatchStockN.setModel(new DefaultComboBoxModel());
-        cbxBatchStock2N.setModel(new DefaultComboBoxModel());
 
         validateForm();
     }
@@ -1452,6 +1451,16 @@ private void cbxBatchStockNActionPerformed(java.awt.event.ActionEvent evt) {//GE
     validateForm();
 
     BatchStock batchStock = (BatchStock) cbxBatchStockN.getSelectedItem();
+
+    if (checkedCharg != null && !checkedCharg.isEmpty() 
+            && (modeDetail == MODE_DETAIL.IN_PO_PURCHASE || modeDetail == MODE_DETAIL.IN_WAREHOUSE_TRANSFER)) {
+        if (!checkedCharg.equalsIgnoreCase(batchStock.getCharg())) {
+            JOptionPane.showMessageDialog(rootPane,
+                    resourceMapMsg.getString("msg.batchStockContainWarning", batchStock.getCharg()),
+                    "Warning", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
     if (newWeightTicket != null) {
         newWeightTicket.setCharg(batchStock.getCharg());
     }
@@ -1560,6 +1569,8 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
         Vendor vendor = (Vendor) cbxVendorTransportN.getSelectedItem();
         newWeightTicket.getWeightTicketDetail().setTransVendor(vendor.getLifnr());
 
+        checkPlateWithVendor();
+
         validateForm();
     }
 }//GEN-LAST:event_cbxVendorTransportNActionPerformed
@@ -1570,15 +1581,53 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
     plateNo = plateNo.replace(".", "");
     txtPlateNoN.setText(plateNo.toUpperCase());
 
+    if (!checkPlateWithVendor()) {
+        return;
+    }
+
     if (!plateNoValidDO.isEmpty() && !plateNo.contains(plateNoValidDO)) {
         lblPlateNoN.setForeground(Color.red);
         btnSave.setEnabled(false);
 
-        JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.plateNoNotResgiter", plateNo, plateNoValidDO));
+        String plateName = "xe";
+        if (modeDetail == MODE_DETAIL.OUT_SELL_WATERWAY) {
+            plateName = "ghe";
+        }
+        JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.plateNoNotResgiter", plateName, plateNo, plateNoValidDO));
     } else {
         validateForm();
     }
 }//GEN-LAST:event_txtPlateNoNFocusLost
+
+    private boolean checkPlateWithVendor() throws HeadlessException {
+        String plateNo = txtPlateNoN.getText().trim();
+        isValidPlateNo = true;
+        if (modeDetail == MODE_DETAIL.OUT_PLANT_PLANT || modeDetail == MODE_DETAIL.OUT_SLOC_SLOC || modeDetail == MODE_DETAIL.OUT_PULL_STATION) {
+            Vendor transportVendor = (Vendor) cbxVendorTransportN.getSelectedItem();
+
+            boolean isPlateNoValid;
+            if (modeDetail == MODE_DETAIL.OUT_SLOC_SLOC) {
+                isPlateNoValid = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
+            } else {
+                isPlateNoValid = wtRegisValidation.validatePlateNoWithDB(plateNo, lblPlateNoN);
+            }
+
+            if (!isPlateNoValid) {
+                isValidPlateNo = false;
+            } else {
+                txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(plateNo).toString());
+
+                if (transportVendor != null && !weightTicketRegistarationController.checkPlateNoInVendor(transportVendor.getLifnr(), plateNo)) {
+                    lblPlateNoN.setForeground(Color.red);
+                    btnSave.setEnabled(false);
+                    JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.validateBSxe"));
+                    isValidPlateNo = false;
+                }
+            }
+        }
+
+        return isValidPlateNo;
+    }
 
 private void dpDateToPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_dpDateToPropertyChange
     if (SDATE.equals(evt.getPropertyName())) {
@@ -1753,11 +1802,21 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
         txtDONumN.setText(String.join(" - ", doNums));
 
-        boolean isPlateNoValid = wtRegisValidation.validatePlateNo(txtPlateNoN.getText(), lblPlateNoN);
-        if (!isPlateNoValid) {
-            JOptionPane.showMessageDialog(rootPane,
-                    resourceMapMsg.getString("msg.plzInputPlateNo"));
-            return null;
+        boolean isPlateNoValid;
+        if (modeDetail == MODE_DETAIL.OUT_SELL_WATERWAY) {
+            isPlateNoValid = wtRegisValidation.validatePlateNoWater(txtPlateNoN.getText(), lblPlateNoN);
+            if (!isPlateNoValid) {
+                JOptionPane.showMessageDialog(rootPane,
+                        resourceMapMsg.getString("msg.plzInputPlateNo", "ghe"));
+                return null;
+            }
+        } else {
+            isPlateNoValid = wtRegisValidation.validatePlateNo(txtPlateNoN.getText(), lblPlateNoN);
+            if (!isPlateNoValid) {
+                JOptionPane.showMessageDialog(rootPane,
+                        resourceMapMsg.getString("msg.plzInputPlateNo", "xe"));
+                return null;
+            }
         }
 
         return new CheckDOTask(WeighBridgeApp.getApplication());
@@ -1969,7 +2028,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         lblPOSTONumN.setText(resourceMapMsg.getString("lblPOSTONumN.text"));
         lblSlocN.setText(resourceMapMsg.getString("lblSlocN.text"));
         lblBatchStockN.setText(resourceMapMsg.getString("lblBatchStockN.text"));
-        
+        lblPlateNoN.setText(resourceMapMsg.getString("lblPlateNoN.text"));
+
         if (modeDetail == null) {
             disableAllInForm();
             return;
@@ -2286,6 +2346,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     }
 
     private void prepareOutSellWateway() {
+        lblPlateNoN.setText(resourceMapMsg.getString("lblPlateNoWater"));
+
         showComponent(txtTicketIdN, lblTicketIdN, false, false);
         showComponent(txtWeightTickerRefN, lblWeightTickerRefN, false, false);
         showComponent(txtRegisterIdN, lblRegisterIdN, true, true);
@@ -2513,18 +2575,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
 
         String plateNo = txtPlateNoN.getText().trim();
-        boolean isPlateNoValid = wtRegisValidation.validatePlateNoWithDB(plateNo, lblPlateNoN);
-        if (isPlateNoValid) {
-            txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(plateNo).toString());
-
-            Vendor transportVendor = (Vendor) cbxVendorTransportN.getSelectedItem();
-            if (transportVendor != null) {
-                if (!weightTicketRegistarationController.checkPlateNoInVendor(transportVendor.getLifnr(), plateNo)) {
-                    isPlateNoValid = false;
-                    lblPlateNoN.setForeground(Color.red);
-                    JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.validateBSxe"));
-                }
-            }
+        if (plateNo.isEmpty()) {
+            lblPlateNoN.setForeground(Color.red);
         }
 
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
@@ -2551,7 +2603,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         boolean isVendorTransValid = wtRegisValidation.validateCbxSelected(cbxVendorTransportN.getSelectedIndex(), lblVendorTransportN);
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
-                && isCMNDBLValid && isPlateNoValid && isPOValid
+                && isCMNDBLValid && isPOValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isSlocValid && isMaterialTypeValid && isWeightValid && isVendorTransValid;
     }
@@ -2563,18 +2615,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
 
         String plateNo = txtPlateNoN.getText().trim();
-        boolean isPlateNoValid = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
-        if (isPlateNoValid) {
-            txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(plateNo).toString());
-
-            Vendor transportVendor = (Vendor) cbxVendorTransportN.getSelectedItem();
-            if (transportVendor != null) {
-                if (!weightTicketRegistarationController.checkPlateNoInVendor(transportVendor.getLifnr(), plateNo)) {
-                    isPlateNoValid = false;
-                    lblPlateNoN.setForeground(Color.red);
-                    JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.validateBSxe"));
-                }
-            }
+        if (plateNo.isEmpty()) {
+            lblPlateNoN.setForeground(Color.red);
         }
 
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
@@ -2603,7 +2645,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         boolean isSloc2Valid = wtRegisValidation.validateCbxSelected(cbxSloc2N.getSelectedIndex(), lblSloc2N);
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
-                && isCMNDBLValid && isPlateNoValid && isPOValid
+                && isCMNDBLValid && isPOValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isSlocValid && isSloc2Valid && isMaterialTypeValid;
     }
@@ -2615,18 +2657,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
 
         String plateNo = txtPlateNoN.getText().trim();
-        boolean isPlateNoValid = wtRegisValidation.validatePlateNoWithDB(plateNo, lblPlateNoN);
-        if (isPlateNoValid) {
-            txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(plateNo).toString());
-
-            Vendor transportVendor = (Vendor) cbxVendorTransportN.getSelectedItem();
-            if (transportVendor != null) {
-                if (!weightTicketRegistarationController.checkPlateNoInVendor(transportVendor.getLifnr(), plateNo)) {
-                    isPlateNoValid = false;
-                    lblPlateNoN.setForeground(Color.red);
-                    JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.validateBSxe"));
-                }
-            }
+        if (plateNo.isEmpty()) {
+            lblPlateNoN.setForeground(Color.red);
         }
 
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
@@ -2655,7 +2687,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
-                && isCMNDBLValid && isPlateNoValid && isPOValid
+                && isCMNDBLValid && isPOValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isSlocValid && isMaterialTypeValid && isWeightValid;
     }
@@ -2666,7 +2698,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
 
         String plateNo = txtPlateNoN.getText().trim();
-        boolean isPlateNoValid = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
+        boolean isPlateNoValid = wtRegisValidation.validatePlateNoWater(plateNo, lblPlateNoN);
         if (isPlateNoValid) {
             txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(plateNo).toString());
         }
@@ -2697,6 +2729,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
     private void loadBatchStockModel(JComboBox slocComponent, JComboBox batchStockComponent, boolean isSloc) {
         if (slocComponent.getSelectedIndex() == -1) {
+            batchStockComponent.setModel(new DefaultComboBoxModel());
             return;
         }
 
@@ -2718,7 +2751,22 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
             List<BatchStock> batchStocks = weightTicketRegistarationController.getBatchStocks(sloc, arr_matnr);
             batchStockComponent.setModel(weightTicketRegistarationController.getBatchStockModel(batchStocks));
-            batchStockComponent.setSelectedIndex(batchStocks.size() > 0 ? 0 : -1);
+
+            if (isSloc && checkedCharg != null && !checkedCharg.isEmpty()
+                    && (modeDetail == MODE_DETAIL.IN_PO_PURCHASE || modeDetail == MODE_DETAIL.IN_WAREHOUSE_TRANSFER)) {
+                BatchStock batchStock = batchStocks.stream()
+                        .filter(t -> checkedCharg.equalsIgnoreCase(t.getCharg()))
+                        .findFirst()
+                        .orElse(null);
+
+                if (batchStock != null) {
+                    batchStockComponent.setSelectedItem(batchStock);
+                } else {
+                    batchStockComponent.setSelectedIndex(batchStocks.size() > 0 ? 0 : -1);
+                }
+            } else {
+                batchStockComponent.setSelectedIndex(batchStocks.size() > 0 ? 0 : -1);
+            }
         }
 
         validateForm();
@@ -2969,7 +3017,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
                 String traid = outboundDelivery.getTraid().trim();
                 traid = StringUtil.correctPlateNo(traid);
                 if (!traid.isEmpty() && !traid.startsWith(plateNo)) {
-                    throw new Exception(resourceMapMsg.getString("msg.plateNoNotMappingWithDO", plateNo));
+                    String plateName = "xe";
+                    if (modeDetail == MODE_DETAIL.OUT_SELL_WATERWAY) {
+                        plateName = "ghe";
+                    }
+                    throw new Exception(resourceMapMsg.getString("msg.plateNoNotMappingWithDO", plateName, plateNo));
                 }
 
                 // for check edit plateNo after check DO
@@ -3023,6 +3075,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             totalWeight = totalWeight.add(outboundDelivery.getLfimg());
             kunnr = outboundDelivery.getKunnr();
             strLgort = outboundDelivery.getLgort();
+            checkedCharg = outboundDelivery.getCharg();
         }
 
         private boolean checkMaterial(OutboundDelivery outboundDelivery) {
@@ -3078,9 +3131,6 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             // load sloc
             List<String> lgorts = weightTicketRegistarationController.getListLgortByMatnr(matnrs, false);
             loadSLoc(lgorts, strLgort);
-
-            // load batch stock
-            loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
         }
 
         @Override
@@ -3094,6 +3144,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             isValidDO = false;
             // for check edit plateNo after check DO
             plateNoValidDO = "";
+            checkedCharg = "";
 
             logger.error(null, cause);
             JOptionPane.showMessageDialog(rootPane, cause.getMessage());
@@ -3467,7 +3518,9 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         isValidVendorLoad = false;
         isValidVendorTransport = false;
         plateNoValidDO = "";
+        isValidPlateNo = false;
         numCheckWeight = BigDecimal.ZERO;
+        checkedCharg = "";
 
         txtTicketIdN.setText("");
         txtWeightTickerRefN.setText("");
@@ -3736,7 +3789,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         protected void succeeded(Object t) {
             isValidPO = true;
             txtWeightN.setText(df.format(totalWeight).toString());
-            
+
             Material material = weightTicketRegistarationController.getMaterial(strMatnr);
             if (material == null && !strMatnr.isEmpty()) {
                 JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.materialNotExist", strMatnr));
@@ -3745,10 +3798,6 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             // load sloc
             List<String> lgorts = weightTicketRegistarationController.getListLgortByMatnr(strMatnr, false);
             loadSLoc(lgorts, strLgort);
-
-            // load batch stock
-            loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
-            loadBatchStockModel(cbxSloc2N, cbxBatchStock2N, false);
 
             if (kunnr != null && !kunnr.isEmpty()) {
                 cbxCustomerN.setSelectedItem(weightTicketRegistarationController.findByKunnr(kunnr));
@@ -3771,6 +3820,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             cbxMaterialTypeN.setSelectedIndex(-1);
             cbxVendorTransportN.setSelectedIndex(-1);
             cbxCustomerN.setSelectedIndex(-1);
+            checkedCharg = "";
             loadSLoc(null, null);
 
             isValidPO = false;
@@ -3803,6 +3853,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
             strMatnr = purchaseOrderDetail.getMaterial();
             strLgort = purchaseOrderDetail.getStgeLoc();
+            checkedCharg = purchaseOrderDetail.getCharg();
 
             newWeightTicket.getWeightTicketDetail().setTransVendor(purchaseOrder.getVendor());
             strVendor = purchaseOrder.getVendor();

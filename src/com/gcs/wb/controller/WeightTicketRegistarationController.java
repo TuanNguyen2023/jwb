@@ -21,6 +21,7 @@ import com.gcs.wb.jpa.repositorys.TransportAgentVehicleRepository;
 import com.gcs.wb.jpa.repositorys.VehicleLoadRepository;
 import com.gcs.wb.jpa.repositorys.VendorRepository;
 import com.gcs.wb.jpa.repositorys.WeightTicketDetailRepository;
+import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import com.gcs.wb.service.WeightTicketRegistrationService;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -51,6 +52,7 @@ public class WeightTicketRegistarationController {
     MaterialRepository materialRepository = new MaterialRepository();
     SLocRepository sLocRepository = new SLocRepository();
     CustomerRepository customerRepository = new CustomerRepository();
+    WeightTicketRepository weightTicketRepository = new WeightTicketRepository();
 
     public String getReportName() {
         String reportName = null;
@@ -296,6 +298,16 @@ public class WeightTicketRegistarationController {
         for (WeightTicketDetail weightTicketDetail : weightTicketDetails) {
             result = result.add(weightTicketDetail.getRegItemQuantity());
         }
+
+        return result;
+    }
+    
+    public BigDecimal getSumGqtyWithPoNo(String poNo) {
+        BigDecimal result = BigDecimal.ZERO;
+          List<WeightTicket> wts = weightTicketRepository.findQtyByPoNo(poNo);
+          for (WeightTicket wt: wts) {
+              result = result.add(wt.getGQty());
+          }
 
         return result;
     }

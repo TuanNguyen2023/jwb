@@ -119,6 +119,13 @@ import javax.persistence.Temporal;
             + " WHERE wd.deliveryOrderNo LIKE :deliveryOrderNo "
             + " AND wd.ebeln IS NULL" 
             + " AND w.fScale IS NOT NULL"),
+    @NamedQuery(name = "WeightTicket.findByQtyPOisPOSTED",
+            query = "SELECT DISTINCT w FROM WeightTicket w "
+            + " , IN(w.weightTicketDetails) wd "
+            + " WHERE wd.ebeln LIKE :ebeln" 
+            + " AND w.status LIKE :status"
+            + " AND w.mandt LIKE :mandt"
+            + " AND w.wplant LIKE :wplant"),
 })
 public class WeightTicket implements Serializable {
 

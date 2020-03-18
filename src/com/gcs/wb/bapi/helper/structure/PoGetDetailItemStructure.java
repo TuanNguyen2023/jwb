@@ -35,6 +35,9 @@ public class PoGetDetailItemStructure implements Serializable {
     /**Storage Location*/
     @Parameter(PoGetDetailConstants.STGE_LOC)
     private String _STGE_LOC;
+    /**Storate Batch Stock*/
+    @Parameter(PoGetDetailConstants.BATCH)
+    private String _BATCH;
     /**Material Number Used by Vendor*/
     @Parameter(PoGetDetailConstants.VEND_MAT)
     private String _VEND_MAT;
@@ -136,6 +139,14 @@ public class PoGetDetailItemStructure implements Serializable {
      */
     public String getSTGE_LOC() {
         return _STGE_LOC;
+    }
+    
+    /**
+     * Storage Batch Stock
+     * @return the _BATCH
+     */
+    public String getBATCH() {
+        return _BATCH;
     }
 
     /**
