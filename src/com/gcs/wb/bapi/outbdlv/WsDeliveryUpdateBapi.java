@@ -12,6 +12,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.hibersap.annotations.Bapi;
 import org.hibersap.annotations.Export;
 import org.hibersap.annotations.Import;
@@ -242,29 +243,37 @@ public class WsDeliveryUpdateBapi implements Serializable {
         this._iv_wbid_nosave = ivWbidNosave;
     }
     
-    public String getReturnMessage() {
+    public List<String> getReturnMessage() {
+        List<String> errorMsgs = new ArrayList<>();
         if (_return == null || _return.isEmpty()) {
-            return null;
+            return errorMsgs;
         }
         
-        BapiRet2 bapiRet2 = _return.get(0);
-        if (bapiRet2.getMessage() != null && !bapiRet2.getMessage().trim().isEmpty()) {
-            return bapiRet2.getMessage().trim();
-        }
-        String msg = "";
-        if(bapiRet2.getMessageV1() != null && !bapiRet2.getMessageV1().trim().isEmpty() ) {
-            msg += bapiRet2.getMessageV1() + " ";
-        }
-        if(bapiRet2.getMessageV2() != null && !bapiRet2.getMessageV2().trim().isEmpty() ) {
-            msg += bapiRet2.getMessageV2() + " ";
-        }
-        if(bapiRet2.getMessageV3() != null && !bapiRet2.getMessageV3().trim().isEmpty() ) {
-            msg += bapiRet2.getMessageV3() + " ";
-        }
-        if(bapiRet2.getMessageV4() != null && !bapiRet2.getMessageV4().trim().isEmpty() ) {
-            msg += bapiRet2.getMessageV4() + " ";
-        }
-        return msg.trim();
+        return _return.stream().map(bapiRet2 -> {
+            if (bapiRet2.getType() != 'E') {
+                return null;
+            }
+
+            if (bapiRet2.getMessage() != null && !bapiRet2.getMessage().trim().isEmpty()) {
+                return bapiRet2.getMessage().trim();
+            }
+
+            String msg = "";
+            if (bapiRet2.getMessageV1() != null && !bapiRet2.getMessageV1().trim().isEmpty()) {
+                msg += bapiRet2.getMessageV1() + " ";
+            }
+            if (bapiRet2.getMessageV2() != null && !bapiRet2.getMessageV2().trim().isEmpty()) {
+                msg += bapiRet2.getMessageV2() + " ";
+            }
+            if (bapiRet2.getMessageV3() != null && !bapiRet2.getMessageV3().trim().isEmpty()) {
+                msg += bapiRet2.getMessageV3() + " ";
+            }
+            if (bapiRet2.getMessageV4() != null && !bapiRet2.getMessageV4().trim().isEmpty()) {
+                msg += bapiRet2.getMessageV4() + " ";
+            }
+
+            return msg;
+        }).filter(t -> t != null).collect(Collectors.toList());
     }
 
     @Override

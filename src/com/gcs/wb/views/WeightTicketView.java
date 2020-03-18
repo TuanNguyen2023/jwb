@@ -62,6 +62,7 @@ import java.awt.datatransfer.*;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -1957,6 +1958,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
     public static final String PROP_MATAVAILSTOCKS = Constants.WeightTicketView.PROP_MATAVAILSTOCKS;
     private boolean mvt311 = false;
     public static final String PROP_MVT311 = Constants.WeightTicketView.PROP_MVT311;
+    private boolean checkPlant = false;
 
     /**
      * Get the value of stage2
@@ -3095,6 +3097,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         Object objBapi_Posto = null;
         boolean completed = true;
         String bapi_message = "";
+        List<String> bapi_messages = new ArrayList<>();
 
         SaveWTTask(org.jdesktop.application.Application app) {
             super(app);
@@ -3124,7 +3127,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             String modeFlg = null;
             boolean flgGqty = false;
             
-            if (((isStage2() || (!isStage1() && !isStage2())) && !weightTicket.isDissolved())
+            if (((isStage1()) && checkPlant) || ((isStage2() || (!isStage1() && !isStage2())) && !weightTicket.isDissolved())
                     || (!isStage1() && !isStage2() && !weightTicket.isDissolved()
                     && (weightTicket != null && !weightTicket.isPosted()))) {
 
@@ -3195,9 +3198,9 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     weightTicketDetail.setMatDoc(((DOCreate2PGIBapi) objBapi).getMatDoc());
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((DOCreate2PGIBapi) objBapi).getDocYear()));
                                     try {
-                                        bapi_message = ((DOCreate2PGIBapi) objBapi).getReturnMessage().toString();
+                                        bapi_messages = ((DOCreate2PGIBapi) objBapi).getReturnMessage();
                                     } catch (Exception Ex) {
-                                        bapi_message = resourceMapMsg.getString("msg.errorSAP");
+                                        bapi_messages.add(resourceMapMsg.getString("msg.errorSAP"));
                                     }
                                 }
                                 if ((objBapi instanceof GoodsMvtPoCreateBapi) 
@@ -3205,9 +3208,9 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     weightTicketDetail.setMatDoc(((GoodsMvtPoCreateBapi) objBapi).getMatDoc());
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((GoodsMvtPoCreateBapi) objBapi).getMatYear()));
                                     try {
-                                        bapi_message = ((GoodsMvtPoCreateBapi) objBapi).getReturnMessage().toString();
+                                        bapi_messages = ((GoodsMvtPoCreateBapi) objBapi).getReturnMessage();
                                     } catch (Exception Ex) {
-                                        bapi_message = resourceMapMsg.getString("msg.errorSAP");
+                                        bapi_messages.add(resourceMapMsg.getString("msg.errorSAP"));
                                     }
                                 }
                                 if (objBapi instanceof GoodsMvtDoCreateBapi) {
@@ -3215,9 +3218,9 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((GoodsMvtDoCreateBapi) objBapi).getMatYear()));
 
                                     try {
-                                        bapi_message = ((GoodsMvtDoCreateBapi) objBapi).getReturnMessage().toString();
+                                        bapi_messages = ((GoodsMvtDoCreateBapi) objBapi).getReturnMessage();
                                     } catch (Exception Ex) {
-                                        bapi_message = resourceMapMsg.getString("msg.errorSAP");
+                                        bapi_messages.add(resourceMapMsg.getString("msg.errorSAP"));
                                     }
                                 }
                                 if (objBapi instanceof WsDeliveryUpdateBapi) {
@@ -3225,9 +3228,9 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((WsDeliveryUpdateBapi) objBapi).getDoc_year()));
 
                                     try {
-                                        bapi_message = ((WsDeliveryUpdateBapi) objBapi).getReturnMessage().toString();
+                                        bapi_messages = ((WsDeliveryUpdateBapi) objBapi).getReturnMessage();
                                     } catch (Exception Ex) {
-                                        bapi_message = resourceMapMsg.getString("msg.errorSAP");
+                                        bapi_messages.add(resourceMapMsg.getString("msg.errorSAP"));
                                     }
 
                                 }
@@ -3237,9 +3240,9 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     weightTicketDetail.setMatDocGr(((GoodsMvtPoCreateBapi) objBapi_Po).getMatDoc());
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((GoodsMvtPoCreateBapi) objBapi_Po).getMatYear()));
                                     try {
-                                        bapi_message = ((GoodsMvtPoCreateBapi) objBapi_Po).getReturnMessage().toString();
+                                        bapi_messages = ((GoodsMvtPoCreateBapi) objBapi_Po).getReturnMessage();
                                     } catch (Exception Ex) {
-                                        bapi_message = resourceMapMsg.getString("msg.errorSAP");
+                                        bapi_messages.add(resourceMapMsg.getString("msg.errorSAP"));
                                     }
                                 }
 
@@ -3251,9 +3254,9 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     weightTicketDetail.setIvMatDocumentYear(((GoodsMvtPOSTOCreatePGIBapi) objBapi).getMatDocumentYearOut());
 
                                     try {
-                                        bapi_message = ((GoodsMvtPOSTOCreatePGIBapi) objBapi).getReturnMessage().toString();
+                                        bapi_messages = ((GoodsMvtPOSTOCreatePGIBapi) objBapi).getReturnMessage();
                                     } catch (Exception Ex) {
-                                        bapi_message = resourceMapMsg.getString("msg.errorSAP");
+                                        bapi_messages.add(resourceMapMsg.getString("msg.errorSAP"));
                                     }
                                 }
                                 
@@ -3261,9 +3264,9 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     weightTicketDetail.setMatDoc(((DOPostingPGIBapi) objBapi).getMatDoc());
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((DOPostingPGIBapi) objBapi).getDocYear()));
                                     try {
-                                        bapi_message = ((DOPostingPGIBapi) objBapi).getReturnMessage().toString();
+                                        bapi_messages = ((DOPostingPGIBapi) objBapi).getReturnMessage();
                                     } catch (Exception Ex) {
-                                        bapi_message = resourceMapMsg.getString("msg.errorSAP");
+                                        bapi_messages.add(resourceMapMsg.getString("msg.errorSAP"));
                                     }
                                 }
 
@@ -3272,9 +3275,9 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     weightTicketDetail.setMatDocGi(((GoodsMvtPoCreateBapi) objBapi_Posto).getMatDoc());
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((GoodsMvtPoCreateBapi) objBapi_Posto).getMatYear()));
                                     try {
-                                        bapi_message = ((GoodsMvtPoCreateBapi) objBapi_Posto).getReturnMessage().toString();
+                                        bapi_messages = ((GoodsMvtPoCreateBapi) objBapi_Posto).getReturnMessage();
                                     } catch (Exception Ex) {
-                                        bapi_message = resourceMapMsg.getString("msg.errorSAP");
+                                        bapi_messages.add(resourceMapMsg.getString("msg.errorSAP"));
                                     }
                                 }
 
@@ -3283,10 +3286,10 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                         || ((objBapi_Posto != null) && (weightTicketDetail.getMatDocGi() == null || weightTicketDetail.getMatDocGi().equals("")))) {
                                     revertCompletedDO(completedDO, null, null);
                                     weightTicket.setPosted(false);
-                                    if (bapi_message == "") {
-                                        bapi_message = resourceMapMsg.getString("msg.errorSAP");
+                                    if (bapi_messages.isEmpty()) {
+                                        bapi_messages.add(resourceMapMsg.getString("msg.errorSAP"));
                                     }
-                                    JOptionPane.showMessageDialog(rootPane, bapi_message);
+                                    bapi_messages.forEach(msg -> JOptionPane.showMessageDialog(rootPane, msg));
                                     completed = false;
                                     entityManager.clear();
                                 } else if ((weightTicketDetail.getMatDoc() != null) && (!weightTicketDetail.getMatDoc().equals(""))
@@ -3409,9 +3412,9 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     weightTicketDetail.setMatDoc(((DOCreate2PGIBapi) objBapi).getMatDoc());
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((DOCreate2PGIBapi) objBapi).getDocYear()));
                                     try {
-                                        bapi_message = ((DOCreate2PGIBapi) objBapi).getReturnMessage().toString();
+                                        bapi_messages = ((DOCreate2PGIBapi) objBapi).getReturnMessage();
                                     } catch (Exception Ex) {
-                                        bapi_message = resourceMapMsg.getString("msg.errorSAP3048");
+                                        bapi_messages.add(resourceMapMsg.getString("msg.errorSAP"));
                                     }
                                     for (int k = 0; k < outDetails_lits.size(); k++) {
                                         details_item = outDetails_lits.get(k);
@@ -3446,9 +3449,9 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     weightTicketDetail.setMatDoc(((GoodsMvtPoCreateBapi) objBapi).getMatDoc());
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((GoodsMvtPoCreateBapi) objBapi).getMatYear()));
                                     try {
-                                        bapi_message = ((GoodsMvtPoCreateBapi) objBapi).getReturnMessage().toString();
+                                        bapi_messages = ((GoodsMvtPoCreateBapi) objBapi).getReturnMessage();
                                     } catch (Exception Ex) {
-                                        bapi_message = resourceMapMsg.getString("msg.errorSAP3086");
+                                        bapi_messages.add(resourceMapMsg.getString("msg.errorSAP"));
                                     }
                                     for (int k = 0; k < outDetails_lits.size(); k++) {
                                         details_item = outDetails_lits.get(k);
@@ -3483,9 +3486,9 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     weightTicketDetail.setMatDoc(((GoodsMvtDoCreateBapi) objBapi).getMatDoc());
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((GoodsMvtDoCreateBapi) objBapi).getMatYear()));
                                     try {
-                                        bapi_message = ((GoodsMvtDoCreateBapi) objBapi).getReturnMessage().toString();
+                                        bapi_messages = ((GoodsMvtDoCreateBapi) objBapi).getReturnMessage();
                                     } catch (Exception Ex) {
-                                        bapi_message = resourceMapMsg.getString("msg.errorSAP3123");
+                                        bapi_messages.add(resourceMapMsg.getString("msg.errorSAP"));
                                     }
                                     for (int k = 0; k < outDetails_lits.size(); k++) {
                                         details_item = outDetails_lits.get(k);
@@ -3520,9 +3523,9 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((WsDeliveryUpdateBapi) objBapi).getDoc_year()));
 
                                     try {
-                                        bapi_message = ((WsDeliveryUpdateBapi) objBapi).getReturnMessage().toString();
+                                        bapi_messages = ((WsDeliveryUpdateBapi) objBapi).getReturnMessage();
                                     } catch (Exception Ex) {
-                                        bapi_message = resourceMapMsg.getString("msg.errorSAP3160");
+                                        bapi_messages.add(resourceMapMsg.getString("msg.errorSAP"));
                                     }
 //                                        if (weightTicketDetail.getPpProcord() != null && weightTicketDetail.getPpProcord().length() == 12) {
 //                                            weightTicketDetail.setPpProcordcnf(((WsDeliveryUpdateBapi) objBapi).getConf_no());
@@ -3563,10 +3566,10 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     revertCompletedDO(completedDO, outDetails_lits, outbDel_list);
                                     weightTicket.setPosted(false);
                                     weightTicketDetail.setPosted(false);
-                                    if (bapi_message == "") {
-                                        bapi_message = resourceMapMsg.getString("msg.errorBAPI");
+                                    if (bapi_messages.isEmpty()) {
+                                        bapi_messages.add(resourceMapMsg.getString("msg.errorSAP"));
                                     }
-                                    JOptionPane.showMessageDialog(rootPane, bapi_message);
+                                    bapi_messages.forEach(msg -> JOptionPane.showMessageDialog(rootPane, msg));
                                     completed = false;
                                     entityManager.clear();
                                 } else if (!flag_fail) {
@@ -3955,33 +3958,40 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         item.setInScale(new BigDecimal(((Number) txfInQty.getValue()).doubleValue() / 1000));
                         
                         // tinh toan cho Nhap kho tu tay ninh > ben keo
-//                    if(weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER") && configuration.getWkPlant().equals("G112")
-//                            && (item.getArktx().contains("Bag") || item.getArktx().contains("bao"))) {
-//                        //WeightTicketDetail wtDetail = weightTicketDetailRepository.findBydeliveryOrderNo(outbDel.getDeliveryOrderNo());
-//                        WeightTicket wtPlant = weightTicketRepository.findByDOFromPO(outbDel.getDeliveryOrderNo());
-//                        BigDecimal inFScalePlant = BigDecimal.ZERO;
-//                        BigDecimal outSScalePlant = BigDecimal.ZERO;
-//                        if(wtPlant!= null) {
-//                            String poNum = wtPlant.getWeightTicketDetail().getEbeln();
-//                            PurchaseOrder purchaseOrder = purchaseOrderRepository.findByPoNumber(poNum);
-//                            if(purchaseOrder.getSupplPlnt().equals(configuration.getWkPlant())) {
-//                                inFScalePlant = wtPlant.getFScale();
-//                                outSScalePlant = wtPlant.getSScale();
-//                                // check outScalePO va txfInQty.getValue() chenh lech 1%
-//                                
-//                                // -> set weightTicket.setSScale = inScalePO
-//                                // post SAP
-//
-//                            }
-//                        }
-//                    }
+                        if(weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER") && configuration.getWkPlant().equals("G112")
+                                && (item.getArktx().contains("Bag") || item.getArktx().contains("bao"))) {
+                            WeightTicket wtPlant = weightTicketRepository.findByDOFromPO(outbDel.getDeliveryOrderNo());
+                            double inFScalePlant = 0;
+                            double outSScalePlant = 0;
+                            double result = ((Number) txfInQty.getValue()).doubleValue();
+                            if(wtPlant!= null) {
+                                String poNum = wtPlant.getWeightTicketDetail().getEbeln();
+                                PurchaseOrder purchaseOrder = purchaseOrderRepository.findByPoNumber(poNum);
+                                if(purchaseOrder.getPurchaseOrderDetail().getPlant().equals(configuration.getWkPlant())) {
+                                    inFScalePlant = wtPlant.getFScale().doubleValue();
+                                    outSScalePlant = wtPlant.getSScale().doubleValue();
+                                    // check outScalePO va txfInQty.getValue() chenh lech 1%
+                                    double upper = outSScalePlant + (outSScalePlant * 1) / 100;
+                                    double lower = outSScalePlant - (outSScalePlant * 1) / 100;
+                                    // -> set weightTicket.setSScale = inScalePO
+                                    if ((lower <= result && result <= upper)) {
+                                        item.setOutScale(new BigDecimal(((Number) wtPlant.getFScale()).doubleValue() / 1000).setScale(3, RoundingMode.HALF_UP)); 
+                                        item.setGoodsQty((BigDecimal.valueOf(item.getInScale().doubleValue() - item.getOutScale().doubleValue())).setScale(3, RoundingMode.HALF_UP));
+                                        weightTicket.setSCreator(WeighBridgeApp.getApplication().getLogin().getUid());
+                                        weightTicket.setSScale(wtPlant.getFScale());
+                                        weightTicket.setSTime(now);
+                                        checkPlant = true;
+                                    }
+                                    // post SAP
+                                }
+                            }
+                        }
                         if (!entityManager.getTransaction().isActive()) {
                             entityManager.getTransaction().begin();
                         }
                         entityManager.merge(item);
                         entityManager.getTransaction().commit();
                     }
-                    
                 }
             } else if (isStage2()) {
                 txfOutQty.setValue(txfCurScale.getValue());
@@ -4004,7 +4014,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     
                     for (OutboundDeliveryDetail obj : outDetailFrees) {
                         obj.setGoodsQty(obj.getLfimg());
-                        obj.setOutScale(BigDecimal.valueOf(obj.getInScale().doubleValue() + obj.getLfimg().doubleValue()));
+                        obj.setOutScale((BigDecimal.valueOf(obj.getInScale().doubleValue() + obj.getLfimg().doubleValue())).setScale(3, RoundingMode.HALF_UP));
                         remain = remain - obj.getLfimg().doubleValue();
 
                         if (!entityManager.getTransaction().isActive()) {
@@ -4022,7 +4032,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         item = outDetails.get(i);
                         if (i < outDetails.size() - 1) {
                             item.setGoodsQty(item.getLfimg());
-                            item.setOutScale(BigDecimal.valueOf(item.getInScale().doubleValue() + item.getLfimg().doubleValue()));
+                            item.setOutScale((BigDecimal.valueOf(item.getInScale().doubleValue() + item.getLfimg().doubleValue())).setScale(3, RoundingMode.HALF_UP));
                                 remain = remain - item.getLfimg().doubleValue();
                         } else {
                             if(checkVariant) {
@@ -4030,7 +4040,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                             } else {
                                 item.setGoodsQty(BigDecimal.valueOf(remain));
                             }
-                            item.setOutScale(BigDecimal.valueOf(item.getInScale().doubleValue() + remain));
+                            item.setOutScale((BigDecimal.valueOf(item.getInScale().doubleValue() + remain)).setScale(3, RoundingMode.HALF_UP));
                         }
                         if (!entityManager.getTransaction().isActive()) {
                             entityManager.getTransaction().begin();
@@ -4041,11 +4051,11 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 } else if (outDetails_lits.size() == 1) {
                     BigDecimal div = BigDecimal.valueOf(1000);
                     item = outDetails_lits.get(0);
-                    item.setOutScale(weightTicket.getSScale().divide(div));
+                    item.setOutScale((weightTicket.getSScale().divide(div)).setScale(3, RoundingMode.HALF_UP));
                     if (checkVariant) {
                         item.setGoodsQty(item.getLfimg());
                     } else {
-                        item.setGoodsQty(weightTicket.getSScale().subtract(weightTicket.getFScale()).divide(div).abs());
+                        item.setGoodsQty((weightTicket.getSScale().subtract(weightTicket.getFScale()).divide(div).abs()).setScale(3, RoundingMode.HALF_UP));
                     }
                     if (!entityManager.getTransaction().isActive()) {
                         entityManager.getTransaction().begin();
