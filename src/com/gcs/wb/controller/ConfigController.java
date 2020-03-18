@@ -45,4 +45,8 @@ public class ConfigController {
         return p1Control;
 
     }
+
+    public Configuration getConfiguration(String wbId) {
+        return configService.getConfiguration(wbId);
+    }
 }

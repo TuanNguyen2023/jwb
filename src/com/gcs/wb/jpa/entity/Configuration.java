@@ -125,7 +125,7 @@ public class Configuration implements Serializable {
     private String sapPass;
 
     @Column(name = "mode_permissions")
-    private String modePermissions;
+    private String modePermissions = Constants.Configuration.MODE_PERMISSIONS;
 
     public Configuration() {
     }

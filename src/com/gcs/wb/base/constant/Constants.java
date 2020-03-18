@@ -68,6 +68,8 @@ public class Constants {
         public static final String RPT_ID = "";
         public static final String WPLANT_MAP = "0";
         public static final BigDecimal TOLERANCE = new BigDecimal(9);
+        
+        public static final String MODE_PERMISSIONS = "IN_PO_PURCHASE,IN_WAREHOUSE_TRANSFER,IN_OTHER,OUT_SELL_ROAD,OUT_PLANT_PLANT,OUT_SLOC_SLOC,OUT_PULL_STATION,OUT_SELL_WATERWAY,OUT_OTHER";
     }
 
     public static class Label {

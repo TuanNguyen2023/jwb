@@ -20,4 +20,8 @@ public class ConfigService {
 
         return configurationRepository.getConfiguration(WeighBridgeApp.getApplication().getConfig().getWbId());
     }
+    
+    public Configuration getConfiguration(String wbId) {
+        return configurationRepository.getConfiguration(wbId);
+    }
 }
