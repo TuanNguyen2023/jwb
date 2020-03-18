@@ -19,15 +19,20 @@ public class TransportAgentsConverter extends AbstractThrowableConverter<List<Tr
     public List<TransportAgent> convert(List<TransportagentGetListStructure> fromList) {
         List<TransportAgent> toList = new ArrayList<TransportAgent>();
         for (TransportagentGetListStructure transport : fromList) {
-            TransportAgent tAgent = null;
-            tAgent = new TransportAgent(transport.getLifnr());
-            if (transport.getName1() != null || transport.getName1().length() <= 35) {
-                tAgent.setName(transport.getName1());
-            } else {
-                tAgent.setName(transport.getName2());
+            TransportAgent tAgent = new TransportAgent(transport.getLifnr());
+            String name = "";
+            if (transport.getName1() != null) {
+                name = transport.getName1().trim();
             }
+
+            if (transport.getName2() != null) {
+                name += " " + transport.getName2();
+            }
+
+            tAgent.setName(name.trim());
             toList.add(tAgent);
         }
+
         return toList;
     }
 }
