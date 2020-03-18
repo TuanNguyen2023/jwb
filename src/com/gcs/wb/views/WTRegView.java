@@ -1444,7 +1444,8 @@ private void cbxBatchStockNActionPerformed(java.awt.event.ActionEvent evt) {//GE
 
     BatchStock batchStock = (BatchStock) cbxBatchStockN.getSelectedItem();
 
-    if (checkedCharg != null && !checkedCharg.isEmpty() && modeDetail == MODE_DETAIL.IN_WAREHOUSE_TRANSFER) {
+    if (checkedCharg != null && !checkedCharg.isEmpty()
+            && (modeDetail == MODE_DETAIL.IN_PO_PURCHASE || modeDetail == MODE_DETAIL.IN_WAREHOUSE_TRANSFER)) {
         if (!checkedCharg.equalsIgnoreCase(batchStock.getCharg())) {
             JOptionPane.showMessageDialog(rootPane,
                     resourceMapMsg.getString("msg.batchStockContainWarning", batchStock.getCharg()),
@@ -2744,7 +2745,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             List<BatchStock> batchStocks = weightTicketRegistarationController.getBatchStocks(sloc, arr_matnr);
             batchStockComponent.setModel(weightTicketRegistarationController.getBatchStockModel(batchStocks));
 
-            if (isSloc && checkedCharg != null && !checkedCharg.isEmpty() && modeDetail == MODE_DETAIL.IN_WAREHOUSE_TRANSFER) {
+            if (isSloc && checkedCharg != null && !checkedCharg.isEmpty()
+                    && (modeDetail == MODE_DETAIL.IN_PO_PURCHASE || modeDetail == MODE_DETAIL.IN_WAREHOUSE_TRANSFER)) {
                 BatchStock batchStock = batchStocks.stream()
                         .filter(t -> checkedCharg.equalsIgnoreCase(t.getCharg()))
                         .findFirst()
@@ -3855,6 +3857,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             cbxMaterialTypeN.setSelectedIndex(-1);
             cbxVendorTransportN.setSelectedIndex(-1);
             cbxCustomerN.setSelectedIndex(-1);
+            checkedCharg = "";
             loadSLoc(null, null);
 
             isValidPO = false;
@@ -3910,6 +3913,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
             strMatnr = purchaseOrderDetail.getMaterial();
             strLgort = purchaseOrderDetail.getStgeLoc();
+            checkedCharg = purchaseOrderDetail.getCharg();
 
             strVendor = purchaseOrder.getVendor();
             totalWeight = purchaseOrderDetail.getQuantity();

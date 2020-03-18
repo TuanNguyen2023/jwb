@@ -53,6 +53,8 @@ public interface PoGetDetailConstants extends BapiConstants {
     String PLANT = "PLANT";
     /**Storage Location*/
     String STGE_LOC = "STGE_LOC";
+    /**Storage Batch Stock*/
+    String BATCH = "BATCH";
     /**Material Number Used by Vendor*/
     String VEND_MAT = "VEND_MAT";
     /**Purchase Order Quantity*/
