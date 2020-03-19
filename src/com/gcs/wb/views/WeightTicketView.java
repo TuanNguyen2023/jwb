@@ -2905,7 +2905,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         }
                     }
 
-                    if (WeighBridgeApp.getApplication().isOfflineMode() == false) {
+                    if (!WeighBridgeApp.getApplication().isOfflineMode()) {
                         if (objBapi != null) {
                             try {
                                 if (!weightTicket.getMode().equals("OUT_SLOC_SLOC")) {
@@ -3135,7 +3135,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
 //                        entityManager.clear();
                     }
 
-                    if (WeighBridgeApp.getApplication().isOfflineMode() == false) {
+                    if (!WeighBridgeApp.getApplication().isOfflineMode()) {
                         if (objBapi != null) {
                             try {
                                 logger.info("[SAP] Get infor before post SAP: " + objBapi.toString());
@@ -3947,21 +3947,6 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         boolean bNiemXa = true;
         boolean bBatchProduce = true;
         boolean isRemark = true;
-//        if (chkDissolved.isSelected()) {
-//            bMisc = bPO = bMB1B = bMvt311 = bScale = bSLoc = bBatch = !isDissolved();
-//            rbtMisc.setForeground(Color.black);
-//            if (WeighBridgeApp.getApplication().isOfflineMode()) {
-//                rbtMisc.setForeground(Color.red);
-//            }
-//            rbtPO.setForeground(Color.black);
-//            rbtMb1b.setForeground(Color.black);
-//            rbtMvt311.setForeground(Color.black);
-//            lblIScale.setForeground(Color.black);
-//            lblOScale.setForeground(Color.black);
-//            lblGScale.setForeground(Color.black);
-//            lblSLoc.setForeground(Color.black);
-//            lblCharg.setForeground(Color.black);
-//        } else {
         if (grbType.getSelection() == null && isWithoutDO()) {
         } else {
             bMisc = WeighBridgeApp.getApplication().isOfflineMode();
