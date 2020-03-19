@@ -67,6 +67,7 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
     private BigDecimal numCheckWeight = BigDecimal.ZERO;
     private String plateNoValidDO = "";
     private boolean isValidPlateNo = false;
+    private String checkedCharg = "";
 
     private boolean formValid;
     private com.gcs.wb.jpa.entity.WeightTicket newWeightTicket;
@@ -303,9 +304,6 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
 
         cbxSloc2N.setModel(sLoc2Model);
         cbxSloc2N.setSelectedIndex(-1);
-
-        cbxBatchStockN.setModel(new DefaultComboBoxModel());
-        cbxBatchStock2N.setModel(new DefaultComboBoxModel());
 
         validateForm();
     }
@@ -1453,6 +1451,16 @@ private void cbxBatchStockNActionPerformed(java.awt.event.ActionEvent evt) {//GE
     validateForm();
 
     BatchStock batchStock = (BatchStock) cbxBatchStockN.getSelectedItem();
+
+    if (checkedCharg != null && !checkedCharg.isEmpty() 
+            && (modeDetail == MODE_DETAIL.IN_PO_PURCHASE || modeDetail == MODE_DETAIL.IN_WAREHOUSE_TRANSFER)) {
+        if (!checkedCharg.equalsIgnoreCase(batchStock.getCharg())) {
+            JOptionPane.showMessageDialog(rootPane,
+                    resourceMapMsg.getString("msg.batchStockContainWarning", batchStock.getCharg()),
+                    "Warning", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
     if (newWeightTicket != null) {
         newWeightTicket.setCharg(batchStock.getCharg());
     }
@@ -2721,6 +2729,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
     private void loadBatchStockModel(JComboBox slocComponent, JComboBox batchStockComponent, boolean isSloc) {
         if (slocComponent.getSelectedIndex() == -1) {
+            batchStockComponent.setModel(new DefaultComboBoxModel());
             return;
         }
 
@@ -2742,7 +2751,22 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
             List<BatchStock> batchStocks = weightTicketRegistarationController.getBatchStocks(sloc, arr_matnr);
             batchStockComponent.setModel(weightTicketRegistarationController.getBatchStockModel(batchStocks));
-            batchStockComponent.setSelectedIndex(batchStocks.size() > 0 ? 0 : -1);
+
+            if (isSloc && checkedCharg != null && !checkedCharg.isEmpty()
+                    && (modeDetail == MODE_DETAIL.IN_PO_PURCHASE || modeDetail == MODE_DETAIL.IN_WAREHOUSE_TRANSFER)) {
+                BatchStock batchStock = batchStocks.stream()
+                        .filter(t -> checkedCharg.equalsIgnoreCase(t.getCharg()))
+                        .findFirst()
+                        .orElse(null);
+
+                if (batchStock != null) {
+                    batchStockComponent.setSelectedItem(batchStock);
+                } else {
+                    batchStockComponent.setSelectedIndex(batchStocks.size() > 0 ? 0 : -1);
+                }
+            } else {
+                batchStockComponent.setSelectedIndex(batchStocks.size() > 0 ? 0 : -1);
+            }
         }
 
         validateForm();
@@ -3051,6 +3075,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             totalWeight = totalWeight.add(outboundDelivery.getLfimg());
             kunnr = outboundDelivery.getKunnr();
             strLgort = outboundDelivery.getLgort();
+            checkedCharg = outboundDelivery.getCharg();
         }
 
         private boolean checkMaterial(OutboundDelivery outboundDelivery) {
@@ -3106,9 +3131,6 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             // load sloc
             List<String> lgorts = weightTicketRegistarationController.getListLgortByMatnr(matnrs, false);
             loadSLoc(lgorts, strLgort);
-
-            // load batch stock
-            loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
         }
 
         @Override
@@ -3122,6 +3144,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             isValidDO = false;
             // for check edit plateNo after check DO
             plateNoValidDO = "";
+            checkedCharg = "";
 
             logger.error(null, cause);
             JOptionPane.showMessageDialog(rootPane, cause.getMessage());
@@ -3497,6 +3520,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         plateNoValidDO = "";
         isValidPlateNo = false;
         numCheckWeight = BigDecimal.ZERO;
+        checkedCharg = "";
 
         txtTicketIdN.setText("");
         txtWeightTickerRefN.setText("");
@@ -3775,10 +3799,6 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             List<String> lgorts = weightTicketRegistarationController.getListLgortByMatnr(strMatnr, false);
             loadSLoc(lgorts, strLgort);
 
-            // load batch stock
-            loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
-            loadBatchStockModel(cbxSloc2N, cbxBatchStock2N, false);
-
             if (kunnr != null && !kunnr.isEmpty()) {
                 cbxCustomerN.setSelectedItem(weightTicketRegistarationController.findByKunnr(kunnr));
             } else {
@@ -3800,6 +3820,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             cbxMaterialTypeN.setSelectedIndex(-1);
             cbxVendorTransportN.setSelectedIndex(-1);
             cbxCustomerN.setSelectedIndex(-1);
+            checkedCharg = "";
             loadSLoc(null, null);
 
             isValidPO = false;
@@ -3832,6 +3853,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
             strMatnr = purchaseOrderDetail.getMaterial();
             strLgort = purchaseOrderDetail.getStgeLoc();
+            checkedCharg = purchaseOrderDetail.getCharg();
 
             newWeightTicket.getWeightTicketDetail().setTransVendor(purchaseOrder.getVendor());
             strVendor = purchaseOrder.getVendor();

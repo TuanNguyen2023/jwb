@@ -53,6 +53,8 @@ public class PurchaseOrderDetail implements Serializable {
     private String plant;
     @Column(name = "stge_loc")
     private String stgeLoc;
+    @Column(name = "charg")
+    private String charg;
     @Column(name = "vend_mat")
     private String vendMat;
     @Column(name = "quantity")
@@ -173,6 +175,14 @@ public class PurchaseOrderDetail implements Serializable {
 
     public void setStgeLoc(String stgeLoc) {
         this.stgeLoc = stgeLoc;
+    }
+
+    public String getCharg() {
+        return charg;
+    }
+
+    public void setCharg(String charg) {
+        this.charg = charg;
     }
 
     public String getVendMat() {

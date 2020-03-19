@@ -69,7 +69,6 @@ import java.util.*;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
-import org.apache.commons.lang.SerializationUtils;
 
 /*
  *
@@ -2260,25 +2259,25 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             } else {
                 //show hide text and label
                 switchShowHideMode(weightTicket.getMode());
-                
+
                 lblPONo.setText(resourceMapMsg.getString("lblPONo.text"));
                 lblPoPosto.setText(resourceMapMsg.getString("lblPoPosto.text"));
                 lblSLoc.setText(resourceMapMsg.getString("lblSLoc.text"));
                 lblCharg.setText(resourceMapMsg.getString("lblCharg.text"));
                 lblLicPlate.setText(resourceMapMsg.getString("lblLicPlate.text"));
-                
+
                 if (Constants.WeighingProcess.MODE_DETAIL.OUT_SLOC_SLOC.name().equals(weightTicket.getMode())) {
                     lblPONo.setText(resourceMapMsg.getString("lblPoTrans"));
                     lblPoPosto.setText(resourceMapMsg.getString("lblPostoLoad"));
                     lblSLoc.setText(resourceMapMsg.getString("lblSlocOut"));
                     lblCharg.setText(resourceMapMsg.getString("lblBatchStockOut"));
                 }
-                
+
                 if (Constants.WeighingProcess.MODE_DETAIL.OUT_PULL_STATION.name().equals(weightTicket.getMode())) {
                     lblPONo.setText(resourceMapMsg.getString("lblPoOut"));
                     lblPoPosto.setText(resourceMapMsg.getString("lblPostoIn"));
                 }
-                
+
                 if (Constants.WeighingProcess.MODE_DETAIL.OUT_SELL_WATERWAY.name().equals(weightTicket.getMode())) {
                     lblLicPlate.setText(resourceMapMsg.getString("lblPlateNoWater"));
                 }
@@ -2520,11 +2519,11 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                             outDetails_lits.add(item);
                         }
                     }
-                    
+
                     if(outbDel_list.size() > 1) {
                         txtWeight.setText(df.format(totalRegItemQuantity).toString());
                     }
-                    
+
                     txtDelNum.setText(doNums);
                     txtRegItem.setText(regItemDescription);
 
@@ -2610,7 +2609,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     // logic cho nay => no mac dinh offline khi usr can xuat clinker cho POSTO
                     //  txtCustomer.setEnabled(false);
                 }
-                
+
                 String lgort = null;
                 if (weightTicket.getLgort() != null && !weightTicket.getLgort().trim().isEmpty()) {
                     entityManager.clear();
@@ -3118,7 +3117,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             Date now = new Date();
             weightTicket.setUpdatedDate(now);
             List<WeightTicketDetail> weightTicketDetails = weightTicket.getWeightTicketDetails();
-            for(WeightTicketDetail wtDetail: weightTicketDetails) {
+            for (WeightTicketDetail wtDetail : weightTicketDetails) {
                 wtDetail.setUpdatedDate(new java.sql.Date(now.getTime()));
             }
             entityManager.merge(weightTicket);
@@ -3160,8 +3159,8 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     }
                     // xuat ben keo
                     if (weightTicket.getMode().equals("OUT_PULL_STATION") && weightTicket.getPosto() != null) {
-                         // check post PGI for post lai
-                        if(StringUtil.isEmptyString(weightTicketDetail.getDeliveryOrderNo())
+                        // check post PGI for post lai
+                        if (StringUtil.isEmptyString(weightTicketDetail.getDeliveryOrderNo())
                                 && StringUtil.isEmptyString(weightTicketDetail.getMatDoc())) {
                             objBapi = getMvtPOSTOCreatePGI(weightTicket, weightTicket.getPosto(), flgPost);
                         } else {
@@ -3412,9 +3411,9 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     weightTicketDetail.setMatDoc(((DOCreate2PGIBapi) objBapi).getMatDoc());
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((DOCreate2PGIBapi) objBapi).getDocYear()));
                                     try {
-                                        bapi_messages = ((DOCreate2PGIBapi) objBapi).getReturnMessage();
+                                        bapi_message = ((DOCreate2PGIBapi) objBapi).getReturnMessage().toString();
                                     } catch (Exception Ex) {
-                                        bapi_messages.add(resourceMapMsg.getString("msg.errorSAP"));
+                                        bapi_message = resourceMapMsg.getString("msg.errorSAP3048");
                                     }
                                     for (int k = 0; k < outDetails_lits.size(); k++) {
                                         details_item = outDetails_lits.get(k);
@@ -3449,9 +3448,9 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     weightTicketDetail.setMatDoc(((GoodsMvtPoCreateBapi) objBapi).getMatDoc());
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((GoodsMvtPoCreateBapi) objBapi).getMatYear()));
                                     try {
-                                        bapi_messages = ((GoodsMvtPoCreateBapi) objBapi).getReturnMessage();
+                                        bapi_message = ((GoodsMvtPoCreateBapi) objBapi).getReturnMessage().toString();
                                     } catch (Exception Ex) {
-                                        bapi_messages.add(resourceMapMsg.getString("msg.errorSAP"));
+                                        bapi_message = resourceMapMsg.getString("msg.errorSAP3086");
                                     }
                                     for (int k = 0; k < outDetails_lits.size(); k++) {
                                         details_item = outDetails_lits.get(k);
@@ -3486,9 +3485,9 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     weightTicketDetail.setMatDoc(((GoodsMvtDoCreateBapi) objBapi).getMatDoc());
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((GoodsMvtDoCreateBapi) objBapi).getMatYear()));
                                     try {
-                                        bapi_messages = ((GoodsMvtDoCreateBapi) objBapi).getReturnMessage();
+                                        bapi_message = ((GoodsMvtDoCreateBapi) objBapi).getReturnMessage().toString();
                                     } catch (Exception Ex) {
-                                        bapi_messages.add(resourceMapMsg.getString("msg.errorSAP"));
+                                        bapi_message = resourceMapMsg.getString("msg.errorSAP3123");
                                     }
                                     for (int k = 0; k < outDetails_lits.size(); k++) {
                                         details_item = outDetails_lits.get(k);
@@ -3523,9 +3522,9 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((WsDeliveryUpdateBapi) objBapi).getDoc_year()));
 
                                     try {
-                                        bapi_messages = ((WsDeliveryUpdateBapi) objBapi).getReturnMessage();
+                                        bapi_message = ((WsDeliveryUpdateBapi) objBapi).getReturnMessage().toString();
                                     } catch (Exception Ex) {
-                                        bapi_messages.add(resourceMapMsg.getString("msg.errorSAP"));
+                                        bapi_message = resourceMapMsg.getString("msg.errorSAP3160");
                                     }
 //                                        if (weightTicketDetail.getPpProcord() != null && weightTicketDetail.getPpProcord().length() == 12) {
 //                                            weightTicketDetail.setPpProcordcnf(((WsDeliveryUpdateBapi) objBapi).getConf_no());
@@ -3566,10 +3565,10 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     revertCompletedDO(completedDO, outDetails_lits, outbDel_list);
                                     weightTicket.setPosted(false);
                                     weightTicketDetail.setPosted(false);
-                                    if (bapi_messages.isEmpty()) {
-                                        bapi_messages.add(resourceMapMsg.getString("msg.errorSAP"));
+                                    if (bapi_message == "") {
+                                        bapi_message = resourceMapMsg.getString("msg.errorBAPI");
                                     }
-                                    bapi_messages.forEach(msg -> JOptionPane.showMessageDialog(rootPane, msg));
+                                    JOptionPane.showMessageDialog(rootPane, bapi_message);
                                     completed = false;
                                     entityManager.clear();
                                 } else if (!flag_fail) {
@@ -3955,8 +3954,8 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 if (outDetails_lits.size() > 0) {
                     for (int i = 0; i < outDetails_lits.size(); i++) {
                         item = outDetails_lits.get(i);
-                        item.setInScale(new BigDecimal(((Number) txfInQty.getValue()).doubleValue() / 1000));
-                        
+                        BigDecimal inScale = new BigDecimal(((Number) txfInQty.getValue()).doubleValue() / 1000);
+                        item.setInScale(inScale.setScale(3, RoundingMode.HALF_UP));
                         // tinh toan cho Nhap kho tu tay ninh > ben keo
                         if(weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER") && configuration.getWkPlant().equals("G112")
                                 && (item.getArktx().contains("Bag") || item.getArktx().contains("bao"))) {
@@ -3975,7 +3974,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     double lower = outSScalePlant - (outSScalePlant * 1) / 100;
                                     // -> set weightTicket.setSScale = inScalePO
                                     if ((lower <= result && result <= upper)) {
-                                        item.setOutScale(new BigDecimal(((Number) wtPlant.getFScale()).doubleValue() / 1000).setScale(3, RoundingMode.HALF_UP)); 
+                                        item.setOutScale(new BigDecimal(((Number) wtPlant.getFScale()).doubleValue() / 1000).setScale(3, RoundingMode.HALF_UP));
                                         item.setGoodsQty((BigDecimal.valueOf(item.getInScale().doubleValue() - item.getOutScale().doubleValue())).setScale(3, RoundingMode.HALF_UP));
                                         weightTicket.setSCreator(WeighBridgeApp.getApplication().getLogin().getUid());
                                         weightTicket.setSScale(wtPlant.getFScale());
@@ -4001,20 +4000,17 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 weightTicket.setSTime(now);
                 lblOScale.setForeground(Color.black);
                 OutboundDeliveryDetail item;
-                double remain = ((Number) txfCurScale.getValue()).doubleValue() - ((Number) txfInQty.getValue()).doubleValue();
-                if (remain < 0) {
-                    remain = remain * 1;
-                }
-                remain = remain / 1000;
+                double remain = ((Number) txfCurScale.getValue()).doubleValue() - ((Number) txfInQty.getValue()).doubleValue() / 1000;
+
                 // chia cân
                 if (outDetails_lits.size() > 1) {
                     List<OutboundDeliveryDetail> outDetailFrees = outDetails_lits.stream()
                             .filter(t -> t.getFreeItem() != null && t.getFreeItem() == 'X')
                             .collect(Collectors.toList());
-                    
+
                     for (OutboundDeliveryDetail obj : outDetailFrees) {
                         obj.setGoodsQty(obj.getLfimg());
-                        obj.setOutScale((BigDecimal.valueOf(obj.getInScale().doubleValue() + obj.getLfimg().doubleValue())).setScale(3, RoundingMode.HALF_UP));
+                        obj.setOutScale(obj.getInScale().add(obj.getLfimg()).setScale(3, RoundingMode.HALF_UP));
                         remain = remain - obj.getLfimg().doubleValue();
 
                         if (!entityManager.getTransaction().isActive()) {
@@ -4032,13 +4028,13 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         item = outDetails.get(i);
                         if (i < outDetails.size() - 1) {
                             item.setGoodsQty(item.getLfimg());
-                            item.setOutScale((BigDecimal.valueOf(item.getInScale().doubleValue() + item.getLfimg().doubleValue())).setScale(3, RoundingMode.HALF_UP));
-                                remain = remain - item.getLfimg().doubleValue();
+                            item.setOutScale(item.getInScale().add(item.getLfimg()).setScale(3, RoundingMode.HALF_UP));
+                            remain = remain - item.getLfimg().doubleValue();
                         } else {
-                            if(checkVariant) {
+                            if (checkVariant) {
                                 item.setGoodsQty(item.getLfimg());
                             } else {
-                                item.setGoodsQty(BigDecimal.valueOf(remain));
+                                item.setGoodsQty(BigDecimal.valueOf(remain).setScale(3, RoundingMode.HALF_UP));
                             }
                             item.setOutScale((BigDecimal.valueOf(item.getInScale().doubleValue() + remain)).setScale(3, RoundingMode.HALF_UP));
                         }
@@ -4051,7 +4047,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 } else if (outDetails_lits.size() == 1) {
                     BigDecimal div = BigDecimal.valueOf(1000);
                     item = outDetails_lits.get(0);
-                    item.setOutScale((weightTicket.getSScale().divide(div)).setScale(3, RoundingMode.HALF_UP));
+                    item.setOutScale(weightTicket.getSScale().divide(div).setScale(3, RoundingMode.HALF_UP));
                     if (checkVariant) {
                         item.setGoodsQty(item.getLfimg());
                     } else {
@@ -4431,38 +4427,38 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
     }
 
     private boolean validateTolerance(PurchaseOrder purchaseOrder, OutboundDelivery outboundDelivery) {
-            BigDecimal numCheckWeight = BigDecimal.ZERO;
-            BigDecimal quantity = BigDecimal.ZERO;
-            BigDecimal tolerance = BigDecimal.ZERO;
-            BigDecimal freeQty = BigDecimal.ZERO;
-            // check for PO
-            if (purchaseOrder != null) {
-                PurchaseOrderDetail purchaseOrderDetail = purchaseOrder.getPurchaseOrderDetail();
+        BigDecimal numCheckWeight = BigDecimal.ZERO;
+        BigDecimal quantity = BigDecimal.ZERO;
+        BigDecimal tolerance = BigDecimal.ZERO;
+        BigDecimal freeQty = BigDecimal.ZERO;
+        // check for PO
+        if (purchaseOrder != null) {
+            PurchaseOrderDetail purchaseOrderDetail = purchaseOrder.getPurchaseOrderDetail();
 
-                quantity = purchaseOrderDetail.getQuantity() != null ? purchaseOrderDetail.getQuantity() : BigDecimal.ZERO;
-                tolerance = purchaseOrderDetail.getOverDlvTol() != null ? purchaseOrderDetail.getOverDlvTol() : BigDecimal.ZERO;
+            quantity = purchaseOrderDetail.getQuantity() != null ? purchaseOrderDetail.getQuantity() : BigDecimal.ZERO;
+            tolerance = purchaseOrderDetail.getOverDlvTol() != null ? purchaseOrderDetail.getOverDlvTol() : BigDecimal.ZERO;
 
-                numCheckWeight = quantity.add(
-                        quantity.multiply(tolerance).divide(new BigDecimal(100))
-                ).subtract(weightTicketRegistarationController.getSumGqtyWithPoNo(purchaseOrder.getPoNumber()));
+            numCheckWeight = quantity.add(
+                    quantity.multiply(tolerance).divide(new BigDecimal(100))
+            ).subtract(weightTicketRegistarationController.getSumGqtyWithPoNo(purchaseOrder.getPoNumber()));
 
-                BigDecimal result = numCheckWeight.subtract(weightTicket.getGQty());
-                if (result.compareTo(BigDecimal.ZERO) <= 0) {
+            BigDecimal result = numCheckWeight.subtract(weightTicket.getGQty());
+            if (result.compareTo(BigDecimal.ZERO) <= 0) {
+                return false;
+            }
+        }
+
+        // check for DO hàng tặng
+        if (outboundDelivery != null) {
+            numCheckWeight = outboundDelivery.getLfimg() != null ? outboundDelivery.getLfimg() : BigDecimal.ZERO;
+            freeQty = outboundDelivery.getFreeQty();
+
+            if (freeQty != null) {
+                BigDecimal resultFree = freeQty.subtract(weightTicket.getGQty());
+                if (resultFree.compareTo(BigDecimal.ZERO) > 0) {
                     return false;
                 }
             }
-
-            // check for DO hàng tặng
-            if (outboundDelivery != null) {
-                numCheckWeight = outboundDelivery.getLfimg() != null ? outboundDelivery.getLfimg() : BigDecimal.ZERO;
-                freeQty = outboundDelivery.getFreeQty();
-
-                if (freeQty != null) {
-                    BigDecimal resultFree = freeQty.subtract(weightTicket.getGQty());
-                    if (resultFree.compareTo(BigDecimal.ZERO) > 0) {
-                        return false;
-                    }
-                }
 
             }
             return true;

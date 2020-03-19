@@ -56,6 +56,7 @@ public class PurchaseOrderConverter extends AbstractThrowableParamConverter<PoGe
                 purchaseOrderDetail.setMaterial(item.getMATERIAL());
                 purchaseOrderDetail.setPlant(item.getPLANT());
                 purchaseOrderDetail.setStgeLoc(item.getSTGE_LOC());
+                purchaseOrderDetail.setCharg(item.getBATCH());
                 purchaseOrderDetail.setVendMat(item.getVEND_MAT());
                 purchaseOrderDetail.setQuantity(item_qty.add(item.getQUANTITY()));
                 purchaseOrderDetail.setPoUnit(item.getPO_UNIT());

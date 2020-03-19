@@ -959,11 +959,16 @@ private void txtSapPasswordKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         config.setDbName(txtDBName.getText().trim());
         config.setDbUsername(txtDBUsr.getText().trim());
         config.setDbPassword(new String(txtDBPwd.getPassword()).trim());
+        String wbId = txtWBID.getText().trim();
+        config.setWbId(wbId);
 
         Configuration configuration = config.getConfiguration();
-        if (configuration == null) {
-            configuration = new Configuration();
-        } else {
+        if (configuration != null && !wbId.equalsIgnoreCase(configuration.getWbId())) {
+            configuration = configController.getConfiguration(wbId);
+        }
+
+        configuration = configuration != null ? configuration : new Configuration();
+        if (configuration.getId() > 0) {
             configuration.setUpdatedDate(new Date());
         }
 
@@ -976,9 +981,7 @@ private void txtSapPasswordKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         configuration.setSapPass(new String(txtSapPassword.getPassword()).trim());
 
         configuration.setWkPlant(txtPlant.getText().trim());
-        String wbId = txtWBID.getText().trim();
         configuration.setWbId(wbId);
-        config.setWbId(wbId);
 
         configuration.setWb1Port(cbxPort1.getSelectedItem().toString().trim());
         configuration.setWb1BaudRate((Integer) cbxSpeed1.getSelectedItem());
