@@ -2145,7 +2145,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 } else if (weightTicket.getFScale() != null && weightTicket.getSScale() == null) {
                     setStage2(true);
                 }
-                OutboundDelivery od = null; //HLD18++
+                OutboundDelivery od = null;
                 // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc="Load D.O/P.O details">
                 List<WeightTicketDetail> weightTicketDetails = weightTicket.getWeightTicketDetails();
@@ -2201,7 +2201,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 }
 
                 if (WeighBridgeApp.getApplication().isOfflineMode()
-                        && od == null //HLD18
+                        && od == null
                         ) {
                     setWithoutDO(true);
                 }
@@ -2303,7 +2303,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     setSubContract(false);
                     PurchaseOrderDetail purchaseOrderDetail = purOrder.getPurchaseOrderDetail();
                     txtRegItem.setText(weightTicket.getWeightTicketDetail().getRegItemDescription());
-                    if (rbtOutward.isSelected() && purchaseOrderDetail.getItemCat() == '3' //                            && purOrder.getMaterial().equalsIgnoreCase(setting.getMatnrPcb40())
+                    if (rbtOutward.isSelected() && purchaseOrderDetail.getItemCat() == '3'
                             ) {
                         setSubContract(true);
                     }
@@ -2672,10 +2672,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         protected Object doInBackground() {
             setMessage(resourceMapMsg.getString("msg.getDataPO"));
             setProgress(0, 0, 3);
-            // Tuanna >> 14.06.13 
             txtCustomer.setText(null);
-
-            // << end comment.
             purOrder = weightTicketController.findPurOrder(poNum);
             setMessage(resourceMapMsg.getString("msg.searchDataPo"));
             setProgress(1, 0, 3);
@@ -3418,7 +3415,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             entityManager.getTransaction().commit();
             entityManager.clear();
             if (completed) {
-                if (!weightTicket.isDissolved() || weightTicket.isPosted()) { //+20100111#01 khong in neu huy phieu
+                if (!weightTicket.isDissolved() || weightTicket.isPosted()) {
                     setMessage(resourceMapMsg.getString("msg.printing"));
                     printWT(weightTicket, false);
                 }
