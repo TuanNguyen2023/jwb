@@ -90,7 +90,6 @@ public class WeightTicketService {
         DefaultComboBoxModel result = new DefaultComboBoxModel();
         for (BatchStock b : batchs) {
             if (b.getLvorm() == null || b.getLvorm().toString().trim().isEmpty()) {
-                // Fillter BATCH not contain "-" by Tuanna -10.01.2013 
                 if (configuration.getWkPlant().contains("1311")) {
                     result.addElement(b.getCharg());
                 } else if (!b.getCharg().contains("-")) {

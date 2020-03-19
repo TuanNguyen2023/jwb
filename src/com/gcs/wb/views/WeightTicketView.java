@@ -1411,8 +1411,6 @@ private void txtInTimeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
 }//GEN-LAST:event_txtInTimeKeyReleased
 
 private void txtWTNumFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtWTNumFocusGained
-// Tuanna add -- for paste ID from Clipboard if data is ticket  --28.11.2012
-
     String result = "";
     Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
     //odd: the Object param of getContents is not currently used
@@ -1431,12 +1429,10 @@ private void txtWTNumFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
         txtWTNum.setText(result);
     }
 
-    //end Add.
 
 }//GEN-LAST:event_txtWTNumFocusGained
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        //tuanna
         StringSelection stringSelection = new StringSelection("");
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
         txtWTNum.selectAll();
@@ -3649,7 +3645,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         weightTicket.setGQty(new BigDecimal(Double.toString(result)));
                     }
                 } else if (isSubContract() && weightTicket.getLgort() != null && weightTicket.getCharg() != null) {
-                    setMessage(resourceMapMsg.getString("msg.checkIssetWarehouse")); // checking stock --tuanna
+                    setMessage(resourceMapMsg.getString("msg.checkIssetWarehouse"));
                     Double remaining = CheckMatStock(weightTicket.getWeightTicketDetail().getMatnrRef(), configuration.getWkPlant(), weightTicket.getLgort(), weightTicket.getCharg());
                     if (result <= remaining) {
                         txfGoodsQty.setValue(result);
