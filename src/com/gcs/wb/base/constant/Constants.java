@@ -307,4 +307,9 @@ public class Constants {
         public static final String CRON_EXPRESSION = "0 0 0 ? * * *"; // 00:00:00 every day
         public static final String TIME_SYNC = "000000"; // 00:00:00
     }
+    
+    public static final class Groes {
+
+        public static final String B50 = "B|50";
+    }
 }

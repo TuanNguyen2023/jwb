@@ -14,6 +14,7 @@ public interface MaterialGetListConstants extends BapiConstants {
     String BAPI_NAME = "ZMM_FM_WB_MATERIAL_MASTER";
     String IV_START_DATE = "IV_START_DATE";
     String IV_START_TIME = "IV_START_TIME";
+    String IV_END_DATE  = "IV_END_DATE";
     String IV_END_TIME = "IV_END_TIME";
     String IV_INDICATOR = "IV_INDICATOR";
     String ET_MATERIAL = "ET_MATERIAL";
@@ -24,4 +25,5 @@ public interface MaterialGetListConstants extends BapiConstants {
     String WERKS = "WERKS";
     String LGORT = "LGORT";
     String LVORM = "LVORM";
+    String GROES = "GROES";
 }

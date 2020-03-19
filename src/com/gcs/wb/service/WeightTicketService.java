@@ -20,6 +20,7 @@ import com.gcs.wb.bapi.outbdlv.structure.VbkokStructure;
 import com.gcs.wb.bapi.outbdlv.structure.VbpokStructure;
 import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.base.constant.Constants;
+import com.gcs.wb.base.util.StringUtil;
 import com.gcs.wb.controller.WeightTicketController;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.JReportService;
@@ -64,6 +65,7 @@ public class WeightTicketService {
     Session session = WeighBridgeApp.getApplication().getSAPSession();
     private final Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
     WeightTicketRegistrationService weightTicketRegistrationService = new WeightTicketRegistrationService();
+    MaterialRepository materialRepository = new MaterialRepository();
 
     public DefaultComboBoxModel getCustomerByMaNdt() {
         List<Customer> customers = this.customerRepository.getListCustomer();
@@ -983,8 +985,8 @@ public class WeightTicketService {
                 WeightTicketDetail weightTicketDetail = wt.getWeightTicketDetail();
                 if (!wt.isDissolved()) {
                     Double tmp = null;
-                    if (weightTicketDetail.getRegItemDescription() != null
-                            && (weightTicketDetail.getRegItemDescription().contains("Bag")) || weightTicketDetail.getRegItemDescription().contains("bao")) {
+                    if ((StringUtil.isNotEmptyString(weightTicketDetail.getRecvMatnr()))
+                            && checkBagCement(weightTicketDetail.getRecvMatnr())) {
                         tmp = ((weightTicketDetail.getRegItemQuantity().doubleValue()) * 1000d) / 50d;
                     }
                     
@@ -1073,7 +1075,7 @@ public class WeightTicketService {
                         map.put("P_TOTAL_QTY", String.valueOf(totalQty));
                         map.put("P_TOTAL_QTY_REALITY", String.valueOf(totalQtyReality));
                         Double tmp = null;
-                        if ((outbDel != null) && ((outbDel.getArktx().contains("Bag")) || (outbDel.getArktx().contains("bao")))) {
+                        if ((outbDel != null) && (StringUtil.isNotEmptyString(outbDel.getMatnr())) && (checkBagCement(outbDel.getMatnr()))) {
                             tmp = ((outbDel.getLfimg().doubleValue() + outbDel.getFreeQty().doubleValue()) * 1000d) / 50d;
                             bags = Math.round(tmp);
                         }
@@ -1091,11 +1093,10 @@ public class WeightTicketService {
                         map.put("P_TOTAL_QTY", String.valueOf(totalQty));
                         map.put("P_TOTAL_QTY_REALITY", String.valueOf(totalQtyReality));
                         Double tmp = null;
-                        if ((outbDel != null) && ((outbDel.getArktx().contains("Bag")) || (outbDel.getArktx().contains("bao")))) {
+                        if ((outbDel != null) && (StringUtil.isNotEmptyString(outbDel.getMatnr())) && (checkBagCement(outbDel.getMatnr()))) {
                             tmp = (outbDel.getLfimg().doubleValue() * 1000d) / 50d;
                             bags = Math.round(tmp);
                         }
-
                     }
 
                     if (bags != null) {
@@ -1311,28 +1312,14 @@ public class WeightTicketService {
         return bapi;
     }
     
-//    public boolean checkVariantByMaterial(WeightTicket wt, String material, BigDecimal gQty) {
-//        Variant vari = findByParamMandtWplant(material, configuration.getSapClient(), configuration.getWkPlant());
-//        double valueUp = 0;
-//        double valueDown = 0;
-//        double result = gQty.doubleValue();
-//
-//        if (vari != null) {
-//            if (vari.getValueUp() != null && !vari.getValueUp().isEmpty()) {
-//                valueUp = Double.parseDouble(vari.getValueUp());
-//            }
-//
-//            if (vari.getValueDown() != null && !vari.getValueDown().isEmpty()) {
-//                valueDown = Double.parseDouble(vari.getValueDown());
-//            }
-//
-//            double upper = result + (result * valueUp) / 100;
-//            double lower = result - (result * valueDown) / 100;
-//
-//            if ((lower <= result && result <= upper)) {hc
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
+private boolean checkBagCement(String matnr) {
+    Material mat = materialRepository.findByMatnr(matnr);
+    if ((StringUtil.isNotEmptyString(mat.getGroes()))
+        && (mat.getGroes().replaceAll("\\s+","").equals(Constants.Groes.B50))) {
+        return true;
+    }
+    return false;
+    }
 }
+
+
