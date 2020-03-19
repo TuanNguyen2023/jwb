@@ -270,6 +270,7 @@ public class WeightTicketService {
         stWT.setVTYPE(od != null ? od.getBwtar() : "");
         stWT.setBatch(od != null ? od.getCharg() : "");
         stWT.setLfart(od != null ? od.getLfart() : "");
+        stWT.setChargEnh(wt.getChargEnh());
 
         return stWT;
     }

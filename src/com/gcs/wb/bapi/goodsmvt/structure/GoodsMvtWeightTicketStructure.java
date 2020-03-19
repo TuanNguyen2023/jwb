@@ -101,6 +101,8 @@ public class GoodsMvtWeightTicketStructure implements Serializable {
     private String status;
     @Parameter(GoodsMvtCreateConstants.WT_ID_REF)
     private String wtIdRef;
+    @Parameter(GoodsMvtCreateConstants.CHARG_ENH)
+    private String chargEnh;
     
     public GoodsMvtWeightTicketStructure() {
     }
@@ -440,4 +442,11 @@ public class GoodsMvtWeightTicketStructure implements Serializable {
         this.wtIdRef = wtIdRef;
     }
 
+    public String getChargEnh() {
+        return chargEnh;
+    }
+
+    public void setChargEnh(String chargEnh) {
+        this.chargEnh = chargEnh;
+    }
 }

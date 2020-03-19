@@ -155,6 +155,7 @@ public class Constants {
 
         public static final Pattern LICENSE_PLATE_PATTERN = Pattern.compile("^(\\d{2}[A-Za-z]-\\d{4})|(\\d{2}[A-Za-z]-\\d{3}\\.\\d{2})|(\\d{2}[A-Za-z]-\\d{4,6})|(\\d{2}[A-Za-z]\\d{4,7})$");
         public static final Pattern LICENSE_PLATE_WATER_PATTERN = Pattern.compile("^([A-Za-z]{2,3}\\d{4,7})$");
+        public static final Pattern LICENSE_SALAN_PATTERN = Pattern.compile("^([A-Za-z\\d]{2,8})$");
     }
 
     public static final class ComboBox {

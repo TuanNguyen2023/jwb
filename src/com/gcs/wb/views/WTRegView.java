@@ -385,6 +385,8 @@ public class WTRegView extends javax.swing.JInternalFrame {
         rbtOutput = new javax.swing.JRadioButton();
         cbxModeType = new javax.swing.JComboBox();
         lblSlingN = new javax.swing.JLabel();
+        lblSalanN = new javax.swing.JLabel();
+        txtSalanN = new javax.swing.JTextField();
         pnControl = new javax.swing.JPanel();
         btnNew = new javax.swing.JButton();
         btnClear = new javax.swing.JButton();
@@ -860,6 +862,21 @@ public class WTRegView extends javax.swing.JInternalFrame {
         lblSlingN.setText(resourceMap.getString("lblSlingN.text")); // NOI18N
         lblSlingN.setName("lblSlingN"); // NOI18N
 
+        lblSalanN.setText(resourceMap.getString("lblSalanN.text")); // NOI18N
+        lblSalanN.setName("lblSalanN"); // NOI18N
+
+        txtSalanN.setName("txtSalanN"); // NOI18N
+        txtSalanN.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtSalanNFocusLost(evt);
+            }
+        });
+        txtSalanN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtSalanNKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnROVLeftLayout = new javax.swing.GroupLayout(pnROVLeft);
         pnROVLeft.setLayout(pnROVLeftLayout);
         pnROVLeftLayout.setHorizontalGroup(
@@ -875,29 +892,28 @@ public class WTRegView extends javax.swing.JInternalFrame {
                             .addComponent(rbtInput)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                             .addComponent(rbtOutput)))
-                    .addComponent(lblSoNiemXaN)
-                    .addComponent(lblSlingN)
-                    .addComponent(lblProductionBatchN)
-                    .addComponent(lblNoteN)
                     .addComponent(lblDriverNameN)
                     .addComponent(lblRegisterIdN)
                     .addComponent(lblWeightTickerRefN)
                     .addComponent(lblTicketIdN)
-                    .addComponent(lblCMNDN))
+                    .addComponent(lblCMNDN)
+                    .addComponent(lblSoNiemXaN)
+                    .addComponent(lblSlingN)
+                    .addComponent(lblProductionBatchN)
+                    .addComponent(lblNoteN)
+                    .addComponent(lblSalanN))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtProductionBatchN, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
-                    .addComponent(txtNoteN, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
+                    .addComponent(txtSalanN, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
                     .addComponent(txtSoNiemXaN, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
-                    .addGroup(pnROVLeftLayout.createSequentialGroup()
-                        .addComponent(txtSlingN, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
-                        .addGap(32, 32, 32)
-                        .addComponent(lblPalletN)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtPalletN, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE))
+                    .addComponent(txtNoteN, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
+                    .addComponent(txtProductionBatchN, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
                     .addComponent(cbxModeType, 0, 380, Short.MAX_VALUE)
                     .addComponent(txtTicketIdN, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
                     .addComponent(txtCMNDN, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
+                    .addComponent(txtWeightTickerRefN, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
+                    .addComponent(txtDriverNameN, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
+                    .addComponent(txtRegisterIdN, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
                     .addGroup(pnROVLeftLayout.createSequentialGroup()
                         .addComponent(txtPlateNoN, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -908,9 +924,12 @@ public class WTRegView extends javax.swing.JInternalFrame {
                         .addComponent(lblTonnageN)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtTonnageN, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE))
-                    .addComponent(txtWeightTickerRefN, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
-                    .addComponent(txtDriverNameN, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
-                    .addComponent(txtRegisterIdN, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE))
+                    .addGroup(pnROVLeftLayout.createSequentialGroup()
+                        .addComponent(txtSlingN, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(21, 21, 21)
+                        .addComponent(lblPalletN)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtPalletN, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblTonngageUnitN)
                 .addContainerGap())
@@ -953,26 +972,28 @@ public class WTRegView extends javax.swing.JInternalFrame {
                     .addComponent(txtTonnageN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblTonngageUnitN))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(lblPalletN)
-                        .addComponent(txtPalletN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txtSlingN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblSlingN)))
+                .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblSalanN)
+                    .addComponent(txtSalanN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtSoNiemXaN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblSoNiemXaN))
+                    .addComponent(lblSlingN)
+                    .addComponent(txtSlingN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblPalletN)
+                    .addComponent(txtPalletN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtNoteN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblProductionBatchN))
+                    .addComponent(lblSoNiemXaN)
+                    .addComponent(txtSoNiemXaN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblProductionBatchN)
+                    .addComponent(txtNoteN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblNoteN)
                     .addComponent(txtProductionBatchN, javax.swing.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE))
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pnControl.setName("pnControl"); // NOI18N
@@ -1031,7 +1052,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addComponent(pnROVLeft, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(pnControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(125, Short.MAX_VALUE))
+                .addContainerGap(95, Short.MAX_VALUE))
         );
 
         pnROVRight.setName("pnROVRight"); // NOI18N
@@ -1084,7 +1105,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
         });
 
         txtWeightN.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.000"))));
-        txtWeightN.setText(resourceMap.getString("txtWeightN.text")); // NOI18N
         txtWeightN.setName("txtWeightN"); // NOI18N
         txtWeightN.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -1360,7 +1380,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnShowFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(13, 13, 13)
-                .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 224, Short.MAX_VALUE)
+                .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnPrintControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(13, 13, 13)
@@ -1734,6 +1754,19 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     pnShowFilter.setVisible(true);
 }//GEN-LAST:event_btnHideFilterActionPerformed
 
+private void txtSalanNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSalanNKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtSalanNKeyReleased
+
+private void txtSalanNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSalanNFocusLost
+    String soSalan = txtSalanN.getText().trim();
+    soSalan = soSalan.replace("-", "");
+    soSalan = soSalan.replace(".", "");
+    txtSalanN.setText(soSalan.toUpperCase());
+
+    validateForm();
+}//GEN-LAST:event_txtSalanNFocusLost
+
     private void validateFilterForm() {
         boolean isDriverNameValid = wtRegisValidation.validateLength(txtDriverName.getText(), lblDriverName, 0, 70);
         boolean isPlateNoValid = wtRegisValidation.validateLength(txtPlateNo.getText(), lblPlateNo, 0, 20);
@@ -2002,6 +2035,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         lblTonnageN.setForeground(Color.black);
         txtTrailerNoN.setEnabled(false);
         lblTrailerNoN.setForeground(Color.black);
+        txtSalanN.setEnabled(false);
+        lblSalanN.setForeground(Color.black);
         txtSlingN.setEnabled(false);
         lblSlingN.setForeground(Color.black);
         txtPalletN.setEnabled(false);
@@ -2138,6 +2173,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         showComponent(txtPlateNoN, lblPlateNoN, true, true);
         showComponent(txtTonnageN, lblTonnageN, lblTonngageUnitN, true, false);
         showComponent(txtTrailerNoN, lblTrailerNoN, true, true);
+        showComponent(txtSalanN, lblSalanN, true, true);
         showComponent(txtSlingN, lblSlingN, false, false);
         showComponent(txtPalletN, lblPalletN, false, false);
         showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
@@ -2167,6 +2203,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         showComponent(txtPlateNoN, lblPlateNoN, true, true);
         showComponent(txtTonnageN, lblTonnageN, lblTonngageUnitN, true, false);
         showComponent(txtTrailerNoN, lblTrailerNoN, true, true);
+        showComponent(txtSalanN, lblSalanN, true, true);
         showComponent(txtSlingN, lblSlingN, false, false);
         showComponent(txtPalletN, lblPalletN, false, false);
         showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
@@ -2196,6 +2233,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         showComponent(txtPlateNoN, lblPlateNoN, true, true);
         showComponent(txtTonnageN, lblTonnageN, lblTonngageUnitN, true, false);
         showComponent(txtTrailerNoN, lblTrailerNoN, true, true);
+        showComponent(txtSalanN, lblSalanN, true, true);
         showComponent(txtSlingN, lblSlingN, true, true);
         showComponent(txtPalletN, lblPalletN, true, true);
         showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
@@ -2231,6 +2269,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         showComponent(txtPlateNoN, lblPlateNoN, true, true);
         showComponent(txtTonnageN, lblTonnageN, lblTonngageUnitN, true, false);
         showComponent(txtTrailerNoN, lblTrailerNoN, true, true);
+        showComponent(txtSalanN, lblSalanN, true, true);
         showComponent(txtSlingN, lblSlingN, true, true);
         showComponent(txtPalletN, lblPalletN, true, true);
         showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
@@ -2260,6 +2299,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         showComponent(txtPlateNoN, lblPlateNoN, true, true);
         showComponent(txtTonnageN, lblTonnageN, lblTonngageUnitN, true, false);
         showComponent(txtTrailerNoN, lblTrailerNoN, true, true);
+        showComponent(txtSalanN, lblSalanN, true, true);
         showComponent(txtSlingN, lblSlingN, true, true);
         showComponent(txtPalletN, lblPalletN, true, true);
         showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
@@ -2297,6 +2337,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         showComponent(txtPlateNoN, lblPlateNoN, true, true);
         showComponent(txtTonnageN, lblTonnageN, lblTonngageUnitN, true, false);
         showComponent(txtTrailerNoN, lblTrailerNoN, true, true);
+        showComponent(txtSalanN, lblSalanN, true, true);
         showComponent(txtSlingN, lblSlingN, false, false);
         showComponent(txtPalletN, lblPalletN, false, false);
         showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
@@ -2334,6 +2375,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         showComponent(txtPlateNoN, lblPlateNoN, true, true);
         showComponent(txtTonnageN, lblTonnageN, lblTonngageUnitN, true, false);
         showComponent(txtTrailerNoN, lblTrailerNoN, true, true);
+        showComponent(txtSalanN, lblSalanN, true, true);
         showComponent(txtSlingN, lblSlingN, false, false);
         showComponent(txtPalletN, lblPalletN, false, false);
         showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
@@ -2368,6 +2410,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         showComponent(txtPlateNoN, lblPlateNoN, true, true);
         showComponent(txtTonnageN, lblTonnageN, lblTonngageUnitN, true, false);
         showComponent(txtTrailerNoN, lblTrailerNoN, true, true);
+        showComponent(txtSalanN, lblSalanN, true, true);
         showComponent(txtSlingN, lblSlingN, true, true);
         showComponent(txtPalletN, lblPalletN, true, true);
         showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
@@ -2438,6 +2481,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         }
 
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
+        String salan = txtSalanN.getText().trim();
+        boolean isSalanValid = salan.isEmpty() || wtRegisValidation.validateSalan(salan, lblSalanN);
         boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
@@ -2451,7 +2496,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
-                && isCMNDBLValid && isPlateNoValid
+                && isCMNDBLValid && isPlateNoValid && isSalanValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isSlocValid;
     }
@@ -2469,6 +2514,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         }
 
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
+        String salan = txtSalanN.getText().trim();
+        boolean isSalanValid = salan.isEmpty() || wtRegisValidation.validateSalan(salan, lblSalanN);
         boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
@@ -2492,7 +2539,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         }
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
-                && isCMNDBLValid && isPlateNoValid
+                && isCMNDBLValid && isPlateNoValid && isSalanValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isSlocValid;
     }
@@ -2510,6 +2557,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         }
 
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
+        String salan = txtSalanN.getText().trim();
+        boolean isSalanValid = salan.isEmpty() || wtRegisValidation.validateSalan(salan, lblSalanN);
         boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
@@ -2520,7 +2569,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
-                && isCMNDBLValid && isPlateNoValid
+                && isCMNDBLValid && isPlateNoValid && isSalanValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isMaterialTypeValid && isSlocValid && isWeightValid;
     }
@@ -2537,6 +2586,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         }
 
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
+        String salan = txtSalanN.getText().trim();
+        boolean isSalanValid = salan.isEmpty() || wtRegisValidation.validateSalan(salan, lblSalanN);
         boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
@@ -2561,7 +2612,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
         return isRegisterIdValid && isDriverNameValid && isCMNDBLValid && isPlateNoValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
-                && isNoteValid && isSlocValid;
+                && isNoteValid && isSlocValid && isSalanValid;
     }
 
     private boolean validateOutPlantPlant() {
@@ -2576,6 +2627,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         }
 
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
+        String salan = txtSalanN.getText().trim();
+        boolean isSalanValid = salan.isEmpty() || wtRegisValidation.validateSalan(salan, lblSalanN);
         boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
@@ -2593,7 +2646,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         }
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
-                && isCMNDBLValid
+                && isCMNDBLValid && isSalanValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isSlocValid && isVendorTransValid;
     }
@@ -2610,6 +2663,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         }
 
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
+        String salan = txtSalanN.getText().trim();
+        boolean isSalanValid = salan.isEmpty() || wtRegisValidation.validateSalan(salan, lblSalanN);
         boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
@@ -2639,7 +2694,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         boolean isSloc2Valid = wtRegisValidation.validateCbxSelected(cbxSloc2N.getSelectedIndex(), lblSloc2N);
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
-                && isCMNDBLValid
+                && isCMNDBLValid && isSalanValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isSlocValid && isSloc2Valid && isMaterialTypeValid;
     }
@@ -2656,6 +2711,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         }
 
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
+        String salan = txtSalanN.getText().trim();
+        boolean isSalanValid = salan.isEmpty() || wtRegisValidation.validateSalan(salan, lblSalanN);
         boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
@@ -2683,7 +2740,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         }
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
-                && isCMNDBLValid
+                && isCMNDBLValid && isSalanValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isSlocValid && isVendorTransValid;
     }
@@ -2700,6 +2757,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         }
 
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
+        String salan = txtSalanN.getText().trim();
+        boolean isSalanValid = salan.isEmpty() || wtRegisValidation.validateSalan(salan, lblSalanN);
         boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
@@ -2714,7 +2773,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
         return isRegisterIdValid && isDriverNameValid
-                && isCMNDBLValid && isPlateNoValid
+                && isCMNDBLValid && isPlateNoValid && isSalanValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isSlocValid;
     }
@@ -3279,6 +3338,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             newWeightTicket.setBatch(txtProductionBatchN.getText().trim());
             newWeightTicket.setNote(txtNoteN.getText().trim());
             newWeightTicket.setTicketId(txtTicketIdN.getText().trim());
+            newWeightTicket.setChargEnh(txtSalanN.getText().trim());
 
             // set for oubdel
             List<OutboundDeliveryDetail> deliveryDetails = null;
@@ -3513,6 +3573,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         txtPlateNoN.setText("");
         txtTonnageN.setText("0");
         txtTrailerNoN.setText("");
+        txtSalanN.setText("");
         txtSlingN.setText("0");
         txtPalletN.setText("0");
         txtSoNiemXaN.setText("");
@@ -3610,6 +3671,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     private javax.swing.JLabel lblProductionBatchN;
     private javax.swing.JLabel lblRegisterIdN;
     private javax.swing.JLabel lblSONumN;
+    private javax.swing.JLabel lblSalanN;
     private javax.swing.JLabel lblSlingN;
     private javax.swing.JLabel lblSloc2N;
     private javax.swing.JLabel lblSlocN;
@@ -3651,6 +3713,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     private javax.swing.JTextField txtProductionBatchN;
     private javax.swing.JTextField txtRegisterIdN;
     private javax.swing.JTextField txtSONumN;
+    private javax.swing.JTextField txtSalanN;
     private javax.swing.JFormattedTextField txtSlingN;
     private javax.swing.JTextField txtSoNiemXaN;
     private javax.swing.JTextField txtTicketIdN;
