@@ -1503,22 +1503,22 @@ private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
 }//GEN-LAST:event_txtTicketIdNKeyReleased
 
 private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtWeightNKeyReleased
-    if (modeDetail == MODE_DETAIL.IN_PO_PURCHASE) {
-        boolean isWeightValid = wtRegisValidation.validateLength(txtWeightN.getText(), lblWeightN, 1, 10);
-        if (isWeightValid) {
-            BigDecimal weight = new BigDecimal(txtWeightN.getText());
-
-            if (numCheckWeight.subtract(weight).compareTo(BigDecimal.ZERO) < 0) {
-                JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.quantityOver", numCheckWeight));
-
-                lblWeightN.setForeground(Color.red);
-
-                isValidWeight = false;
-            } else {
-                isValidWeight = true;
-            }
-        }
-    }
+//    if (modeDetail == MODE_DETAIL.IN_PO_PURCHASE) {
+//        boolean isWeightValid = wtRegisValidation.validateLength(txtWeightN.getText(), lblWeightN, 1, 10);
+//        if (isWeightValid) {
+//            BigDecimal weight = new BigDecimal(txtWeightN.getText());
+//
+//            if (numCheckWeight.subtract(weight).compareTo(BigDecimal.ZERO) < 0) {
+//                JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.quantityOver", numCheckWeight));
+//
+//                lblWeightN.setForeground(Color.red);
+//
+//                isValidWeight = false;
+//            } else {
+//                isValidWeight = true;
+//            }
+//        }
+//    }
 
     validateForm();
 }//GEN-LAST:event_txtWeightNKeyReleased
