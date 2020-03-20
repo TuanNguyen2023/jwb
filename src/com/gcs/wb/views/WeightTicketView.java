@@ -3730,7 +3730,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 weightTicket.setSTime(now);
                 lblOScale.setForeground(Color.black);
                 OutboundDeliveryDetail item;
-                double remain = ((Number) txfCurScale.getValue()).doubleValue() - ((Number) txfInQty.getValue()).doubleValue() / 1000;
+                double remain = (((Number) txfCurScale.getValue()).doubleValue() - ((Number) txfInQty.getValue()).doubleValue()) / 1000;
 
                 // chia cân
                 if (outDetails_lits.size() > 1) {
