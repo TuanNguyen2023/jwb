@@ -1,6 +1,7 @@
 package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
+import com.gcs.wb.bapi.SAPSession;
 import com.gcs.wb.controller.LoginController;
 import com.sap.conn.jco.JCoException;
 import java.awt.Color;
@@ -11,7 +12,6 @@ import javax.swing.text.BadLocationException;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.hibersap.HibersapException;
-import org.hibersap.session.Session;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.ResourceMap;
@@ -311,7 +311,7 @@ public class LoginView extends javax.swing.JDialog {
         protected void failed(Throwable cause) {
             if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
                 cause = cause.getCause();
-                Session session = WeighBridgeApp.getApplication().getSAPSession();
+                SAPSession session = WeighBridgeApp.getApplication().getSAPSession();
                 if (session != null) {
                     session.close();
                     session = null;

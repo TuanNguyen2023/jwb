@@ -9,6 +9,7 @@ import com.gcs.wb.bapi.helper.TransportagentGetListBapi;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.bapi.helper.structure.BatchStocksStructure;
 import com.gcs.wb.WeighBridgeApp;
+import com.gcs.wb.bapi.SAPSession;
 import com.gcs.wb.bapi.goodsmvt.SOGetDetailBapi;
 import com.gcs.wb.bapi.goodsmvt.structure.DOCheckStructure;
 import com.gcs.wb.bapi.goodsmvt.structure.SOCheckStructure;
@@ -82,7 +83,6 @@ import javax.persistence.EntityTransaction;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import org.hibersap.session.Session;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.ResourceMap;
 
@@ -114,7 +114,7 @@ public class SAPService {
     private JFrame mainFrame = WeighBridgeApp.getApplication().getMainFrame();
     public ResourceMap resourceMapMsg = Application.getInstance(WeighBridgeApp.class).getContext().getResourceMap(TransportAgentView.class);
 
-    Session session = WeighBridgeApp.getApplication().getSAPSession();
+    SAPSession session = WeighBridgeApp.getApplication().getSAPSession();
     org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(SAPService.class);
 
     /**

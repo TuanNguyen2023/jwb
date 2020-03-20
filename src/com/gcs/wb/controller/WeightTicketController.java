@@ -5,6 +5,7 @@
 package com.gcs.wb.controller;
 
 import com.gcs.wb.WeighBridgeApp;
+import com.gcs.wb.bapi.SAPSession;
 import com.gcs.wb.bapi.goodsmvt.structure.GoodsMvtWeightTicketStructure;
 import com.gcs.wb.base.enums.ModeEnum;
 import com.gcs.wb.jpa.entity.BatchStock;
@@ -26,7 +27,6 @@ import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JRadioButton;
 import javax.swing.JRootPane;
-import org.hibersap.session.Session;
 
 /**
  *
@@ -89,7 +89,7 @@ public class WeightTicketController {
         return weightTicketService.getSapPurOrder(poNum);
     }
 
-    public void revertCompletedDO(List<String> completedDOs, List<OutboundDeliveryDetail> OutbDetailsV2, List<OutboundDelivery> outbDels, WeightTicket weightTicket, List<OutboundDeliveryDetail> outDetails_lits, Session sapSession) {
+    public void revertCompletedDO(List<String> completedDOs, List<OutboundDeliveryDetail> OutbDetailsV2, List<OutboundDelivery> outbDels, WeightTicket weightTicket, List<OutboundDeliveryDetail> outDetails_lits, SAPSession sapSession) {
         weightTicketService.revertCompletedDO(completedDOs, OutbDetailsV2, outbDels, weightTicket, outDetails_lits, sapSession);
     }
 

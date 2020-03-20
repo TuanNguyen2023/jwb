@@ -13,6 +13,7 @@ package com.gcs.wb.views;
 import com.fazecast.jSerialComm.SerialPortInvalidPortException;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.SAPErrorTransform;
+import com.gcs.wb.bapi.SAPSession;
 import com.gcs.wb.bapi.goodsmvt.GoodsMvtDoCreateBapi;
 import com.gcs.wb.bapi.goodsmvt.GoodsMvtPOSTOCreatePGIBapi;
 import com.gcs.wb.bapi.goodsmvt.GoodsMvtPoCreateBapi;
@@ -46,7 +47,6 @@ import com.sap.conn.jco.JCoException;
 import org.apache.log4j.Logger;
 import org.hibersap.HibersapException;
 import org.hibersap.SapException;
-import org.hibersap.session.Session;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.ResourceMap;
@@ -2839,7 +2839,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
 
     private class SaveWTTask extends Task<Object, Void> {
 
-        Session sapSession = null;
+        SAPSession sapSession = null;
         Object objBapi = null;
         Object objBapi_Po = null;
         Object objBapi_Posto = null;
