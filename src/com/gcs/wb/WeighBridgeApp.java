@@ -4,6 +4,7 @@
 package com.gcs.wb;
 
 import com.fazecast.jSerialComm.SerialPortInvalidPortException;
+import com.gcs.wb.bapi.SAPSession;
 import com.gcs.wb.base.exceptions.IllegalPortException;
 import com.gcs.wb.base.serials.ScaleMettler;
 import com.gcs.wb.base.serials.SerialComm;
@@ -55,7 +56,7 @@ public class WeighBridgeApp extends SingleFrameApplication {
      */
     private boolean offlineMode = false;
     private boolean authenticated = false;
-    private Session _SAPSession = null;
+    private SAPSession _SAPSession = null;
     /**
      * HiberSAP credential object
      */
@@ -357,15 +358,15 @@ public class WeighBridgeApp extends SingleFrameApplication {
     /**
      * @return the _SAPSession
      */
-    public Session getSAPSession() {
+    public SAPSession getSAPSession() {
         return _SAPSession;
     }
 
     /**
      * @param SAPSession the _SAPSession to set
      */
-    public void setSAPSession(Session SAPSession) {
-        this._SAPSession = SAPSession;
+    public void setSAPSession(SAPSession sapSession) {
+        this._SAPSession = sapSession;
     }
     // </editor-fold>
 
