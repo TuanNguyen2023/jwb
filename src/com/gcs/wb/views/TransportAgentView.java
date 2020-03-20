@@ -149,13 +149,13 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
             pnTransportAgentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnTransportAgentLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(spnTransportAgent, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
+                .addComponent(spnTransportAgent, javax.swing.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE)
                 .addContainerGap())
         );
         pnTransportAgentLayout.setVerticalGroup(
             pnTransportAgentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnTransportAgentLayout.createSequentialGroup()
-                .addComponent(spnTransportAgent, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE)
+                .addComponent(spnTransportAgent, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -266,11 +266,11 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
             .addGroup(pnVehicleLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(spnVehicle, javax.swing.GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE)
+                    .addComponent(spnVehicle, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
                     .addComponent(lblLicensePlate)
                     .addGroup(pnVehicleLayout.createSequentialGroup()
                         .addComponent(btnVehicleRemove)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 145, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 147, Short.MAX_VALUE)
                         .addComponent(btnVehicleSave))
                     .addGroup(pnVehicleLayout.createSequentialGroup()
                         .addGroup(pnVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -279,16 +279,16 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
                             .addComponent(lblValidTo))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(pnVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtLicensePlate, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
-                            .addComponent(cbxVehicleType, 0, 190, Short.MAX_VALUE)
-                            .addComponent(dpValidFrom, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
-                            .addComponent(dpValidTo, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE))))
+                            .addComponent(txtLicensePlate, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
+                            .addComponent(cbxVehicleType, 0, 192, Short.MAX_VALUE)
+                            .addComponent(dpValidFrom, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
+                            .addComponent(dpValidTo, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         pnVehicleLayout.setVerticalGroup(
             pnVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnVehicleLayout.createSequentialGroup()
-                .addComponent(spnVehicle, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
+                .addComponent(spnVehicle, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(pnVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblLicensePlate)
@@ -320,7 +320,7 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(pnTransportAgent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnVehicle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(pnVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -407,7 +407,6 @@ private void btnVehicleRemoveActionPerformed(java.awt.event.ActionEvent evt) {//
 }//GEN-LAST:event_btnVehicleRemoveActionPerformed
 
 private void dpValidFromPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_dpValidFromPropertyChange
-// TODO add your handling code here:
     if (SDATE.equals(evt.getPropertyName())) {
         validateForm();
     }
@@ -466,11 +465,17 @@ private void cbxVehicleTypeActionPerformed(java.awt.event.ActionEvent evt) {//GE
     }
 
     private boolean validateLicensePlate() {
-        boolean isLicensePlate = false;
         String licensePlateStr = txtLicensePlate.getText().trim();
 
-        Matcher matcher = Constants.TransportAgent.LICENSE_PLATE_PATTERN.matcher(licensePlateStr);
-        isLicensePlate = !licensePlateStr.isEmpty() && matcher.matches();
+        Matcher matcher;
+        VehicleType vehicleType = (VehicleType) cbxVehicleType.getSelectedItem();
+        if (vehicleType == null || vehicleType.getType() == Constants.TransportAgent.STRUCK_TYPE) {
+            matcher = Constants.TransportAgent.LICENSE_PLATE_PATTERN.matcher(licensePlateStr);
+        } else {
+            matcher = Constants.TransportAgent.LICENSE_PLATE_WATER_PATTERN.matcher(licensePlateStr);
+        }
+
+        boolean isLicensePlate = !licensePlateStr.isEmpty() && matcher.matches();
         lblLicensePlate.setForeground(isLicensePlate ? Color.black : Color.red);
 
         return isLicensePlate;

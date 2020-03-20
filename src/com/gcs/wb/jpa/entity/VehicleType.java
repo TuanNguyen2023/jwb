@@ -5,9 +5,9 @@
  */
 package com.gcs.wb.jpa.entity;
 
+import com.gcs.wb.base.constant.Constants;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -36,6 +36,8 @@ public class VehicleType implements Serializable {
     private int id;
     @Column(name = "name")
     private String name;
+    @Column(name = "type")
+    private int type = Constants.TransportAgent.STRUCK_TYPE;
     @Column(name = "created_date")
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date createdDate;
@@ -61,6 +63,14 @@ public class VehicleType implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public Date getCreatedDate() {
