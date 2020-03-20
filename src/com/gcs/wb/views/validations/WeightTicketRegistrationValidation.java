@@ -66,6 +66,17 @@ public class WeightTicketRegistrationValidation {
 
         return result;
     }
+    
+    public boolean validateSalan(String value, JComponent label) {
+        value = value.trim();
+
+        Matcher matcher = Constants.TransportAgent.LICENSE_SALAN_PATTERN.matcher(value);
+        boolean result = matcher.matches();
+
+        label.setForeground(result ? Color.black : Color.red);
+
+        return result;
+    }
 
     public boolean validatePlateNoWithDB(String value, JComponent label) {
         value = value.trim();
