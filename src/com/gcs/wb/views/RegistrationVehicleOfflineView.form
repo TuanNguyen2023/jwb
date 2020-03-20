@@ -40,14 +40,14 @@
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="pnShowFilter" alignment="1" max="32767" attributes="0"/>
-                  <Component id="spnResult" alignment="1" pref="1160" max="32767" attributes="2"/>
+                  <Component id="spnResult" alignment="1" pref="1170" max="32767" attributes="2"/>
                   <Component id="pnFilter" alignment="1" max="32767" attributes="2"/>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="pnRegistrationOfVehicle" max="32767" attributes="2"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="pnROVRight" max="32767" attributes="0"/>
                   </Group>
-                  <Component id="pnPrintControl" alignment="0" pref="1160" max="32767" attributes="1"/>
+                  <Component id="pnPrintControl" alignment="0" pref="1170" max="32767" attributes="1"/>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
@@ -60,7 +60,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="pnShowFilter" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="spnResult" pref="180" max="32767" attributes="0"/>
+              <Component id="spnResult" pref="157" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="pnPrintControl" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
@@ -93,7 +93,7 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" pref="152" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="156" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
                       <Component id="lblDriverName" alignment="1" min="-2" max="-2" attributes="0"/>
                       <Component id="lblDateFrom" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -128,14 +128,14 @@
                           </Group>
                           <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="cbxModeSearch" pref="183" max="32767" attributes="2"/>
-                              <Component id="txtCreator" alignment="0" pref="183" max="32767" attributes="2"/>
+                              <Component id="cbxModeSearch" pref="189" max="32767" attributes="2"/>
+                              <Component id="txtCreator" alignment="0" pref="189" max="32767" attributes="2"/>
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="cbxHourFrom" pref="63" max="32767" attributes="0"/>
+                                  <Component id="cbxHourFrom" pref="65" max="32767" attributes="0"/>
                                   <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lblHourTo" max="32767" attributes="0"/>
+                                  <Component id="lblHourTo" pref="24" max="32767" attributes="0"/>
                                   <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cbxHourTo" pref="70" max="32767" attributes="0"/>
+                                  <Component id="cbxHourTo" pref="72" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -514,16 +514,19 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Component id="pnROVLeft" alignment="0" max="32767" attributes="1"/>
-              <Component id="pnControl" alignment="1" pref="569" max="32767" attributes="3"/>
+              <Group type="102" alignment="1" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="pnControl" pref="582" max="32767" attributes="3"/>
+              </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <Component id="pnROVLeft" min="-2" max="-2" attributes="1"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="pnControl" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="84" max="32767" attributes="0"/>
+                  <EmptySpace pref="122" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -540,71 +543,63 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="lblSalanN" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Component id="lblNoteN" alignment="1" min="-2" max="-2" attributes="0"/>
-                          <Component id="lblProductionBatchN" alignment="1" min="-2" max="-2" attributes="0"/>
-                          <Component id="lblSoNiemXaN" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="rbtInput" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="rbtOutput" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="lblPlateNoN" min="-2" max="-2" attributes="0"/>
                           <Component id="lblCMNDN" min="-2" max="-2" attributes="0"/>
                           <Component id="lblDriverNameN" min="-2" max="-2" attributes="0"/>
                           <Component id="lblRegisterIdN" min="-2" max="-2" attributes="0"/>
                           <Component id="lblWeightTickerRefN" min="-2" max="-2" attributes="0"/>
                           <Component id="lblTicketIdN" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblProductionBatchN" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblPlateNoN" min="-2" max="-2" attributes="0"/>
                           <Component id="lblSlingN" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblSoNiemXaN" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="txtNoteN" pref="369" max="32767" attributes="1"/>
-                          <Component id="txtProductionBatchN" alignment="0" pref="369" max="32767" attributes="1"/>
-                          <Component id="txtSoNiemXaN" alignment="0" pref="369" max="32767" attributes="1"/>
-                          <Component id="cbxModeType" alignment="0" pref="369" max="32767" attributes="0"/>
-                          <Component id="txtTicketIdN" alignment="0" pref="369" max="32767" attributes="1"/>
-                          <Component id="txtCMNDN" alignment="0" pref="369" max="32767" attributes="1"/>
-                          <Component id="txtWeightTickerRefN" alignment="0" pref="369" max="32767" attributes="1"/>
-                          <Component id="txtDriverNameN" alignment="0" pref="369" max="32767" attributes="1"/>
-                          <Component id="txtRegisterIdN" alignment="0" pref="369" max="32767" attributes="1"/>
+                          <Component id="txtSoNiemXaN" pref="402" max="32767" attributes="1"/>
+                          <Component id="txtNoteN" pref="402" max="32767" attributes="1"/>
+                          <Component id="txtProductionBatchN" pref="402" max="32767" attributes="1"/>
                           <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="1" attributes="0">
-                                      <Component id="txtPlateNoN" pref="82" max="32767" attributes="1"/>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="lblTrailerNoN" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="1" attributes="0">
-                                      <Component id="txtSlingN" pref="124" max="32767" attributes="1"/>
-                                      <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="lblPalletN" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                                      <Component id="txtPalletN" pref="124" max="32767" attributes="1"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="txtTrailerNoN" min="-2" pref="86" max="-2" attributes="1"/>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="lblTonnageN" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="txtTonnageN" pref="56" max="32767" attributes="0"/>
-                                  </Group>
-                              </Group>
+                              <Component id="txtSlingN" min="-2" pref="127" max="-2" attributes="1"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="lblPalletN" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="txtPalletN" pref="176" max="32767" attributes="1"/>
                           </Group>
+                          <Component id="cbxModeType" alignment="0" pref="402" max="32767" attributes="0"/>
+                          <Component id="txtTicketIdN" alignment="0" pref="402" max="32767" attributes="1"/>
+                          <Component id="txtCMNDN" alignment="0" pref="402" max="32767" attributes="1"/>
+                          <Component id="txtWeightTickerRefN" alignment="0" pref="402" max="32767" attributes="1"/>
+                          <Component id="txtDriverNameN" alignment="0" pref="402" max="32767" attributes="1"/>
+                          <Component id="txtRegisterIdN" alignment="0" pref="402" max="32767" attributes="1"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="txtPlateNoN" pref="98" max="32767" attributes="1"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="lblTrailerNoN" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="txtTrailerNoN" min="-2" pref="86" max="-2" attributes="1"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="lblTonnageN" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="txtTonnageN" pref="75" max="32767" attributes="0"/>
+                          </Group>
+                          <Component id="txtSalanN" alignment="0" pref="402" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="lblTonngageUnitN" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="cbxModeType" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -648,8 +643,13 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="txtSlingN" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblSalanN" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtSalanN" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="lblSlingN" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtSlingN" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="lblPalletN" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="txtPalletN" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -668,7 +668,7 @@
                           <Component id="lblNoteN" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="txtNoteN" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="56" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -908,6 +908,21 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxModeTypeActionPerformed"/>
               </Events>
             </Component>
+            <Component class="javax.swing.JLabel" name="lblSalanN">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblSalanN.text"/>
+                <Property name="name" type="java.lang.String" value="lblSalanN" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtSalanN">
+              <Properties>
+                <Property name="name" type="java.lang.String" value="txtSalanN" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtSalanNFocusLost"/>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtSalanNKeyReleased"/>
+              </Events>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="pnControl">
@@ -924,7 +939,7 @@
                       <Component id="btnClear" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="btnSave" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="346" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="372" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1114,7 +1129,7 @@
                       <Component id="cbxVendorTransportN" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
                       <Component id="lblVendorTransportN" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="42" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -1406,7 +1421,7 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace pref="1065" max="32767" attributes="0"/>
+                  <EmptySpace pref="1075" max="32767" attributes="0"/>
                   <Component id="btnShowFilter" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
