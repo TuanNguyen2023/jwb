@@ -4184,7 +4184,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             ).subtract(weightTicketRegistarationController.getSumGqtyWithPoNo(purchaseOrder.getPoNumber()));
 
             BigDecimal result = numCheckWeight.subtract(qty);
-            if (result.compareTo(BigDecimal.ZERO) <= 0) {
+            if (result.compareTo(BigDecimal.ZERO) < 0) {
                 return false;
             }
         }
