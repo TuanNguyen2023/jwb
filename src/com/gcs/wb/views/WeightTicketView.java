@@ -3611,7 +3611,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     purchaseOrder = purchaseOrderRepository.findByPoNumber(weightTicket.getWeightTicketDetail().getEbeln());
                     if (validateQuantityPO(purchaseOrder, new BigDecimal(Double.toString(result)))) {
                         txfGoodsQty.setValue(result);
-                        weightTicket.setGQty(new BigDecimal(Double.toString(result)));
+                        weightTicket.setGQty(new BigDecimal(Double.toString(result)).setScale(3, RoundingMode.HALF_UP));
                     } else {
                         String msg = "Không thể nhập hàng vì trọng lượng vượt quá đăng ký!";
                         JOptionPane.showMessageDialog(rootPane, msg);
@@ -3667,7 +3667,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
 
                         if ((lower <= result && result <= upper)) {
                             txfGoodsQty.setValue(result);
-                            weightTicket.setGQty(new BigDecimal(Double.toString(result)));
+                            weightTicket.setGQty(new BigDecimal(Double.toString(result)).setScale(3, RoundingMode.HALF_UP));
                             checkVariant = true;
                         } else {
                             String msg = "Chênh lệch vượt dung sai cho phép!";
@@ -3682,14 +3682,14 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         }
                     } else {
                         txfGoodsQty.setValue(result);
-                        weightTicket.setGQty(new BigDecimal(Double.toString(result)));
+                        weightTicket.setGQty(new BigDecimal(Double.toString(result)).setScale(3, RoundingMode.HALF_UP));
                     }
                 } else if (isSubContract() && weightTicket.getLgort() != null && weightTicket.getCharg() != null) {
                     setMessage(resourceMapMsg.getString("msg.checkIssetWarehouse"));
                     Double remaining = CheckMatStock(weightTicket.getWeightTicketDetail().getMatnrRef(), configuration.getWkPlant(), weightTicket.getLgort(), weightTicket.getCharg());
                     if (result <= remaining) {
                         txfGoodsQty.setValue(result);
-                        weightTicket.setGQty(new BigDecimal(Double.toString(result)));
+                        weightTicket.setGQty(new BigDecimal(Double.toString(result)).setScale(3, RoundingMode.HALF_UP));
                     } else {
                         JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.oBiggerWarehouse"));
                         txfOutQty.setValue(null);
@@ -3699,14 +3699,14 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     }
                 } else {
                     txfGoodsQty.setValue(result);
-                    weightTicket.setGQty(new BigDecimal(Double.toString(result)));
+                    weightTicket.setGQty(new BigDecimal(Double.toString(result)).setScale(3, RoundingMode.HALF_UP));
                 }
             }
             if (isStage1()) {
                 txfInQty.setValue(txfCurScale.getValue());
                 txtInTime.setText(formatter.format(now));
                 weightTicket.setFCreator(WeighBridgeApp.getApplication().getLogin().getUid());
-                weightTicket.setFScale(new BigDecimal(((Number) txfInQty.getValue()).doubleValue()));
+                weightTicket.setFScale(new BigDecimal(((Number) txfInQty.getValue()).doubleValue()).setScale(3, RoundingMode.HALF_UP));
                 weightTicket.setFTime(now);
                 lblIScale.setForeground(Color.black);
                 OutboundDeliveryDetail item;
@@ -3726,7 +3726,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 txfOutQty.setValue(txfCurScale.getValue());
                 txtOutTime.setText(formatter.format(now));
                 weightTicket.setSCreator(WeighBridgeApp.getApplication().getLogin().getUid());
-                weightTicket.setSScale(new BigDecimal(((Number) txfOutQty.getValue()).doubleValue()));
+                weightTicket.setSScale(new BigDecimal(((Number) txfOutQty.getValue()).doubleValue()).setScale(3, RoundingMode.HALF_UP));
                 weightTicket.setSTime(now);
                 lblOScale.setForeground(Color.black);
                 OutboundDeliveryDetail item;
