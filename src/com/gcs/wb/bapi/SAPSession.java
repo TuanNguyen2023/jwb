@@ -6,6 +6,7 @@
 package com.gcs.wb.bapi;
 
 import com.gcs.wb.WeighBridgeApp;
+import com.gcs.wb.service.LoginService;
 import com.sap.conn.jco.JCoException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -33,17 +34,31 @@ public class SAPSession {
     }
 
     public void execute(Object bapiObject) {
-        try {
-            session.execute(bapiObject);
-        } catch (Exception ex) {
-            if (ex.getCause() instanceof JCoException) {
-                JCoException jcoException = (JCoException) ex.getCause();
-                if (jcoException.getGroup() == JCoException.JCO_ERROR_COMMUNICATION) {
-                    JOptionPane.showMessageDialog(mainFrame, "Mất kết nối đến SAP, vui lòng kiểm tra lại!");
+        while (true) {
+            try {
+                session.execute(bapiObject);
+                break;
+            } catch (Exception ex) {
+                if (ex.getCause() instanceof JCoException) {
+                    JCoException jcoException = (JCoException) ex.getCause();
+                    if (jcoException.getGroup() == JCoException.JCO_ERROR_COMMUNICATION) {
+                        int answer = JOptionPane.showConfirmDialog(
+                                mainFrame,
+                                "Mất kết nối đến SAP, kết nối lại?",
+                                JOptionPane.OPTIONS_PROPERTY,
+                                JOptionPane.YES_NO_OPTION,
+                                JOptionPane.QUESTION_MESSAGE);
+
+                        if (answer == JOptionPane.YES_OPTION) {
+                            LoginService loginService = new LoginService();
+                            session = loginService.reconnectSapSession();
+                            continue;
+                        }
+                    }
                 }
+
+                throw ex;
             }
-            
-            throw ex;
         }
     }
 
