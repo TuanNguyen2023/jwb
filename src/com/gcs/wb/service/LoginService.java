@@ -33,6 +33,8 @@ import org.hibersap.session.SessionManager;
  */
 public class LoginService {
 
+    static SessionManager sessionManager;
+    static Credentials credentials;
     private EntityManager entityManager = JPAConnector.getInstance();
     private EntityTransaction entityTransaction = entityManager.getTransaction();
     private AppConfig appConfig = WeighBridgeApp.getApplication().getConfig();
@@ -42,15 +44,26 @@ public class LoginService {
     org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(LoginService.class);
 
     public Session getSapSession(Credentials credentials) throws Exception {
+        LoginService.credentials = credentials;
         SAPSession sapSession = WeighBridgeApp.getApplication().getSAPSession();
         Session session = sapSession != null ? sapSession.getSession() : null;
         if (session != null) {
             session.close();
         }
-        SessionManager sessionManager = BAPIConfiguration.getSessionManager(appConfig, credentials);
+        sessionManager = BAPIConfiguration.getSessionManager(appConfig, credentials);
         session = sessionManager.openSession(credentials);
         WeighBridgeApp.getApplication().setSAPSession(new SAPSession(session));
         return session;
+    }
+    
+    public Session reconnectSapSession() {
+        SAPSession sapSession = WeighBridgeApp.getApplication().getSAPSession();
+        Session session = sapSession != null ? sapSession.getSession() : null;
+        if (session != null) {
+            session.close();
+        }
+
+       return sessionManager.openSession(credentials);
     }
 
     public void checkVersionWB(Session session) throws Exception {
