@@ -22,7 +22,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tbl_user")
 @NamedQueries({
-    @NamedQuery(name = "User.findByUid", query = "SELECT u FROM User u WHERE u.uid = :uid")})
+    @NamedQuery(name = "User.findByUid", query = "SELECT u FROM User u WHERE u.uid = :uid"),
+    @NamedQuery(name = "User.findByMandtWplantUid", query = "SELECT u FROM User u WHERE u.mandt = :mandt AND u.wplant = :wplant AND u.uid = :uid")})
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;

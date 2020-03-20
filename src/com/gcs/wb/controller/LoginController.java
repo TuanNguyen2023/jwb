@@ -78,7 +78,7 @@ public class LoginController {
         userGetDetailBapi.setUserName(username);
 
         try {
-            user = userRepository.findByUid(username);
+            user = userRepository.findByMandtWplantUid(configuration.getSapClient(), configuration.getWkPlant(), username);
 
             if ((user == null) || (user != null && !user.getPassword().equals(password))) {
                 throw new Exception(resourceMap.getString("msg.offlineUsernameOrPasswordInvalid"));
