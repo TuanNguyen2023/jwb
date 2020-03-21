@@ -20,6 +20,7 @@ public class SAPSession {
 
     private Session session = null;
     private JFrame mainFrame = WeighBridgeApp.getApplication().getMainFrame();
+    org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(SAPSession.class);
 
     public SAPSession(Session session) {
         this.session = session;
@@ -39,6 +40,7 @@ public class SAPSession {
                 session.execute(bapiObject);
                 break;
             } catch (Exception ex) {
+                logger.error(ex);
                 if (ex.getCause() instanceof JCoException) {
                     JCoException jcoException = (JCoException) ex.getCause();
                     if (jcoException.getGroup() == JCoException.JCO_ERROR_COMMUNICATION) {

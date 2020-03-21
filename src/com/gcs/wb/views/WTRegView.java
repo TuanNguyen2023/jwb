@@ -3032,8 +3032,20 @@ private void txtSalanNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         }
     }
 
+    private boolean isSapDisConnectException(Throwable ex) {
+        if (ex.getCause() instanceof JCoException) {
+            JCoException jcoException = (JCoException) ex.getCause();
+            if (jcoException.getGroup() == JCoException.JCO_ERROR_COMMUNICATION) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private class CheckDOTask extends org.jdesktop.application.Task<Object, Void> {
 
+        private boolean canceled = false;
         private List<String> strMaterial = new ArrayList<>();
         private List<String> matnrs = new ArrayList<>();
         private BigDecimal totalWeight = BigDecimal.ZERO;
@@ -3141,7 +3153,7 @@ private void txtSalanNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
         }
 
-        private OutboundDelivery syncOutboundDelivery(String deliveryOrderNo, OutboundDelivery outboundDelivery) {
+        private OutboundDelivery syncOutboundDelivery(String deliveryOrderNo, OutboundDelivery outboundDelivery) throws Exception {
             try {
                 setStep(2, resourceMapMsg.getString("checkDOInSap"));
                 OutboundDelivery sapOutboundDelivery = sapService.getOutboundDelivery(deliveryOrderNo);
@@ -3149,6 +3161,11 @@ private void txtSalanNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 setStep(3, resourceMapMsg.getString("msg.saveDataDOToDb"));
                 return sapService.syncOutboundDelivery(sapOutboundDelivery, outboundDelivery, deliveryOrderNo);
             } catch (Exception ex) {
+                if (isSapDisConnectException(ex)) {
+                    canceled = true;
+                    throw ex;
+                }
+
                 return null;
             }
         }
@@ -3159,6 +3176,11 @@ private void txtSalanNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 Customer sapCustomer = sapService.getCustomer(kunnr);
                 return sapService.syncCustomer(sapCustomer, dbCustomer);
             } catch (Exception ex) {
+                if (isSapDisConnectException(ex)) {
+                    canceled = true;
+                    throw ex;
+                }
+
                 return null;
             }
         }
@@ -3265,11 +3287,14 @@ private void txtSalanNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             // for check edit plateNo after check DO
             plateNoValidDO = "";
             checkedCharg = "";
-            if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
-                cause = cause.getCause();
+
+            if (!canceled) {
+                if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
+                    cause = cause.getCause();
+                }
+                logger.error(null, cause);
+                JOptionPane.showMessageDialog(rootPane, cause.getMessage());
             }
-            logger.error(null, cause);
-            JOptionPane.showMessageDialog(rootPane, cause.getMessage());
 
             validateForm();
         }
@@ -3796,6 +3821,7 @@ private void txtSalanNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
     private class CheckPOTask extends Task<Object, Void> {
 
+        private boolean canceled = false;
         private String strVendor = "";
         private String strMatnr = null;
         private BigDecimal totalWeight = BigDecimal.ZERO;
@@ -3929,11 +3955,13 @@ private void txtSalanNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             loadSLoc(null, null);
 
             isValidPO = false;
-            if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
-                cause = cause.getCause();
+            if (!canceled) {
+                if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
+                    cause = cause.getCause();
+                }
+                logger.error(null, cause);
+                JOptionPane.showMessageDialog(rootPane, cause.getMessage());
             }
-            logger.error(null, cause);
-            JOptionPane.showMessageDialog(rootPane, cause.getMessage());
 
             validateForm();
         }
@@ -3945,7 +3973,7 @@ private void txtSalanNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             setProgress(step, 1, 4);
         }
 
-        private PurchaseOrder syncPurchaseOrder(String poNum, PurchaseOrder purchaseOrder) {
+        private PurchaseOrder syncPurchaseOrder(String poNum, PurchaseOrder purchaseOrder) throws Exception {
             try {
                 setStep(2, resourceMapMsg.getString("checkPOInSap"));
                 PurchaseOrder sapPurchaseOrder = sapService.getPurchaseOrder(poNum);
@@ -3954,6 +3982,11 @@ private void txtSalanNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 setStep(3, resourceMapMsg.getString("msg.saveDataPOToDb"));
                 return sapService.syncPurchaseOrder(sapPurchaseOrder, purchaseOrder);
             } catch (Exception ex) {
+                if (isSapDisConnectException(ex)) {
+                    canceled = true;
+                    throw ex;
+                }
+
                 return null;
             }
         }
@@ -3964,6 +3997,11 @@ private void txtSalanNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 Customer sapCustomer = sapService.getCustomer(kunnr);
                 return sapService.syncCustomer(sapCustomer, dbCustomer);
             } catch (Exception ex) {
+                if (isSapDisConnectException(ex)) {
+                    canceled = true;
+                    throw ex;
+                }
+
                 return null;
             }
         }
@@ -4020,6 +4058,7 @@ private void txtSalanNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
     private class CheckPOSTOTask extends Task<Object, Void> {
 
+        private boolean canceled = false;
         private String strVendor = "";
 
         CheckPOSTOTask(Application app) {
@@ -4070,7 +4109,7 @@ private void txtSalanNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             }
 
             // check PO is released
-            if (Objects.equals(purchaseOrderPO.getPoRelInd(), Constants.PurchaseOrder.PO_REL_IND_NOT_RELEASED)) {
+            if (Objects.equals(purchaseOrderPOSTO.getPoRelInd(), Constants.PurchaseOrder.PO_REL_IND_NOT_RELEASED)) {
                 throw new Exception(resourceMapMsg.getString("msg.poNotReleased", postoNum));
             }
 
@@ -4097,11 +4136,13 @@ private void txtSalanNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             isValidPOSTO = false;
             cbxVendorLoadingN.setSelectedIndex(-1);
 
-            if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
-                cause = cause.getCause();
+            if (!canceled) {
+                if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
+                    cause = cause.getCause();
+                }
+                logger.error(null, cause);
+                JOptionPane.showMessageDialog(rootPane, cause.getMessage());
             }
-            logger.error(null, cause);
-            JOptionPane.showMessageDialog(rootPane, cause.getMessage());
 
             validateForm();
         }
@@ -4113,7 +4154,7 @@ private void txtSalanNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             setProgress(step, 1, 4);
         }
 
-        private PurchaseOrder syncPurchaseOrder(String poNum, PurchaseOrder purchaseOrder) {
+        private PurchaseOrder syncPurchaseOrder(String poNum, PurchaseOrder purchaseOrder) throws Exception {
             try {
                 setStep(2, resourceMapMsg.getString("checkPOSTOInSap"));
                 PurchaseOrder sapPurchaseOrder = sapService.getPurchaseOrder(poNum);
@@ -4121,6 +4162,11 @@ private void txtSalanNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 setStep(3, resourceMapMsg.getString("msg.saveDataPOSTOToDb"));
                 return sapService.syncPurchaseOrder(sapPurchaseOrder, purchaseOrder);
             } catch (Exception ex) {
+                if (isSapDisConnectException(ex)) {
+                    canceled = true;
+                    throw ex;
+                }
+
                 return null;
             }
         }
