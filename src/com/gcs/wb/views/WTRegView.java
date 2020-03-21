@@ -3856,6 +3856,11 @@ private void txtSalanNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 throw new Exception(resourceMapMsg.getString("msg.postoIsMatnr"));
             }
 
+            // check PO is released
+            if (Objects.equals(purchaseOrderPO.getPoRelInd(), Constants.PurchaseOrder.PO_REL_IND_NOT_RELEASED)) {
+                throw new Exception(resourceMapMsg.getString("msg.poNotReleased", poNum));
+            }
+
             updateWeightTicket(purchaseOrderPO);
 
             setStep(4, null);
@@ -4062,6 +4067,11 @@ private void txtSalanNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                     && (purchaseOrderPO != null)
                     && (!purchaseOrderPOSTO.getPurchaseOrderDetail().getMaterial().equals(purchaseOrderPO.getPurchaseOrderDetail().getMaterial()))) {
                 throw new Exception(resourceMapMsg.getString("msg.postoIsMatnr"));
+            }
+
+            // check PO is released
+            if (Objects.equals(purchaseOrderPO.getPoRelInd(), Constants.PurchaseOrder.PO_REL_IND_NOT_RELEASED)) {
+                throw new Exception(resourceMapMsg.getString("msg.poNotReleased", postoNum));
             }
 
             updateWeightTicket(purchaseOrderPOSTO);
