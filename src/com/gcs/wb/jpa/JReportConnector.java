@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.logging.Level;
+import javax.swing.JOptionPane;
 
 import org.apache.log4j.Logger;
 import org.eclipse.persistence.config.PersistenceUnitProperties;
@@ -23,26 +24,22 @@ public class JReportConnector {
     private JReportConnector() {
     }
 
-    public static Connection getInstance() {
+    public static Connection getInstance() throws ClassNotFoundException, SQLException {
         if (instance != null) {
             return instance;
         } else {
-            try {
-                Class.forName((String) DataSources.getJweighbridgeProperties().get(PersistenceUnitProperties.JDBC_DRIVER));
-                
-                instance = DriverManager.getConnection(
-                        (String) DataSources.getJweighbridgeProperties().get(PersistenceUnitProperties.JDBC_URL),
-                        (String) DataSources.getJweighbridgeProperties().get(PersistenceUnitProperties.JDBC_USER),
-                        (String) DataSources.getJweighbridgeProperties().get(PersistenceUnitProperties.JDBC_PASSWORD));
-                
-            } catch (Exception e) {
-                java.util.logging.Logger.getLogger(JReportConnector.class.getName()).log(Level.SEVERE, null, e);
-            }
+            Class.forName((String) DataSources.getJweighbridgeProperties().get(PersistenceUnitProperties.JDBC_DRIVER));
+
+            instance = DriverManager.getConnection(
+                    (String) DataSources.getJweighbridgeProperties().get(PersistenceUnitProperties.JDBC_URL),
+                    (String) DataSources.getJweighbridgeProperties().get(PersistenceUnitProperties.JDBC_USER),
+                    (String) DataSources.getJweighbridgeProperties().get(PersistenceUnitProperties.JDBC_PASSWORD));
+
             return instance;
         }
     }
 
-    public static void close(){
+    public static void close() {
         if (instance != null) {
             try {
                 instance.close();

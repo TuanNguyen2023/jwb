@@ -373,7 +373,7 @@ public class WeightTicketRepository {
         typedQuery.setParameter("wplant", configuration.getWkPlant());
         return typedQuery.getResultList();
     }
-    
+
     public WeightTicket findByDOFromPO(String doNum) {
         WeightTicket weightTicket = null;
         String modePlant = "OUT_PLANT_PLANT";
@@ -381,7 +381,7 @@ public class WeightTicketRepository {
         typedQuery.setParameter("deliveryOrderNo", doNum);
         typedQuery.setParameter("mode", modePlant);
         typedQuery.setParameter("mandt", configuration.getSapClient());
-        
+
         List<WeightTicket> weightTickets = typedQuery.getResultList();
         if (weightTickets != null && weightTickets.size() > 0) {
             weightTicket = weightTickets.get(0);

@@ -5,6 +5,7 @@
 package com.gcs.wb.service;
 
 import com.gcs.wb.WeighBridgeApp;
+import com.gcs.wb.bapi.SAPSession;
 import com.gcs.wb.bapi.goodsmvt.GoodsMvtDoCreateBapi;
 import com.gcs.wb.bapi.goodsmvt.GoodsMvtPOSTOCreatePGIBapi;
 import com.gcs.wb.bapi.goodsmvt.GoodsMvtPoCreateBapi;
@@ -62,7 +63,6 @@ public class WeightTicketService {
     JReportService jreportService = new JReportService();
     PurchaseOrderRepository purchaseOrderRepository = new PurchaseOrderRepository();
     EntityTransaction entityTransaction = entityManager.getTransaction();
-    Session session = WeighBridgeApp.getApplication().getSAPSession();
     private final Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
     WeightTicketRegistrationService weightTicketRegistrationService = new WeightTicketRegistrationService();
     MaterialRepository materialRepository = new MaterialRepository();
@@ -92,7 +92,6 @@ public class WeightTicketService {
         DefaultComboBoxModel result = new DefaultComboBoxModel();
         for (BatchStock b : batchs) {
             if (b.getLvorm() == null || b.getLvorm().toString().trim().isEmpty()) {
-                // Fillter BATCH not contain "-" by Tuanna -10.01.2013 
                 if (configuration.getWkPlant().contains("1311")) {
                     result.addElement(b.getCharg());
                 } else if (!b.getCharg().contains("-")) {
@@ -164,7 +163,7 @@ public class WeightTicketService {
         return sapService.getPurchaseOrder(poNum);
     }
 
-    public void revertCompletedDO(List<String> completedDOs, List<OutboundDeliveryDetail> OutbDetailsV2, List<OutboundDelivery> outbDels, WeightTicket weightTicket, List<OutboundDeliveryDetail> outDetails_lits, Session sapSession) {
+    public void revertCompletedDO(List<String> completedDOs, List<OutboundDeliveryDetail> OutbDetailsV2, List<OutboundDelivery> outbDels, WeightTicket weightTicket, List<OutboundDeliveryDetail> outDetails_lits, SAPSession sapSession) {
         DORevertBapi bapi = null;
         for (String item : completedDOs) {
             bapi = new DORevertBapi(item);
@@ -273,6 +272,7 @@ public class WeightTicketService {
         stWT.setVTYPE(od != null ? od.getBwtar() : "");
         stWT.setBatch(od != null ? od.getCharg() : "");
         stWT.setLfart(od != null ? od.getLfart() : "");
+        stWT.setChargEnh(wt.getChargEnh());
 
         return stWT;
     }

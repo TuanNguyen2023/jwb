@@ -379,6 +379,8 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
         rbtInput = new javax.swing.JRadioButton();
         rbtOutput = new javax.swing.JRadioButton();
         cbxModeType = new javax.swing.JComboBox();
+        lblSalanN = new javax.swing.JLabel();
+        txtSalanN = new javax.swing.JTextField();
         pnControl = new javax.swing.JPanel();
         btnNew = new javax.swing.JButton();
         btnClear = new javax.swing.JButton();
@@ -558,7 +560,7 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
         pnFilterLayout.setHorizontalGroup(
             pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnFilterLayout.createSequentialGroup()
-                .addGap(152, 152, 152)
+                .addGap(156, 156, 156)
                 .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lblDriverName)
                     .addComponent(lblDateFrom)
@@ -588,14 +590,14 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
                             .addComponent(lblMode))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbxModeSearch, 0, 183, Short.MAX_VALUE)
-                            .addComponent(txtCreator, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
+                            .addComponent(cbxModeSearch, 0, 189, Short.MAX_VALUE)
+                            .addComponent(txtCreator, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
                             .addGroup(pnFilterLayout.createSequentialGroup()
-                                .addComponent(cbxHourFrom, 0, 63, Short.MAX_VALUE)
+                                .addComponent(cbxHourFrom, 0, 65, Short.MAX_VALUE)
                                 .addGap(18, 18, 18)
-                                .addComponent(lblHourTo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblHourTo, javax.swing.GroupLayout.DEFAULT_SIZE, 24, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(cbxHourTo, 0, 70, Short.MAX_VALUE)))))
+                                .addComponent(cbxHourTo, 0, 72, Short.MAX_VALUE)))))
                 .addGap(104, 104, 104)
                 .addComponent(btnHideFilter)
                 .addContainerGap())
@@ -854,6 +856,21 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
             }
         });
 
+        lblSalanN.setText(resourceMap.getString("lblSalanN.text")); // NOI18N
+        lblSalanN.setName("lblSalanN"); // NOI18N
+
+        txtSalanN.setName("txtSalanN"); // NOI18N
+        txtSalanN.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtSalanNFocusLost(evt);
+            }
+        });
+        txtSalanN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtSalanNKeyReleased(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnROVLeftLayout = new javax.swing.GroupLayout(pnROVLeft);
         pnROVLeft.setLayout(pnROVLeftLayout);
         pnROVLeftLayout.setHorizontalGroup(
@@ -861,55 +878,52 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
             .addGroup(pnROVLeftLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblSalanN)
                     .addComponent(lblNoteN)
-                    .addComponent(lblProductionBatchN)
-                    .addComponent(lblSoNiemXaN)
                     .addGroup(pnROVLeftLayout.createSequentialGroup()
                         .addComponent(rbtInput)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(rbtOutput))
-                    .addComponent(lblPlateNoN)
                     .addComponent(lblCMNDN)
                     .addComponent(lblDriverNameN)
                     .addComponent(lblRegisterIdN)
                     .addComponent(lblWeightTickerRefN)
                     .addComponent(lblTicketIdN)
-                    .addComponent(lblSlingN))
+                    .addComponent(lblProductionBatchN)
+                    .addComponent(lblPlateNoN)
+                    .addComponent(lblSlingN)
+                    .addComponent(lblSoNiemXaN))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtNoteN, javax.swing.GroupLayout.DEFAULT_SIZE, 369, Short.MAX_VALUE)
-                    .addComponent(txtProductionBatchN, javax.swing.GroupLayout.DEFAULT_SIZE, 369, Short.MAX_VALUE)
-                    .addComponent(txtSoNiemXaN, javax.swing.GroupLayout.DEFAULT_SIZE, 369, Short.MAX_VALUE)
-                    .addComponent(cbxModeType, 0, 369, Short.MAX_VALUE)
-                    .addComponent(txtTicketIdN, javax.swing.GroupLayout.DEFAULT_SIZE, 369, Short.MAX_VALUE)
-                    .addComponent(txtCMNDN, javax.swing.GroupLayout.DEFAULT_SIZE, 369, Short.MAX_VALUE)
-                    .addComponent(txtWeightTickerRefN, javax.swing.GroupLayout.DEFAULT_SIZE, 369, Short.MAX_VALUE)
-                    .addComponent(txtDriverNameN, javax.swing.GroupLayout.DEFAULT_SIZE, 369, Short.MAX_VALUE)
-                    .addComponent(txtRegisterIdN, javax.swing.GroupLayout.DEFAULT_SIZE, 369, Short.MAX_VALUE)
+                    .addComponent(txtSoNiemXaN, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
+                    .addComponent(txtNoteN, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
+                    .addComponent(txtProductionBatchN, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
                     .addGroup(pnROVLeftLayout.createSequentialGroup()
-                        .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnROVLeftLayout.createSequentialGroup()
-                                .addComponent(txtPlateNoN, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE)
-                                .addGap(18, 18, 18)
-                                .addComponent(lblTrailerNoN)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnROVLeftLayout.createSequentialGroup()
-                                .addComponent(txtSlingN, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
-                                .addGap(38, 38, 38)))
-                        .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnROVLeftLayout.createSequentialGroup()
-                                .addComponent(lblPalletN)
-                                .addGap(12, 12, 12)
-                                .addComponent(txtPalletN, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE))
-                            .addGroup(pnROVLeftLayout.createSequentialGroup()
-                                .addComponent(txtTrailerNoN, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(lblTonnageN)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtTonnageN, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)))))
+                        .addComponent(txtSlingN, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblPalletN)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtPalletN, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE))
+                    .addComponent(cbxModeType, 0, 402, Short.MAX_VALUE)
+                    .addComponent(txtTicketIdN, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
+                    .addComponent(txtCMNDN, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
+                    .addComponent(txtWeightTickerRefN, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
+                    .addComponent(txtDriverNameN, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
+                    .addComponent(txtRegisterIdN, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE)
+                    .addGroup(pnROVLeftLayout.createSequentialGroup()
+                        .addComponent(txtPlateNoN, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblTrailerNoN)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtTrailerNoN, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblTonnageN)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtTonnageN, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE))
+                    .addComponent(txtSalanN, javax.swing.GroupLayout.DEFAULT_SIZE, 402, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblTonngageUnitN)
-                .addGap(45, 45, 45))
+                .addGap(48, 48, 48))
         );
         pnROVLeftLayout.setVerticalGroup(
             pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -950,8 +964,12 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
                     .addComponent(lblPlateNoN))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtSlingN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblSalanN)
+                    .addComponent(txtSalanN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblSlingN)
+                    .addComponent(txtSlingN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblPalletN)
                     .addComponent(txtPalletN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -966,7 +984,7 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
                 .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblNoteN)
                     .addComponent(txtNoteN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(56, 56, 56))
+                .addContainerGap())
         );
 
         pnControl.setName("pnControl"); // NOI18N
@@ -993,7 +1011,7 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
                 .addComponent(btnClear)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnSave)
-                .addGap(346, 346, 346))
+                .addGap(372, 372, 372))
         );
         pnControlLayout.setVerticalGroup(
             pnControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1010,15 +1028,17 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
         pnRegistrationOfVehicleLayout.setHorizontalGroup(
             pnRegistrationOfVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(pnROVLeft, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(pnControl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 569, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnRegistrationOfVehicleLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(pnControl, javax.swing.GroupLayout.DEFAULT_SIZE, 582, Short.MAX_VALUE))
         );
         pnRegistrationOfVehicleLayout.setVerticalGroup(
             pnRegistrationOfVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnRegistrationOfVehicleLayout.createSequentialGroup()
                 .addComponent(pnROVLeft, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(pnControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(84, Short.MAX_VALUE))
+                .addContainerGap(122, Short.MAX_VALUE))
         );
 
         pnROVRight.setName("pnROVRight"); // NOI18N
@@ -1318,7 +1338,7 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
                 .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbxVendorTransportN, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblVendorTransportN))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
 
         pnShowFilter.setName("pnShowFilter"); // NOI18N
@@ -1336,7 +1356,7 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
         pnShowFilterLayout.setHorizontalGroup(
             pnShowFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnShowFilterLayout.createSequentialGroup()
-                .addContainerGap(1065, Short.MAX_VALUE)
+                .addContainerGap(1075, Short.MAX_VALUE)
                 .addComponent(btnShowFilter))
         );
         pnShowFilterLayout.setVerticalGroup(
@@ -1354,13 +1374,13 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(pnShowFilter, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(spnResult, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1160, Short.MAX_VALUE)
+                    .addComponent(spnResult, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1170, Short.MAX_VALUE)
                     .addComponent(pnFilter, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(pnRegistrationOfVehicle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(pnROVRight, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(pnPrintControl, javax.swing.GroupLayout.DEFAULT_SIZE, 1160, Short.MAX_VALUE))
+                    .addComponent(pnPrintControl, javax.swing.GroupLayout.DEFAULT_SIZE, 1170, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -1370,7 +1390,7 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnShowFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
+                .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnPrintControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(13, 13, 13)
@@ -1737,6 +1757,19 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     pnShowFilter.setVisible(true);
 }//GEN-LAST:event_btnHideFilterActionPerformed
 
+private void txtSalanNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSalanNKeyReleased
+    validateForm();
+}//GEN-LAST:event_txtSalanNKeyReleased
+
+private void txtSalanNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSalanNFocusLost
+    String soSalan = txtSalanN.getText().trim();
+    soSalan = soSalan.replace("-", "");
+    soSalan = soSalan.replace(".", "");
+    txtSalanN.setText(soSalan.toUpperCase());
+
+    validateForm();
+}//GEN-LAST:event_txtSalanNFocusLost
+
     private void validateFilterForm() {
         boolean isDriverNameValid = wtRegisValidation.validateLength(txtDriverName.getText(), lblDriverName, 0, 70);
         boolean isPlateNoValid = wtRegisValidation.validateLength(txtPlateNo.getText(), lblPlateNo, 0, 20);
@@ -1979,6 +2012,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         lblTonnageN.setForeground(Color.black);
         txtTrailerNoN.setEnabled(false);
         lblTrailerNoN.setForeground(Color.black);
+        txtSalanN.setEnabled(false);
+        lblSalanN.setForeground(Color.black);
         txtSlingN.setEnabled(false);
         lblSlingN.setForeground(Color.black);
         txtPalletN.setEnabled(false);
@@ -2114,6 +2149,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         showComponent(txtPlateNoN, lblPlateNoN, true, true);
         showComponent(txtTonnageN, lblTonnageN, lblTonngageUnitN, true, false);
         showComponent(txtTrailerNoN, lblTrailerNoN, true, true);
+        showComponent(txtSalanN, lblSalanN, true, true);
         showComponent(txtSlingN, lblSlingN, false, false);
         showComponent(txtPalletN, lblPalletN, false, false);
         showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
@@ -2146,6 +2182,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         showComponent(txtPlateNoN, lblPlateNoN, true, true);
         showComponent(txtTonnageN, lblTonnageN, lblTonngageUnitN, true, false);
         showComponent(txtTrailerNoN, lblTrailerNoN, true, true);
+        showComponent(txtSalanN, lblSalanN, true, true);
         showComponent(txtSlingN, lblSlingN, false, false);
         showComponent(txtPalletN, lblPalletN, false, false);
         showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
@@ -2178,6 +2215,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         showComponent(txtPlateNoN, lblPlateNoN, true, true);
         showComponent(txtTonnageN, lblTonnageN, lblTonngageUnitN, true, false);
         showComponent(txtTrailerNoN, lblTrailerNoN, true, true);
+        showComponent(txtSalanN, lblSalanN, true, true);
         showComponent(txtSlingN, lblSlingN, true, true);
         showComponent(txtPalletN, lblPalletN, true, true);
         showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
@@ -2210,6 +2248,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         showComponent(txtPlateNoN, lblPlateNoN, true, true);
         showComponent(txtTonnageN, lblTonnageN, lblTonngageUnitN, true, false);
         showComponent(txtTrailerNoN, lblTrailerNoN, true, true);
+        showComponent(txtSalanN, lblSalanN, true, true);
         showComponent(txtSlingN, lblSlingN, true, true);
         showComponent(txtPalletN, lblPalletN, true, true);
         showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
@@ -2242,6 +2281,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         showComponent(txtPlateNoN, lblPlateNoN, true, true);
         showComponent(txtTonnageN, lblTonnageN, lblTonngageUnitN, true, false);
         showComponent(txtTrailerNoN, lblTrailerNoN, true, true);
+        showComponent(txtSalanN, lblSalanN, true, true);
         showComponent(txtSlingN, lblSlingN, true, true);
         showComponent(txtPalletN, lblPalletN, true, true);
         showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
@@ -2282,6 +2322,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         showComponent(txtPlateNoN, lblPlateNoN, true, true);
         showComponent(txtTonnageN, lblTonnageN, lblTonngageUnitN, true, false);
         showComponent(txtTrailerNoN, lblTrailerNoN, true, true);
+        showComponent(txtSalanN, lblSalanN, true, true);
         showComponent(txtSlingN, lblSlingN, false, false);
         showComponent(txtPalletN, lblPalletN, false, false);
         showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
@@ -2319,6 +2360,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         showComponent(txtPlateNoN, lblPlateNoN, true, true);
         showComponent(txtTonnageN, lblTonnageN, lblTonngageUnitN, true, false);
         showComponent(txtTrailerNoN, lblTrailerNoN, true, true);
+        showComponent(txtSalanN, lblSalanN, true, true);
         showComponent(txtSlingN, lblSlingN, false, false);
         showComponent(txtPalletN, lblPalletN, false, false);
         showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
@@ -2356,6 +2398,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         showComponent(txtPlateNoN, lblPlateNoN, true, true);
         showComponent(txtTonnageN, lblTonnageN, lblTonngageUnitN, true, false);
         showComponent(txtTrailerNoN, lblTrailerNoN, true, true);
+        showComponent(txtSalanN, lblSalanN, true, true);
         showComponent(txtSlingN, lblSlingN, true, true);
         showComponent(txtPalletN, lblPalletN, true, true);
         showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
@@ -2436,6 +2479,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         }
 
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
+        String salan = txtSalanN.getText().trim();
+        boolean isSalanValid = salan.isEmpty() || wtRegisValidation.validatePlateNoWater(salan, lblSalanN);
         boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
@@ -2456,7 +2501,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
-                && isCMNDBLValid && isPlateNoValid
+                && isCMNDBLValid && isPlateNoValid && isSalanValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isSlocValid && isMaterialTypeValid && isWeightValid && isPOValid;
     }
@@ -2474,6 +2519,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         }
 
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
+        String salan = txtSalanN.getText().trim();
+        boolean isSalanValid = salan.isEmpty() || wtRegisValidation.validatePlateNoWater(salan, lblSalanN);
         boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
@@ -2496,7 +2543,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
-                && isCMNDBLValid && isPlateNoValid && isSOValid
+                && isCMNDBLValid && isPlateNoValid && isSOValid && isSalanValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isSlocValid && isMaterialTypeValid && isWeightValid;
     }
@@ -2514,6 +2561,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         }
 
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
+        String salan = txtSalanN.getText().trim();
+        boolean isSalanValid = salan.isEmpty() || wtRegisValidation.validatePlateNoWater(salan, lblSalanN);
         boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
@@ -2524,7 +2573,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
-                && isCMNDBLValid && isPlateNoValid
+                && isCMNDBLValid && isPlateNoValid && isSalanValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isMaterialTypeValid && isSlocValid && isWeightValid;
     }
@@ -2541,6 +2590,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         }
 
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
+        String salan = txtSalanN.getText().trim();
+        boolean isSalanValid = salan.isEmpty() || wtRegisValidation.validatePlateNoWater(salan, lblSalanN);
         boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
@@ -2563,7 +2614,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
-        return isRegisterIdValid && isDriverNameValid && isCMNDBLValid && isPlateNoValid
+        return isRegisterIdValid && isDriverNameValid && isCMNDBLValid && isPlateNoValid && isSalanValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isSlocValid && isSOValid && isMaterialTypeValid && isWeightValid;
     }
@@ -2580,6 +2631,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         }
 
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
+        String salan = txtSalanN.getText().trim();
+        boolean isSalanValid = salan.isEmpty() || wtRegisValidation.validatePlateNoWater(salan, lblSalanN);
         boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
@@ -2603,7 +2656,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         boolean isVendorTransValid = wtRegisValidation.validateCbxSelected(cbxVendorTransportN.getSelectedIndex(), lblVendorTransportN);
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
-                && isCMNDBLValid && isPOValid
+                && isCMNDBLValid && isPOValid && isSalanValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isSlocValid && isMaterialTypeValid && isWeightValid && isVendorTransValid;
     }
@@ -2620,6 +2673,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         }
 
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
+        String salan = txtSalanN.getText().trim();
+        boolean isSalanValid = salan.isEmpty() || wtRegisValidation.validatePlateNoWater(salan, lblSalanN);
         boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
@@ -2645,7 +2700,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         boolean isSloc2Valid = wtRegisValidation.validateCbxSelected(cbxSloc2N.getSelectedIndex(), lblSloc2N);
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
-                && isCMNDBLValid && isPOValid
+                && isCMNDBLValid && isPOValid && isSalanValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isSlocValid && isSloc2Valid && isMaterialTypeValid;
     }
@@ -2662,6 +2717,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         }
 
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
+        String salan = txtSalanN.getText().trim();
+        boolean isSalanValid = salan.isEmpty() || wtRegisValidation.validatePlateNoWater(salan, lblSalanN);
         boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
@@ -2687,7 +2744,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
-                && isCMNDBLValid && isPOValid
+                && isCMNDBLValid && isPOValid && isSalanValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isSlocValid && isMaterialTypeValid && isWeightValid;
     }
@@ -2704,6 +2761,8 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         }
 
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
+        String salan = txtSalanN.getText().trim();
+        boolean isSalanValid = salan.isEmpty() || wtRegisValidation.validatePlateNoWater(salan, lblSalanN);
         boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
@@ -2721,7 +2780,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
-        return isRegisterIdValid && isDriverNameValid
+        return isRegisterIdValid && isDriverNameValid && isSalanValid
                 && isCMNDBLValid && isPlateNoValid && isSOValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isSlocValid && isMaterialTypeValid && isWeightValid;
@@ -3215,6 +3274,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             newWeightTicket.setBatch(txtProductionBatchN.getText().trim());
             newWeightTicket.setNote(txtNoteN.getText().trim());
             newWeightTicket.setTicketId(txtTicketIdN.getText().trim());
+            newWeightTicket.setChargEnh(txtSalanN.getText().trim());
             switch (modeDetail) {
                 case IN_PO_PURCHASE:
                     updateDataForInPoPurchaseMode();
@@ -3530,6 +3590,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         txtPlateNoN.setText("");
         txtTonnageN.setText("0");
         txtTrailerNoN.setText("");
+        txtSalanN.setText("");
         txtSlingN.setText("0");
         txtPalletN.setText("0");
         txtSoNiemXaN.setText("");
@@ -3627,6 +3688,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     private javax.swing.JLabel lblProductionBatchN;
     private javax.swing.JLabel lblRegisterIdN;
     private javax.swing.JLabel lblSONumN;
+    private javax.swing.JLabel lblSalanN;
     private javax.swing.JLabel lblSlingN;
     private javax.swing.JLabel lblSloc2N;
     private javax.swing.JLabel lblSlocN;
@@ -3668,6 +3730,7 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     private javax.swing.JTextField txtProductionBatchN;
     private javax.swing.JTextField txtRegisterIdN;
     private javax.swing.JTextField txtSONumN;
+    private javax.swing.JTextField txtSalanN;
     private javax.swing.JFormattedTextField txtSlingN;
     private javax.swing.JTextField txtSoNiemXaN;
     private javax.swing.JTextField txtTicketIdN;
@@ -3777,6 +3840,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             if ((modeDetail == MODE_DETAIL.IN_PO_PURCHASE)
                     && (!(purchaseOrder.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant()))) {
                 throw new Exception(resourceMapMsg.getString("msg.poIsDenied"));
+            }
+            
+            // check PO is released
+            if (Objects.equals(purchaseOrder.getPoRelInd(), Constants.PurchaseOrder.PO_REL_IND_NOT_RELEASED)) {
+                throw new Exception(resourceMapMsg.getString("msg.poNotReleased", poNum));
             }
 
             updateWeightTicket(purchaseOrder);
@@ -3917,6 +3985,11 @@ private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             if ((modeDetail == MODE_DETAIL.IN_PO_PURCHASE)
                     && (!(purchaseOrder.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant()))) {
                 throw new Exception(resourceMapMsg.getString("msg.postoIsDenied"));
+            }
+
+            // check PO is released
+            if (Objects.equals(purchaseOrder.getPoRelInd(), Constants.PurchaseOrder.PO_REL_IND_NOT_RELEASED)) {
+                throw new Exception(resourceMapMsg.getString("msg.poNotReleased", postoNum));
             }
 
             updateWeightTicket(purchaseOrder);

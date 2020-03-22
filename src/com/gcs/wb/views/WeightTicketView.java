@@ -13,6 +13,7 @@ package com.gcs.wb.views;
 import com.fazecast.jSerialComm.SerialPortInvalidPortException;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.SAPErrorTransform;
+import com.gcs.wb.bapi.SAPSession;
 import com.gcs.wb.bapi.goodsmvt.GoodsMvtDoCreateBapi;
 import com.gcs.wb.bapi.goodsmvt.GoodsMvtPOSTOCreatePGIBapi;
 import com.gcs.wb.bapi.goodsmvt.GoodsMvtPoCreateBapi;
@@ -47,7 +48,6 @@ import com.sap.conn.jco.JCoException;
 import org.apache.log4j.Logger;
 import org.hibersap.HibersapException;
 import org.hibersap.SapException;
-import org.hibersap.session.Session;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.ResourceMap;
@@ -270,6 +270,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         txtProcedure = new javax.swing.JTextField();
         lblRemark = new javax.swing.JLabel();
         txtRemark = new javax.swing.JTextField();
+        lblSalan = new javax.swing.JLabel();
+        txtSalan = new javax.swing.JTextField();
         pnWTRight = new javax.swing.JPanel();
         txtDelNum = new javax.swing.JTextField();
         txtPONo = new javax.swing.JTextField();
@@ -378,7 +380,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(122, 122, 122))
+                .addGap(129, 129, 129))
         );
         pnWTFilterLayout.setVerticalGroup(
             pnWTFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -392,7 +394,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         .addComponent(txtWTNum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jButton1)
                         .addComponent(jButton2)))
-                .addContainerGap(52, Short.MAX_VALUE))
+                .addContainerGap(57, Short.MAX_VALUE))
         );
 
         pnCurScale.setBorder(javax.swing.BorderFactory.createTitledBorder(resourceMap.getString("pnCurScale.border.title"))); // NOI18N
@@ -629,9 +631,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     .addComponent(lblIScale, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnScaleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txfGoodsQty, javax.swing.GroupLayout.DEFAULT_SIZE, 394, Short.MAX_VALUE)
-                    .addComponent(txfOutQty, javax.swing.GroupLayout.DEFAULT_SIZE, 394, Short.MAX_VALUE)
-                    .addComponent(txfInQty, javax.swing.GroupLayout.DEFAULT_SIZE, 394, Short.MAX_VALUE))
+                    .addComponent(txfGoodsQty, javax.swing.GroupLayout.DEFAULT_SIZE, 398, Short.MAX_VALUE)
+                    .addComponent(txfOutQty, javax.swing.GroupLayout.DEFAULT_SIZE, 398, Short.MAX_VALUE)
+                    .addComponent(txfInQty, javax.swing.GroupLayout.DEFAULT_SIZE, 398, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnScaleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnScaleDataLayout.createSequentialGroup()
@@ -644,8 +646,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                             .addComponent(lblOTime))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(pnScaleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtOutTime, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
-                            .addComponent(txtInTime, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE))
+                            .addComponent(txtOutTime, javax.swing.GroupLayout.DEFAULT_SIZE, 391, Short.MAX_VALUE)
+                            .addComponent(txtInTime, javax.swing.GroupLayout.DEFAULT_SIZE, 391, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(pnScaleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(btnIScaleReset, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -822,6 +824,13 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             }
         });
 
+        lblSalan.setText(resourceMap.getString("lblSalan.text")); // NOI18N
+        lblSalan.setName("lblSalan"); // NOI18N
+
+        txtSalan.setDisabledTextColor(resourceMap.getColor("txtGRText.disabledTextColor")); // NOI18N
+        txtSalan.setEnabled(false);
+        txtSalan.setName("txtSalan"); // NOI18N
+
         javax.swing.GroupLayout pnWTLeftLayout = new javax.swing.GroupLayout(pnWTLeft);
         pnWTLeft.setLayout(pnWTLeftLayout);
         pnWTLeftLayout.setHorizontalGroup(
@@ -834,13 +843,17 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     .addComponent(lblTicketId)
                     .addComponent(lblBatchProduce)
                     .addComponent(lblCementDesc)
-                    .addComponent(lblGRText)
+                    .addGroup(pnWTLeftLayout.createSequentialGroup()
+                        .addGap(35, 35, 35)
+                        .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblRegCat)
+                            .addComponent(lblRegistrationNo)
+                            .addComponent(lblDName)
+                            .addComponent(lblCMNDBL)
+                            .addComponent(lblLicPlate)))
+                    .addComponent(lblSalan)
                     .addComponent(lblSling)
-                    .addComponent(lblRegCat)
-                    .addComponent(lblRegistrationNo)
-                    .addComponent(lblDName)
-                    .addComponent(lblLicPlate)
-                    .addComponent(lblCMNDBL))
+                    .addComponent(lblGRText))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnWTLeftLayout.createSequentialGroup()
@@ -850,31 +863,33 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblProcedure)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtProcedure, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE))
-                    .addComponent(txtRegistrationNo, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE)
-                    .addComponent(txtDName, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE)
+                        .addComponent(txtProcedure, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE))
+                    .addComponent(txtRegistrationNo, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
+                    .addComponent(txtDName, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
+                    .addComponent(txtCMNDBL, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
                     .addGroup(pnWTLeftLayout.createSequentialGroup()
-                        .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnWTLeftLayout.createSequentialGroup()
-                                .addComponent(txtSling, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
-                                .addComponent(lblPallet))
+                        .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(pnWTLeftLayout.createSequentialGroup()
-                                .addComponent(txtLicPlate, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
-                                .addGap(24, 24, 24)
-                                .addComponent(lblTrailerPlate)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtLicPlate, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
+                                .addGap(24, 24, 24))
+                            .addGroup(pnWTLeftLayout.createSequentialGroup()
+                                .addComponent(txtSling, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                         .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txtTrailerPlate, javax.swing.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)
-                            .addComponent(txtPallet, javax.swing.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)))
-                    .addComponent(txtGRText, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE)
-                    .addComponent(txtCementDesc, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE)
-                    .addComponent(txtBatchProduce, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE)
-                    .addComponent(txtTicketId, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE)
-                    .addComponent(txtWeightTicketIdRef, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE)
-                    .addComponent(txtRemark, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE)
-                    .addComponent(txtCMNDBL, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE))
-                .addContainerGap())
+                            .addComponent(lblTrailerPlate)
+                            .addComponent(lblPallet))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtTrailerPlate, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
+                            .addComponent(txtPallet, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)))
+                    .addComponent(txtSalan, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
+                    .addComponent(txtGRText, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
+                    .addComponent(txtCementDesc, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
+                    .addComponent(txtBatchProduce, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
+                    .addComponent(txtTicketId, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
+                    .addComponent(txtWeightTicketIdRef, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
+                    .addComponent(txtRemark, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE))
+                .addGap(26, 26, 26))
         );
         pnWTLeftLayout.setVerticalGroup(
             pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -894,47 +909,53 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblDName)
                     .addComponent(txtDName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtCMNDBL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblCMNDBL))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtTrailerPlate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblTrailerPlate))
+                    .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtLicPlate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblLicPlate)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtLicPlate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblLicPlate)
-                    .addComponent(txtTrailerPlate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblTrailerPlate))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(lblSalan)
+                    .addComponent(txtSalan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtSling, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblSling)
+                    .addComponent(txtSling, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblPallet)
                     .addComponent(txtPallet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblGRText)
                     .addComponent(txtGRText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblCementDesc)
                     .addComponent(txtCementDesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblBatchProduce)
                     .addComponent(txtBatchProduce, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblTicketId)
                     .addComponent(txtTicketId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblWeightTicketIdRef)
                     .addComponent(txtWeightTicketIdRef, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblRemark)
                     .addComponent(txtRemark, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
 
         pnWTRight.setName("pnWTRight"); // NOI18N
@@ -1075,20 +1096,17 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 .addGap(15, 15, 15)
                 .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lblPoPosto)
-                    .addGroup(pnWTRightLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lblRegItem)
-                            .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(lblMatnr)
-                                .addComponent(lbKunnr, javax.swing.GroupLayout.Alignment.LEADING))
-                            .addComponent(lblWeight)
-                            .addComponent(lblLgortIn)
-                            .addComponent(lblCharg)
-                            .addComponent(lblChargIn)
-                            .addComponent(lblSLoc)
-                            .addComponent(lblVendorLoading)
-                            .addComponent(lblVendorTransport)))
+                    .addComponent(lblRegItem)
+                    .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(lblMatnr)
+                        .addComponent(lbKunnr, javax.swing.GroupLayout.Alignment.LEADING))
+                    .addComponent(lblWeight)
+                    .addComponent(lblLgortIn)
+                    .addComponent(lblCharg)
+                    .addComponent(lblChargIn)
+                    .addComponent(lblSLoc)
+                    .addComponent(lblVendorLoading)
+                    .addComponent(lblVendorTransport)
                     .addComponent(lblSO)
                     .addComponent(lblPONo)
                     .addComponent(lblDelNum))
@@ -1206,7 +1224,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(696, Short.MAX_VALUE)
+                .addContainerGap(703, Short.MAX_VALUE)
                 .addComponent(btnPostAgain)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnReprint)
@@ -1229,12 +1247,12 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             .addGroup(pnWTicketLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnWTicketLayout.createSequentialGroup()
+                    .addGroup(pnWTicketLayout.createSequentialGroup()
                         .addComponent(pnWTLeft, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(pnWTRight, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(10, 10, 10))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnWTicketLayout.createSequentialGroup()
+                    .addGroup(pnWTicketLayout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addContainerGap())))
         );
@@ -1259,7 +1277,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     .addComponent(pnWTicket, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pnScaleData, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(pnWTFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 663, Short.MAX_VALUE)
+                        .addComponent(pnWTFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 670, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(pnCurScale, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -1412,8 +1430,6 @@ private void txtInTimeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
 }//GEN-LAST:event_txtInTimeKeyReleased
 
 private void txtWTNumFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtWTNumFocusGained
-// Tuanna add -- for paste ID from Clipboard if data is ticket  --28.11.2012
-
     String result = "";
     Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
     //odd: the Object param of getContents is not currently used
@@ -1432,12 +1448,10 @@ private void txtWTNumFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
         txtWTNum.setText(result);
     }
 
-    //end Add.
 
 }//GEN-LAST:event_txtWTNumFocusGained
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        //tuanna
         StringSelection stringSelection = new StringSelection("");
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
         txtWTNum.selectAll();
@@ -1479,168 +1493,22 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
 
     @Action
     public void showMB1BOption() {
-//        if (weightTicket == null) {
-//            return;
-//        }
-//        WeightTicketDetail weightTicketDetail = weightTicket.getWeightTicketDetail();
-//
-//        if (rbtMb1b.isSelected() && rbtInward.isSelected()) {
-//            grbType.clearSelection();
-//            return;
-//        }
-//        if (rbtMb1b.isSelected() && weightTicket.getRegType() == 'O') {
-//            RecvSlocView rsview = new RecvSlocView(WeighBridgeApp.getApplication().getMainFrame(), weightTicket.getRecvLgort(), weightTicket.getRecvPo());
-//            rsview.setLocationRelativeTo(WeighBridgeApp.getApplication().getMainFrame());
-//            WeighBridgeApp.getApplication().show(rsview);
-//            if (!rsview.isShowing()) {
-//                if (rsview.getRecSloc() != null) {
-//                    weightTicket.setRecvLgort(rsview.getRecSloc().getLgort());
-//                } else {
-//                    weightTicket.setRecvLgort(null);
-//                }
-//                if (rsview.getRefPO() != null) {
-//                    weightTicket.setRecvPo(rsview.getRefPO());
-//                } else {
-//                    weightTicket.setRecvPo(null);
-//                }
-//                weightTicket.setRecvPlant(configuration.getWkPlant());
-//                weightTicket.setRecvCharg(weightTicket.getCharg());
-////                weightTicket.setRecvMatnr(setting.getMatnrClinker());
-////                weightTicket.setMatnrRef(setting.getMatnrClinker());
-//                weightTicketDetail.setRegItemDescription(Constants.WeightTicketView.ITEM_DESCRIPTION);
-//                weightTicketDetail.setUnit("TO");
-//                weightTicket.setMoveType("313");
-//                weightTicket.setMoveReas("0003");
-//                rsview.dispose();
-//                rsview = null;
-//                txtRegItem.setText(weightTicketDetail.getRegItemDescription());
-//            }
-//        }
-//        txtMatnr.setText(weightTicketDetail.getRecvMatnr());
-//        if (rbtPO.isEnabled() && rbtMisc.isEnabled() && rbtMb1b.isEnabled() && rbtMvt311.isEnabled()
-//                && grbType.getSelection() != null) {
-//            rbtPO.setForeground(Color.black);
-//            rbtMisc.setForeground(Color.black);
-//            if (WeighBridgeApp.getApplication().isOfflineMode()) {
-//                rbtMisc.setForeground(Color.RED);
-//            }
-//            rbtMb1b.setForeground(Color.black);
-//            rbtMvt311.setForeground(Color.black);
-//        }
         setSaveNeeded(isValidated());
     }
 
     @Action
     public void selectRbtMvt311() {
-//        if (weightTicket == null) {
-//            return;
-//        }
-//
-//        WeightTicketDetail weightTicketDetail = weightTicket.getWeightTicketDetail();
-//        if (rbtMvt311.isSelected() && rbtInward.isSelected()) {
-//            grbType.clearSelection();
-//            return;
-//        }
-//        txtRegItem.setText(weightTicketDetail.getRegItemDescription());
-//        if (rbtMvt311.isSelected() && weightTicket.getRegType() == 'O') {
-//            Mvt311View mvt311View = new Mvt311View(WeighBridgeApp.getApplication().getMainFrame(), weightTicket.getRecvLgort(), null);
-//            mvt311View.setLocationRelativeTo(WeighBridgeApp.getApplication().getMainFrame());
-//            WeighBridgeApp.getApplication().show(mvt311View);
-//            if (!mvt311View.isShowing()) {
-//                if (mvt311View.getRecSloc() != null) {
-//                    weightTicket.setRecvLgort(mvt311View.getRecSloc().getLgort());
-//                } else {
-//                    weightTicket.setRecvLgort(null);
-//                }
-//                if (mvt311View.getSelMaterial() != null) {
-//                    material = mvt311View.getSelMaterial();
-//                    weightTicketDetail.setRecvMatnr(material.getMatnr());
-//                    weightTicketDetail.setMatnrRef(material.getMatnr());
-//                    weightTicketDetail.setRegItemDescription(material.getMaktx());
-//                } else {
-//                    material = null;
-//                    weightTicketDetail.setRecvMatnr(null);
-//                    weightTicketDetail.setMatnrRef(null);
-////                    weightTicket.setRegItemDescription(null);
-//                }
-//                weightTicket.setRecvPlant(configuration.getWkPlant());
-//                weightTicket.setRecvCharg(weightTicket.getCharg());
-//                weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
-//                weightTicket.setMoveType("311");
-//                weightTicket.setMoveReas(null);
-//                mvt311View.dispose();
-//                mvt311View = null;
-//                txtRegItem.setText(weightTicketDetail.getRegItemDescription());
-//            }
-//        }
-//        txtMatnr.setText(weightTicketDetail.getRecvMatnr());
-//        if (rbtPO.isEnabled() && rbtMisc.isEnabled() && rbtMb1b.isEnabled() && rbtMvt311.isEnabled()
-//                && grbType.getSelection() != null) {
-//            rbtPO.setForeground(Color.black);
-//            rbtMisc.setForeground(Color.black);
-//            if (WeighBridgeApp.getApplication().isOfflineMode()) {
-//                rbtMisc.setForeground(Color.red);
-//            }
-//            rbtMb1b.setForeground(Color.black);
-//            rbtMvt311.setForeground(Color.black);
-//        }
         setSaveNeeded(isValidated());
     }
 
     @Action
     public void selectRbtPO() {
 
-        /* try{
-            String sql = "call pvc_getTicketIndex ( ? ) " ;
-            Query qx = (Query) entityManager.createNativeQuery(sql);
-            qx.setParameter(1,txtWTNum.getText().toString());
-            List wtx = qx.getResultList();
-            
-            try {
-            //  SoNiemXa = wts.get(0).toString();
-            //   txtCementDesc.setText(SoNiemXa);
-            txtPONum.setText(wtx.get(2).toString());
-            weightTicket.setAbbr(wtx.get(3).toString());
-            
-            }catch(Throwable cause ){
-            //    klmax  = -1 ;
-            }
-            
-            
-            
-            } catch(Throwable cause ){
-            
-            }
-             * 
-         */
         setSaveNeeded(isValidated());
     }
 
     @Action
     public void selectRbtMisc() {
-//        if (rbtMisc.isSelected()) {
-//            WeightTicketDetail weightTicketDetail = weightTicket.getWeightTicketDetail();
-//            txtRegItem.setText(weightTicketDetail.getRegItemDescription());
-//            weightTicketDetail.setEbeln(null);
-//            weightTicketDetail.setItem(null);
-//            weightTicket.setRecvLgort(null);
-//            weightTicket.setRecvPlant(null);
-//            weightTicket.setRecvCharg(null);
-//            weightTicket.setRecvPo(null);
-//            weightTicketDetail.setRecvMatnr(null);
-//            weightTicketDetail.setMatnrRef(null);
-//            weightTicketDetail.setUnit(null);
-//        }
-//        if (rbtPO.isEnabled() && rbtMisc.isEnabled() && rbtMb1b.isEnabled() && rbtMvt311.isEnabled()
-//                && grbType.getSelection() != null) {
-//            rbtPO.setForeground(Color.black);
-//            rbtMisc.setForeground(Color.black);
-//            if (WeighBridgeApp.getApplication().isOfflineMode()) {
-//                rbtMisc.setForeground(Color.red);
-//            }
-//            rbtMb1b.setForeground(Color.black);
-//            rbtMvt311.setForeground(Color.black);
-//        }
         setSaveNeeded(isValidated());
     }
 
@@ -1742,12 +1610,12 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         if (weightTicket == null) {
             return null;
         } else {
-            if (!weightTicket.isDissolved()) { //+20100112#01 Phieu bi huy khong dc in lai
+            if (!weightTicket.isDissolved()) {
                 return new ReprintWTTask(WeighBridgeApp.getApplication());
-            } else { //+20100112#01 Phieu bi huy khong dc in lai
+            } else {
                 JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), resourceMapMsg.getString("msg.ticketDestroy"));
                 return null;
-            } //+20100112#01 Phieu bi huy khong dc in lai
+            }
         }
     }
 
@@ -1760,7 +1628,6 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             if (!weightTicket.isPosted()) {
                 valid = true;
             }
-            //check KL Dang Ky = KL Thuc te cho xi mang
             OutboundDelivery outdel_tmp = null;
             List<OutboundDeliveryDetail> details_list = new ArrayList<>();
             OutboundDeliveryDetail item = null;
@@ -1768,16 +1635,12 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             Boolean ximang_tmp = false;
             Boolean flag_tmp = true;
 
-            // Nhận dạng phiếu cân gỏ tay Hiệp Phước
-            //   weightTicket.setText("ZBD"); 
             weightTicket.setNote(txtGRText.getText().trim());
             weightTicket.setRemark(txtRemark.getText().trim());
             for (int i = 0; i < outbDel_list.size(); i++) {
                 outdel_tmp = outbDel_list.get(i);
                 try {
                     mat_tmp = weightTicketController.checkPOSTO(outdel_tmp.getMatnr());
-
-//                    ximang_tmp = mat_tmp.getBag();
                 } catch (Exception ex) {
                     java.util.logging.Logger.getLogger(WeightTicketView.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -1796,21 +1659,14 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 }
             }
             if (!flag_tmp) {
-                //    JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(),cmes.getMsg("3") );
                 String Mes = resourceMapMsg.getString("msg.errorPointReceive");
-                //    Mes = cmes.getMsg("3") ;
                 JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), Mes.toString());
             }
-            //end 20121203
         }
         if (valid) {
             //------------------------
-            //Set require input ghi chu if process is GI Cement for POSTO.
-            //Modified by Tuanna 08/04/2013
-            //        boolean bGhichu = true  ; 
             String wplant = configuration.getWkPlant();
             try {
-                //  msg = cmes.getMsg("2");
                 msg = resourceMapMsg.getString("msg.errorNote");
             } catch (Exception ex) {
                 java.util.logging.Logger.getLogger(WeightTicketView.class.getName()).log(Level.SEVERE, null, ex);
@@ -1825,9 +1681,6 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                             && wplant.indexOf("1311") >= 0
                             && outbDel.getMatnr() != null && outbDel.getMatnr().indexOf("1011304") >= 0) {
                         if (txtGRText.getText().length() <= 1 || txtGRText.getText() == null) {
-
-                            //   String msgz = " Lỗi thiếu thông tin ghi chú !  ";
-                            // setMessage(msg);
                             JOptionPane.showMessageDialog(rootPane, msg);
                             return null;
                         }
@@ -1845,57 +1698,6 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             Integer lv_return = JOptionPane.showConfirmDialog(WeighBridgeApp.getApplication().getMainFrame(), msg, resourceMapMsg.getString("msg.question"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 
             if (lv_return == JOptionPane.YES_OPTION) {
-                //
-                if (outbDel != null && outbDel.getMatnr() != null
-                        //                        && outbDel.getMatnr().equalsIgnoreCase(setting.getMatnrPcb40())
-                        && rbtOutward.isSelected() && isStage2()) {
-                    //{+20101202#02 check material availability
-                    //setMessage("Đang kiểm tra tồn kho trong SAP...");
-                    //Double result = (Double) txfGoodsQty.getValue();
-                    //Double remaining = CheckMatStock(weightTicket.getMatnrRef(), configuration.getWkPlant(), weightTicket.getLgort(), "");
-                    Double result = (double) 1;
-                    Double remaining = (double) 0;
-
-//                    if (result != null && remaining != null) {
-//                        if (result > remaining) {
-//                            //}+20101202#02 check material availability
-//                            //+{add logic check confirm
-//                            Variant vari = weightTicketController.findByParam(Constants.WeightTicketView.PROCESS_ORDER_CF);
-//                            String chkPROC1 = "";
-//                            if (vari != null) {
-//                                try {
-//                                    chkPROC1 = vari.getValue().toString();
-//                                } catch (Exception e) {
-//                                }
-//                            }
-//                            entityManager.clear();
-//                            //if (chkPROC1.equals("X")){ //20100214#01 huy phieu can
-//                            if (chkPROC1.equals("X")) { //20100214#01 huy phieu can
-//                                //+}add logic check confirm
-//                                //JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), "Không đủ tồn kho XM PCB40!!!");
-//                                WeightTicketDetail weightTicketDetail = weightTicket.getWeightTicketDetail();
-//                                ProcOrdView procoView = new ProcOrdView(WeighBridgeApp.getApplication().getMainFrame(), null);
-//                                procoView.setLocationRelativeTo(WeighBridgeApp.getApplication().getMainFrame());
-//                                WeighBridgeApp.getApplication().show(procoView);
-////                                if (!procoView.isShowing()) {
-////                                    if (procoView.getProcOrd() != null) {
-////                                        weightTicketDetail.setPpProcord(procoView.getProcOrd());
-////                                    } else {
-////                                        weightTicketDetail.setPpProcord(null);
-////                                    }
-////                                    procoView.dispose();
-////                                    procoView = null;
-////                                    if (weightTicketDetail.getPpProcord() == null) {
-////                                        JOptionPane.showMessageDialog(WeighBridgeApp.getApplication().getMainFrame(), resourceMapMsg.getString("msg.needProcessOrder"));
-////                                        return null;
-////                                    }
-////                                }
-//                            }
-//                            //{+20101202#02 check material availability
-//                        }
-//                    }
-                    //}+20101202#02 check material availability
-                }
                 return new SaveWTTask(WeighBridgeApp.getApplication());
             } else {
                 return null;
@@ -2230,17 +2032,6 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
 
         String id;
 
-        /*
-        ReadWTTask(Application app, String id, String seq, String RegId ) {
-        super(app);
-        this.id = id;
-        this.seq = Integer.valueOf(seq);
-        setReprintable(false);
-        grbType.clearSelection();
-        grbCat.clearSelection();
-        config = WeighBridgeApp.getApplication().getConfig();
-        }
-         */
         ReadWTTask(Application app, String id) {
             super(app);
             this.id = id;
@@ -2369,7 +2160,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 } else if (weightTicket.getFScale() != null && weightTicket.getSScale() == null) {
                     setStage2(true);
                 }
-                OutboundDelivery od = null; //HLD18++
+                OutboundDelivery od = null;
                 // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc="Load D.O/P.O details">
                 List<WeightTicketDetail> weightTicketDetails = weightTicket.getWeightTicketDetails();
@@ -2405,7 +2196,6 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                             }
                             if ((odt != null) && (odt.size() > 0)) {
                                 OutboundDeliveryDetail item = odt.get(0);
-//                          J-20062013 - add code to check double post GR
                                 if (item.getMatDoc() != null
                                         && !item.getMatDoc().equals("")) {
                                     setStage2(false);
@@ -2426,7 +2216,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 }
 
                 if (WeighBridgeApp.getApplication().isOfflineMode()
-                        && od == null //HLD18
+                        && od == null
                         ) {
                     setWithoutDO(true);
                 }
@@ -2446,7 +2236,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         } catch (Exception ex) {
                             java.util.logging.Logger.getLogger(WeightTicketView.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                        if (!WeighBridgeApp.getApplication().isOfflineMode()) { //HLD18++offline
+                        if (!WeighBridgeApp.getApplication().isOfflineMode()) {
                             OutboundDelivery sapOutbDel = sapService.getOutboundDelivery(do_list.get(index));
                             if (sapOutbDel != null && outbDel == null) {
                                 if (!entityManager.getTransaction().isActive()) {
@@ -2467,33 +2257,9 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                 entityManager.getTransaction().commit();
                                 entityManager.clear();
                             }
-                        }//HLD18++
+                        }
                         if (outbDel != null) {
                             outbDel_list.add(outbDel);
-                            //lay total qty va qty_free
-
-//                            if (outbDel.getFreeQty() != null) {
-//                                if (isStage2()) {
-//                                    total_qty_free = total_qty_free.add(outbDel.getFreeQty());
-//                                }
-//
-//                            }
-//                            if (outbDel.getLfimg() == null) {
-//                            } else {
-//                                if (isStage2()) {
-//                                    total_qty_goods = total_qty_goods.add(outbDel.getLfimg());
-//                                }
-//
-//                            }
-//                            weightTicketDetail.setKunnr(null);
-//                            if ((weightTicketDetail.getKunnr() == null || weightTicketDetail.getKunnr().isEmpty())
-//                                    && outbDel.getKunnr() != null && !outbDel.getKunnr().isEmpty()) {
-//                                weightTicketDetail.setKunnr(outbDel.getKunnr());
-//                            }
-//                            weightTicketDetail.setRegItemDescription(outbDel.getArktx());
-//                            weightTicketDetail.setMatnrRef(outbDel.getMatnr());
-//                            weightTicketDetail.setItem(outbDel.getDeliveryItem());
-//                            weightTicketDetail.setUnit(outbDel.getVrkme());
                             total_qty_goods = total_qty_goods.add(outbDel.getLfimg());
                             if (doNums.equals("")) {
                                 doNums = weightTicketDetail.getDeliveryOrderNo();
@@ -2508,7 +2274,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                 }
                             }
                         }
-                        //weightTicket.setUnit("TO");
+
                         try {
                             //get list outdetails
                             details_list = weightTicketRegistarationController.findByMandtDelivNumb(do_list.get(index));
@@ -2535,14 +2301,13 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         setValidPONum(true);
                         setSubContract(false);
                         PurchaseOrderDetail purchaseOrderDetail = purOrder.getPurchaseOrderDetail();
-                        //txtRegItem.setText(purchaseOrderDetail.getShortText());
-                        if (rbtOutward.isSelected() && purchaseOrderDetail.getItemCat() == '3' //                            && purOrder.getMaterial().equalsIgnoreCase(setting.getMatnrPcb40())
+
+                        if (rbtOutward.isSelected() && purchaseOrderDetail.getItemCat() == '3'
                                 ) {
                             setSubContract(true);
                         }
                     } else {
                         if (Posto.equals("")) {
-                            // Tuanna 2018 08015
                             txtPONo.setText(null);
                         }
                     }
@@ -2553,7 +2318,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     setSubContract(false);
                     PurchaseOrderDetail purchaseOrderDetail = purOrder.getPurchaseOrderDetail();
                     txtRegItem.setText(weightTicket.getWeightTicketDetail().getRegItemDescription());
-                    if (rbtOutward.isSelected() && purchaseOrderDetail.getItemCat() == '3' //                            && purOrder.getMaterial().equalsIgnoreCase(setting.getMatnrPcb40())
+                    if (rbtOutward.isSelected() && purchaseOrderDetail.getItemCat() == '3'
                             ) {
                         setSubContract(true);
                     }
@@ -2577,9 +2342,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 if (weightTicket.getSScale() != null) {
                     txfOutQty.setValue(weightTicket.getSScale());
                     txtOutTime.setText(formatter.format(weightTicket.getSTime()));
-//                    if (weightTicket.getGQty() != null) {
                     txfGoodsQty.setValue(weightTicket.getGQty());
-//                    }
                 } else {
                     txfOutQty.setValue(null);
                     txtOutTime.setText(null);
@@ -2589,9 +2352,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 txtCMNDBL.setText(weightTicket.getDriverIdNo());
                 txtLicPlate.setValue(weightTicket.getPlateNo());
                 txtTrailerPlate.setValue(weightTicket.getTrailerId());
-
-                //20120522_ setEnabled for "combo box Khach hang" depends on Offline(of Weight Ticket, radio Offline) and Posted status
-                //Posted: -1-Post hong, 0-Chua Post, 1-Post vo SAP ok, 2-Post ok nhung Offline
+                txtSalan.setText(weightTicket.getChargEnh());
                 txtCustomer.setText(null);
                 String kunnr = weightTicket.getWeightTicketDetail().getKunnr();
                 if (kunnr != null && !kunnr.trim().isEmpty()) {
@@ -2604,11 +2365,8 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         || (!WeighBridgeApp.getApplication().isOfflineMode()
                         && !weightTicket.isPosted())) {
                     if (weightTicket.getRegType() == 'O' && weightTicket.getWeightTicketDetail().getEbeln() == null) {
-                        txtCustomer.setEnabled(true); // 2471
+                        txtCustomer.setEnabled(true);
                     }
-                } else {
-                    // logic cho nay => no mac dinh offline khi usr can xuat clinker cho POSTO
-                    //  txtCustomer.setEnabled(false);
                 }
 
                 String lgort = null;
@@ -2930,10 +2688,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         protected Object doInBackground() {
             setMessage(resourceMapMsg.getString("msg.getDataPO"));
             setProgress(0, 0, 3);
-            // Tuanna >> 14.06.13 
             txtCustomer.setText(null);
-
-            // << end comment.
             purOrder = weightTicketController.findPurOrder(poNum);
             setMessage(resourceMapMsg.getString("msg.searchDataPo"));
             setProgress(1, 0, 3);
@@ -3015,9 +2770,8 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 if ((rbtInward.isSelected() && purchaseOrderDetail.getPlant().equalsIgnoreCase(configuration.getWkPlant()))
                         || (rbtOutward.isSelected() && purOrder.getSupplPlnt().equalsIgnoreCase(configuration.getWkPlant()))) {
                     setValidPONum(true);
-                } else if (rbtOutward.isSelected() && purchaseOrderDetail.getItemCat() == '3' //                        && purOrder.getMaterial().equalsIgnoreCase(setting.getMatnrPcb40())
+                } else if (rbtOutward.isSelected() && purchaseOrderDetail.getItemCat() == '3'
                         ) {
-//                    purOrder.setMaterial(setting.getMatnrClinker());
                     purchaseOrderDetail.setShortText(Constants.WeightTicketView.ITEM_DESCRIPTION);
                     purchaseOrderDetail.setPoUnit(weightTicketRegistarationController.getUnit().getPurchaseUnit());
                     setValidPONum(true);
@@ -3026,7 +2780,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     setValidPONum(true);
                 }
             }
-            return null;  // return your result
+            return null;
         }
 
         @Override
@@ -3060,11 +2814,6 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 setSaveNeeded(isValidated());
                 txtRegItem.setText(purchaseOrderDetail.getShortText());
                 txtMatnr.setText(purchaseOrderDetail.getMaterial());
-//                weightTicketDetail.setEbeln(purOrder.getPoNumber());
-//                weightTicketDetail.setItem(purchaseOrderDetail.getPoItem());
-//                weightTicketDetail.setRegItemDescription(purchaseOrderDetail.getShortText());
-//                weightTicketDetail.setMatnrRef(purchaseOrderDetail.getMaterial());
-//                weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
             } else {
                 txtRegItem.setText(null);
                 txtMatnr.setText(null);
@@ -3085,13 +2834,13 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         @Override
         protected Object doInBackground() {
             printWT(weightTicket, true);
-            return null;  // return your result
+            return null;
         }
     }
 
     private class SaveWTTask extends Task<Object, Void> {
 
-        Session sapSession = null;
+        SAPSession sapSession = null;
         Object objBapi = null;
         Object objBapi_Po = null;
         Object objBapi_Posto = null;
@@ -3129,7 +2878,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             List<String> completedDO = new ArrayList<>();
             String modeFlg = null;
             boolean flgGqty = false;
-            
+
             if (((isStage1()) && checkPlant) || ((isStage2() || (!isStage1() && !isStage2())) && !weightTicket.isDissolved())
                     || (!isStage1() && !isStage2() && !weightTicket.isDissolved()
                     && (weightTicket != null && !weightTicket.isPosted()))) {
@@ -3145,7 +2894,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     // mode xuat plant
                     if (weightTicket.getMode().equals("OUT_PLANT_PLANT")) {
                         // check post PGI for post lai
-                        if(StringUtil.isEmptyString(weightTicketDetail.getDeliveryOrderNo())
+                        if (StringUtil.isEmptyString(weightTicketDetail.getDeliveryOrderNo())
                                 && StringUtil.isEmptyString(weightTicketDetail.getMatDoc())) {
                             objBapi = getDoCreate2PGI(weightTicket, outbDel);
                         } else {
@@ -3172,7 +2921,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         }
                     }
 
-                    if (WeighBridgeApp.getApplication().isOfflineMode() == false) {
+                    if (!WeighBridgeApp.getApplication().isOfflineMode()) {
                         if (objBapi != null) {
                             try {
                                 if(!weightTicket.getMode().equals("OUT_SLOC_SLOC")) {
@@ -3185,7 +2934,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                         logger.info("[SAP] Get infor before post SAP: " + objBapi.toString());
                                         sapSession.execute(objBapi);
                                     }
-                                    if((objBapi_Po != null) && 
+                                    if((objBapi_Po != null) &&
                                             (weightTicketDetail.getMatDocGr() == null || weightTicketDetail.getMatDocGr().equals(""))) {
                                         logger.info("[SAP] Get infor before post SAP: " + objBapi_Po.toString());
                                         sapSession.execute(objBapi_Po);
@@ -3206,7 +2955,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                         bapi_messages.add(resourceMapMsg.getString("msg.errorSAP"));
                                     }
                                 }
-                                if ((objBapi instanceof GoodsMvtPoCreateBapi) 
+                                if ((objBapi instanceof GoodsMvtPoCreateBapi)
                                         && (weightTicketDetail.getMatDoc() == null || weightTicketDetail.getMatDoc().equals(""))) {
                                     weightTicketDetail.setMatDoc(((GoodsMvtPoCreateBapi) objBapi).getMatDoc());
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((GoodsMvtPoCreateBapi) objBapi).getMatYear()));
@@ -3266,7 +3015,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                         bapi_messages.add(resourceMapMsg.getString("msg.errorSAP"));
                                     }
                                 }
-                                
+
                                 if (objBapi instanceof DOPostingPGIBapi) {
                                     weightTicketDetail.setMatDoc(((DOPostingPGIBapi) objBapi).getMatDoc());
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((DOPostingPGIBapi) objBapi).getDocYear()));
@@ -3277,7 +3026,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     }
                                 }
 
-                                if ((objBapi_Posto instanceof GoodsMvtPoCreateBapi) 
+                                if ((objBapi_Posto instanceof GoodsMvtPoCreateBapi)
                                         && (weightTicketDetail.getMatDocGi() == null || weightTicketDetail.getMatDocGi().equals(""))) {
                                     weightTicketDetail.setMatDocGi(((GoodsMvtPoCreateBapi) objBapi_Posto).getMatDoc());
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((GoodsMvtPoCreateBapi) objBapi_Posto).getMatYear()));
@@ -3293,7 +3042,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                         || ((objBapi_Posto != null) && (weightTicketDetail.getMatDocGi() == null || weightTicketDetail.getMatDocGi().equals("")))) {
                                     revertCompletedDO(completedDO, null, null);
                                     weightTicket.setPosted(false);
-                                    
+
                                     if (weightTicket.getMode().equals("OUT_SLOC_SLOC")) {
                                         if (bapi_messagesSloc.isEmpty() && bapi_messagesPo.isEmpty() && bapi_messagesPosto.isEmpty()) {
                                             bapi_messagesSloc.add(resourceMapMsg.getString("msg.errorSAP"));
@@ -3364,7 +3113,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     outbDel = outbDel_list.get(i);
                     sumQtyReg = sumQtyReg.add(outbDel.getLfimg());
                 }
-                
+
                 // post SAP
                 String ivWbidNosave = "";
                 for (int i = 0; i < outbDel_list.size(); i++) {
@@ -3372,7 +3121,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     if (i != 0) {
                         ivWbidNosave = "X";
                     }
-                    
+
                     WeightTicketDetail weightTicketDetail = new WeightTicketDetail();
                     for(WeightTicketDetail wtDetail: weightTicketDetails) {
                         if(wtDetail.getDeliveryOrderNo().equals(outbDel.getDeliveryOrderNo())) {
@@ -3381,7 +3130,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     }
                     // validate trọng lượng DO
                     flgGqty = validateTolerance(null, outbDel);
-                    
+
                     // check dung sai -> set Qty
 //                    String material = (outbDel != null && outbDel.getMatnr() != null) ? outbDel.getMatnr().toString() : "";
 //                    if(checkVariantByMaterial(weightTicket, material, weightTicket.getGQty())) {
@@ -3420,7 +3169,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
 //                        entityManager.clear();
                     }
 
-                    if (WeighBridgeApp.getApplication().isOfflineMode() == false) {
+                    if (!WeighBridgeApp.getApplication().isOfflineMode()) {
                         if (objBapi != null) {
                             try {
                                 logger.info("[SAP] Get infor before post SAP: " + objBapi.toString());
@@ -3548,10 +3297,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     } catch (Exception Ex) {
                                         bapi_message = resourceMapMsg.getString("msg.errorSAP3160");
                                     }
-//                                        if (weightTicketDetail.getPpProcord() != null && weightTicketDetail.getPpProcord().length() == 12) {
-//                                            weightTicketDetail.setPpProcordcnf(((WsDeliveryUpdateBapi) objBapi).getConf_no());
-//                                            weightTicketDetail.setPpProcordcnfcnt(((WsDeliveryUpdateBapi) objBapi).getConf_cnt());
-//                                        }
+
                                     for (int k = 0; k < outDetails_lits.size(); k++) {
                                         details_item = outDetails_lits.get(k);
                                         if (details_item.getDeliveryOrderNo().equals(outbDel.getDeliveryOrderNo())) {
@@ -3645,7 +3391,6 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     } else if (sapLifnr == null && lifnr != null) {
                                         entityManager.remove(lifnr);
                                     }
-                                    // 120518_17h keep values(posted, mat_doc) which are gotten from Save SAP at the first time
                                     sapOutb.setId(outbDel.getId());
                                     sapOutb.setPosted(outbDel.isPosted());
                                     sapOutb.setMatDoc(outbDel.getMatDoc());
@@ -3653,7 +3398,6 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     outbDel = sapOutb;
                                 }
                                 // </editor-fold>
-//                    }
                             } catch (Exception e) {
                                 logger.error(e);
                                 if (objBapi instanceof WsDeliveryUpdateBapi) {
@@ -3708,7 +3452,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             entityManager.getTransaction().commit();
             entityManager.clear();
             if (completed) {
-                if (!weightTicket.isDissolved() || weightTicket.isPosted()) { //+20100111#01 khong in neu huy phieu
+                if (!weightTicket.isDissolved() || weightTicket.isPosted()) {
                     setMessage(resourceMapMsg.getString("msg.printing"));
                     printWT(weightTicket, false);
                 }
@@ -3728,9 +3472,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     || (weightTicket != null && !weightTicket.isPosted())) {
 //                weightTicket.setPosted(-1);
             }
-//            entityManager.merge(weightTicket);
-//            entityManager.getTransaction().commit();
-//            entityManager.clear();
+
             if (cause instanceof SapException) {
                 for (SapException.SapError error : ((SapException) cause).getErrors()) {
                     logger.error(null, new Exception(error.toString()));
@@ -3776,15 +3518,11 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         @Override
         protected Object doInBackground() {
             String charg = txtCharg.getText().trim().isEmpty() ? null : txtCharg.getText().trim();
-            //+20100216#01
             if (charg != null) {
                 charg = charg.toUpperCase(Locale.ENGLISH);
             }
-            //+20100216#01
             weightTicket.setCharg(charg);
-//            if (rbtMvt311.isSelected()) {
-//                weightTicket.setRecvCharg(charg);
-//            }
+
             lblCharg.setForeground(Color.black);
             if (isSubContract() && txfGoodsQty.getValue() != null) {
                 setMessage(resourceMapMsg.getString("msg.checkIssetWarehouse"));
@@ -3874,7 +3612,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                      purchaseOrder = purchaseOrderRepository.findByPoNumber(weightTicket.getWeightTicketDetail().getEbeln());
                     if(validateQuantityPO(purchaseOrder, new BigDecimal(Double.toString(result)))) {
                         txfGoodsQty.setValue(result);
-                        weightTicket.setGQty(new BigDecimal(Double.toString(result)));
+                        weightTicket.setGQty(new BigDecimal(Double.toString(result)).setScale(3, RoundingMode.HALF_UP));
                     } else {
                         String msg = "Không thể nhập hàng vì trọng lượng vượt quá đăng ký!";
                         JOptionPane.showMessageDialog(rootPane, msg);
@@ -3930,7 +3668,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
 
                         if ((lower <= result && result <= upper)) {
                             txfGoodsQty.setValue(result);
-                            weightTicket.setGQty(new BigDecimal(Double.toString(result)));
+                            weightTicket.setGQty(new BigDecimal(Double.toString(result)).setScale(3, RoundingMode.HALF_UP));
                             checkVariant = true;
                         } else {
                             String msg = "Chênh lệch vượt dung sai cho phép!";
@@ -3945,14 +3683,14 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         }
                     } else {
                         txfGoodsQty.setValue(result);
-                        weightTicket.setGQty(new BigDecimal(Double.toString(result)));
+                        weightTicket.setGQty(new BigDecimal(Double.toString(result)).setScale(3, RoundingMode.HALF_UP));
                     }
                 } else if (isSubContract() && weightTicket.getLgort() != null && weightTicket.getCharg() != null) {
-                    setMessage(resourceMapMsg.getString("msg.checkIssetWarehouse")); // checking stock --tuanna
+                    setMessage(resourceMapMsg.getString("msg.checkIssetWarehouse"));
                     Double remaining = CheckMatStock(weightTicket.getWeightTicketDetail().getMatnrRef(), configuration.getWkPlant(), weightTicket.getLgort(), weightTicket.getCharg());
                     if (result <= remaining) {
                         txfGoodsQty.setValue(result);
-                        weightTicket.setGQty(new BigDecimal(Double.toString(result)));
+                        weightTicket.setGQty(new BigDecimal(Double.toString(result)).setScale(3, RoundingMode.HALF_UP));
                     } else {
                         JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.oBiggerWarehouse"));
                         txfOutQty.setValue(null);
@@ -3962,14 +3700,14 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     }
                 } else {
                     txfGoodsQty.setValue(result);
-                    weightTicket.setGQty(new BigDecimal(Double.toString(result)));
+                    weightTicket.setGQty(new BigDecimal(Double.toString(result)).setScale(3, RoundingMode.HALF_UP));
                 }
             }
             if (isStage1()) {
                 txfInQty.setValue(txfCurScale.getValue());
                 txtInTime.setText(formatter.format(now));
                 weightTicket.setFCreator(WeighBridgeApp.getApplication().getLogin().getUid());
-                weightTicket.setFScale(new BigDecimal(((Number) txfInQty.getValue()).doubleValue()));
+                weightTicket.setFScale(new BigDecimal(((Number) txfInQty.getValue()).doubleValue()).setScale(3, RoundingMode.HALF_UP));
                 weightTicket.setFTime(now);
                 lblIScale.setForeground(Color.black);
                 OutboundDeliveryDetail item;
@@ -4019,11 +3757,11 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 txfOutQty.setValue(txfCurScale.getValue());
                 txtOutTime.setText(formatter.format(now));
                 weightTicket.setSCreator(WeighBridgeApp.getApplication().getLogin().getUid());
-                weightTicket.setSScale(new BigDecimal(((Number) txfOutQty.getValue()).doubleValue()));
+                weightTicket.setSScale(new BigDecimal(((Number) txfOutQty.getValue()).doubleValue()).setScale(3, RoundingMode.HALF_UP));
                 weightTicket.setSTime(now);
                 lblOScale.setForeground(Color.black);
                 OutboundDeliveryDetail item;
-                double remain = ((Number) txfCurScale.getValue()).doubleValue() - ((Number) txfInQty.getValue()).doubleValue() / 1000;
+                double remain = (((Number) txfCurScale.getValue()).doubleValue() - ((Number) txfInQty.getValue()).doubleValue()) / 1000;
 
                 // chia cân
                 if (outDetails_lits.size() > 1) {
@@ -4042,7 +3780,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         entityManager.merge(obj);
                         entityManager.getTransaction().commit();
                     }
-                    
+
                     List<OutboundDeliveryDetail> outDetails = outDetails_lits.stream()
                             .filter(t -> t.getFreeItem() == null || t.getFreeItem() != 'X')
                             .collect(Collectors.toList());
@@ -4159,6 +3897,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         txtCMNDBL.setText(null);
         txtLicPlate.setValue(null);
         txtTrailerPlate.setValue(null);
+        txtSalan.setText(null);
         txtSLoc.setText(null);
 
         txtGRText.setText(null);
@@ -4179,8 +3918,6 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         lblCementDesc.setForeground(Color.black);
         lblBatchProduce.setForeground(Color.black);
 
-        // Temporary enable btnAccept
-//        btnAccept.setEnabled(true);
         txtRegistrationNo.setText(null);
         txtProcedure.setText(null);
         txtSling.setText(null);
@@ -4235,7 +3972,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
     private Object getDoCreate2PGI(WeightTicket wt, OutboundDelivery outbDel) {
         return weightTicketController.getDoCreate2PGI(wt, outbDel, weightTicket, timeFrom, timeTo, outDetails_lits);
     }
-    
+
     private Object getDOPostingPGI(WeightTicket wt, OutboundDelivery outbDel, String deliveryNum) {
         return weightTicketController.getDOPostingPGI(wt, outbDel, weightTicket, timeFrom, timeTo, outDetails_lits, deliveryNum);
     }
@@ -4275,21 +4012,6 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         boolean bNiemXa = true;
         boolean bBatchProduce = true;
         boolean isRemark = true;
-//        if (chkDissolved.isSelected()) {
-//            bMisc = bPO = bMB1B = bMvt311 = bScale = bSLoc = bBatch = !isDissolved();
-//            rbtMisc.setForeground(Color.black);
-//            if (WeighBridgeApp.getApplication().isOfflineMode()) {
-//                rbtMisc.setForeground(Color.red);
-//            }
-//            rbtPO.setForeground(Color.black);
-//            rbtMb1b.setForeground(Color.black);
-//            rbtMvt311.setForeground(Color.black);
-//            lblIScale.setForeground(Color.black);
-//            lblOScale.setForeground(Color.black);
-//            lblGScale.setForeground(Color.black);
-//            lblSLoc.setForeground(Color.black);
-//            lblCharg.setForeground(Color.black);
-//        } else {
         if (grbType.getSelection() == null && isWithoutDO()) {
         } else {
             bMisc = WeighBridgeApp.getApplication().isOfflineMode();
@@ -4355,19 +4077,8 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         if (!bBatch && bMaterial && !bBatchMng) {
             bBatch = true;
         }
-//        if (bSLoc) {
-//            lblSLoc.setForeground(Color.black);
-//        } else {
-//            lblSLoc.setForeground(Color.red);
-//        }
-//        if (bBatch) {
-//            lblCharg.setForeground(Color.black);
-//        } else {
-//            lblCharg.setForeground(Color.red);
-//        }
-        //}
+
         bBatch = true;
-        //txtGRText.setEnabled(true);
         if (weightTicket.getWeightTicketDetail() != null && weightTicket.getWeightTicketDetail().getMatnrRef() != null) {
             materialConstraint = weightTicketController.getMaterialConstraintByMatnr(weightTicket.getWeightTicketDetail().getMatnrRef());
             if (isStage2()
@@ -4423,7 +4134,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
             OutboundDelivery od, List<OutboundDeliveryDetail> od_v2_list) {
         return weightTicketController.fillWTStructure(wt, od, od_v2_list, weightTicket);
     }
-    
+
     public boolean checkVariantByMaterial(WeightTicket wt, String material, BigDecimal gQty) {
         Variant vari = weightTicketController.findByParamMandtWplant(material, configuration.getSapClient(), configuration.getWkPlant());
         double valueUp = 0;
@@ -4483,43 +4194,32 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 }
             }
 
-            }
-            return true;
         }
+        return true;
+    }
 
     private boolean validateQuantityPO(PurchaseOrder purchaseOrder, BigDecimal qty) {
-            BigDecimal numCheckWeight = BigDecimal.ZERO;
-            BigDecimal quantity = BigDecimal.ZERO;
-            BigDecimal tolerance = BigDecimal.ZERO;
-            BigDecimal freeQty = BigDecimal.ZERO;
-            // check for PO
-            if (purchaseOrder != null) {
-                PurchaseOrderDetail purchaseOrderDetail = purchaseOrder.getPurchaseOrderDetail();
+        BigDecimal numCheckWeight = BigDecimal.ZERO;
+        BigDecimal quantity = BigDecimal.ZERO;
+        BigDecimal tolerance = BigDecimal.ZERO;
+        BigDecimal freeQty = BigDecimal.ZERO;
+        // check for PO
+        if (purchaseOrder != null) {
+            PurchaseOrderDetail purchaseOrderDetail = purchaseOrder.getPurchaseOrderDetail();
 
-                quantity = purchaseOrderDetail.getQuantity() != null ? purchaseOrderDetail.getQuantity() : BigDecimal.ZERO;
-                tolerance = purchaseOrderDetail.getOverDlvTol() != null ? purchaseOrderDetail.getOverDlvTol() : BigDecimal.ZERO;
+            quantity = purchaseOrderDetail.getQuantity() != null ? purchaseOrderDetail.getQuantity() : BigDecimal.ZERO;
+            tolerance = purchaseOrderDetail.getOverDlvTol() != null ? purchaseOrderDetail.getOverDlvTol() : BigDecimal.ZERO;
 
-                numCheckWeight = quantity.add(
-                        quantity.multiply(tolerance).divide(new BigDecimal(100))
-                ).subtract(weightTicketRegistarationController.getSumGqtyWithPoNo(purchaseOrder.getPoNumber()));
+            numCheckWeight = quantity.add(
+                    quantity.multiply(tolerance).divide(new BigDecimal(100))
+            ).subtract(weightTicketRegistarationController.getSumGqtyWithPoNo(purchaseOrder.getPoNumber()));
 
-                BigDecimal result = numCheckWeight.subtract(qty);
-                if (result.compareTo(BigDecimal.ZERO) < 0) {
-                    return false;
-                }
+            BigDecimal result = numCheckWeight.subtract(qty);
+            if (result.compareTo(BigDecimal.ZERO) < 0) {
+                return false;
             }
-            return true;
         }
-    
-    private boolean checkPlantG112ToG111(OutboundDeliveryDetail item, WeightTicket wtPlant) {
-        Material mat = materialRepository.findByMatnr(item.getMatnr());
-        if (weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER")
-                && configuration.getWkPlant().equals("G111")
-                && (StringUtil.isNotEmptyString(mat.getGroes())) && (mat.getGroes().replaceAll("\\s+","").equals(Constants.Groes.B50))
-                && wtPlant.getWplant().equals("G112")) {
-            return true;
-        }
-        return false;
+        return true;
     }
     // </editor-fold>
     //<editor-fold defaultstate="collapsed" desc="Variables declaration Area">
@@ -4568,6 +4268,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
     private javax.swing.JLabel lblRemark;
     private javax.swing.JLabel lblSLoc;
     private javax.swing.JLabel lblSO;
+    private javax.swing.JLabel lblSalan;
     private javax.swing.JLabel lblSling;
     private javax.swing.JLabel lblTicketId;
     private javax.swing.JLabel lblTrailerPlate;
@@ -4614,6 +4315,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
     private javax.swing.JTextField txtRemark;
     private javax.swing.JTextField txtSLoc;
     private javax.swing.JTextField txtSO;
+    private javax.swing.JTextField txtSalan;
     private javax.swing.JFormattedTextField txtSling;
     private javax.swing.JFormattedTextField txtTicketId;
     private javax.swing.JFormattedTextField txtTrailerPlate;

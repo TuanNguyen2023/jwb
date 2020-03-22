@@ -150,7 +150,7 @@ public class GoodsMvtPoCreateBapi implements Serializable {
         if (_return == null || _return.isEmpty()) {
             return errorMsgs;
         }
-        
+
         return _return.stream().map(bapiRet2 -> {
             if (bapiRet2.getType() != 'E') {
                 return null;

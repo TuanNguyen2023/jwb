@@ -160,7 +160,7 @@ public class DOCreate2PGIBapi implements Serializable {
         if (_Return == null || _Return.isEmpty()) {
             return errorMsgs;
         }
-        
+
         return _Return.stream().map(bapiRet2 -> {
             if (bapiRet2.getType() != 'E') {
                 return null;

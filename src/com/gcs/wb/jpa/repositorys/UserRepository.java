@@ -29,4 +29,18 @@ public class UserRepository {
 
         return null;
     }
+
+    public User findByMandtWplantUid(String mandt, String wplant, String uid) {
+        TypedQuery<User> typedQuery = entityManager.createNamedQuery("User.findByMandtWplantUid", User.class);
+        typedQuery.setParameter("mandt", mandt);
+        typedQuery.setParameter("wplant", wplant);
+        typedQuery.setParameter("uid", uid);
+        List<User> users = typedQuery.getResultList();
+
+        if (users != null && users.size() >= 1) {
+            return users.get(0);
+        }
+
+        return null;
+    }
 }

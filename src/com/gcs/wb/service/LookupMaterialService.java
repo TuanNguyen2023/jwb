@@ -14,7 +14,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.TypedQuery;
-import org.hibersap.session.Session;
 
 /**
  *
@@ -24,7 +23,6 @@ public class LookupMaterialService {
 
     EntityManager entityManager = JPAConnector.getInstance();
     Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
-    Session session = WeighBridgeApp.getApplication().getSAPSession();
     EntityTransaction entityTransaction = entityManager.getTransaction();
 
     /**

@@ -129,7 +129,7 @@ import javax.persistence.Temporal;
     @NamedQuery(name = "WeightTicket.findByDOFromPO",
             query = "SELECT DISTINCT w FROM WeightTicket w "
             + " , IN(w.weightTicketDetails) wd "
-            + " WHERE wd.deliveryOrderNo LIKE :deliveryOrderNo" 
+            + " WHERE wd.deliveryOrderNo LIKE :deliveryOrderNo"
             + " AND w.mode LIKE :mode"
             + " AND w.mandt LIKE :mandt")
 })
@@ -237,7 +237,9 @@ public class WeightTicket implements Serializable {
     private String ticketId;
     @Column(name = "registered_number")
     private String registeredNumber;
-    
+    @Column(name = "charg_enh")
+    private String chargEnh;
+
     @Column(name = "weight_ticket_id_ref")
     private String weightTicketIdRef;
 
@@ -661,6 +663,14 @@ public class WeightTicket implements Serializable {
 
     public void setPosto(String posto) {
         this.posto = posto;
+    }
+
+    public String getChargEnh() {
+        return chargEnh;
+    }
+
+    public void setChargEnh(String chargEnh) {
+        this.chargEnh = chargEnh;
     }
 
     public List<WeightTicketDetail> getWeightTicketDetails() {

@@ -99,4 +99,5 @@ public interface GoodsMvtCreateConstants extends BapiConstants {
     String LFART = "LFART";
     String STATUS = "STATUS";
     String WT_ID_REF = "WT_ID_REF";
+    String CHARG_ENH = "CHARG_ENH";
 }
