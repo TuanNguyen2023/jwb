@@ -40,6 +40,7 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -3866,6 +3867,10 @@ private void txtSalanNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             }
 
             updateWeightTicket(purchaseOrderPO);
+
+            if (totalWeight.compareTo(BigDecimal.ZERO) == 0) {
+               throw new Exception(resourceMapMsg.getString("msg.excessWeight", poNum));
+            }
 
             setStep(4, null);
             return null;
