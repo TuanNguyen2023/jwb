@@ -4221,6 +4221,18 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         }
         return true;
     }
+
+    private boolean checkPlantG112ToG111(OutboundDeliveryDetail item, WeightTicket wtPlant) {
+        Material mat = materialRepository.findByMatnr(item.getMatnr());
+        if (weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER")
+                && configuration.getWkPlant().equals("G111")
+                && (StringUtil.isNotEmptyString(mat.getGroes())) && (mat.getGroes().replaceAll("\\s+","").equals(Constants.Groes.B50))
+                && wtPlant.getWplant().equals("G112")) {
+            return true;
+        }
+        return false;
+    }
+
     // </editor-fold>
     //<editor-fold defaultstate="collapsed" desc="Variables declaration Area">
     // Variables declaration - do not modify//GEN-BEGIN:variables
