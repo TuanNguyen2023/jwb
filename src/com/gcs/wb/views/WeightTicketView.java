@@ -2854,11 +2854,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         SaveWTTask(org.jdesktop.application.Application app) {
             super(app);
             btnSave.setEnabled(false);
-            if (((isStage2() || (!isStage1() && !isStage2())) && !weightTicket.isDissolved())
-                    || (!isStage1() && !isStage2() && !weightTicket.isDissolved()
-                    && (weightTicket != null && !weightTicket.isPosted()))) {
-                sapSession = WeighBridgeApp.getApplication().getSAPSession();
-            }
+            sapSession = WeighBridgeApp.getApplication().getSAPSession();
             setSaveNeeded(false);
         }
 
@@ -3195,11 +3191,15 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                         }
                                         if (((DOCreate2PGIBapi) objBapi).getMatDoc() == null) {
                                             details_item.setPosted(false);
+                                            details_item.setUpdatedDate(new java.sql.Date(now.getTime()));
                                             outbDel.setPosted(false);
+                                            outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                             flag_fail = true;
                                         } else {
                                             details_item.setPosted(true);
                                             outbDel.setPosted(true);
+                                            details_item.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                            outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                         }
 
                                         if (!entityManager.getTransaction().isActive()) {
@@ -3210,9 +3210,11 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     }
                                     if (((DOCreate2PGIBapi) objBapi).getMatDoc() == null) {
                                         outbDel.setPosted(false);
+                                        outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                         flag_fail = true;
                                     } else {
                                         outbDel.setPosted(true);
+                                        outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                     }
                                 }
                                 if (objBapi instanceof GoodsMvtPoCreateBapi) {
@@ -3233,10 +3235,14 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                         if (((GoodsMvtPoCreateBapi) objBapi).getMatDoc() == null) {
                                             details_item.setPosted(false);
                                             outbDel.setPosted(false);
+                                            details_item.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                            outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                             flag_fail = true;
                                         } else {
                                             details_item.setPosted(true);
                                             outbDel.setPosted(true);
+                                            details_item.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                            outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                         }
                                         if (!entityManager.getTransaction().isActive()) {
                                             entityManager.getTransaction().begin();
@@ -3246,10 +3252,12 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     }
                                     if (((GoodsMvtPoCreateBapi) objBapi).getMatDoc() == null) {
                                         outbDel.setPosted(false);
+                                        outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
 
                                         flag_fail = true;
                                     } else {
                                         outbDel.setPosted(true);
+                                        outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                     }
                                 }
                                 if (objBapi instanceof GoodsMvtDoCreateBapi) {
@@ -3270,10 +3278,14 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                         if (((GoodsMvtDoCreateBapi) objBapi).getMatDoc() == null) {
                                             details_item.setPosted(false);
                                             outbDel.setPosted(false);
+                                            details_item.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                            outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                             flag_fail = true;
                                         } else {
                                             details_item.setPosted(true);
                                             outbDel.setPosted(true);
+                                            details_item.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                            outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                         }
                                         if (!entityManager.getTransaction().isActive()) {
                                             entityManager.getTransaction().begin();
@@ -3284,8 +3296,10 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     if (((GoodsMvtDoCreateBapi) objBapi).getMatDoc() == null) {
                                         outbDel.setPosted(false);
                                         flag_fail = true;
+                                        outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                     } else {
                                         outbDel.setPosted(true);
+                                        outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                     }
                                 }
                                 if (objBapi instanceof WsDeliveryUpdateBapi) {
@@ -3308,10 +3322,14 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                         if (((WsDeliveryUpdateBapi) objBapi).getMat_doc() == null) {
                                             details_item.setPosted(false);
                                             outbDel.setPosted(false);
+                                            details_item.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                            outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                             flag_fail = true;
                                         } else {
                                             details_item.setPosted(true);
                                             outbDel.setPosted(true);
+                                            details_item.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                            outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                         }
 
                                         if (!entityManager.getTransaction().isActive()) {
@@ -3324,8 +3342,10 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     if (((WsDeliveryUpdateBapi) objBapi).getMat_doc() == null) {
                                         outbDel.setPosted(false);
                                         flag_fail = true;
+                                        outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                     } else {
                                         outbDel.setPosted(true);
+                                        outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                     }
                                 }
 
@@ -3394,6 +3414,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                     sapOutb.setId(outbDel.getId());
                                     sapOutb.setPosted(outbDel.isPosted());
                                     sapOutb.setMatDoc(outbDel.getMatDoc());
+                                    sapOutb.setUpdatedDate(new java.sql.Date(now.getTime()));
                                     entityManager.merge(sapOutb);
                                     outbDel = sapOutb;
                                 }
@@ -3409,6 +3430,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
 
                                         revertCompletedDO(completedDO, outDetails_lits, outbDel_list);
                                         outbDel.setPosted(false);
+                                        outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                     }
                                 }
                                 weightTicket.setPosted(false);
@@ -3716,6 +3738,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         item = outDetails_lits.get(i);
                         BigDecimal inScale = new BigDecimal(((Number) txfInQty.getValue()).doubleValue() / 1000);
                         item.setInScale(inScale.setScale(3, RoundingMode.HALF_UP));
+                        item.setUpdatedDate(new java.sql.Date(now.getTime()));
                         // tinh toan cho Nhap kho tu tay ninh > ben keo
                         WeightTicket wtPlantG112 = weightTicketRepository.findByDOFromPO(outbDel.getDeliveryOrderNo());
                         if(checkPlantG112ToG111(item, wtPlantG112)) {
@@ -3772,6 +3795,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     for (OutboundDeliveryDetail obj : outDetailFrees) {
                         obj.setGoodsQty(obj.getLfimg());
                         obj.setOutScale(obj.getInScale().add(obj.getLfimg()).setScale(3, RoundingMode.HALF_UP));
+                        obj.setUpdatedDate(new java.sql.Date(now.getTime()));
                         remain = remain - obj.getLfimg().doubleValue();
 
                         if (!entityManager.getTransaction().isActive()) {
@@ -3790,6 +3814,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         if (i < outDetails.size() - 1) {
                             item.setGoodsQty(item.getLfimg());
                             item.setOutScale(item.getInScale().add(item.getLfimg()).setScale(3, RoundingMode.HALF_UP));
+                            item.setUpdatedDate(new java.sql.Date(now.getTime()));
                             remain = remain - item.getLfimg().doubleValue();
                         } else {
                             if (checkVariant) {
@@ -3798,6 +3823,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                 item.setGoodsQty(BigDecimal.valueOf(remain).setScale(3, RoundingMode.HALF_UP));
                             }
                             item.setOutScale((BigDecimal.valueOf(item.getInScale().doubleValue() + remain)).setScale(3, RoundingMode.HALF_UP));
+                            item.setUpdatedDate(new java.sql.Date(now.getTime()));
                         }
                         if (!entityManager.getTransaction().isActive()) {
                             entityManager.getTransaction().begin();
@@ -3814,6 +3840,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                     } else {
                         item.setGoodsQty((weightTicket.getSScale().subtract(weightTicket.getFScale()).divide(div).abs()).setScale(3, RoundingMode.HALF_UP));
                     }
+                    item.setUpdatedDate(new java.sql.Date(now.getTime()));
                     if (!entityManager.getTransaction().isActive()) {
                         entityManager.getTransaction().begin();
                     }
