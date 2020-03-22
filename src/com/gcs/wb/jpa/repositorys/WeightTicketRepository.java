@@ -16,8 +16,10 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 import org.apache.log4j.Logger;
+import org.eclipse.persistence.exceptions.DatabaseException;
 
 /**
  *
@@ -345,8 +347,14 @@ public class WeightTicketRepository {
             nq.setParameter("wplant", configuration.getWkPlant());
 
             return nq.getResultList();
-        } catch (NumberFormatException ex) {
+        } catch (Exception ex) {
             logger.error(null, ex);
+            if (ex.getCause() instanceof DatabaseException) {
+                DatabaseException dbex = (DatabaseException) ex.getCause();
+                if (dbex.isCommunicationFailure()) {
+                    throw new Exception(Constants.Message.DB_DISCONNECTED);
+                }
+            }
             throw ex;
         }
     }

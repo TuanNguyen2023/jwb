@@ -313,4 +313,8 @@ public class Constants {
     public static final class PurchaseOrder {
         public static Character PO_REL_IND_NOT_RELEASED = 'B';
     }
+    
+    public static final class Message {
+        public static String DB_DISCONNECTED = "Mất kết nối tới Database.\nVui lòng thử lại hoặc liên hệ dịch vụ khách hàng Hotline 0919 49 59 69 để được hỗ trợ.";
+    }
 }
