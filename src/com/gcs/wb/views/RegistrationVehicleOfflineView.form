@@ -40,14 +40,14 @@
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="pnShowFilter" alignment="1" max="32767" attributes="0"/>
-                  <Component id="spnResult" alignment="1" pref="1170" max="32767" attributes="2"/>
+                  <Component id="spnResult" alignment="1" pref="1196" max="32767" attributes="2"/>
                   <Component id="pnFilter" alignment="1" max="32767" attributes="2"/>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="pnRegistrationOfVehicle" max="32767" attributes="2"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="pnROVRight" max="32767" attributes="0"/>
                   </Group>
-                  <Component id="pnPrintControl" alignment="0" pref="1170" max="32767" attributes="1"/>
+                  <Component id="pnPrintControl" alignment="0" pref="1196" max="32767" attributes="1"/>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
@@ -60,7 +60,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="pnShowFilter" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="spnResult" pref="157" max="32767" attributes="0"/>
+              <Component id="spnResult" pref="135" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="pnPrintControl" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
@@ -68,7 +68,7 @@
                   <Component id="pnRegistrationOfVehicle" max="32767" attributes="1"/>
                   <Component id="pnROVRight" alignment="0" max="32767" attributes="1"/>
               </Group>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="68" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -128,14 +128,14 @@
                           </Group>
                           <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="cbxModeSearch" pref="189" max="32767" attributes="2"/>
-                              <Component id="txtCreator" alignment="0" pref="189" max="32767" attributes="2"/>
+                              <Component id="cbxModeSearch" pref="215" max="32767" attributes="2"/>
+                              <Component id="txtCreator" alignment="0" pref="215" max="32767" attributes="2"/>
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="cbxHourFrom" pref="65" max="32767" attributes="0"/>
+                                  <Component id="cbxHourFrom" pref="73" max="32767" attributes="0"/>
                                   <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lblHourTo" pref="24" max="32767" attributes="0"/>
+                                  <Component id="lblHourTo" pref="34" max="32767" attributes="0"/>
                                   <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cbxHourTo" pref="72" max="32767" attributes="0"/>
+                                  <Component id="cbxHourTo" pref="80" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -513,20 +513,20 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="pnROVLeft" alignment="0" max="32767" attributes="1"/>
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="pnControl" pref="582" max="32767" attributes="3"/>
+                  <Component id="pnControl" pref="597" max="32767" attributes="3"/>
               </Group>
+              <Component id="pnROVLeft" alignment="0" max="32767" attributes="1"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <Component id="pnROVLeft" min="-2" max="-2" attributes="1"/>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="pnControl" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="122" max="32767" attributes="0"/>
+                  <EmptySpace pref="77" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -543,8 +543,8 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="lblSalanN" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Component id="lblNoteN" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblSalanN" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="rbtInput" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -559,11 +559,12 @@
                           <Component id="lblPlateNoN" min="-2" max="-2" attributes="0"/>
                           <Component id="lblSlingN" min="-2" max="-2" attributes="0"/>
                           <Component id="lblSoNiemXaN" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblLoadSourceN" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="txtSoNiemXaN" pref="402" max="32767" attributes="1"/>
                           <Component id="txtNoteN" pref="402" max="32767" attributes="1"/>
+                          <Component id="txtSoNiemXaN" pref="402" max="32767" attributes="1"/>
                           <Component id="txtProductionBatchN" pref="402" max="32767" attributes="1"/>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="txtSlingN" min="-2" pref="127" max="-2" attributes="1"/>
@@ -590,10 +591,11 @@
                               <Component id="txtTonnageN" pref="75" max="32767" attributes="0"/>
                           </Group>
                           <Component id="txtSalanN" alignment="0" pref="402" max="32767" attributes="0"/>
+                          <Component id="txtLoadSourceN" alignment="0" pref="402" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="lblTonngageUnitN" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="51" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -662,6 +664,11 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="lblProductionBatchN" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="txtProductionBatchN" alignment="3" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="lblLoadSourceN" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtLoadSourceN" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -923,6 +930,20 @@
                 <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtSalanNKeyReleased"/>
               </Events>
             </Component>
+            <Component class="javax.swing.JLabel" name="lblLoadSourceN">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="lblLoadSourceN.text"/>
+                <Property name="name" type="java.lang.String" value="lblLoadSourceN" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtLoadSourceN">
+              <Properties>
+                <Property name="name" type="java.lang.String" value="txtLoadSourceN" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtLoadSourceNKeyReleased"/>
+              </Events>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="pnControl">
@@ -1129,7 +1150,7 @@
                       <Component id="cbxVendorTransportN" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
                       <Component id="lblVendorTransportN" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="42" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -1421,7 +1442,7 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace pref="1075" max="32767" attributes="0"/>
+                  <EmptySpace pref="1101" max="32767" attributes="0"/>
                   <Component id="btnShowFilter" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
