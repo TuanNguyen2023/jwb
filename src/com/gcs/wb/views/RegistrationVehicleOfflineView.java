@@ -104,13 +104,12 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
         initTableEvent();
         btnEdit.setEnabled(false);
         pnShowFilter.setVisible(false);
-
-        SearchWeightTicketTask t = new SearchWeightTicketTask(WeighBridgeApp.getApplication());
-        t.execute();
-
         cbxHourTo.setSelectedIndex(23);
         cbxModeSearch.setModel(new DefaultComboBoxModel<>(ModeEnum.values()));
         cbxStatus.setModel(new DefaultComboBoxModel<>(StatusEnum.values()));
+
+        SearchWeightTicketTask t = new SearchWeightTicketTask(WeighBridgeApp.getApplication());
+        t.execute();
     }
 
     private void initTableEvent() {
@@ -2868,11 +2867,17 @@ private void txtSalanNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 wtData[i][3] = item.getPlateNo();
                 wtData[i][4] = item.getTrailerId();
                 wtData[i][5] = item.getRegType();
-                String[] regItemDescriptions = weightTicketDetails.stream()
-                        .map(t -> t.getRegItemDescription())
-                        .filter(t -> t != null)
-                        .toArray(String[]::new);
-                wtData[i][6] = regItemDescriptions.length > 0 ? String.join(" - ", regItemDescriptions) : "";
+
+                List<String> regItemDescriptions = new ArrayList<>();
+                for (WeightTicketDetail wtDetail : weightTicketDetails) {
+                    String description = wtDetail.getRegItemDescription();
+                    if (description != null && !description.isEmpty()) {
+                        regItemDescriptions.add(description);
+                    }
+                }
+
+                wtData[i][6] = regItemDescriptions.size() > 0 ? String.join(" - ", regItemDescriptions) : "";
+
                 wtData[i][7] = weightTicketDetail.getRegItemQuantity();
                 String[] doNums = weightTicketDetails.stream()
                         .map(t -> t.getDeliveryOrderNo())
@@ -3504,6 +3509,7 @@ private void txtSalanNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
         @Override
         protected void failed(Throwable cause) {
+            logger.error(cause);
             if (entityTransaction.isActive()) {
                 entityTransaction.rollback();
             }

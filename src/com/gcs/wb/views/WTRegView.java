@@ -110,13 +110,12 @@ public class WTRegView extends javax.swing.JInternalFrame {
         initComboboxModel();
         initComboboxRenderer();
         initTableEvent();
-
-        SearchWeightTicketTask t = new SearchWeightTicketTask(WeighBridgeApp.getApplication());
-        t.execute();
-
         cbxHourTo.setSelectedIndex(23);
         cbxModeSearch.setModel(new DefaultComboBoxModel<>(ModeEnum.values()));
         cbxStatus.setModel(new DefaultComboBoxModel<>(StatusEnum.values()));
+
+        SearchWeightTicketTask t = new SearchWeightTicketTask(WeighBridgeApp.getApplication());
+        t.execute();
     }
 
     private void initTableEvent() {
@@ -2860,12 +2859,16 @@ private void txtSalanNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 wtData[i][3] = item.getPlateNo();
                 wtData[i][4] = item.getTrailerId();
                 wtData[i][5] = item.getRegType();
+                
+                List<String> regItemDescriptions = new ArrayList<>();
+                for (WeightTicketDetail weightTicketDetail : weightTicketDetails) {
+                    String description = weightTicketDetail.getRegItemDescription();
+                    if (description != null && !description.isEmpty()) {
+                        regItemDescriptions.add(description);
+                    }
+                }
 
-                String[] regItemDescriptions = weightTicketDetails == null ? null : weightTicketDetails.stream()
-                        .map(t -> t != null ? t.getRegItemDescription() : null)
-                        .filter(t -> t != null)
-                        .toArray(String[]::new);
-                wtData[i][6] = regItemDescriptions != null && regItemDescriptions.length > 0 ? String.join(" - ", regItemDescriptions) : "";
+                wtData[i][6] = regItemDescriptions.size() > 0 ? String.join(" - ", regItemDescriptions) : "";
 
                 BigDecimal sumRegQty = BigDecimal.ZERO;
                 for (WeightTicketDetail wt : weightTicketDetails) {
@@ -3488,6 +3491,7 @@ private void txtSalanNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
         @Override
         protected void failed(Throwable cause) {
+            logger.error(cause);
             if (entityTransaction.isActive()) {
                 entityTransaction.rollback();
             }
