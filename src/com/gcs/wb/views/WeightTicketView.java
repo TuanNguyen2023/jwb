@@ -36,6 +36,7 @@ import com.gcs.wb.controller.WeightTicketController;
 import com.gcs.wb.controller.WeightTicketRegistarationController;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.*;
+import com.gcs.wb.jpa.repositorys.MaterialInterPlantRepository;
 import com.gcs.wb.jpa.repositorys.MaterialInternalRepository;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
 import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
@@ -113,6 +114,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
     SAPService sapService = new SAPService();
     PurchaseOrderRepository purchaseOrderRepository = new PurchaseOrderRepository();
+    MaterialInterPlantRepository materialInterPlantRepository = new MaterialInterPlantRepository();
+    
     PurchaseOrder purchaseOrder = new PurchaseOrder();
     private boolean flgPost = false;
     private DecimalFormat df = new DecimalFormat("#,##0.000");
@@ -3143,8 +3146,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         } else {
                             objBapi = getGrDoMigoBapi(weightTicket, outbDel);
                         }
-                    } //                    else if ((!weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER"))
-                    //                            && (flgGqty && (!toleranceUtil.isInvalidTolerance(sumQtyReg, weightTicket.getGQty(), configuration.getTolerance())))) {
+                    } 
                     else if ((!weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER")) && (flgGqty)) {
                         // xuat DO
                         if (weightTicket.getMode().equals("OUT_SELL_ROAD")) {
@@ -3739,33 +3741,28 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                         BigDecimal inScale = new BigDecimal(((Number) txfInQty.getValue()).doubleValue() / 1000);
                         item.setInScale(inScale.setScale(3, RoundingMode.HALF_UP));
                         item.setUpdatedDate(new java.sql.Date(now.getTime()));
-                        // tinh toan cho Nhap kho tu tay ninh > ben keo
-                        WeightTicket wtPlantG112 = weightTicketRepository.findByDOFromPO(outbDel.getDeliveryOrderNo());
-                        if(checkPlantG112ToG111(item, wtPlantG112)) {
+                        // tinh toan cho Nhap kho tu plant xuat > plant nhap
+                        WeightTicket wtPlantOut = weightTicketRepository.findByDOFromPO(outbDel.getDeliveryOrderNo());
+                        if((wtPlantOut != null) && (checkPlantOutToIn(item, wtPlantOut.getWplant()))) {
                             double inFScalePlant = 0;
                             double outSScalePlant = 0;
                             double result = ((Number) txfInQty.getValue()).doubleValue();
-                            if(wtPlantG112!= null) {
-                                String poNum = wtPlantG112.getWeightTicketDetail().getEbeln();
-                                PurchaseOrder purchaseOrder = purchaseOrderRepository.findByPoNumber(poNum);
-                                if(purchaseOrder.getPurchaseOrderDetail().getPlant().equals(configuration.getWkPlant())) {
-                                    inFScalePlant = wtPlantG112.getFScale().doubleValue();
-                                    outSScalePlant = wtPlantG112.getSScale().doubleValue();
-                                    // check outScalePO va txfInQty.getValue() chenh lech 1%
-                                    double upper = outSScalePlant + (outSScalePlant * 1) / 100;
-                                    double lower = outSScalePlant - (outSScalePlant * 1) / 100;
-                                    // -> set weightTicket.setSScale = inScalePO
-                                    if ((lower <= result && result <= upper)) {
-                                        item.setOutScale(new BigDecimal(((Number) wtPlantG112.getFScale()).doubleValue() / 1000).setScale(3, RoundingMode.HALF_UP));
-                                        item.setGoodsQty((BigDecimal.valueOf(item.getInScale().doubleValue() - item.getOutScale().doubleValue())).setScale(3, RoundingMode.HALF_UP));
-                                        //item.setsTime(now);
-                                        weightTicket.setSCreator(WeighBridgeApp.getApplication().getLogin().getUid());
-                                        weightTicket.setSScale(wtPlantG112.getFScale());
-                                        weightTicket.setSTime(now);
-                                        weightTicket.setGQty((BigDecimal.valueOf(item.getInScale().doubleValue() - item.getOutScale().doubleValue())).setScale(3, RoundingMode.HALF_UP));
-                                        checkPlant = true;
-                                    }
-                                    // post SAP
+                            String poNum = wtPlantOut.getWeightTicketDetail().getEbeln();
+                            PurchaseOrder purchaseOrder = purchaseOrderRepository.findByPoNumber(poNum);
+                            if(purchaseOrder.getPurchaseOrderDetail().getPlant().equals(configuration.getWkPlant())) {
+                                inFScalePlant = wtPlantOut.getFScale().doubleValue();
+                                outSScalePlant = wtPlantOut.getSScale().doubleValue();
+                                // check can 1 cua nhap voi can 2 xuat chenh lech 1%
+                                double upper = outSScalePlant + (outSScalePlant * 1) / 100;
+                                double lower = outSScalePlant - (outSScalePlant * 1) / 100;
+                                if ((lower <= result && result <= upper)) {
+                                    item.setOutScale(new BigDecimal(((Number) wtPlantOut.getFScale()).doubleValue() / 1000).setScale(3, RoundingMode.HALF_UP));
+                                    item.setGoodsQty((BigDecimal.valueOf(item.getInScale().doubleValue() - item.getOutScale().doubleValue())).setScale(3, RoundingMode.HALF_UP));
+                                    weightTicket.setSCreator(WeighBridgeApp.getApplication().getLogin().getUid());
+                                    weightTicket.setSScale(wtPlantOut.getFScale());
+                                    weightTicket.setSTime(now);
+                                    weightTicket.setGQty((BigDecimal.valueOf(item.getInScale().doubleValue() - item.getOutScale().doubleValue())).setScale(3, RoundingMode.HALF_UP));
+                                    checkPlant = true;
                                 }
                             }
                         }
@@ -4249,12 +4246,13 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
         return true;
     }
 
-    private boolean checkPlantG112ToG111(OutboundDeliveryDetail item, WeightTicket wtPlant) {
+    private boolean checkPlantOutToIn(OutboundDeliveryDetail item, String wplantOut) {
         Material mat = materialRepository.findByMatnr(item.getMatnr());
+        MaterialInterPlant materialInterPlant = materialInterPlantRepository.findByMatnrAndPlantInOut(item.getMatnr(), configuration.getWkPlant(), wplantOut);
         if (weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER")
-                && configuration.getWkPlant().equals("G111")
-                && (StringUtil.isNotEmptyString(mat.getGroes())) && (mat.getGroes().replaceAll("\\s+","").equals(Constants.Groes.B50))
-                && wtPlant.getWplant().equals("G112")) {
+                && (materialInterPlant != null)
+                && (StringUtil.isNotEmptyString(mat.getGroes()))
+                && (mat.getGroes().replaceAll("\\s+","").equals(Constants.Groes.B50))) {
             return true;
         }
         return false;

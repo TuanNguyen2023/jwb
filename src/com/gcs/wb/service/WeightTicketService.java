@@ -985,8 +985,8 @@ public class WeightTicketService {
                 WeightTicketDetail weightTicketDetail = wt.getWeightTicketDetail();
                 if (!wt.isDissolved()) {
                     Double tmp = null;
-                    if ((StringUtil.isNotEmptyString(weightTicketDetail.getRecvMatnr()))
-                            && checkBagCement(weightTicketDetail.getRecvMatnr())) {
+                    if ((StringUtil.isNotEmptyString(weightTicketDetail.getMatnrRef()))
+                            && checkBagCement(weightTicketDetail.getMatnrRef())) {
                         tmp = ((weightTicketDetail.getRegItemQuantity().doubleValue()) * 1000d) / 50d;
                     }
                     

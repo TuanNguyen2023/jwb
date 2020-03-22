@@ -27,6 +27,7 @@
     <class>com.gcs.wb.jpa.entity.Unit</class>
     <class>com.gcs.wb.jpa.entity.SaleOrder</class>
     <class>com.gcs.wb.jpa.entity.VehicleType</class>
+     <class>com.gcs.wb.jpa.entity.MaterialInterPlant</class>
     <properties>
       <property name="eclipselink.logging.level.sql" value="FINE"/>
       <property name="hibernate.show_sql" value="true"/>
