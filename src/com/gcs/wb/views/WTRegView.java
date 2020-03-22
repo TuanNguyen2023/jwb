@@ -1832,24 +1832,43 @@ private void txtSalanNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
         txtDONumN.setText(String.join(" - ", doNums));
 
-        boolean isPlateNoValid;
-        if (modeDetail == MODE_DETAIL.OUT_SELL_WATERWAY) {
-            isPlateNoValid = wtRegisValidation.validatePlateNoWater(txtPlateNoN.getText(), lblPlateNoN);
-            if (!isPlateNoValid) {
-                JOptionPane.showMessageDialog(rootPane,
-                        resourceMapMsg.getString("msg.plzInputPlateNo", "ghe"));
-                return null;
-            }
-        } else {
-            isPlateNoValid = wtRegisValidation.validatePlateNo(txtPlateNoN.getText(), lblPlateNoN);
-            if (!isPlateNoValid) {
-                JOptionPane.showMessageDialog(rootPane,
-                        resourceMapMsg.getString("msg.plzInputPlateNo", "xe"));
-                return null;
-            }
+        if (!checkInputPlateNo()) {
+            return null;
         }
 
         return new CheckDOTask(WeighBridgeApp.getApplication());
+    }
+
+    private boolean checkInputPlateNo() throws HeadlessException {
+        boolean isPlateNoValid;
+        String plateNo = txtPlateNoN.getText().trim();
+        if (modeDetail == MODE_DETAIL.OUT_SELL_WATERWAY) {
+            isPlateNoValid = wtRegisValidation.validatePlateNoWater(plateNo, lblPlateNoN);
+            if (!isPlateNoValid) {
+                if (plateNo.isEmpty()) {
+                    JOptionPane.showMessageDialog(rootPane,
+                            resourceMapMsg.getString("msg.plzInputPlateNo", "ghe"));
+                } else {
+                    JOptionPane.showMessageDialog(rootPane,
+                            resourceMapMsg.getString("msg.plzCheckPlateNo", "ghe"));
+                }
+                return false;
+            }
+        } else {
+            isPlateNoValid = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
+            if (!isPlateNoValid) {
+                if (plateNo.isEmpty()) {
+                    JOptionPane.showMessageDialog(rootPane,
+                            resourceMapMsg.getString("msg.plzInputPlateNo", "xe"));
+                } else {
+                    JOptionPane.showMessageDialog(rootPane,
+                            resourceMapMsg.getString("msg.plzCheckPlateNo", "xe"));
+                }
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @Action(block = Task.BlockingScope.ACTION)
@@ -1866,6 +1885,10 @@ private void txtSalanNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         }
 
         txtSONumN.setText(String.join(" - ", soNums));
+
+        if (!checkInputPlateNo()) {
+            return null;
+        }
 
         return new CheckSOTask(WeighBridgeApp.getApplication());
     }
@@ -1884,10 +1907,6 @@ private void txtSalanNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             String bsXe = txtPlateNoN.getText().trim();
             DOCheckStructure doNumber = new DOCheckStructure();
             String bsRomoc = txtTrailerNoN.getText().trim();
-
-            if (bsXe.isEmpty()) {
-                throw new Exception(resourceMapMsg.getString("msg.plzInputPlateNo", "ghe"));
-            }
 
             if (val.length == listDONumbers.size()) {
                 boolean hasChecked = listDONumbers.stream()
@@ -2860,7 +2879,7 @@ private void txtSalanNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 wtData[i][3] = item.getPlateNo();
                 wtData[i][4] = item.getTrailerId();
                 wtData[i][5] = item.getRegType();
-                
+
                 List<String> regItemDescriptions = new ArrayList<>();
                 for (WeightTicketDetail weightTicketDetail : weightTicketDetails) {
                     String description = weightTicketDetail.getRegItemDescription();
@@ -3869,7 +3888,7 @@ private void txtSalanNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             updateWeightTicket(purchaseOrderPO);
 
             if (totalWeight.compareTo(BigDecimal.ZERO) == 0) {
-               throw new Exception(resourceMapMsg.getString("msg.excessWeight", poNum));
+                throw new Exception(resourceMapMsg.getString("msg.excessWeight", poNum));
             }
 
             setStep(4, null);

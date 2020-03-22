@@ -1471,7 +1471,7 @@ private void cbxBatchStockNActionPerformed(java.awt.event.ActionEvent evt) {//GE
 
     BatchStock batchStock = (BatchStock) cbxBatchStockN.getSelectedItem();
 
-    if (checkedCharg != null && !checkedCharg.isEmpty() 
+    if (checkedCharg != null && !checkedCharg.isEmpty()
             && (modeDetail == MODE_DETAIL.IN_PO_PURCHASE || modeDetail == MODE_DETAIL.IN_WAREHOUSE_TRANSFER)) {
         if (!checkedCharg.equalsIgnoreCase(batchStock.getCharg())) {
             JOptionPane.showMessageDialog(rootPane,
@@ -1834,30 +1834,53 @@ private void txtSalanNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
         txtDONumN.setText(String.join(" - ", doNums));
 
-        boolean isPlateNoValid;
-        if (modeDetail == MODE_DETAIL.OUT_SELL_WATERWAY) {
-            isPlateNoValid = wtRegisValidation.validatePlateNoWater(txtPlateNoN.getText(), lblPlateNoN);
-            if (!isPlateNoValid) {
-                JOptionPane.showMessageDialog(rootPane,
-                        resourceMapMsg.getString("msg.plzInputPlateNo", "ghe"));
-                return null;
-            }
-        } else {
-            isPlateNoValid = wtRegisValidation.validatePlateNo(txtPlateNoN.getText(), lblPlateNoN);
-            if (!isPlateNoValid) {
-                JOptionPane.showMessageDialog(rootPane,
-                        resourceMapMsg.getString("msg.plzInputPlateNo", "xe"));
-                return null;
-            }
+        if (!checkInputPlateNo()) {
+            return null;
         }
 
         return new CheckDOTask(WeighBridgeApp.getApplication());
+    }
+
+    private boolean checkInputPlateNo() throws HeadlessException {
+        boolean isPlateNoValid;
+        String plateNo = txtPlateNoN.getText().trim();
+        if (modeDetail == MODE_DETAIL.OUT_SELL_WATERWAY) {
+            isPlateNoValid = wtRegisValidation.validatePlateNoWater(plateNo, lblPlateNoN);
+            if (!isPlateNoValid) {
+                if (plateNo.isEmpty()) {
+                    JOptionPane.showMessageDialog(rootPane,
+                            resourceMapMsg.getString("msg.plzInputPlateNo", "ghe"));
+                } else {
+                    JOptionPane.showMessageDialog(rootPane,
+                            resourceMapMsg.getString("msg.plzCheckPlateNo", "ghe"));
+                }
+                return false;
+            }
+        } else {
+            isPlateNoValid = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
+            if (!isPlateNoValid) {
+                if (plateNo.isEmpty()) {
+                    JOptionPane.showMessageDialog(rootPane,
+                            resourceMapMsg.getString("msg.plzInputPlateNo", "xe"));
+                } else {
+                    JOptionPane.showMessageDialog(rootPane,
+                            resourceMapMsg.getString("msg.plzCheckPlateNo", "xe"));
+                }
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @Action(block = Task.BlockingScope.ACTION)
     public Task checkSO() {
         String soNum = StringUtil.paddingZero(txtSONumN.getText().trim(), 10);
         txtPOSTONumN.setText(soNum);
+
+        if (!checkInputPlateNo()) {
+            return null;
+        }
 
         return new CheckSOTask(WeighBridgeApp.getApplication());
     }
@@ -3847,7 +3870,7 @@ private void txtSalanNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                     && (!(purchaseOrder.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant()))) {
                 throw new Exception(resourceMapMsg.getString("msg.poIsDenied"));
             }
-            
+
             // check PO is released
             if (Objects.equals(purchaseOrder.getPoRelInd(), Constants.PurchaseOrder.PO_REL_IND_NOT_RELEASED)) {
                 throw new Exception(resourceMapMsg.getString("msg.poNotReleased", poNum));
