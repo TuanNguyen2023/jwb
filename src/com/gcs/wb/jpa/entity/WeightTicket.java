@@ -239,6 +239,8 @@ public class WeightTicket implements Serializable {
     private String registeredNumber;
     @Column(name = "charg_enh")
     private String chargEnh;
+    @Column(name = "load_source")
+    private String loadSource;
 
     @Column(name = "weight_ticket_id_ref")
     private String weightTicketIdRef;
@@ -671,6 +673,14 @@ public class WeightTicket implements Serializable {
 
     public void setChargEnh(String chargEnh) {
         this.chargEnh = chargEnh;
+    }
+
+    public String getLoadSource() {
+        return loadSource;
+    }
+
+    public void setLoadSource(String loadSource) {
+        this.loadSource = loadSource;
     }
 
     public List<WeightTicketDetail> getWeightTicketDetails() {
