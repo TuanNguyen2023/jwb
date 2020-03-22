@@ -1390,82 +1390,82 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         setSaveNeeded(isValidated());
     }//GEN-LAST:event_txtGRTextKeyReleased
 
-private void txtCementDescKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCementDescKeyReleased
-// TODO add your handling code here:
-    if (weightTicket != null) {
-        weightTicket.setSoNiemXa(txtCementDesc.getText());
-    }
-    setSaveNeeded(isValidated());
-}//GEN-LAST:event_txtCementDescKeyReleased
-
-private void txtCementDescActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCementDescActionPerformed
-
+    private void txtCementDescKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCementDescKeyReleased
     // TODO add your handling code here:
-    setSaveNeeded(isValidated());
-}//GEN-LAST:event_txtCementDescActionPerformed
-
-private void btnAcceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAcceptActionPerformed
-// TODO add your handling code here:
-    setSaveNeeded(isValidated());
-}//GEN-LAST:event_btnAcceptActionPerformed
-
-private void btnPostAgainActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPostAgainActionPerformed
-// TODO add your handling code here:
-    int answer = -1;
-    answer = JOptionPane.showConfirmDialog(
-            this.getRootPane(),
-            resourceMapMsg.getString("msg.questionPostTicket"),
-            JOptionPane.OPTIONS_PROPERTY,
-            JOptionPane.YES_NO_OPTION,
-            JOptionPane.QUESTION_MESSAGE);
-    if (answer == JOptionPane.YES_OPTION) {
-        setSaveNeeded(true);
-        btnPostAgain.setEnabled(false);
-        weightTicket.setPosted(false);
-        weightTicketController.savePostAgainActionPerformed(weightTicket);
-        flgPost = true;
-    } else {
-        setSaveNeeded(false);
-    }
-}//GEN-LAST:event_btnPostAgainActionPerformed
-
-private void txtOutTimeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtOutTimeKeyReleased
-// TODO add your handling code here:
-    if (txtOutTime.getText().length() == 19) {
-        String[] time = txtOutTime.getText().split(" ");
-        weightTicket.setSTime(weightTicketController.setTimeWeightTicket(time));
-    }
-}//GEN-LAST:event_txtOutTimeKeyReleased
-
-private void txtInTimeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtInTimeKeyReleased
-// TODO add your handling code here:
-    if (txtInTime.getText().length() == 19) {
-        String[] time = txtInTime.getText().split(" ");
-        weightTicket.setFTime(weightTicketController.setTimeWeightTicket(time));
-    }
-}//GEN-LAST:event_txtInTimeKeyReleased
-
-private void txtWTNumFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtWTNumFocusGained
-    String result = "";
-    Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-    //odd: the Object param of getContents is not currently used
-    Transferable contents = clipboard.getContents(null);
-    boolean hasTransferableText
-            = (contents != null)
-            && contents.isDataFlavorSupported(DataFlavor.stringFlavor);
-    if (hasTransferableText) {
-        try {
-            result = (String) contents.getTransferData(DataFlavor.stringFlavor);
-        } catch (UnsupportedFlavorException | IOException ex) {
-            logger.error(ex.toString());
+        if (weightTicket != null) {
+            weightTicket.setSoNiemXa(txtCementDesc.getText());
         }
-    }
-    if (result.length() == 10) {
-        txtWTNum.setText(result);
-    }
+        setSaveNeeded(isValidated());
+    }//GEN-LAST:event_txtCementDescKeyReleased
+
+    private void txtCementDescActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCementDescActionPerformed
+
+        // TODO add your handling code here:
+        setSaveNeeded(isValidated());
+    }//GEN-LAST:event_txtCementDescActionPerformed
+
+    private void btnAcceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAcceptActionPerformed
+    // TODO add your handling code here:
+        setSaveNeeded(isValidated());
+    }//GEN-LAST:event_btnAcceptActionPerformed
+
+    private void btnPostAgainActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPostAgainActionPerformed
+    // TODO add your handling code here:
+        int answer = -1;
+        answer = JOptionPane.showConfirmDialog(
+                this.getRootPane(),
+                resourceMapMsg.getString("msg.questionPostTicket"),
+                JOptionPane.OPTIONS_PROPERTY,
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
+        if (answer == JOptionPane.YES_OPTION) {
+            setSaveNeeded(true);
+            btnPostAgain.setEnabled(false);
+            weightTicket.setPosted(false);
+            weightTicketController.savePostAgainActionPerformed(weightTicket);
+            flgPost = true;
+        } else {
+            setSaveNeeded(false);
+        }
+    }//GEN-LAST:event_btnPostAgainActionPerformed
+
+    private void txtOutTimeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtOutTimeKeyReleased
+    // TODO add your handling code here:
+        if (txtOutTime.getText().length() == 19) {
+            String[] time = txtOutTime.getText().split(" ");
+            weightTicket.setSTime(weightTicketController.setTimeWeightTicket(time));
+        }
+    }//GEN-LAST:event_txtOutTimeKeyReleased
+
+    private void txtInTimeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtInTimeKeyReleased
+    // TODO add your handling code here:
+        if (txtInTime.getText().length() == 19) {
+            String[] time = txtInTime.getText().split(" ");
+            weightTicket.setFTime(weightTicketController.setTimeWeightTicket(time));
+        }
+    }//GEN-LAST:event_txtInTimeKeyReleased
+
+    private void txtWTNumFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtWTNumFocusGained
+        String result = "";
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        //odd: the Object param of getContents is not currently used
+        Transferable contents = clipboard.getContents(null);
+        boolean hasTransferableText
+                = (contents != null)
+                && contents.isDataFlavorSupported(DataFlavor.stringFlavor);
+        if (hasTransferableText) {
+            try {
+                result = (String) contents.getTransferData(DataFlavor.stringFlavor);
+            } catch (UnsupportedFlavorException | IOException ex) {
+                logger.error(ex.toString());
+            }
+        }
+        if (result.length() == 10) {
+            txtWTNum.setText(result);
+        }
 
 
-}//GEN-LAST:event_txtWTNumFocusGained
+    }//GEN-LAST:event_txtWTNumFocusGained
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         StringSelection stringSelection = new StringSelection("");
@@ -1484,28 +1484,28 @@ private void txtWTNumFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
         // TODO add your handling code here:
     }//GEN-LAST:event_btnSaveActionPerformed
 
-private void txtPoPostoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPoPostoActionPerformed
-// TODO add your handling code here:
-}//GEN-LAST:event_txtPoPostoActionPerformed
+    private void txtPoPostoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPoPostoActionPerformed
+    // TODO add your handling code here:
+    }//GEN-LAST:event_txtPoPostoActionPerformed
 
-private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPoPostoKeyReleased
-// TODO add your handling code here:
-}//GEN-LAST:event_txtPoPostoKeyReleased
+    private void txtPoPostoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPoPostoKeyReleased
+    // TODO add your handling code here:
+    }//GEN-LAST:event_txtPoPostoKeyReleased
 
-private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRemarkKeyReleased
-    setSaveNeeded(isValidated());
-}//GEN-LAST:event_txtRemarkKeyReleased
+    private void txtRemarkKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRemarkKeyReleased
+        setSaveNeeded(isValidated());
+    }//GEN-LAST:event_txtRemarkKeyReleased
 
-private void txtBatchProduceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBatchProduceActionPerformed
-    setSaveNeeded(isValidated());
-}//GEN-LAST:event_txtBatchProduceActionPerformed
+    private void txtBatchProduceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBatchProduceActionPerformed
+        setSaveNeeded(isValidated());
+    }//GEN-LAST:event_txtBatchProduceActionPerformed
 
-private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBatchProduceKeyReleased
-    if (weightTicket != null) {
-        weightTicket.setBatch(txtBatchProduce.getText());
-    }
-    setSaveNeeded(isValidated());
-}//GEN-LAST:event_txtBatchProduceKeyReleased
+    private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBatchProduceKeyReleased
+        if (weightTicket != null) {
+            weightTicket.setBatch(txtBatchProduce.getText());
+        }
+        setSaveNeeded(isValidated());
+    }//GEN-LAST:event_txtBatchProduceKeyReleased
 
     @Action
     public void showMB1BOption() {

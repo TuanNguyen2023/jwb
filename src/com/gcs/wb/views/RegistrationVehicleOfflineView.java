@@ -104,13 +104,12 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
         initTableEvent();
         btnEdit.setEnabled(false);
         pnShowFilter.setVisible(false);
-
-        SearchWeightTicketTask t = new SearchWeightTicketTask(WeighBridgeApp.getApplication());
-        t.execute();
-
         cbxHourTo.setSelectedIndex(23);
         cbxModeSearch.setModel(new DefaultComboBoxModel<>(ModeEnum.values()));
         cbxStatus.setModel(new DefaultComboBoxModel<>(StatusEnum.values()));
+
+        SearchWeightTicketTask t = new SearchWeightTicketTask(WeighBridgeApp.getApplication());
+        t.execute();
     }
 
     private void initTableEvent() {
@@ -1490,7 +1489,7 @@ private void cbxBatchStockNActionPerformed(java.awt.event.ActionEvent evt) {//GE
 
     BatchStock batchStock = (BatchStock) cbxBatchStockN.getSelectedItem();
 
-    if (checkedCharg != null && !checkedCharg.isEmpty() 
+    if (checkedCharg != null && !checkedCharg.isEmpty()
             && (modeDetail == MODE_DETAIL.IN_PO_PURCHASE || modeDetail == MODE_DETAIL.IN_WAREHOUSE_TRANSFER)) {
         if (!checkedCharg.equalsIgnoreCase(batchStock.getCharg())) {
             JOptionPane.showMessageDialog(rootPane,
@@ -1857,30 +1856,53 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
 
         txtDONumN.setText(String.join(" - ", doNums));
 
-        boolean isPlateNoValid;
-        if (modeDetail == MODE_DETAIL.OUT_SELL_WATERWAY) {
-            isPlateNoValid = wtRegisValidation.validatePlateNoWater(txtPlateNoN.getText(), lblPlateNoN);
-            if (!isPlateNoValid) {
-                JOptionPane.showMessageDialog(rootPane,
-                        resourceMapMsg.getString("msg.plzInputPlateNo", "ghe"));
-                return null;
-            }
-        } else {
-            isPlateNoValid = wtRegisValidation.validatePlateNo(txtPlateNoN.getText(), lblPlateNoN);
-            if (!isPlateNoValid) {
-                JOptionPane.showMessageDialog(rootPane,
-                        resourceMapMsg.getString("msg.plzInputPlateNo", "xe"));
-                return null;
-            }
+        if (!checkInputPlateNo()) {
+            return null;
         }
 
         return new CheckDOTask(WeighBridgeApp.getApplication());
+    }
+
+    private boolean checkInputPlateNo() throws HeadlessException {
+        boolean isPlateNoValid;
+        String plateNo = txtPlateNoN.getText().trim();
+        if (modeDetail == MODE_DETAIL.OUT_SELL_WATERWAY) {
+            isPlateNoValid = wtRegisValidation.validatePlateNoWater(plateNo, lblPlateNoN);
+            if (!isPlateNoValid) {
+                if (plateNo.isEmpty()) {
+                    JOptionPane.showMessageDialog(rootPane,
+                            resourceMapMsg.getString("msg.plzInputPlateNo", "ghe"));
+                } else {
+                    JOptionPane.showMessageDialog(rootPane,
+                            resourceMapMsg.getString("msg.plzCheckPlateNo", "ghe"));
+                }
+                return false;
+            }
+        } else {
+            isPlateNoValid = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
+            if (!isPlateNoValid) {
+                if (plateNo.isEmpty()) {
+                    JOptionPane.showMessageDialog(rootPane,
+                            resourceMapMsg.getString("msg.plzInputPlateNo", "xe"));
+                } else {
+                    JOptionPane.showMessageDialog(rootPane,
+                            resourceMapMsg.getString("msg.plzCheckPlateNo", "xe"));
+                }
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @Action(block = Task.BlockingScope.ACTION)
     public Task checkSO() {
         String soNum = StringUtil.paddingZero(txtSONumN.getText().trim(), 10);
         txtPOSTONumN.setText(soNum);
+
+        if (!checkInputPlateNo()) {
+            return null;
+        }
 
         return new CheckSOTask(WeighBridgeApp.getApplication());
     }
@@ -2902,11 +2924,17 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 wtData[i][3] = item.getPlateNo();
                 wtData[i][4] = item.getTrailerId();
                 wtData[i][5] = item.getRegType();
-                String[] regItemDescriptions = weightTicketDetails.stream()
-                        .map(t -> t.getRegItemDescription())
-                        .filter(t -> t != null)
-                        .toArray(String[]::new);
-                wtData[i][6] = regItemDescriptions.length > 0 ? String.join(" - ", regItemDescriptions) : "";
+
+                List<String> regItemDescriptions = new ArrayList<>();
+                for (WeightTicketDetail wtDetail : weightTicketDetails) {
+                    String description = wtDetail.getRegItemDescription();
+                    if (description != null && !description.isEmpty()) {
+                        regItemDescriptions.add(description);
+                    }
+                }
+
+                wtData[i][6] = regItemDescriptions.size() > 0 ? String.join(" - ", regItemDescriptions) : "";
+
                 wtData[i][7] = weightTicketDetail.getRegItemQuantity();
                 String[] doNums = weightTicketDetails.stream()
                         .map(t -> t.getDeliveryOrderNo())
@@ -3540,6 +3568,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
 
         @Override
         protected void failed(Throwable cause) {
+            logger.error(cause);
             if (entityTransaction.isActive()) {
                 entityTransaction.rollback();
             }
@@ -3880,7 +3909,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                     && (!(purchaseOrder.getPurchaseOrderDetail().getPlant()).equals(configuration.getWkPlant()))) {
                 throw new Exception(resourceMapMsg.getString("msg.poIsDenied"));
             }
-            
+
             // check PO is released
             if (Objects.equals(purchaseOrder.getPoRelInd(), Constants.PurchaseOrder.PO_REL_IND_NOT_RELEASED)) {
                 throw new Exception(resourceMapMsg.getString("msg.poNotReleased", poNum));
