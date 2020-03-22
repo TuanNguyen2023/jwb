@@ -769,7 +769,7 @@ $F{RECV_LGORT} != null ? $F{RECV_LGORT} : null]]></textFieldExpression>
 					</jr:column>
 					<jr:column width="113">
 						<jr:detailCell style="table_TD" height="15" rowSpan="1">
-							<textField isBlankWhenNull="true">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="113" height="15"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="DejaVu Sans" size="8"/>

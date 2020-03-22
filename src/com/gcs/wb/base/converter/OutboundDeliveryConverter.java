@@ -143,6 +143,7 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
                 outboundDelivery.setBldat(new java.sql.Date(doItem.getBldat().getTime()));
                 if (outboundDelivery.getMatnr() == null || outboundDelivery.getMatnr().trim().isEmpty()) {
                     outboundDelivery.setMatnr(doItem.getMatnr());
+                    outboundDelivery.setArktx(doItem.getArktx());
                 }
                 outboundDelivery.setWerks(doItem.getWerks());
                 outboundDelivery.setLgort(doItem.getLgort());
@@ -153,7 +154,6 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
                 outboundDelivery.setUebtk(doItem.getUebtk() == null || doItem.getUebtk().trim().isEmpty() ? ' ' : 'X');
                 outboundDelivery.setUebto(doItem.getUebto());
                 outboundDelivery.setUntto(doItem.getUntto());
-                outboundDelivery.setArktx(doItem.getArktx());
                 outboundDelivery.setVgbel(doItem.getVgbel());
                 outboundDelivery.setVgpos(doItem.getVgpos());
                 outboundDelivery.setBwart(doItem.getBwart());

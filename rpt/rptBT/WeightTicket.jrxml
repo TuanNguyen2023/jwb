@@ -625,7 +625,7 @@ $F{RECV_LGORT} != null ? $F{RECV_LGORT} : null]]></textFieldExpression>
 				<rectangle>
 					<reportElement x="60" y="40" width="147" height="20"/>
 				</rectangle>
-				<textField isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 					<reportElement x="60" y="40" width="147" height="20"/>
 					<box leftPadding="2"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
