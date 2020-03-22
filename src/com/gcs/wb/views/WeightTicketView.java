@@ -3735,6 +3735,7 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                 weightTicket.setFTime(now);
                 lblIScale.setForeground(Color.black);
                 OutboundDeliveryDetail item;
+                checkPlant = false;
                 if (outDetails_lits.size() > 0) {
                     for (int i = 0; i < outDetails_lits.size(); i++) {
                         item = outDetails_lits.get(i);
