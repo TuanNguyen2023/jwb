@@ -359,11 +359,11 @@ $F{RECV_LGORT} != null ? $F{RECV_LGORT} : null]]></textFieldExpression>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{KUNNR} != null ? $F{SHPName1} != null ? $F{SHPName1} : "" + " "+ $F{SHPName2} != null ? $F{SHPName2} : "" :
-$F{KUNAG} != null ? $F{SOPName1} != null ? $F{SOPName1} : "" + " "+ $F{SOPName2} != null ? $F{SOPName2} : "" :
-$F{RECV_PLANT} != null ? $F{RPName1} != null ? $F{RPName1} : "" + " "+ $F{RPName2} != null ? $F{RPName2} : "" :
-$F{PORPlant} != null ? $F{PORPName_RPT} != null ? $F{PORPName_RPT} : $F{PORPName1} != null ? $F{PORPName1} : "" + " " + $F{PORPName2} != null ? $F{PORPName2} : "" :
-$F{RECV_LGORT} != null ? $F{RecvSLocName} != null ? $F{RecvSLocName} : "" : null]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{KUNNR} != null ? (($F{SHPName1} != null ? $F{SHPName1} + " " : "") + ($F{SHPName2} != null ? $F{SHPName2} : "")) :
+    $F{KUNAG} != null ? (($F{SOPName1} != null ? $F{SOPName1} + " " : "") + ($F{SOPName2} != null ? $F{SOPName2} : "")) :
+        $F{RECV_PLANT} != null ? (($F{RPName1} != null ? $F{RPName1} + " " : "") + ($F{RPName2} != null ? $F{RPName2} : "")) :
+            $F{PORPlant} != null ? ($F{PORPName_RPT} != null ? $F{PORPName_RPT} : (($F{PORPName1} != null ? $F{PORPName1} + " " : "") + ($F{PORPName2} != null ? $F{PORPName2} : ""))) :
+                ($F{RECV_LGORT} != null ? ($F{RecvSLocName} != null ? $F{RecvSLocName} : "") : null)]]></textFieldExpression>
 				</textField>
 				<rectangle>
 					<reportElement x="95" y="40" width="196" height="20"/>
