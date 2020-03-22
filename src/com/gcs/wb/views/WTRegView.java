@@ -4070,7 +4070,7 @@ private void txtSalanNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             }
 
             // check PO is released
-            if (Objects.equals(purchaseOrderPO.getPoRelInd(), Constants.PurchaseOrder.PO_REL_IND_NOT_RELEASED)) {
+            if (Objects.equals(purchaseOrderPOSTO.getPoRelInd(), Constants.PurchaseOrder.PO_REL_IND_NOT_RELEASED)) {
                 throw new Exception(resourceMapMsg.getString("msg.poNotReleased", postoNum));
             }
 
