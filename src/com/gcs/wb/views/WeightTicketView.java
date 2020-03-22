@@ -93,6 +93,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     private boolean flag_fail = false;
     private int timeFrom = 0;
     private int timeTo = 0;
+    private int tolerancePlant = 1;
     private String ximang = null;
     public ResourceMap resourceMapMsg = Application.getInstance(WeighBridgeApp.class).getContext().getResourceMap(WeightTicketView.class);
     private com.gcs.wb.jpa.entity.Material material;
@@ -3782,8 +3783,8 @@ private void txtBatchProduceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRS
                                 inFScalePlant = wtPlantOut.getFScale().doubleValue();
                                 outSScalePlant = wtPlantOut.getSScale().doubleValue();
                                 // check can 1 cua nhap voi can 2 xuat chenh lech 1%
-                                double upper = outSScalePlant + (outSScalePlant * 1) / 100;
-                                double lower = outSScalePlant - (outSScalePlant * 1) / 100;
+                                double upper = outSScalePlant + (outSScalePlant * tolerancePlant) / 100;
+                                double lower = outSScalePlant - (outSScalePlant * tolerancePlant) / 100;
                                 if ((lower <= result && result <= upper)) {
                                     item.setOutScale(new BigDecimal(((Number) wtPlantOut.getFScale()).doubleValue() / 1000).setScale(3, RoundingMode.HALF_UP));
                                     item.setGoodsQty((BigDecimal.valueOf(item.getInScale().doubleValue() - item.getOutScale().doubleValue())).setScale(3, RoundingMode.HALF_UP));
