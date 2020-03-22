@@ -3773,22 +3773,20 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         // tinh toan cho Nhap kho tu plant xuat > plant nhap
                         WeightTicket wtPlantOut = weightTicketRepository.findByDOFromPO(outbDel.getDeliveryOrderNo());
                         if((wtPlantOut != null) && (checkPlantOutToIn(item, wtPlantOut.getWplant()))) {
-                            double inFScalePlant = 0;
                             double outSScalePlant = 0;
                             double result = ((Number) txfInQty.getValue()).doubleValue();
                             String poNum = wtPlantOut.getWeightTicketDetail().getEbeln();
                             PurchaseOrder purchaseOrder = purchaseOrderRepository.findByPoNumber(poNum);
                             if(purchaseOrder.getPurchaseOrderDetail().getPlant().equals(configuration.getWkPlant())) {
-                                inFScalePlant = wtPlantOut.getFScale().doubleValue();
                                 outSScalePlant = wtPlantOut.getSScale().doubleValue();
                                 // check can 1 cua nhap voi can 2 xuat chenh lech 1%
                                 double upper = outSScalePlant + (outSScalePlant * 1) / 100;
                                 double lower = outSScalePlant - (outSScalePlant * 1) / 100;
                                 if ((lower <= result && result <= upper)) {
-                                    item.setOutScale(new BigDecimal(((Number) wtPlantOut.getFScale()).doubleValue() / 1000).setScale(3, RoundingMode.HALF_UP));
-                                    item.setGoodsQty((BigDecimal.valueOf(item.getInScale().doubleValue() - item.getOutScale().doubleValue())).setScale(3, RoundingMode.HALF_UP));
+                                    item.setGoodsQty(item.getLfimg());
+                                    item.setOutScale((BigDecimal.valueOf(item.getInScale().doubleValue() - item.getGoodsQty().doubleValue())).setScale(3, RoundingMode.HALF_UP));
                                     weightTicket.setSCreator(WeighBridgeApp.getApplication().getLogin().getUid());
-                                    weightTicket.setSScale(wtPlantOut.getFScale());
+                                    weightTicket.setSScale((BigDecimal.valueOf((item.getInScale().doubleValue() - item.getGoodsQty().doubleValue())* 1000)).setScale(3, RoundingMode.HALF_UP));
                                     weightTicket.setSTime(now);
                                     weightTicket.setGQty((BigDecimal.valueOf(item.getInScale().doubleValue() - item.getOutScale().doubleValue())).setScale(3, RoundingMode.HALF_UP));
                                     checkPlant = true;
