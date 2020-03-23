@@ -117,7 +117,7 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
                 outboundDeliveryDetail.setBzirk(from.getEs_bzirk());
                 outboundDeliveryDetail.setBztxt(from.getEs_text());
                 outboundDeliveryDetail.setMandt(configuration.getSapClient());
-                outboundDeliveryDetail.setCreatedDate(new java.sql.Date(dateNow.getTime()));
+                outboundDeliveryDetail.setCreatedDate(dateNow);
 
                 outboundDelivery.addOutboundDeliveryDetail(outboundDeliveryDetail);
                 //end set data
