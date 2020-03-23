@@ -115,8 +115,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         cbxModeSearch.setModel(new DefaultComboBoxModel<>(ModeEnum.values()));
         cbxStatus.setModel(new DefaultComboBoxModel<>(StatusEnum.values()));
 
-        SearchWeightTicketTask t = new SearchWeightTicketTask(WeighBridgeApp.getApplication());
-        t.execute();
+        btnFind.doClick();
     }
 
     private void initTableEvent() {
@@ -3483,8 +3482,8 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             } catch (Exception ex) {
                 btnSave.setEnabled(true);
             }
-            SearchWeightTicketTask t = new SearchWeightTicketTask(this.getApplication());
-            t.execute();
+            
+            btnFind.doClick();
 
             return null;
         }
