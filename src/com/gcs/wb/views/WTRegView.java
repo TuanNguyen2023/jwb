@@ -69,6 +69,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
     private boolean isValidWeight = false;
     private boolean isValidVendorLoad = false;
     private boolean isValidVendorTransport = false;
+    private boolean isValidSloc = false;
     private BigDecimal numCheckWeight = BigDecimal.ZERO;
     private String plateNoValidDO = "";
     private boolean isValidPlateNo = false;
@@ -1499,7 +1500,7 @@ private void cbxBatchStockNActionPerformed(java.awt.event.ActionEvent evt) {//GE
 }//GEN-LAST:event_cbxBatchStockNActionPerformed
 
 private void cbxSloc2NActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxSloc2NActionPerformed
-    loadBatchStockModel(cbxSloc2N, cbxBatchStock2N, false);
+    loadBatchStockModel2N(cbxSloc2N, cbxBatchStock2N, false);
 }//GEN-LAST:event_cbxSloc2NActionPerformed
 
 private void cbxBatchStock2NActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxBatchStock2NActionPerformed
@@ -1592,7 +1593,7 @@ private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//
 
     // load batch stock
     loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
-    loadBatchStockModel(cbxSloc2N, cbxBatchStock2N, false);
+    loadBatchStockModel2N(cbxSloc2N, cbxBatchStock2N, false);
 }//GEN-LAST:event_cbxMaterialTypeNActionPerformed
 
 private void cbxVendorLoadingNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxVendorLoadingNActionPerformed
@@ -2505,7 +2506,8 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 isValid = validateOutPlantPlant() && isValidPO && isValidVendorLoad && isValidVendorTransport && isValidPlateNo;
                 break;
             case OUT_SLOC_SLOC:
-                isValid = validateOutSlocSloc() && isValidPO && (isValidPOSTO || txtPOSTONumN.getText().trim().isEmpty()) && isValidVendorTransport && isValidPlateNo;
+                isValid = validateOutSlocSloc() && isValidPO && (isValidPOSTO || txtPOSTONumN.getText().trim().isEmpty())
+                        && isValidVendorTransport && isValidPlateNo && isValidSloc;
                 break;
             case OUT_PULL_STATION:
                 isValid = validateOutPullStation() && isValidPO && isValidPOSTO && isValidVendorLoad && isValidVendorTransport && isValidPlateNo;
@@ -2745,8 +2747,8 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         }
 
         boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
-        boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
-        boolean isSloc2Valid = wtRegisValidation.validateCbxSelected(cbxSloc2N.getSelectedIndex(), lblSloc2N);
+        boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN) && isValidSloc;
+        boolean isSloc2Valid = wtRegisValidation.validateCbxSelected(cbxSloc2N.getSelectedIndex(), lblSloc2N) && isValidSloc;
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
                 && isCMNDBLValid && isSalanValid
@@ -2834,12 +2836,90 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
     }
 
     private void loadBatchStockModel(JComboBox slocComponent, JComboBox batchStockComponent, boolean isSloc) {
+            batchStockComponent.setModel(new DefaultComboBoxModel());
+        if (slocComponent.getSelectedIndex() == -1) {
+            return;
+        }
+
+        //lblSloc2N.setBackground(Color.black);
+        SLoc sloc = (SLoc) slocComponent.getSelectedItem();
+        if(modeDetail == MODE_DETAIL.OUT_SLOC_SLOC
+                && cbxSloc2N.getSelectedIndex() != -1) {
+            SLoc sloc2N = (SLoc) cbxSloc2N.getSelectedItem();
+            if(sloc.getLgort().equals(sloc2N.getLgort())) {
+                JOptionPane.showMessageDialog(rootPane,
+                    resourceMapMsg.getString("msg.slocDuplicate"),
+                    "Warning", JOptionPane.WARNING_MESSAGE);
+                isValidSloc = false;
+                cbxBatchStockN.setSelectedIndex(-1);
+                lblSlocN.setForeground(Color.red);
+                btnSave.setEnabled(false);
+                return;
+            }
+        }
+        isValidSloc = true;
+        if (newWeightTicket != null) {
+            if (isSloc) {
+                newWeightTicket.setLgort(sloc.getLgort());
+            } else {
+                newWeightTicket.setRecvLgort(sloc.getLgort());
+            }
+
+            List<WeightTicketDetail> weightTicketDetails = newWeightTicket.getWeightTicketDetails();
+            String[] arr_matnr;
+            if (weightTicketDetails.size() > 0
+                    && !(modeDetail == MODE_DETAIL.IN_OTHER || modeDetail == MODE_DETAIL.OUT_OTHER || modeDetail == MODE_DETAIL.OUT_SLOC_SLOC)) {
+                arr_matnr = weightTicketDetails.stream().map(item -> item.getMatnrRef()).toArray(String[]::new);
+            } else {
+                arr_matnr = new String[]{newWeightTicket.getRecvMatnr()};
+            }
+
+            List<BatchStock> batchStocks = weightTicketRegistarationController.getBatchStocks(sloc, arr_matnr);
+            batchStockComponent.setModel(weightTicketRegistarationController.getBatchStockModel(batchStocks));
+
+            if (isSloc && checkedCharg != null && !checkedCharg.isEmpty()
+                    && (modeDetail == MODE_DETAIL.IN_PO_PURCHASE || modeDetail == MODE_DETAIL.IN_WAREHOUSE_TRANSFER)) {
+                BatchStock batchStock = batchStocks.stream()
+                        .filter(t -> checkedCharg.equalsIgnoreCase(t.getCharg()))
+                        .findFirst()
+                        .orElse(null);
+
+                if (batchStock != null) {
+                    batchStockComponent.setSelectedItem(batchStock);
+                } else {
+                    batchStockComponent.setSelectedIndex(batchStocks.size() > 0 ? 0 : -1);
+                }
+            } else {
+                batchStockComponent.setSelectedIndex(batchStocks.size() > 0 ? 0 : -1);
+            }
+        }
+
+        validateForm();
+    }
+    
+    private void loadBatchStockModel2N(JComboBox slocComponent, JComboBox batchStockComponent, boolean isSloc) {
         if (slocComponent.getSelectedIndex() == -1) {
             batchStockComponent.setModel(new DefaultComboBoxModel());
             return;
         }
 
+        isValidSloc = true;
         SLoc sloc = (SLoc) slocComponent.getSelectedItem();
+        if(modeDetail == MODE_DETAIL.OUT_SLOC_SLOC
+                && cbxSlocN.getSelectedIndex() != -1) {
+            SLoc sloc2N = (SLoc) cbxSlocN.getSelectedItem();
+            if(sloc.getLgort().equals(sloc2N.getLgort())) {
+                JOptionPane.showMessageDialog(rootPane,
+                    resourceMapMsg.getString("msg.slocDuplicate"),
+                    "Warning", JOptionPane.WARNING_MESSAGE);
+                isValidSloc = false;
+                cbxBatchStock2N.setSelectedIndex(-1);
+                lblSloc2N.setForeground(Color.red);
+                btnSave.setEnabled(false);
+                return;
+            }
+        }
+        
         if (newWeightTicket != null) {
             if (isSloc) {
                 newWeightTicket.setLgort(sloc.getLgort());
