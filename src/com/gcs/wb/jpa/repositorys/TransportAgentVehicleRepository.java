@@ -4,11 +4,14 @@
  */
 package com.gcs.wb.jpa.repositorys;
 
+import com.gcs.wb.base.util.ExceptionUtil;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.TransportAgentVehicle;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -17,54 +20,92 @@ import javax.persistence.TypedQuery;
 public class TransportAgentVehicleRepository {
 
     EntityManager entityManager = JPAConnector.getInstance();
+    Logger logger = Logger.getLogger(this.getClass());
 
     /**
      * get list BS Xe
-     * @param id
-     * @return 
+     *
+     * @param transportAgentId
+     * @return
      */
     public List<TransportAgentVehicle> findByTransportAgentId(int transportAgentId) {
-        TypedQuery<TransportAgentVehicle> typedQuery = entityManager.createNamedQuery("TransportAgentVehicle.findByTransportAgentId", TransportAgentVehicle.class);
-        typedQuery.setParameter("transportAgentId", transportAgentId);
+        List<TransportAgentVehicle> list = new ArrayList<>();
+        try {
+            TypedQuery<TransportAgentVehicle> typedQuery = entityManager.createNamedQuery("TransportAgentVehicle.findByTransportAgentId", TransportAgentVehicle.class);
+            typedQuery.setParameter("transportAgentId", transportAgentId);
 
-        return typedQuery.getResultList();
+            list = typedQuery.getResultList();
+        } catch (Exception ex) {
+            logger.error(null, ex);
+            ExceptionUtil.checkDatabaseDisconnectedException(ex);
+        }
+
+        return list;
     }
 
     public List<TransportAgentVehicle> findByVehicleId(int vehicleId) {
-        TypedQuery<TransportAgentVehicle> typedQuery = entityManager.createNamedQuery("TransportAgentVehicle.findByVehicleId", TransportAgentVehicle.class);
-        typedQuery.setParameter("vehicleId", vehicleId);
+        List<TransportAgentVehicle> list = new ArrayList<>();
+        try {
+            TypedQuery<TransportAgentVehicle> typedQuery = entityManager.createNamedQuery("TransportAgentVehicle.findByVehicleId", TransportAgentVehicle.class);
+            typedQuery.setParameter("vehicleId", vehicleId);
 
-        return typedQuery.getResultList();
+            list = typedQuery.getResultList();
+        } catch (Exception ex) {
+            logger.error(null, ex);
+            ExceptionUtil.checkDatabaseDisconnectedException(ex);
+        }
+
+        return list;
     }
 
     public TransportAgentVehicle findByTransportAgentIdAndVehicleId(int transportAgentId, int vehicleId) {
-        TypedQuery<TransportAgentVehicle> typedQuery = entityManager.createNamedQuery("TransportAgentVehicle.findByTransportAgentIdAndVehicleId", TransportAgentVehicle.class);
-        typedQuery.setParameter("transportAgentId", transportAgentId);
-        typedQuery.setParameter("vehicleId", vehicleId);
+        try {
+            TypedQuery<TransportAgentVehicle> typedQuery = entityManager.createNamedQuery("TransportAgentVehicle.findByTransportAgentIdAndVehicleId", TransportAgentVehicle.class);
+            typedQuery.setParameter("transportAgentId", transportAgentId);
+            typedQuery.setParameter("vehicleId", vehicleId);
 
-        List<TransportAgentVehicle> transportAgentVehicles = typedQuery.getResultList();
-        if (transportAgentVehicles != null && transportAgentVehicles.size() == 1) {
-            return transportAgentVehicles.get(0);
+            List<TransportAgentVehicle> transportAgentVehicles = typedQuery.getResultList();
+            if (transportAgentVehicles != null && transportAgentVehicles.size() == 1) {
+                return transportAgentVehicles.get(0);
+            }
+        } catch (Exception ex) {
+            logger.error(null, ex);
+            ExceptionUtil.checkDatabaseDisconnectedException(ex);
         }
 
         return null;
     }
-    
+
     public List<TransportAgentVehicle> findByPlateNo(String plateNo) {
-        TypedQuery<TransportAgentVehicle> typedQuery = entityManager.createNamedQuery("TransportAgentVehicle.findByPlateNo", TransportAgentVehicle.class);
-        typedQuery.setParameter("plateNo", plateNo);
+        List<TransportAgentVehicle> list = new ArrayList<>();
+        try {
+            TypedQuery<TransportAgentVehicle> typedQuery = entityManager.createNamedQuery("TransportAgentVehicle.findByPlateNo", TransportAgentVehicle.class
+            );
+            typedQuery.setParameter("plateNo", plateNo);
 
-        return typedQuery.getResultList();
+            list = typedQuery.getResultList();
+        } catch (Exception ex) {
+            logger.error(null, ex);
+            ExceptionUtil.checkDatabaseDisconnectedException(ex);
+        }
+
+        return list;
     }
-    
-    public TransportAgentVehicle findByAbbrAndPlateNo(String abbr, String plateNo) {
-        TypedQuery<TransportAgentVehicle> typedQuery = entityManager.createNamedQuery("TransportAgentVehicle.findByAbbrAndPlateNo", TransportAgentVehicle.class);
-        typedQuery.setParameter("abbr", abbr);
-        typedQuery.setParameter("plateNo", plateNo);
 
-        List<TransportAgentVehicle> transportAgentVehicles = typedQuery.getResultList();
-        if (transportAgentVehicles != null && transportAgentVehicles.size() == 1) {
-            return transportAgentVehicles.get(0);
+    public TransportAgentVehicle findByAbbrAndPlateNo(String abbr, String plateNo) {
+        try {
+            TypedQuery<TransportAgentVehicle> typedQuery = entityManager.createNamedQuery("TransportAgentVehicle.findByAbbrAndPlateNo", TransportAgentVehicle.class
+            );
+            typedQuery.setParameter("abbr", abbr);
+            typedQuery.setParameter("plateNo", plateNo);
+
+            List<TransportAgentVehicle> transportAgentVehicles = typedQuery.getResultList();
+            if (transportAgentVehicles != null && transportAgentVehicles.size() == 1) {
+                return transportAgentVehicles.get(0);
+            }
+        } catch (Exception ex) {
+            logger.error(null, ex);
+            ExceptionUtil.checkDatabaseDisconnectedException(ex);
         }
 
         return null;

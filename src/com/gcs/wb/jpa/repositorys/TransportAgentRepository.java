@@ -4,13 +4,16 @@
  */
 package com.gcs.wb.jpa.repositorys;
 
+import com.gcs.wb.base.util.ExceptionUtil;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.TransportAgent;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -19,14 +22,24 @@ import javax.swing.DefaultListModel;
 public class TransportAgentRepository {
 
     EntityManager entityManager = JPAConnector.getInstance();
+    Logger logger = Logger.getLogger(this.getClass());
 
     /**
      * get list DVVC
-     * @return 
+     *
+     * @return
      */
     public List<TransportAgent> getListTransportAgent() {
-        TypedQuery<TransportAgent> typedQuery = entityManager.createNamedQuery("TransportAgent.findAll", TransportAgent.class);
-        return typedQuery.getResultList();
+        List<TransportAgent> list = new ArrayList<>();
+        try {
+            TypedQuery<TransportAgent> typedQuery = entityManager.createNamedQuery("TransportAgent.findAll", TransportAgent.class);
+            list = typedQuery.getResultList();
+        } catch (Exception ex) {
+            logger.error(null, ex);
+            ExceptionUtil.checkDatabaseDisconnectedException(ex);
+        }
+
+        return list;
     }
 
     public DefaultListModel getTAModel() {

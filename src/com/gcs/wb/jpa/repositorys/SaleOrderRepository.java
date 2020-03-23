@@ -4,8 +4,10 @@
  */
 package com.gcs.wb.jpa.repositorys;
 
+import com.gcs.wb.base.util.ExceptionUtil;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.SaleOrder;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -18,19 +20,32 @@ import org.apache.log4j.Logger;
 public class SaleOrderRepository {
 
     EntityManager entityManager = JPAConnector.getInstance();
-    Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
+    Logger logger = Logger.getLogger(this.getClass());
 
     public List<SaleOrder> getListSaleOrder() {
-        TypedQuery<SaleOrder> typedQuery = entityManager.createNamedQuery("SaleOrder.findAll", SaleOrder.class);
-        return typedQuery.getResultList();
+        List<SaleOrder> list = new ArrayList<>();
+        try {
+            TypedQuery<SaleOrder> typedQuery = entityManager.createNamedQuery("SaleOrder.findAll", SaleOrder.class);
+            list = typedQuery.getResultList();
+        } catch (Exception ex) {
+            logger.error(null, ex);
+            ExceptionUtil.checkDatabaseDisconnectedException(ex);
+        }
+
+        return list;
     }
 
     public SaleOrder findBySoNumber(String soNumber) {
-        TypedQuery<SaleOrder> typedQuery = entityManager.createNamedQuery("SaleOrder.findBySoNumber", SaleOrder.class);
-        typedQuery.setParameter("soNumber", soNumber);
-        List<SaleOrder> sellOrders = typedQuery.getResultList();
-        if (sellOrders != null && sellOrders.size() > 0) {
-            return sellOrders.get(0);
+        try {
+            TypedQuery<SaleOrder> typedQuery = entityManager.createNamedQuery("SaleOrder.findBySoNumber", SaleOrder.class);
+            typedQuery.setParameter("soNumber", soNumber);
+            List<SaleOrder> sellOrders = typedQuery.getResultList();
+            if (sellOrders != null && sellOrders.size() > 0) {
+                return sellOrders.get(0);
+            }
+        } catch (Exception ex) {
+            logger.error(null, ex);
+            ExceptionUtil.checkDatabaseDisconnectedException(ex);
         }
 
         return null;
