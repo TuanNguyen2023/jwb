@@ -12,6 +12,7 @@ import com.gcs.wb.base.constant.Constants.WeighingProcess.MODE;
 import com.gcs.wb.base.constant.Constants.WeighingProcess.MODE_DETAIL;
 import com.gcs.wb.base.enums.ModeEnum;
 import com.gcs.wb.base.enums.StatusEnum;
+import com.gcs.wb.base.util.ExceptionUtil;
 import com.gcs.wb.base.util.StringUtil;
 import com.gcs.wb.base.validator.DateFromToValidator;
 import com.gcs.wb.controller.WeightTicketController;
@@ -1983,11 +1984,13 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
 
             validateForm();
 
-            if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
-                cause = cause.getCause();
+            if (!ExceptionUtil.isSapDisConnectedException(cause)) {
+                if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
+                    cause = cause.getCause();
+                }
+                logger.error(null, cause);
+                JOptionPane.showMessageDialog(rootPane, cause.getMessage());
             }
-            logger.error(null, cause);
-            JOptionPane.showMessageDialog(rootPane, cause.getMessage());
         }
 
         @Override
@@ -3091,17 +3094,6 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         }
     }
 
-    private boolean isSapDisConnectException(Throwable ex) {
-        if (ex.getCause() instanceof JCoException) {
-            JCoException jcoException = (JCoException) ex.getCause();
-            if (jcoException.getGroup() == JCoException.JCO_ERROR_COMMUNICATION) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     private class CheckDOTask extends org.jdesktop.application.Task<Object, Void> {
 
         private boolean canceled = false;
@@ -3220,7 +3212,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 setStep(3, resourceMapMsg.getString("msg.saveDataDOToDb"));
                 return sapService.syncOutboundDelivery(sapOutboundDelivery, outboundDelivery, deliveryOrderNo);
             } catch (Exception ex) {
-                if (isSapDisConnectException(ex)) {
+                if (ExceptionUtil.isSapDisConnectedException(ex)) {
                     canceled = true;
                     throw ex;
                 }
@@ -3235,7 +3227,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 Customer sapCustomer = sapService.getCustomer(kunnr);
                 return sapService.syncCustomer(sapCustomer, dbCustomer);
             } catch (Exception ex) {
-                if (isSapDisConnectException(ex)) {
+                if (ExceptionUtil.isSapDisConnectedException(ex)) {
                     canceled = true;
                     throw ex;
                 }
@@ -4063,7 +4055,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 setStep(3, resourceMapMsg.getString("msg.saveDataPOToDb"));
                 return sapService.syncPurchaseOrder(sapPurchaseOrder, purchaseOrder);
             } catch (Exception ex) {
-                if (isSapDisConnectException(ex)) {
+                if (ExceptionUtil.isSapDisConnectedException(ex)) {
                     canceled = true;
                     throw ex;
                 }
@@ -4078,7 +4070,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 Customer sapCustomer = sapService.getCustomer(kunnr);
                 return sapService.syncCustomer(sapCustomer, dbCustomer);
             } catch (Exception ex) {
-                if (isSapDisConnectException(ex)) {
+                if (ExceptionUtil.isSapDisConnectedException(ex)) {
                     canceled = true;
                     throw ex;
                 }
@@ -4243,7 +4235,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 setStep(3, resourceMapMsg.getString("msg.saveDataPOSTOToDb"));
                 return sapService.syncPurchaseOrder(sapPurchaseOrder, purchaseOrder);
             } catch (Exception ex) {
-                if (isSapDisConnectException(ex)) {
+                if (ExceptionUtil.isSapDisConnectedException(ex)) {
                     canceled = true;
                     throw ex;
                 }

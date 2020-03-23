@@ -23,10 +23,10 @@ import com.gcs.wb.bapi.outbdlv.DOPostingPGIBapi;
 import com.gcs.wb.bapi.outbdlv.WsDeliveryUpdateBapi;
 import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.base.constant.Constants;
-import com.gcs.wb.base.enums.MaterialEnum;
 import com.gcs.wb.base.enums.ModeEnum;
 import com.gcs.wb.base.exceptions.IllegalPortException;
 import com.gcs.wb.base.util.Base64_Utils;
+import com.gcs.wb.base.util.ExceptionUtil;
 import com.gcs.wb.base.util.IntegerUtil;
 import com.gcs.wb.base.util.RegexFormatter;
 import com.gcs.wb.base.util.StringUtil;
@@ -44,7 +44,6 @@ import com.gcs.wb.jpa.repositorys.VendorRepository;
 import com.gcs.wb.jpa.repositorys.WeightTicketDetailRepository;
 import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import com.gcs.wb.model.AppConfig;
-import com.gcs.wb.views.validations.WeightTicketRegistrationValidation;
 import com.sap.conn.jco.JCoException;
 import org.apache.log4j.Logger;
 import org.hibersap.HibersapException;
@@ -128,24 +127,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         material = new com.gcs.wb.jpa.entity.Material();
         materialConstraint = new MaterialConstraint();
         initComponents();
-
-        txtMatnr.getDocument().addDocumentListener(new DocumentListener() {
-
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                getSAPMatData(e);
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                getSAPMatData(e);
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                getSAPMatData(e);
-            }
-        });
 
         setBridge1(configuration.getWb1Port() != null);
         setBridge2(configuration.getWb2Port() != null);
@@ -2200,15 +2181,15 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 //                        java.util.logging.Logger.getLogger(WeightTicketView.class.getName()).log(Level.SEVERE, null, ex);
                         }
                         if (od == null && weightTicketDetail.getEbeln() != null) {
-                            od = sapService.getOutboundDelivery(weightTicketDetail.getDeliveryOrderNo());
-                            if (od != null) {
-                                if (!entityManager.getTransaction().isActive()) {
-                                    entityManager.getTransaction().begin();
-                                }
-                                entityManager.persist(od);
-                                entityManager.getTransaction().commit();
-                            }
                             try {
+                                od = sapService.getOutboundDelivery(weightTicketDetail.getDeliveryOrderNo());
+                                if (od != null) {
+                                    if (!entityManager.getTransaction().isActive()) {
+                                        entityManager.getTransaction().begin();
+                                    }
+                                    entityManager.persist(od);
+                                    entityManager.getTransaction().commit();
+                                }
                                 odt = weightTicketRegistarationController.findByMandtDelivNumb(weightTicketDetail.getDeliveryOrderNo());
                             } catch (Exception ex) {
 //                            java.util.logging.Logger.getLogger(WeightTicketView.class.getName()).log(Level.SEVERE, null, ex);
@@ -2256,26 +2237,28 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                             java.util.logging.Logger.getLogger(WeightTicketView.class.getName()).log(Level.SEVERE, null, ex);
                         }
                         if (!WeighBridgeApp.getApplication().isOfflineMode()) {
-                            OutboundDelivery sapOutbDel = sapService.getOutboundDelivery(do_list.get(index));
-                            if (sapOutbDel != null && outbDel == null) {
-                                if (!entityManager.getTransaction().isActive()) {
-                                    entityManager.getTransaction().begin();
+                            try {
+                                OutboundDelivery sapOutbDel = sapService.getOutboundDelivery(do_list.get(index));
+                                if (sapOutbDel != null && outbDel == null) {
+                                    if (!entityManager.getTransaction().isActive()) {
+                                        entityManager.getTransaction().begin();
+                                    }
+                                    entityManager.persist(sapOutbDel);
+                                    entityManager.getTransaction().commit();
+                                    entityManager.clear();
+                                } else if (sapOutbDel != null && outbDel != null) {
+                                    sapOutbDel.setId(outbDel.getId());
+                                    sapOutbDel.setPosted(outbDel.isPosted());
+                                    sapOutbDel.setMatDoc(outbDel.getMatDoc());
+                                    if (!entityManager.getTransaction().isActive()) {
+                                        entityManager.getTransaction().begin();
+                                    }
+                                    entityManager.merge(sapOutbDel);
+                                    outbDel = sapOutbDel;
+                                    entityManager.getTransaction().commit();
+                                    entityManager.clear();
                                 }
-                                entityManager.persist(sapOutbDel);
-                                entityManager.getTransaction().commit();
-                                entityManager.clear();
-                            } else if (sapOutbDel != null && outbDel != null) {
-                                sapOutbDel.setId(outbDel.getId());
-                                sapOutbDel.setPosted(outbDel.isPosted());
-                                sapOutbDel.setMatDoc(outbDel.getMatDoc());
-                                if (!entityManager.getTransaction().isActive()) {
-                                    entityManager.getTransaction().begin();
-                                }
-                                entityManager.merge(sapOutbDel);
-                                outbDel = sapOutbDel;
-                                entityManager.getTransaction().commit();
-                                entityManager.clear();
-                            }
+                            } catch (Exception ex) {}
                         }
                         if (outbDel != null) {
                             outbDel_list.add(outbDel);
@@ -2528,7 +2511,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             lblVendorTransport.setVisible(false);
             lblSO.setVisible(false);
             lblLoadSource.setVisible(false);
-            txtLoadSource.setVisible(true);
+            txtLoadSource.setVisible(false);
 
             txtSO.setVisible(false);
             txtWeightTicketIdRef.setVisible(false);
@@ -2575,7 +2558,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             lblTicketId.setVisible(false);
             lblWeightTicketIdRef.setVisible(false);
             lblLoadSource.setVisible(false);
-            txtLoadSource.setVisible(true);
+            txtLoadSource.setVisible(false);
 
             txtSO.setVisible(false);
             txtDelNum.setVisible(false);
@@ -2601,7 +2584,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             lblVendorTransport.setVisible(false);
             lblSO.setVisible(false);
             lblLoadSource.setVisible(false);
-            txtLoadSource.setVisible(true);
+            txtLoadSource.setVisible(false);
 
             txtSO.setVisible(false);
             txtTicketId.setVisible(false);
@@ -2640,7 +2623,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             lblMatnr.setVisible(false);
             lblSO.setVisible(false);
             lblLoadSource.setVisible(false);
-            txtLoadSource.setVisible(true);
+            txtLoadSource.setVisible(false);
 
             txtSO.setVisible(false);
             txtSling.setVisible(false);
@@ -2659,7 +2642,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             lblLgortIn.setVisible(false);
             lblChargIn.setVisible(false);
             lblLoadSource.setVisible(false);
-            txtLoadSource.setVisible(true);
+            txtLoadSource.setVisible(false);
 
             txtSO.setVisible(false);
             txtSling.setVisible(false);
@@ -2683,7 +2666,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             lblVendorLoading.setVisible(false);
             lblVendorTransport.setVisible(false);
             lblLoadSource.setVisible(false);
-            txtLoadSource.setVisible(true);
+            txtLoadSource.setVisible(false);
 
             txtTicketId.setVisible(false);
             txtWeightTicketIdRef.setVisible(false);
@@ -3537,11 +3520,13 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     weightTicket.setPosted(false);
                 }
             } else {
-                if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
-                    cause = cause.getCause();
+                if (!ExceptionUtil.isSapDisConnectedException(cause)) {
+                    if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
+                        cause = cause.getCause();
+                    }
+                    logger.error(null, cause);
+                    JOptionPane.showMessageDialog(rootPane, cause != null ? cause.getMessage() : "Null Pointer Exception");
                 }
-                logger.error(null, cause);
-                JOptionPane.showMessageDialog(rootPane, cause != null ? cause.getMessage() : "Null Pointer Exception");
                 weightTicket.setPosted(false);
             }
             entityManager.merge(weightTicket);
@@ -4038,22 +4023,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
     private void printWT(WeightTicket wt, boolean reprint) {
         weightTicketController.printWT(wt, reprint, ximang, outbDel_list, outDetails_lits, outbDel, txtPONo.getText(), stage1, rootPane);
-    }
-
-    private void getSAPMatData(DocumentEvent e) {
-        if (weightTicket == null) {
-            return;
-        }
-        try {
-            String val = e.getDocument().getText(0, e.getDocument().getLength()).trim();
-            if (!val.isEmpty()) {
-                material = sapService.getMaterialDetail(val);
-            }
-        } catch (Exception ex) {
-            logger.error(null, ex);
-        } finally {
-            setSaveNeeded(isValidated());
-        }
     }
 
     public boolean isValidated() {
