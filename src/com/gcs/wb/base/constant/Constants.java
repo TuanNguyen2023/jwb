@@ -68,7 +68,7 @@ public class Constants {
         public static final String RPT_ID = "";
         public static final String WPLANT_MAP = "0";
         public static final BigDecimal TOLERANCE = new BigDecimal(9);
-        
+
         public static final String MODE_PERMISSIONS = "IN_PO_PURCHASE,IN_WAREHOUSE_TRANSFER,IN_OTHER,OUT_SELL_ROAD,OUT_PLANT_PLANT,OUT_SLOC_SLOC,OUT_PULL_STATION,OUT_SELL_WATERWAY,OUT_OTHER";
     }
 
@@ -303,18 +303,25 @@ public class Constants {
 
         public static final String FORMAT = "dd/MM/yyyy";
     }
-    
+
     public static final class SyncMasterData {
 
         public static final String CRON_EXPRESSION = "0 0 0 ? * * *"; // 00:00:00 every day
         public static final String TIME_SYNC = "000000"; // 00:00:00
     }
-    
+
     public static final class PurchaseOrder {
+
         public static Character PO_REL_IND_NOT_RELEASED = 'B';
     }
-    
+
     public static final class Message {
+
         public static String DB_DISCONNECTED = "Mất kết nối tới Database.\nVui lòng thử lại hoặc liên hệ dịch vụ khách hàng Hotline 0919 49 59 69 để được hỗ trợ.";
+    }
+
+    public static final class Groes {
+
+        public static final String B50 = "B|50";
     }
 }

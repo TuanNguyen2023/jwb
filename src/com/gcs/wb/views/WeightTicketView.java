@@ -23,6 +23,7 @@ import com.gcs.wb.bapi.outbdlv.DOPostingPGIBapi;
 import com.gcs.wb.bapi.outbdlv.WsDeliveryUpdateBapi;
 import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.base.constant.Constants;
+import com.gcs.wb.base.enums.MaterialEnum;
 import com.gcs.wb.base.enums.ModeEnum;
 import com.gcs.wb.base.exceptions.IllegalPortException;
 import com.gcs.wb.base.util.Base64_Utils;
@@ -35,6 +36,7 @@ import com.gcs.wb.controller.WeightTicketController;
 import com.gcs.wb.controller.WeightTicketRegistarationController;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.*;
+import com.gcs.wb.jpa.repositorys.MaterialInterPlantRepository;
 import com.gcs.wb.jpa.repositorys.MaterialInternalRepository;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
 import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
@@ -112,6 +114,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
     SAPService sapService = new SAPService();
     PurchaseOrderRepository purchaseOrderRepository = new PurchaseOrderRepository();
+    MaterialInterPlantRepository materialInterPlantRepository = new MaterialInterPlantRepository();
+    
     PurchaseOrder purchaseOrder = new PurchaseOrder();
     private boolean flgPost = false;
     private DecimalFormat df = new DecimalFormat("#,##0.000");
@@ -271,6 +275,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         txtRemark = new javax.swing.JTextField();
         lblSalan = new javax.swing.JLabel();
         txtSalan = new javax.swing.JTextField();
+        lblLoadSource = new javax.swing.JLabel();
+        txtLoadSource = new javax.swing.JTextField();
         pnWTRight = new javax.swing.JPanel();
         txtDelNum = new javax.swing.JTextField();
         txtPONo = new javax.swing.JTextField();
@@ -374,7 +380,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(lblWTNum)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtWTNum, javax.swing.GroupLayout.DEFAULT_SIZE, 342, Short.MAX_VALUE)
+                .addComponent(txtWTNum, javax.swing.GroupLayout.DEFAULT_SIZE, 347, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -630,9 +636,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     .addComponent(lblIScale, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnScaleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txfGoodsQty, javax.swing.GroupLayout.DEFAULT_SIZE, 398, Short.MAX_VALUE)
-                    .addComponent(txfOutQty, javax.swing.GroupLayout.DEFAULT_SIZE, 398, Short.MAX_VALUE)
-                    .addComponent(txfInQty, javax.swing.GroupLayout.DEFAULT_SIZE, 398, Short.MAX_VALUE))
+                    .addComponent(txfGoodsQty, javax.swing.GroupLayout.DEFAULT_SIZE, 401, Short.MAX_VALUE)
+                    .addComponent(txfOutQty, javax.swing.GroupLayout.DEFAULT_SIZE, 401, Short.MAX_VALUE)
+                    .addComponent(txfInQty, javax.swing.GroupLayout.DEFAULT_SIZE, 401, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnScaleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnScaleDataLayout.createSequentialGroup()
@@ -645,8 +651,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                             .addComponent(lblOTime))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(pnScaleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtOutTime, javax.swing.GroupLayout.DEFAULT_SIZE, 391, Short.MAX_VALUE)
-                            .addComponent(txtInTime, javax.swing.GroupLayout.DEFAULT_SIZE, 391, Short.MAX_VALUE))
+                            .addComponent(txtOutTime, javax.swing.GroupLayout.DEFAULT_SIZE, 393, Short.MAX_VALUE)
+                            .addComponent(txtInTime, javax.swing.GroupLayout.DEFAULT_SIZE, 393, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(pnScaleDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(btnIScaleReset, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -830,6 +836,13 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         txtSalan.setEnabled(false);
         txtSalan.setName("txtSalan"); // NOI18N
 
+        lblLoadSource.setText(resourceMap.getString("lblLoadSource.text")); // NOI18N
+        lblLoadSource.setName("lblLoadSource"); // NOI18N
+
+        txtLoadSource.setDisabledTextColor(resourceMap.getColor("txtGRText.disabledTextColor")); // NOI18N
+        txtLoadSource.setEnabled(false);
+        txtLoadSource.setName("txtLoadSource"); // NOI18N
+
         javax.swing.GroupLayout pnWTLeftLayout = new javax.swing.GroupLayout(pnWTLeft);
         pnWTLeft.setLayout(pnWTLeftLayout);
         pnWTLeftLayout.setHorizontalGroup(
@@ -838,23 +851,24 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lblRemark)
-                    .addComponent(lblWeightTicketIdRef)
-                    .addComponent(lblTicketId)
                     .addComponent(lblBatchProduce)
                     .addComponent(lblCementDesc)
-                    .addGroup(pnWTLeftLayout.createSequentialGroup()
-                        .addGap(35, 35, 35)
-                        .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lblRegCat)
-                            .addComponent(lblRegistrationNo)
-                            .addComponent(lblDName)
-                            .addComponent(lblCMNDBL)
-                            .addComponent(lblLicPlate)))
+                    .addComponent(lblRegCat)
+                    .addComponent(lblRegistrationNo)
+                    .addComponent(lblDName)
+                    .addComponent(lblCMNDBL)
+                    .addComponent(lblLicPlate)
                     .addComponent(lblSalan)
                     .addComponent(lblSling)
-                    .addComponent(lblGRText))
+                    .addComponent(lblGRText)
+                    .addComponent(lblLoadSource)
+                    .addComponent(lblTicketId)
+                    .addComponent(lblWeightTicketIdRef))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtRemark, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
+                    .addComponent(txtWeightTicketIdRef, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
+                    .addComponent(txtTicketId, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
                     .addGroup(pnWTLeftLayout.createSequentialGroup()
                         .addComponent(rbtInward)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -885,9 +899,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     .addComponent(txtGRText, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
                     .addComponent(txtCementDesc, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
                     .addComponent(txtBatchProduce, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
-                    .addComponent(txtTicketId, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
-                    .addComponent(txtWeightTicketIdRef, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
-                    .addComponent(txtRemark, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE))
+                    .addComponent(txtLoadSource, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE))
                 .addGap(26, 26, 26))
         );
         pnWTLeftLayout.setVerticalGroup(
@@ -944,6 +956,10 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     .addComponent(txtBatchProduce, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblLoadSource)
+                    .addComponent(txtLoadSource, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblTicketId)
                     .addComponent(txtTicketId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -954,7 +970,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblRemark)
                     .addComponent(txtRemark, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(41, Short.MAX_VALUE))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
 
         pnWTRight.setName("pnWTRight"); // NOI18N
@@ -1223,7 +1239,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(703, Short.MAX_VALUE)
+                .addContainerGap(708, Short.MAX_VALUE)
                 .addComponent(btnPostAgain)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnReprint)
@@ -1260,7 +1276,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             .addGroup(pnWTicketLayout.createSequentialGroup()
                 .addGroup(pnWTicketLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(pnWTLeft, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnWTRight, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(pnWTRight, javax.swing.GroupLayout.DEFAULT_SIZE, 390, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -1276,7 +1292,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     .addComponent(pnWTicket, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pnScaleData, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(pnWTFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 670, Short.MAX_VALUE)
+                        .addComponent(pnWTFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 675, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(pnCurScale, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -2112,6 +2128,10 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         || Constants.WeighingProcess.MODE_DETAIL.IN_WAREHOUSE_TRANSFER.name().equals(weightTicket.getMode())) {
                     txtTicketId.setText(weightTicket.getTicketId());
                 }
+                if (Constants.WeighingProcess.MODE_DETAIL.OUT_PLANT_PLANT.name().equals(weightTicket.getMode())
+                        || Constants.WeighingProcess.MODE_DETAIL.IN_WAREHOUSE_TRANSFER.name().equals(weightTicket.getMode())) {
+                    txtLoadSource.setText(weightTicket.getLoadSource());
+                }
                 if (Constants.WeighingProcess.MODE_DETAIL.IN_WAREHOUSE_TRANSFER.name().equals(weightTicket.getMode())) {
                     txtWeightTicketIdRef.setText(String.valueOf(weightTicket.getWeightTicketIdRef()));
                 }
@@ -2286,7 +2306,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         }
                     }
 
-                    if (outbDel_list.size() > 1) {
+                    if(outbDel_list.size() > 1) {
                         txtWeight.setText(df.format(totalRegItemQuantity).toString());
                     }
 
@@ -2507,6 +2527,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             lblVendorLoading.setVisible(false);
             lblVendorTransport.setVisible(false);
             lblSO.setVisible(false);
+            lblLoadSource.setVisible(false);
+            txtLoadSource.setVisible(true);
 
             txtSO.setVisible(false);
             txtWeightTicketIdRef.setVisible(false);
@@ -2552,6 +2574,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             lblSO.setVisible(false);
             lblTicketId.setVisible(false);
             lblWeightTicketIdRef.setVisible(false);
+            lblLoadSource.setVisible(false);
+            txtLoadSource.setVisible(true);
 
             txtSO.setVisible(false);
             txtDelNum.setVisible(false);
@@ -2576,6 +2600,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             lblVendorLoading.setVisible(false);
             lblVendorTransport.setVisible(false);
             lblSO.setVisible(false);
+            lblLoadSource.setVisible(false);
+            txtLoadSource.setVisible(true);
 
             txtSO.setVisible(false);
             txtTicketId.setVisible(false);
@@ -2613,6 +2639,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             lblDelNum.setVisible(false);
             lblMatnr.setVisible(false);
             lblSO.setVisible(false);
+            lblLoadSource.setVisible(false);
+            txtLoadSource.setVisible(true);
 
             txtSO.setVisible(false);
             txtSling.setVisible(false);
@@ -2630,6 +2658,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             lblSO.setVisible(false);
             lblLgortIn.setVisible(false);
             lblChargIn.setVisible(false);
+            lblLoadSource.setVisible(false);
+            txtLoadSource.setVisible(true);
 
             txtSO.setVisible(false);
             txtSling.setVisible(false);
@@ -2652,6 +2682,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             lblPoPosto.setVisible(false);
             lblVendorLoading.setVisible(false);
             lblVendorTransport.setVisible(false);
+            lblLoadSource.setVisible(false);
+            txtLoadSource.setVisible(true);
 
             txtTicketId.setVisible(false);
             txtWeightTicketIdRef.setVisible(false);
@@ -2853,11 +2885,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         SaveWTTask(org.jdesktop.application.Application app) {
             super(app);
             btnSave.setEnabled(false);
-            if (((isStage2() || (!isStage1() && !isStage2())) && !weightTicket.isDissolved())
-                    || (!isStage1() && !isStage2() && !weightTicket.isDissolved()
-                    && (weightTicket != null && !weightTicket.isPosted()))) {
-                sapSession = WeighBridgeApp.getApplication().getSAPSession();
-            }
+            sapSession = WeighBridgeApp.getApplication().getSAPSession();
             setSaveNeeded(false);
         }
 
@@ -2878,7 +2906,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             String modeFlg = null;
             boolean flgGqty = false;
 
-            if (((isStage2() || (!isStage1() && !isStage2())) && !weightTicket.isDissolved())
+            if (((isStage1()) && checkPlant) || ((isStage2() || (!isStage1() && !isStage2())) && !weightTicket.isDissolved())
                     || (!isStage1() && !isStage2() && !weightTicket.isDissolved()
                     && (weightTicket != null && !weightTicket.isPosted()))) {
 
@@ -2888,7 +2916,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     purchaseOrder = purchaseOrderRepository.findByPoNumber(weightTicket.getWeightTicketDetail().getEbeln());
                     // nhap mua hang
                     if (weightTicket.getMode().equals("IN_PO_PURCHASE")) {
-                        objBapi = getGrPoMigoBapi(weightTicket, purchaseOrder);
+                            objBapi = getGrPoMigoBapi(weightTicket, purchaseOrder);
                     }
                     // mode xuat plant
                     if (weightTicket.getMode().equals("OUT_PLANT_PLANT")) {
@@ -2923,7 +2951,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     if (!WeighBridgeApp.getApplication().isOfflineMode()) {
                         if (objBapi != null) {
                             try {
-                                if (!weightTicket.getMode().equals("OUT_SLOC_SLOC")) {
+                                if(!weightTicket.getMode().equals("OUT_SLOC_SLOC")) {
                                     logger.info("[SAP] Get infor before post SAP: " + objBapi.toString());
                                     sapSession.execute(objBapi);
                                 }
@@ -2933,8 +2961,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                         logger.info("[SAP] Get infor before post SAP: " + objBapi.toString());
                                         sapSession.execute(objBapi);
                                     }
-                                    if ((objBapi_Po != null)
-                                            && (weightTicketDetail.getMatDocGr() == null || weightTicketDetail.getMatDocGr().equals(""))) {
+                                    if((objBapi_Po != null) &&
+                                            (weightTicketDetail.getMatDocGr() == null || weightTicketDetail.getMatDocGr().equals(""))) {
                                         logger.info("[SAP] Get infor before post SAP: " + objBapi_Po.toString());
                                         sapSession.execute(objBapi_Po);
                                     }
@@ -3146,8 +3174,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         } else {
                             objBapi = getGrDoMigoBapi(weightTicket, outbDel);
                         }
-                    } //                    else if ((!weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER"))
-                    //                            && (flgGqty && (!toleranceUtil.isInvalidTolerance(sumQtyReg, weightTicket.getGQty(), configuration.getTolerance())))) {
+                    } 
                     else if ((!weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER")) && (flgGqty)) {
                         // xuat DO
                         if (weightTicket.getMode().equals("OUT_SELL_ROAD")) {
@@ -3194,11 +3221,15 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                         }
                                         if (((DOCreate2PGIBapi) objBapi).getMatDoc() == null) {
                                             details_item.setPosted(false);
+                                            details_item.setUpdatedDate(new java.sql.Date(now.getTime()));
                                             outbDel.setPosted(false);
+                                            outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                             flag_fail = true;
                                         } else {
                                             details_item.setPosted(true);
                                             outbDel.setPosted(true);
+                                            details_item.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                            outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                         }
 
                                         if (!entityManager.getTransaction().isActive()) {
@@ -3209,9 +3240,11 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                     }
                                     if (((DOCreate2PGIBapi) objBapi).getMatDoc() == null) {
                                         outbDel.setPosted(false);
+                                        outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                         flag_fail = true;
                                     } else {
                                         outbDel.setPosted(true);
+                                        outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                     }
                                 }
                                 if (objBapi instanceof GoodsMvtPoCreateBapi) {
@@ -3232,10 +3265,14 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                         if (((GoodsMvtPoCreateBapi) objBapi).getMatDoc() == null) {
                                             details_item.setPosted(false);
                                             outbDel.setPosted(false);
+                                            details_item.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                            outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                             flag_fail = true;
                                         } else {
                                             details_item.setPosted(true);
                                             outbDel.setPosted(true);
+                                            details_item.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                            outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                         }
                                         if (!entityManager.getTransaction().isActive()) {
                                             entityManager.getTransaction().begin();
@@ -3245,10 +3282,12 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                     }
                                     if (((GoodsMvtPoCreateBapi) objBapi).getMatDoc() == null) {
                                         outbDel.setPosted(false);
+                                        outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
 
                                         flag_fail = true;
                                     } else {
                                         outbDel.setPosted(true);
+                                        outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                     }
                                 }
                                 if (objBapi instanceof GoodsMvtDoCreateBapi) {
@@ -3269,10 +3308,14 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                         if (((GoodsMvtDoCreateBapi) objBapi).getMatDoc() == null) {
                                             details_item.setPosted(false);
                                             outbDel.setPosted(false);
+                                            details_item.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                            outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                             flag_fail = true;
                                         } else {
                                             details_item.setPosted(true);
                                             outbDel.setPosted(true);
+                                            details_item.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                            outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                         }
                                         if (!entityManager.getTransaction().isActive()) {
                                             entityManager.getTransaction().begin();
@@ -3283,8 +3326,10 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                     if (((GoodsMvtDoCreateBapi) objBapi).getMatDoc() == null) {
                                         outbDel.setPosted(false);
                                         flag_fail = true;
+                                        outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                     } else {
                                         outbDel.setPosted(true);
+                                        outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                     }
                                 }
                                 if (objBapi instanceof WsDeliveryUpdateBapi) {
@@ -3307,10 +3352,14 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                         if (((WsDeliveryUpdateBapi) objBapi).getMat_doc() == null) {
                                             details_item.setPosted(false);
                                             outbDel.setPosted(false);
+                                            details_item.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                            outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                             flag_fail = true;
                                         } else {
                                             details_item.setPosted(true);
                                             outbDel.setPosted(true);
+                                            details_item.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                            outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                         }
 
                                         if (!entityManager.getTransaction().isActive()) {
@@ -3323,8 +3372,10 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                     if (((WsDeliveryUpdateBapi) objBapi).getMat_doc() == null) {
                                         outbDel.setPosted(false);
                                         flag_fail = true;
+                                        outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                     } else {
                                         outbDel.setPosted(true);
+                                        outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                     }
                                 }
 
@@ -3393,6 +3444,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                     sapOutb.setId(outbDel.getId());
                                     sapOutb.setPosted(outbDel.isPosted());
                                     sapOutb.setMatDoc(outbDel.getMatDoc());
+                                    sapOutb.setUpdatedDate(new java.sql.Date(now.getTime()));
                                     entityManager.merge(sapOutb);
                                     outbDel = sapOutb;
                                 }
@@ -3408,6 +3460,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
                                         revertCompletedDO(completedDO, outDetails_lits, outbDel_list);
                                         outbDel.setPosted(false);
+                                        outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                     }
                                 }
                                 weightTicket.setPosted(false);
@@ -3439,7 +3492,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 if (isStage2()) {
                     weightTicket.setPosted(false);
                 }
-                for (WeightTicketDetail wtDetail : weightTicketDetails) {
+                for(WeightTicketDetail wtDetail: weightTicketDetails) {
                     wtDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
                 }
             }
@@ -3607,9 +3660,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 //  Conver result from KG unit to TON unit
 
                 // check tolorance for PO mua hang
-                if (weightTicket.getMode().equals("IN_PO_PURCHASE")) {
-                    purchaseOrder = purchaseOrderRepository.findByPoNumber(weightTicket.getWeightTicketDetail().getEbeln());
-                    if (validateQuantityPO(purchaseOrder, new BigDecimal(Double.toString(result)))) {
+                 if (weightTicket.getMode().equals("IN_PO_PURCHASE")) {
+                     purchaseOrder = purchaseOrderRepository.findByPoNumber(weightTicket.getWeightTicketDetail().getEbeln());
+                    if(validateQuantityPO(purchaseOrder, new BigDecimal(Double.toString(result)))) {
                         txfGoodsQty.setValue(result);
                         weightTicket.setGQty(new BigDecimal(Double.toString(result)).setScale(3, RoundingMode.HALF_UP));
                     } else {
@@ -3622,8 +3675,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         btnAccept.setEnabled(false);
                         btnOScaleReset.setEnabled(true);
                         return null;
-                    }
-                }
+                        }
+                 }
                 double main_qty = 0;
                 double qty = 0;
                 if (outbDel != null) {
@@ -3681,8 +3734,21 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                             return null;
                         }
                     } else {
-                        txfGoodsQty.setValue(result);
-                        weightTicket.setGQty(new BigDecimal(Double.toString(result)).setScale(3, RoundingMode.HALF_UP));
+                        double upper = qty + (qty * valueUp) / 100;
+                        if ((result <= upper)) {
+                            txfGoodsQty.setValue(result);
+                            weightTicket.setGQty(new BigDecimal(Double.toString(result)).setScale(3, RoundingMode.HALF_UP));
+                        } else {
+                            String msg = "Chênh lệch vượt dung sai cho phép!";
+                            JOptionPane.showMessageDialog(rootPane, msg);
+                            txfOutQty.setValue(null);
+                            txtOutTime.setText(null);
+                            txfGoodsQty.setValue(null);
+                            weightTicket.setGQty(null);
+                            btnAccept.setEnabled(false);
+                            btnOScaleReset.setEnabled(true);
+                            return null;
+                        }
                     }
                 } else if (isSubContract() && weightTicket.getLgort() != null && weightTicket.getCharg() != null) {
                     setMessage(resourceMapMsg.getString("msg.checkIssetWarehouse"));
@@ -3710,11 +3776,38 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 weightTicket.setFTime(now);
                 lblIScale.setForeground(Color.black);
                 OutboundDeliveryDetail item;
+                checkPlant = false;
                 if (outDetails_lits.size() > 0) {
                     for (int i = 0; i < outDetails_lits.size(); i++) {
                         item = outDetails_lits.get(i);
                         BigDecimal inScale = new BigDecimal(((Number) txfInQty.getValue()).doubleValue() / 1000);
                         item.setInScale(inScale.setScale(3, RoundingMode.HALF_UP));
+                        item.setfTime(new java.sql.Date(now.getTime()));
+                        item.setUpdatedDate(new java.sql.Date(now.getTime()));
+                        // tinh toan cho Nhap kho tu plant xuat > plant nhap
+                        WeightTicket wtPlantOut = weightTicketRepository.findByDOFromPO(outbDel.getDeliveryOrderNo());
+                        if((wtPlantOut != null) && (checkPlantOutToIn(item, wtPlantOut.getWplant()))) {
+                            double outSScalePlant = 0;
+                            double result = ((Number) txfInQty.getValue()).doubleValue();
+                            String poNum = wtPlantOut.getWeightTicketDetail().getEbeln();
+                            PurchaseOrder purchaseOrder = purchaseOrderRepository.findByPoNumber(poNum);
+                            if(purchaseOrder.getPurchaseOrderDetail().getPlant().equals(configuration.getWkPlant())) {
+                                outSScalePlant = wtPlantOut.getSScale().doubleValue();
+                                // check can 1 cua nhap voi can 2 xuat chenh lech 1%
+                                double upper = outSScalePlant + (outSScalePlant * 1) / 100;
+                                double lower = outSScalePlant - (outSScalePlant * 1) / 100;
+                                if ((lower <= result && result <= upper)) {
+                                    item.setGoodsQty(item.getLfimg());
+                                    item.setOutScale((BigDecimal.valueOf(item.getInScale().doubleValue() - item.getGoodsQty().doubleValue())).setScale(3, RoundingMode.HALF_UP));
+                                    item.setsTime(new java.sql.Date(now.getTime()));
+                                    weightTicket.setSCreator(WeighBridgeApp.getApplication().getLogin().getUid());
+                                    weightTicket.setSScale((BigDecimal.valueOf((item.getInScale().doubleValue() - item.getGoodsQty().doubleValue())* 1000)).setScale(3, RoundingMode.HALF_UP));
+                                    weightTicket.setSTime(now);
+                                    weightTicket.setGQty((BigDecimal.valueOf(item.getInScale().doubleValue() - item.getOutScale().doubleValue())).setScale(3, RoundingMode.HALF_UP));
+                                    checkPlant = true;
+                                }
+                            }
+                        }
                         if (!entityManager.getTransaction().isActive()) {
                             entityManager.getTransaction().begin();
                         }
@@ -3741,6 +3834,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     for (OutboundDeliveryDetail obj : outDetailFrees) {
                         obj.setGoodsQty(obj.getLfimg());
                         obj.setOutScale(obj.getInScale().add(obj.getLfimg()).setScale(3, RoundingMode.HALF_UP));
+                        obj.setsTime(new java.sql.Date(now.getTime()));
+                        obj.setUpdatedDate(new java.sql.Date(now.getTime()));
                         remain = remain - obj.getLfimg().doubleValue();
 
                         if (!entityManager.getTransaction().isActive()) {
@@ -3759,6 +3854,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         if (i < outDetails.size() - 1) {
                             item.setGoodsQty(item.getLfimg());
                             item.setOutScale(item.getInScale().add(item.getLfimg()).setScale(3, RoundingMode.HALF_UP));
+                            item.setsTime(new java.sql.Date(now.getTime()));
+                            item.setUpdatedDate(new java.sql.Date(now.getTime()));
                             remain = remain - item.getLfimg().doubleValue();
                         } else {
                             if (checkVariant) {
@@ -3767,6 +3864,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                 item.setGoodsQty(BigDecimal.valueOf(remain).setScale(3, RoundingMode.HALF_UP));
                             }
                             item.setOutScale((BigDecimal.valueOf(item.getInScale().doubleValue() + remain)).setScale(3, RoundingMode.HALF_UP));
+                            item.setsTime(new java.sql.Date(now.getTime()));
+                            item.setUpdatedDate(new java.sql.Date(now.getTime()));
                         }
                         if (!entityManager.getTransaction().isActive()) {
                             entityManager.getTransaction().begin();
@@ -3783,6 +3882,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     } else {
                         item.setGoodsQty((weightTicket.getSScale().subtract(weightTicket.getFScale()).divide(div).abs()).setScale(3, RoundingMode.HALF_UP));
                     }
+                    item.setsTime(new java.sql.Date(now.getTime()));
+                    item.setUpdatedDate(new java.sql.Date(now.getTime()));
                     if (!entityManager.getTransaction().isActive()) {
                         entityManager.getTransaction().begin();
                     }
@@ -4190,6 +4291,19 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         }
         return true;
     }
+
+    private boolean checkPlantOutToIn(OutboundDeliveryDetail item, String wplantOut) {
+        Material mat = materialRepository.findByMatnr(item.getMatnr());
+        MaterialInterPlant materialInterPlant = materialInterPlantRepository.findByMatnrAndPlantInOut(item.getMatnr(), configuration.getWkPlant(), wplantOut);
+        if (weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER")
+                && (materialInterPlant != null)
+                && (StringUtil.isNotEmptyString(mat.getGroes()))
+                && (mat.getGroes().replaceAll("\\s+","").equals(Constants.Groes.B50))) {
+            return true;
+        }
+        return false;
+    }
+
     // </editor-fold>
     //<editor-fold defaultstate="collapsed" desc="Variables declaration Area">
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -4223,6 +4337,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     private javax.swing.JLabel lblKG;
     private javax.swing.JLabel lblLgortIn;
     private javax.swing.JLabel lblLicPlate;
+    private javax.swing.JLabel lblLoadSource;
     private javax.swing.JLabel lblMatnr;
     private javax.swing.JLabel lblOScale;
     private javax.swing.JLabel lblOTime;
@@ -4273,6 +4388,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txtInTime;
     private javax.swing.JTextField txtLgortIn;
     private javax.swing.JFormattedTextField txtLicPlate;
+    private javax.swing.JTextField txtLoadSource;
     private javax.swing.JTextField txtMatnr;
     private javax.swing.JTextField txtOutTime;
     private javax.swing.JTextField txtPONo;
