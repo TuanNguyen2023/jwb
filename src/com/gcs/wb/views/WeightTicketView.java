@@ -3126,7 +3126,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                             weightTicket.setPosted(false);
                         }
                     } else {
-                        bapi_message = resourceMapMsg.getString("msg.postOfflien");
+                        bapi_messages.add(resourceMapMsg.getString("msg.postOfflien"));
                         weightTicketDetail.setPosted(false);
                         weightTicket.setPosted(false);
                         weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
@@ -3209,9 +3209,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                     weightTicketDetail.setMatDoc(((DOCreate2PGIBapi) objBapi).getMatDoc());
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((DOCreate2PGIBapi) objBapi).getDocYear()));
                                     try {
-                                        bapi_message = ((DOCreate2PGIBapi) objBapi).getReturnMessage().toString();
+                                        bapi_messages = ((DOCreate2PGIBapi) objBapi).getReturnMessage();
                                     } catch (Exception Ex) {
-                                        bapi_message = resourceMapMsg.getString("msg.errorSAP3048");
+                                        bapi_messages.add(resourceMapMsg.getString("msg.errorSAP"));
                                     }
                                     for (int k = 0; k < outDetails_lits.size(); k++) {
                                         details_item = outDetails_lits.get(k);
@@ -3252,9 +3252,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                     weightTicketDetail.setMatDoc(((GoodsMvtPoCreateBapi) objBapi).getMatDoc());
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((GoodsMvtPoCreateBapi) objBapi).getMatYear()));
                                     try {
-                                        bapi_message = ((GoodsMvtPoCreateBapi) objBapi).getReturnMessage().toString();
+                                        bapi_messages = ((GoodsMvtPoCreateBapi) objBapi).getReturnMessage();
                                     } catch (Exception Ex) {
-                                        bapi_message = resourceMapMsg.getString("msg.errorSAP3086");
+                                        bapi_messages.add(resourceMapMsg.getString("msg.errorSAP"));
                                     }
                                     for (int k = 0; k < outDetails_lits.size(); k++) {
                                         details_item = outDetails_lits.get(k);
@@ -3295,9 +3295,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                     weightTicketDetail.setMatDoc(((GoodsMvtDoCreateBapi) objBapi).getMatDoc());
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((GoodsMvtDoCreateBapi) objBapi).getMatYear()));
                                     try {
-                                        bapi_message = ((GoodsMvtDoCreateBapi) objBapi).getReturnMessage().toString();
+                                        bapi_messages = ((GoodsMvtDoCreateBapi) objBapi).getReturnMessage();
                                     } catch (Exception Ex) {
-                                        bapi_message = resourceMapMsg.getString("msg.errorSAP3123");
+                                        bapi_messages.add(resourceMapMsg.getString("msg.errorSAP"));
                                     }
                                     for (int k = 0; k < outDetails_lits.size(); k++) {
                                         details_item = outDetails_lits.get(k);
@@ -3338,9 +3338,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((WsDeliveryUpdateBapi) objBapi).getDoc_year()));
 
                                     try {
-                                        bapi_message = ((WsDeliveryUpdateBapi) objBapi).getReturnMessage().toString();
+                                        bapi_messages = ((WsDeliveryUpdateBapi) objBapi).getReturnMessage();
                                     } catch (Exception Ex) {
-                                        bapi_message = resourceMapMsg.getString("msg.errorSAP3160");
+                                        bapi_messages.add(resourceMapMsg.getString("msg.errorSAP"));
                                     }
 
                                     for (int k = 0; k < outDetails_lits.size(); k++) {
@@ -3384,10 +3384,10 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                     revertCompletedDO(completedDO, outDetails_lits, outbDel_list);
                                     weightTicket.setPosted(false);
                                     weightTicketDetail.setPosted(false);
-                                    if (bapi_message == "") {
-                                        bapi_message = resourceMapMsg.getString("msg.errorBAPI");
+                                    if (bapi_messages.isEmpty()) {
+                                        bapi_messages.add(resourceMapMsg.getString("msg.errorSAP"));
                                     }
-                                    JOptionPane.showMessageDialog(rootPane, bapi_message);
+                                    bapi_messages.forEach(msg -> JOptionPane.showMessageDialog(rootPane, msg));
                                     completed = false;
                                     entityManager.clear();
                                 } else if (!flag_fail) {
