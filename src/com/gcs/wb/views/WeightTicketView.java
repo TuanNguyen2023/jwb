@@ -3476,6 +3476,17 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     entityManager.merge(outbDel);
                     entityManager.getTransaction().commit();
                 }
+                boolean flgNotPosted = false;
+                for (WeightTicketDetail wtDetail : weightTicketDetails) {
+                    if (StringUtil.isEmptyString(wtDetail.getMatDoc())) {
+                        flgNotPosted = true;
+                    }
+                }
+                if (flgNotPosted) {
+                    weightTicket.setPosted(false);
+                } else {
+                    weightTicket.setPosted(true);
+                }
                 // </editor-fold>
 
             }
