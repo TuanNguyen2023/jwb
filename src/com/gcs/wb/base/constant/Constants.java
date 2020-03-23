@@ -318,4 +318,9 @@ public class Constants {
 
         public static final String B50 = "B|50";
     }
+    
+    public static final class Message {
+        
+        public static final String SAP_DISCONNECTED = "Mất kết nối đến SAP, kết nối lại hoặc vui lòng liên hệ dịch vụ khách hàng Hotline 0919 49 59 69 để được hỗ trợ?";
+    }
 }

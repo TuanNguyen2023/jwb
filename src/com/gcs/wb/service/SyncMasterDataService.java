@@ -38,7 +38,7 @@ public class SyncMasterDataService {
     private Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
     public static Logger logger = Logger.getLogger(SyncMasterDataService.class);
 
-    public void syncMasterData() {
+    public void syncMasterData() throws Exception {
         logger.info("Sync master data is processing...");
 
         logger.info("Sync SAP setting...");
@@ -75,7 +75,7 @@ public class SyncMasterDataService {
         WeighBridgeApp.getApplication().restartApplication();
     }
 
-    public void syncMasterDataWhenLogin() {
+    public void syncMasterDataWhenLogin() throws Exception {
         String mandt = configuration.getSapClient();
         String wplant = configuration.getWkPlant();
 
@@ -147,7 +147,7 @@ public class SyncMasterDataService {
     }
 
     // sync for offline
-    public void syncPoPostoDatas() {
+    public void syncPoPostoDatas() throws Exception {
         sapService.syncPoPostoDatas();
     }
     

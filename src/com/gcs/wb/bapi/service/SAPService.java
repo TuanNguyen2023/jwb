@@ -186,6 +186,7 @@ public class SAPService {
                 matsSap = materialsV2Converter.convert(mats);
             } catch (Exception ex) {
                 logger.error(ex);
+                throw ex;
             }
 
             //sync DB SAP
@@ -257,6 +258,7 @@ public class SAPService {
                 }
             } catch (Exception ex) {
                 logger.error(ex);
+                throw ex;
             }
 
             entityTransaction = entityManager.getTransaction();
@@ -270,7 +272,6 @@ public class SAPService {
 //                    entityManager.remove(ven);
 //                }
 //            }
-
             // update SAP - DB
             for (Vendor venSap : venSaps) {
                 int index = vendorDBs.indexOf(venSap);
@@ -424,6 +425,8 @@ public class SAPService {
             if (entityTransaction.isActive()) {
                 entityTransaction.rollback();
             }
+
+            throw ex;
         }
     }
 
@@ -517,6 +520,7 @@ public class SAPService {
                 }
             } catch (Exception ex) {
                 logger.error(ex);
+                throw ex;
             }
 
             // sync data
@@ -702,7 +706,7 @@ public class SAPService {
 
     public List<DOCheckStructure> getDONumber(String[] soNumbers, String bsXe, String soRomoc) {
         SOGetDetailBapi bapi = new SOGetDetailBapi();
-        List<SOCheckStructure> soChecks = new ArrayList<SOCheckStructure>();
+        List<SOCheckStructure> soChecks = new ArrayList<>();
         SOCheckStructure soCheck;
         for (int k = 0; k < soNumbers.length; k++) {
             soCheck = new SOCheckStructure();
@@ -714,16 +718,13 @@ public class SAPService {
 
         //soCheck.setVbeln(soNumber);
         bapi.setSOCheck(soChecks);
-        try {
-            logger.info("[SAP] Check SO: " + bapi.toString());
-            session.execute(bapi);
-            List<DOCheckStructure> dos = bapi.getDOCheck();
-            if (dos != null) {
-                return dos;
-            }
-        } catch (Exception ex) {
-            logger.error(ex);
-        }     
+        logger.info("[SAP] Check SO: " + bapi.toString());
+        session.execute(bapi);
+        List<DOCheckStructure> dos = bapi.getDOCheck();
+        if (dos != null) {
+            return dos;
+        }
+
         return null;
     }
 
@@ -788,6 +789,8 @@ public class SAPService {
             if (entityTransaction.isActive()) {
                 entityTransaction.rollback();
             }
+
+            throw ex;
         }
 
         return null;
@@ -825,25 +828,26 @@ public class SAPService {
                         .collect(Collectors.toCollection(ArrayList::new));
             }
         } catch (Exception ex) {
-            System.out.println("PoPostGetListBapi đang lỗi!");
             logger.error(ex);
+            throw ex;
         }
 
         return poPostoNumbers;
     }
 
-    public void syncPoPostoDatas() {
+    public void syncPoPostoDatas() throws Exception {
         List<String> poPostoNumbers = getListPoPostoNumber();
 
-        poPostoNumbers.stream().forEach(number -> {
-            try {
+        try {
+            for (String number : poPostoNumbers) {
                 PurchaseOrder sapPurchaseOrder = getPurchaseOrder(number);
                 PurchaseOrder purchaseOrder = purchaseOrderRepository.findByPoNumber(number);
                 syncPurchaseOrder(sapPurchaseOrder, purchaseOrder);
-            } catch (Exception ex) {
-                Logger.getLogger(SAPService.class.getName()).log(Level.SEVERE, null, ex);
             }
-        });
+        } catch (Exception ex) {
+            logger.error(ex);
+            throw ex;
+        }
     }
 
     public List<SaleOrder> getListSalesOrder() {
@@ -868,11 +872,9 @@ public class SAPService {
                     .map(t -> saleOrderConverter.convert(t))
                     .collect(Collectors.toCollection(ArrayList::new));
         } catch (Exception ex) {
-            System.out.println("SyncContractSOGetListBapi đang lỗi!");
             logger.error(ex);
+            throw ex;
         }
-
-        return null;
     }
 
     public void syncSoDatas() {
@@ -898,7 +900,8 @@ public class SAPService {
                 entityTransaction.commit();
                 entityManager.clear();
             } catch (Exception ex) {
-                Logger.getLogger(SAPService.class.getName()).log(Level.SEVERE, null, ex);
+                logger.error(ex);
+                throw ex;
             }
         });
     }

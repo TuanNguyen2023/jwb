@@ -6,6 +6,7 @@
 package com.gcs.wb.bapi;
 
 import com.gcs.wb.WeighBridgeApp;
+import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.service.LoginService;
 import com.sap.conn.jco.JCoException;
 import javax.swing.JFrame;
@@ -46,7 +47,7 @@ public class SAPSession {
                     if (jcoException.getGroup() == JCoException.JCO_ERROR_COMMUNICATION) {
                         int answer = JOptionPane.showConfirmDialog(
                                 mainFrame,
-                                "Mất kết nối đến SAP, kết nối lại?",
+                                Constants.Message.SAP_DISCONNECTED,
                                 JOptionPane.OPTIONS_PROPERTY,
                                 JOptionPane.YES_NO_OPTION,
                                 JOptionPane.QUESTION_MESSAGE);
