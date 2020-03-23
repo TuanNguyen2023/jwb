@@ -3734,8 +3734,21 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                             return null;
                         }
                     } else {
-                        txfGoodsQty.setValue(result);
-                        weightTicket.setGQty(new BigDecimal(Double.toString(result)).setScale(3, RoundingMode.HALF_UP));
+                        double upper = qty + (qty * valueUp) / 100;
+                        if ((result <= upper)) {
+                            txfGoodsQty.setValue(result);
+                            weightTicket.setGQty(new BigDecimal(Double.toString(result)).setScale(3, RoundingMode.HALF_UP));
+                        } else {
+                            String msg = "Chênh lệch vượt dung sai cho phép!";
+                            JOptionPane.showMessageDialog(rootPane, msg);
+                            txfOutQty.setValue(null);
+                            txtOutTime.setText(null);
+                            txfGoodsQty.setValue(null);
+                            weightTicket.setGQty(null);
+                            btnAccept.setEnabled(false);
+                            btnOScaleReset.setEnabled(true);
+                            return null;
+                        }
                     }
                 } else if (isSubContract() && weightTicket.getLgort() != null && weightTicket.getCharg() != null) {
                     setMessage(resourceMapMsg.getString("msg.checkIssetWarehouse"));
@@ -3769,6 +3782,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         item = outDetails_lits.get(i);
                         BigDecimal inScale = new BigDecimal(((Number) txfInQty.getValue()).doubleValue() / 1000);
                         item.setInScale(inScale.setScale(3, RoundingMode.HALF_UP));
+                        item.setfTime(new java.sql.Date(now.getTime()));
                         item.setUpdatedDate(new java.sql.Date(now.getTime()));
                         // tinh toan cho Nhap kho tu plant xuat > plant nhap
                         WeightTicket wtPlantOut = weightTicketRepository.findByDOFromPO(outbDel.getDeliveryOrderNo());
@@ -3785,6 +3799,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                 if ((lower <= result && result <= upper)) {
                                     item.setGoodsQty(item.getLfimg());
                                     item.setOutScale((BigDecimal.valueOf(item.getInScale().doubleValue() - item.getGoodsQty().doubleValue())).setScale(3, RoundingMode.HALF_UP));
+                                    item.setsTime(new java.sql.Date(now.getTime()));
                                     weightTicket.setSCreator(WeighBridgeApp.getApplication().getLogin().getUid());
                                     weightTicket.setSScale((BigDecimal.valueOf((item.getInScale().doubleValue() - item.getGoodsQty().doubleValue())* 1000)).setScale(3, RoundingMode.HALF_UP));
                                     weightTicket.setSTime(now);
@@ -3819,6 +3834,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     for (OutboundDeliveryDetail obj : outDetailFrees) {
                         obj.setGoodsQty(obj.getLfimg());
                         obj.setOutScale(obj.getInScale().add(obj.getLfimg()).setScale(3, RoundingMode.HALF_UP));
+                        obj.setsTime(new java.sql.Date(now.getTime()));
                         obj.setUpdatedDate(new java.sql.Date(now.getTime()));
                         remain = remain - obj.getLfimg().doubleValue();
 
@@ -3838,6 +3854,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         if (i < outDetails.size() - 1) {
                             item.setGoodsQty(item.getLfimg());
                             item.setOutScale(item.getInScale().add(item.getLfimg()).setScale(3, RoundingMode.HALF_UP));
+                            item.setsTime(new java.sql.Date(now.getTime()));
                             item.setUpdatedDate(new java.sql.Date(now.getTime()));
                             remain = remain - item.getLfimg().doubleValue();
                         } else {
@@ -3847,6 +3864,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                 item.setGoodsQty(BigDecimal.valueOf(remain).setScale(3, RoundingMode.HALF_UP));
                             }
                             item.setOutScale((BigDecimal.valueOf(item.getInScale().doubleValue() + remain)).setScale(3, RoundingMode.HALF_UP));
+                            item.setsTime(new java.sql.Date(now.getTime()));
                             item.setUpdatedDate(new java.sql.Date(now.getTime()));
                         }
                         if (!entityManager.getTransaction().isActive()) {
@@ -3864,6 +3882,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     } else {
                         item.setGoodsQty((weightTicket.getSScale().subtract(weightTicket.getFScale()).divide(div).abs()).setScale(3, RoundingMode.HALF_UP));
                     }
+                    item.setsTime(new java.sql.Date(now.getTime()));
                     item.setUpdatedDate(new java.sql.Date(now.getTime()));
                     if (!entityManager.getTransaction().isActive()) {
                         entityManager.getTransaction().begin();
