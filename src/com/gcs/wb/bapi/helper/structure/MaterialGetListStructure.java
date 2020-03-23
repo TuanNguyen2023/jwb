@@ -42,7 +42,11 @@ public class MaterialGetListStructure implements Serializable {
     /**Flag Material for Deletion at Plant Level*/
     @Parameter(value = MaterialGetListConstants.LVORM)
     private String _lvorm;
-    
+
+    /**Flag Material for Xi mang bao*/
+    @Parameter(value = MaterialGetListConstants.GROES)
+    private String _groes;
+
     public MaterialGetListStructure() {
         
     }
@@ -101,5 +105,13 @@ public class MaterialGetListStructure implements Serializable {
      */
     public String getLvorm() {
         return _lvorm;
+    }
+
+    /**
+     * Flag Material xi mang bao
+     * @return the _groes
+     */
+    public String getGroes() {
+        return _groes;
     }
 }

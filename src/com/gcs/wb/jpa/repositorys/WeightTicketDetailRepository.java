@@ -38,4 +38,4 @@ public class WeightTicketDetailRepository {
         }
         return null;
     }
-}
+        }

@@ -46,6 +46,8 @@ public class Material implements Serializable {
     private String maktx;
     @Column(name = "maktg")
     private String maktg;
+    @Column(name = "groes")
+    private String groes;
     @Column(name = "xchpf")
     private Character xchpf;
     @Column(name = "check_posto")
@@ -127,6 +129,14 @@ public class Material implements Serializable {
 
     public void setMaktg(String maktg) {
         this.maktg = maktg;
+    }
+    
+    public String getGroes() {
+        return groes;
+    }
+
+    public void setGroes(String groes) {
+        this.groes = groes;
     }
 
     public Character getXchpf() {

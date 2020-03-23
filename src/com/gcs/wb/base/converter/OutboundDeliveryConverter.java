@@ -15,6 +15,7 @@ import com.gcs.wb.jpa.entity.OutboundDeliveryDetail;
 import com.gcs.wb.jpa.repositorys.OutboundDetailRepository;
 import com.gcs.wb.model.AppConfig;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,6 +44,7 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
         BigDecimal item_qty = BigDecimal.ZERO;
         BigDecimal item_qty_free = BigDecimal.ZERO;
         BigDecimal sumLfimg = BigDecimal.ZERO;
+        Date dateNow = new Date();
         List<DoGetDetailStructure> dos = from.getTd_dos();
         if (dos.size() > 0) {
             // <editor-fold defaultstate="collapsed" desc="Fill D.O Data">
@@ -115,6 +117,7 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
                 outboundDeliveryDetail.setBzirk(from.getEs_bzirk());
                 outboundDeliveryDetail.setBztxt(from.getEs_text());
                 outboundDeliveryDetail.setMandt(configuration.getSapClient());
+                outboundDeliveryDetail.setCreatedDate(new java.sql.Date(dateNow.getTime()));
 
                 outboundDelivery.addOutboundDeliveryDetail(outboundDeliveryDetail);
                 //end set data
@@ -143,6 +146,7 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
                 outboundDelivery.setBldat(new java.sql.Date(doItem.getBldat().getTime()));
                 if (outboundDelivery.getMatnr() == null || outboundDelivery.getMatnr().trim().isEmpty()) {
                     outboundDelivery.setMatnr(doItem.getMatnr());
+                    outboundDelivery.setArktx(doItem.getArktx());
                 }
                 outboundDelivery.setWerks(doItem.getWerks());
                 outboundDelivery.setLgort(doItem.getLgort());
@@ -153,7 +157,6 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
                 outboundDelivery.setUebtk(doItem.getUebtk() == null || doItem.getUebtk().trim().isEmpty() ? ' ' : 'X');
                 outboundDelivery.setUebto(doItem.getUebto());
                 outboundDelivery.setUntto(doItem.getUntto());
-                outboundDelivery.setArktx(doItem.getArktx());
                 outboundDelivery.setVgbel(doItem.getVgbel());
                 outboundDelivery.setVgpos(doItem.getVgpos());
                 outboundDelivery.setBwart(doItem.getBwart());
@@ -173,6 +176,7 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
                 outboundDelivery.setLfimg(sumLfimg);
                 outboundDelivery.setVbelnNach(doItem.getVbelnNach());
                 outboundDelivery.setWtIdRef(doItem.getWtIdRef());
+                outboundDelivery.setCreatedDate(new java.sql.Date(dateNow.getTime()));
             }
             //set lai item number thanh number dau tien
 

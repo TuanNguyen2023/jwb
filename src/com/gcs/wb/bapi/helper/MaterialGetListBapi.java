@@ -32,6 +32,11 @@ public class MaterialGetListBapi implements Serializable {
     @Parameter(MaterialGetListConstants.IV_START_TIME)
     private String _ivStartTime;
     
+    /**Import Parameter: IV_END_DATE */
+    @Import
+    @Parameter(MaterialGetListConstants.IV_END_DATE)
+    private Date _ivEndDate;
+    
     /**Import Parameter: IV_END_TIME */
     @Import
     @Parameter(MaterialGetListConstants.IV_END_TIME)
@@ -66,9 +71,17 @@ public class MaterialGetListBapi implements Serializable {
     public void setIvStartTime(String ivStartTime) {
         this._ivStartTime = ivStartTime;
     }
-    
+
     /**
      * Import Parameter: IV_END_DATE
+     * @param ivEndDate the ivEndDate to set
+     */
+    public void setIvEndDate(Date ivEndDate) {
+        this._ivEndDate = ivEndDate;
+    }
+
+    /**
+     * Import Parameter: IV_END_TIME
      * @param ivEndTime the _ivEndTime to set
      */
     public void setIvEndTime(String ivEndTime) {

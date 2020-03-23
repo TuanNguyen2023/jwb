@@ -154,7 +154,7 @@ public class Constants {
     public static final class TransportAgent {
 
         public static final Pattern LICENSE_PLATE_PATTERN = Pattern.compile("^(\\d{2}[A-Za-z]-\\d{4})|(\\d{2}[A-Za-z]-\\d{3}\\.\\d{2})|(\\d{2}[A-Za-z]-\\d{4,6})|(\\d{2}[A-Za-z]\\d{4,7})$");
-        public static final Pattern LICENSE_PLATE_WATER_PATTERN = Pattern.compile("^([A-Za-z]{2}\\d{4,8})|([A-Za-z]{3}\\d{4,7})$");
+        public static final Pattern LICENSE_PLATE_WATER_PATTERN = Pattern.compile("^([A-Za-z]{2}\\d{4,8})|([A-Za-z]{3}\\d{4,7})|^([A-Za-z]{2}-\\d{4,8})|([A-Za-z]{3}-\\d{4,7})$");
 
         public static final int STRUCK_TYPE = 1;
     }
@@ -309,8 +309,13 @@ public class Constants {
         public static final String CRON_EXPRESSION = "0 0 0 ? * * *"; // 00:00:00 every day
         public static final String TIME_SYNC = "000000"; // 00:00:00
     }
-    
+
     public static final class PurchaseOrder {
         public static Character PO_REL_IND_NOT_RELEASED = 'B';
+    }
+
+    public static final class Groes {
+
+        public static final String B50 = "B|50";
     }
 }
