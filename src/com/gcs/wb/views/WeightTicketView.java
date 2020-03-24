@@ -3749,6 +3749,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                             btnOScaleReset.setEnabled(true);
                             return null;
                         }
+                    } else {
+                        txfGoodsQty.setValue(result);
+                        weightTicket.setGQty(new BigDecimal(Double.toString(result)).setScale(3, RoundingMode.HALF_UP));
                     }
                 } else if (isSubContract() && weightTicket.getLgort() != null && weightTicket.getCharg() != null) {
                     setMessage(resourceMapMsg.getString("msg.checkIssetWarehouse"));

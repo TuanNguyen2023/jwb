@@ -252,9 +252,11 @@ public class WsDeliveryUpdateBapi implements Serializable {
             if (bapiRet2.getType() != 'E') {
                 return null;
             }
+
             if (bapiRet2.getMessage() != null && !bapiRet2.getMessage().trim().isEmpty()) {
                 return bapiRet2.getMessage().trim();
             }
+
             String msg = "";
             if (bapiRet2.getMessageV1() != null && !bapiRet2.getMessageV1().trim().isEmpty()) {
                 msg += bapiRet2.getMessageV1() + " ";
