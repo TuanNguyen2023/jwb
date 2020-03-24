@@ -4315,7 +4315,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             return false;
         }
         String b = output[0];
-        if (b.equals(Constants.Groes.B50)) {
+        if (b.equals(Constants.Groes.B)) {
             checkBag = true;
         }
         MaterialInterPlant materialInterPlant = materialInterPlantRepository.findByMatnrAndPlantInOut(item.getMatnr(), configuration.getWkPlant(), wplantOut);

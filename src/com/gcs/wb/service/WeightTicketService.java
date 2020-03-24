@@ -66,7 +66,7 @@ public class WeightTicketService {
     private final Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
     WeightTicketRegistrationService weightTicketRegistrationService = new WeightTicketRegistrationService();
     MaterialRepository materialRepository = new MaterialRepository();
-    private Double baoWeigh = null;
+    private Double baoWeigh = Double.valueOf(1);
 
     public DefaultComboBoxModel getCustomerByMaNdt() {
         List<Customer> customers = this.customerRepository.getListCustomer();
@@ -1326,7 +1326,7 @@ public class WeightTicketService {
         String firstChar = output[0];
         String secondChar = output[1];
 
-        if (firstChar.equals(Constants.Groes.B50)) {
+        if (firstChar.equals(Constants.Groes.B)) {
             baoWeigh = new Double(secondChar);
             return true;
         }

@@ -322,6 +322,6 @@ public class Constants {
 
     public static final class Groes {
 
-        public static final String B50 = "B";
+        public static final String B = "B";
     }
 }
