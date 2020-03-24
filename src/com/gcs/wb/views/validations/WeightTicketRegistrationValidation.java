@@ -55,7 +55,7 @@ public class WeightTicketRegistrationValidation {
 
         return result;
     }
-    
+
     public boolean validatePlateNoWater(String value, JComponent label) {
         value = value.trim();
 
@@ -70,8 +70,7 @@ public class WeightTicketRegistrationValidation {
     public boolean validatePlateNoWithDB(String value, JComponent label) {
         value = value.trim();
 
-        Matcher matcher = Constants.TransportAgent.LICENSE_PLATE_PATTERN.matcher(value);
-        boolean result = matcher.matches();
+        boolean result = !value.isEmpty();
 
         if (result) {
             Vehicle vehicle = vehicleRepository.findByPlateNo(value);
