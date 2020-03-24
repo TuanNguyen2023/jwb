@@ -318,7 +318,7 @@ public class Constants {
     public static final class Message {
 
         public static final String DB_DISCONNECTED = "Mất kết nối tới Database.\nVui lòng thử lại hoặc liên hệ dịch vụ khách hàng Hotline 0919 49 59 69 để được hỗ trợ.";
-        public static final String SAP_DISCONNECTED = "Mất kết nối đến SAP, kết nối lại?\nHoặc vui lòng liên hệ dịch vụ khách hàng Hotline 0919 49 59 69 để được hỗ trợ.";
+        public static final String SAP_DISCONNECTED = "Mất kết nối đến SAP, vui lòng kết nối lại?\nHoặc liên hệ với dịch vụ khách hàng Hotline 0919 49 59 69 để được hỗ trợ.";
     }
 
     public static final class Groes {

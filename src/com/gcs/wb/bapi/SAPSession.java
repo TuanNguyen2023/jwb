@@ -48,7 +48,7 @@ public class SAPSession {
                         int answer = JOptionPane.showConfirmDialog(
                                 mainFrame,
                                 Constants.Message.SAP_DISCONNECTED,
-                                JOptionPane.OPTIONS_PROPERTY,
+                                JOptionPane.MESSAGE_PROPERTY,
                                 JOptionPane.YES_NO_OPTION,
                                 JOptionPane.QUESTION_MESSAGE);
 
