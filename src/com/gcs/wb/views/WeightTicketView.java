@@ -2069,6 +2069,10 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 if (Constants.WeighingProcess.MODE_DETAIL.OUT_SELL_WATERWAY.name().equals(weightTicket.getMode())) {
                     lblLicPlate.setText(resourceMapMsg.getString("lblPlateNoWater"));
                 }
+                
+                if (Constants.WeighingProcess.MODE_DETAIL.OUT_PLANT_PLANT.name().equals(weightTicket.getMode())) {
+                    lblLicPlate.setText(resourceMapMsg.getString("lblVehicleNo"));
+                }
 
                 if (weightTicket.getRegType() == 'I') {
                     rbtInward.setSelected(true);
