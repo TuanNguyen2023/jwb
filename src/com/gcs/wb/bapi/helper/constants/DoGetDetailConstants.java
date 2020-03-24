@@ -8,7 +8,7 @@ import org.hibersap.bapi.BapiConstants;
 
 /**
  *
- * @author Tran-Vu
+ * @author HangTT
  */
 public interface DoGetDetailConstants extends BapiConstants {
 
@@ -59,15 +59,22 @@ public interface DoGetDetailConstants extends BapiConstants {
     String KOSTK = "KOSTK";
     String KOQUK = "KOQUK";
     String WBSTK = "WBSTK";
-    //{+20100212#01 Add new fields
     //Higher-level item in bill of material structures
     //Sales document item category
     String UEPOS = "UEPOS";
     String PSTYV = "PSTYV";
-    //}+20100212#01 Add new fields
     
     String VBELN_NACH = "VBELN_NACH";
     String WT_ID_REF = "WT_ID_REF";
+
+    String VSBED = "VSBED";
+    String ZKVGR1 = "ZKVGR1";
+    String ZKVGR1_TEXT = "ZKVGR1_TEXT";
+    String ZKVGR2 = "ZKVGR2";
+    String ZKVGR2_TEXT = "ZKVGR2_TEXT";
+    String ZKVGR3 = "ZKVGR3";
+    String ZKVGR3_TEXT = "ZKVGR3_TEXT";
+    String SORT1 = "SORT1";
 
     // </editor-fold>
 }
