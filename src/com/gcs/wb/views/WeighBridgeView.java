@@ -304,7 +304,7 @@ public class WeighBridgeView extends FrameView {
         miSyncMasterData.setAction(actionMap.get("syncMasterData")); // NOI18N
         miSyncMasterData.setText(resourceMap.getString("miSyncMasterData.text")); // NOI18N
         miSyncMasterData.setName("miSyncMasterData"); // NOI18N
-        if(WeighBridgeApp.getApplication().getLogin().getRoles().toUpperCase().indexOf("Z_JWB_ADMIN") >= 0 ){
+        if(WeighBridgeApp.getApplication().getLogin().getRoles().toUpperCase().indexOf("Z_JWB_ADMIN") >= 0 && !WeighBridgeApp.getApplication().isOfflineMode()){
             mFile.add(miSyncMasterData);
         }
 
@@ -643,7 +643,7 @@ public class WeighBridgeView extends FrameView {
             super(app);
         }
 
-        @Override protected Object doInBackground() {
+        @Override protected Object doInBackground() throws Exception {
             setStep(1, resourceMapMsg.getString("msg.isSyncMasterData"));
             SyncMasterDataService syncMasterDataService = new SyncMasterDataService();
             syncMasterDataService.syncMasterData();
@@ -656,6 +656,7 @@ public class WeighBridgeView extends FrameView {
 
         @Override
         protected void failed(Throwable thrwbl) {
+            logger.error(thrwbl);
             setStep(2, resourceMapMsg.getString("msg.syncMasterDataFailed"));
         }
         
