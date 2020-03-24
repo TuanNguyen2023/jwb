@@ -3476,6 +3476,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     entityManager.merge(outbDel);
                     entityManager.getTransaction().commit();
                 }
+                // check status posted for Ghep ma
                 boolean flgNotPosted = false;
                 for (WeightTicketDetail wtDetail : weightTicketDetails) {
                     if (StringUtil.isEmptyString(wtDetail.getMatDoc())) {
@@ -3793,7 +3794,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         item.setfTime(now);
                         item.setUpdatedDate(now);
                         // tinh toan cho Nhap kho tu plant xuat > plant nhap
-                        WeightTicket wtPlantOut = weightTicketRepository.findByDOFromPO(outbDel.getDeliveryOrderNo());
+                        WeightTicket wtPlantOut 
+                                = weightTicketRepository.findByDOFromPO(outbDel.getDeliveryOrderNo());
                         if((wtPlantOut != null) && (checkPlantOutToIn(item, wtPlantOut.getWplant()))) {
                             double outSScalePlant = 0;
                             double result = ((Number) txfInQty.getValue()).doubleValue();
@@ -4301,12 +4303,25 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     }
 
     private boolean checkPlantOutToIn(OutboundDeliveryDetail item, String wplantOut) {
+        boolean checkBag = false;
         Material mat = materialRepository.findByMatnr(item.getMatnr());
+        // check dong bao
+        if (mat == null || StringUtil.isEmptyString(mat.getGroes())) {
+            return false;
+        }
+        String groes = mat.getGroes().replaceAll("\\s+", "");
+        String[] output = groes.split("\\|");
+        if (output.length != 2) {
+            return false;
+        }
+        String b = output[0];
+        if (b.equals(Constants.Groes.B50)) {
+            checkBag = true;
+        }
         MaterialInterPlant materialInterPlant = materialInterPlantRepository.findByMatnrAndPlantInOut(item.getMatnr(), configuration.getWkPlant(), wplantOut);
         if (weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER")
                 && (materialInterPlant != null)
-                && (StringUtil.isNotEmptyString(mat.getGroes()))
-                && (mat.getGroes().replaceAll("\\s+","").equals(Constants.Groes.B50))) {
+                && (checkBag)) {
             return true;
         }
         return false;

@@ -66,6 +66,7 @@ public class WeightTicketService {
     private final Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
     WeightTicketRegistrationService weightTicketRegistrationService = new WeightTicketRegistrationService();
     MaterialRepository materialRepository = new MaterialRepository();
+    private Double baoWeigh = null;
 
     public DefaultComboBoxModel getCustomerByMaNdt() {
         List<Customer> customers = this.customerRepository.getListCustomer();
@@ -987,7 +988,7 @@ public class WeightTicketService {
                     Double tmp = null;
                     if ((StringUtil.isNotEmptyString(weightTicketDetail.getMatnrRef()))
                             && checkBagCement(weightTicketDetail.getMatnrRef())) {
-                        tmp = ((weightTicketDetail.getRegItemQuantity().doubleValue()) * 1000d) / 50d;
+                        tmp = ((weightTicketDetail.getRegItemQuantity().doubleValue()) * 1000d) / baoWeigh;
                     }
                     
                     if (tmp != null) {
@@ -1076,7 +1077,7 @@ public class WeightTicketService {
                         map.put("P_TOTAL_QTY_REALITY", String.valueOf(totalQtyReality));
                         Double tmp = null;
                         if ((outbDel != null) && (StringUtil.isNotEmptyString(outbDel.getMatnr())) && (checkBagCement(outbDel.getMatnr()))) {
-                            tmp = ((outbDel.getLfimg().doubleValue() + outbDel.getFreeQty().doubleValue()) * 1000d) / 50d;
+                            tmp = ((outbDel.getLfimg().doubleValue() + outbDel.getFreeQty().doubleValue()) * 1000d) / baoWeigh;
                             bags = Math.round(tmp);
                         }
                     } else {
@@ -1094,7 +1095,7 @@ public class WeightTicketService {
                         map.put("P_TOTAL_QTY_REALITY", String.valueOf(totalQtyReality));
                         Double tmp = null;
                         if ((outbDel != null) && (StringUtil.isNotEmptyString(outbDel.getMatnr())) && (checkBagCement(outbDel.getMatnr()))) {
-                            tmp = (outbDel.getLfimg().doubleValue() * 1000d) / 50d;
+                            tmp = (outbDel.getLfimg().doubleValue() * 1000d) / baoWeigh;
                             bags = Math.round(tmp);
                         }
                     }
@@ -1312,13 +1313,24 @@ public class WeightTicketService {
         return bapi;
     }
     
-private boolean checkBagCement(String matnr) {
-    Material mat = materialRepository.findByMatnr(matnr);
-    if ((StringUtil.isNotEmptyString(mat.getGroes()))
-        && (mat.getGroes().replaceAll("\\s+","").equals(Constants.Groes.B50))) {
-        return true;
-    }
-    return false;
+    private boolean checkBagCement(String matnr) {
+        Material mat = materialRepository.findByMatnr(matnr);
+        if (mat == null || StringUtil.isEmptyString(mat.getGroes())) {
+            return false;
+        }
+        String groes = mat.getGroes().replaceAll("\\s+","");
+        String[] output = groes.split("\\|");
+        if (output.length != 2) {
+            return false;
+        }
+        String firstChar = output[0];
+        String secondChar = output[1];
+
+        if (firstChar.equals(Constants.Groes.B50)) {
+            baoWeigh = new Double(secondChar);
+            return true;
+        }
+        return false;
     }
 }
 

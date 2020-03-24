@@ -316,6 +316,6 @@ public class Constants {
 
     public static final class Groes {
 
-        public static final String B50 = "B|50";
+        public static final String B50 = "B";
     }
 }
