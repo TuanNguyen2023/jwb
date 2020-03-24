@@ -12,6 +12,7 @@ import com.gcs.wb.base.constant.Constants.WeighingProcess.MODE;
 import com.gcs.wb.base.constant.Constants.WeighingProcess.MODE_DETAIL;
 import com.gcs.wb.base.enums.ModeEnum;
 import com.gcs.wb.base.enums.StatusEnum;
+import com.gcs.wb.base.util.ExceptionUtil;
 import com.gcs.wb.base.util.StringUtil;
 import com.gcs.wb.base.validator.DateFromToValidator;
 import com.gcs.wb.controller.WeightTicketController;
@@ -1983,11 +1984,13 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
 
             validateForm();
 
-            if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
-                cause = cause.getCause();
+            if (!ExceptionUtil.isSapDisConnectedException(cause)) {
+                if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
+                    cause = cause.getCause();
+                }
+                logger.error(null, cause);
+                JOptionPane.showMessageDialog(rootPane, cause.getMessage());
             }
-            logger.error(null, cause);
-            JOptionPane.showMessageDialog(rootPane, cause.getMessage());
         }
 
         @Override
@@ -3165,6 +3168,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
 
     private class CheckDOTask extends org.jdesktop.application.Task<Object, Void> {
 
+        private boolean canceled = false;
         private List<String> strMaterial = new ArrayList<>();
         private List<String> matnrs = new ArrayList<>();
         private BigDecimal totalWeight = BigDecimal.ZERO;
@@ -3272,7 +3276,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
 
         }
 
-        private OutboundDelivery syncOutboundDelivery(String deliveryOrderNo, OutboundDelivery outboundDelivery) {
+        private OutboundDelivery syncOutboundDelivery(String deliveryOrderNo, OutboundDelivery outboundDelivery) throws Exception {
             try {
                 setStep(2, resourceMapMsg.getString("checkDOInSap"));
                 OutboundDelivery sapOutboundDelivery = sapService.getOutboundDelivery(deliveryOrderNo);
@@ -3280,6 +3284,11 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 setStep(3, resourceMapMsg.getString("msg.saveDataDOToDb"));
                 return sapService.syncOutboundDelivery(sapOutboundDelivery, outboundDelivery, deliveryOrderNo);
             } catch (Exception ex) {
+                if (ExceptionUtil.isSapDisConnectedException(ex)) {
+                    canceled = true;
+                    throw ex;
+                }
+
                 return null;
             }
         }
@@ -3290,6 +3299,11 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 Customer sapCustomer = sapService.getCustomer(kunnr);
                 return sapService.syncCustomer(sapCustomer, dbCustomer);
             } catch (Exception ex) {
+                if (ExceptionUtil.isSapDisConnectedException(ex)) {
+                    canceled = true;
+                    throw ex;
+                }
+
                 return null;
             }
         }
@@ -3396,11 +3410,14 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             // for check edit plateNo after check DO
             plateNoValidDO = "";
             checkedCharg = "";
-            if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
-                cause = cause.getCause();
+
+            if (!canceled) {
+                if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
+                    cause = cause.getCause();
+                }
+                logger.error(null, cause);
+                JOptionPane.showMessageDialog(rootPane, cause.getMessage());
             }
-            logger.error(null, cause);
-            JOptionPane.showMessageDialog(rootPane, cause.getMessage());
 
             validateForm();
         }
@@ -3945,6 +3962,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
 
     private class CheckPOTask extends Task<Object, Void> {
 
+        private boolean canceled = false;
         private String strVendor = "";
         private String strMatnr = null;
         private BigDecimal totalWeight = BigDecimal.ZERO;
@@ -4082,11 +4100,13 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             loadSLoc(null, null);
 
             isValidPO = false;
-            if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
-                cause = cause.getCause();
+            if (!canceled) {
+                if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
+                    cause = cause.getCause();
+                }
+                logger.error(null, cause);
+                JOptionPane.showMessageDialog(rootPane, cause.getMessage());
             }
-            logger.error(null, cause);
-            JOptionPane.showMessageDialog(rootPane, cause.getMessage());
 
             validateForm();
         }
@@ -4098,7 +4118,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             setProgress(step, 1, 4);
         }
 
-        private PurchaseOrder syncPurchaseOrder(String poNum, PurchaseOrder purchaseOrder) {
+        private PurchaseOrder syncPurchaseOrder(String poNum, PurchaseOrder purchaseOrder) throws Exception {
             try {
                 setStep(2, resourceMapMsg.getString("checkPOInSap"));
                 PurchaseOrder sapPurchaseOrder = sapService.getPurchaseOrder(poNum);
@@ -4107,6 +4127,11 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 setStep(3, resourceMapMsg.getString("msg.saveDataPOToDb"));
                 return sapService.syncPurchaseOrder(sapPurchaseOrder, purchaseOrder);
             } catch (Exception ex) {
+                if (ExceptionUtil.isSapDisConnectedException(ex)) {
+                    canceled = true;
+                    throw ex;
+                }
+
                 return null;
             }
         }
@@ -4117,6 +4142,11 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 Customer sapCustomer = sapService.getCustomer(kunnr);
                 return sapService.syncCustomer(sapCustomer, dbCustomer);
             } catch (Exception ex) {
+                if (ExceptionUtil.isSapDisConnectedException(ex)) {
+                    canceled = true;
+                    throw ex;
+                }
+
                 return null;
             }
         }
@@ -4173,6 +4203,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
 
     private class CheckPOSTOTask extends Task<Object, Void> {
 
+        private boolean canceled = false;
         private String strVendor = "";
 
         CheckPOSTOTask(Application app) {
@@ -4250,11 +4281,13 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             isValidPOSTO = false;
             cbxVendorLoadingN.setSelectedIndex(-1);
 
-            if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
-                cause = cause.getCause();
+            if (!canceled) {
+                if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
+                    cause = cause.getCause();
+                }
+                logger.error(null, cause);
+                JOptionPane.showMessageDialog(rootPane, cause.getMessage());
             }
-            logger.error(null, cause);
-            JOptionPane.showMessageDialog(rootPane, cause.getMessage());
 
             validateForm();
         }
@@ -4266,7 +4299,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             setProgress(step, 1, 4);
         }
 
-        private PurchaseOrder syncPurchaseOrder(String poNum, PurchaseOrder purchaseOrder) {
+        private PurchaseOrder syncPurchaseOrder(String poNum, PurchaseOrder purchaseOrder) throws Exception {
             try {
                 setStep(2, resourceMapMsg.getString("checkPOSTOInSap"));
                 PurchaseOrder sapPurchaseOrder = sapService.getPurchaseOrder(poNum);
@@ -4274,6 +4307,11 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 setStep(3, resourceMapMsg.getString("msg.saveDataPOSTOToDb"));
                 return sapService.syncPurchaseOrder(sapPurchaseOrder, purchaseOrder);
             } catch (Exception ex) {
+                if (ExceptionUtil.isSapDisConnectedException(ex)) {
+                    canceled = true;
+                    throw ex;
+                }
+
                 return null;
             }
         }

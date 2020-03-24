@@ -5,6 +5,7 @@
  */
 package com.gcs.wb.base.util;
 
+import com.sap.conn.jco.JCoException;
 import com.gcs.wb.base.constant.Constants;
 import org.eclipse.persistence.exceptions.DatabaseException;
 
@@ -16,6 +17,17 @@ public class ExceptionUtil {
 
     public static <E extends Throwable> void sneakyThrow(Throwable e) throws E {
         throw (E) e;
+    }
+
+    public static boolean isSapDisConnectedException(Throwable ex) {
+        if (ex.getCause() instanceof JCoException) {
+            JCoException jcoException = (JCoException) ex.getCause();
+            if (jcoException.getGroup() == JCoException.JCO_ERROR_COMMUNICATION) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static void checkDatabaseDisconnectedException(Exception ex) {

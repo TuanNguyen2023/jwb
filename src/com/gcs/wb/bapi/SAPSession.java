@@ -6,6 +6,7 @@
 package com.gcs.wb.bapi;
 
 import com.gcs.wb.WeighBridgeApp;
+import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.service.LoginService;
 import com.sap.conn.jco.JCoException;
 import javax.swing.JFrame;
@@ -20,6 +21,7 @@ public class SAPSession {
 
     private Session session = null;
     private JFrame mainFrame = WeighBridgeApp.getApplication().getMainFrame();
+    org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(SAPSession.class);
 
     public SAPSession(Session session) {
         this.session = session;
@@ -39,13 +41,14 @@ public class SAPSession {
                 session.execute(bapiObject);
                 break;
             } catch (Exception ex) {
+                logger.error(ex);
                 if (ex.getCause() instanceof JCoException) {
                     JCoException jcoException = (JCoException) ex.getCause();
                     if (jcoException.getGroup() == JCoException.JCO_ERROR_COMMUNICATION) {
                         int answer = JOptionPane.showConfirmDialog(
                                 mainFrame,
-                                "Mất kết nối đến SAP, kết nối lại?",
-                                JOptionPane.OPTIONS_PROPERTY,
+                                Constants.Message.SAP_DISCONNECTED,
+                                JOptionPane.MESSAGE_PROPERTY,
                                 JOptionPane.YES_NO_OPTION,
                                 JOptionPane.QUESTION_MESSAGE);
 
@@ -55,6 +58,24 @@ public class SAPSession {
                             continue;
                         }
                     }
+                }
+
+                throw ex;
+            }
+        }
+    }
+
+    public void executeInBackground(Object bapiObject) {
+        for (int i = 0; i <= 3; i++) {
+            try {
+                session.execute(bapiObject);
+                break;
+            } catch (Exception ex) {
+                logger.error(ex);
+                if (i < 3) {
+                    LoginService loginService = new LoginService();
+                    session = loginService.reconnectSapSession();
+                    continue;
                 }
 
                 throw ex;

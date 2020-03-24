@@ -15,7 +15,6 @@ import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.model.AppConfig;
 import com.gcs.wb.base.enums.ParityEnum;
 import com.gcs.wb.base.serials.SerialHelper;
-import com.gcs.wb.base.util.StringUtil;
 import com.gcs.wb.controller.ConfigController;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.Configuration;
@@ -24,7 +23,6 @@ import java.awt.Color;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
-import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import org.apache.commons.configuration.ConfigurationException;
@@ -49,6 +47,7 @@ public class ConfigView extends javax.swing.JDialog {
     ResourceMap resourceMap = Application.getInstance(WeighBridgeApp.class).getContext().getResourceMap(ConfigView.class);
     private DefaultComboBoxModel port1Model = null;
     private DefaultComboBoxModel port2Model = null;
+    public static Logger logger = Logger.getLogger(ConfigView.class);
 
     // <editor-fold defaultstate="collapsed" desc="Class Constructors">
     /**
@@ -1114,9 +1113,6 @@ private void txtSapPasswordKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             objMapping();
             try {
                 config.save();
-
-                SyncMasterDataService syncMasterDataService = new SyncMasterDataService();
-                syncMasterDataService.syncMasterDataWhenLogin();
             } catch (ConfigurationException ex) {
                 Logger.getLogger(this.getClass()).error(null, ex);
                 error = true;
@@ -1124,7 +1120,15 @@ private void txtSapPasswordKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                     msg.append(string).append(". \n");
                 }
             }
+
             if (!error) {
+                try {
+                    SyncMasterDataService syncMasterDataService = new SyncMasterDataService();
+                    syncMasterDataService.syncMasterDataWhenLogin();
+                } catch (Exception ex) {
+                    logger.error(ex);
+                }
+
                 dispose();
                 WeighBridgeApp app = new WeighBridgeApp();
                 app.restartApplication();

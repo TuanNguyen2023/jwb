@@ -7,10 +7,7 @@ package com.gcs.wb.base.constant;
 import com.gcs.wb.model.WeighingMode;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -317,11 +314,17 @@ public class Constants {
 
     public static final class Message {
 
-        public static String DB_DISCONNECTED = "Mất kết nối tới Database.\nVui lòng thử lại hoặc liên hệ dịch vụ khách hàng Hotline 0919 49 59 69 để được hỗ trợ.";
+        public static final String DB_DISCONNECTED = "Mất kết nối tới Database.\nVui lòng thử lại hoặc liên hệ dịch vụ khách hàng Hotline 0919 49 59 69 để được hỗ trợ.";
+        public static final String SAP_DISCONNECTED = "Mất kết nối đến SAP, vui lòng kết nối lại?\nHoặc liên hệ với dịch vụ khách hàng Hotline 0919 49 59 69 để được hỗ trợ.";
     }
 
     public static final class Groes {
 
         public static final String B = "B";
+    }
+
+    public static enum InteractiveObject {
+        SYSTEM,
+        USER
     }
 }
