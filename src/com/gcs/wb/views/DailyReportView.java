@@ -54,8 +54,7 @@ public class DailyReportView extends javax.swing.JInternalFrame {
         dpDateTo.setFormats(Constants.Date.FORMAT);
         weightTicketList = new ArrayList();
 
-        FilterActionTask filterActionTask = new FilterActionTask(WeighBridgeApp.getApplication());
-        filterActionTask.execute();
+        btnFilter.doClick();
     }
 
     /**
@@ -214,10 +213,12 @@ private void dpDateFromPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN
             lblFrom.setForeground(Color.black);
             lblTo.setForeground(Color.black);
             btnFilter.setEnabled(true);
+            btnPrintReport.setEnabled(true);
         } catch (IllegalArgumentException ex) {
             lblFrom.setForeground(Color.red);
             lblTo.setForeground(Color.red);
             btnFilter.setEnabled(false);
+            btnPrintReport.setEnabled(false);
         }
     }
 

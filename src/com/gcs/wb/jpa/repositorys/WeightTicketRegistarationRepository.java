@@ -4,6 +4,7 @@
  */
 package com.gcs.wb.jpa.repositorys;
 
+import com.gcs.wb.base.util.ExceptionUtil;
 import com.gcs.wb.jpa.JPAConnector;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +20,10 @@ import org.apache.log4j.Logger;
  */
 public class WeightTicketRegistarationRepository {
 
-    Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
+    Logger logger = Logger.getLogger(this.getClass());
 
     public List<Object[]> getDangtaiV2(String pRegId) {
-        List<Object[]> result = new ArrayList<Object[]>();
+        List<Object[]> result = new ArrayList<>();
         try {
             EntityManager entityManager = JPAConnector.getInstance();
             if (entityManager != null) {
@@ -35,15 +36,16 @@ public class WeightTicketRegistarationRepository {
                 result = query.getResultList();
                 entityManager.getTransaction().commit();
             }
-        } catch (Exception e) {
-            logger.error(e.toString());
-
+        } catch (Exception ex) {
+            logger.error(null, ex);
+            ExceptionUtil.checkDatabaseDisconnectedException(ex);
         }
+
         return result;
     }
 
     public List<Object[]> checkDoExist(String pDoNumber, String pWplant) {
-        List<Object[]> result = new ArrayList<Object[]>();
+        List<Object[]> result = new ArrayList<>();
         try {
             EntityManager entityManager = JPAConnector.getInstance();
             if (entityManager != null) {
@@ -58,10 +60,11 @@ public class WeightTicketRegistarationRepository {
                 result = query.getResultList();
                 entityManager.getTransaction().commit();
             }
-        } catch (Exception e) {
-            logger.error(e.toString());
-
+        } catch (Exception ex) {
+            logger.error(null, ex);
+            ExceptionUtil.checkDatabaseDisconnectedException(ex);
         }
+
         return result;
     }
 
@@ -87,9 +90,11 @@ public class WeightTicketRegistarationRepository {
                 }
                 entityManager.getTransaction().commit();
             }
-        } catch (Exception e) {
-            logger.error(e.toString());
+        } catch (Exception ex) {
+            logger.error(null, ex);
+            ExceptionUtil.checkDatabaseDisconnectedException(ex);
         }
+
         return count;
     }
 
@@ -111,9 +116,11 @@ public class WeightTicketRegistarationRepository {
                 }
                 entityManager.getTransaction().commit();
             }
-        } catch (Exception e) {
-            logger.error(e.toString());
+        } catch (Exception ex) {
+            logger.error(null, ex);
+            ExceptionUtil.checkDatabaseDisconnectedException(ex);
         }
+
         return iplus;
     }
 
@@ -135,14 +142,16 @@ public class WeightTicketRegistarationRepository {
                 }
                 entityManager.getTransaction().commit();
             }
-        } catch (Exception e) {
-            logger.error(e.toString());
+        } catch (Exception ex) {
+            logger.error(null, ex);
+            ExceptionUtil.checkDatabaseDisconnectedException(ex);
         }
+
         return count;
     }
 
     public List<Object> updateWTReg(String pRegId, String pWT) {
-        List<Object> result = new ArrayList<Object>();
+        List<Object> result = new ArrayList<>();
         try {
             EntityManager entityManager = JPAConnector.getInstance();
             if (entityManager != null) {
@@ -157,9 +166,11 @@ public class WeightTicketRegistarationRepository {
                 result = query.getResultList();
                 entityManager.getTransaction().commit();
             }
-        } catch (Exception e) {
-            logger.error(e.toString());
+        } catch (Exception ex) {
+            logger.error(null, ex);
+            ExceptionUtil.checkDatabaseDisconnectedException(ex);
         }
+
         return result;
     }
 
@@ -170,7 +181,7 @@ public class WeightTicketRegistarationRepository {
             String pTRANSVEN,
             String pTRANSPLANT) {
 
-        List<Object[]> result = new ArrayList<Object[]>();
+        List<Object[]> result = new ArrayList<>();
         try {
             EntityManager entityManager = JPAConnector.getInstance();
             if (entityManager != null) {
@@ -191,9 +202,11 @@ public class WeightTicketRegistarationRepository {
                 result = query.getResultList();
                 entityManager.getTransaction().commit();
             }
-        } catch (Exception e) {
-            logger.error(e.toString());
+        } catch (Exception ex) {
+            logger.error(null, ex);
+            ExceptionUtil.checkDatabaseDisconnectedException(ex);
         }
+
         return result;
     }
 }

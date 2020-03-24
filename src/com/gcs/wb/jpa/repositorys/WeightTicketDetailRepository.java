@@ -4,8 +4,10 @@
  */
 package com.gcs.wb.jpa.repositorys;
 
+import com.gcs.wb.base.util.ExceptionUtil;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.WeightTicketDetail;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -18,24 +20,38 @@ import org.apache.log4j.Logger;
 public class WeightTicketDetailRepository {
 
     EntityManager entityManager = JPAConnector.getInstance();
-    Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
+    Logger logger = Logger.getLogger(this.getClass());
 
     public List<WeightTicketDetail> findByPoNo(String poNo) {
-        String status = "POSTED";
-        TypedQuery<WeightTicketDetail> typedQuery = entityManager.createNamedQuery("WeightTicketDetail.findByPoNo", WeightTicketDetail.class);
-        typedQuery.setParameter("poNo", poNo);
-        typedQuery.setParameter("status", status);
-        return typedQuery.getResultList();
-    }
-    
-     public WeightTicketDetail findBydeliveryOrderNo(String doNumber) {
-        TypedQuery<WeightTicketDetail> typedQuery = entityManager.createNamedQuery("WeightTicketDetail.findByDoNo", WeightTicketDetail.class);
-        typedQuery.setParameter("deliveryOrderNo", doNumber);
-        List<WeightTicketDetail> wtDetail = typedQuery.getResultList();
-        
-        if (wtDetail != null && wtDetail.size() > 0) {
-            return wtDetail.get(0);
+        List<WeightTicketDetail> list = new ArrayList<>();
+        try {
+            String status = "POSTED";
+            TypedQuery<WeightTicketDetail> typedQuery = entityManager.createNamedQuery("WeightTicketDetail.findByPoNo", WeightTicketDetail.class);
+            typedQuery.setParameter("poNo", poNo);
+            typedQuery.setParameter("status", status);
+            list = typedQuery.getResultList();
+        } catch (Exception ex) {
+            logger.error(null, ex);
+            ExceptionUtil.checkDatabaseDisconnectedException(ex);
         }
+
+        return list;
+    }
+
+    public WeightTicketDetail findBydeliveryOrderNo(String doNumber) {
+        try {
+            TypedQuery<WeightTicketDetail> typedQuery = entityManager.createNamedQuery("WeightTicketDetail.findByDoNo", WeightTicketDetail.class);
+            typedQuery.setParameter("deliveryOrderNo", doNumber);
+            List<WeightTicketDetail> wtDetail = typedQuery.getResultList();
+
+            if (wtDetail != null && wtDetail.size() > 0) {
+                return wtDetail.get(0);
+            }
+        } catch (Exception ex) {
+            logger.error(null, ex);
+            ExceptionUtil.checkDatabaseDisconnectedException(ex);
+        }
+
         return null;
     }
         }

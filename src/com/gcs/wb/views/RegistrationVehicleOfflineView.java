@@ -108,8 +108,7 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
         cbxModeSearch.setModel(new DefaultComboBoxModel<>(ModeEnum.values()));
         cbxStatus.setModel(new DefaultComboBoxModel<>(StatusEnum.values()));
 
-        SearchWeightTicketTask t = new SearchWeightTicketTask(WeighBridgeApp.getApplication());
-        t.execute();
+        btnFind.doClick();
     }
 
     private void initTableEvent() {
@@ -2961,53 +2960,46 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
 
         @SuppressWarnings("unchecked")
         @Override
-        protected Object doInBackground() {
-            try {
-                setProgress(0, 0, 4);
-                weightTicketList.clear();
+        protected Object doInBackground() throws Exception {
+            setProgress(0, 0, 4);
+            weightTicketList.clear();
 
-                setProgress(1, 0, 4);
-                setMessage(resourceMapMsg.getString("msg.getData"));
+            setProgress(1, 0, 4);
+            setMessage(resourceMapMsg.getString("msg.getData"));
 
-                Object[] select = cbxMaterialType.getSelectedObjects();
-                com.gcs.wb.jpa.entity.Material material = (com.gcs.wb.jpa.entity.Material) select[0];
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                String from = format.format(dpDateFrom.getDate());
-                String to = format.format(dpDateTo.getDate());
-                StatusEnum status = (StatusEnum) cbxStatus.getSelectedItem();
-                status = status != null ? status : StatusEnum.ALL;
-                List<WeightTicket> result = weightTicketRegistarationController.findListWeightTicket(from, to,
-                        txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim(),
-                        material.getMatnr(), status,
-                        (ModeEnum) cbxModeSearch.getSelectedItem());
+            Object[] select = cbxMaterialType.getSelectedObjects();
+            com.gcs.wb.jpa.entity.Material material = (com.gcs.wb.jpa.entity.Material) select[0];
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            String from = format.format(dpDateFrom.getDate());
+            String to = format.format(dpDateTo.getDate());
+            StatusEnum status = (StatusEnum) cbxStatus.getSelectedItem();
+            status = status != null ? status : StatusEnum.ALL;
+            List<WeightTicket> result = weightTicketRegistarationController.findListWeightTicket(from, to,
+                    txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim(),
+                    material.getMatnr(), status,
+                    (ModeEnum) cbxModeSearch.getSelectedItem());
 
-                result = filterHours(result, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
+            result = filterHours(result, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
 
-                setProgress(2, 0, 4);
-                setMessage(resourceMapMsg.getString("msg.handleDate"));
-                weightTicketList.addAll(result);
-                wtData = new Object[weightTicketList.size()][wtCols.length];
+            setProgress(2, 0, 4);
+            setMessage(resourceMapMsg.getString("msg.handleDate"));
+            weightTicketList.addAll(result);
+            wtData = new Object[weightTicketList.size()][wtCols.length];
 
-                setWeightTicketData();
+            setWeightTicketData();
 
-                setProgress(3, 0, 4);
-                editable = new boolean[wtCols.length];
-                for (int i = 0; i < editable.length; i++) {
-                    editable[i] = false;
-                }
-                setProgress(4, 0, 4);
-            } catch (Exception ex) {
-                failed(ex);
+            setProgress(3, 0, 4);
+            editable = new boolean[wtCols.length];
+            for (int i = 0; i < editable.length; i++) {
+                editable[i] = false;
             }
+            setProgress(4, 0, 4);
+
             return null;
         }
 
         @Override
         protected void succeeded(Object result) {
-        }
-
-        @Override
-        protected void finished() {
             setMessage(resourceMapMsg.getString("msg.finished"));
             WeighBridgeApp.getApplication().bindJTableModel(tabResults, wtData, wtCols, wtTypes, editable);
 
@@ -3404,8 +3396,8 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             } catch (Exception ex) {
                 btnSave.setEnabled(true);
             }
-            SearchWeightTicketTask t = new SearchWeightTicketTask(this.getApplication());
-            t.execute();
+
+            btnFind.doClick();
 
             return null;
         }

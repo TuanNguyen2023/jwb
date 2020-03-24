@@ -1,6 +1,17 @@
 <?xml version="1.1" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JInternalFrameFormInfo">
+  <NonVisualComponents>
+    <Component class="javax.swing.JButton" name="btnLoad">
+      <Properties>
+        <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+          <action class="com.gcs.wb.views.TransportAgentView" id="LoadTransportAgent" methodName="LoadTransportAgent"/>
+        </Property>
+        <Property name="text" type="java.lang.String" resourceKey="btnLoad.text"/>
+        <Property name="name" type="java.lang.String" value="btnLoad" noResource="true"/>
+      </Properties>
+    </Component>
+  </NonVisualComponents>
   <Properties>
     <Property name="closable" type="boolean" value="true"/>
     <Property name="maximizable" type="boolean" value="true"/>
@@ -62,7 +73,7 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
+              <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="spnTransportAgent" pref="368" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
@@ -72,7 +83,7 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="spnTransportAgent" pref="360" max="32767" attributes="0"/>
+                  <Component id="spnTransportAgent" pref="368" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -91,9 +102,7 @@
           <SubComponents>
             <Component class="javax.swing.JList" name="lstTransportAgent">
               <Properties>
-                <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor" postCode="lstTransportAgent.setCellRenderer(new DefaultListCellRenderer() {&#xa;   @Override&#xa;   public Component getListCellRendererComponent(&#xa;           JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {&#xa;       super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);&#xa;       if (value instanceof TransportAgent) {&#xa;           TransportAgent ta = (TransportAgent)value;&#xa;           setText(ta.getName());&#xa;       }&#xa;       return this;&#xa;   }&#xa;});">
-                  <Connection code="getTransportAgentsModel()" type="code"/>
-                </Property>
+                <Property name="model" postCode="lstTransportAgent.setCellRenderer(new DefaultListCellRenderer() {&#xa;   @Override&#xa;   public Component getListCellRendererComponent(&#xa;           JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {&#xa;       super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);&#xa;       if (value instanceof TransportAgent) {&#xa;           TransportAgent ta = (TransportAgent)value;&#xa;           setText(ta.getName());&#xa;       }&#xa;       return this;&#xa;   }&#xa;});"/>
                 <Property name="selectionMode" type="int" value="0"/>
                 <Property name="name" type="java.lang.String" value="lstTransportAgent" noResource="true"/>
               </Properties>
@@ -152,7 +161,7 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <Component id="spnVehicle" pref="184" max="32767" attributes="0"/>
+                  <Component id="spnVehicle" pref="192" max="32767" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="lblLicensePlate" alignment="3" min="-2" max="-2" attributes="0"/>
