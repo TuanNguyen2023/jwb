@@ -3185,10 +3185,10 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     if (!WeighBridgeApp.getApplication().isOfflineMode()) {
                         if (objBapi != null) {
                             try {
-                                logger.info("[SAP] Get infor before post SAP: " + objBapi.toString());
-                                sapSession.execute(objBapi);
-
-                                OutboundDeliveryDetail details_item = null;
+                                if (StringUtil.isEmptyString(weightTicketDetail.getMatDoc())) {
+                                    logger.info("[SAP] Get infor before post SAP: " + objBapi.toString());
+                                    sapSession.execute(objBapi);
+                                    OutboundDeliveryDetail details_item = null;
 
                                 if (objBapi instanceof DOCreate2PGIBapi) {
                                     weightTicketDetail.setDeliveryOrderNo(((DOCreate2PGIBapi) objBapi).getDelivery());
@@ -3430,6 +3430,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                     outbDel = sapOutb;
                                 }
                                 // </editor-fold>
+                             }
                             } catch (Exception e) {
                                 logger.error(e);
                                 if (objBapi instanceof WsDeliveryUpdateBapi) {
@@ -3731,7 +3732,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                             btnOScaleReset.setEnabled(true);
                             return null;
                         }
-                    } else {
+                    } else if(weightTicket.getMode().equals("OUT_SELL_ROAD")
+                            || weightTicket.getMode().equals("OUT_SELL_WATERWAY")) {
                         double upper = qty + (qty * valueUp) / 100;
                         if ((result <= upper)) {
                             txfGoodsQty.setValue(result);

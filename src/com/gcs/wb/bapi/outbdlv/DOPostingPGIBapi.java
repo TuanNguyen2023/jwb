@@ -129,8 +129,7 @@ public class DOPostingPGIBapi implements Serializable {
         if (_Return == null || _Return.isEmpty()) {
             return errorMsgs;
         }
-
-        return _Return.stream().map(bapiRet2 -> {
+        List<String> errors = _Return.stream().map(bapiRet2 -> {
             if (bapiRet2.getType() != 'E') {
                 return null;
             }
@@ -152,9 +151,33 @@ public class DOPostingPGIBapi implements Serializable {
             if (bapiRet2.getMessageV4() != null && !bapiRet2.getMessageV4().trim().isEmpty()) {
                 msg += bapiRet2.getMessageV4() + " ";
             }
-
             return msg;
         }).filter(t -> t != null).collect(Collectors.toList());
+        
+        List<String> normals = _Return.stream().map(bapiRet2 -> {
+            if (bapiRet2.getType() == 'E') {
+                return null;
+            }
+            if (bapiRet2.getMessage() != null && !bapiRet2.getMessage().trim().isEmpty()) {
+                return bapiRet2.getMessage().trim();
+            }
+            String msg = "";
+            if (bapiRet2.getMessageV1() != null && !bapiRet2.getMessageV1().trim().isEmpty()) {
+                msg += bapiRet2.getMessageV1() + " ";
+            }
+            if (bapiRet2.getMessageV2() != null && !bapiRet2.getMessageV2().trim().isEmpty()) {
+                msg += bapiRet2.getMessageV2() + " ";
+            }
+            if (bapiRet2.getMessageV3() != null && !bapiRet2.getMessageV3().trim().isEmpty()) {
+                msg += bapiRet2.getMessageV3() + " ";
+            }
+            if (bapiRet2.getMessageV4() != null && !bapiRet2.getMessageV4().trim().isEmpty()) {
+                msg += bapiRet2.getMessageV4() + " ";
+            }
+            return msg;
+        }).filter(t -> t != null).collect(Collectors.toList());
+        
+        return errors.size()> 0 ? errors : normals;
     }
 
     @Override
