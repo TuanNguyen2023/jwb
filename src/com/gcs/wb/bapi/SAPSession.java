@@ -65,6 +65,24 @@ public class SAPSession {
         }
     }
 
+    public void executeInBackground(Object bapiObject) {
+        for (int i = 0; i <= 3; i++) {
+            try {
+                session.execute(bapiObject);
+                break;
+            } catch (Exception ex) {
+                logger.error(ex);
+                if (i < 3) {
+                    LoginService loginService = new LoginService();
+                    session = loginService.reconnectSapSession();
+                    continue;
+                }
+
+                throw ex;
+            }
+        }
+    }
+
     public void close() {
         session.close();
     }

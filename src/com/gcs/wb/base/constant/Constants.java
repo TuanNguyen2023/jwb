@@ -7,10 +7,7 @@ package com.gcs.wb.base.constant;
 import com.gcs.wb.model.WeighingMode;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -324,5 +321,10 @@ public class Constants {
     public static final class Groes {
 
         public static final String B50 = "B|50";
+    }
+
+    public static enum InteractiveObject {
+        SYSTEM,
+        USER
     }
 }

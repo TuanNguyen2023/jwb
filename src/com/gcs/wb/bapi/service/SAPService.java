@@ -34,6 +34,7 @@ import com.gcs.wb.bapi.helper.structure.SalesOrderStructure;
 import com.gcs.wb.bapi.helper.structure.TransportagentGetListStructure;
 import com.gcs.wb.bapi.helper.structure.VendorGetDetailStructure;
 import com.gcs.wb.base.constant.Constants;
+import com.gcs.wb.base.constant.Constants.InteractiveObject;
 import com.gcs.wb.base.converter.CustomerConverter;
 import com.gcs.wb.base.converter.MaterialConverter;
 import com.gcs.wb.base.converter.MaterialsV2Converter;
@@ -92,6 +93,7 @@ import org.jdesktop.application.ResourceMap;
  */
 public class SAPService {
 
+    InteractiveObject interactiveObject;
     EntityManager entityManager = JPAConnector.getInstance();
     EntityTransaction entityTransaction = entityManager.getTransaction();
 
@@ -117,6 +119,14 @@ public class SAPService {
     SAPSession session = WeighBridgeApp.getApplication().getSAPSession();
     org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(SAPService.class);
 
+    public SAPService() {
+        this.interactiveObject = InteractiveObject.USER;
+    }
+
+    public SAPService(InteractiveObject interactiveObject) {
+        this.interactiveObject = interactiveObject;
+    }
+
     /**
      * get Material model
      */
@@ -130,7 +140,11 @@ public class SAPService {
             MaterialGetListBapi bapi = new MaterialGetListBapi();
             try {
                 logger.info("[SAP] Get list Materials: " + bapi.toString());
-                session.execute(bapi);
+                if (interactiveObject == InteractiveObject.USER) {
+                    session.execute(bapi);
+                } else {
+                    session.executeInBackground(bapi);
+                }
                 List<MaterialGetListStructure> mats = bapi.getEtMaterial();
                 MaterialsV2Converter materialsV2Converter = new MaterialsV2Converter();
                 matsSap = materialsV2Converter.convertMaster(mats);
@@ -180,7 +194,11 @@ public class SAPService {
             MaterialGetListBapi bapi = new MaterialGetListBapi();
             try {
                 logger.info("[SAP] Get list Materials: " + bapi.toString());
-                session.execute(bapi);
+                if (interactiveObject == InteractiveObject.USER) {
+                    session.execute(bapi);
+                } else {
+                    session.executeInBackground(bapi);
+                }
                 List<MaterialGetListStructure> mats = bapi.getEtMaterial();
                 MaterialsV2Converter materialsV2Converter = new MaterialsV2Converter();
                 matsSap = materialsV2Converter.convert(mats);
@@ -242,7 +260,11 @@ public class SAPService {
             List<Vendor> venSaps = new ArrayList<>();
             try {
                 logger.info("[SAP] Get list Transport Agent: " + bapi.toString());
-                session.execute(bapi);
+                if (interactiveObject == InteractiveObject.USER) {
+                    session.execute(bapi);
+                } else {
+                    session.executeInBackground(bapi);
+                }
 
                 List<TransportagentGetListStructure> etVendors = bapi.getEtVendor();
 
@@ -304,7 +326,11 @@ public class SAPService {
         DoGetDetailBapi bapiDO = new DoGetDetailBapi();
         bapiDO.setId_do(StringUtil.paddingZero(number, 10));
         logger.info("[SAP] Get Outbound Delivery: " + bapiDO.toString());
-        session.execute(bapiDO);
+        if (interactiveObject == InteractiveObject.USER) {
+            session.execute(bapiDO);
+        } else {
+            session.executeInBackground(bapiDO);
+        }
         OutboundDeliveryConverter outboundDeliveryConverter = new OutboundDeliveryConverter();
         return outboundDeliveryConverter.convertHasParameter(bapiDO, number);
     }
@@ -320,7 +346,11 @@ public class SAPService {
         PoGetDetailBapi bPO = new PoGetDetailBapi();
         bPO.setPURCHASEORDER(poNum);
         logger.info("[SAP] Get Purchase Order: " + bPO.toString());
-        session.execute(bPO);
+        if (interactiveObject == InteractiveObject.USER) {
+            session.execute(bPO);
+        } else {
+            session.executeInBackground(bPO);
+        }
         PurchaseOrderConverter purchaseOrderConverter = new PurchaseOrderConverter();
         return purchaseOrderConverter.convertHasParameter(bPO, poNum);
 
@@ -387,7 +417,11 @@ public class SAPService {
         bBatch.setIdMatnr(matnr);
         try {
             logger.info("[SAP] Get list Batch Stock: " + bBatch.toString());
-            session.execute(bBatch);
+            if (interactiveObject == InteractiveObject.USER) {
+                session.execute(bBatch);
+            } else {
+                session.executeInBackground(bBatch);
+            }
             List<BatchStocksStructure> bBatchStocks = bBatch.getBatchStocks();
             for (BatchStocksStructure b : bBatchStocks) {
                 //BatchStock bs = batchStockRepository.findByWerksLgortMatnrCharg(configuration.getWkPlant(), b.getLgort(), b.getMatnr(), b.getCharg());
@@ -440,7 +474,11 @@ public class SAPService {
         CustomerGetDetailBapi bapiCust = new CustomerGetDetailBapi();
         bapiCust.setIdKunnr(kunnr);
         logger.info("[SAP] Get Customer: " + bapiCust.toString());
-        session.execute(bapiCust);
+        if (interactiveObject == InteractiveObject.USER) {
+            session.execute(bapiCust);
+        } else {
+            session.executeInBackground(bapiCust);
+        }
         CustomerGetDetailStructure strucCust = bapiCust.getEsKna1();
         CustomerConverter customerConverter = new CustomerConverter();
         return customerConverter.convert(strucCust);
@@ -490,7 +528,11 @@ public class SAPService {
         VendorGetDetailBapi bapiCust = new VendorGetDetailBapi();
         bapiCust.setIdLifnr(lifnr);
         logger.info("[SAP] Get Vendor: " + bapiCust.toString());
-        session.execute(bapiCust);
+        if (interactiveObject == InteractiveObject.USER) {
+            session.execute(bapiCust);
+        } else {
+            session.executeInBackground(bapiCust);
+        }
         VendorGetDetailStructure strucVendor = bapiCust.getEsLfa1();
         VendorConverter vendorConverter = new VendorConverter();
         return vendorConverter.convert(strucVendor);
@@ -511,7 +553,11 @@ public class SAPService {
             List<SLoc> slocSaps = new ArrayList<>();
             try {
                 logger.info("[SAP] Get list Slocs: " + bSloc.toString());
-                session.execute(bSloc);
+                if (interactiveObject == InteractiveObject.USER) {
+                    session.execute(bSloc);
+                } else {
+                    session.executeInBackground(bSloc);
+                }
                 List<SLocsGetListStructure> tdSLocs = bSloc.getTdSLocs();
                 for (SLocsGetListStructure s : tdSLocs) {
                     SLoc sloc = new SLoc(s.getLgort());
@@ -566,7 +612,11 @@ public class SAPService {
             List<TransportAgent> transportSaps = new ArrayList<>();
             try {
                 logger.info("[SAP] Get list Transport Agent: " + bapi.toString());
-                session.execute(bapi);
+                if (interactiveObject == InteractiveObject.USER) {
+                    session.execute(bapi);
+                } else {
+                    session.executeInBackground(bapi);
+                }
                 List<TransportagentGetListStructure> transports = bapi.getEtVendor();
                 TransportAgentsConverter transportAgentsConverter = new TransportAgentsConverter();
                 transportSaps = transportAgentsConverter.convert(transports);
@@ -658,7 +708,11 @@ public class SAPService {
         bapi.setId_matnr(matnr);
         try {
             logger.info("[SAP] Get Material detail: " + bapi.toString());
-            session.execute(bapi);
+            if (interactiveObject == InteractiveObject.USER) {
+                session.execute(bapi);
+            } else {
+                session.executeInBackground(bapi);
+            }
             MatGetDetailStructure bapiResult = bapi.getEs_makt();
             MaterialConverter materialConverter = new MaterialConverter();
             result = materialConverter.convert(bapiResult);
@@ -719,7 +773,11 @@ public class SAPService {
         //soCheck.setVbeln(soNumber);
         bapi.setSOCheck(soChecks);
         logger.info("[SAP] Check SO: " + bapi.toString());
-        session.execute(bapi);
+        if (interactiveObject == InteractiveObject.USER) {
+            session.execute(bapi);
+        } else {
+            session.executeInBackground(bapi);
+        }
         List<DOCheckStructure> dos = bapi.getDOCheck();
         if (dos != null) {
             return dos;
@@ -737,7 +795,11 @@ public class SAPService {
         bapi.setIvKschl(vendorType);
         try {
             logger.info("[SAP] Validate Vendor: " + bapi.toString());
-            session.execute(bapi);
+            if (interactiveObject == InteractiveObject.USER) {
+                session.execute(bapi);
+            } else {
+                session.executeInBackground(bapi);
+            }
             String bapiResult = bapi.getEvReturn();
             if (bapiResult != null) {
                 return bapiResult;
@@ -752,7 +814,11 @@ public class SAPService {
         try {
             PlantGetDetailBapi plantGetDetailBapi = new PlantGetDetailBapi(configuration.getSapClient(), configuration.getWkPlant());
             logger.info("[SAP] Get SAP Setting: " + plantGetDetailBapi.toString());
-            session.execute(plantGetDetailBapi);
+            if (interactiveObject == InteractiveObject.USER) {
+                session.execute(plantGetDetailBapi);
+            } else {
+                session.executeInBackground(plantGetDetailBapi);
+            }
             HashMap vals = plantGetDetailBapi.getEsPlant();
 
             SAPSetting localSetting = sapSettingRepository.findByMandtAndWplant(mandt, wplant);
@@ -812,7 +878,11 @@ public class SAPService {
             poPostGetListBapi.setIvEndDate(now);
             poPostGetListBapi.setIvEndTime(formatTime.format(now));
             logger.info("[SAP] Get list PO/POSTO: " + poPostGetListBapi.toString());
-            session.execute(poPostGetListBapi);
+            if (interactiveObject == InteractiveObject.USER) {
+                session.execute(poPostGetListBapi);
+            } else {
+                session.executeInBackground(poPostGetListBapi);
+            }
 
             List<PODataOuboundStructure> listPO = poPostGetListBapi.getListPODataOubound();
             if (listPO != null) {
@@ -863,7 +933,11 @@ public class SAPService {
             syncContractSOGetListBapi.setIvDateT(dateT);
             syncContractSOGetListBapi.setIvOption("WB");
             logger.info("[SAP] Get list SO: " + syncContractSOGetListBapi.toString());
-            session.execute(syncContractSOGetListBapi);
+            if (interactiveObject == InteractiveObject.USER) {
+                session.execute(syncContractSOGetListBapi);
+            } else {
+                session.executeInBackground(syncContractSOGetListBapi);
+            }
 
             List<SalesOrderStructure> listSO = syncContractSOGetListBapi.getListSalesOrder();
 

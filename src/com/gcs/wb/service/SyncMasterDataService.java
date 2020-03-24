@@ -7,6 +7,7 @@ package com.gcs.wb.service;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.service.SAPService;
+import com.gcs.wb.base.constant.Constants.InteractiveObject;
 import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.SAPSetting;
@@ -34,9 +35,17 @@ public class SyncMasterDataService {
     private PurchaseOrderRepository purchaseOrderRepository = new PurchaseOrderRepository();
     private SaleOrderRepository saleOrderRepository = new SaleOrderRepository();
 
-    private SAPService sapService = new SAPService();
+    private SAPService sapService;
     private Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
     public static Logger logger = Logger.getLogger(SyncMasterDataService.class);
+
+    public SyncMasterDataService() {
+        this.sapService = new SAPService();
+    }
+
+    public SyncMasterDataService(InteractiveObject interactiveObject) {
+        this.sapService = new SAPService(interactiveObject);
+    }
 
     public void syncMasterData() throws Exception {
         logger.info("Sync master data is processing...");
@@ -65,12 +74,12 @@ public class SyncMasterDataService {
 
         logger.info("Sync PO, POSTO...");
         syncPoPostoDatas();
-        
+
         logger.info("Sync SO...");
         syncSoDatas();
 
         logger.info("Sync master data is finished...");
-        
+
         logger.info("Restart app...");
         WeighBridgeApp.getApplication().restartApplication();
     }
@@ -84,7 +93,7 @@ public class SyncMasterDataService {
         logger.info("Sync SAP setting...");
         SAPSetting sapSetting = syncSapSetting();
         WeighBridgeApp.getApplication().setSapSetting(sapSetting);
-        
+
         logger.info("Sync vendor...");
         if (!vendorRepository.hasData(mandt, wplant)) {
             syncVendor();
@@ -117,7 +126,7 @@ public class SyncMasterDataService {
         if (!purchaseOrderRepository.hasData()) {
             syncPoPostoDatas();
         }
-        
+
         logger.info("Sync SO...");
         if (!saleOrderRepository.hasData()) {
             syncSoDatas();
@@ -150,7 +159,7 @@ public class SyncMasterDataService {
     public void syncPoPostoDatas() throws Exception {
         sapService.syncPoPostoDatas();
     }
-    
+
     public void syncSoDatas() {
         sapService.syncSoDatas();
     }
