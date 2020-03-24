@@ -2322,6 +2322,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
     }
 
     private void prepareOutPlantPlant() {
+        lblPlateNoN.setText(resourceMapMsg.getString("lblVehicleNo"));
         showComponent(txtTicketIdN, lblTicketIdN, true, true);
         showComponent(txtWeightTickerRefN, lblWeightTickerRefN, false, false);
         showComponent(txtRegisterIdN, lblRegisterIdN, true, true);
