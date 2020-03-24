@@ -28,6 +28,7 @@ import javax.swing.JList;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.ResourceMap;
+import org.jdesktop.application.Task;
 
 /**
  *
@@ -80,6 +81,8 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
 
         cbxVehicleType.setModel(transportAgentController.getVehicleTypesModel());
         cbxVehicleType.setSelectedIndex(-1);
+        
+        btnLoad.doClick();
     }
 
     /**
@@ -92,6 +95,7 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
     private void initComponents() {
         bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
+        btnLoad = new javax.swing.JButton();
         pnTransportAgent = new javax.swing.JPanel();
         spnTransportAgent = new javax.swing.JScrollPane();
         lstTransportAgent = new javax.swing.JList();
@@ -109,10 +113,15 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
         lblVehicleType = new javax.swing.JLabel();
         cbxVehicleType = new javax.swing.JComboBox();
 
+        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getActionMap(TransportAgentView.class, this);
+        btnLoad.setAction(actionMap.get("LoadTransportAgent")); // NOI18N
+        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(TransportAgentView.class);
+        btnLoad.setText(resourceMap.getString("btnLoad.text")); // NOI18N
+        btnLoad.setName("btnLoad"); // NOI18N
+
         setClosable(true);
         setMaximizable(true);
         setResizable(true);
-        org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(TransportAgentView.class);
         setTitle(resourceMap.getString("Form.title")); // NOI18N
         setName("Form"); // NOI18N
 
@@ -121,7 +130,6 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
 
         spnTransportAgent.setName("spnTransportAgent"); // NOI18N
 
-        lstTransportAgent.setModel(getTransportAgentsModel());
         lstTransportAgent.setCellRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(
@@ -147,7 +155,7 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
         pnTransportAgent.setLayout(pnTransportAgentLayout);
         pnTransportAgentLayout.setHorizontalGroup(
             pnTransportAgentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnTransportAgentLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnTransportAgentLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(spnTransportAgent, javax.swing.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE)
                 .addContainerGap())
@@ -155,7 +163,7 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
         pnTransportAgentLayout.setVerticalGroup(
             pnTransportAgentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnTransportAgentLayout.createSequentialGroup()
-                .addComponent(spnTransportAgent, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE)
+                .addComponent(spnTransportAgent, javax.swing.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -207,7 +215,6 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
             }
         });
 
-        javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getActionMap(TransportAgentView.class, this);
         btnVehicleSave.setAction(actionMap.get("saveVehicle")); // NOI18N
         btnVehicleSave.setText(resourceMap.getString("btnVehicleSave.text")); // NOI18N
         btnVehicleSave.setName("btnVehicleSave"); // NOI18N
@@ -288,7 +295,7 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
         pnVehicleLayout.setVerticalGroup(
             pnVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnVehicleLayout.createSequentialGroup()
-                .addComponent(spnVehicle, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
+                .addComponent(spnVehicle, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(pnVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblLicensePlate)
@@ -522,8 +529,47 @@ private void cbxVehicleTypeActionPerformed(java.awt.event.ActionEvent evt) {//GE
         this.vehicleCreatable = b;
         firePropertyChange("vehicleCreatable", old, isVehicleCreatable());
     }
+
+    @Action(block = Task.BlockingScope.ACTION)
+    public Task LoadTransportAgent() {
+        return new LoadTransportAgentTask(Application.getInstance(com.gcs.wb.WeighBridgeApp.class));
+    }
+
+    private class LoadTransportAgentTask extends Task<Object, Void> {
+
+        DefaultListModel model = null;
+
+        LoadTransportAgentTask(Application app) {
+            super(app);
+        }
+
+        @Override
+        protected Object doInBackground() {
+            setProgress(1, 0, 2);
+            setMessage(resourceMapMsg.getString("msg.syncData"));
+            model = getTransportAgentsModel();
+
+            return null;
+        }
+
+        @Override
+        protected void succeeded(Object result) {
+            setProgress(2, 0, 2);
+            setMessage(resourceMapMsg.getString("msg.finished"));
+
+            lstTransportAgent.setModel(model);
+        }
+
+        @Override
+        protected void failed(Throwable thrwbl) {
+            setProgress(2, 0, 2);
+            setMessage(resourceMapMsg.getString("msg.failed"));
+        }
+    }
+
     // </editor-fold>
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnLoad;
     private javax.swing.JButton btnVehicleRemove;
     private javax.swing.JButton btnVehicleSave;
     private javax.swing.JComboBox cbxVehicleType;
