@@ -58,6 +58,9 @@
 		<parameter name="P_STAGE2" class="java.lang.Boolean" isForPrompting="false"/>
 		<parameter name="P_FREE" class="java.lang.String"/>
 		<parameter name="P_TOTAL_QTY_REG" class="java.lang.String"/>
+		<parameter name="P_MAT_DOC" class="java.lang.String">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
 		<queryString>
 			<![CDATA[p_report_online_outbound_detail $P{P_MANDT},$P{P_DEL_NUM}]]>
 		</queryString>
@@ -84,7 +87,7 @@
 	<parameter name="P_TOTAL_QTY" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="P_TOTAL_QTY_REG" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="P_FREE" class="java.lang.String" isForPrompting="false"/>
-	<parameter name="P_MAT_DOC" class="java.lang.String"/>
+	<parameter name="P_MAT_DOC" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="P_SSCALE" class="java.math.BigDecimal" isForPrompting="false"/>
 	<parameter name="P_GQTY" class="java.math.BigDecimal"/>
 	<parameter name="P_ADDRESS" class="java.lang.String"/>
@@ -487,7 +490,7 @@ $F{RECV_LGORT} != null ? $F{RECV_LGORT} : null]]></textFieldExpression>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$P{P_SSCALE}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[!($P{P_MAT_DOC} != null && !$P{P_MAT_DOC}.trim().isEmpty()) ? "" : $P{P_SSCALE}]]></textFieldExpression>
 				</textField>
 				<rectangle>
 					<reportElement x="427" y="60" width="32" height="20"/>
@@ -530,7 +533,7 @@ $F{RECV_LGORT} != null ? $F{RECV_LGORT} : null]]></textFieldExpression>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression><![CDATA[($F{DISSOLVED} == null || $F{DISSOLVED} == false) ? $P{P_GQTY} : null]]></textFieldExpression>
+					<textFieldExpression><![CDATA[($F{DISSOLVED} == null || $F{DISSOLVED} == false) && ($P{P_MAT_DOC} != null && !$P{P_MAT_DOC}.trim().isEmpty()) ? $P{P_GQTY} : null]]></textFieldExpression>
 				</textField>
 				<rectangle>
 					<reportElement x="427" y="80" width="117" height="20"/>
@@ -796,7 +799,7 @@ $F{RECV_LGORT} != null ? $F{RECV_LGORT} : null]]></textFieldExpression>
 								<textElement textAlignment="Right" verticalAlignment="Middle">
 									<font fontName="DejaVu Sans" size="8"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$P{P_STAGE2} != true ? "" : ($F{outb_details_GOODS_QTY} != null) ? $F{outb_details_GOODS_QTY} : ($F{outb_details_LFIMG} != null) ?$F{outb_details_LFIMG} : ""]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$P{P_STAGE2} != true || !($P{P_MAT_DOC} != null && !$P{P_MAT_DOC}.trim().isEmpty()) ? "" : ($F{outb_details_GOODS_QTY} != null) ? $F{outb_details_GOODS_QTY} : ($F{outb_details_LFIMG} != null) ?$F{outb_details_LFIMG} : ""]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -909,7 +912,7 @@ $F{RECV_LGORT} != null ? $F{RECV_LGORT} : null]]></textFieldExpression>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8" isBold="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$P{P_STAGE2} != true ? "" : ($P{P_TOTAL_QTY_REALITY} != null) ? $P{P_TOTAL_QTY_REALITY} : ($F{G_QTY} == null) ? "" : $P{P_GQTY}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{P_STAGE2} != true || !($P{P_MAT_DOC} != null && !$P{P_MAT_DOC}.trim().isEmpty()) ? "" : ($P{P_TOTAL_QTY_REALITY} != null) ? $P{P_TOTAL_QTY_REALITY} : ($F{G_QTY} == null) ? "" : $P{P_GQTY}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0.000;-#,##0.000" isBlankWhenNull="true">
 					<reportElement x="212" y="0" width="54" height="15"/>

@@ -3889,8 +3889,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     entityManager.merge(item);
                     entityManager.getTransaction().commit();
                 }
-                // set enable for button print
-                btnReprint.setEnabled(false);
             }
             return null;
         }
