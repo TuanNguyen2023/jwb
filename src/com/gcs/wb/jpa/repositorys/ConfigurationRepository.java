@@ -4,6 +4,7 @@
  */
 package com.gcs.wb.jpa.repositorys;
 
+import com.gcs.wb.base.util.ExceptionUtil;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.Configuration;
 import java.util.List;
@@ -20,16 +21,21 @@ import org.apache.log4j.Logger;
 public class ConfigurationRepository {
 
     EntityManager entityManager = JPAConnector.getInstance();
-    Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
+    Logger logger = Logger.getLogger(this.getClass());
 
     public Configuration getConfiguration(String wbId) {
-        TypedQuery<Configuration> typedQuery = entityManager.createNamedQuery("Configuration.findByWbId", Configuration.class);
-        typedQuery.setParameter("wbId", wbId);
-        List<Configuration> configurations = typedQuery.getResultList();
-        if (configurations != null && configurations.size() > 0) {
-            return configurations.get(0);
+        try {
+            TypedQuery<Configuration> typedQuery = entityManager.createNamedQuery("Configuration.findByWbId", Configuration.class);
+            typedQuery.setParameter("wbId", wbId);
+            List<Configuration> configurations = typedQuery.getResultList();
+            if (configurations != null && configurations.size() > 0) {
+                return configurations.get(0);
+            }
+        } catch (Exception ex) {
+            logger.error(null, ex);
+            ExceptionUtil.checkDatabaseDisconnectedException(ex);
         }
-        
+
         return null;
     }
 

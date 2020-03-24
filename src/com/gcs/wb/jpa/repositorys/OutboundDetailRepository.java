@@ -4,6 +4,7 @@
  */
 package com.gcs.wb.jpa.repositorys;
 
+import com.gcs.wb.base.util.ExceptionUtil;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.OutboundDeliveryDetail;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ import org.apache.log4j.Logger;
 public class OutboundDetailRepository {
 
     EntityManager entityManager = JPAConnector.getInstance();
-    Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
+    Logger logger = Logger.getLogger(this.getClass());
 
     public List<OutboundDeliveryDetail> findByDeliveryOrderNo(String deliv_numb) {
 
@@ -30,7 +31,9 @@ public class OutboundDetailRepository {
             result = nq.getResultList();
         } catch (Exception ex) {
             logger.error(null, ex);
+            ExceptionUtil.checkDatabaseDisconnectedException(ex);
         }
+
         return result;
     }
 
@@ -43,7 +46,9 @@ public class OutboundDetailRepository {
             result = nq.getResultList();
         } catch (Exception ex) {
             logger.error(null, ex);
+            ExceptionUtil.checkDatabaseDisconnectedException(ex);
         }
+
         return result;
     }
 
@@ -55,7 +60,9 @@ public class OutboundDetailRepository {
             result = nq.getResultList();
         } catch (Exception ex) {
             logger.error(null, ex);
+            ExceptionUtil.checkDatabaseDisconnectedException(ex);
         }
+
         return result;
     }
 }

@@ -4,6 +4,7 @@
  */
 package com.gcs.wb.jpa.repositorys;
 
+import com.gcs.wb.base.util.ExceptionUtil;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
 import java.util.List;
@@ -18,7 +19,7 @@ import org.apache.log4j.Logger;
 public class OutboundDeliveryRepository {
 
     EntityManager entityManager = JPAConnector.getInstance();
-    Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
+    Logger logger = Logger.getLogger(this.getClass());
 
     public OutboundDelivery findByDeliveryOrderNo(String deliveryOrderNo) {
         OutboundDelivery outbDel = null;
@@ -32,8 +33,9 @@ public class OutboundDeliveryRepository {
 
         } catch (Exception ex) {
             logger.error(null, ex);
-
+            ExceptionUtil.checkDatabaseDisconnectedException(ex);
         }
+
         return outbDel;
     }
 }

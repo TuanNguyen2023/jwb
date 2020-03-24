@@ -70,6 +70,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
     private boolean isValidWeight = false;
     private boolean isValidVendorLoad = false;
     private boolean isValidVendorTransport = false;
+    private boolean isValidSloc = false;
     private BigDecimal numCheckWeight = BigDecimal.ZERO;
     private String plateNoValidDO = "";
     private boolean isValidPlateNo = false;
@@ -116,8 +117,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         cbxModeSearch.setModel(new DefaultComboBoxModel<>(ModeEnum.values()));
         cbxStatus.setModel(new DefaultComboBoxModel<>(StatusEnum.values()));
 
-        SearchWeightTicketTask t = new SearchWeightTicketTask(WeighBridgeApp.getApplication());
-        t.execute();
+        btnFind.doClick();
     }
 
     private void initTableEvent() {
@@ -1500,7 +1500,7 @@ private void cbxBatchStockNActionPerformed(java.awt.event.ActionEvent evt) {//GE
 }//GEN-LAST:event_cbxBatchStockNActionPerformed
 
 private void cbxSloc2NActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxSloc2NActionPerformed
-    loadBatchStockModel(cbxSloc2N, cbxBatchStock2N, false);
+    loadBatchStockModel2N(cbxSloc2N, cbxBatchStock2N, false);
 }//GEN-LAST:event_cbxSloc2NActionPerformed
 
 private void cbxBatchStock2NActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxBatchStock2NActionPerformed
@@ -1593,7 +1593,7 @@ private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//
 
     // load batch stock
     loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
-    loadBatchStockModel(cbxSloc2N, cbxBatchStock2N, false);
+    loadBatchStockModel2N(cbxSloc2N, cbxBatchStock2N, false);
 }//GEN-LAST:event_cbxMaterialTypeNActionPerformed
 
 private void cbxVendorLoadingNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxVendorLoadingNActionPerformed
@@ -2508,7 +2508,8 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 isValid = validateOutPlantPlant() && isValidPO && isValidVendorLoad && isValidVendorTransport && isValidPlateNo;
                 break;
             case OUT_SLOC_SLOC:
-                isValid = validateOutSlocSloc() && isValidPO && (isValidPOSTO || txtPOSTONumN.getText().trim().isEmpty()) && isValidVendorTransport && isValidPlateNo;
+                isValid = validateOutSlocSloc() && isValidPO && (isValidPOSTO || txtPOSTONumN.getText().trim().isEmpty())
+                        && isValidVendorTransport && isValidPlateNo && isValidSloc;
                 break;
             case OUT_PULL_STATION:
                 isValid = validateOutPullStation() && isValidPO && isValidPOSTO && isValidVendorLoad && isValidVendorTransport && isValidPlateNo;
@@ -2748,8 +2749,8 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         }
 
         boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
-        boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
-        boolean isSloc2Valid = wtRegisValidation.validateCbxSelected(cbxSloc2N.getSelectedIndex(), lblSloc2N);
+        boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN) && isValidSloc;
+        boolean isSloc2Valid = wtRegisValidation.validateCbxSelected(cbxSloc2N.getSelectedIndex(), lblSloc2N) && isValidSloc;
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
                 && isCMNDBLValid && isSalanValid
@@ -2837,12 +2838,90 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
     }
 
     private void loadBatchStockModel(JComboBox slocComponent, JComboBox batchStockComponent, boolean isSloc) {
+            batchStockComponent.setModel(new DefaultComboBoxModel());
+        if (slocComponent.getSelectedIndex() == -1) {
+            return;
+        }
+
+        //lblSloc2N.setBackground(Color.black);
+        SLoc sloc = (SLoc) slocComponent.getSelectedItem();
+        if(modeDetail == MODE_DETAIL.OUT_SLOC_SLOC
+                && cbxSloc2N.getSelectedIndex() != -1) {
+            SLoc sloc2N = (SLoc) cbxSloc2N.getSelectedItem();
+            if(sloc.getLgort().equals(sloc2N.getLgort())) {
+                JOptionPane.showMessageDialog(rootPane,
+                    resourceMapMsg.getString("msg.slocDuplicate"),
+                    "Warning", JOptionPane.WARNING_MESSAGE);
+                isValidSloc = false;
+                cbxBatchStockN.setSelectedIndex(-1);
+                lblSlocN.setForeground(Color.red);
+                btnSave.setEnabled(false);
+                return;
+            }
+        }
+        isValidSloc = true;
+        if (newWeightTicket != null) {
+            if (isSloc) {
+                newWeightTicket.setLgort(sloc.getLgort());
+            } else {
+                newWeightTicket.setRecvLgort(sloc.getLgort());
+            }
+
+            List<WeightTicketDetail> weightTicketDetails = newWeightTicket.getWeightTicketDetails();
+            String[] arr_matnr;
+            if (weightTicketDetails.size() > 0
+                    && !(modeDetail == MODE_DETAIL.IN_OTHER || modeDetail == MODE_DETAIL.OUT_OTHER || modeDetail == MODE_DETAIL.OUT_SLOC_SLOC)) {
+                arr_matnr = weightTicketDetails.stream().map(item -> item.getMatnrRef()).toArray(String[]::new);
+            } else {
+                arr_matnr = new String[]{newWeightTicket.getRecvMatnr()};
+            }
+
+            List<BatchStock> batchStocks = weightTicketRegistarationController.getBatchStocks(sloc, arr_matnr);
+            batchStockComponent.setModel(weightTicketRegistarationController.getBatchStockModel(batchStocks));
+
+            if (isSloc && checkedCharg != null && !checkedCharg.isEmpty()
+                    && (modeDetail == MODE_DETAIL.IN_PO_PURCHASE || modeDetail == MODE_DETAIL.IN_WAREHOUSE_TRANSFER)) {
+                BatchStock batchStock = batchStocks.stream()
+                        .filter(t -> checkedCharg.equalsIgnoreCase(t.getCharg()))
+                        .findFirst()
+                        .orElse(null);
+
+                if (batchStock != null) {
+                    batchStockComponent.setSelectedItem(batchStock);
+                } else {
+                    batchStockComponent.setSelectedIndex(batchStocks.size() > 0 ? 0 : -1);
+                }
+            } else {
+                batchStockComponent.setSelectedIndex(batchStocks.size() > 0 ? 0 : -1);
+            }
+        }
+
+        validateForm();
+    }
+    
+    private void loadBatchStockModel2N(JComboBox slocComponent, JComboBox batchStockComponent, boolean isSloc) {
         if (slocComponent.getSelectedIndex() == -1) {
             batchStockComponent.setModel(new DefaultComboBoxModel());
             return;
         }
 
+        isValidSloc = true;
         SLoc sloc = (SLoc) slocComponent.getSelectedItem();
+        if(modeDetail == MODE_DETAIL.OUT_SLOC_SLOC
+                && cbxSlocN.getSelectedIndex() != -1) {
+            SLoc sloc2N = (SLoc) cbxSlocN.getSelectedItem();
+            if(sloc.getLgort().equals(sloc2N.getLgort())) {
+                JOptionPane.showMessageDialog(rootPane,
+                    resourceMapMsg.getString("msg.slocDuplicate"),
+                    "Warning", JOptionPane.WARNING_MESSAGE);
+                isValidSloc = false;
+                cbxBatchStock2N.setSelectedIndex(-1);
+                lblSloc2N.setForeground(Color.red);
+                btnSave.setEnabled(false);
+                return;
+            }
+        }
+        
         if (newWeightTicket != null) {
             if (isSloc) {
                 newWeightTicket.setLgort(sloc.getLgort());
@@ -2959,53 +3038,46 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
 
         @SuppressWarnings("unchecked")
         @Override
-        protected Object doInBackground() {
-            try {
-                setProgress(0, 0, 4);
-                weightTicketList.clear();
+        protected Object doInBackground() throws Exception {
+            setProgress(0, 0, 4);
+            weightTicketList.clear();
 
-                setProgress(1, 0, 4);
-                setMessage(resourceMapMsg.getString("msg.getData"));
+            setProgress(1, 0, 4);
+            setMessage(resourceMapMsg.getString("msg.getData"));
 
-                Object[] select = cbxMaterialType.getSelectedObjects();
-                com.gcs.wb.jpa.entity.Material material = (com.gcs.wb.jpa.entity.Material) select[0];
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                String from = format.format(dpDateFrom.getDate());
-                String to = format.format(dpDateTo.getDate());
-                StatusEnum status = (StatusEnum) cbxStatus.getSelectedItem();
-                status = status != null ? status : StatusEnum.ALL;
-                List<WeightTicket> result = weightTicketRegistarationController.findListWeightTicket(from, to,
-                        txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim(),
-                        material.getMatnr(), status,
-                        (ModeEnum) cbxModeSearch.getSelectedItem());
+            Object[] select = cbxMaterialType.getSelectedObjects();
+            com.gcs.wb.jpa.entity.Material material = (com.gcs.wb.jpa.entity.Material) select[0];
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            String from = format.format(dpDateFrom.getDate());
+            String to = format.format(dpDateTo.getDate());
+            StatusEnum status = (StatusEnum) cbxStatus.getSelectedItem();
+            status = status != null ? status : StatusEnum.ALL;
+            List<WeightTicket> result = weightTicketRegistarationController.findListWeightTicket(from, to,
+                    txtCreator.getText().trim(), txtDriverName.getText().trim(), txtPlateNo.getText().trim(),
+                    material.getMatnr(), status,
+                    (ModeEnum) cbxModeSearch.getSelectedItem());
 
-                result = filterHours(result, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
+            result = filterHours(result, cbxHourFrom.getSelectedItem().toString(), cbxHourTo.getSelectedItem().toString());
 
-                setProgress(2, 0, 4);
-                setMessage(resourceMapMsg.getString("msg.handleDate"));
-                weightTicketList.addAll(result);
-                wtData = new Object[weightTicketList.size()][wtCols.length];
+            setProgress(2, 0, 4);
+            setMessage(resourceMapMsg.getString("msg.handleDate"));
+            weightTicketList.addAll(result);
+            wtData = new Object[weightTicketList.size()][wtCols.length];
 
-                setWeightTicketData();
+            setWeightTicketData();
 
-                setProgress(3, 0, 4);
-                editable = new boolean[wtCols.length];
-                for (int i = 0; i < editable.length; i++) {
-                    editable[i] = false;
-                }
-                setProgress(4, 0, 4);
-            } catch (Exception ex) {
-                failed(ex);
+            setProgress(3, 0, 4);
+            editable = new boolean[wtCols.length];
+            for (int i = 0; i < editable.length; i++) {
+                editable[i] = false;
             }
+            setProgress(4, 0, 4);
+
             return null;
         }
 
         @Override
         protected void succeeded(Object result) {
-        }
-
-        @Override
-        protected void finished() {
             setMessage(resourceMapMsg.getString("msg.finished"));
             WeighBridgeApp.getApplication().bindJTableModel(tabResults, wtData, wtCols, wtTypes, editable);
 
@@ -3500,8 +3572,8 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             } catch (Exception ex) {
                 btnSave.setEnabled(true);
             }
-            SearchWeightTicketTask t = new SearchWeightTicketTask(this.getApplication());
-            t.execute();
+            
+            btnFind.doClick();
 
             return null;
         }

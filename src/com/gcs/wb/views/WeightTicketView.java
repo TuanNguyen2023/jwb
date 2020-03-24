@@ -3108,7 +3108,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                             weightTicket.setPosted(false);
                         }
                     } else {
-                        bapi_message = resourceMapMsg.getString("msg.postOfflien");
+                        bapi_messages.add(resourceMapMsg.getString("msg.postOfflien"));
                         weightTicketDetail.setPosted(false);
                         weightTicket.setPosted(false);
                         weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
@@ -3191,9 +3191,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                     weightTicketDetail.setMatDoc(((DOCreate2PGIBapi) objBapi).getMatDoc());
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((DOCreate2PGIBapi) objBapi).getDocYear()));
                                     try {
-                                        bapi_message = ((DOCreate2PGIBapi) objBapi).getReturnMessage().toString();
+                                        bapi_messages = ((DOCreate2PGIBapi) objBapi).getReturnMessage();
                                     } catch (Exception Ex) {
-                                        bapi_message = resourceMapMsg.getString("msg.errorSAP3048");
+                                        bapi_messages.add(resourceMapMsg.getString("msg.errorSAP"));
                                     }
                                     for (int k = 0; k < outDetails_lits.size(); k++) {
                                         details_item = outDetails_lits.get(k);
@@ -3204,14 +3204,14 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                         }
                                         if (((DOCreate2PGIBapi) objBapi).getMatDoc() == null) {
                                             details_item.setPosted(false);
-                                            details_item.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                            details_item.setUpdatedDate(now);
                                             outbDel.setPosted(false);
                                             outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                             flag_fail = true;
                                         } else {
                                             details_item.setPosted(true);
                                             outbDel.setPosted(true);
-                                            details_item.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                            details_item.setUpdatedDate(now);
                                             outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                         }
 
@@ -3234,9 +3234,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                     weightTicketDetail.setMatDoc(((GoodsMvtPoCreateBapi) objBapi).getMatDoc());
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((GoodsMvtPoCreateBapi) objBapi).getMatYear()));
                                     try {
-                                        bapi_message = ((GoodsMvtPoCreateBapi) objBapi).getReturnMessage().toString();
+                                        bapi_messages = ((GoodsMvtPoCreateBapi) objBapi).getReturnMessage();
                                     } catch (Exception Ex) {
-                                        bapi_message = resourceMapMsg.getString("msg.errorSAP3086");
+                                        bapi_messages.add(resourceMapMsg.getString("msg.errorSAP"));
                                     }
                                     for (int k = 0; k < outDetails_lits.size(); k++) {
                                         details_item = outDetails_lits.get(k);
@@ -3248,13 +3248,13 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                         if (((GoodsMvtPoCreateBapi) objBapi).getMatDoc() == null) {
                                             details_item.setPosted(false);
                                             outbDel.setPosted(false);
-                                            details_item.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                            details_item.setUpdatedDate(now);
                                             outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                             flag_fail = true;
                                         } else {
                                             details_item.setPosted(true);
                                             outbDel.setPosted(true);
-                                            details_item.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                            details_item.setUpdatedDate(now);
                                             outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                         }
                                         if (!entityManager.getTransaction().isActive()) {
@@ -3277,9 +3277,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                     weightTicketDetail.setMatDoc(((GoodsMvtDoCreateBapi) objBapi).getMatDoc());
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((GoodsMvtDoCreateBapi) objBapi).getMatYear()));
                                     try {
-                                        bapi_message = ((GoodsMvtDoCreateBapi) objBapi).getReturnMessage().toString();
+                                        bapi_messages = ((GoodsMvtDoCreateBapi) objBapi).getReturnMessage();
                                     } catch (Exception Ex) {
-                                        bapi_message = resourceMapMsg.getString("msg.errorSAP3123");
+                                        bapi_messages.add(resourceMapMsg.getString("msg.errorSAP"));
                                     }
                                     for (int k = 0; k < outDetails_lits.size(); k++) {
                                         details_item = outDetails_lits.get(k);
@@ -3291,13 +3291,13 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                         if (((GoodsMvtDoCreateBapi) objBapi).getMatDoc() == null) {
                                             details_item.setPosted(false);
                                             outbDel.setPosted(false);
-                                            details_item.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                            details_item.setUpdatedDate(now);
                                             outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                             flag_fail = true;
                                         } else {
                                             details_item.setPosted(true);
                                             outbDel.setPosted(true);
-                                            details_item.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                            details_item.setUpdatedDate(now);
                                             outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
                                         }
                                         if (!entityManager.getTransaction().isActive()) {
@@ -3320,9 +3320,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                     weightTicketDetail.setDocYear(IntegerUtil.valueOf(((WsDeliveryUpdateBapi) objBapi).getDoc_year()));
 
                                     try {
-                                        bapi_message = ((WsDeliveryUpdateBapi) objBapi).getReturnMessage().toString();
+                                        bapi_messages = ((WsDeliveryUpdateBapi) objBapi).getReturnMessage();
                                     } catch (Exception Ex) {
-                                        bapi_message = resourceMapMsg.getString("msg.errorSAP3160");
+                                        bapi_messages.add(resourceMapMsg.getString("msg.errorSAP"));
                                     }
 
                                     for (int k = 0; k < outDetails_lits.size(); k++) {
@@ -3330,25 +3330,19 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                         if (details_item.getDeliveryOrderNo().equals(outbDel.getDeliveryOrderNo())) {
                                             details_item.setMatDoc(((WsDeliveryUpdateBapi) objBapi).getMat_doc());
                                             details_item.setDocYear(((WsDeliveryUpdateBapi) objBapi).getDoc_year());
-                                            outbDel.setMatDoc(((WsDeliveryUpdateBapi) objBapi).getMat_doc());
                                         }
                                         if (((WsDeliveryUpdateBapi) objBapi).getMat_doc() == null) {
                                             details_item.setPosted(false);
-                                            outbDel.setPosted(false);
-                                            details_item.setUpdatedDate(new java.sql.Date(now.getTime()));
-                                            outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                            details_item.setUpdatedDate(now);
                                             flag_fail = true;
                                         } else {
                                             details_item.setPosted(true);
-                                            outbDel.setPosted(true);
-                                            details_item.setUpdatedDate(new java.sql.Date(now.getTime()));
-                                            outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                            details_item.setUpdatedDate(now);
                                         }
 
                                         if (!entityManager.getTransaction().isActive()) {
                                             entityManager.getTransaction().begin();
                                         }
-                                        entityManager.merge(outbDel);
                                         entityManager.merge(details_item);
                                         entityManager.getTransaction().commit();
                                     }
@@ -3366,10 +3360,10 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                     revertCompletedDO(completedDO, outDetails_lits, outbDel_list);
                                     weightTicket.setPosted(false);
                                     weightTicketDetail.setPosted(false);
-                                    if (bapi_message == "") {
-                                        bapi_message = resourceMapMsg.getString("msg.errorBAPI");
+                                    if (bapi_messages.isEmpty()) {
+                                        bapi_messages.add(resourceMapMsg.getString("msg.errorSAP"));
                                     }
-                                    JOptionPane.showMessageDialog(rootPane, bapi_message);
+                                    bapi_messages.forEach(msg -> JOptionPane.showMessageDialog(rootPane, msg));
                                     completed = false;
                                     entityManager.clear();
                                 } else if (!flag_fail) {
@@ -3596,6 +3590,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             grbBridge.clearSelection();
             btnAccept.setEnabled(false);
             boolean checkVariant = false;
+//            Date date = new Date(0L);
+//            //Setting time
+//            date.setTime(new java.util.Date().getTime());
             if (isStage1()) {
                 txfInQty.setValue(txfCurScale.getValue());
                 txtInTime.setText(formatter.format(now));
@@ -3719,8 +3716,21 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                             return null;
                         }
                     } else {
-                        txfGoodsQty.setValue(result);
-                        weightTicket.setGQty(new BigDecimal(Double.toString(result)).setScale(3, RoundingMode.HALF_UP));
+                        double upper = qty + (qty * valueUp) / 100;
+                        if ((result <= upper)) {
+                            txfGoodsQty.setValue(result);
+                            weightTicket.setGQty(new BigDecimal(Double.toString(result)).setScale(3, RoundingMode.HALF_UP));
+                        } else {
+                            String msg = "Chênh lệch vượt dung sai cho phép!";
+                            JOptionPane.showMessageDialog(rootPane, msg);
+                            txfOutQty.setValue(null);
+                            txtOutTime.setText(null);
+                            txfGoodsQty.setValue(null);
+                            weightTicket.setGQty(null);
+                            btnAccept.setEnabled(false);
+                            btnOScaleReset.setEnabled(true);
+                            return null;
+                        }
                     }
                 } else if (isSubContract() && weightTicket.getLgort() != null && weightTicket.getCharg() != null) {
                     setMessage(resourceMapMsg.getString("msg.checkIssetWarehouse"));
@@ -3754,7 +3764,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         item = outDetails_lits.get(i);
                         BigDecimal inScale = new BigDecimal(((Number) txfInQty.getValue()).doubleValue() / 1000);
                         item.setInScale(inScale.setScale(3, RoundingMode.HALF_UP));
-                        item.setUpdatedDate(new java.sql.Date(now.getTime()));
+                        item.setfTime(now);
+                        item.setUpdatedDate(now);
                         // tinh toan cho Nhap kho tu plant xuat > plant nhap
                         WeightTicket wtPlantOut = weightTicketRepository.findByDOFromPO(outbDel.getDeliveryOrderNo());
                         if((wtPlantOut != null) && (checkPlantOutToIn(item, wtPlantOut.getWplant()))) {
@@ -3770,6 +3781,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                 if ((lower <= result && result <= upper)) {
                                     item.setGoodsQty(item.getLfimg());
                                     item.setOutScale((BigDecimal.valueOf(item.getInScale().doubleValue() - item.getGoodsQty().doubleValue())).setScale(3, RoundingMode.HALF_UP));
+                                    item.setsTime(now);
                                     weightTicket.setSCreator(WeighBridgeApp.getApplication().getLogin().getUid());
                                     weightTicket.setSScale((BigDecimal.valueOf((item.getInScale().doubleValue() - item.getGoodsQty().doubleValue())* 1000)).setScale(3, RoundingMode.HALF_UP));
                                     weightTicket.setSTime(now);
@@ -3804,7 +3816,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     for (OutboundDeliveryDetail obj : outDetailFrees) {
                         obj.setGoodsQty(obj.getLfimg());
                         obj.setOutScale(obj.getInScale().add(obj.getLfimg()).setScale(3, RoundingMode.HALF_UP));
-                        obj.setUpdatedDate(new java.sql.Date(now.getTime()));
+                        obj.setsTime(now);
+                        obj.setUpdatedDate(now);
                         remain = remain - obj.getLfimg().doubleValue();
 
                         if (!entityManager.getTransaction().isActive()) {
@@ -3823,7 +3836,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         if (i < outDetails.size() - 1) {
                             item.setGoodsQty(item.getLfimg());
                             item.setOutScale(item.getInScale().add(item.getLfimg()).setScale(3, RoundingMode.HALF_UP));
-                            item.setUpdatedDate(new java.sql.Date(now.getTime()));
+                            item.setsTime(now);
+                            item.setUpdatedDate(now);
                             remain = remain - item.getLfimg().doubleValue();
                         } else {
                             if (checkVariant) {
@@ -3832,7 +3846,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                 item.setGoodsQty(BigDecimal.valueOf(remain).setScale(3, RoundingMode.HALF_UP));
                             }
                             item.setOutScale((BigDecimal.valueOf(item.getInScale().doubleValue() + remain)).setScale(3, RoundingMode.HALF_UP));
-                            item.setUpdatedDate(new java.sql.Date(now.getTime()));
+                            item.setsTime(now);
+                            item.setUpdatedDate(now);
                         }
                         if (!entityManager.getTransaction().isActive()) {
                             entityManager.getTransaction().begin();
@@ -3849,7 +3864,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     } else {
                         item.setGoodsQty((weightTicket.getSScale().subtract(weightTicket.getFScale()).divide(div).abs()).setScale(3, RoundingMode.HALF_UP));
                     }
-                    item.setUpdatedDate(new java.sql.Date(now.getTime()));
+                    item.setsTime(now);
+                    item.setUpdatedDate(now);
                     if (!entityManager.getTransaction().isActive()) {
                         entityManager.getTransaction().begin();
                     }

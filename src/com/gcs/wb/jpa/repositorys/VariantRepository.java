@@ -4,6 +4,7 @@
  */
 package com.gcs.wb.jpa.repositorys;
 
+import com.gcs.wb.base.util.ExceptionUtil;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.Variant;
 import java.util.List;
@@ -17,7 +18,7 @@ import org.apache.log4j.Logger;
  */
 public class VariantRepository {
 
-    private Logger logger = org.apache.log4j.Logger.getLogger(this.getClass());
+    private Logger logger = Logger.getLogger(this.getClass());
     EntityManager entityManager = JPAConnector.getInstance();
 
     public Variant findByParam(String param) {
@@ -31,10 +32,12 @@ public class VariantRepository {
             }
         } catch (Exception ex) {
             logger.error(null, ex);
+            ExceptionUtil.checkDatabaseDisconnectedException(ex);
         }
+
         return result;
     }
-    
+
     public Variant findByParamMandtWplant(String param, String mandt, String wplant) {
         Variant result = null;
         try {
@@ -48,7 +51,9 @@ public class VariantRepository {
             }
         } catch (Exception ex) {
             logger.error(null, ex);
+            ExceptionUtil.checkDatabaseDisconnectedException(ex);
         }
+
         return result;
     }
 }
