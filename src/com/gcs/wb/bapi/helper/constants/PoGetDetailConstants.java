@@ -89,4 +89,6 @@ public interface PoGetDetailConstants extends BapiConstants {
     String DELIV_COMPL = "DELIV_COMPL";
     /**Partial Delivery at Item Level (Stock Transfer)*/
     String PART_DELIV = "PART_DELIV";
+    
+    String POSHIPPINGEXP = "POSHIPPINGEXP";
 }

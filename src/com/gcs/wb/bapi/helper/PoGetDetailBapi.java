@@ -7,6 +7,7 @@ package com.gcs.wb.bapi.helper;
 import com.gcs.wb.bapi.helper.structure.PoGetDetailHeaderStructure;
 import com.gcs.wb.bapi.helper.structure.PoGetDetailItemStructure;
 import com.gcs.wb.bapi.helper.constants.PoGetDetailConstants;
+import com.gcs.wb.bapi.helper.structure.PoShippingExpStructure;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,11 +41,15 @@ public class PoGetDetailBapi implements Serializable {
     @Parameter(value = PoGetDetailConstants.POITEM, type = ParameterType.STRUCTURE)
     private List<PoGetDetailItemStructure> _poItems;
     @Table
+    @Parameter(value = PoGetDetailConstants.POSHIPPINGEXP, type = ParameterType.STRUCTURE)
+    private List<PoShippingExpStructure> _poShippingExp;
+    @Table
     @Parameter(value = PoGetDetailConstants.RETURN, type = ParameterType.STRUCTURE)
     private List<BapiRet2> _return;
 
     public PoGetDetailBapi() {
-        _poItems = new ArrayList<PoGetDetailItemStructure>();
+        _poItems = new ArrayList<>();
+        _poShippingExp = new ArrayList<>();
     }
 
     /**
@@ -69,6 +74,14 @@ public class PoGetDetailBapi implements Serializable {
      */
     public List<PoGetDetailItemStructure> getPoItems() {
         return _poItems;
+    }
+    
+    /**
+     * PO Shipping exp
+     * @return the _poShippingExp
+     */
+    public List<PoShippingExpStructure> getPoShippingExps() {
+        return _poShippingExp;
     }
 
     /**
