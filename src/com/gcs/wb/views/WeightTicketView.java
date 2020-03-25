@@ -2275,6 +2275,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                     sapOutbDel.setId(outbDel.getId());
                                     sapOutbDel.setPosted(outbDel.isPosted());
                                     sapOutbDel.setMatDoc(outbDel.getMatDoc());
+                                    sapOutbDel.setWeightTicketId(outbDel.getWeightTicketId());
                                     if (!entityManager.getTransaction().isActive()) {
                                         entityManager.getTransaction().begin();
                                     }
