@@ -75,6 +75,8 @@ public interface DoGetDetailConstants extends BapiConstants {
     String ZKVGR3 = "ZKVGR3";
     String ZKVGR3_TEXT = "ZKVGR3_TEXT";
     String SORT1 = "SORT1";
+    String FSCALE = "FSCALE";
+    String SSCALE = "SSCALE";
 
     // </editor-fold>
 }

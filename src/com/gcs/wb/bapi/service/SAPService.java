@@ -962,13 +962,23 @@ public class SAPService {
                     entityTransaction.begin();
                 }
 
-                if (saleOrder == null) {
+                if (saleOrder == null
+                        && (sapSaleOrder.getChanged() == null
+                        || (sapSaleOrder.getChanged() != null 
+                        && !sapSaleOrder.getChanged().equals("D")))) {
                     sapSaleOrder.setCreatedDate(new Date());
                     entityManager.persist(sapSaleOrder);
                 } else {
                     sapSaleOrder.setId(saleOrder.getId());
                     sapSaleOrder.setUpdatedDate(new Date());
                     entityManager.merge(sapSaleOrder);
+                }
+
+                if(sapSaleOrder.getChanged() != null && sapSaleOrder.getChanged().equals("D")) {
+                    SaleOrder saleOrderD = saleOrderRepository.findBySoNumber(sapSaleOrder.getSoNumber());
+                    if(saleOrderD != null) {
+                        entityManager.remove(saleOrderD);
+                    }
                 }
 
                 entityTransaction.commit();

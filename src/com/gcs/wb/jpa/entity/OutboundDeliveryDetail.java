@@ -107,6 +107,10 @@ public class OutboundDeliveryDetail implements Serializable {
     private String zkvgr3Text;
     @Column(name = "sort1")
     private String sort1;
+    @Column(name = "fscale")
+    private BigDecimal fScale;
+    @Column(name = "sscale")
+    private BigDecimal sScale;
     @ManyToOne
     @JoinColumn(name = "outbound_delivery_id")
     private OutboundDelivery outboundDelivery;
@@ -393,6 +397,22 @@ public class OutboundDeliveryDetail implements Serializable {
 
     public void setSort1(String sort1) {
         this.sort1 = sort1;
+    }
+
+    public BigDecimal getFscale() {
+        return fScale;
+    }
+
+    public void setFscale(BigDecimal fScale) {
+        this.fScale = fScale;
+    }
+
+    public BigDecimal getSscale() {
+        return sScale;
+    }
+
+    public void setSscale(BigDecimal sScale) {
+        this.sScale = sScale;
     }
 
     public OutboundDelivery getOutboundDelivery() {

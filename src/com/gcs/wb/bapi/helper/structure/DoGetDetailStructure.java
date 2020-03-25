@@ -157,6 +157,10 @@ public class DoGetDetailStructure implements Serializable {
     private String _zkvgr3Text;
     @Parameter(DoGetDetailConstants.SORT1)
     private String _sort1;
+    @Parameter(DoGetDetailConstants.FSCALE)
+    private BigDecimal _fscale;
+    @Parameter(DoGetDetailConstants.SSCALE)
+    private BigDecimal _sscale;
 
     // </editor-fold>
 
@@ -507,6 +511,22 @@ public class DoGetDetailStructure implements Serializable {
     
     public String getSort1() {
         return _sort1;
+    }
+    
+    /**
+     * fscale for Xuat plant
+     * @return the _fscale
+     */
+    public BigDecimal getFscale() {
+        return _fscale;
+    }
+
+    /**
+     * sscale for Xuat plant
+     * @return the _sscale
+     */
+    public BigDecimal getSscale() {
+        return _sscale;
     }
 
     // </editor-fold>

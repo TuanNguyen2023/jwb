@@ -3606,9 +3606,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             grbBridge.clearSelection();
             btnAccept.setEnabled(false);
             boolean checkVariant = false;
-//            Date date = new Date(0L);
-//            //Setting time
-//            date.setTime(new java.util.Date().getTime());
             if (isStage1()) {
                 txfInQty.setValue(txfCurScale.getValue());
                 txtInTime.setText(formatter.format(now));
@@ -3791,7 +3788,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                             String poNum = wtPlantOut.getWeightTicketDetail().getEbeln();
                             PurchaseOrder purchaseOrder = purchaseOrderRepository.findByPoNumber(poNum);
                             if(purchaseOrder.getPurchaseOrderDetail().getPlant().equals(configuration.getWkPlant())) {
-                                outSScalePlant = wtPlantOut.getSScale().doubleValue();
+                                outSScalePlant = item.getSscale().doubleValue();
                                 // check can 1 cua nhap voi can 2 xuat chenh lech 1%
                                 double upper = outSScalePlant + (outSScalePlant * 1) / 100;
                                 double lower = outSScalePlant - (outSScalePlant * 1) / 100;

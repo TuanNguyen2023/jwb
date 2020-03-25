@@ -126,6 +126,8 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
                 outboundDeliveryDetail.setZkvgr3(doItem.getZkvgr3());
                 outboundDeliveryDetail.setZkvgr3Text(doItem.getZkvgr3Text());
                 outboundDeliveryDetail.setSort1(doItem.getSort1());
+                outboundDeliveryDetail.setFscale(doItem.getFscale());
+                outboundDeliveryDetail.setSscale(doItem.getSscale());
 
                 outboundDelivery.addOutboundDeliveryDetail(outboundDeliveryDetail);
                 //end set data

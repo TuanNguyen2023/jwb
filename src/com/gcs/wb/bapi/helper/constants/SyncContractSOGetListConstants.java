@@ -26,6 +26,8 @@ public interface SyncContractSOGetListConstants extends BapiConstants {
     String MATNR = "MATNR";
     String MAKTX = "MAKTX";
     String KUNNR = "KUNNR";
+    String TRAID = "TRAID";
+    String WERKS = "WERKS";
     // số lượng bán
     String KWMENG = "KWMENG";
     // số lượng KM
@@ -38,4 +40,16 @@ public interface SyncContractSOGetListConstants extends BapiConstants {
     String SHIP_TO_NAME = "SHIP_TO_NAME";
     // ghi chú
     String NOTE = "NOTE";
+    // status
+    String CHANGED = "CHANGED";
+    // infor customer
+    String VSBED = "VSBED";
+    String ZKVGR1 = "ZKVGR1";
+    String ZKVGR1_TEXT = "ZKVGR1_TEXT";
+    String ZKVGR2 = "ZKVGR2";
+    String ZKVGR2_TEXT = "ZKVGR2_TEXT";
+    String ZKVGR3 = "ZKVGR3";
+    String ZKVGR3_TEXT = "ZKVGR3_TEXT";
+    String SORT1 = "SORT1";
+    
 }
