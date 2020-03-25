@@ -8,6 +8,7 @@ import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.helper.PoGetDetailBapi;
 import com.gcs.wb.bapi.helper.structure.PoGetDetailHeaderStructure;
 import com.gcs.wb.bapi.helper.structure.PoGetDetailItemStructure;
+import com.gcs.wb.bapi.helper.structure.PoShippingExpStructure;
 import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.jpa.entity.PurchaseOrder;
 import com.gcs.wb.jpa.entity.PurchaseOrderDetail;
@@ -40,11 +41,14 @@ public class PurchaseOrderConverter extends AbstractThrowableParamConverter<PoGe
         result.setCreatDate(header.getCREAT_DATE());
         result.setVendor(header.getVENDOR());
         result.setSupplVend(header.getSUPPL_VEND());
-        result.setCustomer(header.getCUSTOMER());
         result.setSupplPlnt(header.getSUPPL_PLNT());
         result.setPoRelInd(header.getPO_REL_IND() == null || header.getPO_REL_IND().trim().isEmpty() ? ' ' : header.getPO_REL_IND().charAt(0));
         result.setRelStatus(header.getREL_STATUS());
 
+        List<PoShippingExpStructure> shippingExps = from.getPoShippingExps();
+        String kunnr = shippingExps.size() > 0 ? shippingExps.get(0).getCUSTOMER() : "";
+        result.setCustomer(kunnr);
+        
         for (int i = 0; i < items.size(); i++) {
             PoGetDetailItemStructure item = items.get(i);
             PurchaseOrderDetail purchaseOrderDetail = new PurchaseOrderDetail();

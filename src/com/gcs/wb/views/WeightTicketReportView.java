@@ -18,6 +18,7 @@ import org.jdesktop.application.Task;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.base.enums.StatusEnum;
+import com.gcs.wb.base.util.ExceptionUtil;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.TransportAgent;
 import java.awt.Component;
@@ -50,6 +51,7 @@ public class WeightTicketReportView extends javax.swing.JInternalFrame {
     Object[] wtColNames = Constants.WeightTicketReport.WT_COL_NAMES;
     Class[] wtColTypes = Constants.WeightTicketReport.WT_COL_TYPES;
     public ResourceMap resourceMapMsg = Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(WeightTicketReportView.class);
+    boolean isInit = true;
 
     /**
      * Creates new form WeightTicketReportView
@@ -203,7 +205,6 @@ public class WeightTicketReportView extends javax.swing.JInternalFrame {
         lblTAgent.setText(resourceMap.getString("lblTAgent.text")); // NOI18N
         lblTAgent.setName("lblTAgent"); // NOI18N
 
-        cbxTransportAgent.setModel(getTransportAgentsModel());
         cbxTransportAgent.setName("cbxTransportAgent"); // NOI18N
         cbxTransportAgent.setRenderer(new DefaultListCellRenderer() {
             @Override
@@ -222,7 +223,6 @@ public class WeightTicketReportView extends javax.swing.JInternalFrame {
         lblType.setText(resourceMap.getString("lblType.text")); // NOI18N
         lblType.setName("lblType"); // NOI18N
 
-        cbxMaterial.setModel(getMaterialsModel());
         cbxMaterial.setName("cbxMaterial"); // NOI18N
         cbxMaterial.setRenderer(new DefaultListCellRenderer() {
             @Override
@@ -370,7 +370,7 @@ public class WeightTicketReportView extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addComponent(pnFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 426, Short.MAX_VALUE)
+                .addComponent(pnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 434, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -407,6 +407,12 @@ private void cbxModeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:
         protected Object doInBackground() throws Exception {
             setStep(1, resourceMapMsg.getString("msg.finding"));
 
+            if (isInit) {
+                cbxTransportAgent.setModel(getTransportAgentsModel());
+                cbxMaterial.setModel(getMaterialsModel());
+                isInit = false;
+            }
+
             String month = cbxMonth.getSelectedItem().toString();
             String year = cbxYear.getSelectedItem().toString();
             String tAgent = ((TransportAgent) cbxTransportAgent.getSelectedItem()).getAbbr();
@@ -432,7 +438,9 @@ private void cbxModeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:
         protected void failed(Throwable cause) {
             setStep(2, resourceMapMsg.getString("msg.finished"));
             logger.error(null, cause);
-            JOptionPane.showMessageDialog(rootPane, cause.getMessage());
+            if (!ExceptionUtil.isDatabaseDisconnectedException(cause)) {
+                JOptionPane.showMessageDialog(rootPane, cause.getMessage());
+            }
         }
 
         @Override
@@ -496,9 +504,12 @@ private void cbxModeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:
         @Override
         protected void failed(Throwable cause) {
             logger.error(null, cause);
-            JOptionPane.showMessageDialog(rootPane, cause.getMessage());
+            if (!ExceptionUtil.isDatabaseDisconnectedException(cause)) {
+                JOptionPane.showMessageDialog(rootPane, cause.getMessage());
+            }
         }
     }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnFind;
     private javax.swing.JButton btnPrintReport;

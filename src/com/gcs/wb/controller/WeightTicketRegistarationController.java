@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
@@ -53,6 +55,8 @@ public class WeightTicketRegistarationController {
     SLocRepository sLocRepository = new SLocRepository();
     CustomerRepository customerRepository = new CustomerRepository();
     WeightTicketRepository weightTicketRepository = new WeightTicketRepository();
+
+    JFrame mainFrame = WeighBridgeApp.getApplication().getMainFrame();
 
     public String getReportName() {
         String reportName = null;
@@ -125,19 +129,24 @@ public class WeightTicketRegistarationController {
 
     public DefaultComboBoxModel getListMaterial() {
 
-        List<Material> materials = wTRegService.getListMaterial();
         DefaultComboBoxModel result = new DefaultComboBoxModel();
+        try {
+            List<Material> materials = wTRegService.getListMaterial();
 
-        materials = materials.stream()
-                .filter(FunctionalUtil.distinctByKey(p -> p.getMatnr()))
-                .collect(Collectors.toList());
+            materials = materials.stream()
+                    .filter(FunctionalUtil.distinctByKey(p -> p.getMatnr()))
+                    .collect(Collectors.toList());
 
-        for (Material material : materials) {
-            if (result.getIndexOf(material) < 0 && material.getMatnr() != null
-                    && material.getMaktx() != null && !material.getMaktx().isEmpty()) {
-                result.addElement(material);
+            for (Material material : materials) {
+                if (result.getIndexOf(material) < 0 && material.getMatnr() != null
+                        && material.getMaktx() != null && !material.getMaktx().isEmpty()) {
+                    result.addElement(material);
+                }
             }
+        } catch (Exception ex) {
+            logger.error(ex);
         }
+
         return result;
     }
 
@@ -169,11 +178,11 @@ public class WeightTicketRegistarationController {
     public WeightTicket findByDeliveryOrderNo(String doNumber) {
         return wTRegService.findByDeliveryOrderNo(doNumber);
     }
-    
+
     public WeightTicket findByDeliveryOrderNoScale(String doNumber) {
         return wTRegService.findByDeliveryOrderNoScale(doNumber);
     }
-    
+
     public List<WeightTicket> getListByDeliveryOrderNo(String outbNumber) {
         return wTRegService.getListByDeliveryOrderNo(outbNumber);
     }
@@ -301,13 +310,13 @@ public class WeightTicketRegistarationController {
 
         return result;
     }
-    
+
     public BigDecimal getSumGqtyWithPoNo(String poNo) {
         BigDecimal result = BigDecimal.ZERO;
-          List<WeightTicket> wts = weightTicketRepository.findQtyByPoNo(poNo);
-          for (WeightTicket wt: wts) {
-              result = result.add(wt.getGQty());
-          }
+        List<WeightTicket> wts = weightTicketRepository.findQtyByPoNo(poNo);
+        for (WeightTicket wt : wts) {
+            result = result.add(wt.getGQty());
+        }
 
         return result;
     }
@@ -319,19 +328,24 @@ public class WeightTicketRegistarationController {
      */
     public DefaultComboBoxModel getListMaterialInternal() {
 
-        List<MaterialInternal> materials = materialInternalRepository.getMaterialInternals();
         DefaultComboBoxModel result = new DefaultComboBoxModel();
+        try {
+            List<MaterialInternal> materials = materialInternalRepository.getMaterialInternals();
 
-        materials = materials.stream()
-                .filter(FunctionalUtil.distinctByKey(p -> p.getMatnr()))
-                .collect(Collectors.toList());
+            materials = materials.stream()
+                    .filter(FunctionalUtil.distinctByKey(p -> p.getMatnr()))
+                    .collect(Collectors.toList());
 
-        for (MaterialInternal material : materials) {
-            if (result.getIndexOf(material) < 0 && material.getMatnr() != null
-                    && material.getMaktx() != null && !material.getMaktx().isEmpty()) {
-                result.addElement(material);
+            for (MaterialInternal material : materials) {
+                if (result.getIndexOf(material) < 0 && material.getMatnr() != null
+                        && material.getMaktx() != null && !material.getMaktx().isEmpty()) {
+                    result.addElement(material);
+                }
             }
+        } catch (Exception ex) {
+            logger.error(ex);
         }
+
         return result;
     }
 
@@ -340,9 +354,20 @@ public class WeightTicketRegistarationController {
     }
 
     public DefaultComboBoxModel getVendorModel() {
-        return new DefaultComboBoxModel(vendorRepository.getListVendor().toArray());
+        List<Vendor> vendors = new ArrayList<>();
+
+        try {
+            vendors = vendorRepository.getListVendor();
+        } catch (Exception ex) {
+        }
+
+        vendors = vendors.stream()
+                .filter(FunctionalUtil.distinctByKey(p -> p.getLifnr()))
+                .collect(Collectors.toList());
+
+        return new DefaultComboBoxModel(vendors.toArray());
     }
-    
+
     public DefaultComboBoxModel getVendorModelByEkorg(String ekorg) {
         return new DefaultComboBoxModel(vendorRepository.findByEkorg(ekorg).toArray());
     }
@@ -386,11 +411,11 @@ public class WeightTicketRegistarationController {
     public DefaultComboBoxModel getSlocModel(List<String> lgorts) {
         return new DefaultComboBoxModel(getListSLoc(lgorts).toArray());
     }
-    
+
     public List<SLoc> getListSLoc(List<String> lgorts) {
         return wTRegService.getListSLoc(lgorts);
     }
-    
+
     public Customer getCustomer(String kunnr) {
         return customerRepository.findByKunnr(kunnr);
     }

@@ -19,6 +19,7 @@ import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.base.constant.Constants;
+import com.gcs.wb.base.util.ExceptionUtil;
 import com.gcs.wb.base.validator.DateFromToValidator;
 import com.gcs.wb.controller.DailyReportController;
 import com.gcs.wb.jpa.entity.WeightTicket;
@@ -270,7 +271,9 @@ private void dpDateFromPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN
         @Override
         protected void failed(Throwable cause) {
             logger.error(null, cause);
-            JOptionPane.showMessageDialog(rootPane, cause.getMessage());
+            if (!ExceptionUtil.isDatabaseDisconnectedException(cause)) {
+                JOptionPane.showMessageDialog(rootPane, cause.getMessage());
+            }
         }
     }
 
@@ -324,7 +327,9 @@ private void dpDateFromPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN
         @Override
         protected void failed(Throwable cause) {
             logger.error(null, cause);
-            JOptionPane.showMessageDialog(rootPane, cause.getMessage());
+            if (!ExceptionUtil.isDatabaseDisconnectedException(cause)) {
+                JOptionPane.showMessageDialog(rootPane, cause.getMessage());
+            }
         }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
