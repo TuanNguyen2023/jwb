@@ -3501,7 +3501,17 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 for (int i = 0; i < do_list.length; i++) {
                     // save DO
                     String doNum = do_list[i].trim();
-                    deliveryDetails = detailRepository.findByDeliveryOrderNo(doNum);
+                    OutboundDelivery outboundDelivery = weightTicketRegistarationController.findByDeliveryOrderNumber(doNum);
+                    // update for header
+                    outboundDelivery.setWeightTicketId(newWeightTicket.getId());
+                    if (!entityManager.getTransaction().isActive()) {
+                            entityManager.getTransaction().begin();
+                        }
+                    entityManager.merge(outboundDelivery);
+                    entityManager.getTransaction().commit();
+
+                    // update for detail
+                    deliveryDetails = outboundDelivery.getOutboundDeliveryDetails();
                     for (int j = 0; j < deliveryDetails.size(); j++) {
                         OutboundDeliveryDetail detail = deliveryDetails.get(j);
                         detail.setWtId(newWeightTicket.getId());
