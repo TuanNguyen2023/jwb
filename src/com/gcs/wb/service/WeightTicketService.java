@@ -188,15 +188,27 @@ public class WeightTicketService {
         if (OutbDetailsV2 != null) {
             for (OutboundDeliveryDetail outbDetail : OutbDetailsV2) {
                 outbDetail.setPosted(false);
+                outbDetail.setMatDoc(null);
                 entityManager.merge(outbDetail);
             }
         }
         if (outbDels != null) {
             for (OutboundDelivery outbD : outbDels) {
                 outbD.setPosted(false);
+                outbD.setMatDoc(null);
                 entityManager.merge(outbD);
             }
         }
+        
+        if (weightTicket != null && weightTicket.getWeightTicketDetails().size() > 0) {
+            for (WeightTicketDetail wtDetail : weightTicket.getWeightTicketDetails()) {
+                wtDetail.setPosted(false);
+                wtDetail.setMatDoc(null);
+                entityManager.merge(wtDetail);
+            }
+        }
+                
+        
         entityManager.getTransaction().commit();
     }
 
