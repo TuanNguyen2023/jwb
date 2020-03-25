@@ -956,7 +956,7 @@ public class SAPService {
 
         saleOrders.forEach(sapSaleOrder -> {
             try {
-                SaleOrder saleOrder = saleOrderRepository.findBySoNumber(sapSaleOrder.getwName());
+                SaleOrder saleOrder = saleOrderRepository.findBySoNumber(sapSaleOrder.getSoNumber());
 
                 if (!entityTransaction.isActive()) {
                     entityTransaction.begin();

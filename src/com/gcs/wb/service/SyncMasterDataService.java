@@ -128,7 +128,7 @@ public class SyncMasterDataService {
         }
 
         logger.info("Sync SO...");
-        if (!saleOrderRepository.hasData()) {
+        if (saleOrderRepository.hasData()) {
             syncSoDatas();
         }
 
