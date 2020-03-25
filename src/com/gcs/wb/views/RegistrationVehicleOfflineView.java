@@ -1543,7 +1543,7 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
     if (modeDetail == MODE_DETAIL.IN_PO_PURCHASE) {
         boolean isWeightValid = wtRegisValidation.validateLength(txtWeightN.getText(), lblWeightN, 1, 10);
         if (isWeightValid && isValidPO) {
-            BigDecimal weight = new BigDecimal(txtWeightN.getText());
+            BigDecimal weight = new BigDecimal(txtWeightN.getText().trim().replace(",", ""));
 
             if (numCheckWeight.subtract(weight).compareTo(BigDecimal.ZERO) < 0) {
                 JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.quantityOver", numCheckWeight));
@@ -3405,7 +3405,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
 
         public void updateDataForInPoPurchaseMode() {
             WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
-            weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+            weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText().trim().replace(",", "")));
             if (!isValidPO) {
                 weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
 
@@ -3431,7 +3431,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 weightTicketDetail.setSoNumber(txtSONumN.getText().trim());
                 weightTicketDetail.setMatnrRef(material.getMatnr());
                 weightTicketDetail.setRegItemDescription(material.getMaktx());
-                weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+                weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText().trim().replace(",", "")));
 
                 Customer customer = (Customer) cbxCustomerN.getSelectedItem();
                 if (customer != null) {
@@ -3453,7 +3453,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 weightTicketDetail.setEbeln(txtPONumN.getText().trim());
                 weightTicketDetail.setMatnrRef(material.getMatnr());
                 weightTicketDetail.setRegItemDescription(material.getMaktx());
-                weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+                weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText().trim().replace(",", "")));
 
                 Customer customer = (Customer) cbxCustomerN.getSelectedItem();
                 if (customer != null) {
@@ -3471,7 +3471,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 Material material = (Material) cbxMaterialTypeN.getSelectedItem();
                 weightTicketDetail.setMatnrRef(material.getMatnr());
                 weightTicketDetail.setRegItemDescription(material.getMaktx());
-                weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+                weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText().trim().replace(",", "")));
                 weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
                 weightTicketDetail.setSoNumber(txtSONumN.getText().trim());
 
@@ -3489,7 +3489,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             MaterialInternal material = (MaterialInternal) cbxMaterialTypeN.getSelectedItem();
             weightTicketDetail.setMatnrRef(material.getMatnr());
             weightTicketDetail.setRegItemDescription(material.getMaktx());
-            weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+            weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText().trim().replace(",", "")));
 
             Customer customer = (Customer) cbxCustomerN.getSelectedItem();
             if (customer != null) {
@@ -3507,7 +3507,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 Material material = (Material) cbxMaterialTypeN.getSelectedItem();
                 weightTicketDetail.setMatnrRef(material.getMatnr());
                 weightTicketDetail.setRegItemDescription(material.getMaktx());
-                weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+                weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText().trim().replace(",", "")));
                 weightTicketDetail.setSoNumber(txtSONumN.getText().trim());
 
                 Customer customer = (Customer) cbxCustomerN.getSelectedItem();
@@ -3529,7 +3529,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 weightTicketDetail.setEbeln(txtPONumN.getText().trim());
                 weightTicketDetail.setMatnrRef(material.getMatnr());
                 weightTicketDetail.setRegItemDescription(material.getMaktx());
-                weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+                weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText().trim().replace(",", "")));
 
                 Customer customer = (Customer) cbxCustomerN.getSelectedItem();
                 if (customer != null) {
@@ -3546,7 +3546,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
 
             weightTicketDetail.setMatnrRef(material.getMatnr());
             weightTicketDetail.setRegItemDescription(material.getMaktx());
-            weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText().trim()));
+            weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText().trim().replace(",", "")));
 
             if (!isValidPO) {
                 weightTicketDetail.setEbeln(txtPONumN.getText().trim());
