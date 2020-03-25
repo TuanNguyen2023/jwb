@@ -2488,14 +2488,17 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     }
                 }
             } else {
-                if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
-                    cause = cause.getCause();
+                if (!ExceptionUtil.isDatabaseDisconnectedException(cause)) {
+                    if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
+                        cause = cause.getCause();
+                    }
+                    logger.error(null, cause);
+                    JOptionPane.showMessageDialog(rootPane,
+                            (cause.getMessage() == null || cause.getMessage().isEmpty())
+                            ? "Null Pointer Exception" : cause.getMessage());
                 }
-                logger.error(null, cause);
-                JOptionPane.showMessageDialog(rootPane,
-                        (cause.getMessage() == null || cause.getMessage().isEmpty())
-                        ? "Null Pointer Exception" : cause.getMessage());
             }
+
             clearForm();
         }
 
