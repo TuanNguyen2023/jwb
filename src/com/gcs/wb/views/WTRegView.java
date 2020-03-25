@@ -41,7 +41,6 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -100,6 +99,12 @@ public class WTRegView extends javax.swing.JInternalFrame {
     OutboundDetailRepository detailRepository = new OutboundDetailRepository();
     WeightTicketDetailRepository weightTicketDetailRepository = new WeightTicketDetailRepository();
 
+    DefaultComboBoxModel materialModel = weightTicketRegistarationController.getListMaterial();
+    DefaultComboBoxModel materialInternalModel = weightTicketRegistarationController.getListMaterialInternal();
+    DefaultComboBoxModel vendorModel = weightTicketRegistarationController.getVendorModel();
+    DefaultComboBoxModel vendor2Model = (DefaultComboBoxModel) SerializationUtils.clone(vendorModel);
+    DefaultComboBoxModel customerModel = weightTicketRegistarationController.getCustomerModel();
+
     public WTRegView() {
         newWeightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
         selectedWeightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
@@ -110,6 +115,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         dpDateTo.setFormats(Constants.Date.FORMAT);
         pnShowFilter.setVisible(false);
         btnEdit.setEnabled(false);
+
         initComboboxModel();
         initComboboxRenderer();
         initTableEvent();
@@ -285,8 +291,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
     }
 
     private void initComboboxModel() {
-        DefaultComboBoxModel vendorModel = weightTicketRegistarationController.getVendorModel();
-        DefaultComboBoxModel vendor2Model = (DefaultComboBoxModel) SerializationUtils.clone(vendorModel);
         cbxVendorLoadingN.setModel(vendorModel);
         cbxVendorLoadingN.setSelectedIndex(-1);
         cbxVendorTransportN.setModel(vendor2Model);
@@ -1676,6 +1680,8 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
         return;
     }
 
+    txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(plateNo).toString());
+
     if (!plateNoValidDO.isEmpty() && !plateNo.contains(plateNoValidDO)) {
         lblPlateNoN.setForeground(Color.red);
         btnSave.setEnabled(false);
@@ -2303,10 +2309,10 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
         showComponent(cbxCustomerN, lblCustomerN, true, true);
 
-        cbxMaterialTypeN.setModel(weightTicketRegistarationController.getListMaterialInternal());
+        cbxMaterialTypeN.setModel(materialInternalModel);
         cbxMaterialTypeN.setSelectedIndex(-1);
 
-        cbxCustomerN.setModel(weightTicketRegistarationController.getCustomerModel());
+        cbxCustomerN.setModel(customerModel);
         cbxCustomerN.setSelectedIndex(-1);
     }
 
@@ -2413,7 +2419,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         showComponent(cbxVendorTransportN, lblVendorTransportN, isShowPOV, false);
         showComponent(cbxCustomerN, lblCustomerN, true, false);
 
-        cbxMaterialTypeN.setModel(weightTicketRegistarationController.getListMaterial());
+        cbxMaterialTypeN.setModel(materialModel);
         cbxMaterialTypeN.setSelectedIndex(-1);
     }
 
@@ -2533,9 +2539,6 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
 
         String plateNo = txtPlateNoN.getText().trim();
         boolean isPlateNoValid = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
-        if (isPlateNoValid) {
-            txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(plateNo).toString());
-        }
 
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
         String salan = txtSalanN.getText().trim();
@@ -2566,9 +2569,6 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
 
         String plateNo = txtPlateNoN.getText().trim();
         boolean isPlateNoValid = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
-        if (isPlateNoValid) {
-            txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(plateNo).toString());
-        }
 
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
         String salan = txtSalanN.getText().trim();
@@ -2610,9 +2610,6 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
 
         String plateNo = txtPlateNoN.getText().trim();
         boolean isPlateNoValid = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
-        if (isPlateNoValid) {
-            txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(plateNo).toString());
-        }
 
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
         String salan = txtSalanN.getText().trim();
@@ -2639,9 +2636,6 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
 
         String plateNo = txtPlateNoN.getText().trim();
         boolean isPlateNoValid = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
-        if (isPlateNoValid) {
-            txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(plateNo).toString());
-        }
 
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
         String salan = txtSalanN.getText().trim();
@@ -2811,9 +2805,6 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
 
         String plateNo = txtPlateNoN.getText().trim();
         boolean isPlateNoValid = wtRegisValidation.validatePlateNoWater(plateNo, lblPlateNoN);
-        if (isPlateNoValid) {
-            txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(plateNo).toString());
-        }
 
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
         String salan = txtSalanN.getText().trim();
@@ -2838,20 +2829,20 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
     }
 
     private void loadBatchStockModel(JComboBox slocComponent, JComboBox batchStockComponent, boolean isSloc) {
-            batchStockComponent.setModel(new DefaultComboBoxModel());
+        batchStockComponent.setModel(new DefaultComboBoxModel());
         if (slocComponent.getSelectedIndex() == -1) {
             return;
         }
 
         //lblSloc2N.setBackground(Color.black);
         SLoc sloc = (SLoc) slocComponent.getSelectedItem();
-        if(modeDetail == MODE_DETAIL.OUT_SLOC_SLOC
+        if (modeDetail == MODE_DETAIL.OUT_SLOC_SLOC
                 && cbxSloc2N.getSelectedIndex() != -1) {
             SLoc sloc2N = (SLoc) cbxSloc2N.getSelectedItem();
-            if(sloc.getLgort().equals(sloc2N.getLgort())) {
+            if (sloc.getLgort().equals(sloc2N.getLgort())) {
                 JOptionPane.showMessageDialog(rootPane,
-                    resourceMapMsg.getString("msg.slocDuplicate"),
-                    "Warning", JOptionPane.WARNING_MESSAGE);
+                        resourceMapMsg.getString("msg.slocDuplicate"),
+                        "Warning", JOptionPane.WARNING_MESSAGE);
                 isValidSloc = false;
                 cbxBatchStockN.setSelectedIndex(-1);
                 lblSlocN.setForeground(Color.red);
@@ -2898,7 +2889,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
 
         validateForm();
     }
-    
+
     private void loadBatchStockModel2N(JComboBox slocComponent, JComboBox batchStockComponent, boolean isSloc) {
         if (slocComponent.getSelectedIndex() == -1) {
             batchStockComponent.setModel(new DefaultComboBoxModel());
@@ -2907,13 +2898,13 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
 
         isValidSloc = true;
         SLoc sloc = (SLoc) slocComponent.getSelectedItem();
-        if(modeDetail == MODE_DETAIL.OUT_SLOC_SLOC
+        if (modeDetail == MODE_DETAIL.OUT_SLOC_SLOC
                 && cbxSlocN.getSelectedIndex() != -1) {
             SLoc sloc2N = (SLoc) cbxSlocN.getSelectedItem();
-            if(sloc.getLgort().equals(sloc2N.getLgort())) {
+            if (sloc.getLgort().equals(sloc2N.getLgort())) {
                 JOptionPane.showMessageDialog(rootPane,
-                    resourceMapMsg.getString("msg.slocDuplicate"),
-                    "Warning", JOptionPane.WARNING_MESSAGE);
+                        resourceMapMsg.getString("msg.slocDuplicate"),
+                        "Warning", JOptionPane.WARNING_MESSAGE);
                 isValidSloc = false;
                 cbxBatchStock2N.setSelectedIndex(-1);
                 lblSloc2N.setForeground(Color.red);
@@ -2921,7 +2912,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 return;
             }
         }
-        
+
         if (newWeightTicket != null) {
             if (isSloc) {
                 newWeightTicket.setLgort(sloc.getLgort());
@@ -3091,7 +3082,9 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         @Override
         protected void failed(Throwable cause) {
             logger.error(null, cause);
-            JOptionPane.showMessageDialog(rootPane, cause.getMessage());
+            if (!ExceptionUtil.isDatabaseDisconnectedException(cause)) {
+                JOptionPane.showMessageDialog(rootPane, cause.getMessage());
+            }
         }
     }
 
@@ -3411,7 +3404,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             plateNoValidDO = "";
             checkedCharg = "";
 
-            if (!canceled) {
+            if (!canceled && !ExceptionUtil.isDatabaseDisconnectedException(cause)) {
                 if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
                     cause = cause.getCause();
                 }
@@ -3572,8 +3565,6 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             } catch (Exception ex) {
                 btnSave.setEnabled(true);
             }
-            
-            btnFind.doClick();
 
             return null;
         }
@@ -3646,6 +3637,11 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             weightTicketDetail.setRegItemDescription(material.getMaktx());
             String val = txtWeightN.getText().trim().replace(",", "");
             weightTicketDetail.setRegItemQuantity(new BigDecimal(val));
+        }
+
+        @Override
+        protected void succeeded(Object t) {
+            btnFind.doClick();
         }
 
         @Override
@@ -4100,7 +4096,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             loadSLoc(null, null);
 
             isValidPO = false;
-            if (!canceled) {
+            if (!canceled && !ExceptionUtil.isDatabaseDisconnectedException(cause)) {
                 if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
                     cause = cause.getCause();
                 }
@@ -4281,7 +4277,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             isValidPOSTO = false;
             cbxVendorLoadingN.setSelectedIndex(-1);
 
-            if (!canceled) {
+            if (!canceled && !ExceptionUtil.isDatabaseDisconnectedException(cause)) {
                 if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
                     cause = cause.getCause();
                 }

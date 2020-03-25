@@ -13,9 +13,7 @@ import com.gcs.wb.bapi.helper.structure.UserGetDetailAGRStructure;
 import com.gcs.wb.bapi.helper.structure.UserGetDetailAddrStructure;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.Configuration;
-import com.gcs.wb.jpa.entity.SAPSetting;
 import com.gcs.wb.jpa.entity.User;
-import com.gcs.wb.jpa.repositorys.SAPSettingRepository;
 import com.gcs.wb.model.AppConfig;
 import java.sql.Date;
 import java.util.Calendar;
@@ -24,7 +22,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import org.hibersap.session.Credentials;
 import org.hibersap.session.Session;
-import org.hibersap.session.SessionImpl;
 import org.hibersap.session.SessionManager;
 
 /**
@@ -39,8 +36,6 @@ public class LoginService {
     private EntityTransaction entityTransaction = entityManager.getTransaction();
     private AppConfig appConfig = WeighBridgeApp.getApplication().getConfig();
     private Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
-    private SAPSettingRepository sapSettingRepository = new SAPSettingRepository();
-    private SAPSetting sapSetting = sapSettingRepository.getSAPSetting();
     org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(LoginService.class);
 
     public Session getSapSession(Credentials credentials) throws Exception {

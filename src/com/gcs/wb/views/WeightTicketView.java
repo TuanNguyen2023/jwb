@@ -138,9 +138,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         sapSetting = WeighBridgeApp.getApplication().getSapSetting();
         login = WeighBridgeApp.getApplication().getLogin();
         entityManager.clear();
-        //String client = WeighBridgeApp.getApplication().getConfig().getsClient();
-        //List kunnr = this.customerRepository.getListCustomer(client);
-        DefaultComboBoxModel result = weightTicketController.getCustomerByMaNdt();
 
         try {
             String pWbId = configuration.getWbId().trim();

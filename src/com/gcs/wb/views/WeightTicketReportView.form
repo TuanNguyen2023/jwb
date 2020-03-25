@@ -42,7 +42,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="pnFilter" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="pnResult" pref="426" max="32767" attributes="0"/>
+              <Component id="pnResult" pref="434" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -232,9 +232,6 @@
             </Component>
             <Component class="javax.swing.JComboBox" name="cbxTransportAgent">
               <Properties>
-                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="getTransportAgentsModel()" type="code"/>
-                </Property>
                 <Property name="name" type="java.lang.String" value="cbxTransportAgent" noResource="true"/>
               </Properties>
               <AuxValues>
@@ -249,9 +246,6 @@
             </Component>
             <Component class="javax.swing.JComboBox" name="cbxMaterial">
               <Properties>
-                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="getMaterialsModel()" type="code"/>
-                </Property>
                 <Property name="name" type="java.lang.String" value="cbxMaterial" noResource="true"/>
               </Properties>
               <AuxValues>

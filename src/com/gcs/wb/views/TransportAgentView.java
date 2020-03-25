@@ -12,6 +12,7 @@ package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.base.constant.Constants;
+import com.gcs.wb.base.util.ExceptionUtil;
 import com.gcs.wb.base.validator.DateFromToValidator;
 import com.gcs.wb.controller.TransportAgentController;
 import com.gcs.wb.jpa.entity.TransportAgent;
@@ -79,9 +80,6 @@ public class TransportAgentView extends javax.swing.JInternalFrame {
             }
         });
 
-        cbxVehicleType.setModel(transportAgentController.getVehicleTypesModel());
-        cbxVehicleType.setSelectedIndex(-1);
-        
         btnLoad.doClick();
     }
 
@@ -546,6 +544,9 @@ private void cbxVehicleTypeActionPerformed(java.awt.event.ActionEvent evt) {//GE
         @Override
         protected Object doInBackground() {
             setProgress(1, 0, 2);
+            cbxVehicleType.setModel(transportAgentController.getVehicleTypesModel());
+            cbxVehicleType.setSelectedIndex(-1);
+
             setMessage(resourceMapMsg.getString("msg.syncData"));
             model = getTransportAgentsModel();
 

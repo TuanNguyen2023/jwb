@@ -5,8 +5,11 @@
  */
 package com.gcs.wb.base.util;
 
+import com.gcs.wb.WeighBridgeApp;
 import com.sap.conn.jco.JCoException;
 import com.gcs.wb.base.constant.Constants;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import org.eclipse.persistence.exceptions.DatabaseException;
 
 /**
@@ -14,6 +17,8 @@ import org.eclipse.persistence.exceptions.DatabaseException;
  * @author thanghl
  */
 public class ExceptionUtil {
+
+    static JFrame mainFrame = WeighBridgeApp.getApplication().getMainFrame();
 
     public static <E extends Throwable> void sneakyThrow(Throwable e) throws E {
         throw (E) e;
@@ -34,10 +39,21 @@ public class ExceptionUtil {
         if (ex.getCause() instanceof DatabaseException) {
             DatabaseException dbex = (DatabaseException) ex.getCause();
             if (dbex.isCommunicationFailure()) {
-                sneakyThrow(new Exception(Constants.Message.DB_DISCONNECTED));
+                JOptionPane.showMessageDialog(mainFrame, Constants.Message.DB_DISCONNECTED);
             }
         }
 
         sneakyThrow(ex);
+    }
+
+    public static boolean isDatabaseDisconnectedException(Throwable ex) {
+        if (ex.getCause() instanceof DatabaseException) {
+            DatabaseException dbex = (DatabaseException) ex.getCause();
+            if (dbex.isCommunicationFailure()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
