@@ -24,6 +24,7 @@ import com.gcs.wb.jpa.repositorys.MaterialInternalRepository;
 import com.gcs.wb.jpa.repositorys.OutboundDetailRepository;
 import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
 import com.gcs.wb.jpa.repositorys.WeightTicketDetailRepository;
+import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import com.gcs.wb.model.WeighingMode;
 import com.gcs.wb.views.validations.WeightTicketRegistrationValidation;
 import com.sap.conn.jco.JCoException;
@@ -98,6 +99,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
     private PurchaseOrder purchaseOrderPOSTO = new PurchaseOrder();
     OutboundDetailRepository detailRepository = new OutboundDetailRepository();
     WeightTicketDetailRepository weightTicketDetailRepository = new WeightTicketDetailRepository();
+    WeightTicketRepository weightTicketRepository = new WeightTicketRepository();
 
     DefaultComboBoxModel materialModel = weightTicketRegistarationController.getListMaterial();
     DefaultComboBoxModel materialInternalModel = weightTicketRegistarationController.getListMaterialInternal();
@@ -3319,6 +3321,17 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             weightTicketDetail.setRegItemQuantity(outboundDelivery.getLfimg());
             weightTicketDetail.setSoNumber(salesOrder);
             weightTicketDetail.setShipTo(outboundDelivery.getOutboundDeliveryDetail().getShipTo());
+            
+            // set PO xuat, vendor van chuyen cho mode Nhap chuyen kho
+            if(modeDetail == MODE_DETAIL.IN_WAREHOUSE_TRANSFER) {
+                WeightTicket wtPlantOut
+                                = weightTicketRepository.findByDOFromPO(outboundDelivery.getDeliveryOrderNo());
+                if(wtPlantOut != null) {
+                    weightTicketDetail.setEbeln(wtPlantOut.getWeightTicketDetail().getEbeln());
+                    weightTicketDetail.setTransVendor(wtPlantOut.getWeightTicketDetail().getTransVendor());
+                }
+            }
+            
             newWeightTicket.addWeightTicketDetail(weightTicketDetail);
             newWeightTicket.setWeightTicketIdRef(outboundDelivery.getWtIdRef());
 

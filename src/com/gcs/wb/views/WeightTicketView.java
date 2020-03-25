@@ -2194,7 +2194,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 BigDecimal totalRegItemQuantity = BigDecimal.ZERO;
                 for (WeightTicketDetail weightTicketDetail : weightTicketDetails) {
                     if ((weightTicketDetail.getDeliveryOrderNo() == null || weightTicketDetail.getDeliveryOrderNo().trim().isEmpty())
-                            || (!weightTicket.isPosted() && (weightTicketDetail.getEbeln() != null && !weightTicketDetail.getEbeln().trim().isEmpty()))
+                            || (!weightTicket.isPosted() && (!weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER") && weightTicketDetail.getEbeln() != null && !weightTicketDetail.getEbeln().trim().isEmpty()))
                             || (weightTicketDetail.getDeliveryOrderNo() == null && weightTicketDetail.getEbeln() == null)) {
                         setWithoutDO(true);
                     } else {
@@ -3804,13 +3804,14 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         // tinh toan cho Nhap kho tu plant xuat > plant nhap
                         WeightTicket wtPlantOut
                                 = weightTicketRepository.findByDOFromPO(outbDel.getDeliveryOrderNo());
-                        if ((wtPlantOut != null) && (checkPlantOutToIn(item, wtPlantOut.getWplant()))) {
-                            double outSScalePlant = 0;
-                            double result = ((Number) txfInQty.getValue()).doubleValue();
-                            String poNum = wtPlantOut.getWeightTicketDetail().getEbeln();
-                            PurchaseOrder purchaseOrder = purchaseOrderRepository.findByPoNumber(poNum);
-                            if (purchaseOrder.getPurchaseOrderDetail().getPlant().equals(configuration.getWkPlant())) {
-                                outSScalePlant = wtPlantOut.getSScale().doubleValue();
+                        if(weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER")) {
+                            if ((wtPlantOut != null) && (checkPlantOutToIn(item, outbDel.getWerks()))) {
+                                double outSScalePlant = 0;
+                                double result = ((Number) txfInQty.getValue()).doubleValue();
+                                //String poNum = wtPlantOut.getWeightTicketDetail().getEbeln();
+                                //PurchaseOrder purchaseOrder = purchaseOrderRepository.findByPoNumber(poNum);
+                                //if (purchaseOrder.getPurchaseOrderDetail().getPlant().equals(configuration.getWkPlant())) {
+                                outSScalePlant = item.getSscale().doubleValue();
                                 // check can 1 cua nhap voi can 2 xuat chenh lech 1%
                                 double upper = outSScalePlant + (outSScalePlant * 1) / 100;
                                 double lower = outSScalePlant - (outSScalePlant * 1) / 100;
@@ -3824,8 +3825,10 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                     weightTicket.setGQty((BigDecimal.valueOf(item.getInScale().doubleValue() - item.getOutScale().doubleValue())).setScale(3, RoundingMode.HALF_UP));
                                     checkPlant = true;
                                 }
+                            //}
                             }
                         }
+                        
                         if (!entityManager.getTransaction().isActive()) {
                             entityManager.getTransaction().begin();
                         }
@@ -4309,8 +4312,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             checkBag = true;
         }
         MaterialInterPlant materialInterPlant = materialInterPlantRepository.findByMatnrAndPlantInOut(item.getMatnr(), configuration.getWkPlant(), wplantOut);
-        if (weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER")
-                && (materialInterPlant != null)
+        if ((materialInterPlant != null)
                 && (checkBag)) {
             return true;
         }
