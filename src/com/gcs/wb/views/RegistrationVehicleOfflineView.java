@@ -3677,7 +3677,9 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         txtTrailerNoN.setText("");
         txtSalanN.setText("");
         txtSlingN.setText("0");
+        txtSlingN.setValue(0);
         txtPalletN.setText("0");
+        txtPalletN.setValue(0);
         txtSoNiemXaN.setText("");
         txtProductionBatchN.setText("");
         txtLoadSourceN.setText("");
