@@ -2146,6 +2146,10 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         || Constants.WeighingProcess.MODE_DETAIL.IN_PO_PURCHASE.name().equals(weightTicket.getMode())) {
                     txtPONo.setText(weightTicket.getWeightTicketDetail().getEbeln());
                 }
+
+                if (WeighBridgeApp.getApplication().isOfflineMode()) {
+                    txtRegItem.setText(weightTicket.getWeightTicketDetail().getRegItemDescription());
+                }
                 txtWeight.setText(df.format(weightTicket.getWeightTicketDetail().getRegItemQuantity()).toString());
                 if (Constants.WeighingProcess.MODE_DETAIL.OUT_SLOC_SLOC.name().equals(weightTicket.getMode())
                         || Constants.WeighingProcess.MODE_DETAIL.OUT_PULL_STATION.name().equals(weightTicket.getMode())) {
