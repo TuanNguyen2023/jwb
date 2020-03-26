@@ -3153,7 +3153,11 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 // post SAP
                 String ivWbidNosave = "";
                 for (int i = 0; i < outbDel_list.size(); i++) {
-                    outbDel = outbDel_list.get(i);
+                    try {
+                        outbDel = weightTicketController.findByMandtOutDel(outbDel_list.get(i).getDeliveryOrderNo());
+                    } catch (Exception ex) {
+                        logger.error(ex);
+                    }
                     if (i != 0) {
                         ivWbidNosave = "X";
                     }
