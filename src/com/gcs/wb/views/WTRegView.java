@@ -3323,17 +3323,15 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             weightTicketDetail.setShipTo(outboundDelivery.getOutboundDeliveryDetail().getShipTo());
             
             // set PO xuat, vendor van chuyen cho mode Nhap chuyen kho
-            if(modeDetail == MODE_DETAIL.IN_WAREHOUSE_TRANSFER) {
-                WeightTicket wtPlantOut
-                                = weightTicketRepository.findByDOFromPO(outboundDelivery.getDeliveryOrderNo());
-                if(wtPlantOut != null) {
-                    weightTicketDetail.setEbeln(wtPlantOut.getWeightTicketDetail().getEbeln());
-                    weightTicketDetail.setTransVendor(wtPlantOut.getWeightTicketDetail().getTransVendor());
-                }
-            }
+            weightTicketDetail.setEbeln(outboundDelivery.getOutboundDeliveryDetail().getPoNumber());
+            weightTicketDetail.setLoadVendor(outboundDelivery.getOutboundDeliveryDetail().getCVendor());
+            weightTicketDetail.setTransVendor(outboundDelivery.getOutboundDeliveryDetail().getTVendor());
             
             newWeightTicket.addWeightTicketDetail(weightTicketDetail);
             newWeightTicket.setWeightTicketIdRef(outboundDelivery.getWtIdRef());
+            
+            newWeightTicket.setSling(outboundDelivery.getOutboundDeliveryDetail().getZsling());
+            newWeightTicket.setPallet(outboundDelivery.getOutboundDeliveryDetail().getZPallet());
 
             List<OutboundDeliveryDetail> outboundDeliveryDetails = outboundDelivery.getOutboundDeliveryDetails();
             for (OutboundDeliveryDetail outboundDeliveryDetail : outboundDeliveryDetails) {
@@ -3397,6 +3395,9 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             switch (modeDetail) {
                 case IN_WAREHOUSE_TRANSFER:
                     txtWeightTickerRefN.setText(newWeightTicket.getWeightTicketIdRef());
+                        txtSlingN.setText(String.valueOf(newWeightTicket.getSling()));
+                        txtPalletN.setText(String.valueOf(newWeightTicket.getPallet()));
+                    
             }
 
             // load sloc

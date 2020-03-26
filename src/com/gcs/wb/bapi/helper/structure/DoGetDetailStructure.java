@@ -162,15 +162,15 @@ public class DoGetDetailStructure implements Serializable {
     @Parameter(DoGetDetailConstants.SSCALE)
     private BigDecimal _sscale;
     @Parameter(DoGetDetailConstants.PO_NUMBER)
-    private BigDecimal _poNumber;
+    private String _poNumber;
     @Parameter(DoGetDetailConstants.C_VENDOR)
-    private BigDecimal _cVendor;
+    private String _cVendor;
     @Parameter(DoGetDetailConstants.T_VENDOR)
-    private BigDecimal _tVendor;
+    private String _tVendor;
     @Parameter(DoGetDetailConstants.ZSLING)
-    private BigDecimal _zSling;
+    private String _zSling;
     @Parameter(DoGetDetailConstants.ZPALLET)
-    private BigDecimal _zPallet;
+    private String _zPallet;
 
     // </editor-fold>
 
@@ -537,6 +537,26 @@ public class DoGetDetailStructure implements Serializable {
      */
     public BigDecimal getSscale() {
         return _sscale;
+    }
+    
+    public String getPoNumber() {
+        return _poNumber;
+    }
+    
+    public String getCVendor() {
+        return _cVendor;
+    }
+    
+    public String getTVendor() {
+        return _tVendor;
+    }
+    
+    public String getZSling() {
+        return _zSling;
+    }
+    
+    public String getZPallet() {
+        return _zPallet;
     }
 
     // </editor-fold>

@@ -107,7 +107,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     ToleranceUtil toleranceUtil = new ToleranceUtil();
     MaterialRepository materialRepository = new MaterialRepository();
     MaterialInternalRepository materialInternalRepository = new MaterialInternalRepository();
-    WeightTicketRepository weightTicketRepository = new WeightTicketRepository();
 
     WeightTicketController weightTicketController = new WeightTicketController();
     WeightTicketRegistarationController weightTicketRegistarationController = new WeightTicketRegistarationController();
@@ -3803,15 +3802,10 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         item.setfTime(now);
                         item.setUpdatedDate(now);
                         // tinh toan cho Nhap kho tu plant xuat > plant nhap
-                        WeightTicket wtPlantOut
-                                = weightTicketRepository.findByDOFromPO(outbDel.getDeliveryOrderNo());
                         if(weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER")) {
-                            if ((wtPlantOut != null) && (checkPlantOutToIn(item, outbDel.getWerks()))) {
+                            if (checkPlantOutToIn(item, outbDel.getWerks())) {
                                 double outSScalePlant = 0;
                                 double result = ((Number) txfInQty.getValue()).doubleValue();
-                                //String poNum = wtPlantOut.getWeightTicketDetail().getEbeln();
-                                //PurchaseOrder purchaseOrder = purchaseOrderRepository.findByPoNumber(poNum);
-                                //if (purchaseOrder.getPurchaseOrderDetail().getPlant().equals(configuration.getWkPlant())) {
                                 outSScalePlant = item.getSscale().doubleValue();
                                 // check can 1 cua nhap voi can 2 xuat chenh lech 1%
                                 double upper = outSScalePlant + (outSScalePlant * 1) / 100;
@@ -3826,7 +3820,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                     weightTicket.setGQty((BigDecimal.valueOf(item.getInScale().doubleValue() - item.getOutScale().doubleValue())).setScale(3, RoundingMode.HALF_UP));
                                     checkPlant = true;
                                 }
-                            //}
                             }
                         }
                         

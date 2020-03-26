@@ -111,6 +111,17 @@ public class OutboundDeliveryDetail implements Serializable {
     private BigDecimal fScale;
     @Column(name = "sscale")
     private BigDecimal sScale;
+    @Column(name = "poNumber")
+    private String poNumber;
+    @Column(name = "c_vendor")
+    private String cVendor;
+    @Column(name = "t_vendor")
+    private String tVendor;
+    @Column(name = "zsling")
+    private Integer zSling;
+    @Column(name = "zpallet")
+    private Integer zPallet;
+
     @ManyToOne
     @JoinColumn(name = "outbound_delivery_id")
     private OutboundDelivery outboundDelivery;
@@ -413,6 +424,46 @@ public class OutboundDeliveryDetail implements Serializable {
 
     public void setSscale(BigDecimal sScale) {
         this.sScale = sScale;
+    }
+    
+    public String getPoNumber() {
+        return poNumber;
+    }
+
+    public void setPoNumber(String poNumber) {
+        this.poNumber = poNumber;
+    }
+    
+    public String getCVendor() {
+        return cVendor;
+    }
+
+    public void setCVendor(String cVendor) {
+        this.cVendor = cVendor;
+    }
+    
+    public String getTVendor() {
+        return tVendor;
+    }
+
+    public void setTVendor(String tVendor) {
+        this.tVendor = tVendor;
+    }
+    
+    public Integer getZsling() {
+        return zSling;
+    }
+
+    public void setZsling(Integer zSling) {
+        this.zSling = zSling;
+    }
+    
+    public Integer getZPallet() {
+        return zPallet;
+    }
+
+    public void setZPallet(Integer zPallet) {
+        this.zPallet = zPallet;
     }
 
     public OutboundDelivery getOutboundDelivery() {
