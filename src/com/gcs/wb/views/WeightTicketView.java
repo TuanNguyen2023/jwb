@@ -3157,6 +3157,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 for (int i = 0; i < outbDel_list.size(); i++) {
                     try {
                         outbDel = weightTicketController.findByMandtOutDel(outbDel_list.get(i).getDeliveryOrderNo());
+                        outbDel_list.set(i, outbDel);
                     } catch (Exception ex) {
                         logger.error(ex);
                     }
@@ -3453,6 +3454,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                     sapOutb.setUpdatedDate(new java.sql.Date(now.getTime()));
                                     entityManager.merge(sapOutb);
                                     outbDel = sapOutb;
+                                    outbDel_list.set(i, sapOutb);
                                 }
                                 // </editor-fold>
                             } catch (Exception e) {
