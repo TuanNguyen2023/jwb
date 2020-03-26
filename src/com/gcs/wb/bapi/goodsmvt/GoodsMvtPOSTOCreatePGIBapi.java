@@ -17,9 +17,9 @@ import org.hibersap.annotations.Import;
 import org.hibersap.annotations.Parameter;
 import org.hibersap.annotations.ParameterType;
 import org.hibersap.annotations.Table;
-import org.hibersap.annotations.ThrowExceptionOnError;
 import org.hibersap.bapi.BapiRet2;
 import com.gcs.wb.bapi.goodsmvt.constants.GoodsMvtPOSTOCreatePGIConstants;
+import com.gcs.wb.bapi.outbdlv.structure.IsExtensionStructure;
 import com.gcs.wb.bapi.outbdlv.structure.OutbDeliveryCreateStoStructure;
 import com.gcs.wb.bapi.outbdlv.structure.VbkokStructure;
 import com.gcs.wb.bapi.outbdlv.structure.VbpokStructure;
@@ -55,6 +55,9 @@ public class GoodsMvtPOSTOCreatePGIBapi implements Serializable {
     @Import
     @Parameter(value = GoodsMvtCreateConstants.I_WEIGHTTICKET, type = ParameterType.STRUCTURE)
     private GoodsMvtWeightTicketStructure _weightticket;
+    @Import
+    @Parameter(value = GoodsMvtCreateConstants.IS_EXTENSION, type = ParameterType.STRUCTURE)
+    private IsExtensionStructure _isExtension;
     @Import
     @Parameter(value = GoodsMvtPOSTOCreatePGIConstants.IV_MATERIALDOCUMENT_INPUT, type = ParameterType.SIMPLE)
     private String _ivMaterialDocument;
@@ -103,7 +106,7 @@ public class GoodsMvtPOSTOCreatePGIBapi implements Serializable {
     // <editor-fold defaultstate="collapsed" desc="Class Constructors">
     public GoodsMvtPOSTOCreatePGIBapi() {
     }
-    
+
     public GoodsMvtPOSTOCreatePGIBapi(GoodsMvtCodeStructure gmcode) {
         this._header = new GoodsMvtHeaderStructure();
         this._gmCode = gmcode;
@@ -157,7 +160,6 @@ public class GoodsMvtPOSTOCreatePGIBapi implements Serializable {
     }
 
     // </editor-fold>
-
     public GoodsMvtWeightTicketStructure getWeightticket() {
         return _weightticket;
     }
@@ -221,15 +223,15 @@ public class GoodsMvtPOSTOCreatePGIBapi implements Serializable {
     public void setVbpok_tab(List<VbpokStructure> vbpok_tab) {
         this._vbpok_tab = vbpok_tab;
     }
-    
+
     public void setIvMaterialDocument(String ivMaterialDocument) {
         this._ivMaterialDocument = ivMaterialDocument;
     }
-    
+
     public void setIvMatDocumentYear(String ivMatDocumentYear) {
         this._ivMatDocumentYear = ivMatDocumentYear;
     }
-    
+
     public void setIvReType(String ivReType) {
         this._ivReType = ivReType;
     }
@@ -237,7 +239,7 @@ public class GoodsMvtPOSTOCreatePGIBapi implements Serializable {
     public String getMaterialDocumentOut() {
         return _materialDocumentOut;
     }
-    
+
     public String getMatDocumentYearOut() {
         return _matDocumentYearOut;
     }
@@ -248,7 +250,7 @@ public class GoodsMvtPOSTOCreatePGIBapi implements Serializable {
     public List<BapiRet2> getReturn() {
         return _return;
     }
-    
+
     public List<String> getReturnMessage() {
         List<String> errorMsgs = new ArrayList<>();
         if (_return == null || _return.isEmpty()) {
@@ -278,7 +280,7 @@ public class GoodsMvtPOSTOCreatePGIBapi implements Serializable {
             }
             return msg;
         }).filter(t -> t != null).collect(Collectors.toList());
-        
+
         List<String> normals = _return.stream().map(bapiRet2 -> {
             if (bapiRet2.getType() == 'E') {
                 return null;
@@ -301,8 +303,16 @@ public class GoodsMvtPOSTOCreatePGIBapi implements Serializable {
             }
             return msg;
         }).filter(t -> t != null).collect(Collectors.toList());
-        
-        return errors.size()> 0 ? errors : normals;
+
+        return errors.size() > 0 ? errors : normals;
+    }
+
+    public IsExtensionStructure getIsExtension() {
+        return _isExtension;
+    }
+
+    public void setIsExtension(IsExtensionStructure _isExtension) {
+        this._isExtension = _isExtension;
     }
 
     @Override

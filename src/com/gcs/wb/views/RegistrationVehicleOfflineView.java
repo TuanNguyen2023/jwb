@@ -2636,8 +2636,11 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
+        boolean isSlingValid = wtRegisValidation.validateIntegerValue(txtSlingN.getText(), lblSlingN);
+        boolean isPalletValid = wtRegisValidation.validateIntegerValue(txtPalletN.getText(), lblPalletN);
+
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
-                && isCMNDBLValid && isPlateNoValid && isSalanValid
+                && isCMNDBLValid && isPlateNoValid && isSalanValid && isSalanValid && isSlingValid && isPalletValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isMaterialTypeValid && isSlocValid && isWeightValid;
     }
@@ -2678,8 +2681,11 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
+        boolean isSlingValid = wtRegisValidation.validateIntegerValue(txtSlingN.getText(), lblSlingN);
+        boolean isPalletValid = wtRegisValidation.validateIntegerValue(txtPalletN.getText(), lblPalletN);
+
         return isRegisterIdValid && isDriverNameValid && isCMNDBLValid && isPlateNoValid && isSalanValid
-                && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
+                && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid && isSalanValid && isSlingValid && isPalletValid
                 && isNoteValid && isSlocValid && isSOValid && isMaterialTypeValid && isWeightValid;
     }
 
@@ -2720,7 +2726,10 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
         boolean isVendorTransValid = wtRegisValidation.validateCbxSelected(cbxVendorTransportN.getSelectedIndex(), lblVendorTransportN);
 
-        return isTicketIdValid && isRegisterIdValid && isDriverNameValid
+        boolean isSlingValid = wtRegisValidation.validateIntegerValue(txtSlingN.getText(), lblSlingN);
+        boolean isPalletValid = wtRegisValidation.validateIntegerValue(txtPalletN.getText(), lblPalletN);
+
+        return isTicketIdValid && isRegisterIdValid && isDriverNameValid && isSalanValid && isSlingValid && isPalletValid
                 && isCMNDBLValid && isPOValid && isSalanValid && isLoadSourceValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isSlocValid && isMaterialTypeValid && isWeightValid && isVendorTransValid;
@@ -2845,8 +2854,11 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
+        boolean isSlingValid = wtRegisValidation.validateIntegerValue(txtSlingN.getText(), lblSlingN);
+        boolean isPalletValid = wtRegisValidation.validateIntegerValue(txtPalletN.getText(), lblPalletN);
+
         return isRegisterIdValid && isDriverNameValid && isSalanValid
-                && isCMNDBLValid && isPlateNoValid && isSOValid
+                && isCMNDBLValid && isPlateNoValid && isSOValid && isSalanValid && isSlingValid && isPalletValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isSlocValid && isMaterialTypeValid && isWeightValid;
     }
@@ -3335,8 +3347,10 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             newWeightTicket.setDriverIdNo(txtCMNDN.getText().trim());
             newWeightTicket.setPlateNo(txtPlateNoN.getText().trim());
             newWeightTicket.setTrailerId(txtTrailerNoN.getText().trim());
-            newWeightTicket.setSling(Integer.parseInt(txtSlingN.getText().trim()));
-            newWeightTicket.setPallet(Integer.parseInt(txtPalletN.getText().trim()));
+            Number sling = (Number) txtSlingN.getValue();
+            newWeightTicket.setSling(sling.intValue());
+            Number pallet = (Number) txtPalletN.getValue();
+            newWeightTicket.setPallet(pallet.intValue());
             newWeightTicket.setRecvPlant(configuration.getWkPlant());
             newWeightTicket.setSoNiemXa(txtSoNiemXaN.getText().trim());
             newWeightTicket.setBatch(txtProductionBatchN.getText().trim());
