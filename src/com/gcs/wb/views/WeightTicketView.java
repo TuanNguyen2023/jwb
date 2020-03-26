@@ -65,6 +65,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
@@ -717,7 +718,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         txtTrailerPlate.setDisabledTextColor(resourceMap.getColor("txtGRText.disabledTextColor")); // NOI18N
         txtTrailerPlate.setName("txtTrailerPlate"); // NOI18N
 
-        txtSling.setEditable(false);
+        txtSling.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
         txtSling.setDisabledTextColor(resourceMap.getColor("txtGRText.disabledTextColor")); // NOI18N
         txtSling.setName("txtSling"); // NOI18N
 
@@ -727,7 +728,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         lblPallet.setText(resourceMap.getString("lblPallet.text")); // NOI18N
         lblPallet.setName("lblPallet"); // NOI18N
 
-        txtPallet.setEditable(false);
+        txtPallet.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
         txtPallet.setDisabledTextColor(resourceMap.getColor("txtGRText.disabledTextColor")); // NOI18N
         txtPallet.setName("txtPallet"); // NOI18N
 
@@ -860,12 +861,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     .addComponent(txtCMNDBL, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
                     .addGroup(pnWTLeftLayout.createSequentialGroup()
                         .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnWTLeftLayout.createSequentialGroup()
-                                .addComponent(txtLicPlate, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(24, 24, 24))
-                            .addGroup(pnWTLeftLayout.createSequentialGroup()
-                                .addComponent(txtSling, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                            .addComponent(txtLicPlate, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtSling, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(24, 24, 24)
                         .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(lblTrailerPlate)
                             .addComponent(lblPallet))
@@ -2118,8 +2116,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         || Constants.WeighingProcess.MODE_DETAIL.OUT_SELL_WATERWAY.name().equals(weightTicket.getMode())
                         || Constants.WeighingProcess.MODE_DETAIL.OUT_OTHER.name().equals(weightTicket.getMode())
                         || Constants.WeighingProcess.MODE_DETAIL.IN_OTHER.name().equals(weightTicket.getMode())) {
-                    txtSling.setText(String.valueOf(weightTicket.getSling()));
-                    txtPallet.setText(String.valueOf(weightTicket.getPallet()));
+                    txtSling.setText(NumberFormat.getInstance().format(weightTicket.getSling()));
+                    txtPallet.setText(NumberFormat.getInstance().format(weightTicket.getPallet()));
                 }
                 txtRemark.setText(weightTicket.getRemark());
                 txtBatchProduce.setText(weightTicket.getBatch());
@@ -2146,6 +2144,10 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         || Constants.WeighingProcess.MODE_DETAIL.OUT_PULL_STATION.name().equals(weightTicket.getMode())
                         || Constants.WeighingProcess.MODE_DETAIL.IN_PO_PURCHASE.name().equals(weightTicket.getMode())) {
                     txtPONo.setText(weightTicket.getWeightTicketDetail().getEbeln());
+                }
+
+                if (WeighBridgeApp.getApplication().isOfflineMode()) {
+                    txtRegItem.setText(weightTicket.getWeightTicketDetail().getRegItemDescription());
                 }
                 txtWeight.setText(df.format(weightTicket.getWeightTicketDetail().getRegItemQuantity()).toString());
                 if (Constants.WeighingProcess.MODE_DETAIL.OUT_SLOC_SLOC.name().equals(weightTicket.getMode())
@@ -2488,14 +2490,17 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     }
                 }
             } else {
-                if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
-                    cause = cause.getCause();
+                if (!ExceptionUtil.isDatabaseDisconnectedException(cause)) {
+                    if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
+                        cause = cause.getCause();
+                    }
+                    logger.error(null, cause);
+                    JOptionPane.showMessageDialog(rootPane,
+                            (cause.getMessage() == null || cause.getMessage().isEmpty())
+                            ? "Null Pointer Exception" : cause.getMessage());
                 }
-                logger.error(null, cause);
-                JOptionPane.showMessageDialog(rootPane,
-                        (cause.getMessage() == null || cause.getMessage().isEmpty())
-                        ? "Null Pointer Exception" : cause.getMessage());
             }
+
             clearForm();
         }
 
