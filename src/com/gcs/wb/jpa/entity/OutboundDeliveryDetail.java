@@ -91,6 +91,26 @@ public class OutboundDeliveryDetail implements Serializable {
     private String mandt;
     @Column(name = "ship_to")
     private String shipTo;
+    @Column(name = "vsbed")
+    private String vsbed;
+    @Column(name = "zkvgr1")
+    private String zkvgr1;
+    @Column(name = "zkvgr1_text")
+    private String zkvgr1Text;
+    @Column(name = "zkvgr2")
+    private String zkvgr2;
+    @Column(name = "zkvgr2_text")
+    private String zkvgr2Text;
+    @Column(name = "zkvgr3")
+    private String zkvgr3;
+    @Column(name = "zkvgr3_text")
+    private String zkvgr3Text;
+    @Column(name = "sort1")
+    private String sort1;
+    @Column(name = "fscale")
+    private BigDecimal fScale;
+    @Column(name = "sscale")
+    private BigDecimal sScale;
     @ManyToOne
     @JoinColumn(name = "outbound_delivery_id")
     private OutboundDelivery outboundDelivery;
@@ -313,6 +333,86 @@ public class OutboundDeliveryDetail implements Serializable {
     
     public void setPosted(boolean isPosted) {
         this.status = isPosted ? Constants.WeightTicket.STATUS_POSTED : null;
+    }
+
+    public String getVsbed() {
+        return vsbed;
+    }
+
+    public void setVsbed(String vsbed) {
+        this.vsbed = vsbed;
+    }
+    
+    public String getZkvgr1() {
+        return zkvgr1;
+    }
+
+    public void setZkvgr1(String zkvgr1) {
+        this.zkvgr1 = zkvgr1;
+    }
+    
+    public String getZkvgr1Text() {
+        return zkvgr1Text;
+    }
+
+    public void setZkvgr1Text(String zkvgr1Text) {
+        this.zkvgr1Text = zkvgr1Text;
+    }
+    
+    public String getZkvgr2() {
+        return zkvgr2;
+    }
+
+    public void setZkvgr2(String zkvgr2) {
+        this.zkvgr2 = zkvgr2;
+    }
+    
+    public String getZkvgr2Text() {
+        return zkvgr2Text;
+    }
+
+    public void setZkvgr2Text(String zkvgr2Text) {
+        this.zkvgr2Text = zkvgr2Text;
+    }
+    
+    public String getZkvgr3() {
+        return zkvgr3;
+    }
+
+    public void setZkvgr3(String zkvgr3) {
+        this.zkvgr3 = zkvgr3;
+    }
+    
+    public String getZkvgr3Text() {
+        return zkvgr3Text;
+    }
+
+    public void setZkvgr3Text(String zkvgr3Text) {
+        this.zkvgr3Text = zkvgr3Text;
+    }
+    
+    public String getSort1() {
+        return sort1;
+    }
+
+    public void setSort1(String sort1) {
+        this.sort1 = sort1;
+    }
+
+    public BigDecimal getFscale() {
+        return fScale;
+    }
+
+    public void setFscale(BigDecimal fScale) {
+        this.fScale = fScale;
+    }
+
+    public BigDecimal getSscale() {
+        return sScale;
+    }
+
+    public void setSscale(BigDecimal sScale) {
+        this.sScale = sScale;
     }
 
     public OutboundDelivery getOutboundDelivery() {

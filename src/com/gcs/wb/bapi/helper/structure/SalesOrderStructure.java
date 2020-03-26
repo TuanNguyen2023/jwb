@@ -38,6 +38,28 @@ public class SalesOrderStructure implements Serializable {
     private String _shipToName;
     @Parameter(SyncContractSOGetListConstants.NOTE)
     private String _note;
+    @Parameter(SyncContractSOGetListConstants.CHANGED)
+    private String _changed;
+    @Parameter(SyncContractSOGetListConstants.VSBED)
+    private String _vsbed;
+    @Parameter(SyncContractSOGetListConstants.ZKVGR1)
+    private String _zkvgr1;
+    @Parameter(SyncContractSOGetListConstants.ZKVGR1_TEXT)
+    private String _zkvgr1Text;
+    @Parameter(SyncContractSOGetListConstants.ZKVGR2)
+    private String _zkvgr2;
+    @Parameter(SyncContractSOGetListConstants.ZKVGR2_TEXT)
+    private String _zkvgr2Text;
+    @Parameter(SyncContractSOGetListConstants.ZKVGR3)
+    private String _zkvgr3;
+    @Parameter(SyncContractSOGetListConstants.ZKVGR3_TEXT)
+    private String _zkvgr3Text;
+    @Parameter(SyncContractSOGetListConstants.SORT1)
+    private String _sort1;
+    @Parameter(SyncContractSOGetListConstants.TRAID)
+    private String _traid;
+    @Parameter(SyncContractSOGetListConstants.WERKS)
+    private String _werks;
 
     public SalesOrderStructure() {
     }
@@ -80,5 +102,49 @@ public class SalesOrderStructure implements Serializable {
 
     public String getNote() {
         return _note;
+    }
+
+    public String getWerks() {
+        return _werks;
+    }
+
+    public String getTraid() {
+        return _traid;
+    }
+
+    public String getChanged() {
+        return _changed;
+    }
+
+     public String getVsbed() {
+        return _vsbed;
+    }
+    
+    public String getZkvgr1() {
+        return _zkvgr1;
+    }
+    
+    public String getZkvgr1Text() {
+        return _zkvgr1Text;
+    }
+
+    public String getZkvgr2() {
+        return _zkvgr2;
+    }
+
+    public String getZkvgr2Text() {
+        return _zkvgr2Text;
+    }
+
+    public String getZkvgr3() {
+        return _zkvgr3;
+    }
+
+    public String getZkvgr3Text() {
+        return _zkvgr3Text;
+    }
+
+    public String getSort1() {
+        return _sort1;
     }
 }

@@ -10,6 +10,7 @@ import com.gcs.wb.base.constant.Constants.WeighingProcess.MODE;
 import com.gcs.wb.base.constant.Constants.WeighingProcess.MODE_DETAIL;
 import com.gcs.wb.base.enums.ModeEnum;
 import com.gcs.wb.base.enums.StatusEnum;
+import com.gcs.wb.base.util.ExceptionUtil;
 import com.gcs.wb.base.util.StringUtil;
 import com.gcs.wb.base.validator.DateFromToValidator;
 import com.gcs.wb.controller.WeightTicketController;
@@ -90,6 +91,9 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
     List<String> cbxSlocs = new ArrayList<>();
     private boolean isShow = true;
     private String modeSearch = null;
+
+    DefaultComboBoxModel materialModel;
+    DefaultComboBoxModel materialInternalModel;
 
     public RegistrationVehicleOfflineView() {
         newWeightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
@@ -282,6 +286,9 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
         cbxVendorTransportN.setModel(vendor2Model);
 
         cbxCustomerN.setModel(weightTicketRegistarationController.getCustomerModel());
+
+        materialModel = weightTicketRegistarationController.getListMaterial();
+        materialInternalModel = weightTicketRegistarationController.getListMaterialInternal();
     }
 
     private void loadSLoc(List<String> lgorts, String lgortSelected) {
@@ -1941,8 +1948,10 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             txtWeightN.setText("0");
             cbxCustomerN.setSelectedIndex(-1);
 
-            logger.error(null, cause);
-            JOptionPane.showMessageDialog(rootPane, cause.getMessage());
+            if (!ExceptionUtil.isDatabaseDisconnectedException(cause)) {
+                logger.error(null, cause);
+                JOptionPane.showMessageDialog(rootPane, cause.getMessage());
+            }
         }
 
         @Override
@@ -2215,7 +2224,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
         showComponent(cbxCustomerN, lblCustomerN, true, false);
 
-        cbxMaterialTypeN.setModel(weightTicketRegistarationController.getListMaterial());
+        cbxMaterialTypeN.setModel(materialModel);
         cbxMaterialTypeN.setSelectedIndex(-1);
     }
 
@@ -2249,7 +2258,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
         showComponent(cbxCustomerN, lblCustomerN, true, false);
 
-        cbxMaterialTypeN.setModel(weightTicketRegistarationController.getListMaterial());
+        cbxMaterialTypeN.setModel(materialModel);
         cbxMaterialTypeN.setSelectedIndex(-1);
     }
 
@@ -2283,7 +2292,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
         showComponent(cbxCustomerN, lblCustomerN, true, true);
 
-        cbxMaterialTypeN.setModel(weightTicketRegistarationController.getListMaterialInternal());
+        cbxMaterialTypeN.setModel(materialInternalModel);
         cbxMaterialTypeN.setSelectedIndex(-1);
     }
 
@@ -2317,7 +2326,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
         showComponent(cbxCustomerN, lblCustomerN, true, false);
 
-        cbxMaterialTypeN.setModel(weightTicketRegistarationController.getListMaterial());
+        cbxMaterialTypeN.setModel(materialModel);
         cbxMaterialTypeN.setSelectedIndex(-1);
     }
 
@@ -2355,7 +2364,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
 
         showComponent(cbxCustomerN, lblCustomerN, true, false);
 
-        cbxMaterialTypeN.setModel(weightTicketRegistarationController.getListMaterial());
+        cbxMaterialTypeN.setModel(materialModel);
         cbxMaterialTypeN.setSelectedIndex(-1);
     }
 
@@ -2396,7 +2405,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         showComponent(cbxVendorTransportN, lblVendorTransportN, isShowPOV, false);
         showComponent(cbxCustomerN, lblCustomerN, true, false);
 
-        cbxMaterialTypeN.setModel(weightTicketRegistarationController.getListMaterial());
+        cbxMaterialTypeN.setModel(materialModel);
         cbxMaterialTypeN.setSelectedIndex(-1);
     }
 
@@ -2436,7 +2445,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
 
         showComponent(cbxCustomerN, lblCustomerN, true, false);
 
-        cbxMaterialTypeN.setModel(weightTicketRegistarationController.getListMaterial());
+        cbxMaterialTypeN.setModel(materialModel);
         cbxMaterialTypeN.setSelectedIndex(-1);
     }
 
@@ -2472,7 +2481,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
         showComponent(cbxCustomerN, lblCustomerN, true, false);
 
-        cbxMaterialTypeN.setModel(weightTicketRegistarationController.getListMaterial());
+        cbxMaterialTypeN.setModel(materialModel);
         cbxMaterialTypeN.setSelectedIndex(-1);
     }
 
@@ -3014,7 +3023,9 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         @Override
         protected void failed(Throwable cause) {
             logger.error(null, cause);
-            JOptionPane.showMessageDialog(rootPane, cause.getMessage());
+            if (!ExceptionUtil.isDatabaseDisconnectedException(cause)) {
+                JOptionPane.showMessageDialog(rootPane, cause.getMessage());
+            }
         }
     }
 
@@ -3260,8 +3271,10 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             plateNoValidDO = "";
             checkedCharg = "";
 
-            logger.error(null, cause);
-            JOptionPane.showMessageDialog(rootPane, cause.getMessage());
+            if (!ExceptionUtil.isDatabaseDisconnectedException(cause)) {
+                logger.error(null, cause);
+                JOptionPane.showMessageDialog(rootPane, cause.getMessage());
+            }
 
             validateForm();
         }
@@ -3397,8 +3410,6 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             } catch (Exception ex) {
                 btnSave.setEnabled(true);
             }
-
-            btnFind.doClick();
 
             return null;
         }
@@ -3579,6 +3590,8 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             setSaveNeeded(false);
 
             clearForm();
+
+            btnFind.doClick();
         }
     }
 // </editor-fold>
@@ -3956,8 +3969,10 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
                 cause = cause.getCause();
             }
-            logger.error(null, cause);
-            JOptionPane.showMessageDialog(rootPane, cause.getMessage());
+            if (!ExceptionUtil.isDatabaseDisconnectedException(cause)) {
+                logger.error(null, cause);
+                JOptionPane.showMessageDialog(rootPane, cause.getMessage());
+            }
 
             validateForm();
         }
@@ -4079,8 +4094,10 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
                 cause = cause.getCause();
             }
-            logger.error(null, cause);
-            JOptionPane.showMessageDialog(rootPane, cause.getMessage());
+            if (!ExceptionUtil.isDatabaseDisconnectedException(cause)) {
+                logger.error(null, cause);
+                JOptionPane.showMessageDialog(rootPane, cause.getMessage());
+            }
 
             validateForm();
         }
@@ -4106,7 +4123,8 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
 
     @Action(block = Task.BlockingScope.ACTION)
     public Task editOfflineRecord() {
-        return new EditOfflineRecordTask(Application.getInstance(WeighBridgeApp.class));
+        return new EditOfflineRecordTask(Application.getInstance(WeighBridgeApp.class
+        ));
     }
 
     private class EditOfflineRecordTask extends Task<Object, Void> {

@@ -118,6 +118,16 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
                 outboundDeliveryDetail.setBztxt(from.getEs_text());
                 outboundDeliveryDetail.setMandt(configuration.getSapClient());
                 outboundDeliveryDetail.setCreatedDate(dateNow);
+                outboundDeliveryDetail.setVsbed(doItem.getVsbed());
+                outboundDeliveryDetail.setZkvgr1(doItem.getZkvgr1());
+                outboundDeliveryDetail.setZkvgr1Text(doItem.getZkvgr1Text());
+                outboundDeliveryDetail.setZkvgr2(doItem.getZkvgr2());
+                outboundDeliveryDetail.setZkvgr2Text(doItem.getZkvgr2Text());
+                outboundDeliveryDetail.setZkvgr3(doItem.getZkvgr3());
+                outboundDeliveryDetail.setZkvgr3Text(doItem.getZkvgr3Text());
+                outboundDeliveryDetail.setSort1(doItem.getSort1());
+                outboundDeliveryDetail.setFscale(doItem.getFscale());
+                outboundDeliveryDetail.setSscale(doItem.getSscale());
 
                 outboundDelivery.addOutboundDeliveryDetail(outboundDeliveryDetail);
                 //end set data

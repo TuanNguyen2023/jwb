@@ -141,6 +141,26 @@ public class DoGetDetailStructure implements Serializable {
     /** Weigh ticker Ref*/
     @Parameter(DoGetDetailConstants.WT_ID_REF)
     private String _wtIdRef;
+    @Parameter(DoGetDetailConstants.VSBED)
+    private String _vsbed;
+    @Parameter(DoGetDetailConstants.ZKVGR1)
+    private String _zkvgr1;
+    @Parameter(DoGetDetailConstants.ZKVGR1_TEXT)
+    private String _zkvgr1Text;
+    @Parameter(DoGetDetailConstants.ZKVGR2)
+    private String _zkvgr2;
+    @Parameter(DoGetDetailConstants.ZKVGR2_TEXT)
+    private String _zkvgr2Text;
+    @Parameter(DoGetDetailConstants.ZKVGR3)
+    private String _zkvgr3;
+    @Parameter(DoGetDetailConstants.ZKVGR3_TEXT)
+    private String _zkvgr3Text;
+    @Parameter(DoGetDetailConstants.SORT1)
+    private String _sort1;
+    @Parameter(DoGetDetailConstants.FSCALE)
+    private BigDecimal _fscale;
+    @Parameter(DoGetDetailConstants.SSCALE)
+    private BigDecimal _sscale;
 
     // </editor-fold>
 
@@ -459,6 +479,54 @@ public class DoGetDetailStructure implements Serializable {
      */
     public String getWtIdRef() {
         return _wtIdRef;
+    }
+    
+    public String getVsbed() {
+        return _vsbed;
+    }
+    
+    public String getZkvgr1() {
+        return _zkvgr1;
+    }
+    
+    public String getZkvgr1Text() {
+        return _zkvgr1Text;
+    }
+    
+    public String getZkvgr2() {
+        return _zkvgr2;
+    }
+    
+    public String getZkvgr2Text() {
+        return _zkvgr2Text;
+    }
+    
+    public String getZkvgr3() {
+        return _zkvgr3;
+    }
+    
+    public String getZkvgr3Text() {
+        return _zkvgr3Text;
+    }
+    
+    public String getSort1() {
+        return _sort1;
+    }
+    
+    /**
+     * fscale for Xuat plant
+     * @return the _fscale
+     */
+    public BigDecimal getFscale() {
+        return _fscale;
+    }
+
+    /**
+     * sscale for Xuat plant
+     * @return the _sscale
+     */
+    public BigDecimal getSscale() {
+        return _sscale;
     }
 
     // </editor-fold>

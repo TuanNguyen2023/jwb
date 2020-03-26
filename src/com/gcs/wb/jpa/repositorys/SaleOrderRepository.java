@@ -4,8 +4,10 @@
  */
 package com.gcs.wb.jpa.repositorys;
 
+import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.base.util.ExceptionUtil;
 import com.gcs.wb.jpa.JPAConnector;
+import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.jpa.entity.SaleOrder;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +23,13 @@ public class SaleOrderRepository {
 
     EntityManager entityManager = JPAConnector.getInstance();
     Logger logger = Logger.getLogger(this.getClass());
+    Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
 
     public List<SaleOrder> getListSaleOrder() {
         List<SaleOrder> list = new ArrayList<>();
         try {
             TypedQuery<SaleOrder> typedQuery = entityManager.createNamedQuery("SaleOrder.findAll", SaleOrder.class);
+            typedQuery.setParameter("mandt", configuration.getSapClient());
             list = typedQuery.getResultList();
         } catch (Exception ex) {
             logger.error(null, ex);
@@ -39,6 +43,7 @@ public class SaleOrderRepository {
         try {
             TypedQuery<SaleOrder> typedQuery = entityManager.createNamedQuery("SaleOrder.findBySoNumber", SaleOrder.class);
             typedQuery.setParameter("soNumber", soNumber);
+            typedQuery.setParameter("mandt", configuration.getSapClient());
             List<SaleOrder> sellOrders = typedQuery.getResultList();
             if (sellOrders != null && sellOrders.size() > 0) {
                 return sellOrders.get(0);

@@ -129,19 +129,24 @@ public class WeightTicketRegistarationController {
 
     public DefaultComboBoxModel getListMaterial() {
 
-        List<Material> materials = wTRegService.getListMaterial();
         DefaultComboBoxModel result = new DefaultComboBoxModel();
+        try {
+            List<Material> materials = wTRegService.getListMaterial();
 
-        materials = materials.stream()
-                .filter(FunctionalUtil.distinctByKey(p -> p.getMatnr()))
-                .collect(Collectors.toList());
+            materials = materials.stream()
+                    .filter(FunctionalUtil.distinctByKey(p -> p.getMatnr()))
+                    .collect(Collectors.toList());
 
-        for (Material material : materials) {
-            if (result.getIndexOf(material) < 0 && material.getMatnr() != null
-                    && material.getMaktx() != null && !material.getMaktx().isEmpty()) {
-                result.addElement(material);
+            for (Material material : materials) {
+                if (result.getIndexOf(material) < 0 && material.getMatnr() != null
+                        && material.getMaktx() != null && !material.getMaktx().isEmpty()) {
+                    result.addElement(material);
+                }
             }
+        } catch (Exception ex) {
+            logger.error(ex);
         }
+
         return result;
     }
 
@@ -323,19 +328,24 @@ public class WeightTicketRegistarationController {
      */
     public DefaultComboBoxModel getListMaterialInternal() {
 
-        List<MaterialInternal> materials = materialInternalRepository.getMaterialInternals();
         DefaultComboBoxModel result = new DefaultComboBoxModel();
+        try {
+            List<MaterialInternal> materials = materialInternalRepository.getMaterialInternals();
 
-        materials = materials.stream()
-                .filter(FunctionalUtil.distinctByKey(p -> p.getMatnr()))
-                .collect(Collectors.toList());
+            materials = materials.stream()
+                    .filter(FunctionalUtil.distinctByKey(p -> p.getMatnr()))
+                    .collect(Collectors.toList());
 
-        for (MaterialInternal material : materials) {
-            if (result.getIndexOf(material) < 0 && material.getMatnr() != null
-                    && material.getMaktx() != null && !material.getMaktx().isEmpty()) {
-                result.addElement(material);
+            for (MaterialInternal material : materials) {
+                if (result.getIndexOf(material) < 0 && material.getMatnr() != null
+                        && material.getMaktx() != null && !material.getMaktx().isEmpty()) {
+                    result.addElement(material);
+                }
             }
+        } catch (Exception ex) {
+            logger.error(ex);
         }
+
         return result;
     }
 
@@ -349,7 +359,6 @@ public class WeightTicketRegistarationController {
         try {
             vendors = vendorRepository.getListVendor();
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(mainFrame, ex);
         }
 
         vendors = vendors.stream()
