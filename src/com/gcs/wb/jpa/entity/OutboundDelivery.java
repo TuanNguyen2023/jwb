@@ -126,6 +126,8 @@ public class OutboundDelivery implements Serializable {
     private Date createdDate;
     @Column(name = "updated_date")
     private Date updatedDate;
+    @Column(name = "weight_ticket_id")
+    private String weight_ticket_id;
     
     @OneToMany(mappedBy = "outboundDelivery", cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "outbound_delivery_id")
@@ -509,6 +511,14 @@ public class OutboundDelivery implements Serializable {
 
     public void setWtIdRef(String wtIdRef) {
         this.wtIdRef = wtIdRef;
+    }
+
+     public String getWeightTicketId() {
+        return weight_ticket_id;
+    }
+
+    public void setWeightTicketId(String weight_ticket_id) {
+        this.weight_ticket_id = weight_ticket_id;
     }
     
     public List<OutboundDeliveryDetail> getOutboundDeliveryDetails() {

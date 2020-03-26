@@ -16,6 +16,7 @@ import com.gcs.wb.bapi.outbdlv.DOCreate2PGIBapi;
 import com.gcs.wb.bapi.outbdlv.DOPostingPGIBapi;
 import com.gcs.wb.bapi.outbdlv.DORevertBapi;
 import com.gcs.wb.bapi.outbdlv.WsDeliveryUpdateBapi;
+import com.gcs.wb.bapi.outbdlv.structure.IsExtensionStructure;
 import com.gcs.wb.bapi.outbdlv.structure.OutbDeliveryCreateStoStructure;
 import com.gcs.wb.bapi.outbdlv.structure.VbkokStructure;
 import com.gcs.wb.bapi.outbdlv.structure.VbpokStructure;
@@ -707,6 +708,11 @@ public class WeightTicketService {
         tab.add(tab_wa);
         bapi.setVbpok_tab(tab);
 
+        IsExtensionStructure isExtensionStructure = new IsExtensionStructure();
+        isExtensionStructure.setZ_sling(Integer.toString(wt.getSling()));
+        isExtensionStructure.setZ_pallet(Integer.toString(wt.getPallet()));
+        bapi.setIsExtension(isExtensionStructure);
+
         return bapi;
     }
 
@@ -1321,6 +1327,11 @@ public class WeightTicketService {
         tab_waVp.setMeins(purOrder.getPurchaseOrderDetail().getPoUnit());
         tabVp.add(tab_waVp);
         bapi.setVbpok_tab(tabVp);
+
+        IsExtensionStructure isExtensionStructure = new IsExtensionStructure();
+        isExtensionStructure.setZ_sling(Integer.toString(wt.getSling()));
+        isExtensionStructure.setZ_pallet(Integer.toString(wt.getPallet()));
+        bapi.setIsExtension(isExtensionStructure);
 
         return bapi;
     }

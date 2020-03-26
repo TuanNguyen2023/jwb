@@ -2,14 +2,10 @@ package com.gcs.wb.views.validations;
 
 import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.base.validator.LengthValidator;
-import com.gcs.wb.jpa.entity.OutboundDelivery;
 import com.gcs.wb.jpa.entity.Vehicle;
 import com.gcs.wb.jpa.repositorys.VehicleRepository;
 import java.awt.Color;
-import java.util.Date;
-import java.util.List;
 import java.util.regex.Matcher;
-import java.util.stream.Stream;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JRootPane;
@@ -143,6 +139,22 @@ public class WeightTicketRegistrationValidation {
         try {
             Long.parseLong(value);
             result = value.length() == 10;
+        } catch (NumberFormatException ex) {
+            result = false;
+        }
+
+        label.setForeground(result ? Color.black : Color.red);
+
+        return result;
+    }
+
+    public boolean validateIntegerValue(String value, JComponent label) {
+        boolean result;
+        value = value.trim().replace(",", "");
+
+        try {
+            Integer.parseInt(value);
+            result = true;
         } catch (NumberFormatException ex) {
             result = false;
         }

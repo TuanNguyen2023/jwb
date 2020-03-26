@@ -65,6 +65,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
@@ -107,7 +108,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     ToleranceUtil toleranceUtil = new ToleranceUtil();
     MaterialRepository materialRepository = new MaterialRepository();
     MaterialInternalRepository materialInternalRepository = new MaterialInternalRepository();
-    WeightTicketRepository weightTicketRepository = new WeightTicketRepository();
 
     WeightTicketController weightTicketController = new WeightTicketController();
     WeightTicketRegistarationController weightTicketRegistarationController = new WeightTicketRegistarationController();
@@ -718,7 +718,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         txtTrailerPlate.setDisabledTextColor(resourceMap.getColor("txtGRText.disabledTextColor")); // NOI18N
         txtTrailerPlate.setName("txtTrailerPlate"); // NOI18N
 
-        txtSling.setEditable(false);
+        txtSling.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
         txtSling.setDisabledTextColor(resourceMap.getColor("txtGRText.disabledTextColor")); // NOI18N
         txtSling.setName("txtSling"); // NOI18N
 
@@ -728,7 +728,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         lblPallet.setText(resourceMap.getString("lblPallet.text")); // NOI18N
         lblPallet.setName("lblPallet"); // NOI18N
 
-        txtPallet.setEditable(false);
+        txtPallet.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getIntegerInstance())));
         txtPallet.setDisabledTextColor(resourceMap.getColor("txtGRText.disabledTextColor")); // NOI18N
         txtPallet.setName("txtPallet"); // NOI18N
 
@@ -861,12 +861,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     .addComponent(txtCMNDBL, javax.swing.GroupLayout.DEFAULT_SIZE, 337, Short.MAX_VALUE)
                     .addGroup(pnWTLeftLayout.createSequentialGroup()
                         .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnWTLeftLayout.createSequentialGroup()
-                                .addComponent(txtLicPlate, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(24, 24, 24))
-                            .addGroup(pnWTLeftLayout.createSequentialGroup()
-                                .addComponent(txtSling, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                            .addComponent(txtLicPlate, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtSling, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(24, 24, 24)
                         .addGroup(pnWTLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(lblTrailerPlate)
                             .addComponent(lblPallet))
@@ -2119,8 +2116,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         || Constants.WeighingProcess.MODE_DETAIL.OUT_SELL_WATERWAY.name().equals(weightTicket.getMode())
                         || Constants.WeighingProcess.MODE_DETAIL.OUT_OTHER.name().equals(weightTicket.getMode())
                         || Constants.WeighingProcess.MODE_DETAIL.IN_OTHER.name().equals(weightTicket.getMode())) {
-                    txtSling.setText(String.valueOf(weightTicket.getSling()));
-                    txtPallet.setText(String.valueOf(weightTicket.getPallet()));
+                    txtSling.setText(NumberFormat.getInstance().format(weightTicket.getSling()));
+                    txtPallet.setText(NumberFormat.getInstance().format(weightTicket.getPallet()));
                 }
                 txtRemark.setText(weightTicket.getRemark());
                 txtBatchProduce.setText(weightTicket.getBatch());
@@ -2147,6 +2144,10 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         || Constants.WeighingProcess.MODE_DETAIL.OUT_PULL_STATION.name().equals(weightTicket.getMode())
                         || Constants.WeighingProcess.MODE_DETAIL.IN_PO_PURCHASE.name().equals(weightTicket.getMode())) {
                     txtPONo.setText(weightTicket.getWeightTicketDetail().getEbeln());
+                }
+
+                if (WeighBridgeApp.getApplication().isOfflineMode()) {
+                    txtRegItem.setText(weightTicket.getWeightTicketDetail().getRegItemDescription());
                 }
                 txtWeight.setText(df.format(weightTicket.getWeightTicketDetail().getRegItemQuantity()).toString());
                 if (Constants.WeighingProcess.MODE_DETAIL.OUT_SLOC_SLOC.name().equals(weightTicket.getMode())
@@ -2194,7 +2195,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 BigDecimal totalRegItemQuantity = BigDecimal.ZERO;
                 for (WeightTicketDetail weightTicketDetail : weightTicketDetails) {
                     if ((weightTicketDetail.getDeliveryOrderNo() == null || weightTicketDetail.getDeliveryOrderNo().trim().isEmpty())
-                            || (!weightTicket.isPosted() && (weightTicketDetail.getEbeln() != null && !weightTicketDetail.getEbeln().trim().isEmpty()))
+                            || (!weightTicket.isPosted() && (!weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER") && weightTicketDetail.getEbeln() != null && !weightTicketDetail.getEbeln().trim().isEmpty()))
                             || (weightTicketDetail.getDeliveryOrderNo() == null && weightTicketDetail.getEbeln() == null)) {
                         setWithoutDO(true);
                     } else {
@@ -2275,6 +2276,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                     sapOutbDel.setId(outbDel.getId());
                                     sapOutbDel.setPosted(outbDel.isPosted());
                                     sapOutbDel.setMatDoc(outbDel.getMatDoc());
+                                    sapOutbDel.setWeightTicketId(outbDel.getWeightTicketId());
                                     if (!entityManager.getTransaction().isActive()) {
                                         entityManager.getTransaction().begin();
                                     }
@@ -3812,15 +3814,11 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         item.setfTime(now);
                         item.setUpdatedDate(now);
                         // tinh toan cho Nhap kho tu plant xuat > plant nhap
-                        WeightTicket wtPlantOut
-                                = weightTicketRepository.findByDOFromPO(outbDel.getDeliveryOrderNo());
-                        if ((wtPlantOut != null) && (checkPlantOutToIn(item, wtPlantOut.getWplant()))) {
-                            double outSScalePlant = 0;
-                            double result = ((Number) txfInQty.getValue()).doubleValue();
-                            String poNum = wtPlantOut.getWeightTicketDetail().getEbeln();
-                            PurchaseOrder purchaseOrder = purchaseOrderRepository.findByPoNumber(poNum);
-                            if (purchaseOrder.getPurchaseOrderDetail().getPlant().equals(configuration.getWkPlant())) {
-                                outSScalePlant = wtPlantOut.getSScale().doubleValue();
+                        if(weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER")) {
+                            if (checkPlantOutToIn(item, outbDel.getWerks())) {
+                                double outSScalePlant = 0;
+                                double result = ((Number) txfInQty.getValue()).doubleValue();
+                                outSScalePlant = item.getSscale().doubleValue();
                                 // check can 1 cua nhap voi can 2 xuat chenh lech 1%
                                 double upper = outSScalePlant + (outSScalePlant * 1) / 100;
                                 double lower = outSScalePlant - (outSScalePlant * 1) / 100;
@@ -3836,6 +3834,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                 }
                             }
                         }
+                        
                         if (!entityManager.getTransaction().isActive()) {
                             entityManager.getTransaction().begin();
                         }
@@ -4319,8 +4318,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             checkBag = true;
         }
         MaterialInterPlant materialInterPlant = materialInterPlantRepository.findByMatnrAndPlantInOut(item.getMatnr(), configuration.getWkPlant(), wplantOut);
-        if (weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER")
-                && (materialInterPlant != null)
+        if ((materialInterPlant != null)
                 && (checkBag)) {
             return true;
         }

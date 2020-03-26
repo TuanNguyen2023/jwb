@@ -24,6 +24,7 @@ import com.gcs.wb.jpa.repositorys.MaterialInternalRepository;
 import com.gcs.wb.jpa.repositorys.OutboundDetailRepository;
 import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
 import com.gcs.wb.jpa.repositorys.WeightTicketDetailRepository;
+import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import com.gcs.wb.model.WeighingMode;
 import com.gcs.wb.views.validations.WeightTicketRegistrationValidation;
 import com.sap.conn.jco.JCoException;
@@ -98,6 +99,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
     private PurchaseOrder purchaseOrderPOSTO = new PurchaseOrder();
     OutboundDetailRepository detailRepository = new OutboundDetailRepository();
     WeightTicketDetailRepository weightTicketDetailRepository = new WeightTicketDetailRepository();
+    WeightTicketRepository weightTicketRepository = new WeightTicketRepository();
 
     DefaultComboBoxModel materialModel = weightTicketRegistarationController.getListMaterial();
     DefaultComboBoxModel materialInternalModel = weightTicketRegistarationController.getListMaterialInternal();
@@ -2623,8 +2625,11 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
+        boolean isSlingValid = wtRegisValidation.validateIntegerValue(txtSlingN.getText(), lblSlingN);
+        boolean isPalletValid = wtRegisValidation.validateIntegerValue(txtPalletN.getText(), lblPalletN);
+
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
-                && isCMNDBLValid && isPlateNoValid && isSalanValid
+                && isCMNDBLValid && isPlateNoValid && isSalanValid && isSlingValid && isPalletValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isMaterialTypeValid && isSlocValid && isWeightValid;
     }
@@ -2662,9 +2667,12 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             }
         }
 
+        boolean isSlingValid = wtRegisValidation.validateIntegerValue(txtSlingN.getText(), lblSlingN);
+        boolean isPalletValid = wtRegisValidation.validateIntegerValue(txtPalletN.getText(), lblPalletN);
+
         return isRegisterIdValid && isDriverNameValid && isCMNDBLValid && isPlateNoValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
-                && isNoteValid && isSlocValid && isSalanValid;
+                && isNoteValid && isSlocValid && isSalanValid && isSlingValid && isPalletValid;
     }
 
     private boolean validateOutPlantPlant() {
@@ -2698,8 +2706,11 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             lblVendorTransportN.setForeground(Color.red);
         }
 
+        boolean isSlingValid = wtRegisValidation.validateIntegerValue(txtSlingN.getText(), lblSlingN);
+        boolean isPalletValid = wtRegisValidation.validateIntegerValue(txtPalletN.getText(), lblPalletN);
+
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
-                && isCMNDBLValid && isSalanValid && isLoadSourceValid
+                && isCMNDBLValid && isSalanValid && isLoadSourceValid && isSlingValid && isPalletValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isSlocValid && isVendorTransValid;
     }
@@ -2822,10 +2833,13 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
+        boolean isSlingValid = wtRegisValidation.validateIntegerValue(txtSlingN.getText(), lblSlingN);
+        boolean isPalletValid = wtRegisValidation.validateIntegerValue(txtPalletN.getText(), lblPalletN);
+
         return isRegisterIdValid && isDriverNameValid
                 && isCMNDBLValid && isPlateNoValid && isSalanValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
-                && isNoteValid && isSlocValid;
+                && isNoteValid && isSlocValid && isSlingValid && isPalletValid;
     }
 
     private void loadBatchStockModel(JComboBox slocComponent, JComboBox batchStockComponent, boolean isSloc) {
@@ -3319,8 +3333,17 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             weightTicketDetail.setRegItemQuantity(outboundDelivery.getLfimg());
             weightTicketDetail.setSoNumber(salesOrder);
             weightTicketDetail.setShipTo(outboundDelivery.getOutboundDeliveryDetail().getShipTo());
+            
+            // set PO xuat, vendor van chuyen cho mode Nhap chuyen kho
+            weightTicketDetail.setEbeln(outboundDelivery.getOutboundDeliveryDetail().getPoNumber());
+            weightTicketDetail.setLoadVendor(outboundDelivery.getOutboundDeliveryDetail().getCVendor());
+            weightTicketDetail.setTransVendor(outboundDelivery.getOutboundDeliveryDetail().getTVendor());
+            
             newWeightTicket.addWeightTicketDetail(weightTicketDetail);
             newWeightTicket.setWeightTicketIdRef(outboundDelivery.getWtIdRef());
+            
+            newWeightTicket.setSling(outboundDelivery.getOutboundDeliveryDetail().getZsling());
+            newWeightTicket.setPallet(outboundDelivery.getOutboundDeliveryDetail().getZPallet());
 
             List<OutboundDeliveryDetail> outboundDeliveryDetails = outboundDelivery.getOutboundDeliveryDetails();
             for (OutboundDeliveryDetail outboundDeliveryDetail : outboundDeliveryDetails) {
@@ -3384,6 +3407,9 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             switch (modeDetail) {
                 case IN_WAREHOUSE_TRANSFER:
                     txtWeightTickerRefN.setText(newWeightTicket.getWeightTicketIdRef());
+                        txtSlingN.setText(String.valueOf(newWeightTicket.getSling()));
+                        txtPalletN.setText(String.valueOf(newWeightTicket.getPallet()));
+                    
             }
 
             // load sloc
@@ -3472,8 +3498,10 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             newWeightTicket.setDriverIdNo(txtCMNDN.getText().trim());
             newWeightTicket.setPlateNo(txtPlateNoN.getText().trim());
             newWeightTicket.setTrailerId(txtTrailerNoN.getText().trim());
-            newWeightTicket.setSling(Integer.parseInt(txtSlingN.getText().trim()));
-            newWeightTicket.setPallet(Integer.parseInt(txtPalletN.getText().trim()));
+            Number sling = (Number) txtSlingN.getValue();
+            newWeightTicket.setSling(sling.intValue());
+            Number pallet = (Number) txtPalletN.getValue();
+            newWeightTicket.setPallet(pallet.intValue());
             newWeightTicket.setRecvPlant(configuration.getWkPlant());
             newWeightTicket.setSoNiemXa(txtSoNiemXaN.getText().trim());
             newWeightTicket.setBatch(txtProductionBatchN.getText().trim());
@@ -3488,7 +3516,17 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 for (int i = 0; i < do_list.length; i++) {
                     // save DO
                     String doNum = do_list[i].trim();
-                    deliveryDetails = detailRepository.findByDeliveryOrderNo(doNum);
+                    OutboundDelivery outboundDelivery = weightTicketRegistarationController.findByDeliveryOrderNumber(doNum);
+                    // update for header
+                    outboundDelivery.setWeightTicketId(newWeightTicket.getId());
+                    if (!entityManager.getTransaction().isActive()) {
+                            entityManager.getTransaction().begin();
+                        }
+                    entityManager.merge(outboundDelivery);
+                    entityManager.getTransaction().commit();
+
+                    // update for detail
+                    deliveryDetails = outboundDelivery.getOutboundDeliveryDetails();
                     for (int j = 0; j < deliveryDetails.size(); j++) {
                         OutboundDeliveryDetail detail = deliveryDetails.get(j);
                         detail.setWtId(newWeightTicket.getId());

@@ -1550,7 +1550,7 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
     if (modeDetail == MODE_DETAIL.IN_PO_PURCHASE) {
         boolean isWeightValid = wtRegisValidation.validateLength(txtWeightN.getText(), lblWeightN, 1, 10);
         if (isWeightValid && isValidPO) {
-            BigDecimal weight = new BigDecimal(txtWeightN.getText());
+            BigDecimal weight = new BigDecimal(txtWeightN.getText().trim().replace(",", ""));
 
             if (numCheckWeight.subtract(weight).compareTo(BigDecimal.ZERO) < 0) {
                 JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.quantityOver", numCheckWeight));
@@ -2636,8 +2636,11 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
+        boolean isSlingValid = wtRegisValidation.validateIntegerValue(txtSlingN.getText(), lblSlingN);
+        boolean isPalletValid = wtRegisValidation.validateIntegerValue(txtPalletN.getText(), lblPalletN);
+
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
-                && isCMNDBLValid && isPlateNoValid && isSalanValid
+                && isCMNDBLValid && isPlateNoValid && isSalanValid && isSalanValid && isSlingValid && isPalletValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isMaterialTypeValid && isSlocValid && isWeightValid;
     }
@@ -2678,8 +2681,11 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
+        boolean isSlingValid = wtRegisValidation.validateIntegerValue(txtSlingN.getText(), lblSlingN);
+        boolean isPalletValid = wtRegisValidation.validateIntegerValue(txtPalletN.getText(), lblPalletN);
+
         return isRegisterIdValid && isDriverNameValid && isCMNDBLValid && isPlateNoValid && isSalanValid
-                && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
+                && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid && isSalanValid && isSlingValid && isPalletValid
                 && isNoteValid && isSlocValid && isSOValid && isMaterialTypeValid && isWeightValid;
     }
 
@@ -2720,7 +2726,10 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
         boolean isVendorTransValid = wtRegisValidation.validateCbxSelected(cbxVendorTransportN.getSelectedIndex(), lblVendorTransportN);
 
-        return isTicketIdValid && isRegisterIdValid && isDriverNameValid
+        boolean isSlingValid = wtRegisValidation.validateIntegerValue(txtSlingN.getText(), lblSlingN);
+        boolean isPalletValid = wtRegisValidation.validateIntegerValue(txtPalletN.getText(), lblPalletN);
+
+        return isTicketIdValid && isRegisterIdValid && isDriverNameValid && isSalanValid && isSlingValid && isPalletValid
                 && isCMNDBLValid && isPOValid && isSalanValid && isLoadSourceValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isSlocValid && isMaterialTypeValid && isWeightValid && isVendorTransValid;
@@ -2845,8 +2854,11 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
+        boolean isSlingValid = wtRegisValidation.validateIntegerValue(txtSlingN.getText(), lblSlingN);
+        boolean isPalletValid = wtRegisValidation.validateIntegerValue(txtPalletN.getText(), lblPalletN);
+
         return isRegisterIdValid && isDriverNameValid && isSalanValid
-                && isCMNDBLValid && isPlateNoValid && isSOValid
+                && isCMNDBLValid && isPlateNoValid && isSOValid && isSalanValid && isSlingValid && isPalletValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isSlocValid && isMaterialTypeValid && isWeightValid;
     }
@@ -3335,8 +3347,10 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             newWeightTicket.setDriverIdNo(txtCMNDN.getText().trim());
             newWeightTicket.setPlateNo(txtPlateNoN.getText().trim());
             newWeightTicket.setTrailerId(txtTrailerNoN.getText().trim());
-            newWeightTicket.setSling(Integer.parseInt(txtSlingN.getText().trim()));
-            newWeightTicket.setPallet(Integer.parseInt(txtPalletN.getText().trim()));
+            Number sling = (Number) txtSlingN.getValue();
+            newWeightTicket.setSling(sling.intValue());
+            Number pallet = (Number) txtPalletN.getValue();
+            newWeightTicket.setPallet(pallet.intValue());
             newWeightTicket.setRecvPlant(configuration.getWkPlant());
             newWeightTicket.setSoNiemXa(txtSoNiemXaN.getText().trim());
             newWeightTicket.setBatch(txtProductionBatchN.getText().trim());
@@ -3416,7 +3430,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
 
         public void updateDataForInPoPurchaseMode() {
             WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
-            weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+            weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText().trim().replace(",", "")));
             if (!isValidPO) {
                 weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
 
@@ -3442,7 +3456,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 weightTicketDetail.setSoNumber(txtSONumN.getText().trim());
                 weightTicketDetail.setMatnrRef(material.getMatnr());
                 weightTicketDetail.setRegItemDescription(material.getMaktx());
-                weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+                weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText().trim().replace(",", "")));
 
                 Customer customer = (Customer) cbxCustomerN.getSelectedItem();
                 if (customer != null) {
@@ -3464,7 +3478,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 weightTicketDetail.setEbeln(txtPONumN.getText().trim());
                 weightTicketDetail.setMatnrRef(material.getMatnr());
                 weightTicketDetail.setRegItemDescription(material.getMaktx());
-                weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+                weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText().trim().replace(",", "")));
 
                 Customer customer = (Customer) cbxCustomerN.getSelectedItem();
                 if (customer != null) {
@@ -3482,7 +3496,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 Material material = (Material) cbxMaterialTypeN.getSelectedItem();
                 weightTicketDetail.setMatnrRef(material.getMatnr());
                 weightTicketDetail.setRegItemDescription(material.getMaktx());
-                weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+                weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText().trim().replace(",", "")));
                 weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
                 weightTicketDetail.setSoNumber(txtSONumN.getText().trim());
 
@@ -3500,7 +3514,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             MaterialInternal material = (MaterialInternal) cbxMaterialTypeN.getSelectedItem();
             weightTicketDetail.setMatnrRef(material.getMatnr());
             weightTicketDetail.setRegItemDescription(material.getMaktx());
-            weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+            weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText().trim().replace(",", "")));
 
             Customer customer = (Customer) cbxCustomerN.getSelectedItem();
             if (customer != null) {
@@ -3518,7 +3532,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 Material material = (Material) cbxMaterialTypeN.getSelectedItem();
                 weightTicketDetail.setMatnrRef(material.getMatnr());
                 weightTicketDetail.setRegItemDescription(material.getMaktx());
-                weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+                weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText().trim().replace(",", "")));
                 weightTicketDetail.setSoNumber(txtSONumN.getText().trim());
 
                 Customer customer = (Customer) cbxCustomerN.getSelectedItem();
@@ -3540,7 +3554,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 weightTicketDetail.setEbeln(txtPONumN.getText().trim());
                 weightTicketDetail.setMatnrRef(material.getMatnr());
                 weightTicketDetail.setRegItemDescription(material.getMaktx());
-                weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText()));
+                weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText().trim().replace(",", "")));
 
                 Customer customer = (Customer) cbxCustomerN.getSelectedItem();
                 if (customer != null) {
@@ -3557,7 +3571,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
 
             weightTicketDetail.setMatnrRef(material.getMatnr());
             weightTicketDetail.setRegItemDescription(material.getMaktx());
-            weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText().trim()));
+            weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText().trim().replace(",", "")));
 
             if (!isValidPO) {
                 weightTicketDetail.setEbeln(txtPONumN.getText().trim());

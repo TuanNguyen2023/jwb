@@ -100,4 +100,7 @@ public interface GoodsMvtCreateConstants extends BapiConstants {
     String STATUS = "STATUS";
     String WT_ID_REF = "WT_ID_REF";
     String CHARG_ENH = "CHARG_ENH";
+    
+    // qty of Sling/ Plallet
+    String IS_EXTENSION = "IS_EXTENSION";
 }

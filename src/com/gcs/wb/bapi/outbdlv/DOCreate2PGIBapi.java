@@ -10,6 +10,7 @@ import com.gcs.wb.bapi.outbdlv.structure.OutbDeliveryCreateStoStructure;
 import com.gcs.wb.bapi.outbdlv.structure.VbkokStructure;
 import com.gcs.wb.bapi.outbdlv.constants.DOCreate2PGIConstants;
 import com.gcs.wb.bapi.outbdlv.constants.OutbDeliveryCreateStoConstants;
+import com.gcs.wb.bapi.outbdlv.structure.IsExtensionStructure;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,6 @@ import org.hibersap.annotations.Import;
 import org.hibersap.annotations.Parameter;
 import org.hibersap.annotations.ParameterType;
 import org.hibersap.annotations.Table;
-import org.hibersap.annotations.ThrowExceptionOnError;
 import org.hibersap.bapi.BapiRet2;
 
 /**
@@ -39,6 +39,9 @@ public class DOCreate2PGIBapi implements Serializable {
     @Import
     @Parameter(value = DOCreate2PGIConstants.I_WEIGHTTICKET, type = ParameterType.STRUCTURE)
     private GoodsMvtWeightTicketStructure _weightticket;
+    @Import
+    @Parameter(value = DOCreate2PGIConstants.IS_EXTENSION, type = ParameterType.STRUCTURE)
+    private IsExtensionStructure _isExtension;
     @Import
     @Parameter(value = DOCreate2PGIConstants.IV_C_VENDOR, type = ParameterType.SIMPLE)
     private String _ivCVendor;
@@ -209,6 +212,14 @@ public class DOCreate2PGIBapi implements Serializable {
         }).filter(t -> t != null).collect(Collectors.toList());
         
         return errors.size()> 0 ? errors : normals;
+    }
+
+    public IsExtensionStructure getIsExtension() {
+        return _isExtension;
+    }
+
+    public void setIsExtension(IsExtensionStructure _isExtension) {
+        this._isExtension = _isExtension;
     }
 
     @Override

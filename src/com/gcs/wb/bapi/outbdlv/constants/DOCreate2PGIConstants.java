@@ -26,5 +26,8 @@ public interface DOCreate2PGIConstants extends BapiConstants {
     String I_WEIGHTTICKET = "I_WEIGHTTICKET";
     String IV_C_VENDOR = "IV_C_VENDOR";
     String IV_T_VENDOR = "IV_T_VENDOR";
+    
+    // qty of Sling/ Plallet
+    String IS_EXTENSION = "IS_EXTENSION";
  
 }
