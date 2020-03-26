@@ -77,6 +77,11 @@ public interface DoGetDetailConstants extends BapiConstants {
     String SORT1 = "SORT1";
     String FSCALE = "FSCALE";
     String SSCALE = "SSCALE";
+    String PO_NUMBER = "PO_NUMBER";
+    String C_VENDOR = "C_VENDOR";
+    String T_VENDOR = "T_VENDOR";
+    String ZSLING = "ZSLING";
+    String ZPALLET = "ZPALLET";
 
     // </editor-fold>
 }

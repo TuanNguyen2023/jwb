@@ -161,6 +161,16 @@ public class DoGetDetailStructure implements Serializable {
     private BigDecimal _fscale;
     @Parameter(DoGetDetailConstants.SSCALE)
     private BigDecimal _sscale;
+    @Parameter(DoGetDetailConstants.PO_NUMBER)
+    private BigDecimal _poNumber;
+    @Parameter(DoGetDetailConstants.C_VENDOR)
+    private BigDecimal _cVendor;
+    @Parameter(DoGetDetailConstants.T_VENDOR)
+    private BigDecimal _tVendor;
+    @Parameter(DoGetDetailConstants.ZSLING)
+    private BigDecimal _zSling;
+    @Parameter(DoGetDetailConstants.ZPALLET)
+    private BigDecimal _zPallet;
 
     // </editor-fold>
 
