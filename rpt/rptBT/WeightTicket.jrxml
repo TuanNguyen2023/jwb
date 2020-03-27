@@ -10,6 +10,9 @@
 	<parameter name="P_REPRINT" class="java.lang.Boolean"/>
 	<parameter name="P_PCB40BAG" class="java.lang.Long"/>
 	<parameter name="P_ADDRESS" class="java.lang.String"/>
+	<parameter name="P_HEADER_RPT" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[p_report_online_weight_ticket $P{P_ADDRESS},$P{P_MANDT},$P{P_WPlant},$P{P_ID},$P{P_DAYSEQ}]]>
 	</queryString>
@@ -93,13 +96,13 @@
 	</background>
 	<title>
 		<band height="53" splitType="Stretch">
-			<staticText>
+			<textField>
 				<reportElement x="0" y="-19" width="304" height="15"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" size="8" isBold="true" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
-				<text><![CDATA[CÔNG TY CỔ PHẦN XI MĂNG FICO TÂY NINH]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$P{P_HEADER_RPT}]]></textFieldExpression>
+			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="0" y="-4" width="304" height="15" isRemoveLineWhenBlank="true"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
@@ -119,7 +122,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" size="8" isBold="true" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[($F{PPhone} != null ? "Tel: "+$F{PPhone} : "") + ( $F{PFAX} != null ? "- Fax: " + $F{PFAX} : "")]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{PPhone} != null ? "Tel: "+$F{PPhone} : "") + ( $F{PFAX} != null ? " - Fax: " + $F{PFAX} : "")]]></textFieldExpression>
 			</textField>
 			<image hAlign="Left" vAlign="Middle" onErrorType="Blank">
 				<reportElement x="459" y="-19" width="85" height="65"/>

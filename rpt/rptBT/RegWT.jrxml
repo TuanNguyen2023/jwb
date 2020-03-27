@@ -19,6 +19,9 @@
 		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
 	</parameter>
 	<parameter name="P_ADDRESS" class="java.lang.String"/>
+	<parameter name="P_HEADER_RPT" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[p_report_online_registration_weight_ticket $P{P_CLIENT},$P{P_WPLANT},$P{P_ID},$P{P_DAYSEQ},$P{P_ADDRESS}]]>
 	</queryString>
@@ -79,7 +82,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" size="8" isBold="true" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[($F{PPhone} != null ? "Tel: "+$F{PPhone} : "") + ( $F{PFAX} != null ? "- Fax: " + $F{PFAX} : "")]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{PPhone} != null ? "Tel: "+$F{PPhone} : "") + ( $F{PFAX} != null ? " - Fax: " + $F{PFAX} : "")]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="0" y="19" width="314" height="20" isRemoveLineWhenBlank="true"/>
@@ -95,13 +98,13 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{PAddress}]]></textFieldExpression>
 			</textField>
-			<staticText>
+			<textField>
 				<reportElement x="0" y="0" width="314" height="20"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" size="8" isBold="true" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
-				<text><![CDATA[CÔNG TY CỔ PHẦN XI MĂNG FICO TÂY NINH]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$P{P_HEADER_RPT}]]></textFieldExpression>
+			</textField>
 			<textField>
 				<reportElement x="275" y="109" width="280" height="20"/>
 				<box leftPadding="5"/>
