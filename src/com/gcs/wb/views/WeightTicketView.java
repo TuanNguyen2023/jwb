@@ -3162,13 +3162,22 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     outbDel = outbDel_list.get(i);
                     sumQtyReg = sumQtyReg.add(outbDel.getLfimg());
                 }
+                
+                // update DO list
+                for (int i = 0; i < outbDel_list.size(); i++) {
+                    try {
+                        outbDel = weightTicketController.findByMandtOutDel(outbDel_list.get(i).getDeliveryOrderNo());
+                        outbDel_list.set(i, outbDel);
+                    } catch (Exception ex) {
+                        logger.error(ex);
+                    }
+                }
 
                 // post SAP
                 String ivWbidNosave = "";
                 for (int i = 0; i < outbDel_list.size(); i++) {
                     try {
-                        outbDel = weightTicketController.findByMandtOutDel(outbDel_list.get(i).getDeliveryOrderNo());
-                        outbDel_list.set(i, outbDel);
+                        outbDel = outbDel_list.get(i);
                     } catch (Exception ex) {
                         logger.error(ex);
                     }

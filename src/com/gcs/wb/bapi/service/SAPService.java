@@ -859,6 +859,7 @@ public class SAPService {
 
             if (vals.size() > 0) {
                 SAPSetting sapSetting = new SAPSetting();
+                sapSetting.setHeaderRpt(Constants.SapSetting.HEADER_RPT);
                 sapSetting.setName1((String) vals.get(PlantGeDetailConstants.NAME1));
                 sapSetting.setName2((String) vals.get(PlantGeDetailConstants.NAME2));
                 sapSetting.setMandt(configuration.getSapClient());
@@ -998,7 +999,7 @@ public class SAPService {
 
                 if (saleOrder == null
                         && (sapSaleOrder.getChanged() == null
-                        || (sapSaleOrder.getChanged() != null 
+                        || (sapSaleOrder.getChanged() != null
                         && !sapSaleOrder.getChanged().equals("D")))) {
                     sapSaleOrder.setCreatedDate(new Date());
                     entityManager.persist(sapSaleOrder);
@@ -1008,9 +1009,9 @@ public class SAPService {
                     entityManager.merge(sapSaleOrder);
                 }
 
-                if(sapSaleOrder.getChanged() != null && sapSaleOrder.getChanged().equals("D")) {
+                if (sapSaleOrder.getChanged() != null && sapSaleOrder.getChanged().equals("D")) {
                     SaleOrder saleOrderD = saleOrderRepository.findBySoNumber(sapSaleOrder.getSoNumber());
-                    if(saleOrderD != null) {
+                    if (saleOrderD != null) {
                         entityManager.remove(saleOrderD);
                     }
                 }

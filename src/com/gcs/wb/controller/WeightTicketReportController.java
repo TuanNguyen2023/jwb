@@ -48,6 +48,7 @@ public class WeightTicketReportController {
         params.put("P_TAGENT", transportAgentName.equals(Constants.Label.LABEL_ALL) ? null : transportAgentName);
         params.put("P_MONTH", cbxMonth.getSelectedItem().toString());
         params.put("P_YEAR", cbxYear.getSelectedItem().toString());
+        params.put("P_HEADER_RPT", WeighBridgeApp.getApplication().getSapSetting().getHeaderRpt());
         return params;
     }
 

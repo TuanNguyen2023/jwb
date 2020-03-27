@@ -57,6 +57,7 @@ public class DailyReportController {
         params.put("P_PFAX", WeighBridgeApp.getApplication().getSapSetting().getFax());
         params.put("P_FROM", dpDateFrom.getDate());
         params.put("P_TO", dpDateTo.getDate());
+        params.put("P_HEADER_RPT", WeighBridgeApp.getApplication().getSapSetting().getHeaderRpt());
         return params;
     }
 

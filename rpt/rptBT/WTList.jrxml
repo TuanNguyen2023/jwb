@@ -12,6 +12,9 @@
 	<parameter name="P_PADDRESS" class="java.lang.String"/>
 	<parameter name="P_PPHONE" class="java.lang.String"/>
 	<parameter name="P_PFAX" class="java.lang.String"/>
+	<parameter name="P_HEADER_RPT" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
 	<field name="COLUMN_0" class="java.lang.Integer"/>
 	<field name="COLUMN_1" class="java.lang.Long"/>
 	<field name="COLUMN_2" class="java.lang.String"/>
@@ -42,7 +45,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" size="10" isBold="true" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA["CÔNG TY CỔ PHẦN XI MĂNG FICO TÂY NINH" + "\n" +  "\n" + $P{P_PNAME_RPT} + "\n" + "\n" + $P{P_PADDRESS} + "\n" + "\n" + ($P{P_PPHONE} != null ? "Tel: "+ $P{P_PPHONE} : "") + ( $P{P_PFAX} != null ? "- Fax: " + $P{P_PFAX} : "")]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($P{P_HEADER_RPT} != null ? $P{P_HEADER_RPT} : "CÔNG TY CỔ PHẦN XI MĂNG FICO TÂY NINH") + "\n" +  "\n" + $P{P_PNAME_RPT} + "\n" + "\n" + $P{P_PADDRESS} + "\n" + "\n" + ($P{P_PPHONE} != null ? "Tel: "+ $P{P_PPHONE} : "") + ( $P{P_PFAX} != null ? " - Fax: " + $P{P_PFAX} : "")]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="730" y="56" width="348" height="20"/>

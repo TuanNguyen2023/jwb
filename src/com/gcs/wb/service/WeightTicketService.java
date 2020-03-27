@@ -1000,6 +1000,7 @@ public class WeightTicketService {
                 map.put("P_DAYSEQ", wt.getSeqDay());
                 map.put("P_REPRINT", reprint);
                 map.put("P_ADDRESS", configuration.getRptId());
+                map.put("P_HEADER_RPT", WeighBridgeApp.getApplication().getSapSetting().getHeaderRpt());
 
                 WeightTicketDetail weightTicketDetail = wt.getWeightTicketDetail();
                 if (!wt.isDissolved()) {
@@ -1042,6 +1043,7 @@ public class WeightTicketService {
                             }
                         }
                     }
+                    map.put("P_HEADER_RPT", WeighBridgeApp.getApplication().getSapSetting().getHeaderRpt());
                     map.put("P_PAGE", "Trang ".concat(String.valueOf(i + 1).concat("/").concat(String.valueOf(outbDel_list.size()))));
                     map.put("P_TOTAL_QTY_ORI", String.valueOf(lfimg_ori));
                     if (wt.getFScale() != null) {
