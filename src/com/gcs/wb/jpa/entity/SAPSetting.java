@@ -38,6 +38,8 @@ public class SAPSetting implements Serializable {
     private String name2;
     @Column(name = "name_rpt")
     private String nameRpt;
+    @Column(name = "header_rpt")
+    private String headerRpt;
     @Column(name = "address")
     private String address;
     @Column(name = "phone")
@@ -88,6 +90,14 @@ public class SAPSetting implements Serializable {
 
     public void setNameRpt(String nameRpt) {
         this.nameRpt = nameRpt;
+    }
+
+    public String getHeaderRpt() {
+        return headerRpt;
+    }
+
+    public void setHeaderRpt(String headerRpt) {
+        this.headerRpt = headerRpt;
     }
 
     public String getAddress() {

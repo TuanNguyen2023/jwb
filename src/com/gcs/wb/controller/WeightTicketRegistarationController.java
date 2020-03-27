@@ -77,6 +77,7 @@ public class WeightTicketRegistarationController {
         params.put("P_PFAX", WeighBridgeApp.getApplication().getSapSetting().getFax());
         params.put("P_FROM", kFrom);
         params.put("P_TO", kTo);
+        params.put("P_HEADER_RPT", WeighBridgeApp.getApplication().getSapSetting().getHeaderRpt());
         return params;
     }
 
@@ -96,6 +97,7 @@ public class WeightTicketRegistarationController {
             map.put("P_REPRINT", reprint);
             map.put("P_ADDRESS", configuration.getRptId());
             map.put("P_DO", weightTicketDetail.getDeliveryOrderNo());
+            map.put("P_HEADER_RPT", WeighBridgeApp.getApplication().getSapSetting().getHeaderRpt());
             String reportName;
             //        if (configuration.isModeNormal()) {
             //            //reportName = "./rpt/rptBT/RegWT_HP.jasper";

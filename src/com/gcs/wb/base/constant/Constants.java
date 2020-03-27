@@ -327,4 +327,8 @@ public class Constants {
         SYSTEM,
         USER
     }
+    
+    public static final class SapSetting {
+        public static final String HEADER_RPT = "CÔNG TY CỔ PHẦN XI MĂNG FICO TÂY NINH";
+    }
 }
