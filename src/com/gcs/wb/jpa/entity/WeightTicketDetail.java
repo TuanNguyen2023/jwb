@@ -78,7 +78,6 @@ public class WeightTicketDetail implements Serializable {
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date createdDate;
     @Column(name = "updated_date")
-    @Temporal(javax.persistence.TemporalType.DATE)
     private Date updatedDate;
     @Column(name = "MAT_DOC_GR")
     private String matDocGr;

@@ -3371,6 +3371,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                         if (details_item.getDeliveryOrderNo().equals(outbDel.getDeliveryOrderNo())) {
                                             details_item.setMatDoc(((WsDeliveryUpdateBapi) objBapi).getMat_doc());
                                             details_item.setDocYear(((WsDeliveryUpdateBapi) objBapi).getDoc_year());
+                                            outbDel.setMatDoc(((WsDeliveryUpdateBapi) objBapi).getMat_doc());
                                         }
                                         if (((WsDeliveryUpdateBapi) objBapi).getMat_doc() == null) {
                                             details_item.setPosted(false);

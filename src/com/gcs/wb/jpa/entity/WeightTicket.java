@@ -215,7 +215,6 @@ public class WeightTicket implements Serializable {
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date createdDate = new Date();
     @Column(name = "updated_date")
-    @Temporal(javax.persistence.TemporalType.DATE)
     private Date updatedDate;
     @Column(name = "posto")
     private String posto;
