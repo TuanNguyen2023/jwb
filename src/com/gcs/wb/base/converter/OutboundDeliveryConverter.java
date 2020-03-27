@@ -147,19 +147,19 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
                     }
                 }
 
-                outboundDelivery.setErdat(new java.sql.Date(doItem.getErdat().getTime()));
+                outboundDelivery.setErdat(doItem.getErdat());
                 outboundDelivery.setLfart(doItem.getLfart());
 
-                outboundDelivery.setWadat(new java.sql.Date(doItem.getWadat().getTime()));
-                outboundDelivery.setLddat(new java.sql.Date(doItem.getLddat().getTime()));
-                outboundDelivery.setKodat(new java.sql.Date(doItem.getKodat().getTime()));
+                outboundDelivery.setWadat(doItem.getWadat());
+                outboundDelivery.setLddat(doItem.getLddat());
+                outboundDelivery.setKodat(doItem.getKodat());
                 outboundDelivery.setLifnr(doItem.getLifnr());
                 outboundDelivery.setKunnr(doItem.getKunnr());
                 outboundDelivery.setKunag(doItem.getKunag());
                 outboundDelivery.setTraty(doItem.getTraty());
                 outboundDelivery.setTraid(doItem.getTraid());
 
-                outboundDelivery.setBldat(new java.sql.Date(doItem.getBldat().getTime()));
+                outboundDelivery.setBldat(doItem.getBldat());
                 if (outboundDelivery.getMatnr() == null || outboundDelivery.getMatnr().trim().isEmpty()) {
                     outboundDelivery.setMatnr(doItem.getMatnr());
                     outboundDelivery.setArktx(doItem.getArktx());
@@ -192,7 +192,7 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
                 outboundDelivery.setLfimg(sumLfimg);
                 outboundDelivery.setVbelnNach(doItem.getVbelnNach());
                 outboundDelivery.setWtIdRef(doItem.getWtIdRef());
-                outboundDelivery.setCreatedDate(new java.sql.Date(dateNow.getTime()));
+                outboundDelivery.setCreatedDate(dateNow);
             }
             //set lai item number thanh number dau tien
 

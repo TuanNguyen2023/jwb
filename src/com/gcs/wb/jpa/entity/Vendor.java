@@ -22,10 +22,16 @@ import javax.persistence.Id;
 @Entity
 @Table(name = "tbl_vendor")
 @NamedQueries({
-    @NamedQuery(name = "Vendor.findAll", query = "SELECT v FROM Vendor v"),
-    @NamedQuery(name = "Vendor.findByMandtWplant", query = "SELECT v FROM Vendor v WHERE v.mandt = :mandt AND v.wplant = :wplant"),
-    @NamedQuery(name = "Vendor.findByMandtWplantLifnr", query = "SELECT v FROM Vendor v WHERE v.mandt = :mandt AND v.wplant = :wplant AND v.lifnr = :lifnr"),
-    @NamedQuery(name = "Vendor.findByMandtWplantEkorg", query = "SELECT v FROM Vendor v WHERE v.mandt = :mandt AND v.wplant = :wplant AND v.ekorg = :ekorg")
+    @NamedQuery(name = "Vendor.findAll", query = "SELECT v FROM Vendor v WHERE v.groupType IS NULL"),
+    @NamedQuery(name = "Vendor.findByMandtWplant", query = "SELECT v FROM Vendor v WHERE v.mandt = :mandt AND v.wplant = :wplant AND v.groupType IS NULL"),
+    @NamedQuery(name = "Vendor.findByMandtWplantLifnr", query = "SELECT v FROM Vendor v WHERE v.mandt = :mandt AND v.wplant = :wplant AND v.lifnr = :lifnr AND v.groupType IS NULL"),
+    @NamedQuery(name = "Vendor.findByMandtWplantEkorg", query = "SELECT v FROM Vendor v WHERE v.mandt = :mandt AND v.wplant = :wplant AND v.ekorg = :ekorg AND v.groupType IS NULL"),
+    @NamedQuery(name = "Vendor.findByMandtWplantLifnrIsCustomer", query = "SELECT v FROM Vendor v"
+            + " WHERE v.mandt = :mandt"
+            + " AND v.wplant = :wplant"
+            + " AND v.lifnr = :lifnr"
+            + " AND v.groupType = :groupType"),
+    @NamedQuery(name = "Vendor.findByMandtWplantIsCustomer", query = "SELECT v FROM Vendor v WHERE v.mandt = :mandt AND v.wplant = :wplant AND v.groupType = :groupType")
 })
 public class Vendor implements Serializable {
 
@@ -50,6 +56,8 @@ public class Vendor implements Serializable {
     private Date createdDate;
     @Column(name = "updated_date")
     private Date updatedDate;
+    @Column(name = "group_type")
+    private String groupType;
 
     public Vendor() {
     }
@@ -90,7 +98,7 @@ public class Vendor implements Serializable {
         this.wplant = wplant;
     }
 
-    public String getName1() {
+     public String getName1() {
         return name1;
     }
 
@@ -128,6 +136,14 @@ public class Vendor implements Serializable {
 
     public void setUpdatedDate(Date updatedDate) {
         this.updatedDate = updatedDate;
+    }
+    
+    public String getGroupType() {
+        return groupType;
+    }
+
+    public void setGroupType(String groupType) {
+        this.groupType = groupType;
     }
 
     @Override

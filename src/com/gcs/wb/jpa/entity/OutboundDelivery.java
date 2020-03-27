@@ -7,7 +7,7 @@ package com.gcs.wb.jpa.entity;
 import com.gcs.wb.base.constant.Constants;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;

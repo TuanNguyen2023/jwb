@@ -2383,10 +2383,20 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 txtSalan.setText(weightTicket.getChargEnh());
                 txtCustomer.setText(null);
                 String kunnr = weightTicket.getWeightTicketDetail().getKunnr();
-                if (kunnr != null && !kunnr.trim().isEmpty()) {
-                    entityManager.clear();
-                    Customer cust = weightTicketRegistarationController.findByKunnr(weightTicket.getWeightTicketDetail().getKunnr());
-                    txtCustomer.setText(cust.getName1() + " " + cust.getName2());
+                    if (kunnr != null && !kunnr.trim().isEmpty()) {
+                         entityManager.clear();
+                        if(Constants.WeighingProcess.MODE_DETAIL.IN_PO_PURCHASE.name().equals(weightTicket.getMode())) {
+                            Vendor custVendor = weightTicketRegistarationController.findByLifnrIsCustomer(weightTicket.getWeightTicketDetail().getKunnr());
+                            if(custVendor != null) {
+                                txtCustomer.setText(custVendor.getName1() + " " + custVendor.getName2());
+                            }
+                        } else {
+                            Customer cust = weightTicketRegistarationController.findByKunnr(weightTicket.getWeightTicketDetail().getKunnr());
+                            if(cust != null) {
+                                txtCustomer.setText(cust.getName1() + " " + cust.getName2());
+                            }
+                        }
+                    
                 }
                 if ((WeighBridgeApp.getApplication().isOfflineMode()
                         && !weightTicket.isPosted())
@@ -2396,6 +2406,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         txtCustomer.setEnabled(true);
                     }
                 }
+                
 
                 String lgort = null;
                 if (weightTicket.getLgort() != null && !weightTicket.getLgort().trim().isEmpty()) {
@@ -2909,7 +2920,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             weightTicket.setUpdatedDate(now);
             List<WeightTicketDetail> weightTicketDetails = weightTicket.getWeightTicketDetails();
             for (WeightTicketDetail wtDetail : weightTicketDetails) {
-                wtDetail.setUpdatedDate(new java.sql.Date(now.getTime()));
+                wtDetail.setUpdatedDate(now);
             }
             entityManager.merge(weightTicket);
             OutboundDelivery outbDel = null;
@@ -3236,13 +3247,13 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                             details_item.setPosted(false);
                                             details_item.setUpdatedDate(now);
                                             outbDel.setPosted(false);
-                                            outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                            outbDel.setUpdatedDate(now);
                                             flag_fail = true;
                                         } else {
                                             details_item.setPosted(true);
                                             outbDel.setPosted(true);
                                             details_item.setUpdatedDate(now);
-                                            outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                            outbDel.setUpdatedDate(now);
                                         }
 
                                         if (!entityManager.getTransaction().isActive()) {
@@ -3253,11 +3264,11 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                     }
                                     if (((DOCreate2PGIBapi) objBapi).getMatDoc() == null) {
                                         outbDel.setPosted(false);
-                                        outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                        outbDel.setUpdatedDate(now);
                                         flag_fail = true;
                                     } else {
                                         outbDel.setPosted(true);
-                                        outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                        outbDel.setUpdatedDate(now);
                                     }
                                 }
                                 if (objBapi instanceof GoodsMvtPoCreateBapi) {
@@ -3279,13 +3290,13 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                             details_item.setPosted(false);
                                             outbDel.setPosted(false);
                                             details_item.setUpdatedDate(now);
-                                            outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                            outbDel.setUpdatedDate(now);
                                             flag_fail = true;
                                         } else {
                                             details_item.setPosted(true);
                                             outbDel.setPosted(true);
                                             details_item.setUpdatedDate(now);
-                                            outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                            outbDel.setUpdatedDate(now);
                                         }
                                         if (!entityManager.getTransaction().isActive()) {
                                             entityManager.getTransaction().begin();
@@ -3295,12 +3306,12 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                     }
                                     if (((GoodsMvtPoCreateBapi) objBapi).getMatDoc() == null) {
                                         outbDel.setPosted(false);
-                                        outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                        outbDel.setUpdatedDate(now);
 
                                         flag_fail = true;
                                     } else {
                                         outbDel.setPosted(true);
-                                        outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                        outbDel.setUpdatedDate(now);
                                     }
                                 }
                                 if (objBapi instanceof GoodsMvtDoCreateBapi) {
@@ -3322,13 +3333,13 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                             details_item.setPosted(false);
                                             outbDel.setPosted(false);
                                             details_item.setUpdatedDate(now);
-                                            outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                            outbDel.setUpdatedDate(now);
                                             flag_fail = true;
                                         } else {
                                             details_item.setPosted(true);
                                             outbDel.setPosted(true);
                                             details_item.setUpdatedDate(now);
-                                            outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                            outbDel.setUpdatedDate(now);
                                         }
                                         if (!entityManager.getTransaction().isActive()) {
                                             entityManager.getTransaction().begin();
@@ -3339,10 +3350,10 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                     if (((GoodsMvtDoCreateBapi) objBapi).getMatDoc() == null) {
                                         outbDel.setPosted(false);
                                         flag_fail = true;
-                                        outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                        outbDel.setUpdatedDate(now);
                                     } else {
                                         outbDel.setPosted(true);
-                                        outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                        outbDel.setUpdatedDate(now);
                                     }
                                 }
                                 if (objBapi instanceof WsDeliveryUpdateBapi) {
@@ -3379,10 +3390,10 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                     if (((WsDeliveryUpdateBapi) objBapi).getMat_doc() == null) {
                                         outbDel.setPosted(false);
                                         flag_fail = true;
-                                        outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                        outbDel.setUpdatedDate(now);
                                     } else {
                                         outbDel.setPosted(true);
-                                        outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                        outbDel.setUpdatedDate(now);
                                     }
                                 }
 
@@ -3449,9 +3460,10 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                         entityManager.remove(lifnr);
                                     }
                                     sapOutb.setId(outbDel.getId());
+                                    sapOutb.setWeightTicketId(outbDel.getWeightTicketId());
                                     sapOutb.setPosted(outbDel.isPosted());
                                     sapOutb.setMatDoc(outbDel.getMatDoc());
-                                    sapOutb.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                    sapOutb.setUpdatedDate(now);
                                     entityManager.merge(sapOutb);
                                     outbDel = sapOutb;
                                     outbDel_list.set(i, sapOutb);
@@ -3468,7 +3480,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
                                         revertCompletedDO(completedDO, outDetails_lits, outbDel_list);
                                         outbDel.setPosted(false);
-                                        outbDel.setUpdatedDate(new java.sql.Date(now.getTime()));
+                                        outbDel.setUpdatedDate(now);
                                     }
                                 }
                                 weightTicket.setPosted(false);
@@ -3814,6 +3826,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         BigDecimal inScale = new BigDecimal(((Number) txfInQty.getValue()).doubleValue() / 1000);
                         item.setInScale(inScale.setScale(3, RoundingMode.HALF_UP));
                         item.setfTime(now);
+                        item.setLfimg_ori(item.getLfimg());
                         item.setUpdatedDate(now);
                         // tinh toan cho Nhap kho tu plant xuat > plant nhap
                         if(weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER")) {

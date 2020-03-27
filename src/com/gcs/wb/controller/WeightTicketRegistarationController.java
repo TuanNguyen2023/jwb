@@ -194,6 +194,10 @@ public class WeightTicketRegistarationController {
     public Vendor findByLifnr(String lifnr) {
         return wTRegService.findByLifnr(lifnr);
     }
+    
+    public Vendor findByLifnrIsCustomer(String lifnr) {
+        return wTRegService.findByLifnrIsCustomer(lifnr);
+    }
 
     public OutboundDelivery findByDeliveryOrderNumber(String deliveryOrderNo) {
         return wTRegService.findByDeliveryOrderNumber(deliveryOrderNo);
@@ -374,6 +378,10 @@ public class WeightTicketRegistarationController {
 
     public DefaultComboBoxModel getCustomerModel() {
         return new DefaultComboBoxModel(customerRepository.getListCustomer().toArray());
+    }
+    
+    public DefaultComboBoxModel getCusVendorModel() {
+        return new DefaultComboBoxModel(vendorRepository.findByGroupType().toArray());
     }
 
     public Unit getUnit() {

@@ -517,6 +517,40 @@ public class SAPService {
 
         return result;
     }
+    
+    public Vendor syncVendor(Vendor sapCusVendor, Vendor vendor) {
+        Vendor result;
+        if (!entityTransaction.isActive()) {
+            entityTransaction.begin();
+        }
+
+        try {
+            if (sapCusVendor != null && vendor == null) {
+                entityManager.persist(sapCusVendor);
+                result = sapCusVendor;
+            } else if (sapCusVendor != null && vendor != null) {
+                sapCusVendor.setId(vendor.getId());
+                entityManager.merge(sapCusVendor);
+                result = sapCusVendor;
+            } else {
+                if (vendor != null) {
+                    entityManager.remove(vendor);
+                }
+                result = null;
+            }
+
+            entityTransaction.commit();
+            entityManager.clear();
+        } catch (Exception ex) {
+            if (entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
+            Logger.getLogger(SAPService.class.getName()).log(Level.SEVERE, null, ex);
+            result = null;
+        }
+
+        return result;
+    }
 
     /**
      * get data Vendor detail

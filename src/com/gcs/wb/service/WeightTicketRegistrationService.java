@@ -89,7 +89,11 @@ public class WeightTicketRegistrationService {
     public Vendor findByLifnr(String lifnr) {
         return vendorRepository.findByLifnr(lifnr);
     }
-
+    
+    public Vendor findByLifnrIsCustomer(String lifnr) {
+        return vendorRepository.findByLifnrIsCustomer(lifnr);
+    }
+    
     public OutboundDelivery findByDeliveryOrderNumber(String deliveryOrderNo) {
         return outboundDeliveryRepository.findByDeliveryOrderNo(deliveryOrderNo);
     }

@@ -5,6 +5,7 @@
 package com.gcs.wb.jpa.repositorys;
 
 import com.gcs.wb.WeighBridgeApp;
+import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.base.util.ExceptionUtil;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.Configuration;
@@ -63,6 +64,25 @@ public class VendorRepository {
 
         return null;
     }
+    
+    public Vendor findByLifnrIsCustomer(String lifnr) {
+        try {
+            TypedQuery<Vendor> typedQuery = entityManager.createNamedQuery("Vendor.findByMandtWplantLifnrIsCustomer", Vendor.class);
+            typedQuery.setParameter("mandt", configuration.getSapClient());
+            typedQuery.setParameter("wplant", configuration.getWkPlant());
+            typedQuery.setParameter("lifnr", lifnr);
+            typedQuery.setParameter("groupType", Constants.GroupType.CUSTOMER);
+            List<Vendor> vendors = typedQuery.getResultList();
+            if (vendors != null && vendors.size() > 0) {
+                return vendors.get(0);
+            }
+        } catch (Exception ex) {
+            logger.error(null, ex);
+            ExceptionUtil.checkDatabaseDisconnectedException(ex);
+        }
+
+        return null;
+    }
 
     public List<Vendor> findByEkorg(String ekorg) {
         List<Vendor> list = new ArrayList<>();
@@ -72,6 +92,23 @@ public class VendorRepository {
             typedQuery.setParameter("mandt", configuration.getSapClient());
             typedQuery.setParameter("wplant", configuration.getWkPlant());
             typedQuery.setParameter("ekorg", ekorg);
+            list = typedQuery.getResultList();
+        } catch (Exception ex) {
+            logger.error(null, ex);
+            ExceptionUtil.checkDatabaseDisconnectedException(ex);
+        }
+
+        return list;
+    }
+    
+    public List<Vendor> findByGroupType() {
+        List<Vendor> list = new ArrayList<>();
+        try {
+            TypedQuery<Vendor> typedQuery = entityManager.createNamedQuery("Vendor.findByMandtWplantIsCustomer", Vendor.class
+            );
+            typedQuery.setParameter("mandt", configuration.getSapClient());
+            typedQuery.setParameter("wplant", configuration.getWkPlant());
+            typedQuery.setParameter("groupType", Constants.GroupType.CUSTOMER);
             list = typedQuery.getResultList();
         } catch (Exception ex) {
             logger.error(null, ex);

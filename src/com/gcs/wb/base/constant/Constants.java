@@ -322,6 +322,11 @@ public class Constants {
 
         public static final String B = "B";
     }
+    
+    public static final class GroupType {
+
+        public static final String CUSTOMER = "CUSTOMER";
+    }
 
     public static enum InteractiveObject {
         SYSTEM,

@@ -4003,6 +4003,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         private String strMatnr = null;
         private BigDecimal totalWeight = BigDecimal.ZERO;
         private Customer customer = null;
+        private Vendor vendor = null;
         private String strLgort = "";
 
         CheckPOTask(Application app) {
@@ -4022,9 +4023,14 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 purchaseOrderPO = syncPurchaseOrder(poNum, purchaseOrderPO);
 
                 if (purchaseOrderPO != null) {
-                    String kunnr = purchaseOrderPO.getCustomer();
-                    if (kunnr != null && !kunnr.trim().isEmpty()) {
+                    if(modeDetail == MODE_DETAIL.IN_PO_PURCHASE) {
+                        String cusVendor = purchaseOrderPO.getVendor();
+                        vendor = syncCustomerFromVendor(cusVendor.trim());
+                    } else {
+                        String kunnr = purchaseOrderPO.getCustomer();
+                        if (kunnr != null && !kunnr.trim().isEmpty()) {
                         customer = syncCustomer(kunnr.trim());
+                        }
                     }
                 }
             }
@@ -4106,8 +4112,13 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 cbxVendorTransportN.setModel(vendor2Model);
                 cbxVendorTransportN.setSelectedIndex(-1);
             }
-
-            if (customer != null) {
+            
+            if(modeDetail == MODE_DETAIL.IN_PO_PURCHASE) {
+               if (vendor != null) {
+                cbxCustomerN.setModel(weightTicketRegistarationController.getCusVendorModel());
+                cbxCustomerN.setSelectedItem(vendor);
+               }
+            } else if (customer != null) {
                 cbxCustomerN.setModel(weightTicketRegistarationController.getCustomerModel());
                 cbxCustomerN.setSelectedItem(customer);
             } else {
@@ -4186,6 +4197,22 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 return null;
             }
         }
+        
+        private Vendor syncCustomerFromVendor(String cusVendor) {
+            try {
+                Vendor dbCusVendor = weightTicketRegistarationController.findByLifnrIsCustomer(cusVendor);
+                Vendor sapVendor = sapService.getVendor(cusVendor);
+                
+                return sapService.syncVendor(sapVendor, dbCusVendor);
+            } catch (Exception ex) {
+                if (ExceptionUtil.isSapDisConnectedException(ex)) {
+                    canceled = true;
+                    throw ex;
+                }
+
+                return null;
+            }
+        }
 
         private void updateWeightTicket(PurchaseOrder purchaseOrder) {
             PurchaseOrderDetail purchaseOrderDetail = purchaseOrder.getPurchaseOrderDetail();
@@ -4221,6 +4248,9 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                     totalWeight = numCheckWeight;
                     weightTicketDetail.setRegItemQuantity(totalWeight);
                     isValidWeight = true;
+                    
+                    // set inform kunnr
+                    weightTicketDetail.setKunnr(purchaseOrder.getVendor());
                     break;
                 case OUT_SLOC_SLOC:
                     newWeightTicket.getWeightTicketDetail().setTransVendor(purchaseOrder.getVendor());
