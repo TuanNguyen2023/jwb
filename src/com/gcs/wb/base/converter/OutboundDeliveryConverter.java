@@ -16,6 +16,7 @@ import com.gcs.wb.jpa.entity.OutboundDeliveryDetail;
 import com.gcs.wb.jpa.repositorys.OutboundDetailRepository;
 import com.gcs.wb.model.AppConfig;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -46,6 +47,12 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
         BigDecimal item_qty_free = BigDecimal.ZERO;
         BigDecimal sumLfimg = BigDecimal.ZERO;
         Date dateNow = new Date();
+        // get create time
+        SimpleDateFormat formatter = new SimpleDateFormat();
+        formatter.applyPattern("yyyy");
+        formatter.applyPattern("HH:mm:ss");
+        String createdTime = formatter.format(dateNow);
+        
         List<DoGetDetailStructure> dos = from.getTd_dos();
         if (dos.size() > 0) {
             // <editor-fold defaultstate="collapsed" desc="Fill D.O Data">
@@ -136,6 +143,7 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
                 outboundDeliveryDetail.setZsling(StringUtil.isNotEmptyString(doItem.getZSling()) ? Integer.parseInt(doItem.getZSling()) : 0);
                 outboundDeliveryDetail.setZPallet(StringUtil.isNotEmptyString(doItem.getZPallet()) ? Integer.parseInt(doItem.getZPallet()) : 0);
 
+                outboundDeliveryDetail.setCreatedTime(createdTime);
                 outboundDelivery.addOutboundDeliveryDetail(outboundDeliveryDetail);
                 //end set data
 
@@ -194,6 +202,7 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
                 outboundDelivery.setVbelnNach(doItem.getVbelnNach());
                 outboundDelivery.setWtIdRef(doItem.getWtIdRef());
                 outboundDelivery.setCreatedDate(dateNow);
+                outboundDelivery.setCreatedTime(createdTime);
             }
             //set lai item number thanh number dau tien
 
@@ -236,6 +245,6 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
         String devNumber = "%" + deliv_numb + "%";
         OutboundDetailRepository repo = new OutboundDetailRepository();
         return repo.findByDeliveryOrderNo(devNumber);
-
     }
+
 }

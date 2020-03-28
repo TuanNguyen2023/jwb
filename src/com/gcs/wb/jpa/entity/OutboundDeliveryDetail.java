@@ -83,6 +83,8 @@ public class OutboundDeliveryDetail implements Serializable {
     private Date fTime;
     @Column(name = "status")
     private String status;
+    @Column(name = "created_time")
+    private String createdTime;
     @Column(name = "created_date")
     private Date createdDate;
     @Column(name = "updated_date")
@@ -464,6 +466,14 @@ public class OutboundDeliveryDetail implements Serializable {
 
     public void setZPallet(Integer zPallet) {
         this.zPallet = zPallet;
+    }
+
+    public String getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(String createdTime) {
+        this.createdTime = createdTime;
     }
 
     public OutboundDelivery getOutboundDelivery() {

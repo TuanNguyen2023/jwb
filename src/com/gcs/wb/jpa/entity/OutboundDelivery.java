@@ -122,6 +122,8 @@ public class OutboundDelivery implements Serializable {
     private String vbelnNach;
     @Column(name = "wt_id_ref")
     private String wtIdRef;
+    @Column(name = "created_time")
+    private String createdTime;
     @Column(name = "created_date")
     private Date createdDate;
     @Column(name = "updated_date")
@@ -519,6 +521,14 @@ public class OutboundDelivery implements Serializable {
 
     public void setWeightTicketId(String weight_ticket_id) {
         this.weight_ticket_id = weight_ticket_id;
+    }
+
+    public String getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(String createdTime) {
+        this.createdTime = createdTime;
     }
     
     public List<OutboundDeliveryDetail> getOutboundDeliveryDetails() {
