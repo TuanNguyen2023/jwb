@@ -25,6 +25,7 @@ import com.gcs.wb.bapi.helper.SyncContractSOGetListBapi;
 import com.gcs.wb.bapi.helper.VendorGetDetailBapi;
 import com.gcs.wb.bapi.helper.VendorValiationCheckBapi;
 import com.gcs.wb.bapi.helper.constants.PlantGeDetailConstants;
+import com.gcs.wb.bapi.helper.structure.CustomerAdrcGetDetailStructure;
 import com.gcs.wb.bapi.helper.structure.CustomerGetDetailStructure;
 import com.gcs.wb.bapi.helper.structure.MatGetDetailStructure;
 import com.gcs.wb.bapi.helper.structure.MaterialGetListStructure;
@@ -479,9 +480,8 @@ public class SAPService {
         } else {
             session.executeInBackground(bapiCust);
         }
-        CustomerGetDetailStructure strucCust = bapiCust.getEsKna1();
         CustomerConverter customerConverter = new CustomerConverter();
-        return customerConverter.convert(strucCust);
+        return customerConverter.convert(bapiCust);
     }
 
     public Customer syncCustomer(Customer sapCustomer, Customer customer) {

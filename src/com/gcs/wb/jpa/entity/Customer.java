@@ -41,6 +41,12 @@ public class Customer implements Serializable {
     private String name1;
     @Column(name = "name2")
     private String name2;
+    @Column(name = "name3")
+    private String name3;
+    @Column(name = "name4")
+    private String name4;
+    @Column(name = "addrnumber")
+    private String addrnumber;
     @Column(name = "created_date")
     private Date createdDate;
     @Column(name = "updated_date")
@@ -91,6 +97,30 @@ public class Customer implements Serializable {
 
     public void setName2(String name2) {
         this.name2 = name2;
+    }
+
+    public String getName3() {
+        return name3;
+    }
+
+    public void setName3(String name3) {
+        this.name3 = name3;
+    }
+
+    public String getName4() {
+        return name4;
+    }
+
+    public void setName4(String name4) {
+        this.name4 = name4;
+    }
+    
+    public String getAddrnumber() {
+        return addrnumber;
+    }
+
+    public void setAddrnumber(String addrnumber) {
+        this.addrnumber = addrnumber;
     }
 
     public Date getCreatedDate() {

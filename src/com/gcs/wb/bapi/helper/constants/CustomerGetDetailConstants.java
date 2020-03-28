@@ -23,8 +23,18 @@ public interface CustomerGetDetailConstants extends BapiConstants {
     /**Customer Number 1*/
     String KUNNR = "KUNNR";
     /**Name 1*/
+//    String NAME1 = "NAME1";
+//    /**Name 2*/
+//    String NAME2 = "NAME2";
+    // </editor-fold>
+    
+    String ES_ADRC = "ES_ADRC";
+    // <editor-fold defaultstate="collapsed" desc="Structure of ES_ADRC">
+    /**  Address number */
+    String ADDRNUMBER = "ADDRNUMBER";
     String NAME1 = "NAME1";
-    /**Name 2*/
     String NAME2 = "NAME2";
+    String NAME3 = "NAME3";
+    String NAME4 = "NAME4";
     // </editor-fold>
 }

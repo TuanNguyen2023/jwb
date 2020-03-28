@@ -6,6 +6,7 @@ package com.gcs.wb.bapi.helper;
 
 import com.gcs.wb.bapi.helper.structure.CustomerGetDetailStructure;
 import com.gcs.wb.bapi.helper.constants.CustomerGetDetailConstants;
+import com.gcs.wb.bapi.helper.structure.CustomerAdrcGetDetailStructure;
 import java.io.Serializable;
 import org.hibersap.annotations.Bapi;
 import org.hibersap.annotations.Export;
@@ -28,6 +29,11 @@ public class CustomerGetDetailBapi implements Serializable {
     @Export
     @Parameter(value = CustomerGetDetailConstants.ES_KNA1, type = ParameterType.STRUCTURE)
     private CustomerGetDetailStructure _esKna1;
+    
+    /**Export Parameter: ES_ADRC (Customer Structure New)*/
+    @Export
+    @Parameter(value = CustomerGetDetailConstants.ES_ADRC, type = ParameterType.STRUCTURE)
+    private CustomerAdrcGetDetailStructure _esAdrc;
 
     public CustomerGetDetailBapi() {
     }
@@ -46,6 +52,14 @@ public class CustomerGetDetailBapi implements Serializable {
      */
     public CustomerGetDetailStructure getEsKna1() {
         return _esKna1;
+    }
+
+    /**
+     * Export Parameter: ES_ADRC (Customer Structure New)
+     * @return the _esAdrc
+     */
+    public CustomerAdrcGetDetailStructure getEsAdrc() {
+        return _esAdrc;
     }
 
     @Override

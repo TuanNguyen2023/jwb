@@ -267,10 +267,7 @@ public class RegistrationVehicleOfflineView extends javax.swing.JInternalFrame {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 if (value instanceof Customer) {
                     Customer customer = (Customer) value;
-                    String name = customer.getName1();
-                    if (customer.getName2() != null && !customer.getName2().isEmpty()) {
-                        name += " - " + customer.getName2();
-                    }
+                    String name = customer.getName2() + " " + customer.getName3() + " " + customer.getName3();
                     setText(name);
                     setToolTipText(customer.getKunnr());
                 }
