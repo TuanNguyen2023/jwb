@@ -2393,7 +2393,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         } else {
                             Customer cust = weightTicketRegistarationController.findByKunnr(weightTicket.getWeightTicketDetail().getKunnr());
                             if(cust != null) {
-                                txtCustomer.setText(cust.getName2() + " " + cust.getName3() + " " + cust.getName3());
+                                txtCustomer.setText(cust.getName2() + " " + cust.getName3() + " " + cust.getName4());
                             }
                         }
                     

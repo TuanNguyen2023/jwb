@@ -280,7 +280,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 if (value instanceof Customer) {
                     Customer customer = (Customer) value;
-                    String name = customer.getName2() + " " + customer.getName3() + " " + customer.getName3();
+                    String name = customer.getName2() + " " + customer.getName3() + " " + customer.getName4();
                     setText(name);
                     setToolTipText(customer.getKunnr());
                 }
