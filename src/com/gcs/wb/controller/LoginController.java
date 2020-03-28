@@ -103,13 +103,6 @@ public class LoginController {
             }
 
             if (onlineMode) {
-                UserGetDetailAddrStructure userGetDetailAddrStructure = userGetDetailBapi.getAddress();
-                String roles = loginService.getRoles(userGetDetailBapi);
-
-                loginService.asyncUser(session, userGetDetailAddrStructure, roles,
-                        userRepository.findByUid(configuration.getSapUser()),
-                        configuration.getSapUser(), configuration.getSapPass());
-
                 SyncMasterDataService syncMasterDataService = new SyncMasterDataService();
                 syncMasterDataService.syncMasterDataWhenLogin();
 
