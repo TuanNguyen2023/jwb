@@ -279,11 +279,7 @@ private void dpDateFromPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN
 
     @Action(block = Task.BlockingScope.ACTION)
     public Task printReport() {
-        if (tabResults.getModel().getRowCount() == 0) {
-            return null;
-        } else {
-            return new PrintReportTask(Application.getInstance(WeighBridgeApp.class));
-        }
+        return new PrintReportTask(Application.getInstance(WeighBridgeApp.class));
     }
 
     private class PrintReportTask extends Task<Object, Void> {
