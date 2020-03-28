@@ -2324,22 +2324,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     txtDelNum.setText(doNums);
                     txtRegItem.setText(regItemDescription);
 
-                    if (weightTicket.getWeightTicketDetail().getEbeln() != null && !weightTicket.getWeightTicketDetail().getEbeln().trim().isEmpty()) {
-
-                        purOrder = weightTicketController.findByPoNumber(weightTicket.getWeightTicketDetail().getEbeln());
-                        txtPONo.setText(weightTicket.getWeightTicketDetail().getEbeln());
-                        setValidPONum(true);
-                        setSubContract(false);
-                        PurchaseOrderDetail purchaseOrderDetail = purOrder.getPurchaseOrderDetail();
-
-                        if (rbtOutward.isSelected() && purchaseOrderDetail.getItemCat() == '3') {
-                            setSubContract(true);
-                        }
-                    } else {
-                        if (Posto.equals("")) {
-                            txtPONo.setText(null);
-                        }
-                    }
                 } else if (weightTicket.getWeightTicketDetail().getEbeln() != null && !weightTicket.getWeightTicketDetail().getEbeln().trim().isEmpty()) {
                     purOrder = weightTicketController.findByPoNumber(weightTicket.getWeightTicketDetail().getEbeln());
                     txtPONo.setText(weightTicket.getWeightTicketDetail().getEbeln());
