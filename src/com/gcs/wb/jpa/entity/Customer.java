@@ -45,7 +45,7 @@ public class Customer implements Serializable {
     private String name3;
     @Column(name = "name4")
     private String name4;
-    @Column(name = "addrnumber")
+    @Column(name = "addr_number")
     private String addrnumber;
     @Column(name = "created_date")
     private Date createdDate;
