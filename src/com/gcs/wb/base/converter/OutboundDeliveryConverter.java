@@ -8,6 +8,7 @@ import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.helper.DoGetDetailBapi;
 import com.gcs.wb.bapi.helper.structure.DoGetDetailStructure;
 import com.gcs.wb.bapi.service.SAPService;
+import com.gcs.wb.base.util.StringUtil;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
@@ -132,8 +133,8 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
                 outboundDeliveryDetail.setPoNumber(doItem.getPoNumber());
                 outboundDeliveryDetail.setCVendor(doItem.getCVendor());
                 outboundDeliveryDetail.setTVendor(doItem.getTVendor());
-                outboundDeliveryDetail.setZsling(doItem.getZSling() != null ? 0 : Integer.parseInt(doItem.getZSling()));
-                outboundDeliveryDetail.setZPallet(doItem.getZPallet() != null ? 0 : Integer.parseInt(doItem.getZPallet()));
+                outboundDeliveryDetail.setZsling(StringUtil.isNotEmptyString(doItem.getZSling()) ? Integer.parseInt(doItem.getZSling()) : 0);
+                outboundDeliveryDetail.setZPallet(StringUtil.isNotEmptyString(doItem.getZPallet()) ? Integer.parseInt(doItem.getZPallet()) : 0);
 
                 outboundDelivery.addOutboundDeliveryDetail(outboundDeliveryDetail);
                 //end set data

@@ -3407,9 +3407,6 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             switch (modeDetail) {
                 case IN_WAREHOUSE_TRANSFER:
                     txtWeightTickerRefN.setText(newWeightTicket.getWeightTicketIdRef());
-                        txtSlingN.setText(String.valueOf(newWeightTicket.getSling()));
-                        txtPalletN.setText(String.valueOf(newWeightTicket.getPallet()));
-                    
             }
 
             // load sloc
@@ -3498,10 +3495,12 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             newWeightTicket.setDriverIdNo(txtCMNDN.getText().trim());
             newWeightTicket.setPlateNo(txtPlateNoN.getText().trim());
             newWeightTicket.setTrailerId(txtTrailerNoN.getText().trim());
-            Number sling = (Number) txtSlingN.getValue();
-            newWeightTicket.setSling(sling.intValue());
-            Number pallet = (Number) txtPalletN.getValue();
-            newWeightTicket.setPallet(pallet.intValue());
+            if(modeDetail != MODE_DETAIL.IN_WAREHOUSE_TRANSFER) {
+                Number sling = (Number) txtSlingN.getValue();
+                newWeightTicket.setSling(sling.intValue());
+                Number pallet = (Number) txtPalletN.getValue();
+                newWeightTicket.setPallet(pallet.intValue());
+            }
             newWeightTicket.setRecvPlant(configuration.getWkPlant());
             newWeightTicket.setSoNiemXa(txtSoNiemXaN.getText().trim());
             newWeightTicket.setBatch(txtProductionBatchN.getText().trim());
