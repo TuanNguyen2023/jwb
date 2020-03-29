@@ -2277,6 +2277,18 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                     sapOutbDel.setPosted(outbDel.isPosted());
                                     sapOutbDel.setMatDoc(outbDel.getMatDoc());
                                     sapOutbDel.setWeightTicketId(outbDel.getWeightTicketId());
+                                    sapOutbDel.setCreatedDate(outbDel.getCreatedDate());
+                                    sapOutbDel.setCreatedTime(outbDel.getCreatedTime());
+                                    sapOutbDel.setUpdatedDate(outbDel.getUpdatedDate());
+
+                                    List<OutboundDeliveryDetail> deliveryDetails = sapOutbDel.getOutboundDeliveryDetails();
+                                    for (int y = 0; y < deliveryDetails.size(); y++) {
+                                        OutboundDeliveryDetail deliveryDetail = deliveryDetails.get(y);
+                                        deliveryDetail.setCreatedDate(outbDel.getCreatedDate());
+                                        deliveryDetail.setCreatedTime(outbDel.getCreatedTime());
+                                        deliveryDetail.setUpdatedDate(outbDel.getUpdatedDate());
+                                    }
+
                                     if (!entityManager.getTransaction().isActive()) {
                                         entityManager.getTransaction().begin();
                                     }
@@ -3443,7 +3455,18 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                     sapOutb.setWeightTicketId(outbDel.getWeightTicketId());
                                     sapOutb.setPosted(outbDel.isPosted());
                                     sapOutb.setMatDoc(outbDel.getMatDoc());
+                                    sapOutb.setCreatedDate(outbDel.getCreatedDate());
+                                    sapOutb.setCreatedTime(outbDel.getCreatedTime());
                                     sapOutb.setUpdatedDate(now);
+
+                                    List<OutboundDeliveryDetail> deliveryDetails = sapOutb.getOutboundDeliveryDetails();
+                                    for (int y = 0; y < deliveryDetails.size(); y++) {
+                                        OutboundDeliveryDetail deliveryDetail = deliveryDetails.get(y);
+                                        deliveryDetail.setCreatedDate(outbDel.getCreatedDate());
+                                        deliveryDetail.setCreatedTime(outbDel.getCreatedTime());
+                                        deliveryDetail.setUpdatedDate(now);
+                                    }
+
                                     entityManager.merge(sapOutb);
                                     outbDel = sapOutb;
                                     outbDel_list.set(i, sapOutb);
@@ -3829,11 +3852,16 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                 }
                             }
                         }
+                    }
+
+                    for (int i = 0; i < outbDel_list.size(); i++) {
+                        OutboundDelivery outboundDelivery = outbDel_list.get(i);
+                        outboundDelivery.setUpdatedDate(now);
 
                         if (!entityManager.getTransaction().isActive()) {
                             entityManager.getTransaction().begin();
                         }
-                        entityManager.merge(item);
+                        entityManager.merge(outboundDelivery);
                         entityManager.getTransaction().commit();
                     }
                 }
