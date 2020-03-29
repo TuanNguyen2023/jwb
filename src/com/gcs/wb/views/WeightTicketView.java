@@ -2290,6 +2290,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         }
                         if (outbDel != null) {
                             outbDel_list.add(outbDel);
+                            outDetails_lits.addAll(outbDel.getOutboundDeliveryDetails());
                             total_qty_goods = total_qty_goods.add(outbDel.getLfimg());
                             if (doNums.equals("")) {
                                 doNums = weightTicketDetail.getDeliveryOrderNo();
@@ -2303,17 +2304,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                     regItemDescription += " - " + outboundDeliveryDetail.getArktx();
                                 }
                             }
-                        }
-
-                        try {
-                            //get list outdetails
-                            details_list = weightTicketRegistarationController.findByMandtDelivNumb(do_list.get(index));
-                        } catch (Exception ex) {
-                            java.util.logging.Logger.getLogger(WeightTicketView.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                        for (int j = 0; j < details_list.size(); j++) {
-                            item = details_list.get(j);
-                            outDetails_lits.add(item);
                         }
                     }
 
@@ -2367,27 +2357,27 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 txtSalan.setText(weightTicket.getChargEnh());
                 txtCustomer.setText(null);
                 String kunnr = weightTicket.getWeightTicketDetail().getKunnr();
-                    if (kunnr != null && !kunnr.trim().isEmpty()) {
-                         entityManager.clear();
-                        if(Constants.WeighingProcess.MODE_DETAIL.IN_PO_PURCHASE.name().equals(weightTicket.getMode())) {
-                            Vendor custVendor = weightTicketRegistarationController.findByLifnrIsCustomer(weightTicket.getWeightTicketDetail().getKunnr());
-                            if(custVendor != null) {
-                                txtCustomer.setText(custVendor.getName1() + " " + custVendor.getName2());
-                            }
-                        } else {
-                            Customer cust = weightTicketRegistarationController.findByKunnr(weightTicket.getWeightTicketDetail().getKunnr());
-                            if(cust != null) {
-                                String name = cust.getName2();
-                                if (!StringUtil.isEmptyString(cust.getName3())) {
-                                    name += " " + cust.getName3();
-                                }
-                                if (!StringUtil.isEmptyString(cust.getName4())) {
-                                    name += " " + cust.getName4();
-                                }
-                                txtCustomer.setText(name);
-                            }
+                if (kunnr != null && !kunnr.trim().isEmpty()) {
+                    entityManager.clear();
+                    if (Constants.WeighingProcess.MODE_DETAIL.IN_PO_PURCHASE.name().equals(weightTicket.getMode())) {
+                        Vendor custVendor = weightTicketRegistarationController.findByLifnrIsCustomer(weightTicket.getWeightTicketDetail().getKunnr());
+                        if (custVendor != null) {
+                            txtCustomer.setText(custVendor.getName1() + " " + custVendor.getName2());
                         }
-                    
+                    } else {
+                        Customer cust = weightTicketRegistarationController.findByKunnr(weightTicket.getWeightTicketDetail().getKunnr());
+                        if (cust != null) {
+                            String name = cust.getName2();
+                            if (!StringUtil.isEmptyString(cust.getName3())) {
+                                name += " " + cust.getName3();
+                            }
+                            if (!StringUtil.isEmptyString(cust.getName4())) {
+                                name += " " + cust.getName4();
+                            }
+                            txtCustomer.setText(name);
+                        }
+                    }
+
                 }
                 if ((WeighBridgeApp.getApplication().isOfflineMode()
                         && !weightTicket.isPosted())
@@ -2397,7 +2387,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         txtCustomer.setEnabled(true);
                     }
                 }
-                
 
                 String lgort = null;
                 if (weightTicket.getLgort() != null && !weightTicket.getLgort().trim().isEmpty()) {
@@ -3153,16 +3142,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     outbDel = outbDel_list.get(i);
                     sumQtyReg = sumQtyReg.add(outbDel.getLfimg());
                 }
-                
-                // update DO list
-                for (int i = 0; i < outbDel_list.size(); i++) {
-                    try {
-                        outbDel = weightTicketController.findByMandtOutDel(outbDel_list.get(i).getDeliveryOrderNo());
-                        outbDel_list.set(i, outbDel);
-                    } catch (Exception ex) {
-                        logger.error(ex);
-                    }
-                }
 
                 // post SAP
                 String ivWbidNosave = "";
@@ -3830,7 +3809,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         item.setLfimg_ori(item.getLfimg());
                         item.setUpdatedDate(now);
                         // tinh toan cho Nhap kho tu plant xuat > plant nhap
-                        if(weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER")) {
+                        if (weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER")) {
                             if (checkPlantOutToIn(item, outbDel.getWerks())) {
                                 double outSScalePlant = 0;
                                 double result = ((Number) txfInQty.getValue()).doubleValue();
@@ -3850,7 +3829,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                 }
                             }
                         }
-                        
+
                         if (!entityManager.getTransaction().isActive()) {
                             entityManager.getTransaction().begin();
                         }
@@ -3874,18 +3853,13 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                             .filter(t -> t.getFreeItem() != null && t.getFreeItem() == 'X')
                             .collect(Collectors.toList());
 
-                    for (OutboundDeliveryDetail obj : outDetailFrees) {
-                        obj.setGoodsQty(obj.getLfimg());
-                        obj.setOutScale(obj.getInScale().add(obj.getLfimg()).setScale(3, RoundingMode.HALF_UP));
-                        obj.setsTime(now);
-                        obj.setUpdatedDate(now);
-                        remain = remain - obj.getLfimg().doubleValue();
-
-                        if (!entityManager.getTransaction().isActive()) {
-                            entityManager.getTransaction().begin();
-                        }
-                        entityManager.merge(obj);
-                        entityManager.getTransaction().commit();
+                    for (int i = 0; i < outDetailFrees.size(); i++) {
+                        item = outDetailFrees.get(i);
+                        item.setGoodsQty(item.getLfimg());
+                        item.setOutScale(item.getInScale().add(item.getLfimg()).setScale(3, RoundingMode.HALF_UP));
+                        item.setsTime(now);
+                        item.setUpdatedDate(now);
+                        remain = remain - item.getLfimg().doubleValue();
                     }
 
                     List<OutboundDeliveryDetail> outDetails = outDetails_lits.stream()
@@ -3910,11 +3884,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                             item.setsTime(now);
                             item.setUpdatedDate(now);
                         }
-                        if (!entityManager.getTransaction().isActive()) {
-                            entityManager.getTransaction().begin();
-                        }
-                        entityManager.merge(item);
-                        entityManager.getTransaction().commit();
                     }
                 } else if (outDetails_lits.size() == 1) {
                     BigDecimal div = BigDecimal.valueOf(1000);
@@ -3927,11 +3896,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     }
                     item.setsTime(now);
                     item.setUpdatedDate(now);
-                    if (!entityManager.getTransaction().isActive()) {
-                        entityManager.getTransaction().begin();
-                    }
-                    entityManager.merge(item);
-                    entityManager.getTransaction().commit();
                 }
             }
             return null;
