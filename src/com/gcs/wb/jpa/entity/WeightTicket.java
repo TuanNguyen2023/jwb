@@ -117,7 +117,7 @@ import javax.persistence.Temporal;
             query = "SELECT w FROM WeightTicket w "
             + " , IN(w.weightTicketDetails) wd "
             + " WHERE wd.deliveryOrderNo LIKE :deliveryOrderNo "
-            + " AND wd.ebeln IS NULL" 
+            + " AND (wd.ebeln IS NULL OR wd.ebeln = '') " 
             + " AND w.fScale IS NOT NULL"),
     @NamedQuery(name = "WeightTicket.findByQtyPOisPOSTED",
             query = "SELECT DISTINCT w FROM WeightTicket w "
