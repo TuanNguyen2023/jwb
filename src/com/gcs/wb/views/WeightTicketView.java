@@ -42,7 +42,6 @@ import com.gcs.wb.jpa.repositorys.MaterialRepository;
 import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
 import com.gcs.wb.jpa.repositorys.VendorRepository;
 import com.gcs.wb.jpa.repositorys.WeightTicketDetailRepository;
-import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import com.gcs.wb.model.AppConfig;
 import com.sap.conn.jco.JCoException;
 import org.apache.log4j.Logger;
@@ -71,7 +70,6 @@ import java.util.*;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
-import javax.swing.border.Border;
 
 /*
  *
@@ -80,6 +78,7 @@ import javax.swing.border.Border;
 public class WeightTicketView extends javax.swing.JInternalFrame {
 
     private AppConfig config = WeighBridgeApp.getApplication().getConfig();
+    private JFrame mainFrame = WeighBridgeApp.getApplication().getMainFrame();
     Configuration configuration = config.getConfiguration();
     private final SAPSetting sapSetting;
     private final User login;
@@ -1515,6 +1514,15 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         if (weightTicket == null || txfCurScale.getValue() == null || ((Number) txfCurScale.getValue()).intValue() == 0) {
             return null;
         }
+
+        String strCurScale = txfCurScale.getText().trim().replace(",", "");
+        String integer = strCurScale.split("\\.")[0];
+
+        if (integer.length() > 10) {
+            JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.curScaleTooBig"));
+            return null;
+        }
+
         WeightTicketDetail weightTicketDetail = weightTicket.getWeightTicketDetail();
         if (!WeighBridgeApp.getApplication().isOfflineMode() && weightTicketDetail.getMatnrRef() == null) {
             return null;
@@ -2321,7 +2329,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     }
 
                     if (outbDel_list.size() > 1) {
-                        txtWeight.setText(df.format(totalRegItemQuantity).toString());
+                        txtWeight.setText(df.format(totalRegItemQuantity));
                     }
 
                     txtDelNum.setText(doNums);
