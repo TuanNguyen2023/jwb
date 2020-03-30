@@ -2114,6 +2114,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 if (Constants.WeighingProcess.MODE_DETAIL.OUT_SELL_ROAD.name().equals(weightTicket.getMode())
                         || Constants.WeighingProcess.MODE_DETAIL.OUT_PLANT_PLANT.name().equals(weightTicket.getMode())
                         || Constants.WeighingProcess.MODE_DETAIL.OUT_SELL_WATERWAY.name().equals(weightTicket.getMode())
+                        || Constants.WeighingProcess.MODE_DETAIL.OUT_PULL_STATION.name().equals(weightTicket.getMode())
                         || Constants.WeighingProcess.MODE_DETAIL.OUT_OTHER.name().equals(weightTicket.getMode())
                         || Constants.WeighingProcess.MODE_DETAIL.IN_OTHER.name().equals(weightTicket.getMode())) {
                     txtSling.setText(NumberFormat.getInstance().format(weightTicket.getSling()));
@@ -2677,8 +2678,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             txtLoadSource.setVisible(false);
 
             txtSO.setVisible(false);
-            txtSling.setVisible(false);
-            txtPallet.setVisible(false);
             txtWeightTicketIdRef.setVisible(false);
             txtDelNum.setVisible(false);
             txtMatnr.setVisible(false);

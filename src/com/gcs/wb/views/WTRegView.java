@@ -281,10 +281,10 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 if (value instanceof Customer) {
                     Customer customer = (Customer) value;
                     String name = customer.getName2();
-                    if(!StringUtil.isEmptyString(customer.getName3())) {
+                    if (!StringUtil.isEmptyString(customer.getName3())) {
                         name += " " + customer.getName3();
                     }
-                    if(!StringUtil.isEmptyString(customer.getName4())) {
+                    if (!StringUtil.isEmptyString(customer.getName4())) {
                         name += " " + customer.getName4();
                     }
                     setText(name);
@@ -2441,8 +2441,8 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         showComponent(txtTonnageN, lblTonnageN, lblTonngageUnitN, true, false);
         showComponent(txtTrailerNoN, lblTrailerNoN, true, true);
         showComponent(txtSalanN, lblSalanN, true, true);
-        showComponent(txtSlingN, lblSlingN, false, false);
-        showComponent(txtPalletN, lblPalletN, false, false);
+        showComponent(txtSlingN, lblSlingN, true, true);
+        showComponent(txtPalletN, lblPalletN, true, true);
         showComponent(txtSoNiemXaN, lblSoNiemXaN, true, true);
         showComponent(txtProductionBatchN, lblProductionBatchN, true, true);
         showComponent(txtLoadSourceN, lblLoadSourceN, false, false);
@@ -2806,8 +2806,11 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             lblVendorTransportN.setForeground(Color.red);
         }
 
+        boolean isSlingValid = wtRegisValidation.validateIntegerValue(txtSlingN.getText(), lblSlingN);
+        boolean isPalletValid = wtRegisValidation.validateIntegerValue(txtPalletN.getText(), lblPalletN);
+
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
-                && isCMNDBLValid && isSalanValid
+                && isCMNDBLValid && isSalanValid && isSlingValid && isPalletValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isSlocValid && isVendorTransValid;
     }
@@ -3336,15 +3339,15 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             weightTicketDetail.setRegItemQuantity(outboundDelivery.getLfimg());
             weightTicketDetail.setSoNumber(salesOrder);
             weightTicketDetail.setShipTo(outboundDelivery.getOutboundDeliveryDetail().getShipTo());
-            
+
             // set PO xuat, vendor van chuyen cho mode Nhap chuyen kho
             weightTicketDetail.setEbeln(outboundDelivery.getOutboundDeliveryDetail().getPoNumber());
             weightTicketDetail.setLoadVendor(outboundDelivery.getOutboundDeliveryDetail().getCVendor());
             weightTicketDetail.setTransVendor(outboundDelivery.getOutboundDeliveryDetail().getTVendor());
-            
+
             newWeightTicket.addWeightTicketDetail(weightTicketDetail);
             newWeightTicket.setWeightTicketIdRef(outboundDelivery.getWtIdRef());
-            
+
             newWeightTicket.setSling(outboundDelivery.getOutboundDeliveryDetail().getZsling());
             newWeightTicket.setPallet(outboundDelivery.getOutboundDeliveryDetail().getZPallet());
 
@@ -3498,7 +3501,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             newWeightTicket.setDriverIdNo(txtCMNDN.getText().trim());
             newWeightTicket.setPlateNo(txtPlateNoN.getText().trim());
             newWeightTicket.setTrailerId(txtTrailerNoN.getText().trim());
-            if(modeDetail != MODE_DETAIL.IN_WAREHOUSE_TRANSFER) {
+            if (modeDetail != MODE_DETAIL.IN_WAREHOUSE_TRANSFER) {
                 Number sling = (Number) txtSlingN.getValue();
                 newWeightTicket.setSling(sling.intValue());
                 Number pallet = (Number) txtPalletN.getValue();
@@ -3522,8 +3525,8 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                     // update for header
                     outboundDelivery.setWeightTicketId(newWeightTicket.getId());
                     if (!entityManager.getTransaction().isActive()) {
-                            entityManager.getTransaction().begin();
-                        }
+                        entityManager.getTransaction().begin();
+                    }
                     entityManager.merge(outboundDelivery);
                     entityManager.getTransaction().commit();
 
@@ -4025,13 +4028,13 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 purchaseOrderPO = syncPurchaseOrder(poNum, purchaseOrderPO);
 
                 if (purchaseOrderPO != null) {
-                    if(modeDetail == MODE_DETAIL.IN_PO_PURCHASE) {
+                    if (modeDetail == MODE_DETAIL.IN_PO_PURCHASE) {
                         String cusVendor = purchaseOrderPO.getVendor();
                         vendor = syncCustomerFromVendor(cusVendor.trim());
                     } else {
                         String kunnr = purchaseOrderPO.getCustomer();
                         if (kunnr != null && !kunnr.trim().isEmpty()) {
-                        customer = syncCustomer(kunnr.trim());
+                            customer = syncCustomer(kunnr.trim());
                         }
                     }
                 }
@@ -4114,12 +4117,12 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 cbxVendorTransportN.setModel(vendor2Model);
                 cbxVendorTransportN.setSelectedIndex(-1);
             }
-            
-            if(modeDetail == MODE_DETAIL.IN_PO_PURCHASE) {
-               if (vendor != null) {
-                cbxCustomerN.setModel(weightTicketRegistarationController.getCusVendorModel());
-                cbxCustomerN.setSelectedItem(vendor);
-               }
+
+            if (modeDetail == MODE_DETAIL.IN_PO_PURCHASE) {
+                if (vendor != null) {
+                    cbxCustomerN.setModel(weightTicketRegistarationController.getCusVendorModel());
+                    cbxCustomerN.setSelectedItem(vendor);
+                }
             } else if (customer != null) {
                 cbxCustomerN.setModel(weightTicketRegistarationController.getCustomerModel());
                 cbxCustomerN.setSelectedItem(customer);
@@ -4199,12 +4202,12 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 return null;
             }
         }
-        
+
         private Vendor syncCustomerFromVendor(String cusVendor) {
             try {
                 Vendor dbCusVendor = weightTicketRegistarationController.findByLifnrIsCustomer(cusVendor);
                 Vendor sapVendor = sapService.getVendor(cusVendor);
-                
+
                 return sapService.syncVendor(sapVendor, dbCusVendor);
             } catch (Exception ex) {
                 if (ExceptionUtil.isSapDisConnectedException(ex)) {
@@ -4250,7 +4253,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                     totalWeight = numCheckWeight;
                     weightTicketDetail.setRegItemQuantity(totalWeight);
                     isValidWeight = true;
-                    
+
                     // set inform kunnr
                     weightTicketDetail.setKunnr(purchaseOrder.getVendor());
                     break;
