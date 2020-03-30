@@ -48,9 +48,9 @@ public class SerialComm {
             throw ex;
         }
         if (serialPort.isOpen()) {
-            String msg = "Error: Port " + portName + " is currently in use";
+            String msg = "Cổng " + portName + " đang được sử dụng. Vui lòng kiểm tra lại.";
             Logger.getLogger(SerialPort.class.getName()).error(msg);
-            throw new SerialPortInvalidPortException();
+            throw new SerialPortInvalidPortException(msg);
         } else {
             serialPort.setComPortParameters(speed, dataBits, stopBits, parity);
             serialPort.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 2000, 0);
@@ -63,7 +63,7 @@ public class SerialComm {
                     throw ex;
                 }
             } else {
-                String msg = "Serial ports are unsuccessfully connected.";
+                String msg = "Kết nối tới cầu cân không thành công. Vui lòng kiểm tra lại.";
                 Logger.getLogger(SerialComm.class.getName()).error(msg);
                 throw new IllegalPortException(msg);
             }
