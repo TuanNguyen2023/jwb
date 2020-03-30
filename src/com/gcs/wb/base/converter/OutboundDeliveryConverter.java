@@ -137,7 +137,9 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
                 outboundDeliveryDetail.setFscale(doItem.getFscale());
                 outboundDeliveryDetail.setSscale(doItem.getSscale());
                 outboundDeliveryDetail.setSscale(doItem.getSscale());
-                outboundDeliveryDetail.setPoNumber(doItem.getPoNumber());
+                if(StringUtil.isNotEmptyString(doItem.getPoNumber())) {
+                    outboundDeliveryDetail.setPoNumber(doItem.getPoNumber());
+                }
                 outboundDeliveryDetail.setCVendor(doItem.getCVendor());
                 outboundDeliveryDetail.setTVendor(doItem.getTVendor());
                 outboundDeliveryDetail.setZsling(StringUtil.isNotEmptyString(doItem.getZSling()) ? Integer.parseInt(doItem.getZSling()) : 0);
