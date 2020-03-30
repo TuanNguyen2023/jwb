@@ -2342,7 +2342,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     setSubContract(false);
                     PurchaseOrderDetail purchaseOrderDetail = purOrder.getPurchaseOrderDetail();
                     txtRegItem.setText(weightTicket.getWeightTicketDetail().getRegItemDescription());
-                    if (rbtOutward.isSelected() && purchaseOrderDetail.getItemCat() == '3') {
+                    if (rbtOutward.isSelected() && purchaseOrderDetail.getItemCat() != null && purchaseOrderDetail.getItemCat() == '3') {
                         setSubContract(true);
                     }
                 }
