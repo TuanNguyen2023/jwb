@@ -1097,7 +1097,7 @@ public class WeightTicketService {
                         map.put("P_TOTAL_QTY_REALITY", String.valueOf(totalQtyReality));
                         Double tmp = null;
                         if ((outbDel != null) && (StringUtil.isNotEmptyString(outbDel.getMatnr())) && (checkBagCement(outbDel.getMatnr()))) {
-                            tmp = ((outbDel.getLfimg().doubleValue() + outbDel.getFreeQty().doubleValue()) * 1000d) / baoWeigh;
+                            tmp = (outbDel.getLfimg().doubleValue() * 1000d) / baoWeigh;
                             bags = Math.round(tmp);
                         }
                     } else {
