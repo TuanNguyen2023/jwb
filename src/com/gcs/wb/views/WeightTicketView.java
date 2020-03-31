@@ -3675,6 +3675,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.iBiggerO"));
                         txfOutQty.setValue(null);
                         txfGoodsQty.setValue(null);
+                        txtOutTime.setText(null);
                         weightTicket.setGQty(null);
                         return null;
                     }
@@ -3683,6 +3684,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     if (weightTicket.getRegType() == 'I') {
                         JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.oBiggerI"));
                         txfOutQty.setValue(null);
+                        txtOutTime.setText(null);
                         txtOutTime.setText(null);
                         txfGoodsQty.setValue(null);
                         weightTicket.setGQty(null);
@@ -3694,6 +3696,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.massOrderInvalid"));
                     txfOutQty.setValue(null);
                     txfGoodsQty.setValue(null);
+                    txtOutTime.setText(null);
                     weightTicket.setGQty(null);
                     return null;
                 } else if (configuration.getWeightLimit() > 0
@@ -3701,6 +3704,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.ordeRexceed", configuration.getWeightLimit()));
                     txfOutQty.setValue(null);
                     txfGoodsQty.setValue(null);
+                    txtOutTime.setText(null);
                     weightTicket.setGQty(null);
                     return null;
                 }
@@ -3811,6 +3815,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.oBiggerWarehouse"));
                         txfOutQty.setValue(null);
                         txfGoodsQty.setValue(null);
+                        txtOutTime.setText(null);
                         weightTicket.setGQty(null);
                         btnOScaleReset.setEnabled(true);
                     }
