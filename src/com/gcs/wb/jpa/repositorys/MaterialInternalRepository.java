@@ -44,6 +44,8 @@ public class MaterialInternalRepository {
     public MaterialInternal findByMatnr(String matnr) {
         try {
             TypedQuery<MaterialInternal> typedQuery = entityManager.createNamedQuery("MaterialInternal.findByMatnr", MaterialInternal.class);
+            typedQuery.setParameter("mandt", configuration.getSapClient());
+            typedQuery.setParameter("wplant", configuration.getWkPlant());
             typedQuery.setParameter("matnr", matnr);
             List<MaterialInternal> materialInternals = typedQuery.getResultList();
             if (materialInternals != null && materialInternals.size() > 0) {
