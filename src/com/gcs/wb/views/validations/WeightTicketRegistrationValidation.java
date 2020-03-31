@@ -163,4 +163,22 @@ public class WeightTicketRegistrationValidation {
 
         return result;
     }
+    
+    public boolean validateIntegerValueWeigh(String value, JComponent label) {
+        boolean result;
+        
+        value = value.trim().replace(",", "");
+        value = value.trim().replace(".", "");
+
+        try {
+            Integer.parseInt(value);
+            result = true;
+        } catch (NumberFormatException ex) {
+            result = false;
+        }
+
+        label.setForeground(result ? Color.black : Color.red);
+
+        return result;
+    }
 }

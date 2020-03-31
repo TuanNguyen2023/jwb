@@ -1552,23 +1552,6 @@ private void txtTicketIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:e
 }//GEN-LAST:event_txtTicketIdNKeyReleased
 
 private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtWeightNKeyReleased
-//    if (modeDetail == MODE_DETAIL.IN_PO_PURCHASE) {
-//        boolean isWeightValid = wtRegisValidation.validateLength(txtWeightN.getText(), lblWeightN, 1, 10);
-//        if (isWeightValid) {
-//            BigDecimal weight = new BigDecimal(txtWeightN.getText());
-//
-//            if (numCheckWeight.subtract(weight).compareTo(BigDecimal.ZERO) < 0) {
-//                JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.quantityOver", numCheckWeight));
-//
-//                lblWeightN.setForeground(Color.red);
-//
-//                isValidWeight = false;
-//            } else {
-//                isValidWeight = true;
-//            }
-//        }
-//    }
-
     validateForm();
 }//GEN-LAST:event_txtWeightNKeyReleased
 
@@ -2624,6 +2607,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
 
         boolean isWeightValid = wtRegisValidation.validateLength(txtWeightN.getText(), lblWeightN, 1, 10);
+        boolean isWeightValidValue = wtRegisValidation.validateIntegerValueWeigh(txtWeightN.getText(), lblWeightN);
 
         boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
@@ -2634,7 +2618,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
                 && isCMNDBLValid && isPlateNoValid && isSalanValid && isSlingValid && isPalletValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
-                && isNoteValid && isMaterialTypeValid && isSlocValid && isWeightValid;
+                && isNoteValid && isMaterialTypeValid && isSlocValid && isWeightValid && isWeightValidValue;
     }
 
     private boolean validateOutSellRoad() {

@@ -60,8 +60,9 @@ public class MaterialInternalRepository {
     public List<String> getListLgortByMatnr(String matnr) {
         List<String> list = new ArrayList<>();
         try {
-            TypedQuery<MaterialInternal> typedQuery = entityManager.createNamedQuery("MaterialInternal.findByMatnr", MaterialInternal.class
-            );
+            TypedQuery<MaterialInternal> typedQuery = entityManager.createNamedQuery("MaterialInternal.findByMatnr", MaterialInternal.class);
+            typedQuery.setParameter("mandt", configuration.getSapClient());
+            typedQuery.setParameter("wplant", configuration.getWkPlant());
             typedQuery.setParameter("matnr", matnr);
             List<MaterialInternal> materials = typedQuery.getResultList();
             list = materials.stream()
@@ -84,8 +85,9 @@ public class MaterialInternalRepository {
         }
 
         try {
-            TypedQuery<MaterialInternal> typedQuery = entityManager.createNamedQuery("MaterialInternal.findByMatnrs", MaterialInternal.class
-            );
+            TypedQuery<MaterialInternal> typedQuery = entityManager.createNamedQuery("MaterialInternal.findByMatnrs", MaterialInternal.class);
+            typedQuery.setParameter("mandt", configuration.getSapClient());
+            typedQuery.setParameter("wplant", configuration.getWkPlant());
             typedQuery.setParameter("matnrs", matnrs);
             List<MaterialInternal> materials = typedQuery.getResultList();
             list = materials.stream()
