@@ -56,6 +56,8 @@ public class SAPSession {
                             LoginService loginService = new LoginService();
                             session = loginService.reconnectSapSession();
                             continue;
+                        } else {
+                            WeighBridgeApp.getApplication().setOfflineMode(true);
                         }
                     }
                 }

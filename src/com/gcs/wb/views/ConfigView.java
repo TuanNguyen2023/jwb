@@ -1122,11 +1122,13 @@ private void txtSapPasswordKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             }
 
             if (!error) {
-                try {
-                    SyncMasterDataService syncMasterDataService = new SyncMasterDataService();
-                    syncMasterDataService.syncMasterDataWhenLogin();
-                } catch (Exception ex) {
-                    logger.error(ex);
+                if (!WeighBridgeApp.getApplication().isOfflineMode()) {
+                    try {
+                        SyncMasterDataService syncMasterDataService = new SyncMasterDataService();
+                        syncMasterDataService.syncMasterDataWhenLogin();
+                    } catch (Exception ex) {
+                        logger.error(ex);
+                    }
                 }
 
                 dispose();

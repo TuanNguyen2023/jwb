@@ -321,6 +321,10 @@ public class WeighBridgeApp extends SingleFrameApplication {
      */
     public void setOfflineMode(boolean offlineMode) {
         this.offlineMode = offlineMode;
+        
+        if (vMain != null && offlineMode) {
+            vMain.switchToOfflineMode();
+        }
     }
 
     /**
