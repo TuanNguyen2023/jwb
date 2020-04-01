@@ -26,7 +26,15 @@ public class WeightTicketRegistrationValidation {
         this.rootPane = rootPane;
         this.resourceMapMsg = resourceMapMsg;
     }
-
+    
+    public boolean validateLength(String value, JComponent label, int min, int max, boolean isDecimal) {
+        if (!isDecimal) {
+            return validateLength(value, label, min, max);
+        } else {
+            String[] arrOfStr = value.split("\\.", 2);  
+            return validateLength(arrOfStr[0], label, min, max);
+        }
+    }
     public boolean validateLength(String value, JComponent label, int min, int max) {
         value = value.trim();
 
