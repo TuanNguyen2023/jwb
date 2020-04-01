@@ -41,7 +41,7 @@ public class SLoc implements Serializable {
     @Column(name = "wplant", unique = true)
     private String wplant;
     @Column(name = "lgobe")
-    private String lgobe;
+    private String lgobe = "";
     @Column(name = "created_date")
     private Date createdDate;
     @Column(name = "updated_date")

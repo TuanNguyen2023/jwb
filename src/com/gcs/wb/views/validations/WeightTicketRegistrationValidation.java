@@ -122,7 +122,7 @@ public class WeightTicketRegistrationValidation {
 
         try {
             Long.parseLong(value);
-            result = true;
+            result = value.length() <= 10;
         } catch (NumberFormatException ex) {
             result = false;
         }
@@ -138,7 +138,7 @@ public class WeightTicketRegistrationValidation {
 
         try {
             Long.parseLong(value);
-            result = value.length() == 10;
+            result = value.length() <= 10;
         } catch (NumberFormatException ex) {
             result = false;
         }

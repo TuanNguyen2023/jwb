@@ -39,7 +39,7 @@ public class WeighBridgeView extends FrameView {
     private final WeighBridgeController weighBridgeController = new WeighBridgeController();
     public ResourceMap resourceMapMsg = Application.getInstance(WeighBridgeApp.class).getContext().getResourceMap(WeighBridgeView.class);
     public JFrame mainFrame = WeighBridgeApp.getApplication().getMainFrame();
-    
+
     public WeighBridgeView(SingleFrameApplication app) {
         super(app);
         initComponents();
@@ -537,11 +537,11 @@ public class WeighBridgeView extends FrameView {
         lblOffline.setVisible(true);
 
         vehicleRegistrationView.dispose();
-        vehicleRegistrationView = new RegistrationVehicleOfflineView();
+        vehicleRegistrationView = new WTRegOfflineView();
         dpVR.removeAll();
         dpVR.add(vehicleRegistrationView);
         vehicleRegistrationView.show();
-        
+
         JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.switchToOfflineModeSuccess"));
     }
 
@@ -549,7 +549,7 @@ public class WeighBridgeView extends FrameView {
         if (tabPane.getSelectedComponent().getName().equalsIgnoreCase(dpVR.getName())) {
             if (vehicleRegistrationView == null) {
                 if (WeighBridgeApp.getApplication().isOfflineMode()) {
-                    vehicleRegistrationView = new RegistrationVehicleOfflineView();
+                    vehicleRegistrationView = new WTRegOfflineView();
                 } else {
                     vehicleRegistrationView = new WTRegView();
                 }
