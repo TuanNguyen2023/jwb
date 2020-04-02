@@ -36,6 +36,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
+import javax.swing.event.ListSelectionEvent;
 import org.apache.commons.lang.SerializationUtils;
 import org.jdesktop.application.Application;
 
@@ -84,14 +85,27 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
         dpDateFrom.setFormats(Constants.Date.FORMAT);
         dpDateTo.setFormats(Constants.Date.FORMAT);
         pnShowFilter.setVisible(false);
+        btnReprint.setEnabled(false);
 
         initComboboxModel();
         initComboboxRenderer();
+        initTableEvent();
         cbxHourTo.setSelectedIndex(23);
         cbxModeSearch.setModel(new DefaultComboBoxModel<>(ModeEnum.values()));
         cbxStatus.setModel(new DefaultComboBoxModel<>(StatusEnum.values()));
 
         btnFind.doClick();
+    }
+
+    private void initTableEvent() {
+        tabResults.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
+            try {
+                selectedWeightTicket = weightTicketList.get(tabResults.convertRowIndexToModel(tabResults.getSelectedRow()));
+                btnReprint.setEnabled(selectedWeightTicket != null);
+            } catch (Exception ex) {
+                btnReprint.setEnabled(false);
+            }
+        });
     }
 
     private void initComboboxRenderer() {
@@ -634,6 +648,7 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
 
         btnReprint.setAction(actionMap.get("reprintRecord")); // NOI18N
         btnReprint.setText(resourceMap.getString("btnReprint.text")); // NOI18N
+        btnReprint.setEnabled(false);
         btnReprint.setName("btnReprint"); // NOI18N
 
         javax.swing.GroupLayout pnPrintControlLayout = new javax.swing.GroupLayout(pnPrintControl);
@@ -1024,7 +1039,7 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
                 .addComponent(pnROVLeft, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(pnControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(72, Short.MAX_VALUE))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
 
         pnROVRight.setName("pnROVRight"); // NOI18N
@@ -1368,7 +1383,7 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnShowFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(13, 13, 13)
-                .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
+                .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnPrintControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

@@ -116,6 +116,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         dpDateFrom.setFormats(Constants.Date.FORMAT);
         dpDateTo.setFormats(Constants.Date.FORMAT);
         pnShowFilter.setVisible(false);
+        btnReprint.setEnabled(false);
         btnEdit.setEnabled(false);
 
         initComboboxModel();
@@ -134,13 +135,17 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 selectedWeightTicket = weightTicketList.get(tabResults.convertRowIndexToModel(tabResults.getSelectedRow()));
                 if (selectedWeightTicket != null
                         && selectedWeightTicket.getOfflineMode()
+                        && WeighBridgeApp.getApplication().getLogin().getRoles().toUpperCase().contains("Z_JWB_ADMIN")
                         && configuration.getListModePermissions().contains(MODE_DETAIL.valueOf(selectedWeightTicket.getMode()))) {
                     btnEdit.setEnabled(true);
                 } else {
                     btnEdit.setEnabled(false);
                 }
+
+                btnReprint.setEnabled(selectedWeightTicket != null);
             } catch (Exception ex) {
                 btnEdit.setEnabled(false);
+                btnReprint.setEnabled(false);
             }
         });
     }
@@ -2573,17 +2578,6 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         }
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
-
-        if (isEditMode) {
-            boolean isSOValid = wtRegisValidation.validateDO(txtSONumN.getText(), lblSONumN);
-            btnSOCheckN.setEnabled(isSOValid);
-            if (!isValidSO) {
-                lblSONumN.setForeground(Color.red);
-            } else {
-                btnDOCheckN.setEnabled(true);
-            }
-        }
-
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
                 && isCMNDBLValid && isPlateNoValid && isSalanValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
@@ -2643,16 +2637,6 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         }
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
-
-        if (isEditMode) {
-            boolean isSOValid = wtRegisValidation.validateDO(txtSONumN.getText(), lblSONumN);
-            btnSOCheckN.setEnabled(isSOValid);
-            if (!isValidSO) {
-                lblSONumN.setForeground(Color.red);
-            } else {
-                btnDOCheckN.setEnabled(true);
-            }
-        }
 
         boolean isSlingValid = wtRegisValidation.validateIntegerValue(txtSlingN.getText(), lblSlingN);
         boolean isPalletValid = wtRegisValidation.validateIntegerValue(txtPalletN.getText(), lblPalletN);
@@ -4404,11 +4388,6 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             rbtOutput.setEnabled(false);
             cbxModeType.setEnabled(false);
 
-            if (modeDetail == MODE_DETAIL.IN_WAREHOUSE_TRANSFER || modeDetail == MODE_DETAIL.OUT_SELL_ROAD) {
-                showComponent(txtDONumN, lblDONumN, btnDOCheckN, true, false);
-                showComponent(txtSONumN, lblSONumN, btnSOCheckN, true, true);
-            }
-
             newWeightTicket = selectedWeightTicket;
             WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
 
@@ -4430,13 +4409,12 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             txtPOSTONumN.setText(newWeightTicket.getPosto());
             txtSONumN.setText(weightTicketDetail.getSoNumber());
             cbxMaterialTypeN.setSelectedItem(weightTicketRegistarationController.getMaterial(weightTicketDetail.getMatnrRef()));
-            txtWeightN.setText(df.format(weightTicketDetail.getRegItemQuantity()).toString());
+            txtWeightN.setText(df.format(weightTicketDetail.getRegItemQuantity()));
 
             // load sloc
             boolean isInternal = modeDetail == MODE_DETAIL.IN_OTHER || modeDetail == MODE_DETAIL.OUT_OTHER;
             List<String> lgorts = weightTicketRegistarationController.getListLgortByMatnr(weightTicketDetail.getMatnrRef(), isInternal);
-            loadSLoc(lgorts, null);
-            cbxSlocN.setSelectedItem(new SLoc(newWeightTicket.getLgort()));
+            loadSLoc(lgorts, newWeightTicket.getLgort());
             cbxSloc2N.setSelectedItem(new SLoc(newWeightTicket.getRecvLgort()));
 
             loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);

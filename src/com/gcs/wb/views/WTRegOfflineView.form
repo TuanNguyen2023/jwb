@@ -59,7 +59,7 @@
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="pnShowFilter" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
-              <Component id="spnResult" pref="260" max="32767" attributes="0"/>
+              <Component id="spnResult" pref="262" max="32767" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="pnPrintControl" min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -491,6 +491,7 @@
               <action class="com.gcs.wb.views.WTRegOfflineView" id="reprintRecord" methodName="reprintRecord"/>
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="btnReprint.text"/>
+            <Property name="enabled" type="boolean" value="false"/>
             <Property name="name" type="java.lang.String" value="btnReprint" noResource="true"/>
           </Properties>
         </Component>
@@ -525,7 +526,7 @@
                   <Component id="pnROVLeft" min="-2" max="-2" attributes="1"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="pnControl" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="72" max="32767" attributes="0"/>
+                  <EmptySpace pref="74" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
