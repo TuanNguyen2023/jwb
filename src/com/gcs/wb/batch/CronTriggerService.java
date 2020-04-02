@@ -14,6 +14,8 @@ import java.text.ParseException;
  */
 public class CronTriggerService {
 
+    static Scheduler scheduler;
+
     public void execute() throws ParseException, SchedulerException {
         // Init Job
         JobDetail syncMasterDataJob = new JobDetail();
@@ -25,13 +27,14 @@ public class CronTriggerService {
         syncMasterDataTrigger.setCronExpression(Constants.SyncMasterData.CRON_EXPRESSION);
 
         // Execute
-        Scheduler scheduler = new StdSchedulerFactory().getScheduler();
+        scheduler = new StdSchedulerFactory().getScheduler();
         scheduler.start();
         scheduler.scheduleJob(syncMasterDataJob, syncMasterDataTrigger);
     }
 
-    public void close() throws ParseException, SchedulerException {
-        Scheduler scheduler = new StdSchedulerFactory().getScheduler();
-        scheduler.shutdown();
+    public static void close() throws SchedulerException {
+        if (scheduler != null && scheduler.isStarted()) {
+            scheduler.shutdown();
+        }
     }
 }

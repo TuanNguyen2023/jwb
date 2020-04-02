@@ -5,7 +5,6 @@
 package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
-import com.gcs.wb.bapi.goodsmvt.structure.DOCheckStructure;
 import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.base.constant.Constants.WeighingProcess.MODE;
 import com.gcs.wb.base.constant.Constants.WeighingProcess.MODE_DETAIL;
@@ -1534,12 +1533,10 @@ private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//
 private void cbxVendorLoadingNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxVendorLoadingNActionPerformed
     if (cbxVendorLoadingN.getSelectedItem() != null && !cbxVendorLoadingN.getSelectedItem().toString().equals("")) {
         Vendor vendor = (Vendor) cbxVendorLoadingN.getSelectedItem();
-        if (modeDetail != MODE_DETAIL.OUT_SLOC_SLOC) {
-            if (newWeightTicket != null) {
-                isValidVendorLoad = true;
-                lblVendorLoadingN.setForeground(Color.black);
-                newWeightTicket.getWeightTicketDetail().setLoadVendor(vendor.getLifnr());
-            }
+        if (newWeightTicket != null && vendor != null) {
+            isValidVendorLoad = true;
+            lblVendorLoadingN.setForeground(Color.black);
+            newWeightTicket.getWeightTicketDetail().setLoadVendor(vendor.getLifnr());
         }
 
         validateForm();
@@ -1551,13 +1548,10 @@ private void cbxVendorLoadingNActionPerformed(java.awt.event.ActionEvent evt) {/
 private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxVendorTransportNActionPerformed
     if (cbxVendorTransportN.getSelectedItem() != null && !cbxVendorTransportN.getSelectedItem().toString().equals("")) {
         Vendor vendor = (Vendor) cbxVendorTransportN.getSelectedItem();
-        if (modeDetail != MODE_DETAIL.OUT_SLOC_SLOC) {
-            //check validate vendor
-            if (newWeightTicket != null) {
-                isValidVendorTransport = true;
-                lblVendorTransportN.setForeground(Color.black);
-                newWeightTicket.getWeightTicketDetail().setTransVendor(vendor.getLifnr());
-            }
+        if (newWeightTicket != null && vendor != null) {
+            isValidVendorTransport = true;
+            lblVendorTransportN.setForeground(Color.black);
+            newWeightTicket.getWeightTicketDetail().setTransVendor(vendor.getLifnr());
         }
 
         checkPlateWithVendor();
@@ -2270,8 +2264,7 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
                 isValid = validateOutPlantPlant() && isValidVendorLoad && isValidVendorTransport && isValidPlateNo;
                 break;
             case OUT_SLOC_SLOC:
-                isValid = validateOutSlocSloc() && txtPOSTONumN.getText().trim().isEmpty()
-                        && isValidVendorTransport && isValidPlateNo && isValidSloc;
+                isValid = validateOutSlocSloc() && isValidVendorTransport && isValidPlateNo && isValidSloc;
                 break;
             case OUT_PULL_STATION:
                 isValid = validateOutPullStation() && isValidVendorLoad && isValidVendorTransport && isValidPlateNo;
@@ -3062,19 +3055,45 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
         public void updateDataForOutSlocSloc() {
             newWeightTicket.setMoveType("311");
             newWeightTicket.setMoveReas(null);
+            newWeightTicket.setTicketId(txtTicketIdN.getText().trim());
+
             WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
             Material material = (Material) cbxMaterialTypeN.getSelectedItem();
 
             weightTicketDetail.setMatnrRef(material.getMatnr());
             weightTicketDetail.setRegItemDescription(material.getMaktx());
-            String val = txtWeightN.getText().trim().replace(",", "");
-            weightTicketDetail.setRegItemQuantity(new BigDecimal(val));
+            weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText().trim().replace(",", "")));
+            weightTicketDetail.setEbeln(txtPONumN.getText().trim());
+            newWeightTicket.setPosto(txtPOSTONumN.getText().trim());
+
+            Customer customer = (Customer) cbxCustomerN.getSelectedItem();
+            if (customer != null) {
+                weightTicketDetail.setKunnr(customer.getKunnr());
+            }
         }
 
         public void updateDataForPrepareOutPullStation() {
             newWeightTicket.setMoveType("101");
-            String val = txtWeightN.getText().trim().replace(",", "");
-            newWeightTicket.getWeightTicketDetail().setRegItemQuantity(new BigDecimal(val));
+            newWeightTicket.setTicketId(txtTicketIdN.getText().trim());
+            Number sling = (Number) txtSlingN.getValue();
+            newWeightTicket.setSling(sling.intValue());
+            Number pallet = (Number) txtPalletN.getValue();
+            newWeightTicket.setPallet(pallet.intValue());
+
+            WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
+            weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
+            weightTicketDetail.setEbeln(txtPONumN.getText().trim());
+            newWeightTicket.setPosto(txtPOSTONumN.getText().trim());
+
+            Material material = (Material) cbxMaterialTypeN.getSelectedItem();
+            weightTicketDetail.setMatnrRef(material.getMatnr());
+            weightTicketDetail.setRegItemDescription(material.getMaktx());
+            weightTicketDetail.setRegItemQuantity(new BigDecimal(txtWeightN.getText().trim().replace(",", "")));
+
+            Customer customer = (Customer) cbxCustomerN.getSelectedItem();
+            if (customer != null) {
+                weightTicketDetail.setKunnr(customer.getKunnr());
+            }
         }
 
         public void updateDataForOutSellWateway() {

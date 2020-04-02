@@ -142,14 +142,17 @@ public class WeighBridgeApp extends SingleFrameApplication {
 
     public void restartApplication() {
         getApplication().hide(vMain);
+        vMain = null;
         JReportConnector.close();
+        JPAConnector.close();
+
         try {
-            (new CronTriggerService()).close();
-        } catch (ParseException ex) {
-            java.util.logging.Logger.getLogger(WeighBridgeApp.class.getName()).log(Level.SEVERE, null, ex);
+            CronTriggerService.close();
         } catch (SchedulerException ex) {
             java.util.logging.Logger.getLogger(WeighBridgeApp.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        // restart
         launch(this.getClass(), null);
     }
 
@@ -184,7 +187,7 @@ public class WeighBridgeApp extends SingleFrameApplication {
     }
 
     public boolean connectWB(boolean autoSignal, String portName, Integer speed, Short dataBits, Short stopBits, Short parity, boolean isMettlerScale, JFormattedTextField control) throws SerialPortInvalidPortException, IllegalPortException, IOException, TooManyListenersException {
-       
+
         boolean connected = false;
         Logger.getLogger(this.getClass()).info("@jSerialComm, connect to weight bridge, " + (isMettlerScale ? "@ScaleMettler" : "@SerialComm"));
         Logger.getLogger(this.getClass()).info("@jSerialComm, port: " + portName + " speed: " + speed + " databit: " + dataBits + " stopbit: " + stopBits);
@@ -193,7 +196,7 @@ public class WeighBridgeApp extends SingleFrameApplication {
                 if (mettlerScale != null) {
                     mettlerScale.disconnect();
                 }
-                 if (autoSignal) {
+                if (autoSignal) {
                     mettlerScale = new ScaleMettler(portName, speed, dataBits, stopBits, parity, control);
                     mettlerScale.connect();
                 }
@@ -204,7 +207,7 @@ public class WeighBridgeApp extends SingleFrameApplication {
                 }
                 if (autoSignal) {
                     normScale = new SerialComm(portName, speed, dataBits, stopBits, parity, control);
-                    normScale.connect();                
+                    normScale.connect();
                 }
             }
             connected = true;
@@ -321,7 +324,7 @@ public class WeighBridgeApp extends SingleFrameApplication {
      */
     public void setOfflineMode(boolean offlineMode) {
         this.offlineMode = offlineMode;
-        
+
         if (vMain != null && offlineMode) {
             vMain.switchToOfflineMode();
         }
