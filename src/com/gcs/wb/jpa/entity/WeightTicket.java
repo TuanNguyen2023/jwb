@@ -31,12 +31,14 @@ import javax.persistence.Temporal;
 @Table(name = "tbl_weight_ticket")
 @NamedQueries({
     @NamedQuery(name = "WeightTicket.findAll", query = "SELECT w FROM WeightTicket w"),
-    @NamedQuery(name = "WeightTicket.findByIdAndMandtAndWplant", 
+    @NamedQuery(name = "WeightTicket.findByIdAndMandtAndWplant",
             query = "SELECT w FROM WeightTicket w WHERE w.id = :id"
-                    + " AND w.mandt = :mandt"
-                    + " AND w.wplant = :wplant"),
+            + " AND w.mandt = :mandt"
+            + " AND w.wplant = :wplant"),
     @NamedQuery(name = "WeightTicket.findByCreatedDateRange",
-            query = "SELECT w FROM WeightTicket w WHERE w.createdDate BETWEEN :from AND :to"
+            query = "SELECT DISTINCT w FROM WeightTicket w "
+            + " , IN(w.weightTicketDetails) wd "
+            + "WHERE w.createdDate BETWEEN :from AND :to"
             + "  AND w.mandt = :mandt"
             + "  AND w.wplant = :wplant"),
     @NamedQuery(name = "WeightTicket.findByDeliveryOrderNo",
@@ -117,12 +119,12 @@ import javax.persistence.Temporal;
             query = "SELECT w FROM WeightTicket w "
             + " , IN(w.weightTicketDetails) wd "
             + " WHERE wd.deliveryOrderNo LIKE :deliveryOrderNo "
-            + " AND (wd.ebeln IS NULL OR wd.ebeln = '') " 
+            + " AND (wd.ebeln IS NULL OR wd.ebeln = '') "
             + " AND w.fScale IS NOT NULL"),
     @NamedQuery(name = "WeightTicket.findByQtyPOisPOSTED",
             query = "SELECT DISTINCT w FROM WeightTicket w "
             + " , IN(w.weightTicketDetails) wd "
-            + " WHERE wd.ebeln LIKE :ebeln" 
+            + " WHERE wd.ebeln LIKE :ebeln"
             + " AND w.status LIKE :status"
             + " AND w.mandt LIKE :mandt"
             + " AND w.wplant LIKE :wplant"),
@@ -311,7 +313,7 @@ public class WeightTicket implements Serializable {
         this.pallet = pallet;
     }
 
-        public String getRecvMatnr() {
+    public String getRecvMatnr() {
         return recvMatnr;
     }
 
@@ -689,7 +691,7 @@ public class WeightTicket implements Serializable {
     public void setWeightTicketDetails(List<WeightTicketDetail> weightTicketDetails) {
         this.weightTicketDetails = weightTicketDetails;
     }
-    
+
     public void addWeightTicketDetail(WeightTicketDetail weightTicketDetail) {
         weightTicketDetail.setWeightTicket(this);
         weightTicketDetails.add(weightTicketDetail);
@@ -830,6 +832,7 @@ public class WeightTicket implements Serializable {
 
         return true;
     }
+
     @Override
     public int hashCode() {
         int result = 31;
