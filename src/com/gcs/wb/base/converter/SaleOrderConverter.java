@@ -41,6 +41,7 @@ public class SaleOrderConverter extends AbstractThrowableConverter<SalesOrderStr
             to.setZkvgr3Text(from.getZkvgr3Text());
             to.setSort1(from.getSort1());
             to.setChanged(from.getChanged());
+            to.setTraid(from.getTraid());
         }
         return to;
     }
