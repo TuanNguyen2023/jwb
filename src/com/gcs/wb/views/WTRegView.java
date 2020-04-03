@@ -94,7 +94,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
     MaterialInternalRepository materialInternalRepository = new MaterialInternalRepository();
     WeightTicketController weightTicketController = new WeightTicketController();
     MaterialGroupRepository materialGroupRepository = new MaterialGroupRepository();
-    List<String> cbxSlocs = new ArrayList<>();
     private PurchaseOrder purchaseOrderPO = new PurchaseOrder();
     private PurchaseOrder purchaseOrderPOSTO = new PurchaseOrder();
     OutboundDetailRepository detailRepository = new OutboundDetailRepository();
@@ -105,6 +104,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
     DefaultComboBoxModel materialInternalModel = weightTicketRegistarationController.getListMaterialInternal();
     DefaultComboBoxModel vendorModel = weightTicketRegistarationController.getVendorModel();
     DefaultComboBoxModel vendor2Model = (DefaultComboBoxModel) SerializationUtils.clone(vendorModel);
+    DefaultComboBoxModel vendorCustomerModel = (DefaultComboBoxModel) SerializationUtils.clone(vendorModel);
     DefaultComboBoxModel customerModel = weightTicketRegistarationController.getCustomerModel();
 
     public WTRegView() {
@@ -234,9 +234,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 if (value instanceof SLoc) {
                     SLoc sloc = (SLoc) value;
                     setText(sloc.getLgort().concat(" - ").concat(sloc.getLgobe()));
-                    //setText(sloc.getLgobe());
-                    //setToolTipText(sloc.getLgort());
-                    cbxSlocs.add(sloc.getLgort().concat(" - ").concat(sloc.getLgobe()));
                 }
 
                 return this;
@@ -295,6 +292,13 @@ public class WTRegView extends javax.swing.JInternalFrame {
                     setText(name);
                     setToolTipText(customer.getKunnr());
                 }
+
+                if (value instanceof Vendor) {
+                    Vendor vendor = (Vendor) value;
+                    setText(vendor.getName1() + " " + vendor.getName2());
+                    setToolTipText(vendor.getLifnr());
+                }
+
                 return this;
             }
         });
@@ -1601,7 +1605,7 @@ private void cbxVendorLoadingNActionPerformed(java.awt.event.ActionEvent evt) {/
             if (newWeightTicket != null && newWeightTicket.getWeightTicketDetail().getMatnrRef() != null) {
                 String vendorBocxep = "ZLCQ";
                 String msgVendorCheck = "";
-                if (!WeighBridgeApp.getApplication().isOfflineMode()) {
+                if (purchaseOrder != null && !WeighBridgeApp.getApplication().isOfflineMode()) {
                     msgVendorCheck = sapService.validateVendor(vendor.getLifnr(),
                             newWeightTicket.getWeightTicketDetail().getMatnrRef(),
                             vendorBocxep, purchaseOrder.getPurchaseOrderDetail().getPlant());
@@ -1635,7 +1639,7 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
             if (newWeightTicket != null && newWeightTicket.getWeightTicketDetail().getMatnrRef() != null) {
                 String vendorVanchuyen = "ZIFQ";
                 String msgVendorCheck = "";
-                if (!WeighBridgeApp.getApplication().isOfflineMode()) {
+                if (purchaseOrder != null && !WeighBridgeApp.getApplication().isOfflineMode()) {
                     msgVendorCheck = sapService.validateVendor(vendor.getLifnr(),
                             newWeightTicket.getWeightTicketDetail().getMatnrRef(),
                             vendorVanchuyen, purchaseOrder.getPurchaseOrderDetail().getPlant());
@@ -3621,7 +3625,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         }
 
         public void updateDataForOtherMode() {
-            WeightTicketDetail weightTicketDetail = new WeightTicketDetail();
+            WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
             weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
 
             MaterialInternal material = (MaterialInternal) cbxMaterialTypeN.getSelectedItem();
@@ -3634,8 +3638,6 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             if (customer != null) {
                 weightTicketDetail.setKunnr(customer.getKunnr());
             }
-
-            newWeightTicket.addWeightTicketDetail(weightTicketDetail);
         }
 
         public void updateDataForOutSlocSloc() {
@@ -4388,28 +4390,40 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
             rbtOutput.setEnabled(false);
             cbxModeType.setEnabled(false);
 
-            newWeightTicket = selectedWeightTicket;
+            newWeightTicket = (WeightTicket) SerializationUtils.clone(selectedWeightTicket);
             WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
 
+            txtWeightTicketNo.setText(newWeightTicket.getId());
             txtTicketIdN.setText(newWeightTicket.getTicketId());
             txtWeightTickerRefN.setText(newWeightTicket.getWeightTicketIdRef());
             txtRegisterIdN.setText(newWeightTicket.getRegisteredNumber());
             txtDriverNameN.setText(newWeightTicket.getDriverName());
             txtCMNDN.setText(newWeightTicket.getDriverIdNo());
             txtPlateNoN.setText(newWeightTicket.getPlateNo());
-            txtTonnageN.setText("0");
+            txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(newWeightTicket.getPlateNo()).toString());
             txtTrailerNoN.setText(newWeightTicket.getTrailerId());
             txtSlingN.setText(Integer.toString(newWeightTicket.getSling()));
+            txtSlingN.setValue(newWeightTicket.getSling());
             txtPalletN.setText(Integer.toString(newWeightTicket.getPallet()));
+            txtPalletN.setValue(newWeightTicket.getPallet());
             txtSoNiemXaN.setText(newWeightTicket.getSoNiemXa());
             txtProductionBatchN.setText(newWeightTicket.getBatch());
+            txtSalanN.setText(newWeightTicket.getChargEnh());
+            txtLoadSourceN.setText(newWeightTicket.getLoadSource());
             txtNoteN.setText(newWeightTicket.getNote());
             txtDONumN.setText(weightTicketDetail.getDeliveryOrderNo());
             txtPONumN.setText(weightTicketDetail.getEbeln());
             txtPOSTONumN.setText(newWeightTicket.getPosto());
             txtSONumN.setText(weightTicketDetail.getSoNumber());
-            cbxMaterialTypeN.setSelectedItem(weightTicketRegistarationController.getMaterial(weightTicketDetail.getMatnrRef()));
             txtWeightN.setText(df.format(weightTicketDetail.getRegItemQuantity()));
+
+            if (modeDetail == MODE_DETAIL.IN_OTHER || modeDetail == MODE_DETAIL.OUT_OTHER) {
+                cbxMaterialTypeN.setModel(materialInternalModel);
+                cbxMaterialTypeN.setSelectedItem(weightTicketRegistarationController.getMaterialInternal(weightTicketDetail.getMatnrRef()));
+            } else {
+                cbxMaterialTypeN.setModel(materialModel);
+                cbxMaterialTypeN.setSelectedItem(weightTicketRegistarationController.getMaterial(weightTicketDetail.getMatnrRef()));
+            }
 
             // load sloc
             boolean isInternal = modeDetail == MODE_DETAIL.IN_OTHER || modeDetail == MODE_DETAIL.OUT_OTHER;
@@ -4419,9 +4433,16 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
 
             loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
             loadBatchStockModel(cbxSlocN, cbxBatchStockN, false);
-            cbxCustomerN.setSelectedItem(weightTicketRegistarationController.getCustomer(weightTicketDetail.getKunnr()));
             cbxVendorLoadingN.setSelectedItem(weightTicketRegistarationController.getVendor(weightTicketDetail.getLoadVendor()));
             cbxVendorTransportN.setSelectedItem(weightTicketRegistarationController.getVendor(weightTicketDetail.getTransVendor()));
+
+            if (modeDetail == MODE_DETAIL.IN_PO_PURCHASE) {
+                cbxCustomerN.setModel(vendorCustomerModel);
+                cbxCustomerN.setSelectedItem(weightTicketRegistarationController.getVendor(weightTicketDetail.getKunnr()));
+            } else {
+                cbxCustomerN.setModel(customerModel);
+                cbxCustomerN.setSelectedItem(weightTicketRegistarationController.getCustomer(weightTicketDetail.getKunnr()));
+            }
 
             return null;  // return your result
         }
@@ -4430,6 +4451,12 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         protected void succeeded(Object result) {
             isEditMode = true;
             validateForm();
+        }
+
+        @Override
+        protected void failed(Throwable thrwbl) {
+            isEditMode = false;
+            clearForm();
         }
     }
 

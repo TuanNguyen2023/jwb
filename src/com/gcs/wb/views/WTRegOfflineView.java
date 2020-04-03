@@ -254,7 +254,9 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
                 if (value instanceof Vendor) {
                     Vendor vendor = (Vendor) value;
                     setText(vendor.getName1() + " " + vendor.getName2());
+                    setToolTipText(vendor.getLifnr());
                 }
+
                 return this;
             }
         });
