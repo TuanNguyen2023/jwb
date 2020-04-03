@@ -43,7 +43,7 @@
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
-              <Component id="pnWholeGroup" max="32767" attributes="0"/>
+              <Component id="pnWholeGroup" pref="213" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -103,7 +103,7 @@
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="txtAddress" pref="207" max="32767" attributes="2"/>
+                          <Component id="txtAddress" min="-2" pref="207" max="-2" attributes="2"/>
                           <Component id="txtNameRPT" alignment="0" pref="207" max="32767" attributes="2"/>
                       </Group>
                       <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
@@ -123,7 +123,7 @@
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace pref="22" max="32767" attributes="0"/>
+                      <EmptySpace pref="27" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="lblNameRPT" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="txtNameRPT" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -151,13 +151,10 @@
             </Component>
             <Component class="javax.swing.JTextField" name="txtNameRPT">
               <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="txtNameRPT.text"/>
+                <Property name="toolTipText" type="java.lang.String" resourceKey="txtNameRPT.toolTipText"/>
                 <Property name="name" type="java.lang.String" value="txtNameRPT" noResource="true"/>
               </Properties>
-              <BindingProperties>
-                <BindingProperty name="text" source="sapSetting" sourcePath="${nameRpt}" target="txtNameRPT" targetPath="text" updateStrategy="0" immediately="false">
-                  <Property name="name" type="java.lang.String" value=""/>
-                </BindingProperty>
-              </BindingProperties>
               <Events>
                 <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtNameRPTKeyReleased"/>
               </Events>
@@ -172,9 +169,6 @@
               <Properties>
                 <Property name="name" type="java.lang.String" value="txtAddress" noResource="true"/>
               </Properties>
-              <BindingProperties>
-                <BindingProperty name="text" source="sapSetting" sourcePath="${address}" target="txtAddress" targetPath="text" updateStrategy="0" immediately="false"/>
-              </BindingProperties>
               <Events>
                 <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtAddressKeyReleased"/>
               </Events>
@@ -189,9 +183,6 @@
               <Properties>
                 <Property name="name" type="java.lang.String" value="txtPhone" noResource="true"/>
               </Properties>
-              <BindingProperties>
-                <BindingProperty name="text" source="sapSetting" sourcePath="${phone}" target="txtPhone" targetPath="text" updateStrategy="0" immediately="false"/>
-              </BindingProperties>
               <Events>
                 <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtPhoneKeyReleased"/>
               </Events>
@@ -206,9 +197,6 @@
               <Properties>
                 <Property name="name" type="java.lang.String" value="txtFax" noResource="true"/>
               </Properties>
-              <BindingProperties>
-                <BindingProperty name="text" source="sapSetting" sourcePath="${fax}" target="txtFax" targetPath="text" updateStrategy="0" immediately="false"/>
-              </BindingProperties>
               <Events>
                 <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtFaxKeyReleased"/>
               </Events>

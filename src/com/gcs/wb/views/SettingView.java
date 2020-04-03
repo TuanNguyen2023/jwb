@@ -47,6 +47,15 @@ public class SettingView extends javax.swing.JDialog {
         super(parent);
         initComponents();
 
+        txtNameRPT.setText(sapSetting.getNameRpt());
+        txtNameRPT.setCaretPosition(0);
+        txtAddress.setText(sapSetting.getAddress());
+        txtAddress.setCaretPosition(0);
+        txtPhone.setText(sapSetting.getPhone());
+        txtPhone.setCaretPosition(0);
+        txtFax.setText(sapSetting.getFax());
+        txtFax.setCaretPosition(0);
+
         // set select for checkbox chkPOV
         chkPOV.setSelected(sapSetting.getCheckPov() != null && sapSetting.getCheckPov());
     }
@@ -59,7 +68,6 @@ public class SettingView extends javax.swing.JDialog {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
         sapSetting = java.beans.Beans.isDesignTime() ? null : WeighBridgeApp.getApplication().getSapSetting();
         pnWholeGroup = new javax.swing.JPanel();
@@ -91,11 +99,9 @@ public class SettingView extends javax.swing.JDialog {
         lblNameRPT.setText(resourceMap.getString("lblNameRPT.text")); // NOI18N
         lblNameRPT.setName("lblNameRPT"); // NOI18N
 
+        txtNameRPT.setText(resourceMap.getString("txtNameRPT.text")); // NOI18N
+        txtNameRPT.setToolTipText(resourceMap.getString("txtNameRPT.toolTipText")); // NOI18N
         txtNameRPT.setName("txtNameRPT"); // NOI18N
-
-        org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${nameRpt}"), txtNameRPT, org.jdesktop.beansbinding.BeanProperty.create("text"), "");
-        bindingGroup.addBinding(binding);
-
         txtNameRPT.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtNameRPTKeyReleased(evt);
@@ -106,10 +112,6 @@ public class SettingView extends javax.swing.JDialog {
         lblAddress.setName("lblAddress"); // NOI18N
 
         txtAddress.setName("txtAddress"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${address}"), txtAddress, org.jdesktop.beansbinding.BeanProperty.create("text"));
-        bindingGroup.addBinding(binding);
-
         txtAddress.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtAddressKeyReleased(evt);
@@ -120,10 +122,6 @@ public class SettingView extends javax.swing.JDialog {
         lblPhone.setName("lblPhone"); // NOI18N
 
         txtPhone.setName("txtPhone"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${phone}"), txtPhone, org.jdesktop.beansbinding.BeanProperty.create("text"));
-        bindingGroup.addBinding(binding);
-
         txtPhone.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtPhoneKeyReleased(evt);
@@ -134,10 +132,6 @@ public class SettingView extends javax.swing.JDialog {
         lblFax.setName("lblFax"); // NOI18N
 
         txtFax.setName("txtFax"); // NOI18N
-
-        binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, sapSetting, org.jdesktop.beansbinding.ELProperty.create("${fax}"), txtFax, org.jdesktop.beansbinding.BeanProperty.create("text"));
-        bindingGroup.addBinding(binding);
-
         txtFax.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtFaxKeyReleased(evt);
@@ -155,7 +149,7 @@ public class SettingView extends javax.swing.JDialog {
                     .addComponent(lblNameRPT))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWPlantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtAddress, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
+                    .addComponent(txtAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtNameRPT, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE))
                 .addGap(10, 10, 10)
                 .addGroup(pnWPlantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -170,7 +164,7 @@ public class SettingView extends javax.swing.JDialog {
         pnWPlantLayout.setVerticalGroup(
             pnWPlantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnWPlantLayout.createSequentialGroup()
-                .addContainerGap(22, Short.MAX_VALUE)
+                .addContainerGap(27, Short.MAX_VALUE)
                 .addGroup(pnWPlantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblNameRPT)
                     .addComponent(txtNameRPT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -249,11 +243,9 @@ public class SettingView extends javax.swing.JDialog {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(pnWholeGroup, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(pnWholeGroup, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
                 .addContainerGap())
         );
-
-        bindingGroup.bind();
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -370,6 +362,5 @@ private void txtPhoneKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
     private javax.swing.JTextField txtFax;
     private javax.swing.JTextField txtNameRPT;
     private javax.swing.JTextField txtPhone;
-    private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables
 }
