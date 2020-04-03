@@ -13,6 +13,7 @@ package com.gcs.wb.views;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.base.util.ExceptionUtil;
+import com.gcs.wb.base.util.StringUtil;
 import com.gcs.wb.base.validator.LengthValidator;
 import com.gcs.wb.base.validator.PhoneValidator;
 import com.gcs.wb.controller.SettingController;
@@ -37,6 +38,7 @@ public class SettingView extends javax.swing.JDialog {
     private boolean isAddressValid = true;
     private boolean isPhoneValid = true;
     private boolean isFaxValid = true;
+    private boolean isNotEmpty = false;
 
     SettingController controller = new SettingController();
 
@@ -252,6 +254,12 @@ public class SettingView extends javax.swing.JDialog {
 
 private void txtFaxKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFaxKeyReleased
     this.isFaxValid = validatePhoneOrFax(this.txtFax.getText(), this.lblFax);
+    if(!isFaxValid || validateEmpty(this.txtFax.getText(), this.lblFax)) {
+        lblFax.setForeground(Color.red);
+    } else {
+        lblFax.setForeground(Color.black);
+    }
+    
     validateForm();
 }//GEN-LAST:event_txtFaxKeyReleased
 
@@ -259,6 +267,12 @@ private void txtNameRPTKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
     this.isNamePRTValid = validateLength(
             Constants.LengthValidator.MAX_LENGTH_NAMEPRT,
             this.txtNameRPT.getText(), this.lblNameRPT);
+    if(!isNamePRTValid || validateEmpty(this.txtNameRPT.getText(), this.lblNameRPT)) {
+        lblNameRPT.setForeground(Color.red);
+    } else {
+        lblNameRPT.setForeground(Color.black);
+    }
+    
     validateForm();
 }//GEN-LAST:event_txtNameRPTKeyReleased
 
@@ -266,16 +280,27 @@ private void txtAddressKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
     this.isAddressValid = validateLength(
             Constants.LengthValidator.MAX_LENGTH_ADDRESS,
             this.txtAddress.getText(), this.lblAddress);
+    if(!isAddressValid || validateEmpty(this.txtAddress.getText(), this.lblAddress)) {
+        lblAddress.setForeground(Color.red);
+    } else {
+        lblAddress.setForeground(Color.black);
+    }
+    
     validateForm();
 }//GEN-LAST:event_txtAddressKeyReleased
 
 private void txtPhoneKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPhoneKeyReleased
     this.isPhoneValid = validatePhoneOrFax(this.txtPhone.getText(), this.lblPhone);
+    if(!isPhoneValid || validateEmpty(this.txtPhone.getText(), this.lblPhone)) {
+        lblPhone.setForeground(Color.red);
+    } else {
+        lblPhone.setForeground(Color.black);
+    }
     validateForm();
 }//GEN-LAST:event_txtPhoneKeyReleased
 
     void validateForm() {
-        this.btnSave.setEnabled(isNamePRTValid && isAddressValid && isPhoneValid && isFaxValid);
+        this.btnSave.setEnabled(isNamePRTValid && isAddressValid && isPhoneValid && isFaxValid && isNotEmpty);
     }
 
     boolean validateLength(int max, String input, JLabel label) {
@@ -298,6 +323,18 @@ private void txtPhoneKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event
             return true;
         } catch (Exception ex) {
             label.setForeground(Color.red);
+            return false;
+        }
+    }
+    
+    boolean validateEmpty(String input, JLabel label) {
+        if (StringUtil.isEmptyString(input)) {
+            label.setForeground(Color.red);
+            this.isNotEmpty = false;
+            return true;
+        } else {
+            label.setForeground(Color.black);
+            this.isNotEmpty = true;
             return false;
         }
     }
