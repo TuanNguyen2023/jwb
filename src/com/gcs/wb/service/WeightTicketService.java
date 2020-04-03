@@ -906,6 +906,11 @@ public class WeightTicketService {
                 ) {
             tab_wa.setPikmg(outbDel.getLfimg());
             tab_wa.setLfimg(outbDel.getLfimg());
+        } else if (outbDel != null && outbDel.getOutboundDeliveryDetails().size() == 1
+                && outbDel.getOutboundDeliveryDetail().getFreeItem() != null) {
+            item = outbDel.getOutboundDeliveryDetail();
+            tab_wa.setPikmg((item.getGoodsQty() != null) ? item.getGoodsQty() : outbDel.getLfimg());
+            tab_wa.setLfimg((item.getGoodsQty() != null) ? item.getGoodsQty() : outbDel.getLfimg());
         } else {
             BigDecimal qty = new BigDecimal(0);
             BigDecimal qtyfree = new BigDecimal(0);
