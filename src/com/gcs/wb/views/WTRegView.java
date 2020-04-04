@@ -104,7 +104,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
     DefaultComboBoxModel materialInternalModel = weightTicketRegistarationController.getListMaterialInternal();
     DefaultComboBoxModel vendorModel = weightTicketRegistarationController.getVendorModel();
     DefaultComboBoxModel vendor2Model = (DefaultComboBoxModel) SerializationUtils.clone(vendorModel);
-    DefaultComboBoxModel vendorCustomerModel = (DefaultComboBoxModel) SerializationUtils.clone(vendorModel);
+    DefaultComboBoxModel vendorCustomerModel = weightTicketRegistarationController.getCusVendorModel();
     DefaultComboBoxModel customerModel = weightTicketRegistarationController.getCustomerModel();
 
     public WTRegView() {
@@ -135,6 +135,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 selectedWeightTicket = weightTicketList.get(tabResults.convertRowIndexToModel(tabResults.getSelectedRow()));
                 if (selectedWeightTicket != null
                         && selectedWeightTicket.getOfflineMode()
+                        && !selectedWeightTicket.isPosted()
                         && WeighBridgeApp.getApplication().getLogin().getRoles().toUpperCase().contains("Z_JWB_ADMIN")
                         && configuration.getListModePermissions().contains(MODE_DETAIL.valueOf(selectedWeightTicket.getMode()))) {
                     btnEdit.setEnabled(true);
@@ -2575,7 +2576,13 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
         boolean isLoadSourceValid = wtRegisValidation.validateLength(txtLoadSourceN.getText(), lblLoadSourceN, 0, 128);
 
-        boolean isDOValid = wtRegisValidation.validateDO(txtDONumN.getText(), lblDONumN);
+        boolean isDOValid;
+        if (isEditMode) {
+            isDOValid = wtRegisValidation.validateSingleSODO(txtDONumN.getText(), lblDONumN);
+        } else {
+            isDOValid = wtRegisValidation.validateDO(txtDONumN.getText(), lblDONumN);
+        }
+
         btnDOCheckN.setEnabled(isDOValid);
         if (!isValidDO) {
             lblDONumN.setForeground(Color.red);
@@ -2634,7 +2641,13 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
 
-        boolean isDOValid = wtRegisValidation.validateDO(txtDONumN.getText(), lblDONumN);
+        boolean isDOValid;
+        if (isEditMode) {
+            isDOValid = wtRegisValidation.validateSingleSODO(txtDONumN.getText(), lblDONumN);
+        } else {
+            isDOValid = wtRegisValidation.validateDO(txtDONumN.getText(), lblDONumN);
+        }
+
         btnDOCheckN.setEnabled(isDOValid);
         if (!isValidDO) {
             lblDONumN.setForeground(Color.red);
@@ -2802,7 +2815,13 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
 
-        boolean isSOValid = wtRegisValidation.validateDO(txtSONumN.getText(), lblSONumN);
+        boolean isSOValid;
+        if (isEditMode) {
+            isSOValid = wtRegisValidation.validateSingleSODO(txtSONumN.getText(), lblSONumN);
+        } else {
+            isSOValid = wtRegisValidation.validateDO(txtSONumN.getText(), lblSONumN);
+        }
+
         btnSOCheckN.setEnabled(isSOValid);
         btnDOCheckN.setEnabled(isValidSO);
         if (!isValidSO) {
@@ -4058,7 +4077,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         @Override
         protected void succeeded(Object t) {
             isValidPO = true;
-            txtWeightN.setText(df.format(totalWeight).toString());
+            txtWeightN.setText(df.format(totalWeight));
             Material temp = weightTicketRegistarationController.getMaterial(strMatnr);
             if (temp == null) {
                 sapService.syncMaterial();
@@ -4083,9 +4102,15 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 DefaultComboBoxModel vendorModel = weightTicketRegistarationController.getVendorModelByEkorg(purchaseOrderPO.getPurchaseOrderDetail().getPlant());
                 DefaultComboBoxModel vendor2Model = (DefaultComboBoxModel) SerializationUtils.clone(vendorModel);
                 cbxVendorLoadingN.setModel(vendorModel);
-                cbxVendorLoadingN.setSelectedIndex(-1);
                 cbxVendorTransportN.setModel(vendor2Model);
-                cbxVendorTransportN.setSelectedIndex(-1);
+
+                if (isEditMode) {
+                    cbxVendorTransportN.setSelectedItem(weightTicketRegistarationController.getVendor(newWeightTicket.getWeightTicketDetail().getTransVendor()));
+                    cbxVendorLoadingN.setSelectedItem(weightTicketRegistarationController.getVendor(newWeightTicket.getWeightTicketDetail().getLoadVendor()));
+                } else {
+                    cbxVendorTransportN.setSelectedIndex(-1);
+                    cbxVendorLoadingN.setSelectedIndex(-1);
+                }
             }
 
             if (modeDetail == MODE_DETAIL.IN_PO_PURCHASE) {
@@ -4425,12 +4450,6 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 cbxMaterialTypeN.setSelectedItem(weightTicketRegistarationController.getMaterial(weightTicketDetail.getMatnrRef()));
             }
 
-            // load sloc
-            boolean isInternal = modeDetail == MODE_DETAIL.IN_OTHER || modeDetail == MODE_DETAIL.OUT_OTHER;
-            List<String> lgorts = weightTicketRegistarationController.getListLgortByMatnr(weightTicketDetail.getMatnrRef(), isInternal);
-            loadSLoc(lgorts, newWeightTicket.getLgort());
-            cbxSloc2N.setSelectedItem(new SLoc(newWeightTicket.getRecvLgort()));
-
             loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
             loadBatchStockModel(cbxSlocN, cbxBatchStockN, false);
             cbxVendorLoadingN.setSelectedItem(weightTicketRegistarationController.getVendor(weightTicketDetail.getLoadVendor()));
@@ -4443,6 +4462,12 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 cbxCustomerN.setModel(customerModel);
                 cbxCustomerN.setSelectedItem(weightTicketRegistarationController.getCustomer(weightTicketDetail.getKunnr()));
             }
+
+            // load sloc
+            boolean isInternal = modeDetail == MODE_DETAIL.IN_OTHER || modeDetail == MODE_DETAIL.OUT_OTHER;
+            List<String> lgorts = weightTicketRegistarationController.getListLgortByMatnr(weightTicketDetail.getMatnrRef(), isInternal);
+            loadSLoc(lgorts, newWeightTicket.getLgort());
+            cbxSloc2N.setSelectedItem(new SLoc(newWeightTicket.getRecvLgort()));
 
             return null;  // return your result
         }

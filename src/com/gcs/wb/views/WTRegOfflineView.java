@@ -73,7 +73,7 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
     DefaultComboBoxModel materialInternalModel = weightTicketRegistarationController.getListMaterialInternal();
     DefaultComboBoxModel vendorModel = weightTicketRegistarationController.getVendorModel();
     DefaultComboBoxModel vendor2Model = (DefaultComboBoxModel) SerializationUtils.clone(vendorModel);
-    DefaultComboBoxModel vendorCustomerModel = (DefaultComboBoxModel) SerializationUtils.clone(vendorModel);
+    DefaultComboBoxModel vendorCustomerModel = weightTicketRegistarationController.getCusVendorModel();
     DefaultComboBoxModel customerModel = weightTicketRegistarationController.getCustomerModel();
 
     public WTRegOfflineView() {
@@ -2462,6 +2462,7 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
         boolean isPOSTOValid = wtRegisValidation.validatePO(txtPOSTONumN.getText(), lblPOSTONumN);
         if (txtPOSTONumN.getText().trim().isEmpty()) {
             lblPOSTONumN.setForeground(Color.black);
+            isPOSTOValid = true;
         }
 
         boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
