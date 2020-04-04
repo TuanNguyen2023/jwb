@@ -2409,6 +2409,13 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
 
         cbxMaterialTypeN.setModel(materialModel);
         cbxMaterialTypeN.setSelectedIndex(-1);
+        
+        DefaultComboBoxModel vendorModel = weightTicketRegistarationController.getVendorModelSloc();
+        DefaultComboBoxModel vendor2Model = (DefaultComboBoxModel) SerializationUtils.clone(vendorModel);
+        cbxVendorLoadingN.setModel(vendorModel);
+        cbxVendorLoadingN.setSelectedIndex(-1);
+        cbxVendorTransportN.setModel(vendor2Model);
+        cbxVendorTransportN.setSelectedIndex(-1);
     }
 
     private void prepareOutPullStation() {

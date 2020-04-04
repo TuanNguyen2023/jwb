@@ -374,6 +374,17 @@ public class WeightTicketRegistarationController {
         return new DefaultComboBoxModel(vendors.toArray());
     }
 
+    public DefaultComboBoxModel getVendorModelSloc() {
+        List<Vendor> vendors = new ArrayList<>();
+
+        try {
+            vendors = vendorRepository.getListVendor();
+        } catch (Exception ex) {
+        }
+
+        return new DefaultComboBoxModel(vendors.toArray());
+    }
+
     public DefaultComboBoxModel getVendorModelByEkorg(String ekorg) {
         return new DefaultComboBoxModel(vendorRepository.findByEkorg(ekorg).toArray());
     }
