@@ -1390,12 +1390,58 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             setSaveNeeded(true);
             btnPostAgain.setEnabled(false);
             weightTicket.setPosted(false);
-            weightTicketController.savePostAgainActionPerformed(weightTicket);
-            flgPost = true;
+
+            boolean checkValidData = true;
+
+            if (weightTicket.getOfflineMode()) {
+                String poNum = weightTicket.getWeightTicketDetail().getEbeln();
+                if (StringUtil.isNotEmptyString(poNum)) {
+                    checkValidData = isValidPO(poNum);
+                }
+
+                String doNum = weightTicket.getWeightTicketDetail().getDeliveryOrderNo();
+                if (StringUtil.isNotEmptyString(doNum)) {
+                    checkValidData = isValidDO(doNum);
+                }
+
+                String soNum = weightTicket.getWeightTicketDetail().getSoNumber();
+                if (StringUtil.isEmptyString(doNum) && StringUtil.isNotEmptyString(soNum)) {
+                    checkValidData = false;
+                }
+            }
+
+            if (checkValidData) {
+                weightTicketController.savePostAgainActionPerformed(weightTicket);
+                flgPost = true;
+            } else {
+                JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.invalidDataToPostSAP"));
+                setSaveNeeded(false);
+                btnPostAgain.setEnabled(true);
+            }
         } else {
             setSaveNeeded(false);
         }
     }//GEN-LAST:event_btnPostAgainActionPerformed
+
+    private boolean isValidPO(String poNum) {
+        try {
+            PurchaseOrder sapPurOrder = sapService.getPurchaseOrder(poNum);
+            return sapPurOrder != null;
+        } catch (Exception ex) {
+            logger.error(ex);
+            return false;
+        }
+    }
+
+    private boolean isValidDO(String doNum) {
+        try {
+            OutboundDelivery sapOutboundDelivery = sapService.getOutboundDelivery(doNum);
+            return sapOutboundDelivery != null;
+        } catch (Exception ex) {
+            logger.error(ex);
+            return false;
+        }
+    }
 
     private void txtOutTimeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtOutTimeKeyReleased
         // TODO add your handling code here:
@@ -2154,7 +2200,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 if (WeighBridgeApp.getApplication().isOfflineMode()) {
                     txtRegItem.setText(weightTicket.getWeightTicketDetail().getRegItemDescription());
                 }
-                txtWeight.setText(df.format(weightTicket.getWeightTicketDetail().getRegItemQuantity()).toString());
+                txtWeight.setText(df.format(weightTicket.getWeightTicketDetail().getRegItemQuantity()));
                 if (Constants.WeighingProcess.MODE_DETAIL.OUT_SLOC_SLOC.name().equals(weightTicket.getMode())
                         || Constants.WeighingProcess.MODE_DETAIL.OUT_PULL_STATION.name().equals(weightTicket.getMode())) {
                     txtPoPosto.setText(weightTicket.getPosto());
@@ -2192,6 +2238,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 } else if (weightTicket.getFScale() != null && weightTicket.getSScale() == null) {
                     setStage2(true);
                 }
+
                 OutboundDelivery od = null;
                 // </editor-fold>
                 // <editor-fold defaultstate="collapsed" desc="Load D.O/P.O details">
@@ -2201,8 +2248,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 for (WeightTicketDetail weightTicketDetail : weightTicketDetails) {
                     if ((weightTicketDetail.getDeliveryOrderNo() == null || weightTicketDetail.getDeliveryOrderNo().trim().isEmpty())
                             || (!weightTicket.isPosted() && (!weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER") && weightTicketDetail.getEbeln() != null && !weightTicketDetail.getEbeln().trim().isEmpty()))
-                            || (weightTicketDetail.getDeliveryOrderNo() == null && weightTicketDetail.getEbeln() == null)
-                            || weightTicket.getOfflineMode()) {
+                            || (weightTicketDetail.getDeliveryOrderNo() == null && weightTicketDetail.getEbeln() == null)) {
                         setWithoutDO(true);
                     } else {
                         List<OutboundDeliveryDetail> odt = null;
@@ -2337,12 +2383,32 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     txtPONo.setText(weightTicket.getWeightTicketDetail().getEbeln());
                     setValidPONum(true);
                     setSubContract(false);
-                    PurchaseOrderDetail purchaseOrderDetail = purOrder.getPurchaseOrderDetail();
                     txtRegItem.setText(weightTicket.getWeightTicketDetail().getRegItemDescription());
-                    if (rbtOutward.isSelected() && purchaseOrderDetail.getItemCat() != null && purchaseOrderDetail.getItemCat() == '3') {
-                        setSubContract(true);
+                    if (purOrder != null) {
+                        PurchaseOrderDetail purchaseOrderDetail = purOrder.getPurchaseOrderDetail();
+                        if (rbtOutward.isSelected() && purchaseOrderDetail.getItemCat() != null && purchaseOrderDetail.getItemCat() == '3') {
+                            setSubContract(true);
+                        }
                     }
                 }
+
+                // START init for offline
+                if (isWithoutDO() && weightTicket.getOfflineMode()) {
+                    WeightTicketDetail ticketDetail = weightTicket.getWeightTicketDetail();
+
+                    if (ticketDetail != null) {
+                        txtRegItem.setText(ticketDetail.getRegItemDescription());
+
+                        String doNum = ticketDetail.getDeliveryOrderNo();
+                        if (StringUtil.isNotEmptyString(doNum)) {
+                            txtDelNum.setText(doNum);
+                        } else {
+                            txtDelNum.setText("");
+                        }
+                    }
+                }
+                // END
+
                 if ((Constants.WeighingProcess.MODE_DETAIL.IN_OTHER.name().equals(weightTicket.getMode()))
                         || (Constants.WeighingProcess.MODE_DETAIL.OUT_OTHER.name().equals(weightTicket.getMode()))) {
                     MaterialInternal mat = materialInternalRepository.findByMatnr(weightTicket.getRecvMatnr());
@@ -2516,7 +2582,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         @Override
         protected void finished() {
             if (weightTicket != null) {
-                if (!weightTicket.isPosted() && !isStage1() && !isStage2()) {
+                if (!weightTicket.isPosted() && !isStage1() && !isStage2()
+                        && !WeighBridgeApp.getApplication().isOfflineMode()
+                        && WeighBridgeApp.getApplication().getLogin().getRoles().toUpperCase().contains("Z_JWB_ADMIN")) {
                     btnPostAgain.setEnabled(true);
                 } else {
                     btnPostAgain.setEnabled(false);
@@ -2743,96 +2811,92 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             setMessage(resourceMapMsg.getString("msg.searchDataPo"));
             setProgress(1, 0, 3);
 
-            if (!WeighBridgeApp.getApplication().isOfflineMode() && !weightTicket.getOfflineMode()) {
-                try {
-                    sapPurOrder = sapService.getPurchaseOrder(poNum);
-                } catch (Exception ex) {
-                    failed(ex);
+            try {
+                sapPurOrder = sapService.getPurchaseOrder(poNum);
+            } catch (Exception ex) {
+                failed(ex);
+            }
+            if (sapPurOrder != null) {
+                if (sapPurOrder.getVendor() != null && !sapPurOrder.getVendor().trim().isEmpty()) {
+                    vendor = weightTicketRegistarationController.findByLifnr(sapPurOrder.getVendor());
+                    sapVendor = sapService.getVendor(sapPurOrder.getVendor());
                 }
-
-                if (sapPurOrder != null) {
-                    if (sapPurOrder.getVendor() != null && !sapPurOrder.getVendor().trim().isEmpty()) {
-                        vendor = weightTicketRegistarationController.findByLifnr(sapPurOrder.getVendor());
-                        sapVendor = sapService.getVendor(sapPurOrder.getVendor());
-                    }
-                    if (sapPurOrder.getSupplVend() != null && !sapPurOrder.getSupplVend().trim().isEmpty()) {
-                        supVendor = weightTicketRegistarationController.findByLifnr(sapPurOrder.getSupplVend());
-                        sapSupVendor = sapService.getVendor(sapPurOrder.getSupplVend());
-                    }
-                    if (sapPurOrder.getCustomer() != null && !sapPurOrder.getCustomer().trim().isEmpty()) {
-                        customer = weightTicketRegistarationController.findByKunnr(sapPurOrder.getCustomer());
-                        sapCustomer = sapService.getCustomer(sapPurOrder.getCustomer());
-                    }
+                if (sapPurOrder.getSupplVend() != null && !sapPurOrder.getSupplVend().trim().isEmpty()) {
+                    supVendor = weightTicketRegistarationController.findByLifnr(sapPurOrder.getSupplVend());
+                    sapSupVendor = sapService.getVendor(sapPurOrder.getSupplVend());
                 }
-
-                setMessage(resourceMapMsg.getString("msg.saveData"));
-                setProgress(2, 0, 3);
-                if (!entityManager.getTransaction().isActive()) {
-                    entityManager.getTransaction().begin();
-                }
-                //Store Ship to party Info
-                if (sapVendor != null && vendor == null) {
-                    entityManager.persist(sapVendor);
-                } else if (sapVendor != null && vendor != null) {
-                    sapVendor.setId(vendor.getId());
-                    entityManager.merge(sapVendor);
-                } else if (sapVendor == null && vendor != null) {
-                    entityManager.remove(vendor);
-                }
-                //Store Sold to party Info
-                if (sapSupVendor != null && supVendor == null && !sapPurOrder.getVendor().equalsIgnoreCase(sapPurOrder.getSupplVend())) {
-                    entityManager.persist(sapSupVendor);
-                } else if (sapSupVendor != null && supVendor != null) {
-                    sapSupVendor.setId(supVendor.getId());
-                    entityManager.merge(sapSupVendor);
-                } else if (sapSupVendor == null && supVendor != null && !sapPurOrder.getVendor().equalsIgnoreCase(sapPurOrder.getSupplVend())) {
-                    entityManager.remove(supVendor);
-                }
-                //Store Vendor Info
-                if (sapCustomer != null && customer == null) {
-                    entityManager.persist(sapCustomer);
-                } else if (sapCustomer != null && customer != null) {
-                    sapCustomer.setId(customer.getId());
-                    entityManager.merge(sapCustomer);
-                } else if (sapCustomer == null && customer != null) {
-                    entityManager.remove(customer);
-                }
-                if (sapPurOrder != null && purOrder == null) {
-                    entityManager.persist(sapPurOrder);
-                } else if (sapPurOrder != null && purOrder != null) {
-                    sapPurOrder.setId(purOrder.getId());
-                    entityManager.merge(sapPurOrder);
-                } else if (sapPurOrder == null && purOrder != null) {
-                    entityManager.remove(purOrder);
-                }
-                entityManager.getTransaction().commit();
-                entityManager.clear();
-                if (sapPurOrder != null) {
-                    purOrder = weightTicketController.findByPoNumber(sapPurOrder.getPoNumber());
-                    entityManager.refresh(purOrder);
-                    entityManager.clear();
-                    setValidPONum(true);
-                } else {
-                    purOrder = null;
-                    setValidPONum(false);
-                }
-                if (isValidPONum()) {
-                    setSubContract(false);
-                    PurchaseOrderDetail purchaseOrderDetail = purOrder.getPurchaseOrderDetail();
-                    if ((rbtInward.isSelected() && purchaseOrderDetail.getPlant().equalsIgnoreCase(configuration.getWkPlant()))
-                            || (rbtOutward.isSelected() && purOrder.getSupplPlnt().equalsIgnoreCase(configuration.getWkPlant()))) {
-                        setValidPONum(true);
-                    } else if (rbtOutward.isSelected() && purchaseOrderDetail.getItemCat() == '3') {
-                        purchaseOrderDetail.setShortText(Constants.WeightTicketView.ITEM_DESCRIPTION);
-                        purchaseOrderDetail.setPoUnit(weightTicketRegistarationController.getUnit().getPurchaseUnit());
-                        setValidPONum(true);
-                        setSubContract(true);
-                    } else {
-                        setValidPONum(true);
-                    }
+                if (sapPurOrder.getCustomer() != null && !sapPurOrder.getCustomer().trim().isEmpty()) {
+                    customer = weightTicketRegistarationController.findByKunnr(sapPurOrder.getCustomer());
+                    sapCustomer = sapService.getCustomer(sapPurOrder.getCustomer());
                 }
             }
 
+            setMessage(resourceMapMsg.getString("msg.saveData"));
+            setProgress(2, 0, 3);
+            if (!entityManager.getTransaction().isActive()) {
+                entityManager.getTransaction().begin();
+            }
+            //Store Ship to party Info
+            if (sapVendor != null && vendor == null) {
+                entityManager.persist(sapVendor);
+            } else if (sapVendor != null && vendor != null) {
+                sapVendor.setId(vendor.getId());
+                entityManager.merge(sapVendor);
+            } else if (sapVendor == null && vendor != null) {
+                entityManager.remove(vendor);
+            }
+            //Store Sold to party Info
+            if (sapSupVendor != null && supVendor == null && !sapPurOrder.getVendor().equalsIgnoreCase(sapPurOrder.getSupplVend())) {
+                entityManager.persist(sapSupVendor);
+            } else if (sapSupVendor != null && supVendor != null) {
+                sapSupVendor.setId(supVendor.getId());
+                entityManager.merge(sapSupVendor);
+            } else if (sapSupVendor == null && supVendor != null && !sapPurOrder.getVendor().equalsIgnoreCase(sapPurOrder.getSupplVend())) {
+                entityManager.remove(supVendor);
+            }
+            //Store Vendor Info
+            if (sapCustomer != null && customer == null) {
+                entityManager.persist(sapCustomer);
+            } else if (sapCustomer != null && customer != null) {
+                sapCustomer.setId(customer.getId());
+                entityManager.merge(sapCustomer);
+            } else if (sapCustomer == null && customer != null) {
+                entityManager.remove(customer);
+            }
+            if (sapPurOrder != null && purOrder == null) {
+                entityManager.persist(sapPurOrder);
+            } else if (sapPurOrder != null && purOrder != null) {
+                sapPurOrder.setId(purOrder.getId());
+                entityManager.merge(sapPurOrder);
+            } else if (sapPurOrder == null && purOrder != null) {
+                entityManager.remove(purOrder);
+            }
+            entityManager.getTransaction().commit();
+            entityManager.clear();
+            if (sapPurOrder != null) {
+                purOrder = weightTicketController.findByPoNumber(sapPurOrder.getPoNumber());
+                entityManager.refresh(purOrder);
+                entityManager.clear();
+                setValidPONum(true);
+            } else {
+                purOrder = null;
+                setValidPONum(false);
+            }
+            if (isValidPONum()) {
+                setSubContract(false);
+                PurchaseOrderDetail purchaseOrderDetail = purOrder.getPurchaseOrderDetail();
+                if ((rbtInward.isSelected() && purchaseOrderDetail.getPlant().equalsIgnoreCase(configuration.getWkPlant()))
+                        || (rbtOutward.isSelected() && purOrder.getSupplPlnt().equalsIgnoreCase(configuration.getWkPlant()))) {
+                    setValidPONum(true);
+                } else if (rbtOutward.isSelected() && purchaseOrderDetail.getItemCat() == '3') {
+                    purchaseOrderDetail.setShortText(Constants.WeightTicketView.ITEM_DESCRIPTION);
+                    purchaseOrderDetail.setPoUnit(weightTicketRegistarationController.getUnit().getPurchaseUnit());
+                    setValidPONum(true);
+                    setSubContract(true);
+                } else {
+                    setValidPONum(true);
+                }
+            }
             return null;
         }
 
@@ -2937,7 +3001,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     WeightTicketDetail weightTicketDetail = weightTicket.getWeightTicketDetail();
                     purchaseOrder = purchaseOrderRepository.findByPoNumber(weightTicket.getWeightTicketDetail().getEbeln());
                     // nhap mua hang
-                    if (weightTicket.getMode().equals("IN_PO_PURCHASE")) {
+                    if (purchaseOrder != null && weightTicket.getMode().equals("IN_PO_PURCHASE")) {
                         objBapi = getGrPoMigoBapi(weightTicket, purchaseOrder);
                     }
                     // mode xuat plant
@@ -2951,7 +3015,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         }
                     }
                     // chuyen kho noi bo
-                    if (weightTicket.getMode().equals("OUT_SLOC_SLOC")) {
+                    if (purchaseOrder != null && weightTicket.getMode().equals("OUT_SLOC_SLOC")) {
                         objBapi = getGiMB1BBapi(weightTicket);
                         objBapi_Po = getGrPoMigoBapi(weightTicket, purchaseOrder);
                         if (weightTicket.getPosto() != null) {
@@ -3716,7 +3780,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 //  Conver result from KG unit to TON unit
 
                 // check tolorance for PO mua hang
-                if (weightTicket.getMode().equals("IN_PO_PURCHASE")) {
+                if (weightTicket.getMode().equals("IN_PO_PURCHASE") && !weightTicket.getOfflineMode()) {
                     purchaseOrder = purchaseOrderRepository.findByPoNumber(weightTicket.getWeightTicketDetail().getEbeln());
                     if (validateQuantityPO(purchaseOrder, new BigDecimal(Double.toString(result)))) {
                         txfGoodsQty.setValue(result);
