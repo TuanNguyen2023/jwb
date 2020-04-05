@@ -2419,6 +2419,13 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
 
         cbxMaterialTypeN.setModel(materialModel);
         cbxMaterialTypeN.setSelectedIndex(-1);
+        
+        DefaultComboBoxModel vendorModel = weightTicketRegistarationController.getVendorModelSloc();
+        DefaultComboBoxModel vendor2Model = (DefaultComboBoxModel) SerializationUtils.clone(vendorModel);
+        cbxVendorLoadingN.setModel(vendorModel);
+        cbxVendorLoadingN.setSelectedIndex(-1);
+        cbxVendorTransportN.setModel(vendor2Model);
+        cbxVendorTransportN.setSelectedIndex(-1);
     }
 
     private void prepareOutPullStation() {
@@ -2611,8 +2618,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
 
-        boolean isWeightValid = wtRegisValidation.validateLength(txtWeightN.getText(), lblWeightN, 1, 10);
-        boolean isWeightValidValue = wtRegisValidation.validateIntegerValueWeigh(txtWeightN.getText(), lblWeightN);
+        boolean isWeightValid = wtRegisValidation.validateWeighField(txtWeightN.getText(), lblWeightN, 1, 10);
 
         boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
@@ -2623,7 +2629,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
                 && isCMNDBLValid && isPlateNoValid && isSalanValid && isSlingValid && isPalletValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
-                && isNoteValid && isMaterialTypeValid && isSlocValid && isWeightValid && isWeightValidValue;
+                && isNoteValid && isMaterialTypeValid && isSlocValid && isWeightValid;
     }
 
     private boolean validateOutSellRoad() {
