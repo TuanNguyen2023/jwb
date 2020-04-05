@@ -1180,14 +1180,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
         jPanel1.setName("jPanel1"); // NOI18N
 
+        btnPostAgain.setAction(actionMap.get("postAgain")); // NOI18N
         btnPostAgain.setText(resourceMap.getString("btnPostAgain.text")); // NOI18N
-        btnPostAgain.setEnabled(false);
         btnPostAgain.setName("btnPostAgain"); // NOI18N
-        btnPostAgain.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnPostAgainActionPerformed(evt);
-            }
-        });
 
         btnReprint.setAction(actionMap.get("reprintWT")); // NOI18N
         btnReprint.setText(resourceMap.getString("btnReprint.text")); // NOI18N
@@ -1376,52 +1371,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         // TODO add your handling code here:
         setSaveNeeded(isValidated());
     }//GEN-LAST:event_btnAcceptActionPerformed
-
-    private void btnPostAgainActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPostAgainActionPerformed
-        // TODO add your handling code here:
-        int answer = -1;
-        answer = JOptionPane.showConfirmDialog(
-                this.getRootPane(),
-                resourceMapMsg.getString("msg.questionPostTicket"),
-                JOptionPane.OPTIONS_PROPERTY,
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE);
-        if (answer == JOptionPane.YES_OPTION) {
-            setSaveNeeded(true);
-            btnPostAgain.setEnabled(false);
-            weightTicket.setPosted(false);
-
-            boolean checkValidData = true;
-
-            if (weightTicket.getOfflineMode()) {
-                String poNum = weightTicket.getWeightTicketDetail().getEbeln();
-                if (StringUtil.isNotEmptyString(poNum)) {
-                    checkValidData = isValidPO(poNum);
-                }
-
-                String doNum = weightTicket.getWeightTicketDetail().getDeliveryOrderNo();
-                if (StringUtil.isNotEmptyString(doNum)) {
-                    checkValidData = isValidDO(doNum);
-                }
-
-                String soNum = weightTicket.getWeightTicketDetail().getSoNumber();
-                if (StringUtil.isEmptyString(doNum) && StringUtil.isNotEmptyString(soNum)) {
-                    checkValidData = false;
-                }
-            }
-
-            if (checkValidData) {
-                weightTicketController.savePostAgainActionPerformed(weightTicket);
-                flgPost = true;
-            } else {
-                JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.invalidDataToPostSAP"));
-                setSaveNeeded(false);
-                btnPostAgain.setEnabled(true);
-            }
-        } else {
-            setSaveNeeded(false);
-        }
-    }//GEN-LAST:event_btnPostAgainActionPerformed
 
     private boolean isValidPO(String poNum) {
         try {
@@ -4410,6 +4359,95 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             return true;
         }
         return false;
+    }
+
+    @Action(block = Task.BlockingScope.ACTION)
+    public Task postAgain() {
+        int answer = JOptionPane.showConfirmDialog(
+                mainFrame,
+                resourceMapMsg.getString("msg.questionPostTicket"),
+                JOptionPane.OPTIONS_PROPERTY,
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
+        if (answer == JOptionPane.YES_OPTION) {
+            return new PostAgainTask(Application.getInstance(WeighBridgeApp.class));
+        } else {
+            setSaveNeeded(false);
+            return null;
+        }
+    }
+
+    private class PostAgainTask extends Task<Object, Void> {
+
+        PostAgainTask(Application app) {
+            super(app);
+
+            btnPostAgain.setEnabled(false);
+            weightTicket.setPosted(false);
+        }
+
+        @Override
+        protected Object doInBackground() throws Exception {
+            setStep(0, resourceMapMsg.getString("msg.checkDataBeforePostAgain"));
+
+            boolean checkValidData = true;
+
+            if (weightTicket.getOfflineMode()) {
+                String poNum = weightTicket.getWeightTicketDetail().getEbeln();
+                if (StringUtil.isNotEmptyString(poNum)) {
+                    checkValidData = isValidPO(poNum);
+                }
+
+                String doNum = weightTicket.getWeightTicketDetail().getDeliveryOrderNo();
+                if (StringUtil.isNotEmptyString(doNum)) {
+                    checkValidData = isValidDO(doNum);
+                }
+
+                String soNum = weightTicket.getWeightTicketDetail().getSoNumber();
+                if (StringUtil.isEmptyString(doNum) && StringUtil.isNotEmptyString(soNum)) {
+                    checkValidData = false;
+                }
+            }
+
+            if (checkValidData) {
+                setStep(1, resourceMapMsg.getString("msg.postAgain"));
+                setSaveNeeded(true);
+                weightTicketController.savePostAgainActionPerformed(weightTicket);
+                flgPost = true;
+            } else {
+                throw new Exception(resourceMapMsg.getString("msg.invalidDataToPostSAP"));
+            }
+
+            return null;  // return your result
+        }
+
+        private void setStep(int step, String msg) {
+            if (StringUtil.isNotEmptyString(msg)) {
+                setMessage(msg);
+            }
+            setProgress(step, 0, 2);
+        }
+
+        @Override
+        protected void succeeded(Object result) {
+            setStep(2, resourceMapMsg.getString("msg.postAgainSuccess"));
+        }
+
+        @Override
+        protected void failed(Throwable cause) {
+            setStep(2, resourceMapMsg.getString("msg.postAgainFail"));
+            setSaveNeeded(false);
+            btnPostAgain.setEnabled(true);
+
+            if (!ExceptionUtil.isSapDisConnectedException(cause)
+                    && !ExceptionUtil.isDatabaseDisconnectedException(cause)) {
+                if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
+                    cause = cause.getCause();
+                }
+                logger.error(cause);
+                JOptionPane.showMessageDialog(mainFrame, cause.getMessage());
+            }
+        }
     }
 
     // </editor-fold>
