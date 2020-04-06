@@ -338,8 +338,9 @@ public class WeightTicketRepository {
             case OFFLINE:
                 query += "  AND w.offlineMode = 1";
                 break;
-
         }
+
+        query += " ORDER BY w.createdDate, w.createdTime";
 
         try {
             TypedQuery<WeightTicket> nq = entityManager.createQuery(query, WeightTicket.class);
@@ -400,6 +401,8 @@ public class WeightTicketRepository {
         } else if (!material.equals(MaterialEnum.ALL.VALUE)) {
             query += "  AND wd.matnrRef = '" + material + "'";
         }
+
+        query += " ORDER BY w.createdDate, w.createdTime";
 
         try {
             TypedQuery<WeightTicket> nq = entityManager.createQuery(query, WeightTicket.class);

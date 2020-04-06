@@ -220,12 +220,10 @@ public class OutboundDeliveryConverter extends AbstractThrowableParamConverter<D
                 }
             }
             //th chi co hang free goods
-
             if (outboundDelivery.getDeliveryItem() == null) {
                 outboundDelivery.setDeliveryItem(outboundDelivery.getDeliveryItemFree());
                 outboundDelivery.setLfimg(outboundDelivery.getFreeQty());
                 outboundDelivery.setDeliveryItemFree(null);
-                outboundDelivery.setFreeQty(null);
             }
         }
 
