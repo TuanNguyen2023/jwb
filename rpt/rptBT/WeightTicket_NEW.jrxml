@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Weight Ticket" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true">
-	<property name="ireport.zoom" value="1.607691607500001"/>
+	<property name="ireport.zoom" value="2.3538212825407516"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="77"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -237,7 +237,7 @@
 	<pageHeader>
 		<band height="24" splitType="Stretch">
 			<staticText>
-				<reportElement positionType="Float" x="35" y="0" width="59" height="19"/>
+				<reportElement positionType="Float" x="35" y="2" width="59" height="17"/>
 				<box leftPadding="2" rightPadding="0"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
@@ -245,7 +245,7 @@
 				<text><![CDATA[Phiếu cân số:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement positionType="Float" x="185" y="1" width="28" height="18"/>
+				<reportElement positionType="Float" x="185" y="2" width="28" height="17"/>
 				<box leftPadding="2" rightPadding="0"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
@@ -253,21 +253,21 @@
 				<text><![CDATA[SĐT:]]></text>
 			</staticText>
 			<textField>
-				<reportElement positionType="Float" x="213" y="1" width="62" height="20"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<reportElement positionType="Float" x="213" y="2" width="78" height="17"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{SEQ_BY_DAY}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement positionType="Float" x="94" y="2" width="91" height="17"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="9" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ID}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement positionType="Float" x="364" y="1" width="95" height="18"/>
+				<reportElement positionType="Float" x="362" y="2" width="95" height="17"/>
 				<box leftPadding="2" rightPadding="0"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
@@ -275,8 +275,8 @@
 				<text><![CDATA[Số phiếu trong tháng:]]></text>
 			</staticText>
 			<textField>
-				<reportElement positionType="Float" x="459" y="2" width="80" height="20"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<reportElement positionType="Float" x="457" y="2" width="88" height="17"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{SEQ_BY_MONTH}]]></textFieldExpression>

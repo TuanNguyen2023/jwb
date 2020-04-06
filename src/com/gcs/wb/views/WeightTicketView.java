@@ -133,27 +133,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
         formatter = new SimpleDateFormat();
         txfCurScale.setEditable(true);
-        txtInTime.setEditable(true);
-        txtOutTime.setEditable(true);
         sapSetting = WeighBridgeApp.getApplication().getSapSetting();
         login = WeighBridgeApp.getApplication().getLogin();
         entityManager.clear();
-
-        try {
-            String pWbId = configuration.getWbId().trim();
-            List sdev = null;// weightTicketRepository.getDev2(pWbId);
-            if (sdev != null) {
-                for (Object obj : sdev) {
-                    Object[] wt = (Object[]) obj;
-                    txfCurScale.setEditable(Integer.parseInt(Base64_Utils.decodeNTimes(wt[0].toString())) == 1);
-                    txtInTime.setEditable(Integer.parseInt(Base64_Utils.decodeNTimes(wt[1].toString())) == 1);
-                    txtOutTime.setEditable(Integer.parseInt(Base64_Utils.decodeNTimes(wt[2].toString())) == 1);
-                    break;
-                }
-            }
-        } catch (NumberFormatException e) {
-            logger.error(e.toString());
-        }
 
         // cấu hình cho cầu cân hiển thị PO và vendor
         if ((sapSetting.getCheckPov()) != null && (sapSetting.getCheckPov()) == true) {
