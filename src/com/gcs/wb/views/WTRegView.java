@@ -75,6 +75,10 @@ public class WTRegView extends javax.swing.JInternalFrame {
     private String plateNoValidDO = "";
     private boolean isValidPlateNo = false;
     private String checkedCharg = "";
+    private String validSO = null;
+    private String validDO = null;
+    private String validPO = null;
+    private String validPOSTO = null;
 
     private boolean formValid;
     private com.gcs.wb.jpa.entity.WeightTicket newWeightTicket;
@@ -1169,6 +1173,11 @@ public class WTRegView extends javax.swing.JInternalFrame {
         });
 
         txtDONumN.setName("txtDONumN"); // NOI18N
+        txtDONumN.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtDONumNFocusLost(evt);
+            }
+        });
         txtDONumN.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtDONumNKeyReleased(evt);
@@ -1180,6 +1189,11 @@ public class WTRegView extends javax.swing.JInternalFrame {
         btnDOCheckN.setName("btnDOCheckN"); // NOI18N
 
         txtSONumN.setName("txtSONumN"); // NOI18N
+        txtSONumN.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtSONumNFocusLost(evt);
+            }
+        });
         txtSONumN.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtSONumNKeyReleased(evt);
@@ -1191,6 +1205,11 @@ public class WTRegView extends javax.swing.JInternalFrame {
         btnSOCheckN.setName("btnSOCheckN"); // NOI18N
 
         txtPONumN.setName("txtPONumN"); // NOI18N
+        txtPONumN.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtPONumNFocusLost(evt);
+            }
+        });
         txtPONumN.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtPONumNKeyReleased(evt);
@@ -1202,6 +1221,11 @@ public class WTRegView extends javax.swing.JInternalFrame {
         btnPOCheckN.setName("btnPOCheckN"); // NOI18N
 
         txtPOSTONumN.setName("txtPOSTONumN"); // NOI18N
+        txtPOSTONumN.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtPOSTONumNFocusLost(evt);
+            }
+        });
         txtPOSTONumN.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtPOSTONumNKeyReleased(evt);
@@ -1408,7 +1432,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnShowFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(13, 13, 13)
-                .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
+                .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnPrintControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1477,6 +1501,18 @@ private void txtPalletNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 }//GEN-LAST:event_txtPalletNKeyReleased
 
 private void txtDONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDONumNKeyReleased
+    if (isValidDO) {
+        String[] beforeDoNums = txtDONumN.getText().split("-");
+        String[] doNums = Stream.of(beforeDoNums)
+                .map(s -> StringUtil.paddingZero(s.trim(), 10)).distinct()
+                .toArray(String[]::new);
+
+        String afterDoNums = String.join(" - ", doNums);
+        if (!afterDoNums.equals(validDO)) {
+            isValidDO = false;
+        }
+    }
+
     validateForm();
 }//GEN-LAST:event_txtDONumNKeyReleased
 
@@ -1525,13 +1561,20 @@ private void cbxBatchStock2NActionPerformed(java.awt.event.ActionEvent evt) {//G
 }//GEN-LAST:event_cbxBatchStock2NActionPerformed
 
 private void txtPONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPONumNKeyReleased
+    if (isValidPO) {
+        String poNum = StringUtil.paddingZero(txtPONumN.getText().trim(), 10);
+        if (!poNum.equals(validPO)) {
+            isValidPO = false;
+        }
+    }
+
     validateForm();
 }//GEN-LAST:event_txtPONumNKeyReleased
 
 private void txtPOSTONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPOSTONumNKeyReleased
     if (isValidPOSTO) {
-        String posto = txtPOSTONumN.getText().trim();
-        if (!posto.equals(newWeightTicket.getPosto())) {
+        String postoNum = StringUtil.paddingZero(txtPOSTONumN.getText().trim(), 10);
+        if (!postoNum.equals(validPOSTO)) {
             isValidPOSTO = false;
         }
     }
@@ -1556,6 +1599,18 @@ private void txtWeightNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:eve
 }//GEN-LAST:event_txtWeightNKeyReleased
 
 private void txtSONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSONumNKeyReleased
+    if (isValidSO) {
+        String[] beforeSoNums = txtSONumN.getText().split("-");
+        String[] soNums = Stream.of(beforeSoNums)
+                .map(s -> StringUtil.paddingZero(s.trim(), 10)).distinct()
+                .toArray(String[]::new);
+
+        String afterSoNums = String.join(" - ", soNums);
+        if (!afterSoNums.equals(validSO)) {
+            isValidSO = false;
+        }
+    }
+
     validateForm();
 }//GEN-LAST:event_txtSONumNKeyReleased
 
@@ -1785,6 +1840,90 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
     validateForm();
 }//GEN-LAST:event_txtLoadSourceNKeyReleased
 
+private void txtPONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPONumNFocusLost
+    String poNum = txtPONumN.getText().trim();
+    if (!poNum.isEmpty()) {
+        poNum = StringUtil.paddingZero(poNum, 10);
+    } else {
+        poNum = "";
+    }
+
+    txtPONumN.setText(poNum);
+
+    if (isValidPO) {
+        if (!poNum.equals(validPO)) {
+            isValidPO = false;
+        }
+    }
+
+    validateForm();
+}//GEN-LAST:event_txtPONumNFocusLost
+
+private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPOSTONumNFocusLost
+    String postoNum = txtPOSTONumN.getText().trim();
+    if (!postoNum.isEmpty()) {
+        postoNum = StringUtil.paddingZero(postoNum, 10);
+    } else {
+        postoNum = "";
+    }
+
+    txtPOSTONumN.setText(postoNum);
+
+    if (isValidPOSTO) {
+        if (!postoNum.equals(validPOSTO)) {
+            isValidPOSTO = false;
+        }
+    }
+
+    validateForm();
+}//GEN-LAST:event_txtPOSTONumNFocusLost
+
+private void txtDONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtDONumNFocusLost
+    String doNum = txtDONumN.getText().trim();
+    if (!doNum.isEmpty()) {
+        String[] doNums = Stream.of(doNum.split("-"))
+                .map(s -> StringUtil.paddingZero(s.trim(), 10)).distinct()
+                .toArray(String[]::new);
+
+        doNum = String.join(" - ", doNums);
+    } else {
+        doNum = "";
+    }
+
+    txtDONumN.setText(doNum);
+
+    if (isValidDO) {
+        if (!doNum.equals(validDO)) {
+            isValidDO = false;
+        }
+    }
+
+    validateForm();
+}//GEN-LAST:event_txtDONumNFocusLost
+
+private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSONumNFocusLost
+    String soNum = txtSONumN.getText().trim();
+    if (!soNum.isEmpty()) {
+        String[] soNums = Stream.of(soNum.split("-"))
+                .map(s -> StringUtil.paddingZero(s.trim(), 10)).distinct()
+                .toArray(String[]::new);
+
+        soNum = String.join(" - ", soNums);
+    } else {
+        soNum = "";
+    }
+
+    txtSONumN.setText(soNum);
+
+    if (isValidSO) {
+        if (!soNum.equals(validSO)) {
+            isValidSO = false;
+        }
+    }
+
+    validateForm();
+}//GEN-LAST:event_txtSONumNFocusLost
+
     private void validateFilterForm() {
         boolean isDriverNameValid = wtRegisValidation.validateLength(txtDriverName.getText(), lblDriverName, 0, 70);
         boolean isPlateNoValid = wtRegisValidation.validateLength(txtPlateNo.getText(), lblPlateNo, 0, 20);
@@ -1989,6 +2128,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         @Override
         protected void succeeded(Object t) {
             isValidSO = true;
+            validSO = txtSONumN.getText().trim();
             validateForm();
         }
     }
@@ -2409,7 +2549,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
 
         cbxMaterialTypeN.setModel(materialModel);
         cbxMaterialTypeN.setSelectedIndex(-1);
-        
+
         DefaultComboBoxModel vendorModel = weightTicketRegistarationController.getVendorModelSloc();
         DefaultComboBoxModel vendor2Model = (DefaultComboBoxModel) SerializationUtils.clone(vendorModel);
         cbxVendorLoadingN.setModel(vendorModel);
@@ -2526,6 +2666,17 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         btnSave.setEnabled(isValid);
     }
 
+    private void validateButtonCheck(JButton button, boolean checkInput, boolean checkSAP) {
+        button.setEnabled(checkInput);
+        if (checkInput && !checkSAP) {
+            button.setForeground(Color.red);
+        } else if (checkInput && checkSAP) {
+            button.setForeground(Color.black);
+        } else {
+            button.setForeground(new Color(115, 115, 115));
+        }
+    }
+
     private boolean validateInPoPurchase() {
         boolean isTicketIdValid = wtRegisValidation.validateLength(txtTicketIdN.getText(), lblTicketIdN, 0, 20);
         boolean isRegisterIdValid = wtRegisValidation.validateLength(txtRegisterIdN.getText(), lblRegisterIdN, 0, 50);
@@ -2543,10 +2694,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
 
         boolean isPOValid = wtRegisValidation.validatePO(txtPONumN.getText(), lblPONumN);
-        btnPOCheckN.setEnabled(isPOValid);
-        if (!isValidPO) {
-            lblPONumN.setForeground(Color.red);
-        }
+        validateButtonCheck(btnPOCheckN, isPOValid, isValidPO);
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
@@ -2574,10 +2722,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         boolean isLoadSourceValid = wtRegisValidation.validateLength(txtLoadSourceN.getText(), lblLoadSourceN, 0, 128);
 
         boolean isDOValid = wtRegisValidation.validateDO(txtDONumN.getText(), lblDONumN);
-        btnDOCheckN.setEnabled(isDOValid);
-        if (!isValidDO) {
-            lblDONumN.setForeground(Color.red);
-        }
+        validateButtonCheck(btnDOCheckN, isDOValid, isValidDO);
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
@@ -2643,10 +2788,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
 
         boolean isDOValid = wtRegisValidation.validateDO(txtDONumN.getText(), lblDONumN);
-        btnDOCheckN.setEnabled(isDOValid);
-        if (!isValidDO) {
-            lblDONumN.setForeground(Color.red);
-        }
+        validateButtonCheck(btnDOCheckN, isDOValid, isValidDO);
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
@@ -2688,10 +2830,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         boolean isLoadSourceValid = wtRegisValidation.validateLength(txtLoadSourceN.getText(), lblLoadSourceN, 0, 128);
 
         boolean isPOValid = wtRegisValidation.validatePO(txtPONumN.getText(), lblPONumN);
-        btnPOCheckN.setEnabled(isPOValid);
-        if (!isValidPO) {
-            lblPONumN.setForeground(Color.red);
-        }
+        validateButtonCheck(btnPOCheckN, isPOValid, isValidPO);
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
         boolean isVendorTransValid = wtRegisValidation.validateCbxSelected(cbxVendorTransportN.getSelectedIndex(), lblVendorTransportN);
@@ -2727,24 +2866,14 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
 
         boolean isPOValid = wtRegisValidation.validatePO(txtPONumN.getText(), lblPONumN);
-        btnPOCheckN.setEnabled(isPOValid);
-        if (!isValidPO) {
-            lblPONumN.setForeground(Color.red);
-        }
+        validateButtonCheck(btnPOCheckN, isPOValid, isValidPO);
 
         boolean isPOSTOValid = wtRegisValidation.validatePO(txtPOSTONumN.getText(), lblPOSTONumN);
         if (txtPOSTONumN.getText().trim().isEmpty()) {
             lblPOSTONumN.setForeground(Color.black);
         }
 
-        btnPOSTOCheckN.setEnabled(isPOSTOValid);
-        if (isPOSTOValid && !isValidPOSTO) {
-            btnPOSTOCheckN.setForeground(Color.red);
-        } else if (isPOSTOValid && isValidPOSTO) {
-            btnPOSTOCheckN.setForeground(Color.black);
-        } else {
-            btnPOSTOCheckN.setForeground(new Color(115, 115, 115));
-        }
+        validateButtonCheck(btnPOSTOCheckN, isPOSTOValid, isValidPOSTO);
 
         boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN) && isValidSloc;
@@ -2775,20 +2904,10 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
 
         boolean isPOValid = wtRegisValidation.validatePO(txtPONumN.getText(), lblPONumN);
-        btnPOCheckN.setEnabled(isPOValid);
-        if (!isValidPO) {
-            lblPONumN.setForeground(Color.red);
-        }
+        validateButtonCheck(btnPOCheckN, isPOValid, isValidPO);
 
         boolean isPOSTOValid = wtRegisValidation.validatePO(txtPOSTONumN.getText(), lblPOSTONumN);
-        btnPOSTOCheckN.setEnabled(isPOSTOValid);
-        if (isPOSTOValid && !isValidPOSTO) {
-            btnPOSTOCheckN.setForeground(Color.red);
-        } else if (isPOSTOValid && isValidPOSTO) {
-            btnPOSTOCheckN.setForeground(Color.black);
-        } else {
-            btnPOSTOCheckN.setForeground(new Color(115, 115, 115));
-        }
+        validateButtonCheck(btnPOSTOCheckN, isPOSTOValid, isValidPOSTO);
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
         boolean isVendorTransValid = wtRegisValidation.validateCbxSelected(cbxVendorTransportN.getSelectedIndex(), lblVendorTransportN);
@@ -2821,11 +2940,8 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
 
         boolean isSOValid = wtRegisValidation.validateDO(txtSONumN.getText(), lblSONumN);
-        btnSOCheckN.setEnabled(isSOValid);
         btnDOCheckN.setEnabled(isValidSO);
-        if (!isValidSO) {
-            lblSONumN.setForeground(Color.red);
-        }
+        validateButtonCheck(btnSOCheckN, isSOValid, isValidSO);
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
@@ -3388,8 +3504,9 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         @Override
         protected void succeeded(Object t) {
             isValidDO = true;
+            validDO = txtDONumN.getText().trim();
             cbxMaterialTypeN.setSelectedItem(String.join(" - ", strMaterial));
-            txtWeightN.setText(df.format(totalWeight).toString());
+            txtWeightN.setText(df.format(totalWeight));
 
             if (customer != null) {
                 cbxCustomerN.setModel(weightTicketRegistarationController.getCustomerModel());
@@ -4078,7 +4195,8 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         @Override
         protected void succeeded(Object t) {
             isValidPO = true;
-            txtWeightN.setText(df.format(totalWeight).toString());
+            validPO = txtPONumN.getText().trim();
+            txtWeightN.setText(df.format(totalWeight));
             Material temp = weightTicketRegistarationController.getMaterial(strMatnr);
             if (temp == null) {
                 sapService.syncMaterial();
@@ -4328,6 +4446,7 @@ private void txtLoadSourceNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
         @Override
         protected void succeeded(Object t) {
             isValidPOSTO = true;
+            validPOSTO = txtPONumN.getText().trim();
             switch (modeDetail) {
                 case OUT_SLOC_SLOC:
                     cbxVendorLoadingN.setSelectedItem(weightTicketRegistarationController.getVendor(strVendor));
