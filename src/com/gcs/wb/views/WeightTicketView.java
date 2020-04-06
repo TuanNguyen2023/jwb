@@ -145,9 +145,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             if (sdev != null) {
                 for (Object obj : sdev) {
                     Object[] wt = (Object[]) obj;
-                    txfCurScale.setEditable(((Integer.parseInt(Base64_Utils.decodeNTimes(wt[0].toString())) == 1) ? true : false));
-                    txtInTime.setEditable(((Integer.parseInt(Base64_Utils.decodeNTimes(wt[1].toString())) == 1) ? true : false));
-                    txtOutTime.setEditable(((Integer.parseInt(Base64_Utils.decodeNTimes(wt[2].toString())) == 1) ? true : false));
+                    txfCurScale.setEditable(Integer.parseInt(Base64_Utils.decodeNTimes(wt[0].toString())) == 1);
+                    txtInTime.setEditable(Integer.parseInt(Base64_Utils.decodeNTimes(wt[1].toString())) == 1);
+                    txtOutTime.setEditable(Integer.parseInt(Base64_Utils.decodeNTimes(wt[2].toString())) == 1);
                     break;
                 }
             }
@@ -175,6 +175,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         txtSLoc.setText(null);
         setAllChildPanelsVisible(pnWTLeft);
         setAllChildPanelsVisible(pnWTRight);
+        btnPostAgain.setEnabled(false);
     }
 
     /**
@@ -2342,7 +2343,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 }
 
                 // START init for offline
-                if (isWithoutDO() && weightTicket.getOfflineMode()) {
+                if (weightTicket.getOfflineMode()) {
                     WeightTicketDetail ticketDetail = weightTicket.getWeightTicketDetail();
 
                     if (ticketDetail != null) {
@@ -4361,7 +4362,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         return false;
     }
 
-    @Action(block = Task.BlockingScope.ACTION)
+    @Action
     public Task postAgain() {
         int answer = JOptionPane.showConfirmDialog(
                 mainFrame,
@@ -4410,10 +4411,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             }
 
             if (checkValidData) {
-                setStep(1, resourceMapMsg.getString("msg.postAgain"));
-                setSaveNeeded(true);
+                setStep(1, resourceMapMsg.getString("msg.prePostAgain"));
                 weightTicketController.savePostAgainActionPerformed(weightTicket);
-                flgPost = true;
             } else {
                 throw new Exception(resourceMapMsg.getString("msg.invalidDataToPostSAP"));
             }
@@ -4430,12 +4429,15 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
         @Override
         protected void succeeded(Object result) {
-            setStep(2, resourceMapMsg.getString("msg.postAgainSuccess"));
+            setStep(2, resourceMapMsg.getString("msg.prePostAgainSuccess"));
+            btnPostAgain.setEnabled(false);
+            setSaveNeeded(true);
+            flgPost = true;
         }
 
         @Override
         protected void failed(Throwable cause) {
-            setStep(2, resourceMapMsg.getString("msg.postAgainFail"));
+            setStep(2, resourceMapMsg.getString("msg.prePostAgainFail"));
             setSaveNeeded(false);
             btnPostAgain.setEnabled(true);
 
