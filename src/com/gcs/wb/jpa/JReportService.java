@@ -19,6 +19,7 @@ import net.sf.jasperreports.view.JRSaveContributor;
 import net.sf.jasperreports.view.JasperViewer;
 import net.sf.jasperreports.view.save.JRCsvSaveContributor;
 import net.sf.jasperreports.view.save.JRPdfSaveContributor;
+import net.sf.jasperreports.view.save.JRSingleSheetXlsSaveContributor;
 import org.apache.log4j.Logger;
 
 /**
@@ -66,7 +67,8 @@ public class JReportService {
         public MyJasperViewer(JasperPrint jasperPrint) {
             super(jasperPrint, false);
             viewer.setSaveContributors(new JRSaveContributor[]{new JRPdfSaveContributor(Locale.getDefault(), null),
-                new JRCsvSaveContributor(Locale.getDefault(), null)});
+                new JRCsvSaveContributor(Locale.getDefault(), null),
+                new JRSingleSheetXlsSaveContributor(Locale.getDefault(), null)});
         }
     }
 }
