@@ -104,12 +104,14 @@ public class WeightTicketRepository {
         return weightTicket;
     }
 
-    public WeightTicket findByDeliveryOrderNoNotExistEbelnScale(String deliverNumber) {
+    public WeightTicket findByDeliveryOrderNoNotExistEbelnScale(String deliverNumber, String wtId) {
         WeightTicket weightTicket = null;
         try {
             List<WeightTicket> list = getListByDeliveryOrderNoNotExistEbelnScale(deliverNumber);
             if (list != null && list.size() > 0) {
-                weightTicket = list.get(0);
+                weightTicket = list.stream().filter(t -> wtId == null || !t.getId().equals(wtId))
+                        .findFirst()
+                        .orElse(null);
             }
         } catch (Exception ex) {
             logger.error(null, ex);

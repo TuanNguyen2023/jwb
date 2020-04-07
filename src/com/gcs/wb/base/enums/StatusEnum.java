@@ -7,7 +7,7 @@ public enum StatusEnum {
     ALL("Tất cả"),
     POSTED("Hoàn tất"),
     UNFINISH("Chưa hoàn tất"),
-    OFFLINE("Mất kết nối SAP - Post lại");
+    OFFLINE("Mất kết nối SAP");
 
     public final String VALUE;
 

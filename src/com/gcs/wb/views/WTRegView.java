@@ -3335,7 +3335,13 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 }
 
                 // check register DO in WB
-                WeightTicket weightTicket = weightTicketRegistarationController.findByDeliveryOrderNoScale(deliveryOrderNo);
+                WeightTicket weightTicket;
+                if (isEditMode) {
+                    weightTicket = weightTicketRegistarationController.findByDeliveryOrderNoScale(deliveryOrderNo, newWeightTicket.getId());
+                } else {
+                    weightTicket = weightTicketRegistarationController.findByDeliveryOrderNoScale(deliveryOrderNo);
+                }
+
                 if (weightTicket != null) {
                     throw new Exception(resourceMapMsg.getString("msg.doExist", deliveryOrderNo, weightTicket.getId()));
                 }
