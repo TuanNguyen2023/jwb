@@ -2652,8 +2652,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             txtMatnr.setVisible(false);
         }
         if (ModeEnum.OUT_PULL_STATION.name().equals(mode)) {
-            lblSling.setVisible(false);
-            lblPallet.setVisible(false);
             lblWeightTicketIdRef.setVisible(false);
             lblDelNum.setVisible(false);
             lblMatnr.setVisible(false);
