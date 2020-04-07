@@ -1875,6 +1875,12 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
         postoNum = StringUtil.paddingZero(postoNum, 10);
     } else {
         postoNum = "";
+
+        if (modeDetail == MODE_DETAIL.OUT_SLOC_SLOC) {
+            newWeightTicket.setPosto(null);
+            cbxVendorLoadingN.setSelectedIndex(-1);
+            newWeightTicket.getWeightTicketDetail().setLoadVendor(null);
+        }
     }
 
     txtPOSTONumN.setText(postoNum);
@@ -4204,23 +4210,26 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         protected void succeeded(Object t) {
             isValidPO = true;
             validPO = txtPONumN.getText().trim();
-            txtWeightN.setText(df.format(totalWeight));
-            Material temp = weightTicketRegistarationController.getMaterial(strMatnr);
-            if (temp == null) {
-                sapService.syncMaterial();
-                temp = weightTicketRegistarationController.getMaterial(strMatnr);
-            }
 
-            if (temp == null && !strMatnr.isEmpty()) {
-                JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.materialNotExist", strMatnr));
-            }
+            if (modeDetail != MODE_DETAIL.OUT_SLOC_SLOC) {
+                txtWeightN.setText(df.format(totalWeight));
+                Material temp = weightTicketRegistarationController.getMaterial(strMatnr);
+                if (temp == null) {
+                    sapService.syncMaterial();
+                    temp = weightTicketRegistarationController.getMaterial(strMatnr);
+                }
 
-            cbxMaterialTypeN.setSelectedItem(temp);
+                if (temp == null && !strMatnr.isEmpty()) {
+                    JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.materialNotExist", strMatnr));
+                }
 
-            // load sloc
-            if (temp != null) {
-                List<String> lgorts = weightTicketRegistarationController.getListLgortByMatnr(temp.getMatnr(), false);
-                loadSLoc(lgorts, strLgort);
+                cbxMaterialTypeN.setSelectedItem(temp);
+
+                // load sloc
+                if (temp != null) {
+                    List<String> lgorts = weightTicketRegistarationController.getListLgortByMatnr(temp.getMatnr(), false);
+                    loadSLoc(lgorts, strLgort);
+                }
             }
 
             // load data vendor
@@ -4267,11 +4276,13 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         @Override
         protected void failed(Throwable cause) {
             newWeightTicket.setWeightTicketDetails(new ArrayList<>());
-            cbxMaterialTypeN.setSelectedIndex(-1);
-            cbxVendorTransportN.setSelectedIndex(-1);
-            cbxCustomerN.setSelectedIndex(-1);
+            if (modeDetail != MODE_DETAIL.OUT_SLOC_SLOC) {
+                cbxMaterialTypeN.setSelectedIndex(-1);
+                cbxVendorTransportN.setSelectedIndex(-1);
+                cbxCustomerN.setSelectedIndex(-1);
+                loadSLoc(null, null);
+            }
             checkedCharg = "";
-            loadSLoc(null, null);
 
             isValidPO = false;
             if (!canceled && !ExceptionUtil.isDatabaseDisconnectedException(cause)) {
@@ -4572,10 +4583,22 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
             if (modeDetail == MODE_DETAIL.IN_OTHER || modeDetail == MODE_DETAIL.OUT_OTHER) {
                 cbxMaterialTypeN.setModel(materialInternalModel);
-                cbxMaterialTypeN.setSelectedItem(weightTicketRegistarationController.getMaterialInternal(weightTicketDetail.getMatnrRef()));
+                for (int i = 0; i < materialInternalModel.getSize(); i++) {
+                    MaterialInternal material = (MaterialInternal) materialInternalModel.getElementAt(i);
+                    if (material.getMatnr().equals(weightTicketDetail.getMatnrRef())) {
+                        cbxMaterialTypeN.setSelectedItem(material);
+                        break;
+                    }
+                }
             } else {
                 cbxMaterialTypeN.setModel(materialModel);
-                cbxMaterialTypeN.setSelectedItem(weightTicketRegistarationController.getMaterial(weightTicketDetail.getMatnrRef()));
+                for (int i = 0; i < materialModel.getSize(); i++) {
+                    Material material = (Material) materialModel.getElementAt(i);
+                    if (material.getMatnr().equals(weightTicketDetail.getMatnrRef())) {
+                        cbxMaterialTypeN.setSelectedItem(material);
+                        break;
+                    }
+                }
             }
 
             loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
