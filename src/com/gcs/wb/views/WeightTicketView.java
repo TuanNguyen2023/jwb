@@ -2479,6 +2479,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 txtCharg.setEnabled(false);
                 txtVendorLoading.setEnabled(false);
                 txtVendorTransport.setEnabled(false);
+                txtRemark.setEnabled(isStage1() || isStage2());
             }
 
             return null;  // return your result
@@ -2535,7 +2536,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         btnPostAgain.setEnabled(false);
         btnReprint.setEnabled(false);
         btnSave.setEnabled(false);
-        txtRemark.setEnabled(true);
         if (ModeEnum.IN_PO_PURCHASE.name().equals(mode)) {
             lblWeightTicketIdRef.setVisible(false);
             lblSling.setVisible(false);
