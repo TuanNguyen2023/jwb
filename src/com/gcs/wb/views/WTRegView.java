@@ -2674,6 +2674,10 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
     private void validateForm() {
         boolean isValid = false;
+        if (modeDetail == null) {
+            return;
+        }
+
         switch (modeDetail) {
             case IN_PO_PURCHASE:
                 isValid = validateInPoPurchase() && isValidPO && isValidWeight;
@@ -3441,7 +3445,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 }
 
                 if (mappingErrMsg.size() > 0) {
-                    String msg = String.join("\\n", mappingErrMsg);
+                    String msg = String.join("\n", mappingErrMsg);
                     if (!confirmOverwriteData(msg)) {
                         canceled = true;
                         throw new Exception();
@@ -3597,7 +3601,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
         @Override
         protected void failed(Throwable cause) {
-            if (!(isEditMode && canceled)) {
+            if (!isEditMode) {
                 newWeightTicket.setWeightTicketDetails(new ArrayList<>());
                 cbxMaterialTypeN.setSelectedItem("");
                 txtWeightN.setText("0");
@@ -4697,15 +4701,15 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
         if (roles.contains("Z_JWB_SUPERVISOR")) {
             Object[] options = {resourceMapMsg.getString("btnOverwrite"), resourceMapMsg.getString("btnCancel")};
-            msg += "\\n" + resourceMapMsg.getString("msg.overwriteSuffixes");
+            msg += "\n\n" + resourceMapMsg.getString("msg.overwriteSuffixes");
 
-            result = JOptionPane.showOptionDialog(rootPane, msg, null,
-                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
+            result = JOptionPane.showOptionDialog(rootPane, msg, "Error",
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.ERROR_MESSAGE,
                     null, options, null);
 
             return result == JOptionPane.OK_OPTION;
         } else {
-            msg += "\\n" + resourceMapMsg.getString("msg.noOverwriteSuffixes");
+            msg += "\n\n" + resourceMapMsg.getString("msg.noOverwriteSuffixes");
 
             JOptionPane.showMessageDialog(rootPane, msg);
             return false;
