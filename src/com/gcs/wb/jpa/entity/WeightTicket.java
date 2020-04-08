@@ -119,8 +119,12 @@ import javax.persistence.Temporal;
             query = "SELECT w FROM WeightTicket w "
             + " , IN(w.weightTicketDetails) wd "
             + " WHERE wd.deliveryOrderNo LIKE :deliveryOrderNo "
-            + " AND (wd.ebeln IS NULL OR wd.ebeln = '') "
-            + " AND w.fScale IS NOT NULL"),
+            + " AND (wd.ebeln IS NULL OR wd.ebeln = '') "),
+    @NamedQuery(name = "WeightTicket.findByDeliveryOrderNoExistEbelnIn",
+            query = "SELECT w FROM WeightTicket w "
+            + " , IN(w.weightTicketDetails) wd "
+            + " WHERE wd.deliveryOrderNo LIKE :deliveryOrderNo "
+            + " AND w.regType = '" + Constants.WeightTicket.REG_TYPE_IN + "'  "),
     @NamedQuery(name = "WeightTicket.findByQtyPOisPOSTED",
             query = "SELECT DISTINCT w FROM WeightTicket w "
             + " , IN(w.weightTicketDetails) wd "

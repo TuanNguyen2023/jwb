@@ -3339,7 +3339,11 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 if (isEditMode) {
                     weightTicket = weightTicketRegistarationController.findByDeliveryOrderNoScale(deliveryOrderNo, newWeightTicket.getId());
                 } else {
-                    weightTicket = weightTicketRegistarationController.findByDeliveryOrderNoScale(deliveryOrderNo);
+                    if (modeDetail == MODE_DETAIL.IN_WAREHOUSE_TRANSFER) {
+                        weightTicket = weightTicketRegistarationController.findByDeliveryOrderNoIn(deliveryOrderNo);
+                    } else {
+                        weightTicket = weightTicketRegistarationController.findByDeliveryOrderNoScale(deliveryOrderNo);
+                    }
                 }
 
                 if (weightTicket != null) {
@@ -3624,7 +3628,9 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 Number pallet = (Number) txtPalletN.getValue();
                 newWeightTicket.setPallet(pallet.intValue());
             }
-            newWeightTicket.setRecvPlant(configuration.getWkPlant());
+            if (modeDetail != MODE_DETAIL.OUT_PLANT_PLANT) {
+                newWeightTicket.setRecvPlant(configuration.getWkPlant());
+            }
             newWeightTicket.setSoNiemXa(txtSoNiemXaN.getText().trim());
             newWeightTicket.setBatch(txtProductionBatchN.getText().trim());
             newWeightTicket.setNote(txtNoteN.getText().trim());
@@ -4381,6 +4387,9 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                     break;
                 case OUT_SLOC_SLOC:
                     newWeightTicket.getWeightTicketDetail().setTransVendor(purchaseOrder.getVendor());
+                    break;
+                case OUT_PLANT_PLANT:
+                    newWeightTicket.setRecvPlant(purchaseOrder.getPurchaseOrderDetail().getPlant());
                     break;
             }
         }

@@ -87,6 +87,7 @@ public class Constants {
         public static final String STATUS_DISSOLVED = "DISSOLVED";
         public static final String STATUS_INCOMPLETED = "INCOMPLETED ";
         public static final String STATUS_OFFLINE = "OFFLINE";
+        public static final String REG_TYPE_IN = "I";
     }
 
     public static class LengthValidator {
