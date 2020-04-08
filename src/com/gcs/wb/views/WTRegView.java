@@ -3329,6 +3329,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         private BigDecimal totalWeight = BigDecimal.ZERO;
         private Customer customer = null;
         private String strLgort = "";
+        private List<String> mappingErrMsg = new ArrayList();
 
         CheckDOTask(org.jdesktop.application.Application app) {
             super(app);
@@ -3402,7 +3403,12 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                     if (modeDetail == MODE_DETAIL.OUT_SELL_WATERWAY) {
                         plateName = "ghe";
                     }
-                    throw new Exception(resourceMapMsg.getString("msg.plateNoNotMappingWithDO", plateName, plateNo));
+
+                    if (isEditMode && (modeDetail == MODE_DETAIL.OUT_SELL_ROAD || modeDetail == MODE_DETAIL.OUT_SELL_WATERWAY)) {
+                        mappingErrMsg.add(resourceMapMsg.getString("msg.vehicleNotMapping", plateName));
+                    } else {
+                        throw new Exception(resourceMapMsg.getString("msg.plateNoNotMappingWithDO", plateName, plateNo));
+                    }
                 }
 
                 // for check edit plateNo after check DO
@@ -3419,6 +3425,26 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                     OutboundDelivery outboundDeliveryBefore = weightTicketRegistarationController.findByDeliveryOrderNumber(deliveryOrderNoBefore);
                     if (!outboundDelivery.getKunnr().equals(outboundDeliveryBefore.getKunnr())) {
                         throw new Exception(resourceMapMsg.getString("msg.customerNotTogether"));
+                    }
+                }
+
+                if (isEditMode && (modeDetail == MODE_DETAIL.OUT_SELL_ROAD || modeDetail == MODE_DETAIL.OUT_SELL_WATERWAY)) {
+                    Material material = (Material) cbxMaterialTypeN.getSelectedItem();
+                    if (material != null && !material.getMatnr().equals(outboundDelivery.getMatnr())) {
+                        mappingErrMsg.add(resourceMapMsg.getString("msg.materialNotMapping"));
+                    }
+
+                    Customer cust = (Customer) cbxCustomerN.getSelectedItem();
+                    if (cust != null && !cust.getKunnr().equals(outboundDelivery.getKunnr())) {
+                        mappingErrMsg.add(resourceMapMsg.getString("msg.customerNotMapping"));
+                    }
+                }
+
+                if (mappingErrMsg.size() > 0) {
+                    String msg = String.join("\\n", mappingErrMsg);
+                    if (!confirmOverwriteData(msg)) {
+                        canceled = true;
+                        throw new Exception();
                     }
                 }
 
@@ -3571,11 +3597,13 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
         @Override
         protected void failed(Throwable cause) {
-            newWeightTicket.setWeightTicketDetails(new ArrayList<>());
-            cbxMaterialTypeN.setSelectedItem("");
-            txtWeightN.setText("0");
-            cbxCustomerN.setSelectedIndex(-1);
-            loadSLoc(null, null);
+            if (!(isEditMode && canceled)) {
+                newWeightTicket.setWeightTicketDetails(new ArrayList<>());
+                cbxMaterialTypeN.setSelectedItem("");
+                txtWeightN.setText("0");
+                cbxCustomerN.setSelectedIndex(-1);
+                loadSLoc(null, null);
+            }
 
             isValidDO = false;
             // for check edit plateNo after check DO
@@ -4663,4 +4691,24 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         }
     }
 
+    private boolean confirmOverwriteData(String msg) {
+        String roles = WeighBridgeApp.getApplication().getLogin().getRoles().toUpperCase();
+        int result;
+
+        if (roles.contains("Z_JWB_SUPERVISOR")) {
+            Object[] options = {resourceMapMsg.getString("btnOverwrite"), resourceMapMsg.getString("btnCancel")};
+            msg += "\\n" + resourceMapMsg.getString("msg.overwriteSuffixes");
+
+            result = JOptionPane.showOptionDialog(rootPane, msg, null,
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
+                    null, options, null);
+
+            return result == JOptionPane.OK_OPTION;
+        } else {
+            msg += "\\n" + resourceMapMsg.getString("msg.noOverwriteSuffixes");
+
+            JOptionPane.showMessageDialog(rootPane, msg);
+            return false;
+        }
+    }
 }
