@@ -162,10 +162,11 @@ public class WTRegView extends javax.swing.JInternalFrame {
         tabResults.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
             try {
                 selectedWeightTicket = weightTicketList.get(tabResults.convertRowIndexToModel(tabResults.getSelectedRow()));
+                String roles = WeighBridgeApp.getApplication().getLogin().getRoles().toUpperCase();
                 if (selectedWeightTicket != null
                         && selectedWeightTicket.getOfflineMode()
                         && !selectedWeightTicket.isPosted()
-                        && WeighBridgeApp.getApplication().getLogin().getRoles().toUpperCase().contains("Z_JWB_ADMIN")
+                        && (roles.contains("Z_JWB_SUPERVISOR") || roles.contains("Z_JWB_ADMIN"))
                         && configuration.getListModePermissions().contains(MODE_DETAIL.valueOf(selectedWeightTicket.getMode()))) {
                     btnEdit.setEnabled(true);
                 } else {
