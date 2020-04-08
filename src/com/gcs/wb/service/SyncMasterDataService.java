@@ -8,18 +8,25 @@ package com.gcs.wb.service;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.base.constant.Constants.InteractiveObject;
+import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.SAPSetting;
 import com.gcs.wb.jpa.entity.SLoc;
+import com.gcs.wb.jpa.entity.SchedulerSync;
 import com.gcs.wb.jpa.repositorys.BatchStockRepository;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
 import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
 import com.gcs.wb.jpa.repositorys.SLocRepository;
 import com.gcs.wb.jpa.repositorys.SaleOrderRepository;
+import com.gcs.wb.jpa.repositorys.SchedulerSyncRepository;
 import com.gcs.wb.jpa.repositorys.VendorRepository;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import org.apache.log4j.Logger;
 
 /**
@@ -49,7 +56,18 @@ public class SyncMasterDataService {
 
     public void syncMasterData() throws Exception {
         logger.info("Sync master data is processing...");
-
+        
+        logger.info("Check sync scheduler...");
+        String mandt = configuration.getSapClient();
+        String wplant = configuration.getWkPlant();
+        SchedulerSyncRepository schedulerSyncRepository = new SchedulerSyncRepository();
+        SchedulerSync schedulerSync = schedulerSyncRepository.findByParamMandtWplant(mandt, wplant);
+        
+        if (!schedulerSync.isAutoSyncAllowed()) {
+            logger.info("The master data already synced today.");
+            return;
+        }
+        
         logger.info("Sync SAP setting...");
         SAPSetting sapSetting = syncSapSetting();
         WeighBridgeApp.getApplication().setSapSetting(sapSetting);
@@ -79,7 +97,8 @@ public class SyncMasterDataService {
         syncSoDatas();
 
         logger.info("Sync master data is finished...");
-
+        schedulerSyncRepository.updateLastAutoSync(schedulerSync);
+        
         logger.info("Restart app...");
         WeighBridgeApp.getApplication().restartApplication();
     }

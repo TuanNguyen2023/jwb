@@ -6,8 +6,12 @@ package com.gcs.wb.views;
 import com.gcs.wb.*;
 import com.gcs.wb.base.util.StringUtil;
 import com.gcs.wb.controller.WeighBridgeController;
+import com.gcs.wb.jpa.entity.Configuration;
+import com.gcs.wb.jpa.entity.SchedulerSync;
 import com.gcs.wb.jpa.entity.User;
+import com.gcs.wb.jpa.repositorys.SchedulerSyncRepository;
 import com.gcs.wb.service.SyncMasterDataService;
+import static com.gcs.wb.service.SyncMasterDataService.logger;
 import java.awt.event.WindowEvent;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
@@ -39,7 +43,7 @@ public class WeighBridgeView extends FrameView {
     private final WeighBridgeController weighBridgeController = new WeighBridgeController();
     public ResourceMap resourceMapMsg = Application.getInstance(WeighBridgeApp.class).getContext().getResourceMap(WeighBridgeView.class);
     public JFrame mainFrame = WeighBridgeApp.getApplication().getMainFrame();
-
+    private Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
     public WeighBridgeView(SingleFrameApplication app) {
         super(app);
         initComponents();
@@ -660,6 +664,16 @@ public class WeighBridgeView extends FrameView {
 
         @Override
         protected Object doInBackground() throws Exception {
+            logger.info("Check sync scheduler...");
+            String mandt = configuration.getSapClient();
+            String wplant = configuration.getWkPlant();
+            SchedulerSyncRepository schedulerSyncRepository = new SchedulerSyncRepository();
+            SchedulerSync schedulerSync = schedulerSyncRepository.findByParamMandtWplant(mandt, wplant);
+
+            if (!schedulerSync.isManualSyncAllowed()) {
+                logger.info("The master data already synced manually less than an hour.");
+                return null;
+            }
             setStep(1, resourceMapMsg.getString("msg.isSyncMasterData"));
             SyncMasterDataService syncMasterDataService = new SyncMasterDataService();
             syncMasterDataService.syncMasterData();
@@ -669,6 +683,10 @@ public class WeighBridgeView extends FrameView {
         @Override
         protected void succeeded(Object result) {
             setStep(2, resourceMapMsg.getString("msg.syncMasterDataSuccess"));
+            String mandt = configuration.getSapClient();
+            String wplant = configuration.getWkPlant();
+            SchedulerSyncRepository schedulerSyncRepository = new SchedulerSyncRepository();
+            schedulerSyncRepository.updateLastManualSync(schedulerSyncRepository.findByParamMandtWplant(mandt, wplant));
         }
 
         @Override
