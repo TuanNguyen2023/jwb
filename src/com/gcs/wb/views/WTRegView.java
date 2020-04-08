@@ -3337,7 +3337,11 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 // check register DO in WB
                 WeightTicket weightTicket;
                 if (isEditMode) {
-                    weightTicket = weightTicketRegistarationController.findByDeliveryOrderNoScale(deliveryOrderNo, newWeightTicket.getId());
+                    if (modeDetail == MODE_DETAIL.IN_WAREHOUSE_TRANSFER) {
+                        weightTicket = weightTicketRegistarationController.findByDeliveryOrderNoIn(deliveryOrderNo, newWeightTicket.getId());
+                    } else {
+                        weightTicket = weightTicketRegistarationController.findByDeliveryOrderNoScale(deliveryOrderNo, newWeightTicket.getId());
+                    }
                 } else {
                     if (modeDetail == MODE_DETAIL.IN_WAREHOUSE_TRANSFER) {
                         weightTicket = weightTicketRegistarationController.findByDeliveryOrderNoIn(deliveryOrderNo);

@@ -1010,9 +1010,15 @@ public class WeightTicketService {
                 WeightTicketDetail weightTicketDetail = wt.getWeightTicketDetail();
                 if (!wt.isDissolved()) {
                     Double tmp = null;
+                    BigDecimal weightActual = BigDecimal.ZERO;
+                    if(wt.getMode().equals("OUT_PLANT_PLANT") && wt.getGQty() != null) {
+                        weightActual = wt.getGQty();
+                    } else {
+                        weightActual = weightTicketDetail.getRegItemQuantity();
+                    }
                     if ((StringUtil.isNotEmptyString(weightTicketDetail.getMatnrRef()))
                             && checkBagCement(weightTicketDetail.getMatnrRef())) {
-                        tmp = ((weightTicketDetail.getRegItemQuantity().doubleValue()) * 1000d) / baoWeigh;
+                        tmp = ((weightActual.doubleValue()) * 1000d) / baoWeigh;
                     }
                     
                     if (tmp != null) {
