@@ -86,8 +86,11 @@ public class WeightTicketRegistarationController {
     }
 
     public void printRegWT(WeightTicket wt, boolean reprint) {
-        List<WeightTicketDetail> weightTicketDetails = new ArrayList<>();
-        weightTicketDetails = wt.getWeightTicketDetails();
+        if (reprint) {
+            wt = weightTicketRepository.getWeightTicketByIdAndMandtAndWplant(wt.getId(), wt.getMandt(), wt.getWplant());
+        }
+
+        List<WeightTicketDetail> weightTicketDetails = wt.getWeightTicketDetails();
         for (WeightTicketDetail weightTicketDetail : weightTicketDetails) {
             Map<String, Object> map = new HashMap<>();
             map.put("P_CLIENT", wt.getMandt());
@@ -184,15 +187,15 @@ public class WeightTicketRegistarationController {
     public WeightTicket findByDeliveryOrderNoScale(String doNumber) {
         return findByDeliveryOrderNoScale(doNumber, null);
     }
-    
+
     public WeightTicket findByDeliveryOrderNoIn(String doNumber) {
         return findByDeliveryOrderNoIn(doNumber, null);
     }
-    
+
     public WeightTicket findByDeliveryOrderNoScale(String doNumber, String wtId) {
         return wTRegService.findByDeliveryOrderNoScale(doNumber, wtId);
     }
-    
+
     public WeightTicket findByDeliveryOrderNoIn(String doNumber, String wtId) {
         return wTRegService.findByDeliveryOrderNoIn(doNumber, wtId);
     }
@@ -208,7 +211,7 @@ public class WeightTicketRegistarationController {
     public Vendor findByLifnr(String lifnr) {
         return wTRegService.findByLifnr(lifnr);
     }
-    
+
     public Vendor findByLifnrIsCustomer(String lifnr) {
         return wTRegService.findByLifnrIsCustomer(lifnr);
     }
@@ -404,7 +407,7 @@ public class WeightTicketRegistarationController {
     public DefaultComboBoxModel getCustomerModel() {
         return new DefaultComboBoxModel(customerRepository.getListCustomer().toArray());
     }
-    
+
     public DefaultComboBoxModel getCusVendorModel() {
         return new DefaultComboBoxModel(vendorRepository.findByGroupType().toArray());
     }
