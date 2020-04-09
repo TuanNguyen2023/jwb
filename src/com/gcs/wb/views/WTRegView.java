@@ -4207,6 +4207,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         private Customer customer = null;
         private Vendor vendor = null;
         private String strLgort = "";
+        private List<String> mappingErrMsg = new ArrayList();
 
         CheckPOTask(Application app) {
             super(app);
@@ -4270,6 +4271,26 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             // check PO is released
             if (Objects.equals(purchaseOrderPO.getPoRelInd(), Constants.PurchaseOrder.PO_REL_IND_NOT_RELEASED)) {
                 throw new Exception(resourceMapMsg.getString("msg.poNotReleased", poNum));
+            }
+
+            if (isEditMode && modeDetail == MODE_DETAIL.IN_PO_PURCHASE) {
+                Material material = (Material) cbxMaterialTypeN.getSelectedItem();
+                if (material != null && !material.getMatnr().equals(purchaseOrderPO.getPurchaseOrderDetail().getMaterial())) {
+                    mappingErrMsg.add(resourceMapMsg.getString("msg.materialNotMapping"));
+                }
+
+                Vendor cust = (Vendor) cbxCustomerN.getSelectedItem();
+                if (cust != null && !cust.getLifnr().equals(purchaseOrderPO.getCustomer())) {
+                    mappingErrMsg.add(resourceMapMsg.getString("msg.customerNotMapping"));
+                }
+            }
+
+            if (mappingErrMsg.size() > 0) {
+                String msg = String.join("\n", mappingErrMsg);
+                if (!confirmOverwriteData(msg)) {
+                    canceled = true;
+                    throw new Exception();
+                }
             }
 
             updateWeightTicket(purchaseOrderPO);
@@ -4351,8 +4372,8 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
         @Override
         protected void failed(Throwable cause) {
-            newWeightTicket.setWeightTicketDetails(new ArrayList<>());
             if (!isEditMode && modeDetail != MODE_DETAIL.OUT_SLOC_SLOC) {
+                newWeightTicket.setWeightTicketDetails(new ArrayList<>());
                 cbxMaterialTypeN.setSelectedIndex(-1);
                 cbxVendorTransportN.setSelectedIndex(-1);
                 cbxCustomerN.setSelectedIndex(-1);
@@ -4687,7 +4708,13 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
             if (modeDetail == MODE_DETAIL.IN_PO_PURCHASE) {
                 cbxCustomerN.setModel(vendorCustomerModel);
-                cbxCustomerN.setSelectedItem(weightTicketRegistarationController.getVendor(weightTicketDetail.getKunnr()));
+                for (int i = 0; i < vendorCustomerModel.getSize(); i++) {
+                    Vendor vendor = (Vendor) vendorCustomerModel.getElementAt(i);
+                    if (vendor.getLifnr().equals(weightTicketDetail.getKunnr())) {
+                        cbxCustomerN.setSelectedItem(vendor);
+                        break;
+                    }
+                }
             } else {
                 cbxCustomerN.setModel(customerModel);
                 cbxCustomerN.setSelectedItem(weightTicketRegistarationController.getCustomer(weightTicketDetail.getKunnr()));
