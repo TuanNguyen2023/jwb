@@ -3408,7 +3408,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                         plateName = "ghe";
                     }
 
-                    if (isEditMode && (modeDetail == MODE_DETAIL.OUT_SELL_ROAD || modeDetail == MODE_DETAIL.OUT_SELL_WATERWAY)) {
+                    if (isEditMode && modeDetail == MODE_DETAIL.OUT_SELL_ROAD) {
                         mappingErrMsg.add(resourceMapMsg.getString("msg.vehicleNotMapping", plateName));
                     } else {
                         throw new Exception(resourceMapMsg.getString("msg.plateNoNotMappingWithDO", plateName, plateNo));
@@ -3432,7 +3432,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                     }
                 }
 
-                if (isEditMode && (modeDetail == MODE_DETAIL.OUT_SELL_ROAD || modeDetail == MODE_DETAIL.OUT_SELL_WATERWAY)) {
+                if (isEditMode && modeDetail == MODE_DETAIL.OUT_SELL_ROAD) {
                     Material material = (Material) cbxMaterialTypeN.getSelectedItem();
                     if (material != null && !material.getMatnr().equals(outboundDelivery.getMatnr())) {
                         mappingErrMsg.add(resourceMapMsg.getString("msg.materialNotMapping"));
@@ -3450,6 +3450,9 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                         canceled = true;
                         throw new Exception();
                     }
+                    
+                    // overwrite plateNo
+                    txtPlateNoN.setText(plateNoValidDO);
                 }
 
                 // set DO data to Weight ticket
