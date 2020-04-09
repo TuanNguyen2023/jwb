@@ -29,10 +29,10 @@ import javax.persistence.Table;
     })
 public class SchedulerSync implements Serializable{
 
-    public static final int SYNC_COMPLETED = 0;
-    public static final int SYNC_ERROR = 1;
-    public static final int SYNC_IN_PROGRESS = 2;
-    public static final int SYNC_UNKNOWN_STATUS = 3;
+    public static final int SYNC_UNKNOWN_STATUS = 0;
+    public static final int SYNC_COMPLETED = 1;
+    public static final int SYNC_ERROR = 2;
+    public static final int SYNC_IN_PROGRESS = 3;
     
     private static final long serialVersionUID = 1L;
     @Id

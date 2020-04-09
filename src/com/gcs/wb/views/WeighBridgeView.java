@@ -47,6 +47,7 @@ public class WeighBridgeView extends FrameView {
     private Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
     SchedulerSyncRepository schedulerSyncRepository;
     SchedulerSync schedulerSync;
+    boolean allowToSync = true;
     private static final Object schedulerSyncLock = new Object();
     public WeighBridgeView(SingleFrameApplication app) {
         super(app);
@@ -675,14 +676,19 @@ public class WeighBridgeView extends FrameView {
                 schedulerSyncRepository = new SchedulerSyncRepository();
                 schedulerSync = schedulerSyncRepository.findByParamMandtWplant(mandt, wplant);
 
-                if (schedulerSync != null && !schedulerSync.isManualSyncAllowed()) {
-                    logger.info("The master data just synced completely manually less than an hour.");
-                    return null;
+                if (schedulerSync != null) {
+                    allowToSync = schedulerSync.isManualSyncAllowed();
+                    if (!allowToSync) {
+                        logger.info("The master data just synced completely manually less than an hour.");
+                        JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.manualSyncDenied"));
+                        return null;
+                    }
                 } else if (schedulerSync == null) {
                     schedulerSync = new SchedulerSync(mandt, wplant);
                     schedulerSync.setLastManualSync(new Date());
                     schedulerSync.setManualSyncStatus(SchedulerSync.SYNC_IN_PROGRESS);
                 }
+                
                 setStep(1, resourceMapMsg.getString("msg.isSyncMasterData"));
                 SyncMasterDataService syncMasterDataService = new SyncMasterDataService();
                 syncMasterDataService.syncMasterData();
@@ -693,9 +699,11 @@ public class WeighBridgeView extends FrameView {
         @Override
         protected void succeeded(Object result) {
             setStep(2, resourceMapMsg.getString("msg.syncMasterDataSuccess"));
-            synchronized (schedulerSyncLock) {
-                schedulerSync.setManualSyncStatus(SchedulerSync.SYNC_COMPLETED);
-                schedulerSyncRepository.updateLastManualSync(schedulerSync);
+            if (allowToSync) {
+                synchronized (schedulerSyncLock) {
+                    schedulerSync.setManualSyncStatus(SchedulerSync.SYNC_COMPLETED);
+                    schedulerSyncRepository.updateLastManualSync(schedulerSync);
+                }
             }
         }
 
@@ -703,9 +711,11 @@ public class WeighBridgeView extends FrameView {
         protected void failed(Throwable thrwbl) {
             logger.error(thrwbl);
             setStep(2, resourceMapMsg.getString("msg.syncMasterDataFailed"));
-            synchronized (schedulerSyncLock) {
-                schedulerSync.setManualSyncStatus(SchedulerSync.SYNC_ERROR);
-                schedulerSyncRepository.updateLastManualSync(schedulerSync);
+            if (allowToSync) {
+                synchronized (schedulerSyncLock) {
+                    schedulerSync.setManualSyncStatus(SchedulerSync.SYNC_ERROR);
+                    schedulerSyncRepository.updateLastManualSync(schedulerSync);
+                }
             }
         }
 
