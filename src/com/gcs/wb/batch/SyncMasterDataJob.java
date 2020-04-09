@@ -7,6 +7,7 @@ import com.gcs.wb.jpa.entity.SchedulerSync;
 import com.gcs.wb.jpa.repositorys.SchedulerSyncRepository;
 import com.gcs.wb.service.SyncMasterDataService;
 import static com.gcs.wb.service.SyncMasterDataService.logger;
+import java.util.Date;
 import org.apache.log4j.Logger;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -22,25 +23,30 @@ public class SyncMasterDataJob implements Job {
     private Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
     @Override
     public void execute(JobExecutionContext jec) throws JobExecutionException {
-        try {
-            logger.info("Check sync scheduler...");
-            String mandt = configuration.getSapClient();
-            String wplant = configuration.getWkPlant();
-            SchedulerSyncRepository schedulerSyncRepository = new SchedulerSyncRepository();
-            SchedulerSync schedulerSync = schedulerSyncRepository.findByParamMandtWplant(mandt, wplant);
+        logger.info("Check sync scheduler...");
+        String mandt = configuration.getSapClient();
+        String wplant = configuration.getWkPlant();
+        SchedulerSyncRepository schedulerSyncRepository = new SchedulerSyncRepository();
+        SchedulerSync schedulerSync = schedulerSyncRepository.findByParamMandtWplant(mandt, wplant);
 
-            if (schedulerSync != null && !schedulerSync.isAutoSyncAllowed()) {
-                logger.info("The master data already synced today.");
-                return;
-            } else if (schedulerSync == null) {
-                schedulerSync = new SchedulerSync(mandt, wplant);
-            }
+        if (schedulerSync != null && !schedulerSync.isAutoSyncAllowed()) {
+            logger.info("The master data already synced today.");
+            return;
+        } else if (schedulerSync == null) {
+            schedulerSync = new SchedulerSync(mandt, wplant);
+            schedulerSync.setAutoSyncStatus(SchedulerSync.SYNC_IN_PROGRESS);
+            schedulerSync.setLastAutoSync(new Date());
+        }
+        try {
             SyncMasterDataService syncMasterDataService = new SyncMasterDataService(interactiveObject);
             syncMasterDataService.syncMasterData();
-            
-            schedulerSyncRepository.updateLastAutoSync(schedulerSync);
+
+            schedulerSync.setAutoSyncStatus(SchedulerSync.SYNC_COMPLETED);
         } catch (Exception ex) {
             logger.error(ex);
+            schedulerSync.setAutoSyncStatus(SchedulerSync.SYNC_ERROR);
+        } finally {
+            schedulerSyncRepository.updateLastAutoSync(schedulerSync);
         }
     }
 }

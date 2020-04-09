@@ -29,6 +29,11 @@ import javax.persistence.Table;
     })
 public class SchedulerSync implements Serializable{
 
+    public static final int SYNC_COMPLETED = 0;
+    public static final int SYNC_ERROR = 1;
+    public static final int SYNC_IN_PROGRESS = 2;
+    public static final int SYNC_UNKNOWN_STATUS = 3;
+    
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,9 +45,13 @@ public class SchedulerSync implements Serializable{
     private String wplant;
     @Column(name = "last_auto_sync")
     private Date lastAutoSync;
+    @Column(name = "auto_sync_status")
+    private int autoSyncStatus;
     @Column(name = "last_manual_sync")
     private Date lastManualSync;
-
+    @Column(name = "manual_sync_status")
+    private int manualSyncStatus;
+            
     public SchedulerSync() {
     }
     
@@ -95,6 +104,22 @@ public class SchedulerSync implements Serializable{
         this.lastManualSync = lastManualSync;
     }
     
+    public int getAutoSyncStatus() {
+        return autoSyncStatus;
+    }
+
+    public void setAutoSyncStatus(int autoSyncStatus) {
+        this.autoSyncStatus = autoSyncStatus;
+    }
+    
+    public int getManualSyncStatus() {
+        return manualSyncStatus;
+    }
+
+    public void setManualSyncStatus(int manualSyncStatus) {
+        this.manualSyncStatus = manualSyncStatus;
+    }
+    
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -130,10 +155,11 @@ public class SchedulerSync implements Serializable{
             LocalDate now = java.time.LocalDate.now();
             if (lastAutoSync.getDate() == now.getDayOfMonth() 
                     && lastAutoSync.getMonth() == now.getMonthValue()
-                    && lastAutoSync.getYear() == now.getYear()) {
-                return true;
-            } else {
+                    && lastAutoSync.getYear() == now.getYear()
+                    && autoSyncStatus == SYNC_COMPLETED) {
                 return false;
+            } else {
+                return true;
             }     
         } 
         
@@ -143,10 +169,10 @@ public class SchedulerSync implements Serializable{
     
         public boolean isManualSyncAllowed() {
         if (lastManualSync != null) {
-            if (System.currentTimeMillis() - lastManualSync.getTime() >= 3600000/120 ) {
-                return true;
-            } else {
+            if (System.currentTimeMillis() - lastManualSync.getTime() < 3600000/120 && manualSyncStatus == SYNC_COMPLETED ) {
                 return false;
+            } else {
+                return true;
             }     
         } 
         

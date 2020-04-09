@@ -22,6 +22,7 @@ import org.jdesktop.application.TaskMonitor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.Timer;
@@ -44,6 +45,9 @@ public class WeighBridgeView extends FrameView {
     public ResourceMap resourceMapMsg = Application.getInstance(WeighBridgeApp.class).getContext().getResourceMap(WeighBridgeView.class);
     public JFrame mainFrame = WeighBridgeApp.getApplication().getMainFrame();
     private Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
+    SchedulerSyncRepository schedulerSyncRepository;
+    SchedulerSync schedulerSync;
+    private static final Object schedulerSyncLock = new Object();
     public WeighBridgeView(SingleFrameApplication app) {
         super(app);
         initComponents();
@@ -664,35 +668,45 @@ public class WeighBridgeView extends FrameView {
 
         @Override
         protected Object doInBackground() throws Exception {
-            logger.info("Check sync scheduler...");
-            String mandt = configuration.getSapClient();
-            String wplant = configuration.getWkPlant();
-            SchedulerSyncRepository schedulerSyncRepository = new SchedulerSyncRepository();
-            SchedulerSync schedulerSync = schedulerSyncRepository.findByParamMandtWplant(mandt, wplant);
+            synchronized (schedulerSyncLock) {
+                logger.info("Check sync scheduler...");
+                String mandt = configuration.getSapClient();
+                String wplant = configuration.getWkPlant();
+                schedulerSyncRepository = new SchedulerSyncRepository();
+                schedulerSync = schedulerSyncRepository.findByParamMandtWplant(mandt, wplant);
 
-            if (schedulerSync != null && !schedulerSync.isManualSyncAllowed()) {
-                logger.info("The master data already synced manually less than an hour.");
-                return null;
+                if (schedulerSync != null && !schedulerSync.isManualSyncAllowed()) {
+                    logger.info("The master data just synced completely manually less than an hour.");
+                    return null;
+                } else if (schedulerSync == null) {
+                    schedulerSync = new SchedulerSync(mandt, wplant);
+                    schedulerSync.setLastManualSync(new Date());
+                    schedulerSync.setManualSyncStatus(SchedulerSync.SYNC_IN_PROGRESS);
+                }
+                setStep(1, resourceMapMsg.getString("msg.isSyncMasterData"));
+                SyncMasterDataService syncMasterDataService = new SyncMasterDataService();
+                syncMasterDataService.syncMasterData();
+                return null;  // return your result
             }
-            setStep(1, resourceMapMsg.getString("msg.isSyncMasterData"));
-            SyncMasterDataService syncMasterDataService = new SyncMasterDataService();
-            syncMasterDataService.syncMasterData();
-            if (schedulerSync == null) {
-                schedulerSync = new SchedulerSync(mandt, wplant);
-            }
-            schedulerSyncRepository.updateLastManualSync(schedulerSync);
-            return null;  // return your result
         }
 
         @Override
         protected void succeeded(Object result) {
             setStep(2, resourceMapMsg.getString("msg.syncMasterDataSuccess"));
+            synchronized (schedulerSyncLock) {
+                schedulerSync.setManualSyncStatus(SchedulerSync.SYNC_COMPLETED);
+                schedulerSyncRepository.updateLastManualSync(schedulerSync);
+            }
         }
 
         @Override
         protected void failed(Throwable thrwbl) {
             logger.error(thrwbl);
             setStep(2, resourceMapMsg.getString("msg.syncMasterDataFailed"));
+            synchronized (schedulerSyncLock) {
+                schedulerSync.setManualSyncStatus(SchedulerSync.SYNC_ERROR);
+                schedulerSyncRepository.updateLastManualSync(schedulerSync);
+            }
         }
 
         private void setStep(int step, String msg) {

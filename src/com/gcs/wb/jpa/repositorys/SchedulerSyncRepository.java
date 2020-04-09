@@ -71,4 +71,17 @@ public class SchedulerSyncRepository {
             throw ex;
         }
     }
+        
+        public void updateLastSync(SchedulerSync newSchedulerSync) {
+        try {
+            if (!entityTransaction.isActive()) {
+                entityTransaction.begin();
+            }
+            entityManager.merge(newSchedulerSync);
+            entityTransaction.commit();
+            entityManager.clear();
+        } catch (Exception ex) {
+            throw ex;
+        }
+    }
 }
