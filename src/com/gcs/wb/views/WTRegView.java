@@ -44,8 +44,6 @@ import java.awt.datatransfer.StringSelection;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Stream;
@@ -100,8 +98,8 @@ public class WTRegView extends javax.swing.JInternalFrame {
     MaterialInternalRepository materialInternalRepository = new MaterialInternalRepository();
     WeightTicketController weightTicketController = new WeightTicketController();
     MaterialGroupRepository materialGroupRepository = new MaterialGroupRepository();
-    private PurchaseOrder purchaseOrderPO = new PurchaseOrder();
-    private PurchaseOrder purchaseOrderPOSTO = new PurchaseOrder();
+    private PurchaseOrder purchaseOrderPO;
+    private PurchaseOrder purchaseOrderPOSTO;
     OutboundDetailRepository detailRepository = new OutboundDetailRepository();
     WeightTicketDetailRepository weightTicketDetailRepository = new WeightTicketDetailRepository();
     WeightTicketRepository weightTicketRepository = new WeightTicketRepository();
@@ -3952,6 +3950,8 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
     private void cleanData() {
         newWeightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
+        purchaseOrderPO = null;
+        purchaseOrderPOSTO = null;
         isValidDO = false;
         isValidPO = false;
         isValidPOSTO = false;
