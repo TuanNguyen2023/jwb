@@ -670,23 +670,23 @@ public class WeighBridgeView extends FrameView {
             SchedulerSyncRepository schedulerSyncRepository = new SchedulerSyncRepository();
             SchedulerSync schedulerSync = schedulerSyncRepository.findByParamMandtWplant(mandt, wplant);
 
-            if (!schedulerSync.isManualSyncAllowed()) {
+            if (schedulerSync != null && !schedulerSync.isManualSyncAllowed()) {
                 logger.info("The master data already synced manually less than an hour.");
                 return null;
             }
             setStep(1, resourceMapMsg.getString("msg.isSyncMasterData"));
             SyncMasterDataService syncMasterDataService = new SyncMasterDataService();
             syncMasterDataService.syncMasterData();
+            if (schedulerSync == null) {
+                schedulerSync = new SchedulerSync(mandt, wplant);
+            }
+            schedulerSyncRepository.updateLastManualSync(schedulerSync);
             return null;  // return your result
         }
 
         @Override
         protected void succeeded(Object result) {
             setStep(2, resourceMapMsg.getString("msg.syncMasterDataSuccess"));
-            String mandt = configuration.getSapClient();
-            String wplant = configuration.getWkPlant();
-            SchedulerSyncRepository schedulerSyncRepository = new SchedulerSyncRepository();
-            schedulerSyncRepository.updateLastManualSync(schedulerSyncRepository.findByParamMandtWplant(mandt, wplant));
         }
 
         @Override

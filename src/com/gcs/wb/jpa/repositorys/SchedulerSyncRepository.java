@@ -8,7 +8,7 @@ package com.gcs.wb.jpa.repositorys;
 import com.gcs.wb.base.util.ExceptionUtil;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.SchedulerSync;
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -27,7 +27,7 @@ public class SchedulerSyncRepository {
     public SchedulerSync findByParamMandtWplant(String mandt, String wplant) {
         SchedulerSync result = null;
         try {
-            TypedQuery<SchedulerSync> query = entityManager.createNamedQuery("SchedulerSync.findByParamMandtWplant", SchedulerSync.class);
+            TypedQuery<SchedulerSync> query = entityManager.createNamedQuery("SchedulerSync.findByMandtWplant", SchedulerSync.class);
             query.setParameter("mandt", mandt);
             query.setParameter("wplant", wplant);
             List<SchedulerSync> schedulerSync = query.getResultList();
@@ -43,7 +43,7 @@ public class SchedulerSyncRepository {
     }
     
     public void updateLastAutoSync(SchedulerSync newSchedulerSync) {
-        Date now = new Date(System.currentTimeMillis());
+        Date now = new Date();
         newSchedulerSync.setLastAutoSync(now);
         try {
             if (!entityTransaction.isActive()) {
@@ -58,7 +58,7 @@ public class SchedulerSyncRepository {
     }
     
         public void updateLastManualSync(SchedulerSync newSchedulerSync) {
-        Date now = new Date(System.currentTimeMillis());
+        Date now = new Date();
         newSchedulerSync.setLastManualSync(now);
         try {
             if (!entityTransaction.isActive()) {

@@ -6,9 +6,8 @@
 package com.gcs.wb.jpa.entity;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,8 +24,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tbl_scheduler_sync")
 @NamedQueries({
-    @NamedQuery(name = "Material.findAll", query = "SELECT s FROM SchedulerSync s"),
-    @NamedQuery(name = "Material.findByMandtWplant", query = "SELECT s FROM SchedulerSync s WHERE s.mandt = :mandt AND s.wplant = :wplant"),
+    @NamedQuery(name = "SchedulerSync.findAll", query = "SELECT s FROM SchedulerSync s"),
+    @NamedQuery(name = "SchedulerSync.findByMandtWplant", query = "SELECT s FROM SchedulerSync s WHERE s.mandt = :mandt AND s.wplant = :wplant"),
     })
 public class SchedulerSync implements Serializable{
 
@@ -144,7 +143,7 @@ public class SchedulerSync implements Serializable{
     
         public boolean isManualSyncAllowed() {
         if (lastManualSync != null) {
-            if (System.currentTimeMillis() - lastAutoSync.getTime() >= 3600000 ) {
+            if (System.currentTimeMillis() - lastManualSync.getTime() >= 3600000/120 ) {
                 return true;
             } else {
                 return false;
