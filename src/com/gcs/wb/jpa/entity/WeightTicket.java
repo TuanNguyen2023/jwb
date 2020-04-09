@@ -457,7 +457,7 @@ public class WeightTicket implements Serializable {
     }
     
     public boolean isEdited() {
-        return offlineMode != null && offlineMode;
+        return edited != null && edited;
     }
 
     public void setEdited(boolean edited) {

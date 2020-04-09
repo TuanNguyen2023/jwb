@@ -4350,7 +4350,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         @Override
         protected void failed(Throwable cause) {
             newWeightTicket.setWeightTicketDetails(new ArrayList<>());
-            if (modeDetail != MODE_DETAIL.OUT_SLOC_SLOC) {
+            if (!isEditMode && modeDetail != MODE_DETAIL.OUT_SLOC_SLOC) {
                 cbxMaterialTypeN.setSelectedIndex(-1);
                 cbxVendorTransportN.setSelectedIndex(-1);
                 cbxCustomerN.setSelectedIndex(-1);
