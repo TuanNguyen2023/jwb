@@ -6,8 +6,8 @@
 package com.gcs.wb.jpa.entity;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -33,6 +33,7 @@ public class SchedulerSync implements Serializable{
     public static final int SYNC_COMPLETED = 1;
     public static final int SYNC_ERROR = 2;
     public static final int SYNC_IN_PROGRESS = 3;
+    public static final int AN_HOUR = 3600000;
     
     private static final long serialVersionUID = 1L;
     @Id
@@ -149,14 +150,13 @@ public class SchedulerSync implements Serializable{
     public String toString() {
         return "com.gcs.wb.jpa.entity.SchedulerSync[id=" + id + "]";
     }
-    
+    public static boolean isSameDay(Date date1, Date date2) {
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
+        return fmt.format(date1).equals(fmt.format(date2));
+    }
     public boolean isAutoSyncAllowed() {
         if (lastAutoSync != null) {
-            LocalDate now = java.time.LocalDate.now();
-            if (lastAutoSync.getDate() == now.getDayOfMonth() 
-                    && lastAutoSync.getMonth() == now.getMonthValue()
-                    && lastAutoSync.getYear() == now.getYear()
-                    && autoSyncStatus == SYNC_COMPLETED) {
+            if (isSameDay(lastAutoSync, new Date()) && (autoSyncStatus == SYNC_COMPLETED)) {
                 return false;
             } else {
                 return true;
@@ -169,7 +169,7 @@ public class SchedulerSync implements Serializable{
     
         public boolean isManualSyncAllowed() {
         if (lastManualSync != null) {
-            if (System.currentTimeMillis() - lastManualSync.getTime() < 3600000/120 && manualSyncStatus == SYNC_COMPLETED ) {
+            if (System.currentTimeMillis() - lastManualSync.getTime() < AN_HOUR && manualSyncStatus == SYNC_COMPLETED ) {
                 return false;
             } else {
                 return true;

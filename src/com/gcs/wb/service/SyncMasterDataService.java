@@ -55,34 +55,34 @@ public class SyncMasterDataService {
         SAPSetting sapSetting = syncSapSetting();
         WeighBridgeApp.getApplication().setSapSetting(sapSetting);
 
-//        logger.info("Sync vendor...");
-//        syncVendor();
-//
-//        logger.info("Sync material...");
-//        List<Material> materials = syncMaterial();
-//
-//        logger.info("Sync sloc...");
-//        List<SLoc> slocs = syncSloc();
-//
-//        logger.info("Sync batch stock...");
-//        if (!materials.isEmpty() && !slocs.isEmpty()) {
-//            for (SLoc sloc : slocs) {
-//                for (Material material : materials) {
-//                    syncBatchStock(sloc.getLgort(), material.getMatnr());
-//                }
-//            }
-//        }
-//
-//        logger.info("Sync PO, POSTO...");
-//        syncPoPostoDatas();
-//
-//        logger.info("Sync SO...");
-//        syncSoDatas();
-//
-//        logger.info("Sync master data is finished...");
-//        
-//        logger.info("Restart app...");
-//        WeighBridgeApp.getApplication().restartApplication();
+        logger.info("Sync vendor...");
+        syncVendor();
+
+        logger.info("Sync material...");
+        List<Material> materials = syncMaterial();
+
+        logger.info("Sync sloc...");
+        List<SLoc> slocs = syncSloc();
+
+        logger.info("Sync batch stock...");
+        if (!materials.isEmpty() && !slocs.isEmpty()) {
+            for (SLoc sloc : slocs) {
+                for (Material material : materials) {
+                    syncBatchStock(sloc.getLgort(), material.getMatnr());
+                }
+            }
+        }
+
+        logger.info("Sync PO, POSTO...");
+        syncPoPostoDatas();
+
+        logger.info("Sync SO...");
+        syncSoDatas();
+
+        logger.info("Sync master data is finished...");
+        
+        logger.info("Restart app...");
+        WeighBridgeApp.getApplication().restartApplication();
     }
 
     public void syncMasterDataWhenLogin() throws Exception {

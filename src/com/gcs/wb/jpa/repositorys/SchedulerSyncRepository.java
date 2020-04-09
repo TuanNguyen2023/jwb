@@ -41,36 +41,6 @@ public class SchedulerSyncRepository {
 
         return result;
     }
-    
-    public void updateLastAutoSync(SchedulerSync newSchedulerSync) {
-        Date now = new Date();
-        newSchedulerSync.setLastAutoSync(now);
-        try {
-            if (!entityTransaction.isActive()) {
-                entityTransaction.begin();
-            }
-            entityManager.merge(newSchedulerSync);
-            entityTransaction.commit();
-            entityManager.clear();
-        } catch (Exception ex) {
-            throw ex;
-        }
-    }
-    
-        public void updateLastManualSync(SchedulerSync newSchedulerSync) {
-        Date now = new Date();
-        newSchedulerSync.setLastManualSync(now);
-        try {
-            if (!entityTransaction.isActive()) {
-                entityTransaction.begin();
-            }
-            entityManager.merge(newSchedulerSync);
-            entityTransaction.commit();
-            entityManager.clear();
-        } catch (Exception ex) {
-            throw ex;
-        }
-    }
         
         public void updateLastSync(SchedulerSync newSchedulerSync) {
         try {

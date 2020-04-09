@@ -683,11 +683,11 @@ public class WeighBridgeView extends FrameView {
                         JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.manualSyncDenied"));
                         return null;
                     }
-                } else if (schedulerSync == null) {
+                } else {
                     schedulerSync = new SchedulerSync(mandt, wplant);
-                    schedulerSync.setLastManualSync(new Date());
-                    schedulerSync.setManualSyncStatus(SchedulerSync.SYNC_IN_PROGRESS);
                 }
+                schedulerSync.setLastManualSync(new Date());
+                schedulerSync.setManualSyncStatus(SchedulerSync.SYNC_IN_PROGRESS);
                 
                 setStep(1, resourceMapMsg.getString("msg.isSyncMasterData"));
                 SyncMasterDataService syncMasterDataService = new SyncMasterDataService();
@@ -702,7 +702,7 @@ public class WeighBridgeView extends FrameView {
             if (allowToSync) {
                 synchronized (schedulerSyncLock) {
                     schedulerSync.setManualSyncStatus(SchedulerSync.SYNC_COMPLETED);
-                    schedulerSyncRepository.updateLastManualSync(schedulerSync);
+                    schedulerSyncRepository.updateLastSync(schedulerSync);
                 }
             }
         }
@@ -714,7 +714,7 @@ public class WeighBridgeView extends FrameView {
             if (allowToSync) {
                 synchronized (schedulerSyncLock) {
                     schedulerSync.setManualSyncStatus(SchedulerSync.SYNC_ERROR);
-                    schedulerSyncRepository.updateLastManualSync(schedulerSync);
+                    schedulerSyncRepository.updateLastSync(schedulerSync);
                 }
             }
         }
