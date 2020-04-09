@@ -1778,6 +1778,7 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
     private boolean checkPlateWithVendor() throws HeadlessException {
         String plateNo = txtPlateNoN.getText().trim();
         isValidPlateNo = true;
+        btnSave.setEnabled(false);
         if (modeDetail == MODE_DETAIL.OUT_PLANT_PLANT || modeDetail == MODE_DETAIL.OUT_SLOC_SLOC || modeDetail == MODE_DETAIL.OUT_PULL_STATION) {
             Vendor transportVendor = (Vendor) cbxVendorTransportN.getSelectedItem();
 
