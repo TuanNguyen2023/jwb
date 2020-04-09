@@ -13,8 +13,6 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
@@ -213,6 +211,8 @@ public class WeightTicket implements Serializable {
     private String wtId;
     @Column(name = "offline_mode")
     private Boolean offlineMode;
+    @Column(name = "edited")
+    private Boolean edited;
     @Column(name = "status")
     private String status;
     @Column(name = "created_time")
@@ -454,6 +454,14 @@ public class WeightTicket implements Serializable {
 
     public void setOfflineMode(Boolean offlineMode) {
         this.offlineMode = offlineMode;
+    }
+    
+    public boolean isEdited() {
+        return offlineMode != null && offlineMode;
+    }
+
+    public void setEdited(boolean edited) {
+        this.edited = edited;
     }
 
     public BigDecimal getFScale() {

@@ -1357,26 +1357,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         setSaveNeeded(isValidated());
     }//GEN-LAST:event_btnAcceptActionPerformed
 
-    private boolean isValidPO(String poNum) {
-        try {
-            PurchaseOrder sapPurOrder = sapService.getPurchaseOrder(poNum);
-            return sapPurOrder != null;
-        } catch (Exception ex) {
-            logger.error(ex);
-            return false;
-        }
-    }
-
-    private boolean isValidDO(String doNum) {
-        try {
-            OutboundDelivery sapOutboundDelivery = sapService.getOutboundDelivery(doNum);
-            return sapOutboundDelivery != null;
-        } catch (Exception ex) {
-            logger.error(ex);
-            return false;
-        }
-    }
-
     private void txtOutTimeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtOutTimeKeyReleased
         // TODO add your handling code here:
         if (txtOutTime.getText().length() == 19) {
@@ -2327,7 +2307,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 }
 
                 // START init for offline
-                if (weightTicket.getOfflineMode()) {
+                if (weightTicket.getOfflineMode() && !weightTicket.isEdited()) {
                     WeightTicketDetail ticketDetail = weightTicket.getWeightTicketDetail();
 
                     if (ticketDetail != null) {
@@ -2452,7 +2432,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
                 }
 
-                if (isDissolved() || (!isStage1() && isStage2()) || (!isStage1() && !isStage2() && weightTicket.isPosted())) {
+                if (isDissolved() || (!isStage1() && isStage2()) || (!isStage1() && !isStage2() && (weightTicket.isPosted() || weightTicket.getOfflineMode()))) {
                     setReprintable(true);
                 }
                 // <editor-fold defaultstate="collapsed" desc="bind batch">
@@ -2517,9 +2497,11 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         @Override
         protected void finished() {
             if (weightTicket != null) {
+                String roles = WeighBridgeApp.getApplication().getLogin().getRoles().toUpperCase();
                 if (!weightTicket.isPosted() && !isStage1() && !isStage2()
                         && !WeighBridgeApp.getApplication().isOfflineMode()
-                        && WeighBridgeApp.getApplication().getLogin().getRoles().toUpperCase().contains("Z_JWB_ADMIN")) {
+                        && (!weightTicket.getOfflineMode() || weightTicket.isEdited())
+                        && (roles.contains("Z_JWB_SUPERVISOR") || roles.contains("Z_JWB_ADMIN"))) {
                     btnPostAgain.setEnabled(true);
                 } else {
                     btnPostAgain.setEnabled(false);
@@ -4391,33 +4373,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
         @Override
         protected Object doInBackground() throws Exception {
-            setStep(0, resourceMapMsg.getString("msg.checkDataBeforePostAgain"));
-
-            boolean checkValidData = true;
-
-            if (weightTicket.getOfflineMode()) {
-                String poNum = weightTicket.getWeightTicketDetail().getEbeln();
-                if (StringUtil.isNotEmptyString(poNum)) {
-                    checkValidData = isValidPO(poNum);
-                }
-
-                String doNum = weightTicket.getWeightTicketDetail().getDeliveryOrderNo();
-                if (StringUtil.isNotEmptyString(doNum)) {
-                    checkValidData = isValidDO(doNum);
-                }
-
-                String soNum = weightTicket.getWeightTicketDetail().getSoNumber();
-                if (StringUtil.isEmptyString(doNum) && StringUtil.isNotEmptyString(soNum)) {
-                    checkValidData = false;
-                }
-            }
-
-            if (checkValidData) {
-                setStep(1, resourceMapMsg.getString("msg.prePostAgain"));
-                weightTicketController.savePostAgainActionPerformed(weightTicket);
-            } else {
-                throw new Exception(resourceMapMsg.getString("msg.invalidDataToPostSAP"));
-            }
+            setStep(1, resourceMapMsg.getString("msg.prePostAgain"));
+            weightTicketController.savePostAgainActionPerformed(weightTicket);
 
             return null;  // return your result
         }

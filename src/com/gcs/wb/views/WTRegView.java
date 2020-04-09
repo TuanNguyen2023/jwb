@@ -108,8 +108,8 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
     DefaultComboBoxModel materialModel = weightTicketRegistarationController.getListMaterial();
     DefaultComboBoxModel materialInternalModel = weightTicketRegistarationController.getListMaterialInternal();
-    DefaultComboBoxModel vendorModel = weightTicketRegistarationController.getVendorModel();
-    DefaultComboBoxModel vendor2Model = (DefaultComboBoxModel) SerializationUtils.clone(vendorModel);
+    DefaultComboBoxModel vendorLoadModel = weightTicketRegistarationController.getVendorModel();
+    DefaultComboBoxModel vendorTransModel = (DefaultComboBoxModel) SerializationUtils.clone(vendorLoadModel);
     DefaultComboBoxModel vendorCustomerModel = weightTicketRegistarationController.getCusVendorModel();
     DefaultComboBoxModel customerModel = weightTicketRegistarationController.getCustomerModel();
 
@@ -336,9 +336,9 @@ public class WTRegView extends javax.swing.JInternalFrame {
     }
 
     private void initComboboxModel() {
-        cbxVendorLoadingN.setModel(vendorModel);
+        cbxVendorLoadingN.setModel(vendorLoadModel);
         cbxVendorLoadingN.setSelectedIndex(-1);
-        cbxVendorTransportN.setModel(vendor2Model);
+        cbxVendorTransportN.setModel(vendorTransModel);
         cbxVendorTransportN.setSelectedIndex(-1);
     }
 
@@ -1708,6 +1708,7 @@ private void cbxVendorLoadingNActionPerformed(java.awt.event.ActionEvent evt) {/
 
         validateForm();
     } else {
+        lblVendorLoadingN.setForeground(Color.black);
         isValidVendorLoad = true;
     }
 }//GEN-LAST:event_cbxVendorLoadingNActionPerformed
@@ -3459,7 +3460,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                         canceled = true;
                         throw new Exception();
                     }
-                    
+
                     // overwrite plateNo
                     txtPlateNoN.setText(plateNoValidDO);
                 }
@@ -3678,15 +3679,15 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 newWeightTicket.setSeqMonth(seqBMonth);
                 newWeightTicket.setCreatedTime(createdTime);
                 newWeightTicket.setCreatedDate(now);
+                newWeightTicket.setOfflineMode(false);
             } else {
                 newWeightTicket.setUpdatedDate(now);
+                newWeightTicket.setEdited(true);
             }
 
             newWeightTicket.setCreator(WeighBridgeApp.getApplication().getLogin().getUid());
-            newWeightTicket.setOfflineMode(WeighBridgeApp.getApplication().isOfflineMode());
             newWeightTicket.setWbId(configuration.getWbId());
             newWeightTicket.setPosted(false);
-
             newWeightTicket.setRegType(mode == MODE.INPUT ? 'I' : 'O');
             newWeightTicket.setMode(modeDetail.name());
             newWeightTicket.setRegisteredNumber(txtRegisterIdN.getText().trim());
@@ -4314,8 +4315,8 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 cbxVendorTransportN.setModel(vendor2Model);
 
                 if (isEditMode) {
-                    cbxVendorTransportN.setSelectedItem(weightTicketRegistarationController.getVendor(newWeightTicket.getWeightTicketDetail().getTransVendor()));
-                    cbxVendorLoadingN.setSelectedItem(weightTicketRegistarationController.getVendor(newWeightTicket.getWeightTicketDetail().getLoadVendor()));
+                    setSelectedVendor(vendorModel, cbxVendorLoadingN, newWeightTicket.getWeightTicketDetail().getLoadVendor());
+                    setSelectedVendor(vendor2Model, cbxVendorTransportN, newWeightTicket.getWeightTicketDetail().getTransVendor());
                 } else {
                     cbxVendorTransportN.setSelectedIndex(-1);
                     cbxVendorLoadingN.setSelectedIndex(-1);
@@ -4677,10 +4678,10 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 }
             }
 
-            loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
-            loadBatchStockModel(cbxSlocN, cbxBatchStockN, false);
-            cbxVendorLoadingN.setSelectedItem(weightTicketRegistarationController.getVendor(weightTicketDetail.getLoadVendor()));
-            cbxVendorTransportN.setSelectedItem(weightTicketRegistarationController.getVendor(weightTicketDetail.getTransVendor()));
+            if (modeDetail == MODE_DETAIL.OUT_PLANT_PLANT || modeDetail == MODE_DETAIL.OUT_SLOC_SLOC || modeDetail == MODE_DETAIL.OUT_PULL_STATION) {
+                setSelectedVendor(vendorLoadModel, cbxVendorLoadingN, weightTicketDetail.getLoadVendor());
+                setSelectedVendor(vendorTransModel, cbxVendorTransportN, weightTicketDetail.getTransVendor());
+            }
 
             if (modeDetail == MODE_DETAIL.IN_PO_PURCHASE) {
                 cbxCustomerN.setModel(vendorCustomerModel);
@@ -4694,7 +4695,12 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             boolean isInternal = modeDetail == MODE_DETAIL.IN_OTHER || modeDetail == MODE_DETAIL.OUT_OTHER;
             List<String> lgorts = weightTicketRegistarationController.getListLgortByMatnr(weightTicketDetail.getMatnrRef(), isInternal);
             loadSLoc(lgorts, newWeightTicket.getLgort());
-            cbxSloc2N.setSelectedItem(new SLoc(newWeightTicket.getRecvLgort()));
+            loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
+
+            if (modeDetail == MODE_DETAIL.OUT_SLOC_SLOC) {
+                cbxSloc2N.setSelectedItem(new SLoc(newWeightTicket.getRecvLgort()));
+                loadBatchStockModel(cbxSloc2N, cbxBatchStock2N, false);
+            }
 
             return null;  // return your result
         }
@@ -4710,6 +4716,18 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             isEditMode = false;
             clearForm();
         }
+    }
+
+    private void setSelectedVendor(DefaultComboBoxModel model, JComboBox comp, String lifnr) {
+        for (int i = 0; i < model.getSize(); i++) {
+            Vendor vendor = (Vendor) model.getElementAt(i);
+            if (vendor.getLifnr().equals(lifnr)) {
+                comp.setSelectedItem(vendor);
+                return;
+            }
+        }
+
+        comp.setSelectedIndex(-1);
     }
 
     private boolean confirmOverwriteData(String msg) {
