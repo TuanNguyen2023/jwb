@@ -36,6 +36,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import org.apache.commons.lang.SerializationUtils;
 import org.jdesktop.application.Application;
@@ -94,7 +96,30 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
         cbxModeSearch.setModel(new DefaultComboBoxModel<>(ModeEnum.values()));
         cbxStatus.setModel(new DefaultComboBoxModel<>(StatusEnum.values()));
 
+        initDocumentListener(txtWeightN);
+        initDocumentListener(txtSlingN);
+        initDocumentListener(txtPalletN);
+
         btnFind.doClick();
+    }
+
+    private void initDocumentListener(JTextField jtext) {
+        jtext.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                validateForm();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                validateForm();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                validateForm();
+            }
+        });
     }
 
     private void initTableEvent() {
@@ -650,7 +675,6 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
 
         btnReprint.setAction(actionMap.get("reprintRecord")); // NOI18N
         btnReprint.setText(resourceMap.getString("btnReprint.text")); // NOI18N
-        btnReprint.setEnabled(false);
         btnReprint.setName("btnReprint"); // NOI18N
 
         javax.swing.GroupLayout pnPrintControlLayout = new javax.swing.GroupLayout(pnPrintControl);
@@ -1041,7 +1065,7 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
                 .addComponent(pnROVLeft, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(pnControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(74, Short.MAX_VALUE))
+                .addContainerGap(80, Short.MAX_VALUE))
         );
 
         pnROVRight.setName("pnROVRight"); // NOI18N
@@ -1095,6 +1119,12 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
 
         txtWeightN.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.000"))));
         txtWeightN.setName("txtWeightN"); // NOI18N
+        txtWeightN.setVerifyInputWhenFocusTarget(false);
+        txtWeightN.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtWeightNFocusLost(evt);
+            }
+        });
         txtWeightN.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtWeightNKeyReleased(evt);
@@ -1385,7 +1415,7 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnShowFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(13, 13, 13)
-                .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
+                .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnPrintControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1726,6 +1756,18 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
         validateForm();
     }
 }//GEN-LAST:event_txtPOSTONumNFocusLost
+
+private void txtWeightNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtWeightNFocusLost
+    String weight = txtWeightN.getText().trim();
+    double minVal = 0d;
+    if (modeDetail != MODE_DETAIL.IN_OTHER && modeDetail != MODE_DETAIL.OUT_OTHER) {
+        minVal = 0.001d;
+    }
+
+    if (!wtRegisValidation.validateWeighValue(weight, minVal)) {
+        JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.lowerMinWeight", minVal));
+    }
+}//GEN-LAST:event_txtWeightNFocusLost
 
     private void validateFilterForm() {
         boolean isDriverNameValid = wtRegisValidation.validateLength(txtDriverName.getText(), lblDriverName, 0, 70);
@@ -2088,6 +2130,9 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
         showComponent(cbxVendorLoadingN, lblVendorLoadingN, false, false);
         showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
         showComponent(cbxCustomerN, lblCustomerN, true, true);
+
+        txtWeightN.setText("0.000");
+        txtWeightN.setValue(0.000d);
     }
 
     private void prepareOutSellRoad() {
@@ -2264,6 +2309,10 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
 
     private void validateForm() {
         boolean isValid = false;
+        if (modeDetail == null) {
+            return;
+        }
+
         switch (modeDetail) {
             case IN_PO_PURCHASE:
                 isValid = validateInPoPurchase();
@@ -2315,11 +2364,14 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
 
         boolean isPOValid = wtRegisValidation.validatePO(txtPONumN.getText(), lblPONumN);
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
+        boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
+        boolean isCustomerValid = wtRegisValidation.validateCbxSelected(cbxCustomerN.getSelectedIndex(), lblCustomerN);
+        boolean isWeightValid = wtRegisValidation.validateWeighField(txtWeightN.getText(), lblWeightN, 1, 10, 0.001d);
 
-        return isTicketIdValid && isRegisterIdValid && isDriverNameValid
-                && isCMNDBLValid && isPlateNoValid && isSalanValid
-                && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
-                && isNoteValid && isSlocValid && isPOValid;
+        return isTicketIdValid && isRegisterIdValid && isDriverNameValid && isWeightValid
+                && isCMNDBLValid && isPlateNoValid && isSalanValid && isCustomerValid
+                && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid && isWeightValid
+                && isNoteValid && isSlocValid && isPOValid && isMaterialTypeValid;
     }
 
     private boolean validateInWarehouseTransfer() {
@@ -2341,11 +2393,14 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
 
         boolean isDOValid = wtRegisValidation.validateSingleSODO(txtDONumN.getText(), lblDONumN);
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
+        boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
+        boolean isCustomerValid = wtRegisValidation.validateCbxSelected(cbxCustomerN.getSelectedIndex(), lblCustomerN);
+        boolean isWeightValid = wtRegisValidation.validateWeighField(txtWeightN.getText(), lblWeightN, 1, 10, 0.001d);
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid && isDOValid
-                && isCMNDBLValid && isPlateNoValid && isSalanValid
-                && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
-                && isNoteValid && isSlocValid && isLoadSourceValid;
+                && isCMNDBLValid && isPlateNoValid && isSalanValid && isMaterialTypeValid
+                && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid && isWeightValid
+                && isNoteValid && isSlocValid && isLoadSourceValid && isCustomerValid;
     }
 
     private boolean validateInOutOther() {
@@ -2364,7 +2419,7 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
         boolean isProductionBatchValid = wtRegisValidation.validateLength(txtProductionBatchN.getText(), lblProductionBatchN, 0, 128);
         boolean isNoteValid = wtRegisValidation.validateLength(txtNoteN.getText(), lblNoteN, 0, 128);
 
-        boolean isWeightValid = wtRegisValidation.validateWeighField(txtWeightN.getText(), lblWeightN, 1, 10);
+        boolean isWeightValid = wtRegisValidation.validateWeighField(txtWeightN.getText(), lblWeightN, 1, 10, 0d);
         boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
 
@@ -2397,10 +2452,13 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
 
         boolean isSlingValid = wtRegisValidation.validateIntegerValue(txtSlingN.getText(), lblSlingN);
         boolean isPalletValid = wtRegisValidation.validateIntegerValue(txtPalletN.getText(), lblPalletN);
+        boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
+        boolean isCustomerValid = wtRegisValidation.validateCbxSelected(cbxCustomerN.getSelectedIndex(), lblCustomerN);
+        boolean isWeightValid = wtRegisValidation.validateWeighField(txtWeightN.getText(), lblWeightN, 1, 10, 0.001d);
 
-        return isRegisterIdValid && isDriverNameValid && isCMNDBLValid && isPlateNoValid && isDOValid
-                && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
-                && isNoteValid && isSlocValid && isSalanValid && isSlingValid && isPalletValid;
+        return isRegisterIdValid && isDriverNameValid && isCMNDBLValid && isPlateNoValid && isDOValid && isWeightValid
+                && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid && isMaterialTypeValid
+                && isNoteValid && isSlocValid && isSalanValid && isSlingValid && isPalletValid && isCustomerValid;
     }
 
     private boolean validateOutPlantPlant() {
@@ -2431,11 +2489,14 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
 
         boolean isSlingValid = wtRegisValidation.validateIntegerValue(txtSlingN.getText(), lblSlingN);
         boolean isPalletValid = wtRegisValidation.validateIntegerValue(txtPalletN.getText(), lblPalletN);
+        boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
+        boolean isCustomerValid = wtRegisValidation.validateCbxSelected(cbxCustomerN.getSelectedIndex(), lblCustomerN);
+        boolean isWeightValid = wtRegisValidation.validateWeighField(txtWeightN.getText(), lblWeightN, 1, 10, 0.001d);
 
-        return isTicketIdValid && isRegisterIdValid && isDriverNameValid && isPOValid
+        return isTicketIdValid && isRegisterIdValid && isDriverNameValid && isPOValid && isCustomerValid
                 && isCMNDBLValid && isSalanValid && isLoadSourceValid && isSlingValid && isPalletValid
-                && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
-                && isNoteValid && isSlocValid && isVendorTransValid;
+                && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid && isWeightValid
+                && isNoteValid && isSlocValid && isVendorTransValid && isMaterialTypeValid;
     }
 
     private boolean validateOutSlocSloc() {
@@ -2466,9 +2527,11 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
         boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN) && isValidSloc;
         boolean isSloc2Valid = wtRegisValidation.validateCbxSelected(cbxSloc2N.getSelectedIndex(), lblSloc2N) && isValidSloc;
+        boolean isCustomerValid = wtRegisValidation.validateCbxSelected(cbxCustomerN.getSelectedIndex(), lblCustomerN);
+        boolean isWeightValid = wtRegisValidation.validateWeighField(txtWeightN.getText(), lblWeightN, 1, 10, 0.001d);
 
-        return isTicketIdValid && isRegisterIdValid && isDriverNameValid
-                && isCMNDBLValid && isSalanValid && isPOValid && isPOSTOValid
+        return isTicketIdValid && isRegisterIdValid && isDriverNameValid && isCustomerValid
+                && isCMNDBLValid && isSalanValid && isPOValid && isPOSTOValid && isWeightValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isSlocValid && isSloc2Valid && isMaterialTypeValid;
     }
@@ -2502,11 +2565,14 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
 
         boolean isSlingValid = wtRegisValidation.validateIntegerValue(txtSlingN.getText(), lblSlingN);
         boolean isPalletValid = wtRegisValidation.validateIntegerValue(txtPalletN.getText(), lblPalletN);
+        boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
+        boolean isCustomerValid = wtRegisValidation.validateCbxSelected(cbxCustomerN.getSelectedIndex(), lblCustomerN);
+        boolean isWeightValid = wtRegisValidation.validateWeighField(txtWeightN.getText(), lblWeightN, 1, 10, 0.001d);
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid && isPOValid && isPOSTOValid
-                && isCMNDBLValid && isSalanValid && isSlingValid && isPalletValid
-                && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
-                && isNoteValid && isSlocValid && isVendorTransValid;
+                && isCMNDBLValid && isSalanValid && isSlingValid && isPalletValid && isCustomerValid
+                && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid && isWeightValid
+                && isNoteValid && isSlocValid && isVendorTransValid && isMaterialTypeValid;
     }
 
     private boolean validateOutSellWateway() {
@@ -2529,11 +2595,14 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
 
         boolean isSlingValid = wtRegisValidation.validateIntegerValue(txtSlingN.getText(), lblSlingN);
         boolean isPalletValid = wtRegisValidation.validateIntegerValue(txtPalletN.getText(), lblPalletN);
+        boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
+        boolean isCustomerValid = wtRegisValidation.validateCbxSelected(cbxCustomerN.getSelectedIndex(), lblCustomerN);
+        boolean isWeightValid = wtRegisValidation.validateWeighField(txtWeightN.getText(), lblWeightN, 1, 10, 0.001d);
 
-        return isRegisterIdValid && isDriverNameValid && isSOValid
-                && isCMNDBLValid && isPlateNoValid && isSalanValid
+        return isRegisterIdValid && isDriverNameValid && isSOValid && isMaterialTypeValid
+                && isCMNDBLValid && isPlateNoValid && isSalanValid && isCustomerValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
-                && isNoteValid && isSlocValid && isSlingValid && isPalletValid;
+                && isNoteValid && isSlocValid && isSlingValid && isPalletValid && isWeightValid;
     }
 
     private void loadBatchStockModel(JComboBox slocComponent, JComboBox batchStockComponent, boolean isSloc) {
@@ -3233,7 +3302,8 @@ private void txtPOSTONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:e
         txtPOSTONumN.setText("");
         txtSONumN.setText("");
         cbxMaterialTypeN.setSelectedIndex(-1);
-        txtWeightN.setText("0.000");
+        txtWeightN.setText("0.001");
+        txtWeightN.setValue(0.001d);
         cbxSlocN.setModel(new DefaultComboBoxModel());
         cbxSlocN.setSelectedIndex(-1);
         cbxSloc2N.setModel(new DefaultComboBoxModel());
