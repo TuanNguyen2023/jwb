@@ -997,7 +997,8 @@ public class WeightTicketService {
             boolean isOffline = WeighBridgeApp.getApplication().isOfflineMode();
             Map<String, Object> map = new HashMap<>();
             Long bags = null;
-            if ((outbDel_list == null || outbDel_list.isEmpty()) && (isOffline || (txtPONo != null || !"".equals(txtPONo)))) {
+            if ((outbDel_list == null || outbDel_list.isEmpty() || wt.getMode().equals("OUT_PLANT_PLANT") || wt.getMode().equals("OUT_PULL_STATION"))
+                    && (isOffline || (txtPONo != null || !"".equals(txtPONo)))) {
                 // can posto xi mang 
                 map.put("P_MANDT", wt.getMandt());
                 map.put("P_WPlant", wt.getWplant());
