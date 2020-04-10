@@ -3001,10 +3001,9 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             return;
         }
 
-        //lblSloc2N.setBackground(Color.black);
-        SLoc sloc = (SLoc) slocComponent.getSelectedItem();
         if (modeDetail == MODE_DETAIL.OUT_SLOC_SLOC
                 && cbxSloc2N.getSelectedIndex() != -1) {
+            SLoc sloc = (SLoc) cbxSlocN.getSelectedItem();
             SLoc sloc2N = (SLoc) cbxSloc2N.getSelectedItem();
             if (sloc.getLgort().equals(sloc2N.getLgort())) {
                 JOptionPane.showMessageDialog(rootPane,
@@ -3017,7 +3016,9 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 return;
             }
         }
+
         isValidSloc = true;
+        SLoc sloc = (SLoc) slocComponent.getSelectedItem();
         if (newWeightTicket != null) {
             if (isSloc) {
                 newWeightTicket.setLgort(sloc.getLgort());
