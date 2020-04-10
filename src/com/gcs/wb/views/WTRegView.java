@@ -42,6 +42,7 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -100,6 +101,8 @@ public class WTRegView extends javax.swing.JInternalFrame {
     MaterialGroupRepository materialGroupRepository = new MaterialGroupRepository();
     private PurchaseOrder purchaseOrderPO;
     private PurchaseOrder purchaseOrderPOSTO;
+    private WeightTicketAudit weightTicketAudit;
+    private WeightTicketDetailAudit weightTicketDetailAudit;
     OutboundDetailRepository detailRepository = new OutboundDetailRepository();
     WeightTicketDetailRepository weightTicketDetailRepository = new WeightTicketDetailRepository();
     WeightTicketRepository weightTicketRepository = new WeightTicketRepository();
@@ -3323,6 +3326,32 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         }
     }
 
+    private void cleanAudit() {
+        weightTicketAudit = null;
+        weightTicketDetailAudit = null;
+    }
+
+    private void setWTAudit(String wtId, String newVehicleNo) {
+        String author = WeighBridgeApp.getApplication().getLogin().getUid();
+
+        weightTicketAudit = new WeightTicketAudit(configuration.getSapClient(), configuration.getWkPlant(), wtId, author);
+        weightTicketAudit.setOldVehicleNo(selectedWeightTicket.getPlateNo());
+        weightTicketAudit.setNewVehicleNo(newVehicleNo);
+    }
+
+    private void setWTDetailAudit(String wtId, String newMaterial, String newSoldTo, String newShipTo) {
+        String author = WeighBridgeApp.getApplication().getLogin().getUid();
+        WeightTicketDetail weightTicketDetail = selectedWeightTicket.getWeightTicketDetail();
+
+        weightTicketDetailAudit = new WeightTicketDetailAudit(configuration.getSapClient(), configuration.getWkPlant(), wtId, author);
+        weightTicketDetailAudit.setOldMaterial(weightTicketDetail.getMatnrRef());
+        weightTicketDetailAudit.setNewMaterial(newMaterial != null ? newMaterial : weightTicketDetail.getMatnrRef());
+        weightTicketDetailAudit.setOldSoldTo(weightTicketDetail.getKunnr());
+        weightTicketDetailAudit.setNewSoldTo(newSoldTo != null ? newSoldTo : weightTicketDetail.getKunnr());
+        weightTicketDetailAudit.setOldShipTo(weightTicketDetail.getShipTo());
+        weightTicketDetailAudit.setNewShipTo(newShipTo != null ? newShipTo : weightTicketDetail.getShipTo());
+    }
+
     private class CheckDOTask extends org.jdesktop.application.Task<Object, Void> {
 
         private boolean canceled = false;
@@ -3408,13 +3437,14 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 String plateNo = txtPlateNoN.getText().trim();
                 String traid = outboundDelivery.getTraid().trim();
                 traid = StringUtil.correctPlateNo(traid).toUpperCase();
-                if ((traid.isEmpty()) || (!traid.isEmpty() && !traid.startsWith(plateNo))) {
+                if (traid.isEmpty() || (!traid.isEmpty() && !traid.startsWith(plateNo))) {
                     String plateName = "xe";
                     if (modeDetail == MODE_DETAIL.OUT_SELL_WATERWAY) {
                         plateName = "ghe";
                     }
 
-                    if (isEditMode && modeDetail == MODE_DETAIL.OUT_SELL_ROAD) {
+                    if (isEditMode && !traid.isEmpty() && modeDetail == MODE_DETAIL.OUT_SELL_ROAD) {
+                        setWTAudit(newWeightTicket.getId(), traid.split("|", 2)[0]);
                         mappingErrMsg.add(resourceMapMsg.getString("msg.vehicleNotMapping", plateName));
                     } else {
                         throw new Exception(resourceMapMsg.getString("msg.plateNoNotMappingWithDO", plateName, plateNo));
@@ -3422,12 +3452,8 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 }
 
                 // for check edit plateNo after check DO
-                plateNoValidDO = traid.isEmpty() ? "" : plateNo;
+                plateNoValidDO = traid.split("|", 2)[0];
 
-                // check DO in used
-//                if (isDOInUsed(deliveryOrderNo, outboundDelivery)) {
-//                    throw new Exception(resourceMapMsg.getString("msg.typeDO", deliveryOrderNo, getMode(outboundDelivery)));
-//                }
                 // check customer
                 if (index > 0) {
                     String deliveryOrderNoBefore = deliveryOrderNos[index - 1];
@@ -3439,20 +3465,29 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 }
 
                 if (isEditMode && modeDetail == MODE_DETAIL.OUT_SELL_ROAD) {
+                    String matnr = null;
                     Material material = (Material) cbxMaterialTypeN.getSelectedItem();
                     if (material != null && !material.getMatnr().equals(outboundDelivery.getMatnr())) {
+                        matnr = outboundDelivery.getMatnr();
                         mappingErrMsg.add(resourceMapMsg.getString("msg.materialNotMapping"));
                     }
 
+                    String kunnr = null;
                     Customer cust = (Customer) cbxCustomerN.getSelectedItem();
                     if (cust != null && !cust.getKunnr().equals(outboundDelivery.getKunnr())) {
+                        kunnr = outboundDelivery.getKunnr();
                         mappingErrMsg.add(resourceMapMsg.getString("msg.customerNotMapping"));
+                    }
+
+                    if (matnr != null || kunnr != null) {
+                        setWTDetailAudit(newWeightTicket.getId(), matnr, kunnr, null);
                     }
                 }
 
                 if (mappingErrMsg.size() > 0) {
                     String msg = String.join("\n", mappingErrMsg);
                     if (!confirmOverwriteData(msg)) {
+                        cleanAudit();
                         canceled = true;
                         throw new Exception();
                     }
@@ -3553,33 +3588,6 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
         private boolean checkMaterial(List<String> matnrs) {
             return materialGroupRepository.checkMaterialTogether(matnrs);
-        }
-
-        private boolean isDOInUsed(String deliveryOrderNo, OutboundDelivery outboundDelivery) {
-            String wplant = configuration.getWkPlant();
-            String sDoType = Constants.WTRegView.DO_TYPES;
-
-            WeightTicket weightTicket = weightTicketRegistarationController.findByDeliveryOrderNo(deliveryOrderNo);
-            String Lfart = outboundDelivery.getLfart();
-
-            //if ((sDoType.contains(Lfart) && outboundDelivery.getWbstk() == 'C'
-//               && outboundDelivery.getWerks().equalsIgnoreCase(wplant))
-//                  || (weightTicket != null && weightTicket.isPosted())) {
-            if ((outboundDelivery.getWbstk() == 'C'
-                    && outboundDelivery.getWerks().equalsIgnoreCase(wplant))
-                    || (weightTicket != null && weightTicket.isPosted())) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-        private String getMode(OutboundDelivery outboundDelivery) {
-            if (outboundDelivery.getLfart().equalsIgnoreCase("LF") || outboundDelivery.getLfart().equalsIgnoreCase("ZTLF")) {
-                return Constants.WTRegView.OUTPUT_LOWCASE;
-            } else {
-                return Constants.WTRegView.INPUT_LOWCASE;
-            }
         }
 
         @Override
@@ -3729,6 +3737,27 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                     for (int j = 0; j < deliveryDetails.size(); j++) {
                         OutboundDeliveryDetail detail = deliveryDetails.get(j);
                         detail.setWtId(newWeightTicket.getId());
+
+                        if (isEditMode) {
+                            detail.setLfimg_ori(detail.getLfimg());
+                            detail.setfTime(newWeightTicket.getFTime());
+                            detail.setsTime(newWeightTicket.getSTime());
+                            detail.setGoodsQty(newWeightTicket.getGQty());
+                            detail.setUpdatedDate(now);
+
+                            BigDecimal fScale = newWeightTicket.getFScale();
+                            if (fScale != null) {
+                                fScale = fScale.divide(new BigDecimal(1000)).setScale(3, RoundingMode.HALF_UP);
+                            }
+                            detail.setInScale(fScale);
+
+                            BigDecimal sScale = newWeightTicket.getSScale();
+                            if (sScale != null) {
+                                sScale = sScale.divide(new BigDecimal(1000)).setScale(3, RoundingMode.HALF_UP);
+                            }
+                            detail.setOutScale(sScale);
+                        }
+
                         if (!entityManager.getTransaction().isActive()) {
                             entityManager.getTransaction().begin();
                         }
@@ -3784,6 +3813,16 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                     entityManager.persist(newWeightTicket);
                 } else {
                     entityManager.merge(newWeightTicket);
+
+                    if (weightTicketAudit != null) {
+                        weightTicketAudit.setOverwrittenTime(now);
+                        entityManager.persist(weightTicketAudit);
+                    }
+
+                    if (weightTicketDetailAudit != null) {
+                        weightTicketDetailAudit.setOverwrittenTime(now);
+                        entityManager.persist(weightTicketDetailAudit);
+                    }
                 }
 
                 entityTransaction.commit();
@@ -3960,6 +3999,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         plateNoValidDO = "";
         isValidPlateNo = false;
         checkedCharg = "";
+        cleanAudit();
 
         txtTicketIdN.setText("");
         txtWeightTickerRefN.setText("");
@@ -4272,20 +4312,29 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             }
 
             if (isEditMode && modeDetail == MODE_DETAIL.IN_PO_PURCHASE) {
+                String matnr = null;
                 Material material = (Material) cbxMaterialTypeN.getSelectedItem();
                 if (material != null && !material.getMatnr().equals(purchaseOrderPO.getPurchaseOrderDetail().getMaterial())) {
+                    matnr = purchaseOrderPO.getPurchaseOrderDetail().getMaterial();
                     mappingErrMsg.add(resourceMapMsg.getString("msg.materialNotMapping"));
                 }
 
+                String kunnr = null;
                 Vendor cust = (Vendor) cbxCustomerN.getSelectedItem();
-                if (cust != null && !cust.getLifnr().equals(purchaseOrderPO.getCustomer())) {
+                if (cust != null && !cust.getLifnr().equals(purchaseOrderPO.getVendor())) {
+                    kunnr = purchaseOrderPO.getVendor();
                     mappingErrMsg.add(resourceMapMsg.getString("msg.customerNotMapping"));
+                }
+
+                if (matnr != null || kunnr != null) {
+                    setWTDetailAudit(newWeightTicket.getId(), matnr, kunnr, null);
                 }
             }
 
             if (mappingErrMsg.size() > 0) {
                 String msg = String.join("\n", mappingErrMsg);
                 if (!confirmOverwriteData(msg)) {
+                    cleanAudit();
                     canceled = true;
                     throw new Exception();
                 }
