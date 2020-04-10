@@ -1697,7 +1697,6 @@ private void cbxVendorLoadingNActionPerformed(java.awt.event.ActionEvent evt) {/
                     JOptionPane.showMessageDialog(rootPane, msgVendorCheck);
                     lblVendorLoadingN.setForeground(Color.red);
                     isValidVendorLoad = false;
-                    return;
                 } else {
                     isValidVendorLoad = true;
                     lblVendorLoadingN.setForeground(Color.black);
@@ -1732,7 +1731,6 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
 
                     lblVendorTransportN.setForeground(Color.red);
                     isValidVendorTransport = false;
-                    return;
                 } else {
                     isValidVendorTransport = true;
                     lblVendorTransportN.setForeground(Color.black);
