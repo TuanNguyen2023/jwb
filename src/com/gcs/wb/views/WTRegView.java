@@ -2096,6 +2096,8 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
     List<DOCheckStructure> listDONumbers = new ArrayList<>();
 
     private class CheckSOTask extends org.jdesktop.application.Task<Object, Void> {
+        private boolean canceled = false;
+        private List<String> mappingErrMsg = new ArrayList();
 
         CheckSOTask(org.jdesktop.application.Application app) {
             super(app);
@@ -2116,6 +2118,44 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                     return null;
                 }
             }
+            
+            if (isEditMode) {
+                SaleOrder saleOrder = weightTicketRegistarationController.getSalesOrderSap(val[0]);
+                if (saleOrder == null) {
+                    saleOrder = weightTicketRegistarationController.getSalesOrderLocal(val[0]);
+                }
+                if (saleOrder != null && saleOrder.getTraid() != null) {
+                    String bsGhe = txtPlateNoN.getText();
+                    String traid = saleOrder.getTraid();
+                    traid = StringUtil.correctPlateNo(traid).toUpperCase();
+                    String plateName = "ghe";
+                    
+                    // validate BS Ghe
+                    if (StringUtil.isNotEmptyString(bsGhe) && !bsGhe.equals(traid)) {
+                        mappingErrMsg.add(resourceMapMsg.getString("msg.vehicleNotMapping", plateName));
+                    }
+                    String matnr = null;
+                    Material material = (Material) cbxMaterialTypeN.getSelectedItem();
+                    if (material != null && !material.getMatnr().equals(saleOrder.getMatnr())) {
+                        matnr = saleOrder.getMatnr();
+                        mappingErrMsg.add(resourceMapMsg.getString("msg.materialNotMapping"));
+                    }
+
+                    String kunnr = null;
+                    Customer cust = (Customer) cbxCustomerN.getSelectedItem();
+                    if (cust != null && !cust.getKunnr().equals(saleOrder.getKunnr())) {
+                        kunnr = saleOrder.getKunnr();
+                        mappingErrMsg.add(resourceMapMsg.getString("msg.customerNotMapping"));
+                    }
+                }
+                if (mappingErrMsg.size() > 0) {
+                    String msg = String.join("\n", mappingErrMsg);
+                    msg += "\n\n" + resourceMapMsg.getString("msg.noOverwriteSuffixes");
+                    JOptionPane.showMessageDialog(rootPane, msg);
+                    canceled = true;
+                    throw new Exception();
+                }
+            }
 
             String doNum = "";
             if (!WeighBridgeApp.getApplication().isOfflineMode()) {
@@ -2130,6 +2170,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                             JOptionPane.showMessageDialog(rootPane, doNumber.getMessage());
                             String msg = "SO " + doNumber.getVbelnSO() + " sai, vui lòng nhập lại!";
                             setMessage(msg);
+                            canceled = true;
                             throw new Exception(msg);
                         } else {
                             if (doNum.isEmpty()) {
@@ -2143,6 +2184,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             }
 
             if (doNum.trim().isEmpty()) {
+                canceled = true;
                 throw new Exception("Không lấy được bất kỳ số DO nào, vui lòng kiểm tra lại!");
             }
 
@@ -2159,7 +2201,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
             validateForm();
 
-            if (!ExceptionUtil.isSapDisConnectedException(cause)) {
+            if (!canceled && !ExceptionUtil.isSapDisConnectedException(cause)) {
                 if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
                     cause = cause.getCause();
                 }
