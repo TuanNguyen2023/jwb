@@ -3024,6 +3024,9 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             isSOValid = wtRegisValidation.validateDO(txtSONumN.getText(), lblSONumN);
         }
         btnDOCheckN.setEnabled(isValidSO);
+        if(isValidSO && isEditMode) {
+            btnDOCheckN.setForeground(Color.red);
+        }
         validateButtonCheck(btnSOCheckN, isSOValid, isValidSO);
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
@@ -3645,6 +3648,10 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 cbxCustomerN.setSelectedItem(customer);
             } else {
                 cbxCustomerN.setSelectedIndex(-1);
+            }
+
+            if (isEditMode) {
+                btnDOCheckN.setForeground(Color.black);
             }
 
             validateForm();
