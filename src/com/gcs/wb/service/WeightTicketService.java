@@ -40,6 +40,7 @@ import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.logging.Level;
+import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 /**
@@ -68,6 +69,7 @@ public class WeightTicketService {
     WeightTicketRegistrationService weightTicketRegistrationService = new WeightTicketRegistrationService();
     MaterialRepository materialRepository = new MaterialRepository();
     private Double baoWeigh = Double.valueOf(1);
+    private String plateFlg = Constants.PlateFormat.PLATE_XE;
 
     public DefaultComboBoxModel getCustomerByMaNdt() {
         List<Customer> customers = this.customerRepository.getListCustomer();
@@ -608,6 +610,9 @@ public class WeightTicketService {
         if (outbDel != null) {
             doNum = outbDel.getDeliveryOrderNo();
         }
+        // check format for traid to set value Traty
+        checkFormatTraid(wt.getPlateNo());
+
         DOCreate2PGIBapi bapi = new DOCreate2PGIBapi();
         WeightTicketDetail weightTicketDetail = wt.getWeightTicketDetail();
         String plateCombine = wt.getPlateNo();
@@ -642,7 +647,7 @@ public class WeightTicketService {
         wa.setWauhr(DateUtil.stripDate(stime));
         wa.setLfdat(DateUtil.stripTime(stime));
         wa.setLfuhr(DateUtil.stripDate(stime));
-        wa.setTraty("Z001");
+        wa.setTraty(plateFlg);
         wa.setTraid(plateCombine);
         wa.setLifex(wt.getDriverName());
         bapi.setVbkok_wa(wa);
@@ -721,6 +726,9 @@ public class WeightTicketService {
         if (outbDel != null) {
             doNum = outbDel.getDeliveryOrderNo();
         }
+        // check format for traid to set value Traty
+        checkFormatTraid(wt.getPlateNo());
+
         DOPostingPGIBapi bapi = new DOPostingPGIBapi();
         bapi.setDelivery(deliveryNum);
         WeightTicketDetail weightTicketDetail = wt.getWeightTicketDetail();
@@ -756,7 +764,7 @@ public class WeightTicketService {
         wa.setWauhr(DateUtil.stripDate(stime));
         wa.setLfdat(DateUtil.stripTime(stime));
         wa.setLfuhr(DateUtil.stripDate(stime));
-        wa.setTraty("Z001");
+        wa.setTraty(plateFlg);
         wa.setTraid(plateCombine);
         wa.setLifex(wt.getDriverName());
         bapi.setVbkok_wa(wa);
@@ -813,12 +821,15 @@ public class WeightTicketService {
     }
 
     public Object getPgmVl02nBapi(WeightTicket wt, OutboundDelivery outbDel,
-            WeightTicket weightTicket,String modeFlg, int timeFrom, int timeTo,
+            WeightTicket weightTicket, int timeFrom, int timeTo,
             List<OutboundDeliveryDetail> outDetails_lits, String ivWbidNosave, BigDecimal sumQtyReg) {
         String doNum = null;
         if (outbDel != null) {
             doNum = outbDel.getDeliveryOrderNo();
         }
+        // check format for traid to set value Traty
+        checkFormatTraid(wt.getPlateNo());
+
         String plateCombine = wt.getPlateNo();
         if (wt.getTrailerId() != null && !wt.getTrailerId().trim().isEmpty()) {
             plateCombine += "|" + wt.getTrailerId();
@@ -837,10 +848,6 @@ public class WeightTicketService {
         BigDecimal kl = BigDecimal.ZERO;
         BigDecimal kl_km = BigDecimal.ZERO;
         BigDecimal kl_total = BigDecimal.ZERO;
-        BigDecimal sumQtyRegWT = BigDecimal.ZERO;
-        
-        // check dung sai -> set Qty
-        String material = (outbDel != null && outbDel.getMatnr() != null) ? outbDel.getMatnr().toString() : "";
 
         for (int i = 0; i < outDetails_lits.size(); i++) {
             item = outDetails_lits.get(i);
@@ -882,7 +889,7 @@ public class WeightTicketService {
         wa.setWauhr(DateUtil.stripDate(stime));
         wa.setLfdat(DateUtil.stripTime(stime));
         wa.setLfuhr(DateUtil.stripDate(stime));
-        wa.setTraty(modeFlg);
+        wa.setTraty(plateFlg);
         wa.setTraid(plateCombine);
         wa.setLifex(wt.getDriverName());
         bapi.setVbkok_wa(wa);
@@ -1228,6 +1235,9 @@ public class WeightTicketService {
             bapi.setIvMaterialDocument(wt.getWeightTicketDetail().getIvMaterialDocument());
             bapi.setIvMatDocumentYear(wt.getWeightTicketDetail().getIvMatDocumentYear());
         }
+        // check format for traid to set value Traty
+        checkFormatTraid(wt.getPlateNo());
+
         //API ZJBAPI_GOODSMVT_CREATE_V2_2606 - Nhap (posto)
         bapi.setGmCode(new GoodsMvtCodeStructure("01"));
         GoodsMvtHeaderStructure header = new GoodsMvtHeaderStructure();
@@ -1302,7 +1312,7 @@ public class WeightTicketService {
         wa.setWauhr(DateUtil.stripDate(stime));
         wa.setLfdat(DateUtil.stripTime(stime));
         wa.setLfuhr(DateUtil.stripDate(stime));
-        wa.setTraty("Z001");
+        wa.setTraty(plateFlg);
         wa.setTraid(plateCombine);
         wa.setLifex(wt.getDriverName());
         bapi.setVbkok_wa(wa);
@@ -1368,6 +1378,18 @@ public class WeightTicketService {
             return true;
         }
         return false;
+    }
+    
+    private void checkFormatTraid(String traid) {
+        Matcher matcherXe = Constants.TransportAgent.LICENSE_PLATE_PATTERN.matcher(traid);
+        Matcher matcherGhe = Constants.TransportAgent.LICENSE_PLATE_WATER_PATTERN.matcher(traid);
+        if (matcherXe.matches()) {
+            plateFlg = Constants.PlateFormat.PLATE_XE;
+            return;
+        }
+        if (matcherGhe.matches()) {
+            plateFlg = Constants.PlateFormat.PLATE_GHE;
+        }
     }
 }
 
