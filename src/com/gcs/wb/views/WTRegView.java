@@ -4547,7 +4547,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         @Override
         protected void succeeded(Object t) {
             isValidPOSTO = true;
-            validPOSTO = txtPONumN.getText().trim();
+            validPOSTO = txtPOSTONumN.getText().trim();
             switch (modeDetail) {
                 case OUT_SLOC_SLOC:
                     cbxVendorLoadingN.setSelectedItem(weightTicketRegistarationController.getVendor(strVendor));
