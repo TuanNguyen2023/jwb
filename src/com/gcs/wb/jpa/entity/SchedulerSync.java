@@ -169,7 +169,7 @@ public class SchedulerSync implements Serializable{
     
     public boolean isManualSyncAllowed() {
         if (lastManualSync != null) {
-            if (System.currentTimeMillis() - lastManualSync.getTime() < AN_HOUR && (autoSyncStatus == SYNC_COMPLETED || autoSyncStatus == SYNC_IN_PROGRESS)) {
+            if (System.currentTimeMillis() - lastManualSync.getTime() < AN_HOUR && (manualSyncStatus == SYNC_COMPLETED || manualSyncStatus == SYNC_IN_PROGRESS)) {
                 return false;
             } else {
                 return true;

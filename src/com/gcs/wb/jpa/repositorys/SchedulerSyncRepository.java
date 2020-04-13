@@ -20,11 +20,11 @@ import org.apache.log4j.Logger;
  * @author TaiTQ
  */
 public class SchedulerSyncRepository {
+
     private Logger logger = Logger.getLogger(this.getClass());
-    EntityManager entityManager = JPAConnector.getInstance();
-    EntityTransaction entityTransaction = entityManager.getTransaction();
 
     public SchedulerSync findByParamMandtWplant(String mandt, String wplant) {
+        EntityManager entityManager = JPAConnector.getInstance();
         SchedulerSync result = null;
         try {
             TypedQuery<SchedulerSync> query = entityManager.createNamedQuery("SchedulerSync.findByMandtWplant", SchedulerSync.class);
@@ -41,8 +41,10 @@ public class SchedulerSyncRepository {
 
         return result;
     }
-        
-        public void updateLastSync(SchedulerSync newSchedulerSync) {
+
+    public void updateLastSync(SchedulerSync newSchedulerSync) {
+        EntityManager entityManager = JPAConnector.getInstance();
+        EntityTransaction entityTransaction = entityManager.getTransaction();
         try {
             if (!entityTransaction.isActive()) {
                 entityTransaction.begin();

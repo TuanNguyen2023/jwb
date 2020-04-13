@@ -6,7 +6,6 @@ import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.jpa.entity.SchedulerSync;
 import com.gcs.wb.jpa.repositorys.SchedulerSyncRepository;
 import com.gcs.wb.service.SyncMasterDataService;
-import static com.gcs.wb.service.SyncMasterDataService.logger;
 import java.util.Date;
 import org.apache.log4j.Logger;
 import org.quartz.Job;
@@ -20,15 +19,16 @@ public class SyncMasterDataJob implements Job {
 
     public static Logger logger = Logger.getLogger(SyncMasterDataJob.class);
     InteractiveObject interactiveObject = InteractiveObject.SYSTEM;
+    SchedulerSyncRepository schedulerSyncRepository = new SchedulerSyncRepository();
+    SchedulerSync schedulerSync;
     private Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
+
     @Override
     public void execute(JobExecutionContext jec) throws JobExecutionException {
         logger.info("Check sync scheduler...");
         String mandt = configuration.getSapClient();
         String wplant = configuration.getWkPlant();
-        SchedulerSyncRepository schedulerSyncRepository = new SchedulerSyncRepository();
-        SchedulerSync schedulerSync = schedulerSyncRepository.findByParamMandtWplant(mandt, wplant);
-
+        schedulerSync = schedulerSyncRepository.findByParamMandtWplant(mandt, wplant);
         if (schedulerSync != null && !schedulerSync.isAutoSyncAllowed()) {
             logger.info("The master data was already synced today.");
             return;
@@ -38,7 +38,15 @@ public class SyncMasterDataJob implements Job {
         schedulerSync.setAutoSyncStatus(SchedulerSync.SYNC_IN_PROGRESS);
         schedulerSync.setLastAutoSync(new Date());
         schedulerSyncRepository.updateLastSync(schedulerSync);
-        
+
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                schedulerSync.setManualSyncStatus(SchedulerSync.SYNC_ERROR);
+                schedulerSyncRepository.updateLastSync(schedulerSync);
+            }
+        });
+
         try {
             SyncMasterDataService syncMasterDataService = new SyncMasterDataService(interactiveObject);
             syncMasterDataService.syncMasterData();
