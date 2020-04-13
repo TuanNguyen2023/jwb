@@ -688,6 +688,7 @@ public class WeighBridgeView extends FrameView {
                 }
                 schedulerSync.setLastManualSync(new Date());
                 schedulerSync.setManualSyncStatus(SchedulerSync.SYNC_IN_PROGRESS);
+                schedulerSyncRepository.updateLastSync(schedulerSync);
                 
                 setStep(1, resourceMapMsg.getString("msg.isSyncMasterData"));
                 SyncMasterDataService syncMasterDataService = new SyncMasterDataService();

@@ -37,6 +37,7 @@ public class SyncMasterDataJob implements Job {
         }
         schedulerSync.setAutoSyncStatus(SchedulerSync.SYNC_IN_PROGRESS);
         schedulerSync.setLastAutoSync(new Date());
+        schedulerSyncRepository.updateLastSync(schedulerSync);
         
         try {
             SyncMasterDataService syncMasterDataService = new SyncMasterDataService(interactiveObject);

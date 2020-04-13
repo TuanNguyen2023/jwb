@@ -156,26 +156,26 @@ public class SchedulerSync implements Serializable{
     }
     public boolean isAutoSyncAllowed() {
         if (lastAutoSync != null) {
-            if (isSameDay(lastAutoSync, new Date()) && (autoSyncStatus == SYNC_COMPLETED)) {
+            if (isSameDay(lastAutoSync, new Date()) && (autoSyncStatus == SYNC_COMPLETED || autoSyncStatus == SYNC_IN_PROGRESS)) {
                 return false;
             } else {
                 return true;
-            }     
+            }
         } 
         
         // Allow to sync in case lastAutoSync not available
         return true;
     }
     
-        public boolean isManualSyncAllowed() {
+    public boolean isManualSyncAllowed() {
         if (lastManualSync != null) {
-            if (System.currentTimeMillis() - lastManualSync.getTime() < AN_HOUR && manualSyncStatus == SYNC_COMPLETED ) {
+            if (System.currentTimeMillis() - lastManualSync.getTime() < AN_HOUR && (autoSyncStatus == SYNC_COMPLETED || autoSyncStatus == SYNC_IN_PROGRESS)) {
                 return false;
             } else {
                 return true;
-            }     
-        } 
-        
+            }
+        }
+
         // Allow to sync in case lastManualSync not available
         return true;
     }
