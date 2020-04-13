@@ -120,11 +120,42 @@ public class WeightTicketRepository {
 
         return weightTicket;
     }
+    
+    public WeightTicket findByDeliveryOrderNoExistEbelnIn(String deliverNumber, String wtId) {
+        WeightTicket weightTicket = null;
+        try {
+            List<WeightTicket> list = getListByDeliveryOrderNoExistEbelnIn(deliverNumber);
+            if (list != null && list.size() > 0) {
+                weightTicket = list.stream().filter(t -> wtId == null || !t.getId().equals(wtId))
+                        .findFirst()
+                        .orElse(null);
+            }
+        } catch (Exception ex) {
+            logger.error(null, ex);
+            ExceptionUtil.checkDatabaseDisconnectedException(ex);
+        }
+
+        return weightTicket;
+    }
 
     public List<WeightTicket> getListByDeliveryOrderNoNotExistEbelnScale(String deliverNumber) {
         List<WeightTicket> wt = new ArrayList<>();
         try {
             TypedQuery<WeightTicket> query = entityManager.createNamedQuery("WeightTicket.findByDeliveryOrderNoNotExistEbelnScale", WeightTicket.class);
+            query.setParameter("deliveryOrderNo", "%" + deliverNumber + "%");
+            wt = query.getResultList();
+        } catch (Exception ex) {
+            logger.error(null, ex);
+            ExceptionUtil.checkDatabaseDisconnectedException(ex);
+        }
+
+        return wt;
+    }
+    
+    public List<WeightTicket> getListByDeliveryOrderNoExistEbelnIn(String deliverNumber) {
+        List<WeightTicket> wt = new ArrayList<>();
+        try {
+            TypedQuery<WeightTicket> query = entityManager.createNamedQuery("WeightTicket.findByDeliveryOrderNoExistEbelnIn", WeightTicket.class);
             query.setParameter("deliveryOrderNo", "%" + deliverNumber + "%");
             wt = query.getResultList();
         } catch (Exception ex) {

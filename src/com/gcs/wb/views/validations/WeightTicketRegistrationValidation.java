@@ -27,9 +27,9 @@ public class WeightTicketRegistrationValidation {
         this.resourceMapMsg = resourceMapMsg;
     }
 
-    public boolean validateWeighField(String value, JComponent label, int min, int max) {
-        String[] arrOfVal = value.split("\\.", 2);
-        boolean result = validateWeighValue(value) && validateLength(arrOfVal[0], label, min, max);
+    public boolean validateWeighField(String value, JComponent label, int minLen, int maxLen, double minVal) {
+        String[] arrOfVal = value.trim().split("\\.", 2);
+        boolean result = validateWeighValue(value, minVal) && validateLength(arrOfVal[0].replace(",", ""), label, minLen, maxLen);
         label.setForeground(result ? Color.black : Color.red);
         return result;
     }
@@ -171,13 +171,13 @@ public class WeightTicketRegistrationValidation {
         return result;
     }
 
-    public boolean validateWeighValue(String value) {
+    public boolean validateWeighValue(String value, double minVal) {
         boolean result;
         value = value.trim().replace(",", "");
 
         try {
             double doubleValue = Double.parseDouble(value);
-            result = doubleValue >= 0d;
+            result = doubleValue >= minVal;
         } catch (NumberFormatException ex) {
             result = false;
         }

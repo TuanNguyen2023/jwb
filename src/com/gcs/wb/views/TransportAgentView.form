@@ -48,11 +48,11 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
+          <Group type="102" alignment="1" attributes="0">
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="pnTransportAgent" alignment="0" max="32767" attributes="2"/>
                   <Component id="pnVehicle" alignment="0" max="32767" attributes="2"/>
+                  <Component id="pnTransportAgent" alignment="0" max="32767" attributes="2"/>
               </Group>
               <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
           </Group>
@@ -75,7 +75,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="spnTransportAgent" pref="368" max="32767" attributes="0"/>
+                  <Component id="spnTransportAgent" pref="351" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -83,7 +83,7 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <Component id="spnTransportAgent" pref="368" max="32767" attributes="0"/>
+                  <Component id="spnTransportAgent" pref="376" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -132,25 +132,25 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="spnVehicle" alignment="0" pref="249" max="32767" attributes="0"/>
-                      <Component id="lblLicensePlate" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="spnVehicle" alignment="0" pref="288" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="btnVehicleRemove" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="147" max="32767" attributes="0"/>
+                          <EmptySpace pref="186" max="32767" attributes="0"/>
                           <Component id="btnVehicleSave" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="lblVehicleType" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblValidFrom" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="lblValidTo" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="lblValidFrom" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblVehicleType" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblLicensePlate" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblValidTo" alignment="1" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="txtLicensePlate" alignment="0" pref="192" max="32767" attributes="0"/>
-                              <Component id="cbxVehicleType" alignment="0" pref="192" max="32767" attributes="0"/>
-                              <Component id="dpValidFrom" alignment="0" pref="192" max="32767" attributes="0"/>
-                              <Component id="dpValidTo" alignment="0" pref="192" max="32767" attributes="0"/>
+                          <EmptySpace pref="10" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="dpValidTo" pref="205" max="32767" attributes="1"/>
+                              <Component id="dpValidFrom" alignment="1" pref="205" max="32767" attributes="1"/>
+                              <Component id="cbxVehicleType" alignment="1" pref="205" max="32767" attributes="1"/>
+                              <Component id="txtLicensePlate" alignment="1" pref="205" max="32767" attributes="1"/>
                           </Group>
                       </Group>
                   </Group>
@@ -161,7 +161,7 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <Component id="spnVehicle" pref="192" max="32767" attributes="0"/>
+                  <Component id="spnVehicle" pref="200" max="32767" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="lblLicensePlate" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -169,13 +169,13 @@
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="lblVehicleType" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="cbxVehicleType" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblVehicleType" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="dpValidFrom" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblValidFrom" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblValidFrom" alignment="3" min="-2" pref="11" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">

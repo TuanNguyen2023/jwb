@@ -1316,6 +1316,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         //  Temporary enable Accept Button
 //        btnAccept.setEnabled(true);
         grbBridge.clearSelection();
+        btnIScaleReset.setEnabled(false);
         setSaveNeeded(isValidated());
     }//GEN-LAST:event_btnIScaleResetActionPerformed
 
@@ -1326,6 +1327,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         // enable button print
         btnReprint.setEnabled(true);
         grbBridge.clearSelection();
+        btnOScaleReset.setEnabled(false);
         setSaveNeeded(isValidated());
     }//GEN-LAST:event_btnOScaleResetActionPerformed
 
@@ -2479,6 +2481,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 txtCharg.setEnabled(false);
                 txtVendorLoading.setEnabled(false);
                 txtVendorTransport.setEnabled(false);
+                txtRemark.setEnabled(isStage1() || isStage2());
             }
 
             return null;  // return your result
@@ -2535,7 +2538,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         btnPostAgain.setEnabled(false);
         btnReprint.setEnabled(false);
         btnSave.setEnabled(false);
-        txtRemark.setEnabled(true);
         if (ModeEnum.IN_PO_PURCHASE.name().equals(mode)) {
             lblWeightTicketIdRef.setVisible(false);
             lblSling.setVisible(false);
@@ -3676,6 +3678,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         txfGoodsQty.setValue(null);
                         txtOutTime.setText(null);
                         weightTicket.setGQty(null);
+                        btnOScaleReset.setEnabled(false);
                         return null;
                     }
                 } else {
@@ -3687,6 +3690,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         txtOutTime.setText(null);
                         txfGoodsQty.setValue(null);
                         weightTicket.setGQty(null);
+                        btnOScaleReset.setEnabled(false);
                         return null;
                     }
                 }
@@ -3697,6 +3701,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     txfGoodsQty.setValue(null);
                     txtOutTime.setText(null);
                     weightTicket.setGQty(null);
+                    btnOScaleReset.setEnabled(false);
                     return null;
                 } else if (configuration.getWeightLimit() > 0
                         && result > configuration.getWeightLimit()) {
@@ -3705,6 +3710,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     txfGoodsQty.setValue(null);
                     txtOutTime.setText(null);
                     weightTicket.setGQty(null);
+                    btnOScaleReset.setEnabled(false);
                     return null;
                 }
                 //  Conver result from KG unit to TON unit
@@ -3723,7 +3729,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         txfGoodsQty.setValue(null);
                         weightTicket.setGQty(null);
                         btnAccept.setEnabled(false);
-                        btnOScaleReset.setEnabled(true);
+                        btnOScaleReset.setEnabled(false);
                         return null;
                     }
                 }
@@ -3780,7 +3786,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                             txfGoodsQty.setValue(null);
                             weightTicket.setGQty(null);
                             btnAccept.setEnabled(false);
-                            btnOScaleReset.setEnabled(true);
+                            btnOScaleReset.setEnabled(false);
                             return null;
                         }
                     } else if (weightTicket.getMode().equals("OUT_SELL_ROAD")
@@ -3797,7 +3803,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                             txfGoodsQty.setValue(null);
                             weightTicket.setGQty(null);
                             btnAccept.setEnabled(false);
-                            btnOScaleReset.setEnabled(true);
+                            btnOScaleReset.setEnabled(false);
                             return null;
                         }
                     } else {
@@ -3816,9 +3822,25 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         txfGoodsQty.setValue(null);
                         txtOutTime.setText(null);
                         weightTicket.setGQty(null);
-                        btnOScaleReset.setEnabled(true);
+                        btnOScaleReset.setEnabled(false);
                     }
                 } else {
+                    if (weightTicket.getMode().equals("OUT_SELL_ROAD")
+                            || weightTicket.getMode().equals("OUT_SELL_WATERWAY")) {
+                        double upper = weightTicket.getWeightTicketDetail().getRegItemQuantity().doubleValue();
+                        if ((result > upper)) {
+                            String msg = "Chênh lệch vượt dung sai cho phép!";
+                            JOptionPane.showMessageDialog(rootPane, msg);
+                            txfOutQty.setValue(null);
+                            txtOutTime.setText(null);
+                            txfGoodsQty.setValue(null);
+                            weightTicket.setGQty(null);
+                            btnAccept.setEnabled(false);
+                            btnOScaleReset.setEnabled(true);
+                            return null;
+                        }
+                    }
+
                     txfGoodsQty.setValue(result);
                     weightTicket.setGQty(new BigDecimal(Double.toString(result)).setScale(3, RoundingMode.HALF_UP));
                 }

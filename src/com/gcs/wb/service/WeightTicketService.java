@@ -997,7 +997,8 @@ public class WeightTicketService {
             boolean isOffline = WeighBridgeApp.getApplication().isOfflineMode();
             Map<String, Object> map = new HashMap<>();
             Long bags = null;
-            if ((outbDel_list == null || outbDel_list.isEmpty()) && (isOffline || (txtPONo != null || !"".equals(txtPONo)))) {
+            if ((outbDel_list == null || outbDel_list.isEmpty() || wt.getMode().equals("OUT_PLANT_PLANT") || wt.getMode().equals("OUT_PULL_STATION"))
+                    && (isOffline || (txtPONo != null || !"".equals(txtPONo)))) {
                 // can posto xi mang 
                 map.put("P_MANDT", wt.getMandt());
                 map.put("P_WPlant", wt.getWplant());
@@ -1010,9 +1011,15 @@ public class WeightTicketService {
                 WeightTicketDetail weightTicketDetail = wt.getWeightTicketDetail();
                 if (!wt.isDissolved()) {
                     Double tmp = null;
+                    BigDecimal weightActual = BigDecimal.ZERO;
+                    if(wt.getMode().equals("OUT_PLANT_PLANT") && wt.getGQty() != null) {
+                        weightActual = wt.getGQty();
+                    } else {
+                        weightActual = weightTicketDetail.getRegItemQuantity();
+                    }
                     if ((StringUtil.isNotEmptyString(weightTicketDetail.getMatnrRef()))
                             && checkBagCement(weightTicketDetail.getMatnrRef())) {
-                        tmp = ((weightTicketDetail.getRegItemQuantity().doubleValue()) * 1000d) / baoWeigh;
+                        tmp = ((weightActual.doubleValue()) * 1000d) / baoWeigh;
                     }
                     
                     if (tmp != null) {
