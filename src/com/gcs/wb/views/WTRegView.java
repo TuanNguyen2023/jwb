@@ -2058,6 +2058,18 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 }
                 return false;
             }
+        } else if (modeDetail == MODE_DETAIL.IN_WAREHOUSE_TRANSFER) {
+            isPlateNoValid = wtRegisValidation.validateVehicle(plateNo, lblPlateNoN);
+            if (!isPlateNoValid) {
+                if (plateNo.isEmpty()) {
+                    JOptionPane.showMessageDialog(rootPane,
+                            resourceMapMsg.getString("msg.plzInputPlateNo", "phương tiện"));
+                } else {
+                    JOptionPane.showMessageDialog(rootPane,
+                            resourceMapMsg.getString("msg.plzCheckPlateNo", "phương tiện"));
+                }
+                return false;
+            }
         } else {
             isPlateNoValid = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
             if (!isPlateNoValid) {
@@ -2122,7 +2134,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                     return null;
                 }
             }
-            
+
             if (isEditMode) {
                 SaleOrder saleOrder = weightTicketRegistarationController.getSalesOrderSap(val[0]);
                 if (saleOrder == null) {
@@ -2133,7 +2145,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                     String traid = saleOrder.getTraid();
                     traid = StringUtil.correctPlateNo(traid).toUpperCase();
                     String plateName = "ghe";
-                    
+
                     // validate BS Ghe
                     if (StringUtil.isNotEmptyString(bsGhe) && !bsGhe.equals(traid)) {
                         mappingErrMsg.add(resourceMapMsg.getString("msg.vehicleNotMapping", plateName));
@@ -2466,6 +2478,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
     }
 
     private void prepareInWarehouseTransfer() {
+        lblPlateNoN.setText(resourceMapMsg.getString("lblVehicleNo"));
         showComponent(txtTicketIdN, lblTicketIdN, true, true);
         showComponent(txtWeightTickerRefN, lblWeightTickerRefN, true, false);
         showComponent(txtRegisterIdN, lblRegisterIdN, true, true);
@@ -2804,7 +2817,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
 
         String plateNo = txtPlateNoN.getText().trim();
-        boolean isPlateNoValid = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
+        boolean isPlateNoValid = wtRegisValidation.validateVehicle(plateNo, lblPlateNoN);
 
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
         String salan = txtSalanN.getText().trim();
@@ -3541,7 +3554,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                         canceled = true;
                         throw new Exception();
                     }
-
+                    
                     // overwrite plateNo
                     txtPlateNoN.setText(plateNoValidDO);
                 }
@@ -3740,6 +3753,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 newWeightTicket.setCreatedTime(createdTime);
                 newWeightTicket.setCreatedDate(now);
                 newWeightTicket.setOfflineMode(false);
+                newWeightTicket.setCreatedDatetime(now);
             } else {
                 newWeightTicket.setUpdatedDate(now);
                 newWeightTicket.setEdited(true);
@@ -3854,6 +3868,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                     weightTicketDetail.setCreatedTime(createdTime);
                     weightTicketDetail.setDocYear(year);
                     weightTicketDetail.setCreatedDate(now);
+                    weightTicketDetail.setCreatedDatetime(now);
                 });
             }
 
@@ -4672,7 +4687,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         @Override
         protected void succeeded(Object t) {
             isValidPOSTO = true;
-            validPOSTO = txtPONumN.getText().trim();
+            validPOSTO = txtPOSTONumN.getText().trim();
             switch (modeDetail) {
                 case OUT_SLOC_SLOC:
                     cbxVendorLoadingN.setSelectedItem(weightTicketRegistarationController.getVendor(strVendor));
