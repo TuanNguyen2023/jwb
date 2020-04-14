@@ -33,7 +33,6 @@ public class SchedulerSync implements Serializable{
     public static final int SYNC_COMPLETED = 1;
     public static final int SYNC_ERROR = 2;
     public static final int SYNC_IN_PROGRESS = 3;
-    public static final int AN_HOUR = 3600000;
     
     private static final long serialVersionUID = 1L;
     @Id
@@ -169,7 +168,7 @@ public class SchedulerSync implements Serializable{
     
     public boolean isManualSyncAllowed() {
         if (lastManualSync != null) {
-            if (System.currentTimeMillis() - lastManualSync.getTime() < AN_HOUR && (manualSyncStatus == SYNC_COMPLETED || manualSyncStatus == SYNC_IN_PROGRESS)) {
+            if (manualSyncStatus == SYNC_IN_PROGRESS) {
                 return false;
             } else {
                 return true;

@@ -679,7 +679,7 @@ public class WeighBridgeView extends FrameView {
                 if (schedulerSync != null) {
                     allowToSync = schedulerSync.isManualSyncAllowed();
                     if (!allowToSync) {
-                        logger.info("The master data just synced completely manually less than an hour.");
+                        logger.info("The master data is syncing in another progress.");
                         JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.manualSyncDenied"));
                         return null;
                     }
