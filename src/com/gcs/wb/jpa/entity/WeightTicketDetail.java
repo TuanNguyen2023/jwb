@@ -97,6 +97,8 @@ public class WeightTicketDetail implements Serializable {
     private String ivMaterialDocument;
     @Column(name = "IvMatDocumentYear")
     private String ivMatDocumentYear;
+    @Column(name = "created_datetime")
+    private Date createdDatetime;
 
     @ManyToOne
     @JoinColumn(name = "weight_ticket_id")
@@ -353,6 +355,14 @@ public class WeightTicketDetail implements Serializable {
 
     public void setIvMatDocumentYear(String ivMatDocumentYear) {
         this.ivMatDocumentYear = ivMatDocumentYear;
+    }
+
+    public Date getCreatedDatetime() {
+        return createdDatetime;
+    }
+
+    public void setCreatedDatetime(Date createdDatetime) {
+        this.createdDatetime = createdDatetime;
     }
 
     @Override
