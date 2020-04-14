@@ -10,6 +10,9 @@ import com.gcs.wb.base.constant.Constants.WeighingProcess.MODE;
 import com.gcs.wb.base.constant.Constants.WeighingProcess.MODE_DETAIL;
 import com.gcs.wb.base.enums.ModeEnum;
 import com.gcs.wb.base.enums.StatusEnum;
+import com.gcs.wb.base.comboboxfilter.ComboBoxFilterDecorator;
+import com.gcs.wb.base.comboboxfilter.CustomComboRenderer;
+import com.gcs.wb.base.comboboxfilter.HtmlHighlighter;
 import com.gcs.wb.base.util.ExceptionUtil;
 import com.gcs.wb.base.util.StringUtil;
 import com.gcs.wb.base.validator.DateFromToValidator;
@@ -17,6 +20,7 @@ import com.gcs.wb.controller.WeightTicketRegistarationController;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.*;
 import com.gcs.wb.model.WeighingMode;
+import static com.gcs.wb.views.WTRegView.getCustomerDisplayText;
 import com.gcs.wb.views.validations.WeightTicketRegistrationValidation;
 import org.apache.log4j.Logger;
 import org.jdesktop.application.Action;
@@ -31,16 +35,19 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
+import java.util.regex.Pattern;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import org.apache.commons.lang.SerializationUtils;
 import org.jdesktop.application.Application;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 public class WTRegOfflineView extends javax.swing.JInternalFrame {
 
@@ -256,37 +263,39 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
         };
         cbxVendorLoadingN.setRenderer(cellRendererVendor);
         cbxVendorTransportN.setRenderer(cellRendererVendor);
-
-        cbxCustomerN.setRenderer(new DefaultListCellRenderer() {
-
-            @Override
-            public Component getListCellRendererComponent(
-                    JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if (value instanceof Customer) {
-                    Customer customer = (Customer) value;
-                    String name = customer.getName2();
-                    if (!StringUtil.isEmptyString(customer.getName3())) {
-                        name += " " + customer.getName3();
-                    }
-                    if (!StringUtil.isEmptyString(customer.getName4())) {
-                        name += " " + customer.getName4();
-                    }
-                    setText(name);
-                    setToolTipText(customer.getKunnr());
-                }
-
-                if (value instanceof Vendor) {
-                    Vendor vendor = (Vendor) value;
-                    setText(vendor.getName1() + " " + vendor.getName2());
-                    setToolTipText(vendor.getLifnr());
-                }
-
-                return this;
-            }
-        });
+        ComboBoxFilterDecorator<Object> decorate = ComboBoxFilterDecorator.decorate(cbxCustomerN,
+                WTRegOfflineView::getCustomerDisplayText,
+                WTRegOfflineView::customerFilter);
+        cbxCustomerN.setRenderer(new CustomComboRenderer(decorate.getFilterTextSupplier()));
+    }
+    private static boolean customerFilter(Customer customer, String textToFilter) {
+        if (textToFilter.isEmpty()) {
+            return true;
+        }
+        String customerDisplayText = getCustomerDisplayText(customer).toLowerCase();
+        customerDisplayText = HtmlHighlighter.removeAccent(customerDisplayText);
+        return customerDisplayText.contains(textToFilter.toLowerCase());
     }
 
+    public static String getCustomerDisplayText(Object value) {
+        String name = "";
+        if (value instanceof Customer) {
+            Customer customer = (Customer) value;
+            name = customer.getName2();
+            if (!StringUtil.isEmptyString(customer.getName3())) {
+                name += " " + customer.getName3();
+            }
+            if (!StringUtil.isEmptyString(customer.getName4())) {
+                name += " " + customer.getName4();
+            }
+        }
+
+        if (value instanceof Vendor) {
+            Vendor vendor = (Vendor) value;
+            name = vendor.getName1() + " " + vendor.getName2();
+        }
+        return name;
+    }
     private void initComboboxModel() {
         cbxCustomerN.setModel(customerModel);
         cbxCustomerN.setSelectedIndex(-1);

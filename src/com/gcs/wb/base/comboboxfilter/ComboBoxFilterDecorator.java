@@ -1,4 +1,4 @@
-package com.gcs.wb.base.util;
+package com.gcs.wb.base.comboboxfilter;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
@@ -66,25 +66,24 @@ public class ComboBoxFilterDecorator<T> {
             }
         });
 
-        JLabel filterLabel = filterEditor.getFilterLabel();
-        filterLabel.addFocusListener(new FocusListener() {
+        JTextField filterText = filterEditor.getFilterText();
+        filterText.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                filterLabel.setBorder(BorderFactory.createLoweredBevelBorder());
             }
 
             @Override
             public void focusLost(FocusEvent e) {
-                filterLabel.setBorder(UIManager.getBorder("TextField.border"));
                 resetFilterComponent();
             }
         });
+        
         comboBox.setEditor(filterEditor);
         comboBox.setEditable(true);
     }
 
     private void initComboKeyListener() {
-        filterEditor.getFilterLabel().addKeyListener(
+        filterEditor.getFilterText().addKeyListener(
                 new KeyAdapter() {
                     @Override
                     public void keyPressed(KeyEvent e) {
@@ -126,7 +125,7 @@ public class ComboBoxFilterDecorator<T> {
     public Supplier<String> getFilterTextSupplier() {
         return () -> {
             if (filterEditor.isEditing()) {
-                return filterEditor.getFilterLabel().getText();
+                return filterEditor.getFilterText().getText();
             }
             return "";
         };
@@ -169,7 +168,7 @@ public class ComboBoxFilterDecorator<T> {
         java.util.List<T> filteredItems = new ArrayList<>();
         //add matched items at top
         for (T item : originalItems) {
-            if (userFilter.test(item, filterEditor.getFilterLabel().getText())) {
+            if (userFilter.test(item, filterEditor.getFilterText().getText())) {
                 model.addElement(item);
             } else {
                 filteredItems.add(item);
@@ -177,10 +176,11 @@ public class ComboBoxFilterDecorator<T> {
         }
 
         //red color when no match
-        filterEditor.getFilterLabel()
+        filterEditor.getFilterText()
                     .setForeground(model.getSize() == 0 ?
                             Color.red : UIManager.getColor("Label.foreground"));
         //add unmatched items
         filteredItems.forEach(model::addElement);
     }
+    
 }

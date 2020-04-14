@@ -1,4 +1,4 @@
-package com.gcs.wb.base.util;
+package com.gcs.wb.base.comboboxfilter;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicComboBoxEditor;
@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class FilterEditor<T> extends BasicComboBoxEditor {
-    private JLabel filterLabel = new JLabel();
+    private JTextField filterText = new JTextField(50);
     private String text = "";
     boolean editing;
     private Function<T, String> displayTextFunction;
@@ -39,14 +39,14 @@ public class FilterEditor<T> extends BasicComboBoxEditor {
 
     private void enableEditingMode() {
         editing = true;
-        filterLabel.setFont(filterLabel.getFont().deriveFont(Font.PLAIN));
+        filterText.setFont(filterText.getFont().deriveFont(Font.PLAIN));
         editingChangeListener.accept(true);
     }
 
     public void reset() {
         if (editing) {
-            filterLabel.setFont(UIManager.getFont("ComboBox.font"));
-            filterLabel.setForeground(UIManager.getColor("Label.foreground"));
+            filterText.setFont(UIManager.getFont("ComboBox.font"));
+            filterText.setForeground(UIManager.getColor("Label.foreground"));
             text = "";
             editing = false;
             editingChangeListener.accept(false);
@@ -55,20 +55,20 @@ public class FilterEditor<T> extends BasicComboBoxEditor {
 
     @Override
     public Component getEditorComponent() {
-        return filterLabel;
+        return filterText;
     }
 
-    public JLabel getFilterLabel() {
-        return filterLabel;
+    public JTextField getFilterText() {
+        return filterText;
     }
 
     @Override
     public void setItem(Object anObject) {
         if (editing) {
-            filterLabel.setText(text);
+            filterText.setText(text);
         } else {
             T t = (T) anObject;
-            filterLabel.setText(displayTextFunction.apply(t));
+            filterText.setText(displayTextFunction.apply(t));
         }
         this.selected = anObject;
     }

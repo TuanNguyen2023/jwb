@@ -12,8 +12,9 @@ import com.gcs.wb.base.constant.Constants.WeighingProcess.MODE;
 import com.gcs.wb.base.constant.Constants.WeighingProcess.MODE_DETAIL;
 import com.gcs.wb.base.enums.ModeEnum;
 import com.gcs.wb.base.enums.StatusEnum;
-import com.gcs.wb.base.util.ComboBoxFilterDecorator;
-import com.gcs.wb.base.util.CustomComboRenderer;
+import com.gcs.wb.base.comboboxfilter.ComboBoxFilterDecorator;
+import com.gcs.wb.base.comboboxfilter.CustomComboRenderer;
+import com.gcs.wb.base.comboboxfilter.HtmlHighlighter;
 import com.gcs.wb.base.util.ExceptionUtil;
 import com.gcs.wb.base.util.StringUtil;
 import com.gcs.wb.base.validator.DateFromToValidator;
@@ -318,10 +319,11 @@ public class WTRegView extends javax.swing.JInternalFrame {
         if (textToFilter.isEmpty()) {
             return true;
         }
-        return getCustomerDisplayText(customer).toLowerCase()
-                .contains(textToFilter.toLowerCase());
+        String customerDisplayText = getCustomerDisplayText(customer).toLowerCase();
+        customerDisplayText = HtmlHighlighter.removeAccent(customerDisplayText);
+        return customerDisplayText.contains(textToFilter.toLowerCase());
     }
-    
+
     public static String getCustomerDisplayText(Object value) {
         String name = "";
         if (value instanceof Customer) {
