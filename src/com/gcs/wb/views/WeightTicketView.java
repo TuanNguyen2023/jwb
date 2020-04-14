@@ -1357,26 +1357,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         setSaveNeeded(isValidated());
     }//GEN-LAST:event_btnAcceptActionPerformed
 
-    private boolean isValidPO(String poNum) {
-        try {
-            PurchaseOrder sapPurOrder = sapService.getPurchaseOrder(poNum);
-            return sapPurOrder != null;
-        } catch (Exception ex) {
-            logger.error(ex);
-            return false;
-        }
-    }
-
-    private boolean isValidDO(String doNum) {
-        try {
-            OutboundDelivery sapOutboundDelivery = sapService.getOutboundDelivery(doNum);
-            return sapOutboundDelivery != null;
-        } catch (Exception ex) {
-            logger.error(ex);
-            return false;
-        }
-    }
-
     private void txtOutTimeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtOutTimeKeyReleased
         // TODO add your handling code here:
         if (txtOutTime.getText().length() == 19) {
@@ -1539,6 +1519,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         WeighBridgeApp.getApplication().setMax(BigInteger.ZERO);
         outbDel_list.clear();
         outDetails_lits.clear();
+        outbDel = null;
         entityManager.clear();
         btnIScaleReset.setEnabled(false);
         btnOScaleReset.setEnabled(false);
@@ -2327,7 +2308,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 }
 
                 // START init for offline
-                if (weightTicket.getOfflineMode()) {
+                if (weightTicket.getOfflineMode() && !weightTicket.isEdited()) {
                     WeightTicketDetail ticketDetail = weightTicket.getWeightTicketDetail();
 
                     if (ticketDetail != null) {
@@ -2452,7 +2433,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
                 }
 
-                if (isDissolved() || (!isStage1() && isStage2()) || (!isStage1() && !isStage2() && weightTicket.isPosted())) {
+                if (isDissolved() || (!isStage1() && isStage2()) || (!isStage1() && !isStage2() && (weightTicket.isPosted() || weightTicket.getOfflineMode()))) {
                     setReprintable(true);
                 }
                 // <editor-fold defaultstate="collapsed" desc="bind batch">
@@ -2517,9 +2498,11 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         @Override
         protected void finished() {
             if (weightTicket != null) {
+                String roles = WeighBridgeApp.getApplication().getLogin().getRoles().toUpperCase();
                 if (!weightTicket.isPosted() && !isStage1() && !isStage2()
                         && !WeighBridgeApp.getApplication().isOfflineMode()
-                        && WeighBridgeApp.getApplication().getLogin().getRoles().toUpperCase().contains("Z_JWB_ADMIN")) {
+                        && (!weightTicket.getOfflineMode() || weightTicket.isEdited())
+                        && (roles.contains("Z_JWB_SUPERVISOR") || roles.contains("Z_JWB_ADMIN"))) {
                     btnPostAgain.setEnabled(true);
                 } else {
                     btnPostAgain.setEnabled(false);
@@ -2921,12 +2904,13 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             entityManager.merge(weightTicket);
             OutboundDelivery outbDel = null;
             List<String> completedDO = new ArrayList<>();
-            String modeFlg = null;
             boolean flgGqty = false;
+            
+            boolean offlineMode = WeighBridgeApp.getApplication().isOfflineMode();
 
-            if (((isStage1()) && checkPlant) || ((isStage2() || (!isStage1() && !isStage2())) && !weightTicket.isDissolved())
+            if (!offlineMode && (((isStage1()) && checkPlant) || ((isStage2() || (!isStage1() && !isStage2())) && !weightTicket.isDissolved())
                     || (!isStage1() && !isStage2() && !weightTicket.isDissolved()
-                    && (weightTicket != null && !weightTicket.isPosted()))) {
+                    && (weightTicket != null && !weightTicket.isPosted())))) {
 
                 // <editor-fold defaultstate="collapsed" desc="Input PO">
                 if (weightTicket.getWeightTicketDetail().getEbeln() != null) {
@@ -2966,7 +2950,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         }
                     }
 
-                    if (!WeighBridgeApp.getApplication().isOfflineMode()) {
+                    if (!offlineMode) {
                         if (objBapi != null) {
                             try {
                                 if (!weightTicket.getMode().equals("OUT_SLOC_SLOC")) {
@@ -3135,7 +3119,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                 completed = false;
                                 entityManager.clear();
                             }
-                        } else if (WeighBridgeApp.getApplication().isOfflineMode()) {
+                        } else if (offlineMode) {
                             weightTicketDetail.setPosted(false);
                             weightTicket.setPosted(false);
                             weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
@@ -3190,22 +3174,19 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         if (outbDel != null && (outbDel.getLfart().equalsIgnoreCase("LR")
                                 || outbDel.getLfart().equalsIgnoreCase("ZRET")
                                 || outbDel.getLfart().equalsIgnoreCase("ZVND"))) {
-                            modeFlg = "Z001";
-                            objBapi = getPgmVl02nBapi(weightTicket, outbDel, modeFlg, ivWbidNosave, sumQtyReg);
+                            objBapi = getPgmVl02nBapi(weightTicket, outbDel, ivWbidNosave, sumQtyReg);
                         } else {
                             objBapi = getGrDoMigoBapi(weightTicket, outbDel);
                         }
                     } else if ((!weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER")) && (flgGqty)) {
                         // xuat DO
                         if (weightTicket.getMode().equals("OUT_SELL_ROAD")) {
-                            modeFlg = "Z001";
-                            objBapi = getPgmVl02nBapi(weightTicket, outbDel, modeFlg, ivWbidNosave, sumQtyReg);
+                            objBapi = getPgmVl02nBapi(weightTicket, outbDel, ivWbidNosave, sumQtyReg);
                         }
 
                         // ban hang thuy
                         if (weightTicket.getMode().equals("OUT_SELL_WATERWAY")) {
-                            modeFlg = "Z002";
-                            objBapi = getPgmVl02nBapi(weightTicket, outbDel, modeFlg, ivWbidNosave, sumQtyReg);
+                            objBapi = getPgmVl02nBapi(weightTicket, outbDel, ivWbidNosave, sumQtyReg);
                         }
                     } else {
                         JOptionPane.showMessageDialog(rootPane, "Chênh lệnh vượt dung sai cho phép!");
@@ -3215,7 +3196,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 //                        entityManager.clear();
                     }
 
-                    if (!WeighBridgeApp.getApplication().isOfflineMode()) {
+                    if (!offlineMode) {
                         if (objBapi != null) {
                             try {
                                 logger.info("[SAP] Get infor before post SAP: " + objBapi.toString());
@@ -3496,7 +3477,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                 entityManager.clear();
                             }
                         }
-                    } else if (WeighBridgeApp.getApplication().isOfflineMode()) {
+                    } else if (offlineMode) {
                         weightTicket.setPosted(false);
                         weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
                     } else {
@@ -3530,7 +3511,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
             }
 
-            if (WeighBridgeApp.getApplication().isOfflineMode()
+            if (offlineMode
                     || weightTicket.getMode().equals("IN_OTHER")
                     || weightTicket.getMode().equals("OUT_OTHER")) {
                 if (isStage2()) {
@@ -3748,7 +3729,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     qty = total_qty_goods.doubleValue() + total_qty_free.doubleValue();
                 }
 
-                if (outbDel != null) {
+                if (outbDel != null && !weightTicket.getOfflineMode()) {
                     String param = (outbDel != null && outbDel.getMatnr() != null) ? outbDel.getMatnr().toString() : "";
 
                     if (param.equals("") && purOrder != null) {
@@ -3827,8 +3808,39 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 } else {
                     if (weightTicket.getMode().equals("OUT_SELL_ROAD")
                             || weightTicket.getMode().equals("OUT_SELL_WATERWAY")) {
-                        double upper = weightTicket.getWeightTicketDetail().getRegItemQuantity().doubleValue();
-                        if ((result > upper)) {
+                        double reqQty = weightTicket.getWeightTicketDetail().getRegItemQuantity().doubleValue();
+                        // check variant
+                        String param = weightTicket.getWeightTicketDetail().getMatnrRef();
+                        Variant vari = weightTicketController.findByParamMandtWplant(param, configuration.getSapClient(), configuration.getWkPlant());
+                        double valueUp = 0;
+                        double valueDown = 0;
+
+                        if (vari != null) {
+                            if (vari.getValueUp() != null && !vari.getValueUp().isEmpty()) {
+                                valueUp = Double.parseDouble(vari.getValueUp());
+                            }
+                            if (vari.getValueDown() != null && !vari.getValueDown().isEmpty()) {
+                                valueDown = Double.parseDouble(vari.getValueDown());
+                            }
+                            double upper = reqQty + (reqQty * valueUp) / 100;
+                            double lower = reqQty - (reqQty * valueDown) / 100;
+
+                            if ((lower <= result && result <= upper)) {
+                                txfGoodsQty.setValue(result);
+                                weightTicket.setGQty(new BigDecimal(Double.toString(result)).setScale(3, RoundingMode.HALF_UP));
+                                checkVariant = true;
+                            } else {
+                                String msg = "Chênh lệch vượt dung sai cho phép!";
+                                JOptionPane.showMessageDialog(rootPane, msg);
+                                txfOutQty.setValue(null);
+                                txtOutTime.setText(null);
+                                txfGoodsQty.setValue(null);
+                                weightTicket.setGQty(null);
+                                btnAccept.setEnabled(false);
+                                btnOScaleReset.setEnabled(false);
+                                return null;
+                            }
+                        } else if ((result > reqQty)) {
                             String msg = "Chênh lệch vượt dung sai cho phép!";
                             JOptionPane.showMessageDialog(rootPane, msg);
                             txfOutQty.setValue(null);
@@ -4111,8 +4123,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         return weightTicketController.getDOPostingPGI(wt, outbDel, weightTicket, timeFrom, timeTo, outDetails_lits, deliveryNum);
     }
 
-    private Object getPgmVl02nBapi(WeightTicket wt, OutboundDelivery outbDel, String modeFlg, String ivWbidNosave, BigDecimal sumQtyReg) {
-        return weightTicketController.getPgmVl02nBapi(wt, outbDel, weightTicket, modeFlg, timeFrom, timeTo, outDetails_lits, ivWbidNosave, sumQtyReg);
+    private Object getPgmVl02nBapi(WeightTicket wt, OutboundDelivery outbDel, String ivWbidNosave, BigDecimal sumQtyReg) {
+        return weightTicketController.getPgmVl02nBapi(wt, outbDel, weightTicket, timeFrom, timeTo, outDetails_lits, ivWbidNosave, sumQtyReg);
     }
 
     private Object getMvtPOSTOCreatePGI(WeightTicket wt, String number, boolean flgPost) {
@@ -4391,33 +4403,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
         @Override
         protected Object doInBackground() throws Exception {
-            setStep(0, resourceMapMsg.getString("msg.checkDataBeforePostAgain"));
-
-            boolean checkValidData = true;
-
-            if (weightTicket.getOfflineMode()) {
-                String poNum = weightTicket.getWeightTicketDetail().getEbeln();
-                if (StringUtil.isNotEmptyString(poNum)) {
-                    checkValidData = isValidPO(poNum);
-                }
-
-                String doNum = weightTicket.getWeightTicketDetail().getDeliveryOrderNo();
-                if (StringUtil.isNotEmptyString(doNum)) {
-                    checkValidData = isValidDO(doNum);
-                }
-
-                String soNum = weightTicket.getWeightTicketDetail().getSoNumber();
-                if (StringUtil.isEmptyString(doNum) && StringUtil.isNotEmptyString(soNum)) {
-                    checkValidData = false;
-                }
-            }
-
-            if (checkValidData) {
-                setStep(1, resourceMapMsg.getString("msg.prePostAgain"));
-                weightTicketController.savePostAgainActionPerformed(weightTicket);
-            } else {
-                throw new Exception(resourceMapMsg.getString("msg.invalidDataToPostSAP"));
-            }
+            setStep(1, resourceMapMsg.getString("msg.prePostAgain"));
+            weightTicketController.savePostAgainActionPerformed(weightTicket);
 
             return null;  // return your result
         }

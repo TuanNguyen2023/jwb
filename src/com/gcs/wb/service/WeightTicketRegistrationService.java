@@ -260,4 +260,8 @@ public class WeightTicketRegistrationService {
 
         return sLocs;
     }
+
+    public List<SaleOrder> getListSalesOrder() {
+        return sAPService.getListSalesOrder();
+    }
 }

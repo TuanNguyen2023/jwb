@@ -2072,6 +2072,7 @@ private void txtWeightNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
     }
 
     private void prepareInWarehouseTransfer() {
+        lblPlateNoN.setText(resourceMapMsg.getString("lblVehicleNo"));
         showComponent(txtTicketIdN, lblTicketIdN, true, true);
         showComponent(txtWeightTickerRefN, lblWeightTickerRefN, true, true);
         showComponent(txtRegisterIdN, lblRegisterIdN, true, true);
@@ -2382,7 +2383,7 @@ private void txtWeightNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
         boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
 
         String plateNo = txtPlateNoN.getText().trim();
-        boolean isPlateNoValid = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
+        boolean isPlateNoValid = wtRegisValidation.validateVehicle(plateNo, lblPlateNoN);
 
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
         String salan = txtSalanN.getText().trim();
@@ -2528,10 +2529,9 @@ private void txtWeightNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
         boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN) && isValidSloc;
         boolean isSloc2Valid = wtRegisValidation.validateCbxSelected(cbxSloc2N.getSelectedIndex(), lblSloc2N) && isValidSloc;
-        boolean isCustomerValid = wtRegisValidation.validateCbxSelected(cbxCustomerN.getSelectedIndex(), lblCustomerN);
         boolean isWeightValid = wtRegisValidation.validateWeighField(txtWeightN.getText(), lblWeightN, 1, 10, 0.001d);
 
-        return isTicketIdValid && isRegisterIdValid && isDriverNameValid && isCustomerValid
+        return isTicketIdValid && isRegisterIdValid && isDriverNameValid
                 && isCMNDBLValid && isSalanValid && isPOValid && isPOSTOValid && isWeightValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isSlocValid && isSloc2Valid && isMaterialTypeValid;
@@ -2950,6 +2950,7 @@ private void txtWeightNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
             newWeightTicket.setSeqMonth(seqBMonth);
             newWeightTicket.setCreatedTime(createdTime);
             newWeightTicket.setCreatedDate(now);
+            newWeightTicket.setCreatedDatetime(now);
 
             newWeightTicket.setCreator(WeighBridgeApp.getApplication().getLogin().getUid());
             newWeightTicket.setOfflineMode(WeighBridgeApp.getApplication().isOfflineMode());
@@ -3005,6 +3006,7 @@ private void txtWeightNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
                     weightTicketDetail.setCreatedTime(createdTime);
                     weightTicketDetail.setDocYear(year);
                     weightTicketDetail.setCreatedDate(now);
+                    weightTicketDetail.setCreatedDatetime(now);
                 });
             }
 
