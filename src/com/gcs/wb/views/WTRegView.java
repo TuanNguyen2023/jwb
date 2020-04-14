@@ -12,6 +12,8 @@ import com.gcs.wb.base.constant.Constants.WeighingProcess.MODE;
 import com.gcs.wb.base.constant.Constants.WeighingProcess.MODE_DETAIL;
 import com.gcs.wb.base.enums.ModeEnum;
 import com.gcs.wb.base.enums.StatusEnum;
+import com.gcs.wb.base.util.ComboBoxFilterDecorator;
+import com.gcs.wb.base.util.CustomComboRenderer;
 import com.gcs.wb.base.util.ExceptionUtil;
 import com.gcs.wb.base.util.StringUtil;
 import com.gcs.wb.base.validator.DateFromToValidator;
@@ -53,6 +55,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.apache.commons.lang.SerializationUtils;
 import org.jdesktop.application.Application;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 public class WTRegView extends javax.swing.JInternalFrame {
 
@@ -305,34 +308,38 @@ public class WTRegView extends javax.swing.JInternalFrame {
         cbxVendorLoadingN.setRenderer(cellRendererVendor);
         cbxVendorTransportN.setRenderer(cellRendererVendor);
 
-        cbxCustomerN.setRenderer(new DefaultListCellRenderer() {
-
-            @Override
-            public Component getListCellRendererComponent(
-                    JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if (value instanceof Customer) {
-                    Customer customer = (Customer) value;
-                    String name = customer.getName2();
-                    if (!StringUtil.isEmptyString(customer.getName3())) {
-                        name += " " + customer.getName3();
-                    }
-                    if (!StringUtil.isEmptyString(customer.getName4())) {
-                        name += " " + customer.getName4();
-                    }
-                    setText(name);
-                    setToolTipText(customer.getKunnr());
-                }
-
-                if (value instanceof Vendor) {
-                    Vendor vendor = (Vendor) value;
-                    setText(vendor.getName1() + " " + vendor.getName2());
-                    setToolTipText(vendor.getLifnr());
-                }
-
-                return this;
+        ComboBoxFilterDecorator<Object> decorate = ComboBoxFilterDecorator.decorate(cbxCustomerN,
+                WTRegView::getCustomerDisplayText,
+                WTRegView::customerFilter);
+        cbxCustomerN.setRenderer(new CustomComboRenderer(decorate.getFilterTextSupplier()));
+    }
+    
+    private static boolean customerFilter(Customer customer, String textToFilter) {
+        if (textToFilter.isEmpty()) {
+            return true;
+        }
+        return getCustomerDisplayText(customer).toLowerCase()
+                .contains(textToFilter.toLowerCase());
+    }
+    
+    public static String getCustomerDisplayText(Object value) {
+        String name = "";
+        if (value instanceof Customer) {
+            Customer customer = (Customer) value;
+            name = customer.getName2();
+            if (!StringUtil.isEmptyString(customer.getName3())) {
+                name += " " + customer.getName3();
             }
-        });
+            if (!StringUtil.isEmptyString(customer.getName4())) {
+                name += " " + customer.getName4();
+            }
+        }
+
+        if (value instanceof Vendor) {
+            Vendor vendor = (Vendor) value;
+            name = vendor.getName1() + " " + vendor.getName2();
+        }
+        return name;
     }
 
     private void initComboboxModel() {
