@@ -3678,6 +3678,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 newWeightTicket.setSeqMonth(seqBMonth);
                 newWeightTicket.setCreatedTime(createdTime);
                 newWeightTicket.setCreatedDate(now);
+                newWeightTicket.setCreatedDatetime(now);
             } else {
                 newWeightTicket.setUpdatedDate(now);
             }
@@ -3772,6 +3773,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                     weightTicketDetail.setCreatedTime(createdTime);
                     weightTicketDetail.setDocYear(year);
                     weightTicketDetail.setCreatedDate(now);
+                    weightTicketDetail.setCreatedDatetime(now);
                 });
             }
 
