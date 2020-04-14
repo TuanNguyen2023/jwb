@@ -337,4 +337,9 @@ public class Constants {
     public static final class SapSetting {
         public static final String HEADER_RPT = "CÔNG TY CỔ PHẦN XI MĂNG FICO TÂY NINH";
     }
+    
+    public static final class PlateFormat {
+        public static final String PLATE_XE = "Z002";
+        public static final String PLATE_GHE = "Z001";
+    }
 }

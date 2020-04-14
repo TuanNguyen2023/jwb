@@ -2949,6 +2949,7 @@ private void txtWeightNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
             newWeightTicket.setSeqMonth(seqBMonth);
             newWeightTicket.setCreatedTime(createdTime);
             newWeightTicket.setCreatedDate(now);
+            newWeightTicket.setCreatedDatetime(now);
 
             newWeightTicket.setCreator(WeighBridgeApp.getApplication().getLogin().getUid());
             newWeightTicket.setOfflineMode(WeighBridgeApp.getApplication().isOfflineMode());
@@ -3004,6 +3005,7 @@ private void txtWeightNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
                     weightTicketDetail.setCreatedTime(createdTime);
                     weightTicketDetail.setDocYear(year);
                     weightTicketDetail.setCreatedDate(now);
+                    weightTicketDetail.setCreatedDatetime(now);
                 });
             }
 

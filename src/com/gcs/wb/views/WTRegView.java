@@ -3687,6 +3687,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 newWeightTicket.setCreatedTime(createdTime);
                 newWeightTicket.setCreatedDate(now);
                 newWeightTicket.setOfflineMode(false);
+                newWeightTicket.setCreatedDatetime(now);
             } else {
                 newWeightTicket.setUpdatedDate(now);
                 newWeightTicket.setEdited(true);
@@ -3801,6 +3802,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                     weightTicketDetail.setCreatedTime(createdTime);
                     weightTicketDetail.setDocYear(year);
                     weightTicketDetail.setCreatedDate(now);
+                    weightTicketDetail.setCreatedDatetime(now);
                 });
             }
 
@@ -4619,7 +4621,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         @Override
         protected void succeeded(Object t) {
             isValidPOSTO = true;
-            validPOSTO = txtPONumN.getText().trim();
+            validPOSTO = txtPOSTONumN.getText().trim();
             switch (modeDetail) {
                 case OUT_SLOC_SLOC:
                     cbxVendorLoadingN.setSelectedItem(weightTicketRegistarationController.getVendor(strVendor));
