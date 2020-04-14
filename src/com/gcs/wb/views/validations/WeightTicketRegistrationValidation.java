@@ -59,6 +59,19 @@ public class WeightTicketRegistrationValidation {
         return result;
     }
 
+    public boolean validateVehicle(String value, JComponent label) {
+        value = value.trim();
+
+        Matcher matcherXe = Constants.TransportAgent.LICENSE_PLATE_PATTERN.matcher(value);
+        Matcher matcherGhe = Constants.TransportAgent.LICENSE_PLATE_WATER_PATTERN.matcher(value);
+
+        boolean result = matcherXe.matches() || matcherGhe.matches();
+
+        label.setForeground(result ? Color.black : Color.red);
+
+        return result;
+    }
+
     public boolean validatePlateNoWater(String value, JComponent label) {
         value = value.trim();
 
