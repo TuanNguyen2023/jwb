@@ -125,6 +125,10 @@ public class WTRegView extends javax.swing.JInternalFrame {
         pnShowFilter.setVisible(false);
         btnReprint.setEnabled(false);
         btnEdit.setEnabled(false);
+        String roles = WeighBridgeApp.getApplication().getLogin().getRoles().toUpperCase();
+        if(!roles.contains("Z_JWB_SUPERVISOR") || !roles.contains("Z_JWB_ADMIN")) {
+            btnEdit.setVisible(false);
+        }
 
         initComboboxModel();
         initComboboxRenderer();
