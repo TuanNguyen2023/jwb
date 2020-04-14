@@ -2904,7 +2904,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             entityManager.merge(weightTicket);
             OutboundDelivery outbDel = null;
             List<String> completedDO = new ArrayList<>();
-            String modeFlg = null;
             boolean flgGqty = false;
             
             boolean offlineMode = WeighBridgeApp.getApplication().isOfflineMode();
@@ -3175,22 +3174,19 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         if (outbDel != null && (outbDel.getLfart().equalsIgnoreCase("LR")
                                 || outbDel.getLfart().equalsIgnoreCase("ZRET")
                                 || outbDel.getLfart().equalsIgnoreCase("ZVND"))) {
-                            modeFlg = "Z001";
-                            objBapi = getPgmVl02nBapi(weightTicket, outbDel, modeFlg, ivWbidNosave, sumQtyReg);
+                            objBapi = getPgmVl02nBapi(weightTicket, outbDel, ivWbidNosave, sumQtyReg);
                         } else {
                             objBapi = getGrDoMigoBapi(weightTicket, outbDel);
                         }
                     } else if ((!weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER")) && (flgGqty)) {
                         // xuat DO
                         if (weightTicket.getMode().equals("OUT_SELL_ROAD")) {
-                            modeFlg = "Z001";
-                            objBapi = getPgmVl02nBapi(weightTicket, outbDel, modeFlg, ivWbidNosave, sumQtyReg);
+                            objBapi = getPgmVl02nBapi(weightTicket, outbDel, ivWbidNosave, sumQtyReg);
                         }
 
                         // ban hang thuy
                         if (weightTicket.getMode().equals("OUT_SELL_WATERWAY")) {
-                            modeFlg = "Z002";
-                            objBapi = getPgmVl02nBapi(weightTicket, outbDel, modeFlg, ivWbidNosave, sumQtyReg);
+                            objBapi = getPgmVl02nBapi(weightTicket, outbDel, ivWbidNosave, sumQtyReg);
                         }
                     } else {
                         JOptionPane.showMessageDialog(rootPane, "Chênh lệnh vượt dung sai cho phép!");
@@ -4127,8 +4123,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         return weightTicketController.getDOPostingPGI(wt, outbDel, weightTicket, timeFrom, timeTo, outDetails_lits, deliveryNum);
     }
 
-    private Object getPgmVl02nBapi(WeightTicket wt, OutboundDelivery outbDel, String modeFlg, String ivWbidNosave, BigDecimal sumQtyReg) {
-        return weightTicketController.getPgmVl02nBapi(wt, outbDel, weightTicket, modeFlg, timeFrom, timeTo, outDetails_lits, ivWbidNosave, sumQtyReg);
+    private Object getPgmVl02nBapi(WeightTicket wt, OutboundDelivery outbDel, String ivWbidNosave, BigDecimal sumQtyReg) {
+        return weightTicketController.getPgmVl02nBapi(wt, outbDel, weightTicket, timeFrom, timeTo, outDetails_lits, ivWbidNosave, sumQtyReg);
     }
 
     private Object getMvtPOSTOCreatePGI(WeightTicket wt, String number, boolean flgPost) {
