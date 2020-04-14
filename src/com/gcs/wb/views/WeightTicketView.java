@@ -2905,10 +2905,12 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             List<String> completedDO = new ArrayList<>();
             String modeFlg = null;
             boolean flgGqty = false;
+            
+            boolean offlineMode = WeighBridgeApp.getApplication().isOfflineMode();
 
-            if (((isStage1()) && checkPlant) || ((isStage2() || (!isStage1() && !isStage2())) && !weightTicket.isDissolved())
+            if (!offlineMode && (((isStage1()) && checkPlant) || ((isStage2() || (!isStage1() && !isStage2())) && !weightTicket.isDissolved())
                     || (!isStage1() && !isStage2() && !weightTicket.isDissolved()
-                    && (weightTicket != null && !weightTicket.isPosted()))) {
+                    && (weightTicket != null && !weightTicket.isPosted())))) {
 
                 // <editor-fold defaultstate="collapsed" desc="Input PO">
                 if (weightTicket.getWeightTicketDetail().getEbeln() != null) {
@@ -2948,7 +2950,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         }
                     }
 
-                    if (!WeighBridgeApp.getApplication().isOfflineMode()) {
+                    if (!offlineMode) {
                         if (objBapi != null) {
                             try {
                                 if (!weightTicket.getMode().equals("OUT_SLOC_SLOC")) {
@@ -3117,7 +3119,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                 completed = false;
                                 entityManager.clear();
                             }
-                        } else if (WeighBridgeApp.getApplication().isOfflineMode()) {
+                        } else if (offlineMode) {
                             weightTicketDetail.setPosted(false);
                             weightTicket.setPosted(false);
                             weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
@@ -3197,7 +3199,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 //                        entityManager.clear();
                     }
 
-                    if (!WeighBridgeApp.getApplication().isOfflineMode()) {
+                    if (!offlineMode) {
                         if (objBapi != null) {
                             try {
                                 logger.info("[SAP] Get infor before post SAP: " + objBapi.toString());
@@ -3478,7 +3480,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                 entityManager.clear();
                             }
                         }
-                    } else if (WeighBridgeApp.getApplication().isOfflineMode()) {
+                    } else if (offlineMode) {
                         weightTicket.setPosted(false);
                         weightTicketDetail.setUnit(weightTicketRegistarationController.getUnit().getWeightTicketUnit());
                     } else {
@@ -3512,7 +3514,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
             }
 
-            if (WeighBridgeApp.getApplication().isOfflineMode()
+            if (offlineMode
                     || weightTicket.getMode().equals("IN_OTHER")
                     || weightTicket.getMode().equals("OUT_OTHER")) {
                 if (isStage2()) {
