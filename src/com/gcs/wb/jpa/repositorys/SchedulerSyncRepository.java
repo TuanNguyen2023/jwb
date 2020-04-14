@@ -22,11 +22,13 @@ import org.apache.log4j.Logger;
 public class SchedulerSyncRepository {
 
     private Logger logger = Logger.getLogger(this.getClass());
-
+    EntityManager entityManager = JPAConnector.getInstance();
+    EntityTransaction entityTransaction = entityManager.getTransaction();
+        
     public SchedulerSync findByParamMandtWplant(String mandt, String wplant) {
-        EntityManager entityManager = JPAConnector.getInstance();
         SchedulerSync result = null;
         try {
+            entityManager.clear();
             TypedQuery<SchedulerSync> query = entityManager.createNamedQuery("SchedulerSync.findByMandtWplant", SchedulerSync.class);
             query.setParameter("mandt", mandt);
             query.setParameter("wplant", wplant);
@@ -42,14 +44,34 @@ public class SchedulerSyncRepository {
         return result;
     }
 
-    public void updateLastSync(SchedulerSync newSchedulerSync) {
-        EntityManager entityManager = JPAConnector.getInstance();
-        EntityTransaction entityTransaction = entityManager.getTransaction();
+    public synchronized void updateLastSync(SchedulerSync newSchedulerSync) {
         try {
             if (!entityTransaction.isActive()) {
                 entityTransaction.begin();
             }
             entityManager.merge(newSchedulerSync);
+            entityTransaction.commit();
+            entityManager.clear();
+        } catch (Exception ex) {
+            throw ex;
+        }
+    }
+    
+    public synchronized void syncExitHandler(SchedulerSync ss, boolean isAuto) {
+        SchedulerSync schedulerSync;
+        entityManager = JPAConnector.getInstance();
+        entityTransaction = entityManager.getTransaction();
+        schedulerSync = findByParamMandtWplant(ss.getMandt(), ss.getWplant());
+        if (isAuto) {
+            schedulerSync.setAutoSyncStatus(schedulerSync.SYNC_ERROR);
+        } else {
+            schedulerSync.setManualSyncStatus(schedulerSync.SYNC_ERROR);
+        }
+        try {
+            if (!entityTransaction.isActive()) {
+                entityTransaction.begin();
+            }
+            entityManager.merge(schedulerSync);
             entityTransaction.commit();
             entityManager.clear();
         } catch (Exception ex) {

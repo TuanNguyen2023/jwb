@@ -693,8 +693,7 @@ public class WeighBridgeView extends FrameView {
                 Runtime.getRuntime().addShutdownHook(new Thread() {
                     @Override
                     public void run() {
-                        schedulerSync.setManualSyncStatus(SchedulerSync.SYNC_ERROR);
-                        schedulerSyncRepository.updateLastSync(schedulerSync);
+                        schedulerSyncRepository.syncExitHandler(schedulerSync, false);
                     }
                 });
                 

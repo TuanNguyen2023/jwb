@@ -29,10 +29,11 @@ import javax.persistence.Table;
     })
 public class SchedulerSync implements Serializable{
 
-    public static final int SYNC_UNKNOWN_STATUS = 0;
-    public static final int SYNC_COMPLETED = 1;
-    public static final int SYNC_ERROR = 2;
-    public static final int SYNC_IN_PROGRESS = 3;
+    public static final String SYNC_UNKNOWN_STATUS = "UNKNOWN";
+    public static final String SYNC_COMPLETED = "COMPLETED";
+    public static final String SYNC_ERROR = "ERROR";
+    public static final String SYNC_IN_PROGRESS = "INPROGRESS";
+    public static final int AN_HOUR = 3600000;
     
     private static final long serialVersionUID = 1L;
     @Id
@@ -46,11 +47,11 @@ public class SchedulerSync implements Serializable{
     @Column(name = "last_auto_sync")
     private Date lastAutoSync;
     @Column(name = "auto_sync_status")
-    private int autoSyncStatus;
+    private String autoSyncStatus;
     @Column(name = "last_manual_sync")
     private Date lastManualSync;
     @Column(name = "manual_sync_status")
-    private int manualSyncStatus;
+    private String manualSyncStatus;
             
     public SchedulerSync() {
     }
@@ -104,19 +105,19 @@ public class SchedulerSync implements Serializable{
         this.lastManualSync = lastManualSync;
     }
     
-    public int getAutoSyncStatus() {
+    public String getAutoSyncStatus() {
         return autoSyncStatus;
     }
 
-    public void setAutoSyncStatus(int autoSyncStatus) {
+    public void setAutoSyncStatus(String autoSyncStatus) {
         this.autoSyncStatus = autoSyncStatus;
     }
     
-    public int getManualSyncStatus() {
+    public String getManualSyncStatus() {
         return manualSyncStatus;
     }
 
-    public void setManualSyncStatus(int manualSyncStatus) {
+    public void setManualSyncStatus(String manualSyncStatus) {
         this.manualSyncStatus = manualSyncStatus;
     }
     
@@ -155,7 +156,7 @@ public class SchedulerSync implements Serializable{
     }
     public boolean isAutoSyncAllowed() {
         if (lastAutoSync != null) {
-            if (isSameDay(lastAutoSync, new Date()) && (autoSyncStatus == SYNC_COMPLETED || autoSyncStatus == SYNC_IN_PROGRESS)) {
+            if (isSameDay(lastAutoSync, new Date()) && (SYNC_COMPLETED.equals(autoSyncStatus) || SYNC_IN_PROGRESS.equals(autoSyncStatus))) {
                 return false;
             } else {
                 return true;
@@ -168,7 +169,8 @@ public class SchedulerSync implements Serializable{
     
     public boolean isManualSyncAllowed() {
         if (lastManualSync != null) {
-            if (manualSyncStatus == SYNC_IN_PROGRESS) {
+            long syncTime = System.currentTimeMillis() - lastManualSync.getTime();
+            if (SYNC_IN_PROGRESS.equals(manualSyncStatus) && syncTime < AN_HOUR * 2 && syncTime > 0) {
                 return false;
             } else {
                 return true;
