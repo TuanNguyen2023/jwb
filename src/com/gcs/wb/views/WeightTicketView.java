@@ -1519,6 +1519,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         WeighBridgeApp.getApplication().setMax(BigInteger.ZERO);
         outbDel_list.clear();
         outDetails_lits.clear();
+        outbDel = null;
         entityManager.clear();
         btnIScaleReset.setEnabled(false);
         btnOScaleReset.setEnabled(false);
@@ -3732,7 +3733,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     qty = total_qty_goods.doubleValue() + total_qty_free.doubleValue();
                 }
 
-                if (outbDel != null) {
+                if (outbDel != null && !weightTicket.getOfflineMode()) {
                     String param = (outbDel != null && outbDel.getMatnr() != null) ? outbDel.getMatnr().toString() : "";
 
                     if (param.equals("") && purOrder != null) {
@@ -3811,8 +3812,39 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 } else {
                     if (weightTicket.getMode().equals("OUT_SELL_ROAD")
                             || weightTicket.getMode().equals("OUT_SELL_WATERWAY")) {
-                        double upper = weightTicket.getWeightTicketDetail().getRegItemQuantity().doubleValue();
-                        if ((result > upper)) {
+                        double reqQty = weightTicket.getWeightTicketDetail().getRegItemQuantity().doubleValue();
+                        // check variant
+                        String param = weightTicket.getWeightTicketDetail().getMatnrRef();
+                        Variant vari = weightTicketController.findByParamMandtWplant(param, configuration.getSapClient(), configuration.getWkPlant());
+                        double valueUp = 0;
+                        double valueDown = 0;
+
+                        if (vari != null) {
+                            if (vari.getValueUp() != null && !vari.getValueUp().isEmpty()) {
+                                valueUp = Double.parseDouble(vari.getValueUp());
+                            }
+                            if (vari.getValueDown() != null && !vari.getValueDown().isEmpty()) {
+                                valueDown = Double.parseDouble(vari.getValueDown());
+                            }
+                            double upper = reqQty + (reqQty * valueUp) / 100;
+                            double lower = reqQty - (reqQty * valueDown) / 100;
+
+                            if ((lower <= result && result <= upper)) {
+                                txfGoodsQty.setValue(result);
+                                weightTicket.setGQty(new BigDecimal(Double.toString(result)).setScale(3, RoundingMode.HALF_UP));
+                                checkVariant = true;
+                            } else {
+                                String msg = "Chênh lệch vượt dung sai cho phép!";
+                                JOptionPane.showMessageDialog(rootPane, msg);
+                                txfOutQty.setValue(null);
+                                txtOutTime.setText(null);
+                                txfGoodsQty.setValue(null);
+                                weightTicket.setGQty(null);
+                                btnAccept.setEnabled(false);
+                                btnOScaleReset.setEnabled(false);
+                                return null;
+                            }
+                        } else if ((result > reqQty)) {
                             String msg = "Chênh lệch vượt dung sai cho phép!";
                             JOptionPane.showMessageDialog(rootPane, msg);
                             txfOutQty.setValue(null);
