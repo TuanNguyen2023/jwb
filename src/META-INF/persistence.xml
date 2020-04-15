@@ -29,6 +29,7 @@
     <class>com.gcs.wb.jpa.entity.SaleOrder</class>
     <class>com.gcs.wb.jpa.entity.VehicleType</class>
     <class>com.gcs.wb.jpa.entity.MaterialInterPlant</class>
+    <class>com.gcs.wb.jpa.entity.SchedulerSync</class>
     <class>com.gcs.wb.jpa.entity.WeightTicketAudit</class>
     <class>com.gcs.wb.jpa.entity.WeightTicketDetailAudit</class>
     <properties>
