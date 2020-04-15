@@ -2373,7 +2373,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                             if (!StringUtil.isEmptyString(cust.getName4())) {
                                 name += " " + cust.getName4();
                             }
-                            txtCustomer.setText(name);
+                            txtCustomer.setText(!StringUtil.isEmptyString(name) ? name : cust.getName1());
                         }
                     }
 
