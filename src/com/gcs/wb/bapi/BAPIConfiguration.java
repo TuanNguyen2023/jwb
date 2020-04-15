@@ -13,6 +13,7 @@ import com.gcs.wb.bapi.helper.BOMReadBapi;
 import com.gcs.wb.bapi.helper.BatchStocksGetListBapi;
 import com.gcs.wb.bapi.helper.CheckVersionWBBapi;
 import com.gcs.wb.bapi.helper.CustomerGetDetailBapi;
+import com.gcs.wb.bapi.helper.CustomerGetListBapi;
 import com.gcs.wb.bapi.helper.DoGetDetailBapi;
 import com.gcs.wb.bapi.helper.MatAvailableBapi;
 import com.gcs.wb.bapi.helper.MatGetDetailBapi;
@@ -113,6 +114,7 @@ public class BAPIConfiguration {
         sessionConfig.addAnnotatedClass(PoPostGetListBapi.class);
         sessionConfig.addAnnotatedClass(SyncContractSOGetListBapi.class);
         sessionConfig.addAnnotatedClass(DOPostingPGIBapi.class);
+        sessionConfig.addAnnotatedClass(CustomerGetListBapi.class);
         
         AnnotationConfiguration conf = new AnnotationConfiguration(sessionConfig);
         return conf.buildSessionManager();

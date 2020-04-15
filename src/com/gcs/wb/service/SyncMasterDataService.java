@@ -54,6 +54,9 @@ public class SyncMasterDataService {
         SAPSetting sapSetting = syncSapSetting();
         WeighBridgeApp.getApplication().setSapSetting(sapSetting);
 
+        logger.info("Sync customer...");
+        syncCustomer();
+
         logger.info("Sync vendor...");
         syncVendor();
 
@@ -162,5 +165,9 @@ public class SyncMasterDataService {
 
     public void syncSoDatas() {
         sapService.syncSoDatas();
+    }
+
+    public void syncCustomer() {
+        sapService.syncCustomer();
     }
 }
