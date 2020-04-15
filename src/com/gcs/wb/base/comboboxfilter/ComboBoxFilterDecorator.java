@@ -104,14 +104,15 @@ public class ComboBoxFilterDecorator<T> {
                                 resetFilterComponent();
                                 return;
                             case KeyEvent.VK_BACK_SPACE:
-                                return;
+                                filterEditor.removeCharAtEnd();
+                                break;
                             default:
                                 filterEditor.addChar(keyChar);
                         }
                         if (!comboBox.isPopupVisible()) {
                             comboBox.showPopup();
                         }
-                        if (filterEditor.isEditing()) {
+                        if (filterEditor.isEditing() && filterEditor.getText().length() >= 0) {
                             applyFilter();
                         } else {
                             comboBox.hidePopup();
@@ -169,7 +170,16 @@ public class ComboBoxFilterDecorator<T> {
         java.util.List<T> filteredItems = new ArrayList<>();
         //add matched items at top
         for (T item : originalItems) {
-            if (userFilter.test(item, filterEditor.getFilterText().getText())) {
+            String text = filterEditor.getFilterText().getText();
+            String saveText = filterEditor.getText();
+            
+            if (text.length() < saveText.length()) {
+                text += saveText.charAt(saveText.length()-1);
+            } else if (text.length() > saveText.length()) {
+                text = text.substring(0, text.length() - 1);
+            }
+
+            if (userFilter.test(item, text)) {
                 model.addElement(item);
             } else {
                 filteredItems.add(item);

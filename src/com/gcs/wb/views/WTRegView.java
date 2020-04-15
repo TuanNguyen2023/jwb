@@ -2358,6 +2358,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 break;
         }
 
+        decorate.updateCombobox(cbxCustomerN);
         validateForm();
     }
 
@@ -2494,7 +2495,6 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         cbxMaterialTypeN.setSelectedIndex(-1);
 
         cbxCustomerN.setModel(customerModel);
-        decorate.updateCombobox(cbxCustomerN);
         cbxCustomerN.setSelectedIndex(-1);
     }
 
@@ -3605,7 +3605,6 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
             if (customer != null) {
                 cbxCustomerN.setModel(weightTicketRegistarationController.getCustomerModel());
-                decorate.updateCombobox(cbxCustomerN);
                 cbxCustomerN.setSelectedItem(customer);
             } else {
                 cbxCustomerN.setSelectedIndex(-1);
@@ -4339,12 +4338,10 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             if (modeDetail == MODE_DETAIL.IN_PO_PURCHASE) {
                 if (vendor != null) {
                     cbxCustomerN.setModel(weightTicketRegistarationController.getCusVendorModel());
-                    decorate.updateCombobox(cbxCustomerN);
                     cbxCustomerN.setSelectedItem(vendor);
                 }
             } else if (customer != null) {
                 cbxCustomerN.setModel(weightTicketRegistarationController.getCustomerModel());
-                decorate.updateCombobox(cbxCustomerN);
                 cbxCustomerN.setSelectedItem(customer);
             } else {
                 cbxCustomerN.setSelectedIndex(-1);
@@ -4700,11 +4697,9 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
             if (modeDetail == MODE_DETAIL.IN_PO_PURCHASE) {
                 cbxCustomerN.setModel(vendorCustomerModel);
-                decorate.updateCombobox(cbxCustomerN);
                 cbxCustomerN.setSelectedItem(weightTicketRegistarationController.getVendor(weightTicketDetail.getKunnr()));
             } else {
                 cbxCustomerN.setModel(customerModel);
-                decorate.updateCombobox(cbxCustomerN);
                 cbxCustomerN.setSelectedItem(weightTicketRegistarationController.getCustomer(weightTicketDetail.getKunnr()));
             }
 
