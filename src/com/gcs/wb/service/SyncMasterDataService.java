@@ -49,7 +49,8 @@ public class SyncMasterDataService {
 
     public void syncMasterData() throws Exception {
         logger.info("Sync master data is processing...");
-
+      
+        
         logger.info("Sync SAP setting...");
         SAPSetting sapSetting = syncSapSetting();
         WeighBridgeApp.getApplication().setSapSetting(sapSetting);
@@ -82,7 +83,7 @@ public class SyncMasterDataService {
         syncSoDatas();
 
         logger.info("Sync master data is finished...");
-
+        
         logger.info("Restart app...");
         WeighBridgeApp.getApplication().restartApplication();
     }
