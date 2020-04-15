@@ -58,6 +58,14 @@ public class CustomerGetListStructure implements Serializable{
     }
 
     /**
+     * Sales org
+     * @return the _vkorg
+     */
+    public String getVkorg() {
+        return _vkorg;
+    }
+
+    /**
      * Name 1
      * @return the _name1
      */
