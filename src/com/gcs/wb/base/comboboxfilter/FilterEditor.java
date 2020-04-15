@@ -22,7 +22,7 @@ public class FilterEditor<T> extends BasicComboBoxEditor {
     }
 
     public void addChar(char c) {
-        text += c;
+        text = filterText.getText();
         if (!editing) {
             enableEditingMode();
         }
@@ -30,14 +30,13 @@ public class FilterEditor<T> extends BasicComboBoxEditor {
 
     public void removeCharAtEnd() {
         if (text.length() > 0) {
-            text = text.substring(0, text.length() - 1);
+            text = filterText.getText();
             if (!editing) {
                 enableEditingMode();
             }
         }
     }
-
-    private void enableEditingMode() {
+    public void enableEditingMode() {
         editing = true;
         filterText.setFont(filterText.getFont().deriveFont(Font.PLAIN));
         editingChangeListener.accept(true);
@@ -68,6 +67,7 @@ public class FilterEditor<T> extends BasicComboBoxEditor {
             filterText.setText(text);
         } else {
             T t = (T) anObject;
+            String text = displayTextFunction.apply(t);
             filterText.setText(displayTextFunction.apply(t));
         }
         this.selected = anObject;

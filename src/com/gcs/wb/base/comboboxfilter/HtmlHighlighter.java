@@ -14,6 +14,7 @@ public class HtmlHighlighter {
         String lowerText = text.toLowerCase();
         lowerText = removeAccent(lowerText);
         String realText = "";
+        textToHighlight = removeAccent(textToHighlight);
         if (lowerText.contains(textToHighlight.toLowerCase())) {
             int index = lowerText.indexOf(textToHighlight.toLowerCase());
             realText = text.substring(index, index + textToHighlight.length());

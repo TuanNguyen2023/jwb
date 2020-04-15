@@ -88,6 +88,7 @@ public class ComboBoxFilterDecorator<T> {
                     @Override
                     public void keyPressed(KeyEvent e) {
                         char keyChar = e.getKeyChar();
+                        boolean hasText = false;
                         if (!Character.isDefined(keyChar)) {
                             return;
                         }
@@ -103,15 +104,14 @@ public class ComboBoxFilterDecorator<T> {
                                 resetFilterComponent();
                                 return;
                             case KeyEvent.VK_BACK_SPACE:
-                                filterEditor.removeCharAtEnd();
-                                break;
+                                return;
                             default:
                                 filterEditor.addChar(keyChar);
                         }
                         if (!comboBox.isPopupVisible()) {
                             comboBox.showPopup();
                         }
-                        if (filterEditor.isEditing() && filterEditor.getText().length() > 0) {
+                        if (filterEditor.isEditing()) {
                             applyFilter();
                         } else {
                             comboBox.hidePopup();
@@ -139,6 +139,7 @@ public class ComboBoxFilterDecorator<T> {
 
             @Override
             public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                selectedItem = comboBox.getSelectedItem();
                 resetFilterComponent();
             }
 
@@ -183,4 +184,8 @@ public class ComboBoxFilterDecorator<T> {
         filteredItems.forEach(model::addElement);
     }
     
+    public void updateCombobox(JComboBox<T> comboBox) {
+        this.comboBox = comboBox;
+        init();
+    }
 }

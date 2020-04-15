@@ -85,6 +85,7 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
     DefaultComboBoxModel vendorCustomerModel = weightTicketRegistarationController.getCusVendorModel();
     DefaultComboBoxModel customerModel = weightTicketRegistarationController.getCustomerModel();
 
+    ComboBoxFilterDecorator<Object> decorate;
     public WTRegOfflineView() {
         newWeightTicket = new WeightTicket();
         selectedWeightTicket = new WeightTicket();
@@ -263,18 +264,18 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
         };
         cbxVendorLoadingN.setRenderer(cellRendererVendor);
         cbxVendorTransportN.setRenderer(cellRendererVendor);
-        ComboBoxFilterDecorator<Object> decorate = ComboBoxFilterDecorator.decorate(cbxCustomerN,
+        decorate = ComboBoxFilterDecorator.decorate(cbxCustomerN,
                 WTRegOfflineView::getCustomerDisplayText,
                 WTRegOfflineView::customerFilter);
         cbxCustomerN.setRenderer(new CustomComboRenderer(decorate.getFilterTextSupplier()));
     }
-    private static boolean customerFilter(Customer customer, String textToFilter) {
+    private static boolean customerFilter(Object object, String textToFilter) {
         if (textToFilter.isEmpty()) {
             return true;
         }
-        String customerDisplayText = getCustomerDisplayText(customer).toLowerCase();
+        String customerDisplayText = getCustomerDisplayText(object).toLowerCase();
         customerDisplayText = HtmlHighlighter.removeAccent(customerDisplayText);
-        return customerDisplayText.contains(textToFilter.toLowerCase());
+        return customerDisplayText.contains(HtmlHighlighter.removeAccent(textToFilter.toLowerCase()));
     }
 
     public static String getCustomerDisplayText(Object value) {
@@ -1962,9 +1963,11 @@ private void txtWeightNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
 
         if (modeDetail == MODE_DETAIL.IN_PO_PURCHASE) {
             cbxCustomerN.setModel(vendorCustomerModel);
+            decorate.updateCombobox(cbxCustomerN);
             cbxCustomerN.setSelectedIndex(-1);
         } else {
             cbxCustomerN.setModel(customerModel);
+            decorate.updateCombobox(cbxCustomerN);
             cbxCustomerN.setSelectedIndex(-1);
         }
 
