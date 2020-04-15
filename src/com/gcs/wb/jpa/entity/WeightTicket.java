@@ -246,9 +246,10 @@ public class WeightTicket implements Serializable {
     private String chargEnh;
     @Column(name = "load_source")
     private String loadSource;
-
     @Column(name = "weight_ticket_id_ref")
     private String weightTicketIdRef;
+    @Column(name = "created_datetime")
+    private Date createdDatetime;
 
     public WeightTicket() {
     }
@@ -694,6 +695,14 @@ public class WeightTicket implements Serializable {
 
     public void setLoadSource(String loadSource) {
         this.loadSource = loadSource;
+    }
+
+    public Date getCreatedDatetime() {
+        return createdDatetime;
+    }
+
+    public void setCreatedDatetime(Date createdDatetime) {
+        this.createdDatetime = createdDatetime;
     }
 
     public List<WeightTicketDetail> getWeightTicketDetails() {
