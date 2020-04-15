@@ -80,6 +80,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
     private String validDO = null;
     private String validPO = null;
     private String validPOSTO = null;
+    private BigDecimal weightRegQtyTemp = BigDecimal.ZERO;
 
     private boolean formValid;
     private com.gcs.wb.jpa.entity.WeightTicket newWeightTicket;
@@ -125,6 +126,10 @@ public class WTRegView extends javax.swing.JInternalFrame {
         pnShowFilter.setVisible(false);
         btnReprint.setEnabled(false);
         btnEdit.setEnabled(false);
+        String roles = WeighBridgeApp.getApplication().getLogin().getRoles().toUpperCase();
+        if(!roles.contains("Z_JWB_SUPERVISOR") || !roles.contains("Z_JWB_ADMIN")) {
+            btnEdit.setVisible(false);
+        }
 
         initComboboxModel();
         initComboboxRenderer();
@@ -2054,6 +2059,18 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 }
                 return false;
             }
+        } else if (modeDetail == MODE_DETAIL.IN_WAREHOUSE_TRANSFER) {
+            isPlateNoValid = wtRegisValidation.validateVehicle(plateNo, lblPlateNoN);
+            if (!isPlateNoValid) {
+                if (plateNo.isEmpty()) {
+                    JOptionPane.showMessageDialog(rootPane,
+                            resourceMapMsg.getString("msg.plzInputPlateNo", "phương tiện"));
+                } else {
+                    JOptionPane.showMessageDialog(rootPane,
+                            resourceMapMsg.getString("msg.plzCheckPlateNo", "phương tiện"));
+                }
+                return false;
+            }
         } else {
             isPlateNoValid = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
             if (!isPlateNoValid) {
@@ -2096,6 +2113,8 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
     List<DOCheckStructure> listDONumbers = new ArrayList<>();
 
     private class CheckSOTask extends org.jdesktop.application.Task<Object, Void> {
+        private boolean canceled = false;
+        private List<String> mappingErrMsg = new ArrayList();
 
         CheckSOTask(org.jdesktop.application.Application app) {
             super(app);
@@ -2117,6 +2136,44 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 }
             }
 
+            if (isEditMode) {
+                SaleOrder saleOrder = weightTicketRegistarationController.getSalesOrderSap(val[0]);
+                if (saleOrder == null) {
+                    saleOrder = weightTicketRegistarationController.getSalesOrderLocal(val[0]);
+                }
+                if (saleOrder != null && saleOrder.getTraid() != null) {
+                    String bsGhe = txtPlateNoN.getText();
+                    String traid = saleOrder.getTraid();
+                    traid = StringUtil.correctPlateNo(traid).toUpperCase();
+                    String plateName = "ghe";
+
+                    // validate BS Ghe
+                    if (StringUtil.isNotEmptyString(bsGhe) && !bsGhe.equals(traid)) {
+                        mappingErrMsg.add(resourceMapMsg.getString("msg.vehicleNotMapping", plateName));
+                    }
+                    String matnr = null;
+                    Material material = (Material) cbxMaterialTypeN.getSelectedItem();
+                    if (material != null && !material.getMatnr().equals(saleOrder.getMatnr())) {
+                        matnr = saleOrder.getMatnr();
+                        mappingErrMsg.add(resourceMapMsg.getString("msg.materialNotMapping"));
+                    }
+
+                    String kunnr = null;
+                    Customer cust = (Customer) cbxCustomerN.getSelectedItem();
+                    if (cust != null && !cust.getKunnr().equals(saleOrder.getKunnr())) {
+                        kunnr = saleOrder.getKunnr();
+                        mappingErrMsg.add(resourceMapMsg.getString("msg.customerNotMapping"));
+                    }
+                }
+                if (mappingErrMsg.size() > 0) {
+                    String msg = String.join("\n", mappingErrMsg);
+                    msg += "\n\n" + resourceMapMsg.getString("msg.noOverwriteSuffixes");
+                    JOptionPane.showMessageDialog(rootPane, msg);
+                    canceled = true;
+                    throw new Exception();
+                }
+            }
+
             String doNum = "";
             if (!WeighBridgeApp.getApplication().isOfflineMode()) {
                 List<DOCheckStructure> doNumbers = sapService.getDONumber(val, bsXe, bsRomoc);
@@ -2130,6 +2187,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                             JOptionPane.showMessageDialog(rootPane, doNumber.getMessage());
                             String msg = "SO " + doNumber.getVbelnSO() + " sai, vui lòng nhập lại!";
                             setMessage(msg);
+                            canceled = true;
                             throw new Exception(msg);
                         } else {
                             if (doNum.isEmpty()) {
@@ -2143,6 +2201,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             }
 
             if (doNum.trim().isEmpty()) {
+                canceled = true;
                 throw new Exception("Không lấy được bất kỳ số DO nào, vui lòng kiểm tra lại!");
             }
 
@@ -2159,7 +2218,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
             validateForm();
 
-            if (!ExceptionUtil.isSapDisConnectedException(cause)) {
+            if (!canceled && !ExceptionUtil.isSapDisConnectedException(cause)) {
                 if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
                     cause = cause.getCause();
                 }
@@ -2420,6 +2479,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
     }
 
     private void prepareInWarehouseTransfer() {
+        lblPlateNoN.setText(resourceMapMsg.getString("lblVehicleNo"));
         showComponent(txtTicketIdN, lblTicketIdN, true, true);
         showComponent(txtWeightTickerRefN, lblWeightTickerRefN, true, false);
         showComponent(txtRegisterIdN, lblRegisterIdN, true, true);
@@ -2758,7 +2818,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
 
         String plateNo = txtPlateNoN.getText().trim();
-        boolean isPlateNoValid = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
+        boolean isPlateNoValid = wtRegisValidation.validateVehicle(plateNo, lblPlateNoN);
 
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
         String salan = txtSalanN.getText().trim();
@@ -2982,6 +3042,9 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             isSOValid = wtRegisValidation.validateDO(txtSONumN.getText(), lblSONumN);
         }
         btnDOCheckN.setEnabled(isValidSO);
+        if(isValidSO && isEditMode) {
+            btnDOCheckN.setForeground(Color.red);
+        }
         validateButtonCheck(btnSOCheckN, isSOValid, isValidSO);
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
@@ -3492,7 +3555,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                         canceled = true;
                         throw new Exception();
                     }
-
+                    
                     // overwrite plateNo
                     txtPlateNoN.setText(plateNoValidDO);
                 }
@@ -3605,6 +3668,10 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 cbxCustomerN.setSelectedIndex(-1);
             }
 
+            if (isEditMode) {
+                btnDOCheckN.setForeground(Color.black);
+            }
+
             validateForm();
 
             switch (modeDetail) {
@@ -3645,6 +3712,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
     }
 
     private class SaveWeightTicketTask extends org.jdesktop.application.Task<Object, Void> {
+        private boolean checkVariant = false;
 
         SaveWeightTicketTask(org.jdesktop.application.Application app) {
             super(app);
@@ -3741,23 +3809,65 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                         detail.setWtId(newWeightTicket.getId());
 
                         if (isEditMode) {
-                            detail.setLfimg_ori(detail.getLfimg());
-                            detail.setfTime(newWeightTicket.getFTime());
-                            detail.setsTime(newWeightTicket.getSTime());
-                            detail.setGoodsQty(newWeightTicket.getGQty());
-                            detail.setUpdatedDate(now);
+                            double remain = newWeightTicket.getGQty().doubleValue();
+                            // check variant
+                            checkVariant(outboundDelivery.getMatnr(), weightRegQtyTemp.doubleValue(), newWeightTicket.getGQty().doubleValue());
 
-                            BigDecimal fScale = newWeightTicket.getFScale();
-                            if (fScale != null) {
-                                fScale = fScale.divide(new BigDecimal(1000)).setScale(3, RoundingMode.HALF_UP);
-                            }
-                            detail.setInScale(fScale);
+                            // chia cân
+                            if (deliveryDetails.size() > 1) {
+                                if (detail.getFreeItem() != null && detail.getFreeItem() == 'X') {
+                                    detail.setGoodsQty(detail.getLfimg());
+                                    detail.setLfimg_ori(detail.getLfimg());
+                                    detail.setfTime(newWeightTicket.getFTime());
+                                    detail.setsTime(newWeightTicket.getSTime());
+                                    detail.setUpdatedDate(now);
 
-                            BigDecimal sScale = newWeightTicket.getSScale();
-                            if (sScale != null) {
-                                sScale = sScale.divide(new BigDecimal(1000)).setScale(3, RoundingMode.HALF_UP);
+                                    BigDecimal fScale = newWeightTicket.getFScale();
+                                    if (fScale != null) {
+                                        fScale = fScale.divide(new BigDecimal(1000)).setScale(3, RoundingMode.HALF_UP);
+                                    }
+                                    detail.setInScale(fScale);
+                                    detail.setOutScale(detail.getInScale().add(detail.getLfimg()).setScale(3, RoundingMode.HALF_UP));
+                                    remain = remain - detail.getLfimg().doubleValue();
+                                } else {
+                                    if (checkVariant) {
+                                        detail.setGoodsQty(weightRegQtyTemp);
+                                    } else {
+                                        detail.setGoodsQty(BigDecimal.valueOf(remain).setScale(3, RoundingMode.HALF_UP));
+                                    }
+                                    detail.setLfimg_ori(detail.getLfimg());
+                                    detail.setfTime(newWeightTicket.getFTime());
+                                    detail.setsTime(newWeightTicket.getSTime());
+                                    detail.setGoodsQty(newWeightTicket.getGQty());
+                                    detail.setUpdatedDate(now);
+
+                                    BigDecimal fScale = newWeightTicket.getFScale();
+                                    if (fScale != null) {
+                                        fScale = fScale.divide(new BigDecimal(1000)).setScale(3, RoundingMode.HALF_UP);
+                                    }
+                                    detail.setInScale(fScale);
+
+                                    detail.setOutScale((BigDecimal.valueOf(detail.getInScale().doubleValue() + detail.getGoodsQty().doubleValue())).setScale(3, RoundingMode.HALF_UP));
+                                }
+                            } else if (deliveryDetails.size() == 1) {
+                                detail.setLfimg_ori(detail.getLfimg());
+                                detail.setfTime(newWeightTicket.getFTime());
+                                detail.setsTime(newWeightTicket.getSTime());
+                                if (checkVariant) {
+                                    detail.setGoodsQty(weightRegQtyTemp);
+                                } else {
+                                    detail.setGoodsQty(newWeightTicket.getGQty());
+                                }
+                                detail.setUpdatedDate(now);
+
+                                BigDecimal fScale = newWeightTicket.getFScale();
+                                if (fScale != null) {
+                                    fScale = fScale.divide(new BigDecimal(1000)).setScale(3, RoundingMode.HALF_UP);
+                                }
+                                detail.setInScale(fScale);
+
+                                detail.setOutScale((BigDecimal.valueOf(detail.getInScale().doubleValue() + detail.getGoodsQty().doubleValue())).setScale(3, RoundingMode.HALF_UP));
                             }
-                            detail.setOutScale(sScale);
                         }
 
                         if (!entityManager.getTransaction().isActive()) {
@@ -3941,6 +4051,30 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             setSaveNeeded(false);
 
             clearForm();
+        }
+
+        private void checkVariant(String matnr, double regQty, double result) {
+            Variant vari = weightTicketController.findByParamMandtWplant(matnr, configuration.getSapClient(), configuration.getWkPlant());
+            double valueUp = 0;
+            double valueDown = 0;
+
+            if (vari != null) {
+                if (vari.getValueUp() != null && !vari.getValueUp().isEmpty()) {
+                    valueUp = Double.parseDouble(vari.getValueUp());
+                }
+
+                if (vari.getValueDown() != null && !vari.getValueDown().isEmpty()) {
+                    valueDown = Double.parseDouble(vari.getValueDown());
+                }
+
+                double upper = regQty + (regQty * valueUp) / 100;
+                double lower = regQty - (regQty * valueDown) / 100;
+
+                if ((lower <= result && result <= upper)) {
+                    checkVariant = true;
+                    return;
+                }
+            }
         }
     }
 // </editor-fold>
@@ -4780,6 +4914,8 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 cbxSloc2N.setSelectedItem(new SLoc(newWeightTicket.getRecvLgort()));
                 loadBatchStockModel(cbxSloc2N, cbxBatchStock2N, false);
             }
+
+            weightRegQtyTemp = weightTicketDetail.getRegItemQuantity();
 
             return null;  // return your result
         }

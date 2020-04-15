@@ -2072,6 +2072,7 @@ private void txtWeightNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
     }
 
     private void prepareInWarehouseTransfer() {
+        lblPlateNoN.setText(resourceMapMsg.getString("lblVehicleNo"));
         showComponent(txtTicketIdN, lblTicketIdN, true, true);
         showComponent(txtWeightTickerRefN, lblWeightTickerRefN, true, true);
         showComponent(txtRegisterIdN, lblRegisterIdN, true, true);
@@ -2382,7 +2383,7 @@ private void txtWeightNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
         boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
 
         String plateNo = txtPlateNoN.getText().trim();
-        boolean isPlateNoValid = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
+        boolean isPlateNoValid = wtRegisValidation.validateVehicle(plateNo, lblPlateNoN);
 
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
         String salan = txtSalanN.getText().trim();

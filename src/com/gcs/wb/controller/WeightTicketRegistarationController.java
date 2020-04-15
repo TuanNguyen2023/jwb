@@ -17,6 +17,7 @@ import com.gcs.wb.jpa.repositorys.CustomerRepository;
 import com.gcs.wb.jpa.repositorys.MaterialInternalRepository;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
 import com.gcs.wb.jpa.repositorys.SLocRepository;
+import com.gcs.wb.jpa.repositorys.SaleOrderRepository;
 import com.gcs.wb.jpa.repositorys.TransportAgentVehicleRepository;
 import com.gcs.wb.jpa.repositorys.VehicleLoadRepository;
 import com.gcs.wb.jpa.repositorys.VendorRepository;
@@ -55,6 +56,7 @@ public class WeightTicketRegistarationController {
     SLocRepository sLocRepository = new SLocRepository();
     CustomerRepository customerRepository = new CustomerRepository();
     WeightTicketRepository weightTicketRepository = new WeightTicketRepository();
+    SaleOrderRepository saleOrderRepository = new SaleOrderRepository();
 
     JFrame mainFrame = WeighBridgeApp.getApplication().getMainFrame();
 
@@ -454,5 +456,19 @@ public class WeightTicketRegistarationController {
 
     public Customer getCustomer(String kunnr) {
         return customerRepository.findByKunnr(kunnr);
+    }
+
+    public SaleOrder getSalesOrderSap(String soNumber) {
+        List<SaleOrder> saleOrders = wTRegService.getListSalesOrder();
+        for (SaleOrder saleOrderSap : saleOrders) {
+            if (saleOrderSap.getSoNumber().equals(soNumber)) {
+                return saleOrderSap;
+            }
+        }
+        return null;
+    }
+
+    public SaleOrder getSalesOrderLocal(String soNumber) {
+        return saleOrderRepository.findBySoNumber(soNumber);
     }
 }
