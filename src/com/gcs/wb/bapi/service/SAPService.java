@@ -282,6 +282,10 @@ public class SAPService {
                     ven.setName1(vens.getName1());
                     ven.setName2(vens.getName2());
                     ven.setEkorg(vens.getEkorg());
+                    ven.setKtokk(vens.getKtokk());
+                    if(!vens.getKtokk().equals(Constants.KTOKK.Z004)) {
+                        ven.setGroupType(Constants.GroupType.CUSTOMER);
+                    }
                     venSaps.add(ven);
                 }
             } catch (Exception ex) {

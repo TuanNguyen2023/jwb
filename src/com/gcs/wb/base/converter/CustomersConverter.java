@@ -18,16 +18,13 @@ import java.util.List;
  * @author HANGTT
  */
 public class CustomersConverter extends AbstractThrowableConverter<List<CustomerGetListStructure>, List<Customer>, Exception> {
-    AppConfig config = WeighBridgeApp.getApplication().getConfig();
-    Configuration configuration = config.getConfiguration();
     
     @Override
     public List<Customer> convert(List<CustomerGetListStructure> fromList) {
         List<Customer> toList = new ArrayList<Customer>();
         for (CustomerGetListStructure cusFrom : fromList) {
             Customer cusTo = new Customer(cusFrom.getKunnr());
-//            cusTo.setMandt(cusFrom.getMandt());
-            cusTo.setMandt(configuration.getSapClient());
+            cusTo.setMandt(cusFrom.getMandt());
             cusTo.setName1(cusFrom.getName1());
             cusTo.setName2(cusFrom.getName2());
             cusTo.setName3(cusFrom.getName3());

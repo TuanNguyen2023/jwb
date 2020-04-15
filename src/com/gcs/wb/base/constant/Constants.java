@@ -328,6 +328,11 @@ public class Constants {
 
         public static final String CUSTOMER = "CUSTOMER";
     }
+    
+    public static final class KTOKK {
+
+        public static final String Z004 = "Z004";
+    }
 
     public static enum InteractiveObject {
         SYSTEM,
