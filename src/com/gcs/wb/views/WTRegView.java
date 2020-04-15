@@ -127,7 +127,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         btnReprint.setEnabled(false);
         btnEdit.setEnabled(false);
         String roles = WeighBridgeApp.getApplication().getLogin().getRoles().toUpperCase();
-        if(!roles.contains("Z_JWB_SUPERVISOR") || !roles.contains("Z_JWB_ADMIN")) {
+        if(!(roles.contains("Z_JWB_SUPERVISOR") || roles.contains("Z_JWB_ADMIN"))) {
             btnEdit.setVisible(false);
         }
 
