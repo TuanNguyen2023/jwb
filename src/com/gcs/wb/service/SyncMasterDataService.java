@@ -13,6 +13,7 @@ import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.SAPSetting;
 import com.gcs.wb.jpa.entity.SLoc;
 import com.gcs.wb.jpa.repositorys.BatchStockRepository;
+import com.gcs.wb.jpa.repositorys.CustomerRepository;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
 import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
 import com.gcs.wb.jpa.repositorys.SLocRepository;
@@ -34,6 +35,7 @@ public class SyncMasterDataService {
     private BatchStockRepository batchStockRepository = new BatchStockRepository();
     private PurchaseOrderRepository purchaseOrderRepository = new PurchaseOrderRepository();
     private SaleOrderRepository saleOrderRepository = new SaleOrderRepository();
+    private CustomerRepository customerRepository = new CustomerRepository();
 
     private SAPService sapService;
     private Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
@@ -54,9 +56,6 @@ public class SyncMasterDataService {
         logger.info("Sync SAP setting...");
         SAPSetting sapSetting = syncSapSetting();
         WeighBridgeApp.getApplication().setSapSetting(sapSetting);
-
-        logger.info("Sync customer...");
-        syncCustomer();
 
         logger.info("Sync vendor...");
         syncVendor();
@@ -81,6 +80,10 @@ public class SyncMasterDataService {
 
         logger.info("Sync SO...");
         syncSoDatas();
+
+
+        logger.info("Sync customer...");
+        syncCustomer();
 
         logger.info("Sync master data is finished...");
         
@@ -134,6 +137,11 @@ public class SyncMasterDataService {
         logger.info("Sync SO...");
         if (!saleOrderRepository.hasData()) {
             syncSoDatas();
+        }
+        
+        logger.info("Sync customer...");
+        if (!customerRepository.hasData()) {
+            syncCustomer();
         }
 
         logger.info("Sync master data is finished...");

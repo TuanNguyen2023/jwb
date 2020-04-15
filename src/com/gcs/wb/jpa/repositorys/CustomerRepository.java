@@ -54,4 +54,20 @@ public class CustomerRepository {
 
         return null;
     }
+    
+    public boolean hasData() {
+        try {
+            TypedQuery<Customer> typedQuery = entityManager.createNamedQuery("Customer.findByMandt", Customer.class);
+            typedQuery.setParameter("mandt", configuration.getSapClient());
+            List<Customer> custs = typedQuery.getResultList();
+            if (custs != null && custs.size() > 0) {
+                return true;
+            }
+        } catch (Exception ex) {
+            logger.error(null, ex);
+            ExceptionUtil.checkDatabaseDisconnectedException(ex);
+        }
+
+        return false;
+    }
 }
