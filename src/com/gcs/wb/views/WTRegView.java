@@ -328,7 +328,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                     if (!StringUtil.isEmptyString(customer.getName4())) {
                         name += " " + customer.getName4();
                     }
-                    setText(name);
+                    setText(!StringUtil.isEmptyString(name) ? name : customer.getName1());
                     setToolTipText(customer.getKunnr());
                 }
 
