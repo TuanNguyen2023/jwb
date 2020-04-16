@@ -5,7 +5,7 @@
  */
 package com.gcs.wb.bapi.helper.structure;
 
-import com.gcs.wb.bapi.helper.constants.SyncContractSOGetListConstants;
+import com.gcs.wb.bapi.helper.constants.SaleOrderGetDetailConstants;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import org.hibersap.annotations.BapiStructure;
@@ -17,47 +17,49 @@ import org.hibersap.annotations.Parameter;
  */
 @BapiStructure
 public class SaleOrderGetDetailStructure implements Serializable {
-    @Parameter(SyncContractSOGetListConstants.VBELN)
+    @Parameter(SaleOrderGetDetailConstants.VBELN)
     private String _vbeln;
-    @Parameter(SyncContractSOGetListConstants.MATNR)
+    @Parameter(SaleOrderGetDetailConstants.MATNR)
     private String _matnr;
-    @Parameter(SyncContractSOGetListConstants.MAKTX)
+    @Parameter(SaleOrderGetDetailConstants.MAKTX)
     private String _maktx;
-    @Parameter(SyncContractSOGetListConstants.KUNNR)
+    @Parameter(SaleOrderGetDetailConstants.KUNNR)
     private String _kunnr;
-    @Parameter(SyncContractSOGetListConstants.KWMENG)
+    @Parameter(SaleOrderGetDetailConstants.KWMENG)
     private BigDecimal _kwmeng;
-    @Parameter(SyncContractSOGetListConstants.FREE_QUA)
+    @Parameter(SaleOrderGetDetailConstants.FREE_QUA)
     private BigDecimal _freeQua;
-    @Parameter(SyncContractSOGetListConstants.REC_QUA)
+    @Parameter(SaleOrderGetDetailConstants.REC_QUA)
     private BigDecimal _recQua;
-    @Parameter(SyncContractSOGetListConstants.W_NAME)
+    @Parameter(SaleOrderGetDetailConstants.W_NAME)
     private String _wName;
-    @Parameter(SyncContractSOGetListConstants.SHIP_TO_NAME)
+    @Parameter(SaleOrderGetDetailConstants.SHIP_TO)
+    private String _shipTo;
+    @Parameter(SaleOrderGetDetailConstants.SHIP_TO_NAME)
     private String _shipToName;
-    @Parameter(SyncContractSOGetListConstants.NOTE)
+    @Parameter(SaleOrderGetDetailConstants.NOTE)
     private String _note;
-    @Parameter(SyncContractSOGetListConstants.CHANGED)
+    @Parameter(SaleOrderGetDetailConstants.CHANGED)
     private String _changed;
-    @Parameter(SyncContractSOGetListConstants.VSBED)
+    @Parameter(SaleOrderGetDetailConstants.VSBED)
     private String _vsbed;
-    @Parameter(SyncContractSOGetListConstants.ZKVGR1)
+    @Parameter(SaleOrderGetDetailConstants.ZKVGR1)
     private String _zkvgr1;
-    @Parameter(SyncContractSOGetListConstants.ZKVGR1_TEXT)
+    @Parameter(SaleOrderGetDetailConstants.ZKVGR1_TEXT)
     private String _zkvgr1Text;
-    @Parameter(SyncContractSOGetListConstants.ZKVGR2)
+    @Parameter(SaleOrderGetDetailConstants.ZKVGR2)
     private String _zkvgr2;
-    @Parameter(SyncContractSOGetListConstants.ZKVGR2_TEXT)
+    @Parameter(SaleOrderGetDetailConstants.ZKVGR2_TEXT)
     private String _zkvgr2Text;
-    @Parameter(SyncContractSOGetListConstants.ZKVGR3)
+    @Parameter(SaleOrderGetDetailConstants.ZKVGR3)
     private String _zkvgr3;
-    @Parameter(SyncContractSOGetListConstants.ZKVGR3_TEXT)
+    @Parameter(SaleOrderGetDetailConstants.ZKVGR3_TEXT)
     private String _zkvgr3Text;
-    @Parameter(SyncContractSOGetListConstants.SORT1)
+    @Parameter(SaleOrderGetDetailConstants.SORT1)
     private String _sort1;
-    @Parameter(SyncContractSOGetListConstants.TRAID)
+    @Parameter(SaleOrderGetDetailConstants.TRAID)
     private String _traid;
-    @Parameter(SyncContractSOGetListConstants.WERKS)
+    @Parameter(SaleOrderGetDetailConstants.WERKS)
     private String _werks;
 
     public SaleOrderGetDetailStructure() {
@@ -93,6 +95,10 @@ public class SaleOrderGetDetailStructure implements Serializable {
 
     public String getWName() {
         return _wName;
+    }
+
+    public String getShipTo() {
+        return _shipTo;
     }
 
     public String getShipToName() {

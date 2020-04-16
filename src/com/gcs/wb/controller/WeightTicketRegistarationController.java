@@ -458,16 +458,6 @@ public class WeightTicketRegistarationController {
         return customerRepository.findByKunnr(kunnr);
     }
 
-    public SaleOrder getSalesOrderSap(String soNumber) {
-        List<SaleOrder> saleOrders = wTRegService.getListSalesOrder();
-        for (SaleOrder saleOrderSap : saleOrders) {
-            if (saleOrderSap.getSoNumber().equals(soNumber)) {
-                return saleOrderSap;
-            }
-        }
-        return null;
-    }
-
     public SaleOrder getSalesOrderLocal(String soNumber) {
         return saleOrderRepository.findBySoNumber(soNumber);
     }

@@ -35,6 +35,7 @@ public interface SaleOrderGetDetailConstants extends BapiConstants {
     // nơi nhận hàng
     String W_NAME = "W_NAME";
     // nơi giao hàng
+    String SHIP_TO = "SHIP_TO";
     String SHIP_TO_NAME = "SHIP_TO_NAME";
     // ghi chú
     String NOTE = "NOTE";

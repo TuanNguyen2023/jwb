@@ -5,6 +5,7 @@
 package com.gcs.wb.service;
 
 import com.gcs.wb.WeighBridgeApp;
+import com.gcs.wb.bapi.helper.SaleOrderGetDetailBapi;
 import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.base.enums.ModeEnum;
 import com.gcs.wb.base.enums.StatusEnum;
@@ -261,7 +262,7 @@ public class WeightTicketRegistrationService {
         return sLocs;
     }
 
-    public List<SaleOrder> getListSalesOrder() {
-        return sAPService.getListSalesOrder();
+    public SaleOrderGetDetailBapi getSalesOrderDetail(String soNumber) {
+        return sAPService.getSalesOrderDetail(soNumber);
     }
 }

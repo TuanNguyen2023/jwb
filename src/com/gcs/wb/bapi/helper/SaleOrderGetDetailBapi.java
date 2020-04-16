@@ -7,7 +7,6 @@ package com.gcs.wb.bapi.helper;
 
 import com.gcs.wb.bapi.helper.constants.SaleOrderGetDetailConstants;
 import com.gcs.wb.bapi.helper.structure.SaleOrderGetDetailStructure;
-import java.util.List;
 import org.hibersap.annotations.Bapi;
 import org.hibersap.annotations.Export;
 import org.hibersap.annotations.Import;
@@ -28,15 +27,15 @@ public class SaleOrderGetDetailBapi {
 
     @Export
     @Parameter(value = SaleOrderGetDetailConstants.EX_DELI_SCHED, type = ParameterType.STRUCTURE)
-    private List<SaleOrderGetDetailStructure> _exDeliSched;
+    private SaleOrderGetDetailStructure _exDeliSched;
 
     @Export
     @Parameter(value = SaleOrderGetDetailConstants.EX_RETURN, type = ParameterType.STRUCTURE)
-    private List<BapiRet2> _exReturn;
+    private BapiRet2 _exReturn;
 
 //    @Table
 //    @Parameter(value = SaleOrderGetDetailConstants.T_RETURN, type = ParameterType.STRUCTURE)
-//    private List<BapiRet2> _tReturn;
+//    private BapiRet2 _tReturn;
     public SaleOrderGetDetailBapi() {
     }
 
@@ -44,12 +43,39 @@ public class SaleOrderGetDetailBapi {
         this._imVbeln = imVbeln;
     }
 
-    public List<SaleOrderGetDetailStructure> getExDeliSched() {
+    public SaleOrderGetDetailStructure getExDeliSched() {
         return _exDeliSched;
     }
 
-    public List<BapiRet2> getExReturn() {
+    public BapiRet2 getExReturn() {
         return _exReturn;
+    }
+
+    public String getReturnMessage() {
+        String errorMsgs = "";
+        if (_exReturn == null) {
+            return errorMsgs;
+        }
+
+        if (_exReturn.getMessage() != null && !_exReturn.getMessage().trim().isEmpty()) {
+            return _exReturn.getMessage().trim();
+        }
+
+        String msg = "";
+        if (_exReturn.getMessageV1() != null && !_exReturn.getMessageV1().trim().isEmpty()) {
+            msg += _exReturn.getMessageV1() + " ";
+        }
+        if (_exReturn.getMessageV2() != null && !_exReturn.getMessageV2().trim().isEmpty()) {
+            msg += _exReturn.getMessageV2() + " ";
+        }
+        if (_exReturn.getMessageV3() != null && !_exReturn.getMessageV3().trim().isEmpty()) {
+            msg += _exReturn.getMessageV3() + " ";
+        }
+        if (_exReturn.getMessageV4() != null && !_exReturn.getMessageV4().trim().isEmpty()) {
+            msg += _exReturn.getMessageV4() + " ";
+        }
+        return msg;
+
     }
 
     @Override
