@@ -44,8 +44,8 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="pnROVRight" max="32767" attributes="0"/>
                   </Group>
-                  <Component id="spnResult" alignment="0" pref="1160" max="32767" attributes="2"/>
-                  <Component id="pnPrintControl" alignment="0" pref="1160" max="32767" attributes="1"/>
+                  <Component id="spnResult" alignment="0" pref="1188" max="32767" attributes="2"/>
+                  <Component id="pnPrintControl" alignment="0" pref="1188" max="32767" attributes="1"/>
                   <Component id="pnShowFilter" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -59,7 +59,7 @@
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="pnShowFilter" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
-              <Component id="spnResult" pref="268" max="32767" attributes="0"/>
+              <Component id="spnResult" pref="270" max="32767" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="pnPrintControl" min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -120,9 +120,9 @@
                           </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="cbxStatus" pref="181" max="32767" attributes="0"/>
-                              <Component id="txtPlateNo" pref="181" max="32767" attributes="1"/>
-                              <Component id="dpDateTo" alignment="0" pref="181" max="32767" attributes="1"/>
+                              <Component id="cbxStatus" pref="209" max="32767" attributes="0"/>
+                              <Component id="txtPlateNo" pref="209" max="32767" attributes="1"/>
+                              <Component id="dpDateTo" alignment="0" pref="209" max="32767" attributes="1"/>
                           </Group>
                           <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
@@ -251,9 +251,6 @@
             </Property>
             <Property name="name" type="java.lang.String" value="cbxMaterialType" noResource="true"/>
           </Properties>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="cbxMaterialType.setRenderer(new DefaultListCellRenderer() {&#xa;   @Override&#xa;   public Component getListCellRendererComponent(&#xa;           JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {&#xa;       super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);&#xa;       if (value instanceof Material) {&#xa;           Material mat = (Material)value;&#xa;           setText(mat.getMaktx());&#xa;           setToolTipText(mat.getMatnr());&#xa;       }&#xa;       return this;&#xa;   }&#xa;});"/>
-          </AuxValues>
         </Component>
         <Component class="javax.swing.JLabel" name="lblHourFrom">
           <Properties>
@@ -525,7 +522,7 @@
                   <Component id="pnROVLeft" min="-2" max="-2" attributes="1"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="pnControl" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="80" max="32767" attributes="0"/>
+                  <EmptySpace pref="82" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -964,7 +961,7 @@
                       <Component id="btnClear" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="btnSave" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="319" max="32767" attributes="0"/>
+                      <EmptySpace pref="347" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1431,7 +1428,7 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace pref="1065" max="32767" attributes="0"/>
+                  <EmptySpace pref="1093" max="32767" attributes="0"/>
                   <Component id="btnShowFilter" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>

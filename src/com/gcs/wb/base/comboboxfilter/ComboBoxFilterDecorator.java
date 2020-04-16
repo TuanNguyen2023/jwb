@@ -21,6 +21,7 @@ public class ComboBoxFilterDecorator<T> {
     java.util.List<T> originalItems;
     private Object selectedItem;
     private FilterEditor filterEditor;
+    private String oldText = "";
 
     public ComboBoxFilterDecorator(JComboBox<T> comboBox,
                                    BiPredicate<T, String> userFilter,
@@ -70,10 +71,15 @@ public class ComboBoxFilterDecorator<T> {
         filterText.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
+                oldText = filterEditor.getFilterText().getText();
+                filterEditor.getFilterText().setText("");
             }
 
             @Override
             public void focusLost(FocusEvent e) {
+                if ("".equals(filterEditor.getFilterText().getText())) {
+                    filterEditor.getFilterText().setText(oldText);
+                }
                 resetFilterComponent();
             }
         });
@@ -88,7 +94,6 @@ public class ComboBoxFilterDecorator<T> {
                     @Override
                     public void keyPressed(KeyEvent e) {
                         char keyChar = e.getKeyChar();
-                        boolean hasText = false;
                         if (!Character.isDefined(keyChar)) {
                             return;
                         }
