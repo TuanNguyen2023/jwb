@@ -32,5 +32,8 @@ public interface TransportagentGetListConstants  extends BapiConstants{
     String EKORG = "EKORG";
     /**LOEVM*/
     String LOEVM = "LOEVM";
+    /** Vendor account group */
+    /**KTOKK*/
+    String KTOKK = "KTOKK";
     // </editor-fold>
 }

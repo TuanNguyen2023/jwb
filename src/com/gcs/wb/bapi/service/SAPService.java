@@ -15,6 +15,7 @@ import com.gcs.wb.bapi.goodsmvt.structure.DOCheckStructure;
 import com.gcs.wb.bapi.goodsmvt.structure.SOCheckStructure;
 import com.gcs.wb.bapi.helper.BatchStocksGetListBapi;
 import com.gcs.wb.bapi.helper.CustomerGetDetailBapi;
+import com.gcs.wb.bapi.helper.CustomerGetListBapi;
 import com.gcs.wb.bapi.helper.MatGetDetailBapi;
 import com.gcs.wb.bapi.helper.MaterialGetListBapi;
 import com.gcs.wb.bapi.helper.PlantGetDetailBapi;
@@ -27,6 +28,7 @@ import com.gcs.wb.bapi.helper.VendorValiationCheckBapi;
 import com.gcs.wb.bapi.helper.constants.PlantGeDetailConstants;
 import com.gcs.wb.bapi.helper.structure.CustomerAdrcGetDetailStructure;
 import com.gcs.wb.bapi.helper.structure.CustomerGetDetailStructure;
+import com.gcs.wb.bapi.helper.structure.CustomerGetListStructure;
 import com.gcs.wb.bapi.helper.structure.MatGetDetailStructure;
 import com.gcs.wb.bapi.helper.structure.MaterialGetListStructure;
 import com.gcs.wb.bapi.helper.structure.PODataOuboundStructure;
@@ -37,6 +39,7 @@ import com.gcs.wb.bapi.helper.structure.VendorGetDetailStructure;
 import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.base.constant.Constants.InteractiveObject;
 import com.gcs.wb.base.converter.CustomerConverter;
+import com.gcs.wb.base.converter.CustomersConverter;
 import com.gcs.wb.base.converter.MaterialConverter;
 import com.gcs.wb.base.converter.MaterialsV2Converter;
 import com.gcs.wb.base.converter.OutboundDeliveryConverter;
@@ -59,6 +62,7 @@ import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.TransportAgentVehicle;
 import com.gcs.wb.jpa.entity.Vendor;
 import com.gcs.wb.jpa.repositorys.BatchStockRepository;
+import com.gcs.wb.jpa.repositorys.CustomerRepository;
 import com.gcs.wb.jpa.repositorys.MaterialInternalRepository;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
 import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
@@ -110,6 +114,7 @@ public class SAPService {
     SAPSettingRepository sapSettingRepository = new SAPSettingRepository();
     PurchaseOrderRepository purchaseOrderRepository = new PurchaseOrderRepository();
     SaleOrderRepository saleOrderRepository = new SaleOrderRepository();
+    CustomerRepository customerRepository = new CustomerRepository();
 
     AppConfig config = WeighBridgeApp.getApplication().getConfig();
     Configuration configuration = config.getConfiguration();
@@ -277,6 +282,10 @@ public class SAPService {
                     ven.setName1(vens.getName1());
                     ven.setName2(vens.getName2());
                     ven.setEkorg(vens.getEkorg());
+                    ven.setKtokk(vens.getKtokk());
+                    if(!vens.getKtokk().equals(Constants.KTOKK.Z004)) {
+                        ven.setGroupType(Constants.GroupType.CUSTOMER);
+                    }
                     venSaps.add(ven);
                 }
             } catch (Exception ex) {
@@ -1023,5 +1032,58 @@ public class SAPService {
                 throw ex;
             }
         });
+    }
+    
+    /**
+     * sync Customer
+     *
+     * @return
+     */
+    public List<Customer> syncCustomer() {
+        List<Customer> customerDBs = customerRepository.getListCustomer();
+
+        if (!WeighBridgeApp.getApplication().isOfflineMode()) {
+            CustomerGetListBapi bapi = new CustomerGetListBapi();
+            List<Customer> cusSaps = new ArrayList<>();
+            try {
+                logger.info("[SAP] Get list Customer: " + bapi.toString());
+                if (interactiveObject == InteractiveObject.USER) {
+                    session.execute(bapi);
+                } else {
+                    session.executeInBackground(bapi);
+                }
+
+                List<CustomerGetListStructure> etCustomers = bapi.getListEtCustomer();
+
+                CustomersConverter customersConverter = new CustomersConverter();
+                cusSaps = customersConverter.convert(etCustomers);
+            } catch (Exception ex) {
+                logger.error(ex);
+                throw ex;
+            }
+
+            entityTransaction = entityManager.getTransaction();
+            if (!entityTransaction.isActive()) {
+                entityTransaction.begin();
+            }
+            // update SAP - DB
+            for (Customer cusSap : cusSaps) {
+                int index = customerDBs.indexOf(cusSap);
+                if (index == -1) {
+                    entityManager.persist(cusSap);
+                } else {
+                    cusSap.setId(customerDBs.get(index).getId());
+                    entityManager.merge(cusSap);
+                }
+            }
+
+            entityTransaction.commit();
+            entityManager.clear();
+
+            // return data
+            return customerRepository.getListCustomer();
+        }
+
+        return customerDBs;
     }
 }

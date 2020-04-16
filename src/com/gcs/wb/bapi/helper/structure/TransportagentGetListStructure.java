@@ -36,15 +36,20 @@ public class TransportagentGetListStructure implements Serializable{
     @Parameter(TransportagentGetListConstants.LOEVM)
     private String _loevm = null;
     
+    /**KTOKK*/
+    @Parameter(TransportagentGetListConstants.KTOKK)
+    private String _ktokk;
+    
     public TransportagentGetListStructure() {
     }
     
-    public TransportagentGetListStructure(String lifnr, String name1, String name2, String ekorg, String loevm) {
+    public TransportagentGetListStructure(String lifnr, String name1, String name2, String ekorg, String loevm, String ktokk) {
         this._lifnr = lifnr;
         this._name1 = name1;
         this._name2 = name2;
         this._ekorg = ekorg;
         this._loevm = loevm;
+        this._ktokk = ktokk;
     }
     
     /**
@@ -85,5 +90,13 @@ public class TransportagentGetListStructure implements Serializable{
      */
     public String getLoevm() {
         return _loevm;
+    }
+
+    /**
+     * KTOKK
+     * @return the _ktokk
+     */
+    public String getKtokk() {
+        return _ktokk;
     }
 }

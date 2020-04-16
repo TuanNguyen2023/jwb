@@ -58,6 +58,8 @@ public class Vendor implements Serializable {
     private Date updatedDate;
     @Column(name = "group_type")
     private String groupType;
+    @Column(name = "ktokk")
+    private String ktokk;
 
     public Vendor() {
     }
@@ -144,6 +146,14 @@ public class Vendor implements Serializable {
 
     public void setGroupType(String groupType) {
         this.groupType = groupType;
+    }
+
+    public String getKtokk() {
+        return ktokk;
+    }
+
+    public void setKtokk(String ktokk) {
+        this.ktokk = ktokk;
     }
 
     @Override
