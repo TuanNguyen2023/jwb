@@ -55,6 +55,21 @@ public class PartnerRepository {
         return null;
     }
 
+    public List<Partner> findByMandtKunnr(String mandt, String kunnr) {
+        List<Partner> list = new ArrayList<>();
+        try {
+            TypedQuery<Partner> typedQuery = entityManager.createNamedQuery("Partner.findByMandtKunnr", Partner.class);
+            typedQuery.setParameter("mandt", mandt);
+            typedQuery.setParameter("kunnr", kunnr);
+            list = typedQuery.getResultList();
+        } catch (Exception ex) {
+            logger.error(null, ex);
+            ExceptionUtil.checkDatabaseDisconnectedException(ex);
+        }
+
+        return list;
+    }
+
     public Partner findByMandtKunnrKunn2(String mandt, String kunnr, String kunn2) {
         try {
             TypedQuery<Partner> typedQuery = entityManager.createNamedQuery("Partner.findByMandtKunnrKunn2", Partner.class);

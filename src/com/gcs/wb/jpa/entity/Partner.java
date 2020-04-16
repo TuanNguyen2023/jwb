@@ -27,6 +27,7 @@ import javax.persistence.Temporal;
     @NamedQuery(name = "Partner.findAll", query = "SELECT p FROM Partner p"),
     @NamedQuery(name = "Partner.findByMandt", query = "SELECT p FROM Partner p WHERE p.mandt = :mandt"),
     @NamedQuery(name = "Partner.findByKunnr", query = "SELECT p FROM Partner p WHERE p.kunnr = :kunnr"),
+    @NamedQuery(name = "Partner.findByMandtKunnr", query = "SELECT p FROM Partner p WHERE p.mandt = :mandt AND p.kunnr = :kunnr"),
     @NamedQuery(name = "Partner.findByMandtKunnrKunn2", query = "SELECT p FROM Partner p WHERE p.mandt = :mandt AND p.kunnr = :kunnr AND p.kunn2 = :kunn2"),
     @NamedQuery(name = "Partner.findPartner",
             query = "SELECT p FROM Partner p"

@@ -25,7 +25,6 @@ import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.base.enums.ModeEnum;
 import com.gcs.wb.base.exceptions.IllegalPortException;
-import com.gcs.wb.base.util.Base64_Utils;
 import com.gcs.wb.base.util.ExceptionUtil;
 import com.gcs.wb.base.util.IntegerUtil;
 import com.gcs.wb.base.util.RegexFormatter;
@@ -268,6 +267,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         txtSLoc = new javax.swing.JTextField();
         lblPoPosto = new javax.swing.JLabel();
         txtPoPosto = new javax.swing.JTextField();
+        lblShipTo = new javax.swing.JLabel();
+        txtShipTo = new javax.swing.JTextField();
         jPanel1 = new javax.swing.JPanel();
         btnPostAgain = new javax.swing.JButton();
         btnReprint = new javax.swing.JButton();
@@ -1055,28 +1056,36 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             }
         });
 
+        lblShipTo.setText(resourceMap.getString("lblShipTo.text")); // NOI18N
+        lblShipTo.setName("lblShipTo"); // NOI18N
+
+        txtShipTo.setDisabledTextColor(resourceMap.getColor("txtGRText.disabledTextColor")); // NOI18N
+        txtShipTo.setEnabled(false);
+        txtShipTo.setName("txtShipTo"); // NOI18N
+
         javax.swing.GroupLayout pnWTRightLayout = new javax.swing.GroupLayout(pnWTRight);
         pnWTRight.setLayout(pnWTRightLayout);
         pnWTRightLayout.setHorizontalGroup(
             pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnWTRightLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
+                .addGap(21, 21, 21)
                 .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblVendorTransport)
                     .addComponent(lblPoPosto)
                     .addComponent(lblRegItem)
                     .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(lblMatnr)
                         .addComponent(lbKunnr, javax.swing.GroupLayout.Alignment.LEADING))
                     .addComponent(lblWeight)
+                    .addComponent(lblSO)
+                    .addComponent(lblPONo)
+                    .addComponent(lblDelNum)
+                    .addComponent(lblShipTo)
+                    .addComponent(lblSLoc)
                     .addComponent(lblLgortIn)
                     .addComponent(lblCharg)
                     .addComponent(lblChargIn)
-                    .addComponent(lblSLoc)
-                    .addComponent(lblVendorLoading)
-                    .addComponent(lblVendorTransport)
-                    .addComponent(lblSO)
-                    .addComponent(lblPONo)
-                    .addComponent(lblDelNum))
+                    .addComponent(lblVendorLoading))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtSO, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
@@ -1089,13 +1098,14 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(txtCustomer, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
+                    .addComponent(txtRegItem, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
+                    .addComponent(txtShipTo, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
                     .addComponent(txtSLoc, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
                     .addComponent(txtLgortIn, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
                     .addComponent(txtCharg, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
                     .addComponent(txtChargIn, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
-                    .addComponent(txtRegItem, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
-                    .addComponent(txtVendorTransport, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
-                    .addComponent(txtVendorLoading, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE))
+                    .addComponent(txtVendorLoading, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
+                    .addComponent(txtVendorTransport, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE))
                 .addContainerGap())
         );
         pnWTRightLayout.setVerticalGroup(
@@ -1136,29 +1146,33 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     .addComponent(txtCustomer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblShipTo)
+                    .addComponent(txtShipTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtSLoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblSLoc, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(8, 8, 8)
-                .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtLgortIn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblLgortIn))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtCharg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblCharg))
+                    .addComponent(lblLgortIn)
+                    .addComponent(txtLgortIn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtChargIn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblChargIn))
+                    .addComponent(lblCharg)
+                    .addComponent(txtCharg, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtVendorLoading, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblVendorLoading))
+                    .addComponent(lblChargIn)
+                    .addComponent(txtChargIn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtVendorTransport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblVendorTransport))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lblVendorLoading)
+                    .addComponent(txtVendorLoading, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnWTRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblVendorTransport)
+                    .addComponent(txtVendorTransport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         jPanel1.setName("jPanel1"); // NOI18N
@@ -2359,12 +2373,12 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 if (kunnr != null && !kunnr.trim().isEmpty()) {
                     entityManager.clear();
                     if (Constants.WeighingProcess.MODE_DETAIL.IN_PO_PURCHASE.name().equals(weightTicket.getMode())) {
-                        Vendor custVendor = weightTicketRegistarationController.findByLifnrIsCustomer(weightTicket.getWeightTicketDetail().getKunnr());
+                        Vendor custVendor = weightTicketRegistarationController.findByLifnrIsCustomer(kunnr);
                         if (custVendor != null) {
                             txtCustomer.setText(custVendor.getName1() + " " + custVendor.getName2());
                         }
                     } else {
-                        Customer cust = weightTicketRegistarationController.findByKunnr(weightTicket.getWeightTicketDetail().getKunnr());
+                        Customer cust = weightTicketRegistarationController.findByKunnr(kunnr);
                         if (cust != null) {
                             String name = cust.getName2();
                             if (!StringUtil.isEmptyString(cust.getName3())) {
@@ -2376,8 +2390,28 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                             txtCustomer.setText(name);
                         }
                     }
-
                 }
+
+                if (Constants.WeighingProcess.MODE_DETAIL.OUT_SELL_ROAD.name().equals(weightTicket.getMode())
+                        || Constants.WeighingProcess.MODE_DETAIL.OUT_SELL_WATERWAY.name().equals(weightTicket.getMode())) {
+                    String shipTo = weightTicket.getWeightTicketDetail().getShipTo();
+                    if (shipTo != null && !shipTo.trim().isEmpty()) {
+                        entityManager.clear();
+                        Customer cust = weightTicketRegistarationController.findByKunnr(shipTo);
+                        if (cust != null) {
+                            String name = cust.getName2();
+                            if (!StringUtil.isEmptyString(cust.getName3())) {
+                                name += " " + cust.getName3();
+                            }
+                            if (!StringUtil.isEmptyString(cust.getName4())) {
+                                name += " " + cust.getName4();
+                            }
+
+                            txtShipTo.setText(!StringUtil.isEmptyString(name) ? name : cust.getName1());
+                        }
+                    }
+                }
+
                 if ((WeighBridgeApp.getApplication().isOfflineMode()
                         && !weightTicket.isPosted())
                         || (!WeighBridgeApp.getApplication().isOfflineMode()
@@ -2535,6 +2569,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             lblSO.setVisible(false);
             lblLoadSource.setVisible(false);
             txtLoadSource.setVisible(false);
+            lblShipTo.setVisible(false);
+            txtShipTo.setVisible(false);
 
             txtSO.setVisible(false);
             txtWeightTicketIdRef.setVisible(false);
@@ -2567,6 +2603,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             txtPoPosto.setVisible(false);
             txtVendorLoading.setVisible(false);
             txtVendorTransport.setVisible(false);
+            lblShipTo.setVisible(false);
+            txtShipTo.setVisible(false);
         }
         if (ModeEnum.IN_OTHER.name().equals(mode) || ModeEnum.OUT_OTHER.name().equals(mode)) {
             lblDelNum.setVisible(false);
@@ -2594,6 +2632,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             txtVendorTransport.setVisible(false);
             txtTicketId.setVisible(false);
             txtWeightTicketIdRef.setVisible(false);
+            lblShipTo.setVisible(false);
+            txtShipTo.setVisible(false);
         }
         if (ModeEnum.OUT_SELL_ROAD.name().equals(mode)) {
             lblTicketId.setVisible(false);
@@ -2636,7 +2676,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             txtLgortIn.setVisible(false);
             txtChargIn.setVisible(false);
             txtPoPosto.setVisible(false);
-
+            lblShipTo.setVisible(false);
+            txtShipTo.setVisible(false);
         }
         if (ModeEnum.OUT_SLOC_SLOC.name().equals(mode)) {
             lblSling.setVisible(false);
@@ -2654,6 +2695,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             txtWeightTicketIdRef.setVisible(false);
             txtDelNum.setVisible(false);
             txtMatnr.setVisible(false);
+            lblShipTo.setVisible(false);
+            txtShipTo.setVisible(false);
         }
         if (ModeEnum.OUT_PULL_STATION.name().equals(mode)) {
             lblWeightTicketIdRef.setVisible(false);
@@ -2671,6 +2714,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             txtMatnr.setVisible(false);
             txtLgortIn.setVisible(false);
             txtChargIn.setVisible(false);
+            lblShipTo.setVisible(false);
+            txtShipTo.setVisible(false);
         }
         if (ModeEnum.OUT_SELL_WATERWAY.name().equals(mode)) {
 
@@ -2905,7 +2950,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             OutboundDelivery outbDel = null;
             List<String> completedDO = new ArrayList<>();
             boolean flgGqty = false;
-            
+
             boolean offlineMode = WeighBridgeApp.getApplication().isOfflineMode();
 
             if (!offlineMode && (((isStage1()) && checkPlant) || ((isStage2() || (!isStage1() && !isStage2())) && !weightTicket.isDissolved())
@@ -4045,6 +4090,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         txtTrailerPlate.setValue(null);
         txtSalan.setText(null);
         txtSLoc.setText(null);
+        txtShipTo.setText(null);
 
         txtGRText.setText(null);
         txtRegItem.setText(null);
@@ -4490,6 +4536,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     private javax.swing.JLabel lblSLoc;
     private javax.swing.JLabel lblSO;
     private javax.swing.JLabel lblSalan;
+    private javax.swing.JLabel lblShipTo;
     private javax.swing.JLabel lblSling;
     private javax.swing.JLabel lblTicketId;
     private javax.swing.JLabel lblTrailerPlate;
@@ -4538,6 +4585,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txtSLoc;
     private javax.swing.JTextField txtSO;
     private javax.swing.JTextField txtSalan;
+    private javax.swing.JTextField txtShipTo;
     private javax.swing.JFormattedTextField txtSling;
     private javax.swing.JFormattedTextField txtTicketId;
     private javax.swing.JFormattedTextField txtTrailerPlate;

@@ -24,6 +24,7 @@ import javax.persistence.Id;
 @NamedQueries({
     @NamedQuery(name = "Customer.findAll", query = "SELECT c FROM Customer c"),
     @NamedQuery(name = "Customer.findByMandt", query = "SELECT c FROM Customer c WHERE c.mandt = :mandt"),
+    @NamedQuery(name = "Customer.findByKunnrs", query = "SELECT c FROM Customer c WHERE c.mandt = :mandt AND c.kunnr IN :kunnrs"),
     @NamedQuery(name = "Customer.findByKunnr", query = "SELECT c FROM Customer c WHERE c.kunnr = :kunnr")
 })
 public class Customer implements Serializable {

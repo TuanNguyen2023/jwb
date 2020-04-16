@@ -54,7 +54,26 @@ public class CustomerRepository {
 
         return null;
     }
-    
+
+    public List<Customer> getListCustomerByKunnr(List<String> kunnrs) {
+        List<Customer> list = new ArrayList<>();
+        if (kunnrs == null || kunnrs.isEmpty()) {
+            return list;
+        }
+
+        try {
+            TypedQuery<Customer> typedQuery = entityManager.createNamedQuery("Customer.findByKunnrs", Customer.class);
+            typedQuery.setParameter("mandt", configuration.getSapClient());
+            typedQuery.setParameter("kunnrs", kunnrs);
+            list = typedQuery.getResultList();
+        } catch (Exception ex) {
+            logger.error(null, ex);
+            ExceptionUtil.checkDatabaseDisconnectedException(ex);
+        }
+
+        return list;
+    }
+
     public boolean hasData() {
         try {
             TypedQuery<Customer> typedQuery = entityManager.createNamedQuery("Customer.findByMandt", Customer.class);

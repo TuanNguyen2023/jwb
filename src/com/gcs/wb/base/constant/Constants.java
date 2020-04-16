@@ -350,6 +350,6 @@ public class Constants {
 
     public static final class Partner {
 
-        public static final String PARVW = "SH";
+        public static final String PARVW = "WE";
     }
 }
