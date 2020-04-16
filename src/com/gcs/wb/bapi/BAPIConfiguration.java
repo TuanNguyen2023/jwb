@@ -21,6 +21,7 @@ import com.gcs.wb.bapi.helper.MatLookupBapi;
 import com.gcs.wb.bapi.helper.MaterialGetListBapi;
 import com.gcs.wb.bapi.helper.MvtGetDetailBapi;
 import com.gcs.wb.bapi.helper.MvtReasonsGetListBapi;
+import com.gcs.wb.bapi.helper.PartnerGetListBapi;
 import com.gcs.wb.bapi.helper.PlantGetDetailBapi;
 import com.gcs.wb.bapi.helper.PoGetDetailBapi;
 import com.gcs.wb.bapi.helper.PoPostGetListBapi;
@@ -115,6 +116,7 @@ public class BAPIConfiguration {
         sessionConfig.addAnnotatedClass(SyncContractSOGetListBapi.class);
         sessionConfig.addAnnotatedClass(DOPostingPGIBapi.class);
         sessionConfig.addAnnotatedClass(CustomerGetListBapi.class);
+        sessionConfig.addAnnotatedClass(PartnerGetListBapi.class);
         
         AnnotationConfiguration conf = new AnnotationConfiguration(sessionConfig);
         return conf.buildSessionManager();
