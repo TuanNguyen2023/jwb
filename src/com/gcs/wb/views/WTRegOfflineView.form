@@ -59,7 +59,7 @@
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="pnShowFilter" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
-              <Component id="spnResult" pref="211" max="32767" attributes="0"/>
+              <Component id="spnResult" pref="202" max="32767" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="pnPrintControl" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
@@ -152,9 +152,9 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                           <Component id="lblHourFrom" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbxHourFrom" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbxHourFrom" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
                           <Component id="lblHourTo" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbxHourTo" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbxHourTo" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -173,11 +173,11 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="lblStatus" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="cbxStatus" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="cbxMaterialType" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="cbxStatus" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
+                              <Component id="cbxMaterialType" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
                               <Component id="lblMaterialType" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="lblMode" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="cbxModeSearch" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="cbxModeSearch" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <Group type="103" alignment="0" groupAlignment="3" attributes="0">
