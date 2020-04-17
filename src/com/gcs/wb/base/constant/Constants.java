@@ -347,4 +347,9 @@ public class Constants {
         public static final String PLATE_XE = "Z002";
         public static final String PLATE_GHE = "Z001";
     }
+
+    public static final class Partner {
+
+        public static final String PARVW = "WE";
+    }
 }

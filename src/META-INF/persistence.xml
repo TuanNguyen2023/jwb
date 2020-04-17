@@ -32,6 +32,7 @@
     <class>com.gcs.wb.jpa.entity.SchedulerSync</class>
     <class>com.gcs.wb.jpa.entity.WeightTicketAudit</class>
     <class>com.gcs.wb.jpa.entity.WeightTicketDetailAudit</class>
+    <class>com.gcs.wb.jpa.entity.Partner</class>
     <properties>
       <property name="eclipselink.logging.level.sql" value="FINE"/>
       <property name="hibernate.show_sql" value="true"/>

@@ -15,6 +15,7 @@ import com.gcs.wb.jpa.entity.SLoc;
 import com.gcs.wb.jpa.repositorys.BatchStockRepository;
 import com.gcs.wb.jpa.repositorys.CustomerRepository;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
+import com.gcs.wb.jpa.repositorys.PartnerRepository;
 import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
 import com.gcs.wb.jpa.repositorys.SLocRepository;
 import com.gcs.wb.jpa.repositorys.SaleOrderRepository;
@@ -36,6 +37,7 @@ public class SyncMasterDataService {
     private PurchaseOrderRepository purchaseOrderRepository = new PurchaseOrderRepository();
     private SaleOrderRepository saleOrderRepository = new SaleOrderRepository();
     private CustomerRepository customerRepository = new CustomerRepository();
+    private PartnerRepository partnerRepository = new PartnerRepository();
 
     private SAPService sapService;
     private Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
@@ -51,8 +53,7 @@ public class SyncMasterDataService {
 
     public void syncMasterData() throws Exception {
         logger.info("Sync master data is processing...");
-      
-        
+
         logger.info("Sync SAP setting...");
         SAPSetting sapSetting = syncSapSetting();
         WeighBridgeApp.getApplication().setSapSetting(sapSetting);
@@ -81,12 +82,14 @@ public class SyncMasterDataService {
         logger.info("Sync SO...");
         syncSoDatas();
 
-
         logger.info("Sync customer...");
         syncCustomer();
 
+        logger.info("Sync Weigh Bridge vendor master data oubound...");
+        syncPartner();
+
         logger.info("Sync master data is finished...");
-        
+
         logger.info("Restart app...");
         WeighBridgeApp.getApplication().restartApplication();
     }
@@ -138,10 +141,15 @@ public class SyncMasterDataService {
         if (!saleOrderRepository.hasData()) {
             syncSoDatas();
         }
-        
+
         logger.info("Sync customer...");
         if (!customerRepository.hasData()) {
             syncCustomer();
+        }
+
+        logger.info("Sync Weigh Bridge vendor master data oubound...");
+        if (!partnerRepository.hasData()) {
+            syncPartner();
         }
 
         logger.info("Sync master data is finished...");
@@ -178,5 +186,9 @@ public class SyncMasterDataService {
 
     public void syncCustomer() {
         sapService.syncCustomer();
+    }
+
+    public void syncPartner() {
+        sapService.syncPartnerDatas();
     }
 }

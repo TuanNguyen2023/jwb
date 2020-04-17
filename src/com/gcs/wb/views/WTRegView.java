@@ -116,6 +116,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
     DefaultComboBoxModel vendorTransModel = (DefaultComboBoxModel) SerializationUtils.clone(vendorLoadModel);
     DefaultComboBoxModel vendorCustomerModel = weightTicketRegistarationController.getCusVendorModel();
     DefaultComboBoxModel customerModel = weightTicketRegistarationController.getCustomerModel();
+    DefaultComboBoxModel shipToModel = (DefaultComboBoxModel) SerializationUtils.clone(customerModel);
 
     public WTRegView() {
         newWeightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
@@ -129,7 +130,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         btnReprint.setEnabled(false);
         btnEdit.setEnabled(false);
         String roles = WeighBridgeApp.getApplication().getLogin().getRoles().toUpperCase();
-        if(!(roles.contains("Z_JWB_SUPERVISOR") || roles.contains("Z_JWB_ADMIN"))) {
+        if (!(roles.contains("Z_JWB_SUPERVISOR") || roles.contains("Z_JWB_ADMIN"))) {
             btnEdit.setVisible(false);
         }
 
@@ -341,6 +342,30 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 return this;
             }
         });
+
+        cbxShipToN.setRenderer(new DefaultListCellRenderer() {
+
+            @Override
+            public Component getListCellRendererComponent(
+                    JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof Customer) {
+                    Customer customer = (Customer) value;
+                    String name = customer.getName2();
+                    if (!StringUtil.isEmptyString(customer.getName3())) {
+                        name += " " + customer.getName3();
+                    }
+                    if (!StringUtil.isEmptyString(customer.getName4())) {
+                        name += " " + customer.getName4();
+                    }
+
+                    setText(!StringUtil.isEmptyString(name) ? name : customer.getName1());
+                    setToolTipText(customer.getKunnr());
+                }
+
+                return this;
+            }
+        });
     }
 
     private void initComboboxModel() {
@@ -455,22 +480,12 @@ public class WTRegView extends javax.swing.JInternalFrame {
         lblMaterialTypeN = new javax.swing.JLabel();
         lblWeightN = new javax.swing.JLabel();
         lblWeightUnitN = new javax.swing.JLabel();
-        lblSlocN = new javax.swing.JLabel();
-        lblSloc2N = new javax.swing.JLabel();
-        lblBatchStockN = new javax.swing.JLabel();
-        lblBatchStock2N = new javax.swing.JLabel();
         lblDONumN = new javax.swing.JLabel();
         lblSONumN = new javax.swing.JLabel();
         lblPONumN = new javax.swing.JLabel();
         lblPOSTONumN = new javax.swing.JLabel();
-        lblVendorLoadingN = new javax.swing.JLabel();
-        lblVendorTransportN = new javax.swing.JLabel();
         cbxMaterialTypeN = new javax.swing.JComboBox();
         txtWeightN = new javax.swing.JFormattedTextField();
-        cbxSlocN = new javax.swing.JComboBox();
-        cbxSloc2N = new javax.swing.JComboBox();
-        cbxBatchStockN = new javax.swing.JComboBox();
-        cbxBatchStock2N = new javax.swing.JComboBox();
         txtDONumN = new javax.swing.JTextField();
         btnDOCheckN = new javax.swing.JButton();
         txtSONumN = new javax.swing.JTextField();
@@ -479,12 +494,24 @@ public class WTRegView extends javax.swing.JInternalFrame {
         btnPOCheckN = new javax.swing.JButton();
         txtPOSTONumN = new javax.swing.JTextField();
         btnPOSTOCheckN = new javax.swing.JButton();
-        cbxVendorLoadingN = new javax.swing.JComboBox();
-        cbxVendorTransportN = new javax.swing.JComboBox();
         lblWeightTicketNo = new javax.swing.JLabel();
         txtWeightTicketNo = new javax.swing.JTextField();
         lblCustomerN = new javax.swing.JLabel();
         cbxCustomerN = new javax.swing.JComboBox();
+        lblShipToN = new javax.swing.JLabel();
+        cbxShipToN = new javax.swing.JComboBox();
+        cbxSlocN = new javax.swing.JComboBox();
+        lblSlocN = new javax.swing.JLabel();
+        cbxSloc2N = new javax.swing.JComboBox();
+        lblSloc2N = new javax.swing.JLabel();
+        cbxBatchStockN = new javax.swing.JComboBox();
+        lblBatchStockN = new javax.swing.JLabel();
+        cbxBatchStock2N = new javax.swing.JComboBox();
+        lblBatchStock2N = new javax.swing.JLabel();
+        cbxVendorLoadingN = new javax.swing.JComboBox();
+        lblVendorLoadingN = new javax.swing.JLabel();
+        cbxVendorTransportN = new javax.swing.JComboBox();
+        lblVendorTransportN = new javax.swing.JLabel();
         pnShowFilter = new javax.swing.JPanel();
         btnShowFilter = new javax.swing.JButton();
 
@@ -975,33 +1002,33 @@ public class WTRegView extends javax.swing.JInternalFrame {
                     .addComponent(lblLoadSourceN))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(pnROVLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtProductionBatchN, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
-                    .addComponent(txtLoadSourceN, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
-                    .addComponent(txtSalanN, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
-                    .addComponent(txtSoNiemXaN, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
-                    .addComponent(cbxModeType, 0, 380, Short.MAX_VALUE)
-                    .addComponent(txtTicketIdN, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
-                    .addComponent(txtCMNDN, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
-                    .addComponent(txtWeightTickerRefN, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
-                    .addComponent(txtDriverNameN, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
-                    .addComponent(txtRegisterIdN, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
+                    .addComponent(txtProductionBatchN, javax.swing.GroupLayout.DEFAULT_SIZE, 383, Short.MAX_VALUE)
+                    .addComponent(txtLoadSourceN, javax.swing.GroupLayout.DEFAULT_SIZE, 383, Short.MAX_VALUE)
+                    .addComponent(txtSalanN, javax.swing.GroupLayout.DEFAULT_SIZE, 383, Short.MAX_VALUE)
+                    .addComponent(txtSoNiemXaN, javax.swing.GroupLayout.DEFAULT_SIZE, 383, Short.MAX_VALUE)
+                    .addComponent(cbxModeType, 0, 383, Short.MAX_VALUE)
+                    .addComponent(txtTicketIdN, javax.swing.GroupLayout.DEFAULT_SIZE, 383, Short.MAX_VALUE)
+                    .addComponent(txtCMNDN, javax.swing.GroupLayout.DEFAULT_SIZE, 383, Short.MAX_VALUE)
+                    .addComponent(txtWeightTickerRefN, javax.swing.GroupLayout.DEFAULT_SIZE, 383, Short.MAX_VALUE)
+                    .addComponent(txtDriverNameN, javax.swing.GroupLayout.DEFAULT_SIZE, 383, Short.MAX_VALUE)
+                    .addComponent(txtRegisterIdN, javax.swing.GroupLayout.DEFAULT_SIZE, 383, Short.MAX_VALUE)
                     .addGroup(pnROVLeftLayout.createSequentialGroup()
                         .addComponent(txtPlateNoN, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(lblTrailerNoN)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtTrailerNoN, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
+                        .addComponent(txtTrailerNoN, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
                         .addComponent(lblTonnageN)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtTonnageN, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE))
+                        .addComponent(txtTonnageN, javax.swing.GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE))
                     .addGroup(pnROVLeftLayout.createSequentialGroup()
                         .addComponent(txtSlingN, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(21, 21, 21)
                         .addComponent(lblPalletN)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtPalletN, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE))
-                    .addComponent(txtNoteN, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE))
+                        .addComponent(txtPalletN, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE))
+                    .addComponent(txtNoteN, javax.swing.GroupLayout.DEFAULT_SIZE, 383, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblTonngageUnitN)
                 .addContainerGap())
@@ -1096,7 +1123,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addComponent(btnClear)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnSave)
-                .addContainerGap(319, Short.MAX_VALUE))
+                .addContainerGap(322, Short.MAX_VALUE))
         );
         pnControlLayout.setVerticalGroup(
             pnControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1128,7 +1155,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addComponent(pnROVLeft, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(pnControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(66, Short.MAX_VALUE))
+                .addContainerGap(96, Short.MAX_VALUE))
         );
 
         pnROVRight.setName("pnROVRight"); // NOI18N
@@ -1142,18 +1169,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
         lblWeightUnitN.setText(resourceMap.getString("lblWeightUnitN.text")); // NOI18N
         lblWeightUnitN.setName("lblWeightUnitN"); // NOI18N
 
-        lblSlocN.setText(resourceMap.getString("lblSlocN.text")); // NOI18N
-        lblSlocN.setName("lblSlocN"); // NOI18N
-
-        lblSloc2N.setText(resourceMap.getString("lblSloc2N.text")); // NOI18N
-        lblSloc2N.setName("lblSloc2N"); // NOI18N
-
-        lblBatchStockN.setText(resourceMap.getString("lblBatchStockN.text")); // NOI18N
-        lblBatchStockN.setName("lblBatchStockN"); // NOI18N
-
-        lblBatchStock2N.setText(resourceMap.getString("lblBatchStock2N.text")); // NOI18N
-        lblBatchStock2N.setName("lblBatchStock2N"); // NOI18N
-
         lblDONumN.setText(resourceMap.getString("lblDONumN.text")); // NOI18N
         lblDONumN.setName("lblDONumN"); // NOI18N
 
@@ -1165,12 +1180,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         lblPOSTONumN.setText(resourceMap.getString("lblPOSTONumN.text")); // NOI18N
         lblPOSTONumN.setName("lblPOSTONumN"); // NOI18N
-
-        lblVendorLoadingN.setText(resourceMap.getString("lblVendorLoadingN.text")); // NOI18N
-        lblVendorLoadingN.setName("lblVendorLoadingN"); // NOI18N
-
-        lblVendorTransportN.setText(resourceMap.getString("lblVendorTransportN.text")); // NOI18N
-        lblVendorTransportN.setName("lblVendorTransportN"); // NOI18N
 
         cbxMaterialTypeN.setEditable(true);
         cbxMaterialTypeN.setName("cbxMaterialTypeN"); // NOI18N
@@ -1185,34 +1194,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
         txtWeightN.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtWeightNKeyReleased(evt);
-            }
-        });
-
-        cbxSlocN.setName("cbxSlocN"); // NOI18N
-        cbxSlocN.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbxSlocNActionPerformed(evt);
-            }
-        });
-
-        cbxSloc2N.setName("cbxSloc2N"); // NOI18N
-        cbxSloc2N.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbxSloc2NActionPerformed(evt);
-            }
-        });
-
-        cbxBatchStockN.setName("cbxBatchStockN"); // NOI18N
-        cbxBatchStockN.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbxBatchStockNActionPerformed(evt);
-            }
-        });
-
-        cbxBatchStock2N.setName("cbxBatchStock2N"); // NOI18N
-        cbxBatchStock2N.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbxBatchStock2NActionPerformed(evt);
             }
         });
 
@@ -1280,20 +1261,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
         btnPOSTOCheckN.setText(resourceMap.getString("btnPOSTOCheckN.text")); // NOI18N
         btnPOSTOCheckN.setName("btnPOSTOCheckN"); // NOI18N
 
-        cbxVendorLoadingN.setName("cbxVendorLoadingN"); // NOI18N
-        cbxVendorLoadingN.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbxVendorLoadingNActionPerformed(evt);
-            }
-        });
-
-        cbxVendorTransportN.setName("cbxVendorTransportN"); // NOI18N
-        cbxVendorTransportN.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbxVendorTransportNActionPerformed(evt);
-            }
-        });
-
         lblWeightTicketNo.setText(resourceMap.getString("lblWeightTicketNo.text")); // NOI18N
         lblWeightTicketNo.setName("lblWeightTicketNo"); // NOI18N
 
@@ -1311,6 +1278,71 @@ public class WTRegView extends javax.swing.JInternalFrame {
             }
         });
 
+        lblShipToN.setText(resourceMap.getString("lblShipToN.text")); // NOI18N
+        lblShipToN.setName("lblShipToN"); // NOI18N
+
+        cbxShipToN.setName("cbxShipToN"); // NOI18N
+
+        cbxSlocN.setName("cbxSlocN"); // NOI18N
+        cbxSlocN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxSlocNActionPerformed(evt);
+            }
+        });
+
+        lblSlocN.setText(resourceMap.getString("lblSlocN.text")); // NOI18N
+        lblSlocN.setName("lblSlocN"); // NOI18N
+
+        cbxSloc2N.setName("cbxSloc2N"); // NOI18N
+        cbxSloc2N.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxSloc2NActionPerformed(evt);
+            }
+        });
+
+        lblSloc2N.setText(resourceMap.getString("lblSloc2N.text")); // NOI18N
+        lblSloc2N.setName("lblSloc2N"); // NOI18N
+
+        cbxBatchStockN.setName("cbxBatchStockN"); // NOI18N
+        cbxBatchStockN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxBatchStockNActionPerformed(evt);
+            }
+        });
+
+        lblBatchStockN.setText(resourceMap.getString("lblBatchStockN.text")); // NOI18N
+        lblBatchStockN.setName("lblBatchStockN"); // NOI18N
+
+        cbxBatchStock2N.setName("cbxBatchStock2N"); // NOI18N
+        cbxBatchStock2N.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxBatchStock2NActionPerformed(evt);
+            }
+        });
+
+        lblBatchStock2N.setText(resourceMap.getString("lblBatchStock2N.text")); // NOI18N
+        lblBatchStock2N.setName("lblBatchStock2N"); // NOI18N
+
+        cbxVendorLoadingN.setName("cbxVendorLoadingN"); // NOI18N
+        cbxVendorLoadingN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxVendorLoadingNActionPerformed(evt);
+            }
+        });
+
+        lblVendorLoadingN.setText(resourceMap.getString("lblVendorLoadingN.text")); // NOI18N
+        lblVendorLoadingN.setName("lblVendorLoadingN"); // NOI18N
+
+        cbxVendorTransportN.setName("cbxVendorTransportN"); // NOI18N
+        cbxVendorTransportN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxVendorTransportNActionPerformed(evt);
+            }
+        });
+
+        lblVendorTransportN.setText(resourceMap.getString("lblVendorTransportN.text")); // NOI18N
+        lblVendorTransportN.setName("lblVendorTransportN"); // NOI18N
+
         javax.swing.GroupLayout pnROVRightLayout = new javax.swing.GroupLayout(pnROVRight);
         pnROVRight.setLayout(pnROVRightLayout);
         pnROVRightLayout.setHorizontalGroup(
@@ -1318,9 +1350,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
             .addGroup(pnROVRightLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblBatchStock2N)
-                    .addComponent(lblVendorLoadingN)
-                    .addComponent(lblVendorTransportN)
                     .addComponent(lblWeightTicketNo)
                     .addComponent(lblMaterialTypeN)
                     .addComponent(lblPOSTONumN)
@@ -1329,25 +1358,30 @@ public class WTRegView extends javax.swing.JInternalFrame {
                     .addComponent(lblSONumN)
                     .addComponent(lblDONumN)
                     .addComponent(lblCustomerN)
+                    .addComponent(lblShipToN)
                     .addComponent(lblSlocN)
                     .addComponent(lblSloc2N)
-                    .addComponent(lblBatchStockN))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(lblBatchStockN)
+                    .addComponent(lblBatchStock2N)
+                    .addComponent(lblVendorTransportN)
+                    .addComponent(lblVendorLoadingN))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cbxVendorTransportN, 0, 374, Short.MAX_VALUE)
-                    .addComponent(cbxCustomerN, 0, 374, Short.MAX_VALUE)
-                    .addComponent(txtPONumN, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
-                    .addComponent(txtPOSTONumN, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
-                    .addComponent(cbxMaterialTypeN, 0, 374, Short.MAX_VALUE)
-                    .addComponent(txtWeightN, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
-                    .addComponent(txtWeightTicketNo, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
-                    .addComponent(txtSONumN, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
-                    .addComponent(txtDONumN, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
-                    .addComponent(cbxSlocN, 0, 374, Short.MAX_VALUE)
-                    .addComponent(cbxSloc2N, 0, 374, Short.MAX_VALUE)
-                    .addComponent(cbxBatchStockN, 0, 374, Short.MAX_VALUE)
-                    .addComponent(cbxBatchStock2N, 0, 374, Short.MAX_VALUE)
-                    .addComponent(cbxVendorLoadingN, 0, 374, Short.MAX_VALUE))
+                    .addComponent(cbxVendorTransportN, 0, 377, Short.MAX_VALUE)
+                    .addComponent(cbxShipToN, 0, 377, Short.MAX_VALUE)
+                    .addComponent(cbxCustomerN, 0, 377, Short.MAX_VALUE)
+                    .addComponent(txtPONumN, javax.swing.GroupLayout.DEFAULT_SIZE, 377, Short.MAX_VALUE)
+                    .addComponent(txtPOSTONumN, javax.swing.GroupLayout.DEFAULT_SIZE, 377, Short.MAX_VALUE)
+                    .addComponent(cbxMaterialTypeN, 0, 377, Short.MAX_VALUE)
+                    .addComponent(txtWeightN, javax.swing.GroupLayout.DEFAULT_SIZE, 377, Short.MAX_VALUE)
+                    .addComponent(txtWeightTicketNo, javax.swing.GroupLayout.DEFAULT_SIZE, 377, Short.MAX_VALUE)
+                    .addComponent(txtSONumN, javax.swing.GroupLayout.DEFAULT_SIZE, 377, Short.MAX_VALUE)
+                    .addComponent(txtDONumN, javax.swing.GroupLayout.DEFAULT_SIZE, 377, Short.MAX_VALUE)
+                    .addComponent(cbxSlocN, 0, 377, Short.MAX_VALUE)
+                    .addComponent(cbxSloc2N, 0, 377, Short.MAX_VALUE)
+                    .addComponent(cbxBatchStockN, 0, 377, Short.MAX_VALUE)
+                    .addComponent(cbxBatchStock2N, 0, 377, Short.MAX_VALUE)
+                    .addComponent(cbxVendorLoadingN, 0, 377, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnPOCheckN)
@@ -1396,34 +1430,38 @@ public class WTRegView extends javax.swing.JInternalFrame {
                     .addGroup(pnROVRightLayout.createSequentialGroup()
                         .addGap(6, 6, 6)
                         .addComponent(lblWeightUnitN)))
-                .addGap(8, 8, 8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbxCustomerN, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblCustomerN))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblSlocN)
-                    .addComponent(cbxSlocN, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblShipToN)
+                    .addComponent(cbxShipToN, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblSloc2N)
-                    .addComponent(cbxSloc2N, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbxSlocN, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblSlocN))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblBatchStockN)
-                    .addComponent(cbxBatchStockN, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbxSloc2N, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblSloc2N))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblBatchStock2N)
-                    .addComponent(cbxBatchStock2N, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbxBatchStockN, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblBatchStockN))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblVendorLoadingN)
-                    .addComponent(cbxVendorLoadingN, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbxBatchStock2N, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblBatchStock2N))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblVendorTransportN)
-                    .addComponent(cbxVendorTransportN, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbxVendorLoadingN, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblVendorLoadingN))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnROVRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbxVendorTransportN, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblVendorTransportN))
                 .addContainerGap())
         );
 
@@ -1476,17 +1514,17 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnShowFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(13, 13, 13)
-                .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE)
+                .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnPrintControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(13, 13, 13)
                         .addComponent(pnROVRight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(14, 14, 14)
                         .addComponent(pnRegistrationOfVehicle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap())
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         pack();
@@ -2115,6 +2153,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
     List<DOCheckStructure> listDONumbers = new ArrayList<>();
 
     private class CheckSOTask extends org.jdesktop.application.Task<Object, Void> {
+
         private boolean canceled = false;
         private List<String> mappingErrMsg = new ArrayList();
         private String returnErrMsg = "";
@@ -2267,14 +2306,12 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
     @Action(enabledProperty = "clearable")
     public void clearForm() {
-        cleanData();
         setCreatable(true);
         setFormEditable(false);
         setRbtEnabled(false);
         setSaveNeeded(false);
         setClearable(false);
 
-        // TODO new ui
         rbtInput.setEnabled(false);
         rbtOutput.setEnabled(false);
         cbxModeType.setEnabled(false);
@@ -2301,12 +2338,6 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             }
         }
 
-        // TODO: new ui set enable input
-        isValidDO = false;
-        isValidPO = false;
-        isValidPOSTO = false;
-        isValidSO = false;
-        disableAllInForm();
         prepareEditableForm(modeDetail);
     }
 
@@ -2373,22 +2404,23 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         lblVendorTransportN.setForeground(Color.black);
         cbxCustomerN.setEnabled(false);
         lblCustomerN.setForeground(Color.black);
+        cbxShipToN.setEnabled(false);
+        lblShipToN.setForeground(Color.black);
     }
 
     private void prepareEditableForm(MODE_DETAIL modeDetail) {
         cleanData();
-        initComboboxModel();
 
+        if (modeDetail == null) {
+            return;
+        }
+
+        initComboboxModel();
         lblPONumN.setText(resourceMapMsg.getString("lblPONumN.text"));
         lblPOSTONumN.setText(resourceMapMsg.getString("lblPOSTONumN.text"));
         lblSlocN.setText(resourceMapMsg.getString("lblSlocN.text"));
         lblBatchStockN.setText(resourceMapMsg.getString("lblBatchStockN.text"));
         lblPlateNoN.setText(resourceMapMsg.getString("lblPlateNoN.text"));
-
-        if (modeDetail == null) {
-            disableAllInForm();
-            return;
-        }
 
         switch (modeDetail) {
             case IN_PO_PURCHASE:
@@ -2489,6 +2521,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         showComponent(cbxVendorLoadingN, lblVendorLoadingN, false, false);
         showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
         showComponent(cbxCustomerN, lblCustomerN, true, false);
+        showComponent(cbxShipToN, lblShipToN, false, false);
     }
 
     private void prepareInWarehouseTransfer() {
@@ -2521,6 +2554,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         showComponent(cbxVendorLoadingN, lblVendorLoadingN, false, false);
         showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
         showComponent(cbxCustomerN, lblCustomerN, true, false);
+        showComponent(cbxShipToN, lblShipToN, false, false);
     }
 
     private void prepareInOutOther() {
@@ -2552,6 +2586,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         showComponent(cbxVendorLoadingN, lblVendorLoadingN, false, false);
         showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
         showComponent(cbxCustomerN, lblCustomerN, true, true);
+        showComponent(cbxShipToN, lblShipToN, false, false);
 
         cbxMaterialTypeN.setModel(materialInternalModel);
         cbxMaterialTypeN.setSelectedIndex(-1);
@@ -2589,6 +2624,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         showComponent(cbxVendorLoadingN, lblVendorLoadingN, false, false);
         showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
         showComponent(cbxCustomerN, lblCustomerN, true, false);
+        showComponent(cbxShipToN, lblShipToN, true, false);
     }
 
     private void prepareOutPlantPlant() {
@@ -2624,6 +2660,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         showComponent(cbxVendorTransportN, lblVendorTransportN, isShowPOV, true);
 
         showComponent(cbxCustomerN, lblCustomerN, true, false);
+        showComponent(cbxShipToN, lblShipToN, false, false);
     }
 
     private void prepareOutSlocSloc() {
@@ -2662,6 +2699,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         showComponent(cbxVendorLoadingN, lblVendorLoadingN, isShowPOV, false);
         showComponent(cbxVendorTransportN, lblVendorTransportN, isShowPOV, false);
         showComponent(cbxCustomerN, lblCustomerN, true, false);
+        showComponent(cbxShipToN, lblShipToN, false, false);
 
         cbxMaterialTypeN.setModel(materialModel);
         cbxMaterialTypeN.setSelectedIndex(-1);
@@ -2709,6 +2747,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         showComponent(cbxVendorTransportN, lblVendorTransportN, isShowPOV, true);
 
         showComponent(cbxCustomerN, lblCustomerN, true, false);
+        showComponent(cbxShipToN, lblShipToN, false, false);
     }
 
     private void prepareOutSellWateway() {
@@ -2742,6 +2781,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         showComponent(cbxVendorLoadingN, lblVendorLoadingN, false, false);
         showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
         showComponent(cbxCustomerN, lblCustomerN, true, false);
+        showComponent(cbxShipToN, lblShipToN, true, false);
 
         txtDONumN.setText("");
     }
@@ -2987,9 +3027,10 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN) && isValidSloc;
         boolean isSloc2Valid = wtRegisValidation.validateCbxSelected(cbxSloc2N.getSelectedIndex(), lblSloc2N) && isValidSloc;
+        boolean isWeightValid = wtRegisValidation.validateWeighField(txtWeightN.getText(), lblWeightN, 1, 10, 0.001d);
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
-                && isCMNDBLValid && isSalanValid
+                && isCMNDBLValid && isSalanValid && isWeightValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isSlocValid && isSloc2Valid && isMaterialTypeValid;
     }
@@ -3435,7 +3476,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         private List<String> strMaterial = new ArrayList<>();
         private List<String> matnrs = new ArrayList<>();
         private BigDecimal totalWeight = BigDecimal.ZERO;
-        private Customer customer = null;
+        private Customer customer = null, shipTo = null;
         private String strLgort = "";
         private List<String> mappingErrMsg = new ArrayList();
 
@@ -3466,6 +3507,11 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                         String kunnr = outboundDelivery.getKunnr();
                         if (kunnr != null && !kunnr.trim().isEmpty()) {
                             customer = syncCustomer(kunnr.trim());
+                        }
+
+                        kunnr = outboundDelivery.getOutboundDeliveryDetail().getShipTo();
+                        if (kunnr != null && !kunnr.trim().isEmpty()) {
+                            shipTo = syncCustomer(kunnr.trim());
                         }
                     }
                 }
@@ -3521,7 +3567,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                     }
 
                     if (isEditMode && !traid.isEmpty() && modeDetail == MODE_DETAIL.OUT_SELL_ROAD) {
-                        setWTAudit(newWeightTicket.getId(), traid.split("|", 2)[0]);
+                        setWTAudit(newWeightTicket.getId(), traid.split("\\|", 2)[0]);
                         mappingErrMsg.add(resourceMapMsg.getString("msg.vehicleNotMapping", plateName));
                     } else {
                         throw new Exception(resourceMapMsg.getString("msg.plateNoNotMappingWithDO", plateName, plateNo));
@@ -3529,7 +3575,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 }
 
                 // for check edit plateNo after check DO
-                plateNoValidDO = traid.split("|", 2)[0];
+                plateNoValidDO = traid.split("\\|", 2)[0];
 
                 // check customer
                 if (index > 0) {
@@ -3568,7 +3614,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                         canceled = true;
                         throw new Exception();
                     }
-                    
+
                     // overwrite plateNo
                     txtPlateNoN.setText(plateNoValidDO);
                 }
@@ -3675,10 +3721,21 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             txtWeightN.setText(df.format(totalWeight));
 
             if (customer != null) {
-                cbxCustomerN.setModel(weightTicketRegistarationController.getCustomerModel());
+                customerModel = weightTicketRegistarationController.getCustomerModel();
+                DefaultComboBoxModel shipToModel = (DefaultComboBoxModel) SerializationUtils.clone(customerModel);
+
+                cbxCustomerN.setModel(customerModel);
                 cbxCustomerN.setSelectedItem(customer);
+
+                if (shipTo != null) {
+                    cbxShipToN.setModel(shipToModel);
+                    cbxShipToN.setSelectedItem(shipTo);
+                } else {
+                    cbxShipToN.setSelectedIndex(-1);
+                }
             } else {
                 cbxCustomerN.setSelectedIndex(-1);
+                cbxShipToN.setSelectedIndex(-1);
             }
 
             btnDOCheckN.setForeground(Color.black);
@@ -3702,6 +3759,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 cbxMaterialTypeN.setSelectedItem("");
                 txtWeightN.setText("0");
                 cbxCustomerN.setSelectedIndex(-1);
+                cbxShipToN.setSelectedIndex(-1);
                 loadSLoc(null, null);
             }
 
@@ -3723,6 +3781,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
     }
 
     private class SaveWeightTicketTask extends org.jdesktop.application.Task<Object, Void> {
+
         private boolean checkVariant = false;
 
         SaveWeightTicketTask(org.jdesktop.application.Application app) {
@@ -4184,6 +4243,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         cbxVendorLoadingN.setSelectedIndex(-1);
         cbxVendorTransportN.setSelectedIndex(-1);
         cbxCustomerN.setSelectedIndex(-1);
+        cbxShipToN.setSelectedIndex(-1);
 
         disableAllInForm();
     }
@@ -4227,6 +4287,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
     private javax.swing.JComboBox cbxMaterialTypeN;
     private javax.swing.JComboBox cbxModeSearch;
     private javax.swing.JComboBox cbxModeType;
+    private javax.swing.JComboBox cbxShipToN;
     private javax.swing.JComboBox cbxSloc2N;
     private javax.swing.JComboBox cbxSlocN;
     private javax.swing.JComboBox cbxStatus;
@@ -4261,6 +4322,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
     private javax.swing.JLabel lblRegisterIdN;
     private javax.swing.JLabel lblSONumN;
     private javax.swing.JLabel lblSalanN;
+    private javax.swing.JLabel lblShipToN;
     private javax.swing.JLabel lblSlingN;
     private javax.swing.JLabel lblSloc2N;
     private javax.swing.JLabel lblSlocN;
@@ -4913,6 +4975,11 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             } else {
                 cbxCustomerN.setModel(customerModel);
                 cbxCustomerN.setSelectedItem(weightTicketRegistarationController.getCustomer(weightTicketDetail.getKunnr()));
+            }
+
+            if (modeDetail == MODE_DETAIL.OUT_SELL_ROAD || modeDetail == MODE_DETAIL.OUT_SELL_WATERWAY) {
+                cbxShipToN.setModel(shipToModel);
+                cbxShipToN.setSelectedItem(weightTicketRegistarationController.getCustomer(weightTicketDetail.getShipTo()));
             }
 
             // load sloc
