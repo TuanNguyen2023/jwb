@@ -1569,6 +1569,9 @@ private void txtDONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
 
 private void cbxSlocNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxSlocNActionPerformed
     loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
+    if (batchStockDcr != null) {
+        batchStockDcr.updateCombobox(cbxBatchStockN);
+    }
 }//GEN-LAST:event_cbxSlocNActionPerformed
 
 private void cbxBatchStockNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxBatchStockNActionPerformed
@@ -1586,6 +1589,9 @@ private void cbxBatchStockNActionPerformed(java.awt.event.ActionEvent evt) {//GE
 
 private void cbxSloc2NActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxSloc2NActionPerformed
     loadBatchStockModel2N(cbxSloc2N, cbxBatchStock2N, false);
+    if (batchStock2Dcr != null) {
+        batchStock2Dcr.updateCombobox(cbxBatchStock2N);
+    }
 }//GEN-LAST:event_cbxSloc2NActionPerformed
 
 private void cbxBatchStock2NActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxBatchStock2NActionPerformed
