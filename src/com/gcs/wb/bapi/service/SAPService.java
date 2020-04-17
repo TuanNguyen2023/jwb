@@ -23,6 +23,7 @@ import com.gcs.wb.bapi.helper.PlantGetDetailBapi;
 import com.gcs.wb.bapi.helper.PoGetDetailBapi;
 import com.gcs.wb.bapi.helper.PoPostGetListBapi;
 import com.gcs.wb.bapi.helper.SLocsGetListBapi;
+import com.gcs.wb.bapi.helper.SaleOrderGetDetailBapi;
 import com.gcs.wb.bapi.helper.SyncContractSOGetListBapi;
 import com.gcs.wb.bapi.helper.VendorGetDetailBapi;
 import com.gcs.wb.bapi.helper.VendorValiationCheckBapi;
@@ -33,6 +34,7 @@ import com.gcs.wb.bapi.helper.structure.MaterialGetListStructure;
 import com.gcs.wb.bapi.helper.structure.PODataOuboundStructure;
 import com.gcs.wb.bapi.helper.structure.PartnerGetListStructure;
 import com.gcs.wb.bapi.helper.structure.SLocsGetListStructure;
+import com.gcs.wb.bapi.helper.structure.SaleOrderGetDetailStructure;
 import com.gcs.wb.bapi.helper.structure.SalesOrderStructure;
 import com.gcs.wb.bapi.helper.structure.TransportagentGetListStructure;
 import com.gcs.wb.bapi.helper.structure.VendorGetDetailStructure;
@@ -1150,5 +1152,18 @@ public class SAPService {
                 throw ex;
             }
         });
+    }
+
+    public SaleOrderGetDetailBapi getSalesOrderDetail(String soNumber) {
+        try {
+            SaleOrderGetDetailBapi bapi = new SaleOrderGetDetailBapi();
+            bapi.setImVbeln(soNumber);
+            logger.info("[SAP] Get detail SO: " + bapi.toString());
+            session.execute(bapi);
+            return bapi;
+        } catch (Exception ex) {
+            logger.error(ex);
+            throw ex;
+        }
     }
 }
