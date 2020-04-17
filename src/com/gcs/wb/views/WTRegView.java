@@ -3554,7 +3554,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                     }
 
                     if (isEditMode && !traid.isEmpty() && modeDetail == MODE_DETAIL.OUT_SELL_ROAD) {
-                        setWTAudit(newWeightTicket.getId(), traid.split("|", 2)[0]);
+                        setWTAudit(newWeightTicket.getId(), traid.split("\\|", 2)[0]);
                         mappingErrMsg.add(resourceMapMsg.getString("msg.vehicleNotMapping", plateName));
                     } else {
                         throw new Exception(resourceMapMsg.getString("msg.plateNoNotMappingWithDO", plateName, plateNo));
@@ -3562,7 +3562,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 }
 
                 // for check edit plateNo after check DO
-                plateNoValidDO = traid.split("|", 2)[0];
+                plateNoValidDO = traid.split("\\|", 2)[0];
 
                 // check customer
                 if (index > 0) {
