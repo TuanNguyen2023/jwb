@@ -5,6 +5,9 @@
 package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
+import com.gcs.wb.base.comboboxfilter.ComboBoxFilterDecorator;
+import com.gcs.wb.base.comboboxfilter.CustomComboRenderer;
+import com.gcs.wb.base.comboboxfilter.HtmlHighlighter;
 import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.base.constant.Constants.WeighingProcess.MODE;
 import com.gcs.wb.base.constant.Constants.WeighingProcess.MODE_DETAIL;
@@ -76,6 +79,23 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
     DefaultComboBoxModel vendorCustomerModel = weightTicketRegistarationController.getCusVendorModel();
     DefaultComboBoxModel customerModel = weightTicketRegistarationController.getCustomerModel();
 
+    ComboBoxFilterDecorator<Object> hourFromDcr;
+    ComboBoxFilterDecorator<Object> hourToDcr ;
+    ComboBoxFilterDecorator<Object> modeDcr;
+    ComboBoxFilterDecorator<Object> statusDcr;
+    ComboBoxFilterDecorator<Object> modeSearchDcr;
+    ComboBoxFilterDecorator<Object> materialTypeDcr;
+    ComboBoxFilterDecorator<Object> materialTypeNDcr;
+    ComboBoxFilterDecorator<Object> slocDcr;
+    ComboBoxFilterDecorator<Object> sloc2Dcr;
+    ComboBoxFilterDecorator<Object> batchStockDcr;
+    ComboBoxFilterDecorator<Object> batchStock2Dcr;
+    ComboBoxFilterDecorator<Object> BatchStockDcr;
+    ComboBoxFilterDecorator<Object> BatchStock2Dcr;
+    ComboBoxFilterDecorator<Object> vendorLoadingDcr;
+    ComboBoxFilterDecorator<Object> vendorTransportDcr;
+    ComboBoxFilterDecorator<Object> customerDcr;
+    ComboBoxFilterDecorator<Object> shipToDcr;
     public WTRegOfflineView() {
         newWeightTicket = new WeightTicket();
         selectedWeightTicket = new WeightTicket();
@@ -132,6 +152,30 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
     }
 
     private void initComboboxRenderer() {
+        
+        materialTypeDcr = ComboBoxFilterDecorator.decorate(cbxMaterialType, WTRegOfflineView::getMaterialSearchText, WTRegOfflineView::customFilter);
+        
+        cbxMaterialType.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(
+                    JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof Material) {
+                    Material mat = (Material) value;
+                    setText(HtmlHighlighter.highlightText(getMaterialSearchText(value), materialTypeDcr.getFilterTextSupplier().get()));
+                    setToolTipText(mat.getMatnr());
+                }
+                this.setForeground((Color) UIManager.get("List.foreground"));
+                return this;
+            }
+        });
+        
+        hourFromDcr = ComboBoxFilterDecorator.decorate(cbxHourFrom, WTRegOfflineView::getCustomDisplayText, WTRegOfflineView::customFilter);
+        cbxHourFrom.setRenderer((new CustomComboRenderer(hourFromDcr.getFilterTextSupplier())));
+
+        hourToDcr = ComboBoxFilterDecorator.decorate(cbxHourTo, WTRegOfflineView::getCustomDisplayText, WTRegOfflineView::customFilter);
+        cbxHourTo.setRenderer((new CustomComboRenderer(hourToDcr.getFilterTextSupplier())));
+        
         cbxModeType.setRenderer(new DefaultListCellRenderer() {
 
             @Override
@@ -147,168 +191,160 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
             }
         });
 
-        cbxStatus.setRenderer(new DefaultListCellRenderer() {
+        statusDcr = ComboBoxFilterDecorator.decorate(cbxStatus, WTRegOfflineView::getCustomDisplayText, WTRegOfflineView::customFilter);
+        cbxStatus.setRenderer((new CustomComboRenderer(statusDcr.getFilterTextSupplier())));
 
-            @Override
-            public Component getListCellRendererComponent(
-                    JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if (value instanceof StatusEnum) {
-                    StatusEnum status = (StatusEnum) value;
-                    setText(status.getValue());
-                }
-                return this;
-            }
-        });
+        modeSearchDcr = ComboBoxFilterDecorator.decorate(cbxModeSearch, WTRegOfflineView::getCustomDisplayText, WTRegOfflineView::customFilter);
+        cbxModeSearch.setRenderer((new CustomComboRenderer(modeSearchDcr.getFilterTextSupplier())));
+        
+        materialTypeNDcr = ComboBoxFilterDecorator.decorate(cbxMaterialTypeN, WTRegOfflineView::getCustomDisplayText, WTRegOfflineView::customFilter);
+        cbxMaterialTypeN.setRenderer((new CustomComboRenderer(materialTypeNDcr.getFilterTextSupplier())));
+        
+        slocDcr = ComboBoxFilterDecorator.decorate(cbxSlocN, WTRegOfflineView::getCustomDisplayText, WTRegOfflineView::customFilter);
+        cbxSlocN.setRenderer(new CustomComboRenderer(slocDcr.getFilterTextSupplier()));
+        
+        sloc2Dcr = ComboBoxFilterDecorator.decorate(cbxSloc2N, WTRegOfflineView::getCustomDisplayText, WTRegOfflineView::customFilter);
+        cbxSloc2N.setRenderer(new CustomComboRenderer(sloc2Dcr.getFilterTextSupplier()));
 
-        cbxModeSearch.setRenderer(new DefaultListCellRenderer() {
+        batchStockDcr = ComboBoxFilterDecorator.decorate(cbxBatchStockN, WTRegOfflineView::getCustomDisplayText, WTRegOfflineView::customFilter);
+        cbxBatchStockN.setRenderer(new CustomComboRenderer(batchStockDcr.getFilterTextSupplier()));
+        
+        batchStock2Dcr = ComboBoxFilterDecorator.decorate(cbxBatchStock2N, WTRegOfflineView::getCustomDisplayText, WTRegOfflineView::customFilter);
+        cbxBatchStock2N.setRenderer(new CustomComboRenderer(batchStock2Dcr.getFilterTextSupplier()));
 
-            @Override
-            public Component getListCellRendererComponent(
-                    JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if (value instanceof ModeEnum) {
-                    ModeEnum mod = (ModeEnum) value;
-                    setText(mod.getName());
-                }
-                return this;
-            }
-        });
+        vendorLoadingDcr = ComboBoxFilterDecorator.decorate(cbxVendorLoadingN, WTRegOfflineView::getCustomDisplayText, WTRegOfflineView::customFilter);
+        cbxVendorLoadingN.setRenderer(new CustomComboRenderer(vendorLoadingDcr.getFilterTextSupplier()));
 
-        cbxMaterialTypeN.setRenderer(new DefaultListCellRenderer() {
+        vendorTransportDcr = ComboBoxFilterDecorator.decorate(cbxVendorTransportN, WTRegOfflineView::getCustomDisplayText, WTRegOfflineView::customFilter);
+        cbxVendorTransportN.setRenderer(new CustomComboRenderer(vendorTransportDcr.getFilterTextSupplier()));
 
-            @Override
-            public Component getListCellRendererComponent(
-                    JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-
-                if (value instanceof MaterialInternal) {
-                    MaterialInternal materialInternal = (MaterialInternal) value;
-                    String maktx = materialInternal.getMaktx();
-                    if (maktx != null && !maktx.isEmpty()) {
-                        setText(materialInternal.getMatnr() + " - " + materialInternal.getMaktx());
-                    } else {
-                        setText(materialInternal.getMatnr() + " - " + materialInternal.getMaktg());
-                    }
-                }
-
-                if (value instanceof Material) {
-                    Material material = (Material) value;
-                    String maktx = material.getMaktx();
-                    if (maktx != null && !maktx.isEmpty()) {
-                        setText(material.getMatnr() + " - " + material.getMaktx());
-                    } else {
-                        setText(material.getMatnr() + " - " + material.getMaktg());
-                    }
-                }
-                return this;
-            }
-        });
-
-        DefaultListCellRenderer cellRendererForSloc = new DefaultListCellRenderer() {
-
-            @Override
-            public Component getListCellRendererComponent(
-                    JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-
-                if (value instanceof SLoc) {
-                    SLoc sloc = (SLoc) value;
-                    setText(sloc.getLgort().concat(" - ").concat(sloc.getLgobe()));
-                }
-
-                return this;
-            }
-        };
-        cbxSlocN.setRenderer(cellRendererForSloc);
-        cbxSloc2N.setRenderer(cellRendererForSloc);
-
-        DefaultListCellRenderer cellRendererForBatchStock = new DefaultListCellRenderer() {
-
-            @Override
-            public Component getListCellRendererComponent(
-                    JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if (value instanceof BatchStock) {
-                    BatchStock batchStock = (BatchStock) value;
-                    setText(batchStock.getCharg());
-                }
-                return this;
-            }
-        };
-        cbxBatchStockN.setRenderer(cellRendererForBatchStock);
-        cbxBatchStock2N.setRenderer(cellRendererForBatchStock);
-
-        DefaultListCellRenderer cellRendererVendor = new DefaultListCellRenderer() {
-
-            @Override
-            public Component getListCellRendererComponent(
-                    JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if (value instanceof Vendor) {
-                    Vendor vendor = (Vendor) value;
-                    setText(vendor.getName1() + " " + vendor.getName2());
-                }
-                return this;
-            }
-        };
-        cbxVendorLoadingN.setRenderer(cellRendererVendor);
-        cbxVendorTransportN.setRenderer(cellRendererVendor);
-
-        cbxCustomerN.setRenderer(new DefaultListCellRenderer() {
-
-            @Override
-            public Component getListCellRendererComponent(
-                    JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if (value instanceof Customer) {
-                    Customer customer = (Customer) value;
-                    String name = customer.getName2();
-                    if (!StringUtil.isEmptyString(customer.getName3())) {
-                        name += " " + customer.getName3();
-                    }
-                    if (!StringUtil.isEmptyString(customer.getName4())) {
-                        name += " " + customer.getName4();
-                    }
-                    setText(!StringUtil.isEmptyString(name) ? name : customer.getName1());
-                    setToolTipText(customer.getKunnr());
-                }
-
-                if (value instanceof Vendor) {
-                    Vendor vendor = (Vendor) value;
-                    setText(vendor.getName1() + " " + vendor.getName2());
-                    setToolTipText(vendor.getLifnr());
-                }
-
-                return this;
-            }
-        });
-
-        cbxShipToN.setRenderer(new DefaultListCellRenderer() {
-
-            @Override
-            public Component getListCellRendererComponent(
-                    JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if (value instanceof Customer) {
-                    Customer customer = (Customer) value;
-                    String name = customer.getName2();
-                    if (!StringUtil.isEmptyString(customer.getName3())) {
-                        name += " " + customer.getName3();
-                    }
-                    if (!StringUtil.isEmptyString(customer.getName4())) {
-                        name += " " + customer.getName4();
-                    }
-
-                    setText(!StringUtil.isEmptyString(name) ? name : customer.getName1());
-                    setToolTipText(customer.getKunnr());
-                }
-
-                return this;
-            }
-        });
+        customerDcr = ComboBoxFilterDecorator.decorate(cbxCustomerN, WTRegOfflineView::getCustomDisplayText, WTRegOfflineView::customFilter);
+        cbxCustomerN.setRenderer(new CustomComboRenderer(customerDcr.getFilterTextSupplier()));
+        
+        shipToDcr = ComboBoxFilterDecorator.decorate(cbxShipToN, WTRegOfflineView::getCustomDisplayText, WTRegOfflineView::customFilter);
+        cbxShipToN.setRenderer(new CustomComboRenderer(shipToDcr.getFilterTextSupplier()));
     }
 
+    private static boolean customFilter(Object object, String textToFilter) {
+        if (textToFilter.isEmpty()) {
+            return true;
+        }
+        String displayText = HtmlHighlighter.removeAccent(getCustomDisplayText(object).toLowerCase());
+        return displayText.contains(HtmlHighlighter.removeAccent(textToFilter.toLowerCase()));
+    }
+    
+    public static String getMaterialSearchText(Object value) {
+        String name = "";
+        if (value instanceof Material) {
+            Material mat = (Material) value;
+            name = mat.getMaktx();
+        }
+        return name;
+    }
+
+    public static String getCustomDisplayText(Object value) {
+        String name = "";
+        if (value instanceof String) {
+            name = (String) value;
+        }
+        
+        if (value instanceof Customer) {
+            Customer customer = (Customer) value;
+            name = customer.getName2();
+            if (!StringUtil.isEmptyString(customer.getName3())) {
+                name += " " + customer.getName3();
+            }
+            if (!StringUtil.isEmptyString(customer.getName4())) {
+                name += " " + customer.getName4();
+            }
+            name = (!StringUtil.isEmptyString(name) ? name : customer.getName1());
+        }
+
+        if (value instanceof Vendor) {
+            Vendor vendor = (Vendor) value;
+            name = vendor.getName1() + " " + vendor.getName2();
+        }
+
+        if (value instanceof BatchStock) {
+            BatchStock batchStock = (BatchStock) value;
+            name = batchStock.getCharg();
+        }
+
+        if (value instanceof SLoc) {
+            SLoc sloc = (SLoc) value;
+            name = sloc.getLgort().concat(" - ").concat(sloc.getLgobe());
+        }
+
+        if (value instanceof MaterialInternal) {
+            MaterialInternal materialInternal = (MaterialInternal) value;
+            String maktx = materialInternal.getMaktx();
+            if (maktx != null && !maktx.isEmpty()) {
+                name = materialInternal.getMatnr() + " - " + materialInternal.getMaktx();
+            } else {
+                name = materialInternal.getMatnr() + " - " + materialInternal.getMaktg();
+            }
+        }
+
+        if (value instanceof Material) {
+            Material material = (Material) value;
+            String maktx = material.getMaktx();
+            if (maktx != null && !maktx.isEmpty()) {
+                name = material.getMatnr() + " - " + material.getMaktx();
+            } else {
+                name = material.getMatnr() + " - " + material.getMaktg();
+            }
+        }
+
+        if (value instanceof ModeEnum) {
+            ModeEnum mod = (ModeEnum) value;
+            name = mod.getName();
+        }
+
+        if (value instanceof StatusEnum) {
+            StatusEnum status = (StatusEnum) value;
+            name = status.getValue();
+        }
+
+        if (value instanceof WeighingMode) {
+            WeighingMode mod = (WeighingMode) value;
+            name = mod.getTitle();
+        }
+        return name;
+    }
+
+    public static String getCustomToolTip(Object value) {
+        String toolTip = "";
+        if (value instanceof Customer) {
+            toolTip = ((Customer) value).getKunnr();
+        }
+
+        if (value instanceof Vendor) {
+            toolTip = ((Vendor) value).getLifnr();
+        }
+
+        if (value instanceof WeighingMode) {
+            WeighingMode mod = (WeighingMode) value;
+            toolTip = mod.getTitle();
+        }
+        
+        if (value instanceof Material) {
+            Material mat = (Material) value;
+            toolTip = mat.getMatnr();
+        }
+        return toolTip;
+    }
+
+    public void updateCbxDecorate() {
+        statusDcr.updateCombobox(cbxStatus);
+        modeSearchDcr.updateCombobox(cbxModeSearch);
+        materialTypeNDcr.updateCombobox(cbxMaterialTypeN);
+        slocDcr.updateCombobox(cbxSlocN);
+        sloc2Dcr.updateCombobox(cbxSloc2N);
+        vendorTransportDcr.updateCombobox(cbxVendorTransportN);
+        vendorLoadingDcr.updateCombobox(cbxVendorLoadingN);
+        customerDcr.updateCombobox(cbxCustomerN);
+        shipToDcr.updateCombobox(cbxShipToN);
+    }
     private void initComboboxModel() {
         cbxCustomerN.setModel(customerModel);
         cbxCustomerN.setSelectedIndex(-1);
@@ -1472,8 +1508,13 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
 // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Event methods">
     private void cbxHourToItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cbxHourToItemStateChanged
-        if (cbxHourTo.getSelectedIndex() < cbxHourFrom.getSelectedIndex()) {
-            cbxHourTo.setSelectedIndex(cbxHourFrom.getSelectedIndex());
+        try {
+            String hourFrom = cbxHourFrom.getSelectedItem().toString();
+            String hourTo = cbxHourTo.getSelectedItem().toString();
+            if (Integer.parseInt(hourTo) < Integer.parseInt(hourFrom)) {
+                cbxHourTo.setSelectedItem(cbxHourFrom.getSelectedItem());
+            }
+        } catch (Exception e) {
         }
     }//GEN-LAST:event_cbxHourToItemStateChanged
 
@@ -1575,6 +1616,7 @@ private void cbxCustomerNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         Customer customer = (Customer) cbxCustomerN.getSelectedItem();
         cbxShipToN.setModel(weightTicketRegistarationController.getShipToModel(customer.getKunnr()));
         cbxShipToN.setSelectedIndex(-1);
+        shipToDcr.updateCombobox(cbxShipToN);
     }
 
     validateForm();
@@ -2046,6 +2088,7 @@ private void cbxShipToNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
                 break;
         }
 
+        updateCbxDecorate();
         validateForm();
     }
 
