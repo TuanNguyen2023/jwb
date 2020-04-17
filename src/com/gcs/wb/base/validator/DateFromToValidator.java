@@ -4,6 +4,7 @@
  */
 package com.gcs.wb.base.validator;
 
+import com.gcs.wb.base.constant.Constants;
 import java.util.Date;
 import org.springframework.util.Assert;
 
@@ -17,7 +18,7 @@ public class DateFromToValidator extends AbstractThrowableValidator<String, Ille
 
     public void validate(Date from, Date to) throws IllegalArgumentException {
         if (from != null && to != null) {
-            boolean isValid = from.compareTo(to) <= 0;
+            boolean isValid = from.compareTo(to) <= 0 && to.compareTo(Constants.Date.MAX_DATE) <= 0;
             Assert.isTrue(isValid, "Date from must be <= Date to");
         } else {
             throw new IllegalArgumentException();
