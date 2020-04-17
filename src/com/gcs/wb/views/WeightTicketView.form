@@ -42,7 +42,7 @@
                   <Component id="pnWTicket" alignment="0" max="32767" attributes="0"/>
                   <Component id="pnScaleData" alignment="0" max="32767" attributes="2"/>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="pnWTFilter" pref="701" max="32767" attributes="0"/>
+                      <Component id="pnWTFilter" pref="707" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="pnCurScale" min="-2" pref="310" max="-2" attributes="2"/>
                   </Group>
@@ -60,7 +60,7 @@
                   <Component id="pnWTFilter" alignment="0" min="-2" pref="147" max="-2" attributes="1"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="pnScaleData" min="-2" max="-2" attributes="1"/>
+              <Component id="pnScaleData" min="-2" pref="126" max="-2" attributes="1"/>
               <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
               <Component id="pnWTicket" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -94,7 +94,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="lblWTNum" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="txtWTNum" pref="373" max="32767" attributes="0"/>
+                  <Component id="txtWTNum" pref="379" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jButton1" min="-2" pref="58" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -368,9 +368,9 @@
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="txfGoodsQty" alignment="0" pref="414" max="32767" attributes="2"/>
-                      <Component id="txfOutQty" alignment="0" pref="414" max="32767" attributes="2"/>
-                      <Component id="txfInQty" alignment="0" pref="414" max="32767" attributes="2"/>
+                      <Component id="txfGoodsQty" alignment="0" pref="417" max="32767" attributes="2"/>
+                      <Component id="txfOutQty" alignment="0" pref="417" max="32767" attributes="2"/>
+                      <Component id="txfInQty" alignment="0" pref="417" max="32767" attributes="2"/>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -386,8 +386,8 @@
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="txtOutTime" pref="406" max="32767" attributes="2"/>
-                              <Component id="txtInTime" alignment="0" pref="406" max="32767" attributes="2"/>
+                              <Component id="txtOutTime" pref="409" max="32767" attributes="2"/>
+                              <Component id="txtInTime" alignment="0" pref="409" max="32767" attributes="2"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
@@ -1054,6 +1054,7 @@
             </Component>
             <Component class="javax.swing.JTextField" name="txtRemark">
               <Properties>
+                <Property name="disabledTextColor" type="java.awt.Color" resourceKey="txtGRText.disabledTextColor"/>
                 <Property name="name" type="java.lang.String" value="txtRemark" noResource="true"/>
               </Properties>
               <Events>
@@ -1452,7 +1453,7 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace pref="734" max="32767" attributes="0"/>
+                      <EmptySpace pref="740" max="32767" attributes="0"/>
                       <Component id="btnPostAgain" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="btnReprint" min="-2" max="-2" attributes="0"/>
