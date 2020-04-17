@@ -2280,7 +2280,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
                 if (mappingErrMsg.size() > 0) {
                     String msg = String.join(", ", mappingErrMsg);
-                    msg += resourceMapMsg.getString("msg.notMappingSuffixes");
+                    msg += " " + resourceMapMsg.getString("msg.notMappingSuffixes");
                     if (!confirmOverwriteData(msg)) {
                         cleanAudit();
                         canceled = true;
@@ -3682,7 +3682,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
                 if (mappingErrMsg.size() > 0) {
                     String msg = String.join(", ", mappingErrMsg);
-                    msg += resourceMapMsg.getString("msg.notMappingSuffixes");
+                    msg += " " + resourceMapMsg.getString("msg.notMappingSuffixes");
                     if (!confirmOverwriteData(msg)) {
                         cleanAudit();
                         canceled = true;
@@ -4618,7 +4618,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
             if (mappingErrMsg.size() > 0) {
                 String msg = String.join(", ", mappingErrMsg);
-                msg += resourceMapMsg.getString("msg.notMappingSuffixes");
+                msg += " " + resourceMapMsg.getString("msg.notMappingSuffixes");
                 if (!confirmOverwriteData(msg)) {
                     cleanAudit();
                     canceled = true;
