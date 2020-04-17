@@ -418,6 +418,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         DefaultComboBoxModel sLocModel = new DefaultComboBoxModel(sLocs.toArray());
         DefaultComboBoxModel sLoc2Model = (DefaultComboBoxModel) SerializationUtils.clone(sLocModel);
         cbxSlocN.setModel(sLocModel);
+        slocDcr.updateCombobox(cbxSlocN);
         if (lgortSelected != null && !lgortSelected.isEmpty() && !sLocs.isEmpty()) {
             SLoc sLoc = sLocs.stream()
                     .filter(t -> lgortSelected.equals(t.getLgort()))
@@ -431,6 +432,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         cbxSloc2N.setModel(sLoc2Model);
         cbxSloc2N.setSelectedIndex(-1);
+        sloc2Dcr.updateCombobox(cbxSloc2N);
 
         validateForm();
     }
@@ -1767,6 +1769,17 @@ private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//
     // load batch stock
     loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
     loadBatchStockModel2N(cbxSloc2N, cbxBatchStock2N, false);
+    if (slocDcr != null) {
+        slocDcr.updateCombobox(cbxSlocN);
+    }
+    if (sloc2Dcr != null) {
+        sloc2Dcr.updateCombobox(cbxSloc2N);
+    }
+    if (BatchStockDcr != null) {
+        BatchStockDcr.updateCombobox(cbxBatchStockN);
+    }
+    if (BatchStock2Dcr != null)
+        BatchStock2Dcr.updateCombobox(cbxBatchStock2N);
 }//GEN-LAST:event_cbxMaterialTypeNActionPerformed
 
 private void cbxVendorLoadingNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxVendorLoadingNActionPerformed
