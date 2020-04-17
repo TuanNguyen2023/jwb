@@ -4994,6 +4994,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             txtDriverNameN.setText(newWeightTicket.getDriverName());
             txtCMNDN.setText(newWeightTicket.getDriverIdNo());
             txtPlateNoN.setText(newWeightTicket.getPlateNo());
+            txtPlateNoN.setEditable(false);
             txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(newWeightTicket.getPlateNo()).toString());
             txtTrailerNoN.setText(newWeightTicket.getTrailerId());
             txtSlingN.setText(Integer.toString(newWeightTicket.getSling()));

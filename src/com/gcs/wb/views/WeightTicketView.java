@@ -3685,10 +3685,26 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             btnAccept.setEnabled(false);
             boolean checkVariant = false;
             if (isStage1()) {
+                double dIn = ((Number) txfCurScale.getValue()).doubleValue();
+                if ( dIn < 0) {
+                        JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.massOrderInvalid"));
+                        txfInQty.setValue(null);
+                        txtInTime.setText(null);
+                        btnOScaleReset.setEnabled(false);
+                        return null;
+                    }
                 txfInQty.setValue(txfCurScale.getValue());
                 txtInTime.setText(formatter.format(now));
                 btnIScaleReset.setEnabled(true);
             } else if (isStage2()) {
+                double dOut = ((Number) txfCurScale.getValue()).doubleValue();
+                if ( dOut < 0) {
+                        JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.massOrderInvalid"));
+                        txfOutQty.setValue(null);
+                        txtOutTime.setText(null);
+                        btnOScaleReset.setEnabled(false);
+                        return null;
+                    }
                 txfOutQty.setValue(txfCurScale.getValue());
                 txtOutTime.setText(formatter.format(now));
                 btnOScaleReset.setEnabled(true);
