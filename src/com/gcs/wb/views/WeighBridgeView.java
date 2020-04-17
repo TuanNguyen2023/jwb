@@ -6,8 +6,12 @@ package com.gcs.wb.views;
 import com.gcs.wb.*;
 import com.gcs.wb.base.util.StringUtil;
 import com.gcs.wb.controller.WeighBridgeController;
+import com.gcs.wb.jpa.entity.Configuration;
+import com.gcs.wb.jpa.entity.SchedulerSync;
 import com.gcs.wb.jpa.entity.User;
+import com.gcs.wb.jpa.repositorys.SchedulerSyncRepository;
 import com.gcs.wb.service.SyncMasterDataService;
+import static com.gcs.wb.service.SyncMasterDataService.logger;
 import java.awt.event.WindowEvent;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
@@ -18,6 +22,7 @@ import org.jdesktop.application.TaskMonitor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.Timer;
@@ -39,7 +44,11 @@ public class WeighBridgeView extends FrameView {
     private final WeighBridgeController weighBridgeController = new WeighBridgeController();
     public ResourceMap resourceMapMsg = Application.getInstance(WeighBridgeApp.class).getContext().getResourceMap(WeighBridgeView.class);
     public JFrame mainFrame = WeighBridgeApp.getApplication().getMainFrame();
-
+    private Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
+    SchedulerSyncRepository schedulerSyncRepository;
+    SchedulerSync schedulerSync;
+    boolean allowToSync = true;
+    private static final Object schedulerSyncLock = new Object();
     public WeighBridgeView(SingleFrameApplication app) {
         super(app);
         initComponents();
@@ -660,21 +669,70 @@ public class WeighBridgeView extends FrameView {
 
         @Override
         protected Object doInBackground() throws Exception {
-            setStep(1, resourceMapMsg.getString("msg.isSyncMasterData"));
-            SyncMasterDataService syncMasterDataService = new SyncMasterDataService();
-            syncMasterDataService.syncMasterData();
-            return null;  // return your result
+            synchronized (schedulerSyncLock) {
+                logger.info("Check sync scheduler...");
+                String mandt = configuration.getSapClient();
+                String wplant = configuration.getWkPlant();
+                schedulerSyncRepository = new SchedulerSyncRepository();
+                schedulerSync = schedulerSyncRepository.findByParamMandtWplant(mandt, wplant);
+
+                if (schedulerSync != null) {
+                    allowToSync = schedulerSync.isManualSyncAllowed();
+                    if (!allowToSync) {
+                        logger.info("The master data is syncing in another progress.");
+                        //JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.manualSyncDenied"));
+                        JDialog.setDefaultLookAndFeelDecorated(true);
+                        int response = JOptionPane.showConfirmDialog(null, resourceMapMsg.getString("msg.manualSyncDenied"), "Confirm",
+                                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                        if (response == JOptionPane.NO_OPTION) {
+                            return null;
+                        } else if (response == JOptionPane.YES_OPTION) {
+                        } else if (response == JOptionPane.CLOSED_OPTION) {
+                            return null;
+                        }
+                    }
+                } else {
+                    schedulerSync = new SchedulerSync(mandt, wplant);
+                }
+                schedulerSync.setLastManualSync(new Date());
+                schedulerSync.setManualSyncStatus(SchedulerSync.SYNC_IN_PROGRESS);
+                schedulerSyncRepository.updateLastSync(schedulerSync);
+
+                Runtime.getRuntime().addShutdownHook(new Thread() {
+                    @Override
+                    public void run() {
+                        schedulerSyncRepository.syncExitHandler(schedulerSync, false);
+                    }
+                });
+                
+                setStep(1, resourceMapMsg.getString("msg.isSyncMasterData"));
+                SyncMasterDataService syncMasterDataService = new SyncMasterDataService();
+                syncMasterDataService.syncMasterData();
+                return null;  // return your result
+            }
         }
 
         @Override
         protected void succeeded(Object result) {
             setStep(2, resourceMapMsg.getString("msg.syncMasterDataSuccess"));
+            if (allowToSync) {
+                synchronized (schedulerSyncLock) {
+                    schedulerSync.setManualSyncStatus(SchedulerSync.SYNC_COMPLETED);
+                    schedulerSyncRepository.updateLastSync(schedulerSync);
+                }
+            }
         }
 
         @Override
         protected void failed(Throwable thrwbl) {
             logger.error(thrwbl);
             setStep(2, resourceMapMsg.getString("msg.syncMasterDataFailed"));
+            if (allowToSync) {
+                synchronized (schedulerSyncLock) {
+                    schedulerSync.setManualSyncStatus(SchedulerSync.SYNC_ERROR);
+                    schedulerSyncRepository.updateLastSync(schedulerSync);
+                }
+            }
         }
 
         private void setStep(int step, String msg) {

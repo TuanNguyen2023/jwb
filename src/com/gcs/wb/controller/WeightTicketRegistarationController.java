@@ -16,7 +16,9 @@ import com.gcs.wb.jpa.entity.OutboundDeliveryDetail;
 import com.gcs.wb.jpa.repositorys.CustomerRepository;
 import com.gcs.wb.jpa.repositorys.MaterialInternalRepository;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
+import com.gcs.wb.jpa.repositorys.PartnerRepository;
 import com.gcs.wb.jpa.repositorys.SLocRepository;
+import com.gcs.wb.jpa.repositorys.SaleOrderRepository;
 import com.gcs.wb.jpa.repositorys.TransportAgentVehicleRepository;
 import com.gcs.wb.jpa.repositorys.VehicleLoadRepository;
 import com.gcs.wb.jpa.repositorys.VendorRepository;
@@ -32,7 +34,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
@@ -55,6 +56,8 @@ public class WeightTicketRegistarationController {
     SLocRepository sLocRepository = new SLocRepository();
     CustomerRepository customerRepository = new CustomerRepository();
     WeightTicketRepository weightTicketRepository = new WeightTicketRepository();
+    SaleOrderRepository saleOrderRepository = new SaleOrderRepository();
+    PartnerRepository partnerRepository = new PartnerRepository();
 
     JFrame mainFrame = WeighBridgeApp.getApplication().getMainFrame();
 
@@ -454,5 +457,30 @@ public class WeightTicketRegistarationController {
 
     public Customer getCustomer(String kunnr) {
         return customerRepository.findByKunnr(kunnr);
+    }
+
+    public SaleOrder getSalesOrderSap(String soNumber) {
+        List<SaleOrder> saleOrders = wTRegService.getListSalesOrder();
+        for (SaleOrder saleOrderSap : saleOrders) {
+            if (saleOrderSap.getSoNumber().equals(soNumber)) {
+                return saleOrderSap;
+            }
+        }
+        return null;
+    }
+
+    public SaleOrder getSalesOrderLocal(String soNumber) {
+        return saleOrderRepository.findBySoNumber(soNumber);
+    }
+
+    public DefaultComboBoxModel getShipToModel(String kunnr) {
+        List<Partner> partners = partnerRepository.findByMandtKunnr(configuration.getSapClient(), kunnr);
+        List<String> kunnrs = partners.stream()
+                .map(t -> t.getKunn2())
+                .distinct()
+                .collect(Collectors.toList());
+
+        List<Customer> customers = customerRepository.getListCustomerByKunnr(kunnrs);
+        return new DefaultComboBoxModel(customers.toArray());
     }
 }

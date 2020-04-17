@@ -15,8 +15,10 @@ import com.gcs.wb.bapi.goodsmvt.structure.DOCheckStructure;
 import com.gcs.wb.bapi.goodsmvt.structure.SOCheckStructure;
 import com.gcs.wb.bapi.helper.BatchStocksGetListBapi;
 import com.gcs.wb.bapi.helper.CustomerGetDetailBapi;
+import com.gcs.wb.bapi.helper.CustomerGetListBapi;
 import com.gcs.wb.bapi.helper.MatGetDetailBapi;
 import com.gcs.wb.bapi.helper.MaterialGetListBapi;
+import com.gcs.wb.bapi.helper.PartnerGetListBapi;
 import com.gcs.wb.bapi.helper.PlantGetDetailBapi;
 import com.gcs.wb.bapi.helper.PoGetDetailBapi;
 import com.gcs.wb.bapi.helper.PoPostGetListBapi;
@@ -25,11 +27,11 @@ import com.gcs.wb.bapi.helper.SyncContractSOGetListBapi;
 import com.gcs.wb.bapi.helper.VendorGetDetailBapi;
 import com.gcs.wb.bapi.helper.VendorValiationCheckBapi;
 import com.gcs.wb.bapi.helper.constants.PlantGeDetailConstants;
-import com.gcs.wb.bapi.helper.structure.CustomerAdrcGetDetailStructure;
-import com.gcs.wb.bapi.helper.structure.CustomerGetDetailStructure;
+import com.gcs.wb.bapi.helper.structure.CustomerGetListStructure;
 import com.gcs.wb.bapi.helper.structure.MatGetDetailStructure;
 import com.gcs.wb.bapi.helper.structure.MaterialGetListStructure;
 import com.gcs.wb.bapi.helper.structure.PODataOuboundStructure;
+import com.gcs.wb.bapi.helper.structure.PartnerGetListStructure;
 import com.gcs.wb.bapi.helper.structure.SLocsGetListStructure;
 import com.gcs.wb.bapi.helper.structure.SalesOrderStructure;
 import com.gcs.wb.bapi.helper.structure.TransportagentGetListStructure;
@@ -37,9 +39,11 @@ import com.gcs.wb.bapi.helper.structure.VendorGetDetailStructure;
 import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.base.constant.Constants.InteractiveObject;
 import com.gcs.wb.base.converter.CustomerConverter;
+import com.gcs.wb.base.converter.CustomersConverter;
 import com.gcs.wb.base.converter.MaterialConverter;
 import com.gcs.wb.base.converter.MaterialsV2Converter;
 import com.gcs.wb.base.converter.OutboundDeliveryConverter;
+import com.gcs.wb.base.converter.PartnersConverter;
 import com.gcs.wb.base.converter.PurchaseOrderConverter;
 import com.gcs.wb.base.converter.SaleOrderConverter;
 import com.gcs.wb.base.converter.TransportAgentsConverter;
@@ -51,6 +55,7 @@ import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.MaterialInternal;
 import com.gcs.wb.jpa.entity.OutboundDelivery;
+import com.gcs.wb.jpa.entity.Partner;
 import com.gcs.wb.jpa.entity.PurchaseOrder;
 import com.gcs.wb.jpa.entity.SAPSetting;
 import com.gcs.wb.jpa.entity.SLoc;
@@ -59,8 +64,10 @@ import com.gcs.wb.jpa.entity.TransportAgent;
 import com.gcs.wb.jpa.entity.TransportAgentVehicle;
 import com.gcs.wb.jpa.entity.Vendor;
 import com.gcs.wb.jpa.repositorys.BatchStockRepository;
+import com.gcs.wb.jpa.repositorys.CustomerRepository;
 import com.gcs.wb.jpa.repositorys.MaterialInternalRepository;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
+import com.gcs.wb.jpa.repositorys.PartnerRepository;
 import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
 import com.gcs.wb.jpa.repositorys.SAPSettingRepository;
 import com.gcs.wb.jpa.repositorys.SLocRepository;
@@ -110,6 +117,8 @@ public class SAPService {
     SAPSettingRepository sapSettingRepository = new SAPSettingRepository();
     PurchaseOrderRepository purchaseOrderRepository = new PurchaseOrderRepository();
     SaleOrderRepository saleOrderRepository = new SaleOrderRepository();
+    CustomerRepository customerRepository = new CustomerRepository();
+    PartnerRepository partnerRepository = new PartnerRepository();
 
     AppConfig config = WeighBridgeApp.getApplication().getConfig();
     Configuration configuration = config.getConfiguration();
@@ -277,6 +286,10 @@ public class SAPService {
                     ven.setName1(vens.getName1());
                     ven.setName2(vens.getName2());
                     ven.setEkorg(vens.getEkorg());
+                    ven.setKtokk(vens.getKtokk());
+                    if (!vens.getKtokk().equals(Constants.KTOKK.Z004)) {
+                        ven.setGroupType(Constants.GroupType.CUSTOMER);
+                    }
                     venSaps.add(ven);
                 }
             } catch (Exception ex) {
@@ -517,7 +530,7 @@ public class SAPService {
 
         return result;
     }
-    
+
     public Vendor syncVendor(Vendor sapCusVendor, Vendor vendor) {
         Vendor result;
         if (!entityTransaction.isActive()) {
@@ -1014,6 +1027,120 @@ public class SAPService {
                     if (saleOrderD != null) {
                         entityManager.remove(saleOrderD);
                     }
+                }
+
+                entityTransaction.commit();
+                entityManager.clear();
+            } catch (Exception ex) {
+                logger.error(ex);
+                throw ex;
+            }
+        });
+    }
+
+    /**
+     * sync Customer
+     *
+     * @return
+     */
+    public List<Customer> syncCustomer() {
+        List<Customer> customerDBs = customerRepository.getListCustomer();
+
+        if (!WeighBridgeApp.getApplication().isOfflineMode()) {
+            CustomerGetListBapi bapi = new CustomerGetListBapi();
+            List<Customer> cusSaps = new ArrayList<>();
+            try {
+                logger.info("[SAP] Get list Customer: " + bapi.toString());
+                if (interactiveObject == InteractiveObject.USER) {
+                    session.execute(bapi);
+                } else {
+                    session.executeInBackground(bapi);
+                }
+
+                List<CustomerGetListStructure> etCustomers = bapi.getListEtCustomer();
+
+                CustomersConverter customersConverter = new CustomersConverter();
+                cusSaps = customersConverter.convert(etCustomers);
+            } catch (Exception ex) {
+                logger.error(ex);
+                throw ex;
+            }
+
+            entityTransaction = entityManager.getTransaction();
+            if (!entityTransaction.isActive()) {
+                entityTransaction.begin();
+            }
+            // update SAP - DB
+            for (Customer cusSap : cusSaps) {
+                int index = customerDBs.indexOf(cusSap);
+                if (index == -1) {
+                    entityManager.persist(cusSap);
+                } else {
+                    cusSap.setId(customerDBs.get(index).getId());
+                    entityManager.merge(cusSap);
+                }
+            }
+
+            entityTransaction.commit();
+            entityManager.clear();
+
+            // return data
+            return customerRepository.getListCustomer();
+        }
+
+        return customerDBs;
+    }
+
+    public List<Partner> getListPartner() {
+        try {
+            PartnerGetListBapi partnerGetListBapi = new PartnerGetListBapi();
+            logger.info("[SAP] Get list Partner: " + partnerGetListBapi.toString());
+            if (interactiveObject == InteractiveObject.USER) {
+                session.execute(partnerGetListBapi);
+            } else {
+                session.executeInBackground(partnerGetListBapi);
+            }
+
+            List<PartnerGetListStructure> structures = partnerGetListBapi.getListEtPartner();
+            structures = structures.stream()
+                    .filter(t -> Constants.Partner.PARVW.equals(t.getParvw()))
+                    .collect(Collectors.toList());
+
+            PartnersConverter partnersConverter = new PartnersConverter();
+            return partnersConverter.convert(structures);
+        } catch (Exception ex) {
+            logger.error(ex);
+            throw ex;
+        }
+    }
+
+    public void syncPartnerDatas() {
+        List<Partner> partners = getListPartner();
+
+        partners.forEach(sapPartner -> {
+            try {
+                Partner partner = partnerRepository.findPartner(
+                        configuration.getSapClient(),
+                        sapPartner.getKunnr(),
+                        sapPartner.getVkorg(),
+                        sapPartner.getVtweg(),
+                        sapPartner.getSpart(),
+                        sapPartner.getParvw(),
+                        sapPartner.getParza()
+                );
+
+                if (!entityTransaction.isActive()) {
+                    entityTransaction.begin();
+                }
+
+                if (partner == null) {
+                    sapPartner.setMandt(configuration.getSapClient());
+                    sapPartner.setCreatedDate(new Date());
+                    entityManager.persist(sapPartner);
+                } else {
+                    partner.setKunn2(sapPartner.getKunn2());
+                    partner.setUpdatedDate(new Date());
+                    entityManager.merge(partner);
                 }
 
                 entityTransaction.commit();

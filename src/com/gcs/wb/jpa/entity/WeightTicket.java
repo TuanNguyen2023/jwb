@@ -13,8 +13,6 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
@@ -213,6 +211,8 @@ public class WeightTicket implements Serializable {
     private String wtId;
     @Column(name = "offline_mode")
     private Boolean offlineMode;
+    @Column(name = "edited")
+    private Boolean edited;
     @Column(name = "status")
     private String status;
     @Column(name = "created_time")
@@ -246,9 +246,10 @@ public class WeightTicket implements Serializable {
     private String chargEnh;
     @Column(name = "load_source")
     private String loadSource;
-
     @Column(name = "weight_ticket_id_ref")
     private String weightTicketIdRef;
+    @Column(name = "created_datetime")
+    private Date createdDatetime;
 
     public WeightTicket() {
     }
@@ -454,6 +455,14 @@ public class WeightTicket implements Serializable {
 
     public void setOfflineMode(Boolean offlineMode) {
         this.offlineMode = offlineMode;
+    }
+    
+    public boolean isEdited() {
+        return edited != null && edited;
+    }
+
+    public void setEdited(boolean edited) {
+        this.edited = edited;
     }
 
     public BigDecimal getFScale() {
@@ -686,6 +695,14 @@ public class WeightTicket implements Serializable {
 
     public void setLoadSource(String loadSource) {
         this.loadSource = loadSource;
+    }
+
+    public Date getCreatedDatetime() {
+        return createdDatetime;
+    }
+
+    public void setCreatedDatetime(Date createdDatetime) {
+        this.createdDatetime = createdDatetime;
     }
 
     public List<WeightTicketDetail> getWeightTicketDetails() {
