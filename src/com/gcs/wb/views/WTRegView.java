@@ -122,7 +122,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
     DefaultComboBoxModel shipToModel = (DefaultComboBoxModel) SerializationUtils.clone(customerModel);
 
     ComboBoxFilterDecorator<Object> hourFromDcr;
-    ComboBoxFilterDecorator<Object> hourToDcr ;
+    ComboBoxFilterDecorator<Object> hourToDcr;
     ComboBoxFilterDecorator<Object> modeDcr;
     ComboBoxFilterDecorator<Object> statusDcr;
     ComboBoxFilterDecorator<Object> modeSearchDcr;
@@ -212,9 +212,9 @@ public class WTRegView extends javax.swing.JInternalFrame {
     }
 
     private void initComboboxRenderer() {
-        
+
         materialTypeDcr = ComboBoxFilterDecorator.decorate(cbxMaterialType, WTRegView::getMaterialSearchText, WTRegView::customFilter);
-        
+
         cbxMaterialType.setRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(
@@ -229,13 +229,13 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 return this;
             }
         });
-        
+
         hourFromDcr = ComboBoxFilterDecorator.decorate(cbxHourFrom, WTRegView::getCustomDisplayText, WTRegView::customFilter);
         cbxHourFrom.setRenderer((new CustomComboRenderer(hourFromDcr.getFilterTextSupplier())));
 
         hourToDcr = ComboBoxFilterDecorator.decorate(cbxHourTo, WTRegView::getCustomDisplayText, WTRegView::customFilter);
         cbxHourTo.setRenderer((new CustomComboRenderer(hourToDcr.getFilterTextSupplier())));
-        
+
         cbxModeType.setRenderer(new DefaultListCellRenderer() {
 
             @Override
@@ -256,19 +256,19 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         modeSearchDcr = ComboBoxFilterDecorator.decorate(cbxModeSearch, WTRegView::getCustomDisplayText, WTRegView::customFilter);
         cbxModeSearch.setRenderer((new CustomComboRenderer(modeSearchDcr.getFilterTextSupplier())));
-        
+
         materialTypeNDcr = ComboBoxFilterDecorator.decorate(cbxMaterialTypeN, WTRegView::getCustomDisplayText, WTRegView::customFilter);
         cbxMaterialTypeN.setRenderer((new CustomComboRenderer(materialTypeNDcr.getFilterTextSupplier())));
-        
+
         slocDcr = ComboBoxFilterDecorator.decorate(cbxSlocN, WTRegView::getCustomDisplayText, WTRegView::customFilter);
         cbxSlocN.setRenderer(new CustomComboRenderer(slocDcr.getFilterTextSupplier()));
-        
+
         sloc2Dcr = ComboBoxFilterDecorator.decorate(cbxSloc2N, WTRegView::getCustomDisplayText, WTRegView::customFilter);
         cbxSloc2N.setRenderer(new CustomComboRenderer(sloc2Dcr.getFilterTextSupplier()));
 
         batchStockDcr = ComboBoxFilterDecorator.decorate(cbxBatchStockN, WTRegView::getCustomDisplayText, WTRegView::customFilter);
         cbxBatchStockN.setRenderer(new CustomComboRenderer(batchStockDcr.getFilterTextSupplier()));
-        
+
         batchStock2Dcr = ComboBoxFilterDecorator.decorate(cbxBatchStock2N, WTRegView::getCustomDisplayText, WTRegView::customFilter);
         cbxBatchStock2N.setRenderer(new CustomComboRenderer(batchStock2Dcr.getFilterTextSupplier()));
 
@@ -292,7 +292,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         String displayText = HtmlHighlighter.removeAccent(getCustomDisplayText(object).toLowerCase());
         return displayText.contains(HtmlHighlighter.removeAccent(textToFilter.toLowerCase()));
     }
-    
+
     public static String getMaterialSearchText(Object value) {
         String name = "";
         if (value instanceof Material) {
@@ -307,7 +307,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         if (value instanceof String) {
             name = (String) value;
         }
-        
+
         if (value instanceof Customer) {
             Customer customer = (Customer) value;
             name = customer.getName2();
@@ -386,7 +386,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
             WeighingMode mod = (WeighingMode) value;
             toolTip = mod.getTitle();
         }
-        
+
         if (value instanceof Material) {
             Material mat = (Material) value;
             toolTip = mat.getMatnr();
@@ -1578,7 +1578,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
             String hourTo = cbxHourTo.getSelectedItem().toString();
             if (Integer.parseInt(hourTo) < Integer.parseInt(hourFrom)) {
                 cbxHourTo.setSelectedItem(cbxHourFrom.getSelectedItem());
-            }            
+            }
         } catch (Exception e) {
         }
 
@@ -2228,7 +2228,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 bapi = sapService.getSalesOrderDetail(val[0]);
                 SaleOrderGetDetailStructure saleOrder = bapi.getExDeliSched();
                 if (saleOrder == null || StringUtil.isEmptyString(saleOrder.getVbeln())) {
-                    if(!StringUtil.isEmptyString(bapi.getReturnMessage())) {
+                    if (!StringUtil.isEmptyString(bapi.getReturnMessage())) {
                         returnErrMsg = bapi.getReturnMessage();
                     }
                     if (StringUtil.isEmptyString(returnErrMsg)) {
@@ -2238,16 +2238,20 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                         throw new Exception();
                     }
                 }
+                
+                String bsGhe = txtPlateNoN.getText();
+                String traid = bsGhe;
                 if (saleOrder != null && saleOrder.getTraid() != null) {
-                    String bsGhe = txtPlateNoN.getText();
-                    String traid = saleOrder.getTraid();
+                    traid = saleOrder.getTraid();
                     traid = StringUtil.correctPlateNo(traid).toUpperCase();
                     String plateName = "ghe";
 
                     // validate BS Ghe
                     if (StringUtil.isNotEmptyString(bsGhe) && !bsGhe.equals(traid)) {
+                        setWTAudit(newWeightTicket.getId(), traid);
                         mappingErrMsg.add(resourceMapMsg.getString("msg.vehicleNotMapping", plateName));
                     }
+
                     String matnr = null;
                     Material material = (Material) cbxMaterialTypeN.getSelectedItem();
                     if (material != null && !material.getMatnr().equals(saleOrder.getMatnr())) {
@@ -2261,13 +2265,29 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                         kunnr = saleOrder.getKunnr();
                         mappingErrMsg.add(resourceMapMsg.getString("msg.customerNotMapping"));
                     }
+
+                    String ship_to = null;
+                    Customer shipToCust = (Customer) cbxShipToN.getSelectedItem();
+                    if (shipToCust != null && !shipToCust.getKunnr().equals(saleOrder.getShipTo())) {
+                        ship_to = saleOrder.getShipTo();
+                        mappingErrMsg.add(resourceMapMsg.getString("msg.shipToNotMapping"));
+                    }
+
+                    if (matnr != null || kunnr != null || ship_to != null) {
+                        setWTDetailAudit(newWeightTicket.getId(), matnr, kunnr, ship_to);
+                    }
                 }
+
                 if (mappingErrMsg.size() > 0) {
                     String msg = String.join("\n", mappingErrMsg);
-                    msg += "\n\n" + resourceMapMsg.getString("msg.noOverwriteSuffixes");
-                    JOptionPane.showMessageDialog(rootPane, msg);
-                    canceled = true;
-                    throw new Exception();
+                    if (!confirmOverwriteData(msg)) {
+                        cleanAudit();
+                        canceled = true;
+                        throw new Exception();
+                    }
+
+                    // overwrite plateNo
+                    txtPlateNoN.setText(traid);
                 }
             }
 
@@ -3141,7 +3161,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             isSOValid = wtRegisValidation.validateDO(txtSONumN.getText(), lblSONumN);
         }
         btnDOCheckN.setEnabled(isValidSO);
-        if(isValidSO && !isValidDO) {
+        if (isValidSO && !isValidDO) {
             btnDOCheckN.setForeground(Color.red);
         }
         validateButtonCheck(btnSOCheckN, isSOValid, isValidSO);
@@ -3647,8 +3667,15 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                         mappingErrMsg.add(resourceMapMsg.getString("msg.customerNotMapping"));
                     }
 
-                    if (matnr != null || kunnr != null) {
-                        setWTDetailAudit(newWeightTicket.getId(), matnr, kunnr, null);
+                    String ship_to = null;
+                    Customer shipToCust = (Customer) cbxShipToN.getSelectedItem();
+                    if (shipToCust != null && !shipToCust.getKunnr().equals(outboundDelivery.getOutboundDeliveryDetail().getShipTo())) {
+                        ship_to = outboundDelivery.getOutboundDeliveryDetail().getShipTo();
+                        mappingErrMsg.add(resourceMapMsg.getString("msg.shipToNotMapping"));
+                    }
+
+                    if (matnr != null || kunnr != null || ship_to != null) {
+                        setWTDetailAudit(newWeightTicket.getId(), matnr, kunnr, ship_to);
                     }
                 }
 
