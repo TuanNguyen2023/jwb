@@ -59,20 +59,20 @@
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="pnShowFilter" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
-              <Component id="spnResult" pref="253" max="32767" attributes="0"/>
+              <Component id="spnResult" pref="251" max="32767" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="pnPrintControl" min="-2" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Group type="102" attributes="0">
                       <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
                       <Component id="pnROVRight" min="-2" max="-2" attributes="1"/>
                   </Group>
-                  <Group type="102" attributes="0">
+                  <Group type="102" attributes="1">
                       <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
                       <Component id="pnRegistrationOfVehicle" max="32767" attributes="1"/>
                   </Group>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace pref="16" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -539,7 +539,7 @@
                   <Component id="pnROVLeft" min="-2" max="-2" attributes="1"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="pnControl" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="66" max="32767" attributes="0"/>
+                  <EmptySpace pref="96" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -581,35 +581,35 @@
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="txtProductionBatchN" pref="380" max="32767" attributes="1"/>
-                          <Component id="txtLoadSourceN" alignment="0" pref="380" max="32767" attributes="0"/>
-                          <Component id="txtSalanN" alignment="0" pref="380" max="32767" attributes="0"/>
-                          <Component id="txtSoNiemXaN" alignment="0" pref="380" max="32767" attributes="1"/>
-                          <Component id="cbxModeType" alignment="0" pref="380" max="32767" attributes="0"/>
-                          <Component id="txtTicketIdN" alignment="0" pref="380" max="32767" attributes="1"/>
-                          <Component id="txtCMNDN" alignment="0" pref="380" max="32767" attributes="1"/>
-                          <Component id="txtWeightTickerRefN" alignment="0" pref="380" max="32767" attributes="1"/>
-                          <Component id="txtDriverNameN" alignment="0" pref="380" max="32767" attributes="1"/>
-                          <Component id="txtRegisterIdN" alignment="0" pref="380" max="32767" attributes="1"/>
+                          <Component id="txtProductionBatchN" pref="383" max="32767" attributes="1"/>
+                          <Component id="txtLoadSourceN" alignment="0" pref="383" max="32767" attributes="0"/>
+                          <Component id="txtSalanN" alignment="0" pref="383" max="32767" attributes="0"/>
+                          <Component id="txtSoNiemXaN" alignment="0" pref="383" max="32767" attributes="1"/>
+                          <Component id="cbxModeType" alignment="0" pref="383" max="32767" attributes="0"/>
+                          <Component id="txtTicketIdN" alignment="0" pref="383" max="32767" attributes="1"/>
+                          <Component id="txtCMNDN" alignment="0" pref="383" max="32767" attributes="1"/>
+                          <Component id="txtWeightTickerRefN" alignment="0" pref="383" max="32767" attributes="1"/>
+                          <Component id="txtDriverNameN" alignment="0" pref="383" max="32767" attributes="1"/>
+                          <Component id="txtRegisterIdN" alignment="0" pref="383" max="32767" attributes="1"/>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="txtPlateNoN" min="-2" pref="91" max="-2" attributes="1"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="lblTrailerNoN" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="txtTrailerNoN" pref="91" max="32767" attributes="1"/>
+                              <Component id="txtTrailerNoN" pref="92" max="32767" attributes="1"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="lblTonnageN" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="txtTonnageN" pref="51" max="32767" attributes="0"/>
+                              <Component id="txtTonnageN" pref="53" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="txtSlingN" min="-2" pref="140" max="-2" attributes="1"/>
                               <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
                               <Component id="lblPalletN" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="txtPalletN" pref="144" max="32767" attributes="1"/>
+                              <Component id="txtPalletN" pref="147" max="32767" attributes="1"/>
                           </Group>
-                          <Component id="txtNoteN" alignment="0" pref="380" max="32767" attributes="1"/>
+                          <Component id="txtNoteN" alignment="0" pref="383" max="32767" attributes="1"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="lblTonngageUnitN" min="-2" max="-2" attributes="0"/>
@@ -978,7 +978,7 @@
                       <Component id="btnClear" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="btnSave" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="319" max="32767" attributes="0"/>
+                      <EmptySpace pref="322" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1038,9 +1038,6 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="lblBatchStock2N" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblVendorLoadingN" alignment="1" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblVendorTransportN" min="-2" max="-2" attributes="0"/>
                       <Component id="lblWeightTicketNo" alignment="1" min="-2" max="-2" attributes="0"/>
                       <Component id="lblMaterialTypeN" min="-2" max="-2" attributes="0"/>
                       <Component id="lblPOSTONumN" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -1049,26 +1046,31 @@
                       <Component id="lblSONumN" min="-2" max="-2" attributes="0"/>
                       <Component id="lblDONumN" min="-2" max="-2" attributes="0"/>
                       <Component id="lblCustomerN" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblShipToN" min="-2" max="-2" attributes="0"/>
                       <Component id="lblSlocN" min="-2" max="-2" attributes="0"/>
                       <Component id="lblSloc2N" min="-2" max="-2" attributes="0"/>
                       <Component id="lblBatchStockN" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblBatchStock2N" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblVendorTransportN" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblVendorLoadingN" alignment="1" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="cbxVendorTransportN" pref="374" max="32767" attributes="1"/>
-                      <Component id="cbxCustomerN" pref="374" max="32767" attributes="1"/>
-                      <Component id="txtPONumN" alignment="0" pref="374" max="32767" attributes="1"/>
-                      <Component id="txtPOSTONumN" alignment="0" pref="374" max="32767" attributes="0"/>
-                      <Component id="cbxMaterialTypeN" alignment="0" pref="374" max="32767" attributes="1"/>
-                      <Component id="txtWeightN" alignment="0" pref="374" max="32767" attributes="1"/>
-                      <Component id="txtWeightTicketNo" alignment="0" pref="374" max="32767" attributes="0"/>
-                      <Component id="txtSONumN" alignment="0" pref="374" max="32767" attributes="1"/>
-                      <Component id="txtDONumN" pref="374" max="32767" attributes="1"/>
-                      <Component id="cbxSlocN" alignment="0" pref="374" max="32767" attributes="1"/>
-                      <Component id="cbxSloc2N" alignment="0" pref="374" max="32767" attributes="1"/>
-                      <Component id="cbxBatchStockN" alignment="0" pref="374" max="32767" attributes="1"/>
-                      <Component id="cbxBatchStock2N" alignment="0" pref="374" max="32767" attributes="1"/>
-                      <Component id="cbxVendorLoadingN" alignment="0" pref="374" max="32767" attributes="1"/>
+                      <Component id="cbxVendorTransportN" pref="377" max="32767" attributes="1"/>
+                      <Component id="cbxShipToN" pref="377" max="32767" attributes="0"/>
+                      <Component id="cbxCustomerN" pref="377" max="32767" attributes="1"/>
+                      <Component id="txtPONumN" alignment="0" pref="377" max="32767" attributes="1"/>
+                      <Component id="txtPOSTONumN" alignment="0" pref="377" max="32767" attributes="0"/>
+                      <Component id="cbxMaterialTypeN" alignment="0" pref="377" max="32767" attributes="1"/>
+                      <Component id="txtWeightN" alignment="0" pref="377" max="32767" attributes="1"/>
+                      <Component id="txtWeightTicketNo" alignment="0" pref="377" max="32767" attributes="0"/>
+                      <Component id="txtSONumN" alignment="0" pref="377" max="32767" attributes="1"/>
+                      <Component id="txtDONumN" pref="377" max="32767" attributes="1"/>
+                      <Component id="cbxSlocN" alignment="0" pref="377" max="32767" attributes="1"/>
+                      <Component id="cbxSloc2N" alignment="0" pref="377" max="32767" attributes="1"/>
+                      <Component id="cbxBatchStockN" alignment="0" pref="377" max="32767" attributes="1"/>
+                      <Component id="cbxBatchStock2N" alignment="0" pref="377" max="32767" attributes="1"/>
+                      <Component id="cbxVendorLoadingN" alignment="0" pref="377" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -1130,40 +1132,45 @@
                           <Component id="lblWeightUnitN" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="cbxCustomerN" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
                       <Component id="lblCustomerN" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="lblSlocN" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblShipToN" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="cbxShipToN" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="cbxSlocN" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
+                      <Component id="lblSlocN" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="lblSloc2N" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="cbxSloc2N" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
+                      <Component id="lblSloc2N" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="lblBatchStockN" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="cbxBatchStockN" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
+                      <Component id="lblBatchStockN" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="lblBatchStock2N" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="cbxBatchStock2N" alignment="3" min="-2" pref="27" max="-2" attributes="0"/>
+                      <Component id="lblBatchStock2N" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="lblVendorLoadingN" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="cbxVendorLoadingN" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
+                      <Component id="lblVendorLoadingN" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="lblVendorTransportN" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="cbxVendorTransportN" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
+                      <Component id="lblVendorTransportN" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
@@ -1187,30 +1194,6 @@
           <Properties>
             <Property name="text" type="java.lang.String" resourceKey="lblWeightUnitN.text"/>
             <Property name="name" type="java.lang.String" value="lblWeightUnitN" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblSlocN">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblSlocN.text"/>
-            <Property name="name" type="java.lang.String" value="lblSlocN" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblSloc2N">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblSloc2N.text"/>
-            <Property name="name" type="java.lang.String" value="lblSloc2N" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblBatchStockN">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblBatchStockN.text"/>
-            <Property name="name" type="java.lang.String" value="lblBatchStockN" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblBatchStock2N">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblBatchStock2N.text"/>
-            <Property name="name" type="java.lang.String" value="lblBatchStock2N" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblDONumN">
@@ -1237,18 +1220,6 @@
             <Property name="name" type="java.lang.String" value="lblPOSTONumN" noResource="true"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="lblVendorLoadingN">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblVendorLoadingN.text"/>
-            <Property name="name" type="java.lang.String" value="lblVendorLoadingN" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblVendorTransportN">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="lblVendorTransportN.text"/>
-            <Property name="name" type="java.lang.String" value="lblVendorTransportN" noResource="true"/>
-          </Properties>
-        </Component>
         <Component class="javax.swing.JComboBox" name="cbxMaterialTypeN">
           <Properties>
             <Property name="editable" type="boolean" value="true"/>
@@ -1270,50 +1241,6 @@
           </Properties>
           <Events>
             <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtWeightNKeyReleased"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="cbxSlocN">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="0"/>
-            </Property>
-            <Property name="name" type="java.lang.String" value="cbxSlocN" noResource="true"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxSlocNActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="cbxSloc2N">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="0"/>
-            </Property>
-            <Property name="name" type="java.lang.String" value="cbxSloc2N" noResource="true"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxSloc2NActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="cbxBatchStockN">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="0"/>
-            </Property>
-            <Property name="name" type="java.lang.String" value="cbxBatchStockN" noResource="true"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxBatchStockNActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="cbxBatchStock2N">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="0"/>
-            </Property>
-            <Property name="name" type="java.lang.String" value="cbxBatchStock2N" noResource="true"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxBatchStock2NActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="txtDONumN">
@@ -1388,28 +1315,6 @@
             <Property name="name" type="java.lang.String" value="btnPOSTOCheckN" noResource="true"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JComboBox" name="cbxVendorLoadingN">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="0"/>
-            </Property>
-            <Property name="name" type="java.lang.String" value="cbxVendorLoadingN" noResource="true"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxVendorLoadingNActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="cbxVendorTransportN">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="0"/>
-            </Property>
-            <Property name="name" type="java.lang.String" value="cbxVendorTransportN" noResource="true"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxVendorTransportNActionPerformed"/>
-          </Events>
-        </Component>
         <Component class="javax.swing.JLabel" name="lblWeightTicketNo">
           <Properties>
             <Property name="text" type="java.lang.String" resourceKey="lblWeightTicketNo.text"/>
@@ -1443,6 +1348,119 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxCustomerNActionPerformed"/>
           </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblShipToN">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblShipToN.text"/>
+            <Property name="name" type="java.lang.String" value="lblShipToN" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbxShipToN">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="cbxShipToN" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbxSlocN">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="0"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="cbxSlocN" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxSlocNActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblSlocN">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblSlocN.text"/>
+            <Property name="name" type="java.lang.String" value="lblSlocN" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbxSloc2N">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="0"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="cbxSloc2N" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxSloc2NActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblSloc2N">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblSloc2N.text"/>
+            <Property name="name" type="java.lang.String" value="lblSloc2N" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbxBatchStockN">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="0"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="cbxBatchStockN" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxBatchStockNActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblBatchStockN">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblBatchStockN.text"/>
+            <Property name="name" type="java.lang.String" value="lblBatchStockN" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbxBatchStock2N">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="0"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="cbxBatchStock2N" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxBatchStock2NActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblBatchStock2N">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblBatchStock2N.text"/>
+            <Property name="name" type="java.lang.String" value="lblBatchStock2N" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbxVendorLoadingN">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="0"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="cbxVendorLoadingN" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxVendorLoadingNActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblVendorLoadingN">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblVendorLoadingN.text"/>
+            <Property name="name" type="java.lang.String" value="lblVendorLoadingN" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbxVendorTransportN">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="0"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="cbxVendorTransportN" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxVendorTransportNActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblVendorTransportN">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblVendorTransportN.text"/>
+            <Property name="name" type="java.lang.String" value="lblVendorTransportN" noResource="true"/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>

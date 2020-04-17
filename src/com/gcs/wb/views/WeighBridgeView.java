@@ -11,7 +11,6 @@ import com.gcs.wb.jpa.entity.SchedulerSync;
 import com.gcs.wb.jpa.entity.User;
 import com.gcs.wb.jpa.repositorys.SchedulerSyncRepository;
 import com.gcs.wb.service.SyncMasterDataService;
-import static com.gcs.wb.service.SyncMasterDataService.logger;
 import java.awt.event.WindowEvent;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
@@ -714,12 +713,14 @@ public class WeighBridgeView extends FrameView {
 
         @Override
         protected void succeeded(Object result) {
-            setStep(2, resourceMapMsg.getString("msg.syncMasterDataSuccess"));
             if (allowToSync) {
+                setStep(2, resourceMapMsg.getString("msg.syncMasterDataSuccess"));
                 synchronized (schedulerSyncLock) {
                     schedulerSync.setManualSyncStatus(SchedulerSync.SYNC_COMPLETED);
                     schedulerSyncRepository.updateLastSync(schedulerSync);
                 }
+            } else {
+                setStep(2, resourceMapMsg.getString("msg.syncMasterDataFailed"));
             }
         }
 

@@ -7,6 +7,7 @@ package com.gcs.wb.base.constant;
 import com.gcs.wb.model.WeighingMode;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -300,6 +301,7 @@ public class Constants {
     public static final class Date {
 
         public static final String FORMAT = "dd/MM/yyyy";
+        public static final java.util.Date MAX_DATE = new java.util.Date(253402275599000l); // 31/12/9999 23:59:59
     }
 
     public static final class SyncMasterData {
@@ -346,5 +348,10 @@ public class Constants {
     public static final class PlateFormat {
         public static final String PLATE_XE = "Z002";
         public static final String PLATE_GHE = "Z001";
+    }
+
+    public static final class Partner {
+
+        public static final String PARVW = "WE";
     }
 }
