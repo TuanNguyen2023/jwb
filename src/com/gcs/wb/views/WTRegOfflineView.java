@@ -2181,9 +2181,6 @@ private void cbxShipToNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         showComponent(cbxVendorTransportN, lblVendorTransportN, false, false);
         showComponent(cbxCustomerN, lblCustomerN, true, true);
         showComponent(cbxShipToN, lblShipToN, false, false);
-
-        txtWeightN.setText("0.000");
-        txtWeightN.setValue(0.000d);
     }
 
     private void prepareOutSellRoad() {
@@ -3373,8 +3370,8 @@ private void cbxShipToNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         txtPOSTONumN.setText("");
         txtSONumN.setText("");
         cbxMaterialTypeN.setSelectedIndex(-1);
-        txtWeightN.setText("0.001");
-        txtWeightN.setValue(0.001d);
+        txtWeightN.setText("0.000");
+        txtWeightN.setValue(0.000d);
         cbxSlocN.setModel(new DefaultComboBoxModel());
         cbxSlocN.setSelectedIndex(-1);
         cbxSloc2N.setModel(new DefaultComboBoxModel());
