@@ -6,6 +6,8 @@ package com.gcs.wb.views;
 
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.goodsmvt.structure.DOCheckStructure;
+import com.gcs.wb.bapi.helper.SaleOrderGetDetailBapi;
+import com.gcs.wb.bapi.helper.structure.SaleOrderGetDetailStructure;
 import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.base.constant.Constants.WeighingProcess.MODE;
@@ -2115,6 +2117,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
     private class CheckSOTask extends org.jdesktop.application.Task<Object, Void> {
         private boolean canceled = false;
         private List<String> mappingErrMsg = new ArrayList();
+        private String returnErrMsg = "";
 
         CheckSOTask(org.jdesktop.application.Application app) {
             super(app);
@@ -2137,9 +2140,19 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             }
 
             if (isEditMode) {
-                SaleOrder saleOrder = weightTicketRegistarationController.getSalesOrderSap(val[0]);
-                if (saleOrder == null) {
-                    saleOrder = weightTicketRegistarationController.getSalesOrderLocal(val[0]);
+                SaleOrderGetDetailBapi bapi = new SaleOrderGetDetailBapi();
+                bapi = sapService.getSalesOrderDetail(val[0]);
+                SaleOrderGetDetailStructure saleOrder = bapi.getExDeliSched();
+                if (saleOrder == null || StringUtil.isEmptyString(saleOrder.getVbeln())) {
+                    if(!StringUtil.isEmptyString(bapi.getReturnMessage())) {
+                        returnErrMsg = bapi.getReturnMessage();
+                    }
+                    if (StringUtil.isEmptyString(returnErrMsg)) {
+                        returnErrMsg = resourceMapMsg.getString("msg.soNotExist");
+                        JOptionPane.showMessageDialog(rootPane, returnErrMsg);
+                        canceled = true;
+                        throw new Exception();
+                    }
                 }
                 if (saleOrder != null && saleOrder.getTraid() != null) {
                     String bsGhe = txtPlateNoN.getText();
@@ -3042,7 +3055,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             isSOValid = wtRegisValidation.validateDO(txtSONumN.getText(), lblSONumN);
         }
         btnDOCheckN.setEnabled(isValidSO);
-        if(isValidSO && isEditMode) {
+        if(isValidSO && !isValidDO) {
             btnDOCheckN.setForeground(Color.red);
         }
         validateButtonCheck(btnSOCheckN, isSOValid, isValidSO);
@@ -3668,9 +3681,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 cbxCustomerN.setSelectedIndex(-1);
             }
 
-            if (isEditMode) {
-                btnDOCheckN.setForeground(Color.black);
-            }
+            btnDOCheckN.setForeground(Color.black);
 
             validateForm();
 
