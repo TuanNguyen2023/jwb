@@ -2293,8 +2293,6 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
     @Action(enabledProperty = "clearable")
     public void clearForm() {
-        loadModeTypeModel(mode);
-        cleanData();
         setCreatable(true);
         setFormEditable(false);
         setRbtEnabled(false);
@@ -2304,6 +2302,8 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         rbtInput.setEnabled(false);
         rbtOutput.setEnabled(false);
         cbxModeType.setEnabled(false);
+        loadModeTypeModel(mode);
+        disableAllInForm();
     }
 
     public void loadModeTypeModel(MODE mode) {
