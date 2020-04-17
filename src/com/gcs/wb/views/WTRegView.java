@@ -280,7 +280,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         customerDcr = ComboBoxFilterDecorator.decorate(cbxCustomerN, WTRegView::getCustomDisplayText, WTRegView::customFilter);
         cbxCustomerN.setRenderer(new CustomComboRenderer(customerDcr.getFilterTextSupplier()));
-        
+
         shipToDcr = ComboBoxFilterDecorator.decorate(cbxShipToN, WTRegView::getCustomDisplayText, WTRegView::customFilter);
         cbxShipToN.setRenderer(new CustomComboRenderer(shipToDcr.getFilterTextSupplier()));
     }
@@ -2251,7 +2251,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                         throw new Exception();
                     }
                 }
-                
+
                 String bsGhe = txtPlateNoN.getText();
                 String traid = bsGhe;
                 if (saleOrder != null && saleOrder.getTraid() != null) {
@@ -2292,7 +2292,8 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 }
 
                 if (mappingErrMsg.size() > 0) {
-                    String msg = String.join("\n", mappingErrMsg);
+                    String msg = String.join(", ", mappingErrMsg);
+                    msg += " " + resourceMapMsg.getString("msg.notMappingSuffixes");
                     if (!confirmOverwriteData(msg)) {
                         cleanAudit();
                         canceled = true;
@@ -3693,7 +3694,8 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 }
 
                 if (mappingErrMsg.size() > 0) {
-                    String msg = String.join("\n", mappingErrMsg);
+                    String msg = String.join(", ", mappingErrMsg);
+                    msg += " " + resourceMapMsg.getString("msg.notMappingSuffixes");
                     if (!confirmOverwriteData(msg)) {
                         cleanAudit();
                         canceled = true;
@@ -4628,7 +4630,8 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             }
 
             if (mappingErrMsg.size() > 0) {
-                String msg = String.join("\n", mappingErrMsg);
+                String msg = String.join(", ", mappingErrMsg);
+                msg += " " + resourceMapMsg.getString("msg.notMappingSuffixes");
                 if (!confirmOverwriteData(msg)) {
                     cleanAudit();
                     canceled = true;
@@ -5007,6 +5010,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             txtDriverNameN.setText(newWeightTicket.getDriverName());
             txtCMNDN.setText(newWeightTicket.getDriverIdNo());
             txtPlateNoN.setText(newWeightTicket.getPlateNo());
+            txtPlateNoN.setEditable(false);
             txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(newWeightTicket.getPlateNo()).toString());
             txtTrailerNoN.setText(newWeightTicket.getTrailerId());
             txtSlingN.setText(Integer.toString(newWeightTicket.getSling()));
