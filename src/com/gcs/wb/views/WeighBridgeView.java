@@ -24,12 +24,15 @@ import java.awt.event.WindowAdapter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import javax.swing.Timer;
 import javax.swing.Icon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.WindowConstants;
 import net.sf.jasperreports.view.JasperViewer;
 import org.apache.log4j.Logger;
 import org.jdesktop.application.Application;
@@ -48,6 +51,7 @@ public class WeighBridgeView extends FrameView {
     SchedulerSync schedulerSync;
     boolean allowToSync = true;
     private static final Object schedulerSyncLock = new Object();
+
     public WeighBridgeView(SingleFrameApplication app) {
         super(app);
         initComponents();
@@ -703,10 +707,20 @@ public class WeighBridgeView extends FrameView {
                         schedulerSyncRepository.syncExitHandler(schedulerSync, false);
                     }
                 });
-                
+
+                JDialog dialog = new JDialog();
+                JLabel label = new JLabel("Please wait...");
+                dialog.setLocationRelativeTo(null);
+                dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+                dialog.setTitle("Please Wait...");
+                dialog.add(label);
+                dialog.pack();
+                dialog.setVisible(true);
+
                 setStep(1, resourceMapMsg.getString("msg.isSyncMasterData"));
                 SyncMasterDataService syncMasterDataService = new SyncMasterDataService();
                 syncMasterDataService.syncMasterData();
+                dialog.setVisible(false);
                 return null;  // return your result
             }
         }
