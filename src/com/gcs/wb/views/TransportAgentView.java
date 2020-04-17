@@ -417,10 +417,11 @@ private void dpValidToPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-
 }//GEN-LAST:event_dpValidToPropertyChange
 
 private void txtLicensePlateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtLicensePlateFocusLost
-    String plateNo = txtLicensePlate.getText().trim();
-    plateNo = plateNo.replace("-", "");
-    plateNo = plateNo.replace(".", "");
-    txtLicensePlate.setText(plateNo.toUpperCase());
+    String plateNoStr = txtLicensePlate.getText().trim();
+    plateNoStr = plateNoStr.replace("-", "").replace(".", "").toUpperCase();
+    txtLicensePlate.setText(plateNoStr);
+
+    validateForm();
 }//GEN-LAST:event_txtLicensePlateFocusLost
 
 private void cbxVehicleTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxVehicleTypeActionPerformed

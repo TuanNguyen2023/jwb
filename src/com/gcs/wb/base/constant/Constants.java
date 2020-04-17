@@ -152,8 +152,8 @@ public class Constants {
 
     public static final class TransportAgent {
 
-        public static final Pattern LICENSE_PLATE_PATTERN = Pattern.compile("^(\\d{2}[A-Za-z]-\\d{4})|(\\d{2}[A-Za-z]-\\d{3}\\.\\d{2})|(\\d{2}[A-Za-z]-\\d{4,6})|(\\d{2}[A-Za-z]\\d{4,7})$");
-        public static final Pattern LICENSE_PLATE_WATER_PATTERN = Pattern.compile("^([A-Za-z]{2}\\d{4,8})|([A-Za-z]{3}\\d{4,7})|^([A-Za-z]{2}-\\d{4,8})|([A-Za-z]{3}-\\d{4,7})$");
+        public static final Pattern LICENSE_PLATE_PATTERN = Pattern.compile("^(\\d{2}[A-Za-z]{1,2}-\\d{3}\\.\\d{2})|(\\d{2}[A-Za-z]{1,2}-\\d{4,6})|(\\d{2}[A-Za-z]\\d{4,7})|(\\d{2}[A-Za-z]{2}\\d{4,6})$");
+        public static final Pattern LICENSE_PLATE_WATER_PATTERN = Pattern.compile("^([A-Za-z]{2}\\d{4,8})|([A-Za-z]{3}\\d{4,7})|([A-Za-z]{2}-\\d{4,8})|([A-Za-z]{3}-\\d{4,7})$");
 
         public static final int STRUCK_TYPE = 1;
     }
@@ -169,8 +169,6 @@ public class Constants {
 
         private WTRegView() {
         }
-        public static final Pattern patLicPlate = Pattern.compile("\\d{2}[A-Z]-\\d{4}");
-        public static final Pattern patLicPlatenew = Pattern.compile("\\d{2}[A-Z]-\\S+");
         public static final String PROP_FORMVALID = "formValid";
         public static final String MODE_REG = "MODE_REG";
         public static final String MODE_RPT = "MODE_RPT";
