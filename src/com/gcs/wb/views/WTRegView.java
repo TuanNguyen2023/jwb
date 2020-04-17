@@ -137,6 +137,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
     ComboBoxFilterDecorator<Object> vendorLoadingDcr;
     ComboBoxFilterDecorator<Object> vendorTransportDcr;
     ComboBoxFilterDecorator<Object> customerDcr;
+    ComboBoxFilterDecorator<Object> shipToDcr;
 
     public WTRegView() {
         newWeightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
@@ -280,29 +281,8 @@ public class WTRegView extends javax.swing.JInternalFrame {
         customerDcr = ComboBoxFilterDecorator.decorate(cbxCustomerN, WTRegView::getCustomDisplayText, WTRegView::customFilter);
         cbxCustomerN.setRenderer(new CustomComboRenderer(customerDcr.getFilterTextSupplier()));
         
-        cbxShipToN.setRenderer(new DefaultListCellRenderer() {
-
-            @Override
-            public Component getListCellRendererComponent(
-                    JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if (value instanceof Customer) {
-                    Customer customer = (Customer) value;
-                    String name = customer.getName2();
-                    if (!StringUtil.isEmptyString(customer.getName3())) {
-                        name += " " + customer.getName3();
-                    }
-                    if (!StringUtil.isEmptyString(customer.getName4())) {
-                        name += " " + customer.getName4();
-                    }
-
-                    setText(!StringUtil.isEmptyString(name) ? name : customer.getName1());
-                    setToolTipText(customer.getKunnr());
-                }
-
-                return this;
-            }
-        });
+        shipToDcr = ComboBoxFilterDecorator.decorate(cbxShipToN, WTRegView::getCustomDisplayText, WTRegView::customFilter);
+        cbxShipToN.setRenderer(new CustomComboRenderer(shipToDcr.getFilterTextSupplier()));
     }
 
     private static boolean customFilter(Object object, String textToFilter) {
@@ -337,6 +317,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
             if (!StringUtil.isEmptyString(customer.getName4())) {
                 name += " " + customer.getName4();
             }
+            name = (!StringUtil.isEmptyString(name) ? name : customer.getName1());
         }
 
         if (value instanceof Vendor) {
@@ -422,6 +403,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         vendorTransportDcr.updateCombobox(cbxVendorTransportN);
         vendorLoadingDcr.updateCombobox(cbxVendorLoadingN);
         customerDcr.updateCombobox(cbxCustomerN);
+        shipToDcr.updateCombobox(cbxShipToN);
     }
 
     private void initComboboxModel() {
@@ -3792,6 +3774,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
                 if (shipTo != null) {
                     cbxShipToN.setModel(shipToModel);
+                    shipToDcr.updateCombobox(cbxShipToN);
                     cbxShipToN.setSelectedItem(shipTo);
                 } else {
                     cbxShipToN.setSelectedIndex(-1);
@@ -5042,6 +5025,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
             if (modeDetail == MODE_DETAIL.OUT_SELL_ROAD || modeDetail == MODE_DETAIL.OUT_SELL_WATERWAY) {
                 cbxShipToN.setModel(shipToModel);
+                shipToDcr.updateCombobox(cbxShipToN);
                 cbxShipToN.setSelectedItem(weightTicketRegistarationController.getCustomer(weightTicketDetail.getShipTo()));
             }
 

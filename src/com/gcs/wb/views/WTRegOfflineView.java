@@ -98,6 +98,7 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
     ComboBoxFilterDecorator<Object> vendorLoadingDcr;
     ComboBoxFilterDecorator<Object> vendorTransportDcr;
     ComboBoxFilterDecorator<Object> customerDcr;
+    ComboBoxFilterDecorator<Object> shipToDcr;
     public WTRegOfflineView() {
         newWeightTicket = new WeightTicket();
         selectedWeightTicket = new WeightTicket();
@@ -223,29 +224,8 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
         customerDcr = ComboBoxFilterDecorator.decorate(cbxCustomerN, WTRegOfflineView::getCustomDisplayText, WTRegOfflineView::customFilter);
         cbxCustomerN.setRenderer(new CustomComboRenderer(customerDcr.getFilterTextSupplier()));
         
-        cbxShipToN.setRenderer(new DefaultListCellRenderer() {
-
-            @Override
-            public Component getListCellRendererComponent(
-                    JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if (value instanceof Customer) {
-                    Customer customer = (Customer) value;
-                    String name = customer.getName2();
-                    if (!StringUtil.isEmptyString(customer.getName3())) {
-                        name += " " + customer.getName3();
-                    }
-                    if (!StringUtil.isEmptyString(customer.getName4())) {
-                        name += " " + customer.getName4();
-                    }
-
-                    setText(!StringUtil.isEmptyString(name) ? name : customer.getName1());
-                    setToolTipText(customer.getKunnr());
-                }
-
-                return this;
-            }
-        });
+        shipToDcr = ComboBoxFilterDecorator.decorate(cbxShipToN, WTRegOfflineView::getCustomDisplayText, WTRegOfflineView::customFilter);
+        cbxShipToN.setRenderer(new CustomComboRenderer(shipToDcr.getFilterTextSupplier()));
     }
 
     private static boolean customFilter(Object object, String textToFilter) {
@@ -280,6 +260,7 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
             if (!StringUtil.isEmptyString(customer.getName4())) {
                 name += " " + customer.getName4();
             }
+            name = (!StringUtil.isEmptyString(name) ? name : customer.getName1());
         }
 
         if (value instanceof Vendor) {
@@ -365,6 +346,7 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
         vendorTransportDcr.updateCombobox(cbxVendorTransportN);
         vendorLoadingDcr.updateCombobox(cbxVendorLoadingN);
         customerDcr.updateCombobox(cbxCustomerN);
+        shipToDcr.updateCombobox(cbxShipToN);
     }
     private void initComboboxModel() {
         cbxCustomerN.setModel(customerModel);
@@ -1624,6 +1606,7 @@ private void cbxCustomerNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         Customer customer = (Customer) cbxCustomerN.getSelectedItem();
         cbxShipToN.setModel(weightTicketRegistarationController.getShipToModel(customer.getKunnr()));
         cbxShipToN.setSelectedIndex(-1);
+        shipToDcr.updateCombobox(cbxShipToN);
     }
 
     validateForm();
