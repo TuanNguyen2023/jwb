@@ -2308,6 +2308,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
                     // overwrite plateNo
                     txtPlateNoN.setText(traid);
+                    bsXe = txtPlateNoN.getText().trim();
                 }
             }
 
@@ -3973,36 +3974,56 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                         detail.setWtId(newWeightTicket.getId());
 
                         if (isEditMode) {
-                            double remain = newWeightTicket.getGQty().doubleValue();
-                            // check variant
-                            checkVariant(outboundDelivery.getMatnr(), weightRegQtyTemp.doubleValue(), newWeightTicket.getGQty().doubleValue());
+                            if (newWeightTicket.getGQty() != null && newWeightTicket.getFScale() != null && newWeightTicket.getSScale() != null) {
+                                double remain = newWeightTicket.getGQty().doubleValue();
+                                // check variant
+                                checkVariant(outboundDelivery.getMatnr(), weightRegQtyTemp.doubleValue(), newWeightTicket.getGQty().doubleValue());
 
-                            // chia cân
-                            if (deliveryDetails.size() > 1) {
-                                if (detail.getFreeItem() != null && detail.getFreeItem() == 'X') {
-                                    detail.setGoodsQty(detail.getLfimg());
+                                // chia cân
+                                if (deliveryDetails.size() > 1) {
+                                    if (detail.getFreeItem() != null && detail.getFreeItem() == 'X') {
+                                        detail.setGoodsQty(detail.getLfimg());
+                                        detail.setLfimg_ori(detail.getLfimg());
+                                        detail.setfTime(newWeightTicket.getFTime());
+                                        detail.setsTime(newWeightTicket.getSTime());
+                                        detail.setUpdatedDate(now);
+
+                                        BigDecimal fScale = newWeightTicket.getFScale();
+                                        if (fScale != null) {
+                                            fScale = fScale.divide(new BigDecimal(1000)).setScale(3, RoundingMode.HALF_UP);
+                                        }
+                                        detail.setInScale(fScale);
+                                        detail.setOutScale(detail.getInScale().add(detail.getLfimg()).setScale(3, RoundingMode.HALF_UP));
+                                        remain = remain - detail.getLfimg().doubleValue();
+                                    } else {
+                                        if (checkVariant) {
+                                            detail.setGoodsQty(weightRegQtyTemp);
+                                        } else {
+                                            detail.setGoodsQty(BigDecimal.valueOf(remain).setScale(3, RoundingMode.HALF_UP));
+                                        }
+                                        detail.setLfimg_ori(detail.getLfimg());
+                                        detail.setfTime(newWeightTicket.getFTime());
+                                        detail.setsTime(newWeightTicket.getSTime());
+                                        detail.setGoodsQty(newWeightTicket.getGQty());
+                                        detail.setUpdatedDate(now);
+
+                                        BigDecimal fScale = newWeightTicket.getFScale();
+                                        if (fScale != null) {
+                                            fScale = fScale.divide(new BigDecimal(1000)).setScale(3, RoundingMode.HALF_UP);
+                                        }
+                                        detail.setInScale(fScale);
+
+                                        detail.setOutScale((BigDecimal.valueOf(detail.getInScale().doubleValue() + detail.getGoodsQty().doubleValue())).setScale(3, RoundingMode.HALF_UP));
+                                    }
+                                } else if (deliveryDetails.size() == 1) {
                                     detail.setLfimg_ori(detail.getLfimg());
                                     detail.setfTime(newWeightTicket.getFTime());
                                     detail.setsTime(newWeightTicket.getSTime());
-                                    detail.setUpdatedDate(now);
-
-                                    BigDecimal fScale = newWeightTicket.getFScale();
-                                    if (fScale != null) {
-                                        fScale = fScale.divide(new BigDecimal(1000)).setScale(3, RoundingMode.HALF_UP);
-                                    }
-                                    detail.setInScale(fScale);
-                                    detail.setOutScale(detail.getInScale().add(detail.getLfimg()).setScale(3, RoundingMode.HALF_UP));
-                                    remain = remain - detail.getLfimg().doubleValue();
-                                } else {
                                     if (checkVariant) {
                                         detail.setGoodsQty(weightRegQtyTemp);
                                     } else {
-                                        detail.setGoodsQty(BigDecimal.valueOf(remain).setScale(3, RoundingMode.HALF_UP));
+                                        detail.setGoodsQty(newWeightTicket.getGQty());
                                     }
-                                    detail.setLfimg_ori(detail.getLfimg());
-                                    detail.setfTime(newWeightTicket.getFTime());
-                                    detail.setsTime(newWeightTicket.getSTime());
-                                    detail.setGoodsQty(newWeightTicket.getGQty());
                                     detail.setUpdatedDate(now);
 
                                     BigDecimal fScale = newWeightTicket.getFScale();
@@ -4013,24 +4034,12 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
                                     detail.setOutScale((BigDecimal.valueOf(detail.getInScale().doubleValue() + detail.getGoodsQty().doubleValue())).setScale(3, RoundingMode.HALF_UP));
                                 }
-                            } else if (deliveryDetails.size() == 1) {
+                            } else if (newWeightTicket.getFScale() != null) {
+                                BigDecimal inScale = newWeightTicket.getFScale().divide(new BigDecimal(1000)).setScale(3, RoundingMode.HALF_UP);
+                                detail.setInScale(inScale.setScale(3, RoundingMode.HALF_UP));
+                                detail.setfTime(now);
                                 detail.setLfimg_ori(detail.getLfimg());
-                                detail.setfTime(newWeightTicket.getFTime());
-                                detail.setsTime(newWeightTicket.getSTime());
-                                if (checkVariant) {
-                                    detail.setGoodsQty(weightRegQtyTemp);
-                                } else {
-                                    detail.setGoodsQty(newWeightTicket.getGQty());
-                                }
                                 detail.setUpdatedDate(now);
-
-                                BigDecimal fScale = newWeightTicket.getFScale();
-                                if (fScale != null) {
-                                    fScale = fScale.divide(new BigDecimal(1000)).setScale(3, RoundingMode.HALF_UP);
-                                }
-                                detail.setInScale(fScale);
-
-                                detail.setOutScale((BigDecimal.valueOf(detail.getInScale().doubleValue() + detail.getGoodsQty().doubleValue())).setScale(3, RoundingMode.HALF_UP));
                             }
                         }
 
