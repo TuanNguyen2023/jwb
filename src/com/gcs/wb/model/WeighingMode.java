@@ -12,6 +12,10 @@ public class WeighingMode {
     private MODE_DETAIL modeDetail;
     private String title;
 
+    public WeighingMode(MODE_DETAIL modeDetail) {
+        this.modeDetail = modeDetail;
+    }
+
     public WeighingMode(MODE_DETAIL modeDetail, String title) {
         this.modeDetail = modeDetail;
         this.title = title;
@@ -58,5 +62,4 @@ public class WeighingMode {
         return true;
     }
 
-    
 }
