@@ -735,7 +735,7 @@ public class WeighBridgeView extends FrameView {
                     schedulerSyncRepository.updateLastSync(schedulerSync);
                 }
             } else {
-                setStep(2, resourceMapMsg.getString("msg.syncMasterDataFailed"));
+                setStep(2, resourceMapMsg.getString("msg.syncMasterDataCanceled"));
             }
         }
 
