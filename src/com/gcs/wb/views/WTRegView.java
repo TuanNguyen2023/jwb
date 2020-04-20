@@ -2084,7 +2084,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 }//GEN-LAST:event_txtSONumNFocusLost
 
 private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTrailerNoNFocusLost
- String trailerNo = txtTrailerNoN.getText().trim();
+    String trailerNo = txtTrailerNoN.getText().trim();
     trailerNo = trailerNo.replace("-", "");
     trailerNo = trailerNo.replace(".", "");
     txtTrailerNoN.setText(trailerNo.toUpperCase());
@@ -3163,9 +3163,10 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
         boolean isMaterialTypeValid = wtRegisValidation.validateCbxSelected(cbxMaterialTypeN.getSelectedIndex(), lblMaterialTypeN);
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN) && isValidSloc;
         boolean isSloc2Valid = wtRegisValidation.validateCbxSelected(cbxSloc2N.getSelectedIndex(), lblSloc2N) && isValidSloc;
+        boolean isWeightValid = wtRegisValidation.validateWeighField(txtWeightN.getText(), lblWeightN, 1, 10, 0.001d);
 
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
-                && isCMNDBLValid && isSalanValid
+                && isCMNDBLValid && isSalanValid && isWeightValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isSlocValid && isSloc2Valid && isMaterialTypeValid;
     }
@@ -3712,7 +3713,7 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
                 }
 
                 // for check edit plateNo after check DO
-                 plateNoValidDO = traid.split("\\|", 2)[0];
+                plateNoValidDO = traid.split("\\|", 2)[0];
 
                 //check exist bs romoc
                 if (modeDetail == MODE_DETAIL.OUT_SELL_ROAD) {
