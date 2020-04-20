@@ -2341,7 +2341,17 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
                         txtPlateNoN.setText(bsGhe);
 
                         if (matnr != null) {
-                            cbxMaterialTypeN.setSelectedItem(material);
+                            Material temp = weightTicketRegistarationController.getMaterial(matnr);
+                            if (temp == null) {
+                                sapService.syncMaterial();
+                                temp = weightTicketRegistarationController.getMaterial(matnr);
+                            }
+
+                            if (temp == null && !matnr.isEmpty()) {
+                                throw new Exception(resourceMapMsg.getString("msg.materialNotExist", matnr));
+                            }
+
+                            cbxMaterialTypeN.setSelectedItem(temp);
                         }
 
                         if (kunnr != null) {
@@ -2349,12 +2359,12 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
                             DefaultComboBoxModel shipToModel = (DefaultComboBoxModel) SerializationUtils.clone(customerModel);
 
                             cbxCustomerN.setModel(customerModel);
-                            cbxCustomerN.setSelectedItem(cust);
+                            cbxCustomerN.setSelectedItem(syncCustomer(kunnr.trim()));
 
                             if (ship_to != null) {
                                 cbxShipToN.setModel(shipToModel);
                                 shipToDcr.updateCombobox(cbxShipToN);
-                                cbxShipToN.setSelectedItem(shipToCust);
+                                cbxShipToN.setSelectedItem(syncCustomer(ship_to.trim()));
                             }
                         }
                     }
@@ -2419,6 +2429,21 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
             isValidSO = true;
             validSO = txtSONumN.getText().trim();
             validateForm();
+        }
+
+        private Customer syncCustomer(String kunnr) {
+            try {
+                Customer dbCustomer = weightTicketRegistarationController.findByKunnr(kunnr);
+                Customer sapCustomer = sapService.getCustomer(kunnr);
+                return sapService.syncCustomer(sapCustomer, dbCustomer);
+            } catch (Exception ex) {
+                if (ExceptionUtil.isSapDisConnectedException(ex)) {
+                    canceled = true;
+                    throw ex;
+                }
+
+                return null;
+            }
         }
     }
 
@@ -3772,19 +3797,19 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
                     if (matnr != null || kunnr != null || ship_to != null) {
                         setWTDetailAudit(newWeightTicket.getId(), matnr, kunnr, ship_to);
                     }
-                }
 
-                if (mappingErrMsg.size() > 0) {
-                    String msg = String.join(", ", mappingErrMsg);
-                    msg += " " + resourceMapMsg.getString("msg.notMappingSuffixes");
-                    if (!confirmOverwriteData(msg)) {
-                        cleanAudit();
-                        canceled = true;
-                        throw new Exception();
+                    if (mappingErrMsg.size() > 0) {
+                        String msg = String.join(", ", mappingErrMsg);
+                        msg += " " + resourceMapMsg.getString("msg.notMappingSuffixes");
+                        if (!confirmOverwriteData(msg)) {
+                            cleanAudit();
+                            canceled = true;
+                            throw new Exception();
+                        }
+
+                        // overwrite plateNo
+                        txtPlateNoN.setText(plateNoValidDO);
                     }
-
-                    // overwrite plateNo
-                    txtPlateNoN.setText(plateNoValidDO);
                 }
 
                 // set DO data to Weight ticket
@@ -3885,7 +3910,22 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
         protected void succeeded(Object t) {
             isValidDO = true;
             validDO = txtDONumN.getText().trim();
-            cbxMaterialTypeN.setSelectedItem(String.join(" - ", strMaterial));
+            if (isEditMode) {
+                String strMatnr = matnrs.get(0);
+                Material temp = weightTicketRegistarationController.getMaterial(strMatnr);
+                if (temp == null) {
+                    sapService.syncMaterial();
+                    temp = weightTicketRegistarationController.getMaterial(strMatnr);
+                }
+
+                if (temp == null && !strMatnr.isEmpty()) {
+                    JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.materialNotExist", strMatnr));
+                }
+
+                cbxMaterialTypeN.setSelectedItem(temp);
+            } else {
+                cbxMaterialTypeN.setSelectedItem(String.join(" - ", strMaterial));
+            }
             txtWeightN.setText(df.format(totalWeight));
 
             if (customer != null) {
