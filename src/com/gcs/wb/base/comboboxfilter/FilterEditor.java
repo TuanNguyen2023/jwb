@@ -29,6 +29,9 @@ public class FilterEditor<T> extends BasicComboBoxEditor {
     }
 
     public void removeCharAtEnd() {
+        if ("".equals(text)) {
+            text = filterText.getText();
+        }
         if (text.length() > 0) {
             text = text.substring(0, text.length() - 1);
             if (!editing) {
