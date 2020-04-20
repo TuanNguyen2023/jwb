@@ -79,7 +79,9 @@ public class WTRegView extends javax.swing.JInternalFrame {
     private boolean isValidSloc = false;
     private BigDecimal numCheckWeight = BigDecimal.ZERO;
     private String plateNoValidDO = "";
+    private String trailerNoValidDO = "";
     private boolean isValidPlateNo = false;
+    //private boolean isValidTrailerNo = false;
     private String checkedCharg = "";
     private String validSO = null;
     private String validDO = null;
@@ -905,6 +907,11 @@ public class WTRegView extends javax.swing.JInternalFrame {
         txtTonnageN.setName("txtTonnageN"); // NOI18N
 
         txtTrailerNoN.setName("txtTrailerNoN"); // NOI18N
+        txtTrailerNoN.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtTrailerNoNFocusLost(evt);
+            }
+        });
         txtTrailerNoN.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtTrailerNoNKeyReleased(evt);
@@ -1554,7 +1561,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnShowFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(13, 13, 13)
-                .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+                .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnPrintControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -2075,6 +2082,23 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
     validateForm();
 }//GEN-LAST:event_txtSONumNFocusLost
+
+private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTrailerNoNFocusLost
+ String trailerNo = txtTrailerNoN.getText().trim();
+    trailerNo = trailerNo.replace("-", "");
+    trailerNo = trailerNo.replace(".", "");
+    txtTrailerNoN.setText(trailerNo.toUpperCase());
+
+    if (modeDetail == MODE_DETAIL.OUT_SELL_ROAD
+            && !trailerNoValidDO.isEmpty() && !trailerNo.contains(trailerNoValidDO)) {
+        lblTrailerNoN.setForeground(Color.red);
+        btnSave.setEnabled(false);
+
+        JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.trailerNoNotMapping", trailerNo));
+    } else {
+        validateForm();
+    }
+}//GEN-LAST:event_txtTrailerNoNFocusLost
 
     private void validateFilterForm() {
         boolean isDriverNameValid = wtRegisValidation.validateLength(txtDriverName.getText(), lblDriverName, 0, 70);
@@ -3644,6 +3668,8 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 // check mapping Plate No
                 String plateNo = txtPlateNoN.getText().trim();
                 String traid = outboundDelivery.getTraid().trim();
+                String trailerNo = txtTrailerNoN.getText().trim();
+                String trailerDo = "";
                 traid = StringUtil.correctPlateNo(traid).toUpperCase();
                 if (traid.isEmpty() || (!traid.isEmpty() && !traid.startsWith(plateNo))) {
                     String plateName = "xe";
@@ -3662,6 +3688,28 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 // for check edit plateNo after check DO
                 plateNoValidDO = traid.split("|", 2)[0];
 
+                //check exist bs romoc
+                if (modeDetail == MODE_DETAIL.OUT_SELL_ROAD) {
+                    if (traid.split("|").length > 1) {
+                        trailerDo = traid.split("|")[1];
+                        trailerNoValidDO = trailerDo;
+                        if (StringUtil.isEmptyString(trailerNo)) {
+                            // vui long nhap BS ro moc
+                            lblTrailerNoN.setForeground(Color.red);
+                            throw new Exception(resourceMapMsg.getString("msg.trailerNoNotExist"));
+                        } else if (trailerDo.equals(trailerNo)) {
+                            // BS Romoc k trung khop voi DO
+                            lblTrailerNoN.setForeground(Color.red);
+                            throw new Exception(resourceMapMsg.getString("msg.trailerNoNotMapping", trailerNo));
+                        }
+                    } else {
+                        if (!StringUtil.isEmptyString(trailerNo)) {
+                            // DO nay khong co so Romoc
+                            lblTrailerNoN.setForeground(Color.red);
+                            throw new Exception(resourceMapMsg.getString("msg.trailerNoEmpty"));
+                        }
+                    }
+                }
                 // check customer
                 if (index > 0) {
                     String deliveryOrderNoBefore = deliveryOrderNos[index - 1];
