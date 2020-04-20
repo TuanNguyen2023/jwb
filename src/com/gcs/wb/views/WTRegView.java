@@ -122,7 +122,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
     DefaultComboBoxModel shipToModel = (DefaultComboBoxModel) SerializationUtils.clone(customerModel);
 
     ComboBoxFilterDecorator<Object> hourFromDcr;
-    ComboBoxFilterDecorator<Object> hourToDcr ;
+    ComboBoxFilterDecorator<Object> hourToDcr;
     ComboBoxFilterDecorator<Object> modeDcr;
     ComboBoxFilterDecorator<Object> statusDcr;
     ComboBoxFilterDecorator<Object> modeSearchDcr;
@@ -212,9 +212,9 @@ public class WTRegView extends javax.swing.JInternalFrame {
     }
 
     private void initComboboxRenderer() {
-        
+
         materialTypeDcr = ComboBoxFilterDecorator.decorate(cbxMaterialType, WTRegView::getMaterialSearchText, WTRegView::customFilter);
-        
+
         cbxMaterialType.setRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(
@@ -229,13 +229,13 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 return this;
             }
         });
-        
+
         hourFromDcr = ComboBoxFilterDecorator.decorate(cbxHourFrom, WTRegView::getCustomDisplayText, WTRegView::customFilter);
         cbxHourFrom.setRenderer((new CustomComboRenderer(hourFromDcr.getFilterTextSupplier())));
 
         hourToDcr = ComboBoxFilterDecorator.decorate(cbxHourTo, WTRegView::getCustomDisplayText, WTRegView::customFilter);
         cbxHourTo.setRenderer((new CustomComboRenderer(hourToDcr.getFilterTextSupplier())));
-        
+
         cbxModeType.setRenderer(new DefaultListCellRenderer() {
 
             @Override
@@ -256,19 +256,19 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         modeSearchDcr = ComboBoxFilterDecorator.decorate(cbxModeSearch, WTRegView::getCustomDisplayText, WTRegView::customFilter);
         cbxModeSearch.setRenderer((new CustomComboRenderer(modeSearchDcr.getFilterTextSupplier())));
-        
+
         materialTypeNDcr = ComboBoxFilterDecorator.decorate(cbxMaterialTypeN, WTRegView::getCustomDisplayText, WTRegView::customFilter);
         cbxMaterialTypeN.setRenderer((new CustomComboRenderer(materialTypeNDcr.getFilterTextSupplier())));
-        
+
         slocDcr = ComboBoxFilterDecorator.decorate(cbxSlocN, WTRegView::getCustomDisplayText, WTRegView::customFilter);
         cbxSlocN.setRenderer(new CustomComboRenderer(slocDcr.getFilterTextSupplier()));
-        
+
         sloc2Dcr = ComboBoxFilterDecorator.decorate(cbxSloc2N, WTRegView::getCustomDisplayText, WTRegView::customFilter);
         cbxSloc2N.setRenderer(new CustomComboRenderer(sloc2Dcr.getFilterTextSupplier()));
 
         batchStockDcr = ComboBoxFilterDecorator.decorate(cbxBatchStockN, WTRegView::getCustomDisplayText, WTRegView::customFilter);
         cbxBatchStockN.setRenderer(new CustomComboRenderer(batchStockDcr.getFilterTextSupplier()));
-        
+
         batchStock2Dcr = ComboBoxFilterDecorator.decorate(cbxBatchStock2N, WTRegView::getCustomDisplayText, WTRegView::customFilter);
         cbxBatchStock2N.setRenderer(new CustomComboRenderer(batchStock2Dcr.getFilterTextSupplier()));
 
@@ -280,7 +280,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         customerDcr = ComboBoxFilterDecorator.decorate(cbxCustomerN, WTRegView::getCustomDisplayText, WTRegView::customFilter);
         cbxCustomerN.setRenderer(new CustomComboRenderer(customerDcr.getFilterTextSupplier()));
-        
+
         shipToDcr = ComboBoxFilterDecorator.decorate(cbxShipToN, WTRegView::getCustomDisplayText, WTRegView::customFilter);
         cbxShipToN.setRenderer(new CustomComboRenderer(shipToDcr.getFilterTextSupplier()));
     }
@@ -292,7 +292,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         String displayText = HtmlHighlighter.removeAccent(getCustomDisplayText(object).toLowerCase());
         return displayText.contains(HtmlHighlighter.removeAccent(textToFilter.toLowerCase()));
     }
-    
+
     public static String getMaterialSearchText(Object value) {
         String name = "";
         if (value instanceof Material) {
@@ -307,7 +307,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         if (value instanceof String) {
             name = (String) value;
         }
-        
+
         if (value instanceof Customer) {
             Customer customer = (Customer) value;
             name = customer.getName2();
@@ -386,7 +386,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
             WeighingMode mod = (WeighingMode) value;
             toolTip = mod.getTitle();
         }
-        
+
         if (value instanceof Material) {
             Material mat = (Material) value;
             toolTip = mat.getMatnr();
@@ -418,6 +418,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         DefaultComboBoxModel sLocModel = new DefaultComboBoxModel(sLocs.toArray());
         DefaultComboBoxModel sLoc2Model = (DefaultComboBoxModel) SerializationUtils.clone(sLocModel);
         cbxSlocN.setModel(sLocModel);
+        slocDcr.updateCombobox(cbxSlocN);
         if (lgortSelected != null && !lgortSelected.isEmpty() && !sLocs.isEmpty()) {
             SLoc sLoc = sLocs.stream()
                     .filter(t -> lgortSelected.equals(t.getLgort()))
@@ -431,6 +432,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         cbxSloc2N.setModel(sLoc2Model);
         cbxSloc2N.setSelectedIndex(-1);
+        sloc2Dcr.updateCombobox(cbxSloc2N);
 
         validateForm();
     }
@@ -739,9 +741,9 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(lblHourFrom)
-                        .addComponent(cbxHourFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cbxHourFrom, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(lblHourTo)
-                        .addComponent(cbxHourTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(cbxHourTo, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pnFilterLayout.createSequentialGroup()
                         .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(dpDateFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -757,11 +759,11 @@ public class WTRegView extends javax.swing.JInternalFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lblStatus)
-                            .addComponent(cbxStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cbxMaterialType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbxStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbxMaterialType, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblMaterialType)
                             .addComponent(lblMode)
-                            .addComponent(cbxModeSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(cbxModeSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(dpDateTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(lblDateTo)))
@@ -1552,7 +1554,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnShowFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(13, 13, 13)
-                .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
+                .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnPrintControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -1562,7 +1564,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(14, 14, 14)
                         .addComponent(pnRegistrationOfVehicle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -1578,7 +1580,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
             String hourTo = cbxHourTo.getSelectedItem().toString();
             if (Integer.parseInt(hourTo) < Integer.parseInt(hourFrom)) {
                 cbxHourTo.setSelectedItem(cbxHourFrom.getSelectedItem());
-            }            
+            }
         } catch (Exception e) {
         }
 
@@ -1645,6 +1647,9 @@ private void txtDONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
 
 private void cbxSlocNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxSlocNActionPerformed
     loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
+    if (batchStockDcr != null) {
+        batchStockDcr.updateCombobox(cbxBatchStockN);
+    } 
 }//GEN-LAST:event_cbxSlocNActionPerformed
 
 private void cbxBatchStockNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxBatchStockNActionPerformed
@@ -1672,6 +1677,9 @@ private void cbxBatchStockNActionPerformed(java.awt.event.ActionEvent evt) {//GE
 
 private void cbxSloc2NActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxSloc2NActionPerformed
     loadBatchStockModel2N(cbxSloc2N, cbxBatchStock2N, false);
+    if (batchStock2Dcr != null) {
+        batchStock2Dcr.updateCombobox(cbxBatchStock2N);
+    }
 }//GEN-LAST:event_cbxSloc2NActionPerformed
 
 private void cbxBatchStock2NActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxBatchStock2NActionPerformed
@@ -1767,6 +1775,17 @@ private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//
     // load batch stock
     loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
     loadBatchStockModel2N(cbxSloc2N, cbxBatchStock2N, false);
+    if (slocDcr != null) {
+        slocDcr.updateCombobox(cbxSlocN);
+    }
+    if (sloc2Dcr != null) {
+        sloc2Dcr.updateCombobox(cbxSloc2N);
+    }
+    if (BatchStockDcr != null) {
+        BatchStockDcr.updateCombobox(cbxBatchStockN);
+    }
+    if (BatchStock2Dcr != null)
+        BatchStock2Dcr.updateCombobox(cbxBatchStock2N);
 }//GEN-LAST:event_cbxMaterialTypeNActionPerformed
 
 private void cbxVendorLoadingNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxVendorLoadingNActionPerformed
@@ -2228,7 +2247,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 bapi = sapService.getSalesOrderDetail(val[0]);
                 SaleOrderGetDetailStructure saleOrder = bapi.getExDeliSched();
                 if (saleOrder == null || StringUtil.isEmptyString(saleOrder.getVbeln())) {
-                    if(!StringUtil.isEmptyString(bapi.getReturnMessage())) {
+                    if (!StringUtil.isEmptyString(bapi.getReturnMessage())) {
                         returnErrMsg = bapi.getReturnMessage();
                     }
                     if (StringUtil.isEmptyString(returnErrMsg)) {
@@ -2238,16 +2257,20 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                         throw new Exception();
                     }
                 }
+
+                String bsGhe = txtPlateNoN.getText();
+                String traid = bsGhe;
                 if (saleOrder != null && saleOrder.getTraid() != null) {
-                    String bsGhe = txtPlateNoN.getText();
-                    String traid = saleOrder.getTraid();
+                    traid = saleOrder.getTraid();
                     traid = StringUtil.correctPlateNo(traid).toUpperCase();
                     String plateName = "ghe";
 
                     // validate BS Ghe
                     if (StringUtil.isNotEmptyString(bsGhe) && !bsGhe.equals(traid)) {
+                        setWTAudit(newWeightTicket.getId(), traid);
                         mappingErrMsg.add(resourceMapMsg.getString("msg.vehicleNotMapping", plateName));
                     }
+
                     String matnr = null;
                     Material material = (Material) cbxMaterialTypeN.getSelectedItem();
                     if (material != null && !material.getMatnr().equals(saleOrder.getMatnr())) {
@@ -2261,13 +2284,30 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                         kunnr = saleOrder.getKunnr();
                         mappingErrMsg.add(resourceMapMsg.getString("msg.customerNotMapping"));
                     }
+
+                    String ship_to = null;
+                    Customer shipToCust = (Customer) cbxShipToN.getSelectedItem();
+                    if (shipToCust != null && !shipToCust.getKunnr().equals(saleOrder.getShipTo())) {
+                        ship_to = saleOrder.getShipTo();
+                        mappingErrMsg.add(resourceMapMsg.getString("msg.shipToNotMapping"));
+                    }
+
+                    if (matnr != null || kunnr != null || ship_to != null) {
+                        setWTDetailAudit(newWeightTicket.getId(), matnr, kunnr, ship_to);
+                    }
                 }
+
                 if (mappingErrMsg.size() > 0) {
-                    String msg = String.join("\n", mappingErrMsg);
-                    msg += "\n\n" + resourceMapMsg.getString("msg.noOverwriteSuffixes");
-                    JOptionPane.showMessageDialog(rootPane, msg);
-                    canceled = true;
-                    throw new Exception();
+                    String msg = String.join(", ", mappingErrMsg);
+                    msg += " " + resourceMapMsg.getString("msg.notMappingSuffixes");
+                    if (!confirmOverwriteData(msg)) {
+                        cleanAudit();
+                        canceled = true;
+                        throw new Exception();
+                    }
+
+                    // overwrite plateNo
+                    txtPlateNoN.setText(traid);
                 }
             }
 
@@ -3141,7 +3181,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             isSOValid = wtRegisValidation.validateDO(txtSONumN.getText(), lblSONumN);
         }
         btnDOCheckN.setEnabled(isValidSO);
-        if(isValidSO && !isValidDO) {
+        if (isValidSO && !isValidDO) {
             btnDOCheckN.setForeground(Color.red);
         }
         validateButtonCheck(btnSOCheckN, isSOValid, isValidSO);
@@ -3647,13 +3687,21 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                         mappingErrMsg.add(resourceMapMsg.getString("msg.customerNotMapping"));
                     }
 
-                    if (matnr != null || kunnr != null) {
-                        setWTDetailAudit(newWeightTicket.getId(), matnr, kunnr, null);
+                    String ship_to = null;
+                    Customer shipToCust = (Customer) cbxShipToN.getSelectedItem();
+                    if (shipToCust != null && !shipToCust.getKunnr().equals(outboundDelivery.getOutboundDeliveryDetail().getShipTo())) {
+                        ship_to = outboundDelivery.getOutboundDeliveryDetail().getShipTo();
+                        mappingErrMsg.add(resourceMapMsg.getString("msg.shipToNotMapping"));
+                    }
+
+                    if (matnr != null || kunnr != null || ship_to != null) {
+                        setWTDetailAudit(newWeightTicket.getId(), matnr, kunnr, ship_to);
                     }
                 }
 
                 if (mappingErrMsg.size() > 0) {
-                    String msg = String.join("\n", mappingErrMsg);
+                    String msg = String.join(", ", mappingErrMsg);
+                    msg += " " + resourceMapMsg.getString("msg.notMappingSuffixes");
                     if (!confirmOverwriteData(msg)) {
                         cleanAudit();
                         canceled = true;
@@ -4588,7 +4636,8 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             }
 
             if (mappingErrMsg.size() > 0) {
-                String msg = String.join("\n", mappingErrMsg);
+                String msg = String.join(", ", mappingErrMsg);
+                msg += " " + resourceMapMsg.getString("msg.notMappingSuffixes");
                 if (!confirmOverwriteData(msg)) {
                     cleanAudit();
                     canceled = true;
@@ -4967,6 +5016,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             txtDriverNameN.setText(newWeightTicket.getDriverName());
             txtCMNDN.setText(newWeightTicket.getDriverIdNo());
             txtPlateNoN.setText(newWeightTicket.getPlateNo());
+            txtPlateNoN.setEditable(false);
             txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(newWeightTicket.getPlateNo()).toString());
             txtTrailerNoN.setText(newWeightTicket.getTrailerId());
             txtSlingN.setText(Integer.toString(newWeightTicket.getSling()));
@@ -5034,12 +5084,14 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             List<String> lgorts = weightTicketRegistarationController.getListLgortByMatnr(weightTicketDetail.getMatnrRef(), isInternal);
             loadSLoc(lgorts, newWeightTicket.getLgort());
             loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
-
+            batchStockDcr.updateCombobox(cbxBatchStockN);
+            
             if (modeDetail == MODE_DETAIL.OUT_SLOC_SLOC) {
                 cbxSloc2N.setSelectedItem(new SLoc(newWeightTicket.getRecvLgort()));
                 loadBatchStockModel(cbxSloc2N, cbxBatchStock2N, false);
             }
-
+            
+            batchStock2Dcr.updateCombobox(cbxBatchStock2N);
             weightRegQtyTemp = weightTicketDetail.getRegItemQuantity();
 
             return null;  // return your result
