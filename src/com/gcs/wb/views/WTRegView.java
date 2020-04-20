@@ -79,7 +79,9 @@ public class WTRegView extends javax.swing.JInternalFrame {
     private boolean isValidSloc = false;
     private BigDecimal numCheckWeight = BigDecimal.ZERO;
     private String plateNoValidDO = "";
+    private String trailerNoValidDO = "";
     private boolean isValidPlateNo = false;
+    private boolean isValidTrailerNo = true;
     private String checkedCharg = "";
     private String validSO = null;
     private String validDO = null;
@@ -905,6 +907,11 @@ public class WTRegView extends javax.swing.JInternalFrame {
         txtTonnageN.setName("txtTonnageN"); // NOI18N
 
         txtTrailerNoN.setName("txtTrailerNoN"); // NOI18N
+        txtTrailerNoN.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtTrailerNoNFocusLost(evt);
+            }
+        });
         txtTrailerNoN.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtTrailerNoNKeyReleased(evt);
@@ -1554,7 +1561,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnShowFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(13, 13, 13)
-                .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+                .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnPrintControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -2076,6 +2083,34 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
     validateForm();
 }//GEN-LAST:event_txtSONumNFocusLost
 
+private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTrailerNoNFocusLost
+    String trailerNo = txtTrailerNoN.getText().trim();
+    trailerNo = trailerNo.replace("-", "");
+    trailerNo = trailerNo.replace(".", "");
+    txtTrailerNoN.setText(trailerNo.toUpperCase());
+    lblTrailerNoN.setForeground(Color.black);
+    isValidTrailerNo = true;
+    if (modeDetail == MODE_DETAIL.OUT_SELL_ROAD) {
+        if (!trailerNoValidDO.isEmpty()
+                && !trailerNo.equals(trailerNoValidDO)) {
+            lblTrailerNoN.setForeground(Color.red);
+            btnSave.setEnabled(false);
+            isValidTrailerNo = false;
+            JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.trailerNoNotMapping", trailerNo));
+        }
+        if (trailerNoValidDO.isEmpty()
+                && !trailerNo.isEmpty()) {
+            lblTrailerNoN.setForeground(Color.red);
+            btnSave.setEnabled(false);
+            isValidTrailerNo = false;
+            JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.trailerNoEmpty"));
+        }
+
+    } else {
+        validateForm();
+    }
+}//GEN-LAST:event_txtTrailerNoNFocusLost
+
     private void validateFilterForm() {
         boolean isDriverNameValid = wtRegisValidation.validateLength(txtDriverName.getText(), lblDriverName, 0, 70);
         boolean isPlateNoValid = wtRegisValidation.validateLength(txtPlateNo.getText(), lblPlateNo, 0, 20);
@@ -2229,8 +2264,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
         @Override
         protected Object doInBackground() throws Exception {
             String[] val = txtSONumN.getText().trim().split("-");
-            String bsXe = txtPlateNoN.getText().trim();
-            DOCheckStructure doNumber = new DOCheckStructure();
+            String bsGhe = txtPlateNoN.getText().trim();
             String bsRomoc = txtTrailerNoN.getText().trim();
 
             if (val.length == listDONumbers.size()) {
@@ -2243,8 +2277,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
             }
 
             if (isEditMode) {
-                SaleOrderGetDetailBapi bapi = new SaleOrderGetDetailBapi();
-                bapi = sapService.getSalesOrderDetail(val[0]);
+                SaleOrderGetDetailBapi bapi = sapService.getSalesOrderDetail(val[0]);
                 SaleOrderGetDetailStructure saleOrder = bapi.getExDeliSched();
                 if (saleOrder == null || StringUtil.isEmptyString(saleOrder.getVbeln())) {
                     if (!StringUtil.isEmptyString(bapi.getReturnMessage())) {
@@ -2258,10 +2291,8 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                     }
                 }
 
-                String bsGhe = txtPlateNoN.getText();
-                String traid = bsGhe;
                 if (saleOrder != null && saleOrder.getTraid() != null) {
-                    traid = saleOrder.getTraid();
+                    String traid = saleOrder.getTraid();
                     traid = StringUtil.correctPlateNo(traid).toUpperCase();
                     String plateName = "ghe";
 
@@ -2295,31 +2326,49 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                     if (matnr != null || kunnr != null || ship_to != null) {
                         setWTDetailAudit(newWeightTicket.getId(), matnr, kunnr, ship_to);
                     }
-                }
 
-                if (mappingErrMsg.size() > 0) {
-                    String msg = String.join(", ", mappingErrMsg);
-                    msg += " " + resourceMapMsg.getString("msg.notMappingSuffixes");
-                    if (!confirmOverwriteData(msg)) {
-                        cleanAudit();
-                        canceled = true;
-                        throw new Exception();
+                    if (mappingErrMsg.size() > 0) {
+                        String msg = String.join(", ", mappingErrMsg);
+                        msg += " " + resourceMapMsg.getString("msg.notMappingSuffixes");
+                        if (!confirmOverwriteData(msg)) {
+                            cleanAudit();
+                            canceled = true;
+                            throw new Exception();
+                        }
+
+                        // overwrite plateNo
+                        bsGhe = traid;
+                        txtPlateNoN.setText(bsGhe);
+
+                        if (matnr != null) {
+                            cbxMaterialTypeN.setSelectedItem(material);
+                        }
+
+                        if (kunnr != null) {
+                            customerModel = weightTicketRegistarationController.getCustomerModel();
+                            DefaultComboBoxModel shipToModel = (DefaultComboBoxModel) SerializationUtils.clone(customerModel);
+
+                            cbxCustomerN.setModel(customerModel);
+                            cbxCustomerN.setSelectedItem(cust);
+
+                            if (ship_to != null) {
+                                cbxShipToN.setModel(shipToModel);
+                                shipToDcr.updateCombobox(cbxShipToN);
+                                cbxShipToN.setSelectedItem(shipToCust);
+                            }
+                        }
                     }
-
-                    // overwrite plateNo
-                    txtPlateNoN.setText(traid);
-                    bsXe = txtPlateNoN.getText().trim();
                 }
             }
 
             String doNum = "";
             if (!WeighBridgeApp.getApplication().isOfflineMode()) {
-                List<DOCheckStructure> doNumbers = sapService.getDONumber(val, bsXe, bsRomoc);
+                List<DOCheckStructure> doNumbers = sapService.getDONumber(val, bsGhe, bsRomoc);
 
                 if (doNumbers != null) {
                     listDONumbers.addAll(doNumbers);
                     for (int i = 0; i < doNumbers.size(); i++) {
-                        doNumber = doNumbers.get(i);
+                        DOCheckStructure doNumber = doNumbers.get(i);
                         if (!doNumber.getMessage().trim().isEmpty()) {
                             setMessage(doNumber.getMessage());
                             JOptionPane.showMessageDialog(rootPane, doNumber.getMessage());
@@ -2890,7 +2939,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 isValid = validateInOutOther();
                 break;
             case OUT_SELL_ROAD:
-                isValid = validateOutSellRoad() && isValidDO;
+                isValid = validateOutSellRoad() && isValidDO && isValidTrailerNo;
                 break;
             case OUT_PLANT_PLANT:
                 isValid = validateOutPlantPlant() && isValidPO && isValidVendorLoad && isValidVendorTransport && isValidPlateNo;
@@ -3645,6 +3694,8 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 // check mapping Plate No
                 String plateNo = txtPlateNoN.getText().trim();
                 String traid = outboundDelivery.getTraid().trim();
+                String trailerNo = txtTrailerNoN.getText().trim();
+                String trailerDo = "";
                 traid = StringUtil.correctPlateNo(traid).toUpperCase();
                 if (traid.isEmpty() || (!traid.isEmpty() && !traid.startsWith(plateNo))) {
                     String plateName = "xe";
@@ -3653,7 +3704,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                     }
 
                     if (isEditMode && !traid.isEmpty() && modeDetail == MODE_DETAIL.OUT_SELL_ROAD) {
-                        setWTAudit(newWeightTicket.getId(), traid.split("|", 2)[0]);
+                        setWTAudit(newWeightTicket.getId(), traid.split("\\|", 2)[0]);
                         mappingErrMsg.add(resourceMapMsg.getString("msg.vehicleNotMapping", plateName));
                     } else {
                         throw new Exception(resourceMapMsg.getString("msg.plateNoNotMappingWithDO", plateName, plateNo));
@@ -3661,8 +3712,30 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
                 }
 
                 // for check edit plateNo after check DO
-                plateNoValidDO = traid.split("|", 2)[0];
+                plateNoValidDO = traid.split("\\|", 2)[0];
 
+                //check exist bs romoc
+                if (modeDetail == MODE_DETAIL.OUT_SELL_ROAD) {
+                    if (traid.split("\\|").length > 1) {
+                        trailerDo = traid.split("\\|")[1];
+                        trailerNoValidDO = trailerDo;
+                        if (StringUtil.isEmptyString(trailerNo)) {
+                            // vui long nhap BS ro moc
+                            lblTrailerNoN.setForeground(Color.red);
+                            throw new Exception(resourceMapMsg.getString("msg.trailerNoNotExist"));
+                        } else if (trailerDo.equals(trailerNo)) {
+                            // BS Romoc k trung khop voi DO
+                            lblTrailerNoN.setForeground(Color.red);
+                            throw new Exception(resourceMapMsg.getString("msg.trailerNoNotMapping", trailerNo));
+                        }
+                    } else {
+                        if (!StringUtil.isEmptyString(trailerNo)) {
+                            // DO nay khong co so Romoc
+                            lblTrailerNoN.setForeground(Color.red);
+                            throw new Exception(resourceMapMsg.getString("msg.trailerNoEmpty"));
+                        }
+                    }
+                }
                 // check customer
                 if (index > 0) {
                     String deliveryOrderNoBefore = deliveryOrderNos[index - 1];
