@@ -81,7 +81,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
     private String plateNoValidDO = "";
     private String trailerNoValidDO = "";
     private boolean isValidPlateNo = false;
-    //private boolean isValidTrailerNo = false;
+    private boolean isValidTrailerNo = true;
     private String checkedCharg = "";
     private String validSO = null;
     private String validDO = null;
@@ -2088,13 +2088,24 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
     trailerNo = trailerNo.replace("-", "");
     trailerNo = trailerNo.replace(".", "");
     txtTrailerNoN.setText(trailerNo.toUpperCase());
+    lblTrailerNoN.setForeground(Color.black);
+    isValidTrailerNo = true;
+    if (modeDetail == MODE_DETAIL.OUT_SELL_ROAD) {
+        if (!trailerNoValidDO.isEmpty()
+                && !trailerNo.equals(trailerNoValidDO)) {
+            lblTrailerNoN.setForeground(Color.red);
+            btnSave.setEnabled(false);
+            isValidTrailerNo = false;
+            JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.trailerNoNotMapping", trailerNo));
+        }
+        if (trailerNoValidDO.isEmpty()
+                && !trailerNo.isEmpty()) {
+            lblTrailerNoN.setForeground(Color.red);
+            btnSave.setEnabled(false);
+            isValidTrailerNo = false;
+            JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.trailerNoEmpty"));
+        }
 
-    if (modeDetail == MODE_DETAIL.OUT_SELL_ROAD
-            && !trailerNoValidDO.isEmpty() && !trailerNo.contains(trailerNoValidDO)) {
-        lblTrailerNoN.setForeground(Color.red);
-        btnSave.setEnabled(false);
-
-        JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.trailerNoNotMapping", trailerNo));
     } else {
         validateForm();
     }
@@ -2913,7 +2924,7 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
                 isValid = validateInOutOther();
                 break;
             case OUT_SELL_ROAD:
-                isValid = validateOutSellRoad() && isValidDO;
+                isValid = validateOutSellRoad() && isValidDO && isValidTrailerNo;
                 break;
             case OUT_PLANT_PLANT:
                 isValid = validateOutPlantPlant() && isValidPO && isValidVendorLoad && isValidVendorTransport && isValidPlateNo;
@@ -3678,7 +3689,7 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
                     }
 
                     if (isEditMode && !traid.isEmpty() && modeDetail == MODE_DETAIL.OUT_SELL_ROAD) {
-                        setWTAudit(newWeightTicket.getId(), traid.split("|", 2)[0]);
+                        setWTAudit(newWeightTicket.getId(), traid.split("\\|", 2)[0]);
                         mappingErrMsg.add(resourceMapMsg.getString("msg.vehicleNotMapping", plateName));
                     } else {
                         throw new Exception(resourceMapMsg.getString("msg.plateNoNotMappingWithDO", plateName, plateNo));
@@ -3686,12 +3697,12 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
                 }
 
                 // for check edit plateNo after check DO
-                plateNoValidDO = traid.split("|", 2)[0];
+                 plateNoValidDO = traid.split("\\|", 2)[0];
 
                 //check exist bs romoc
                 if (modeDetail == MODE_DETAIL.OUT_SELL_ROAD) {
-                    if (traid.split("|").length > 1) {
-                        trailerDo = traid.split("|")[1];
+                    if (traid.split("\\|").length > 1) {
+                        trailerDo = traid.split("\\|")[1];
                         trailerNoValidDO = trailerDo;
                         if (StringUtil.isEmptyString(trailerNo)) {
                             // vui long nhap BS ro moc
