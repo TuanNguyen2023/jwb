@@ -837,6 +837,11 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
         txtTonnageN.setName("txtTonnageN"); // NOI18N
 
         txtTrailerNoN.setName("txtTrailerNoN"); // NOI18N
+        txtTrailerNoN.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtTrailerNoNFocusLost(evt);
+            }
+        });
         txtTrailerNoN.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtTrailerNoNKeyReleased(evt);
@@ -1493,7 +1498,7 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnShowFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(13, 13, 13)
-                .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
+                .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnPrintControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1877,6 +1882,15 @@ private void txtWeightNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
 private void cbxShipToNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxShipToNActionPerformed
     validateForm();
 }//GEN-LAST:event_cbxShipToNActionPerformed
+
+private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTrailerNoNFocusLost
+String trailerNo = txtTrailerNoN.getText().trim();
+    trailerNo = trailerNo.replace("-", "");
+    trailerNo = trailerNo.replace(".", "");
+    txtTrailerNoN.setText(trailerNo.toUpperCase());
+
+    validateForm();
+}//GEN-LAST:event_txtTrailerNoNFocusLost
 
     private void validateFilterForm() {
         boolean isDriverNameValid = wtRegisValidation.validateLength(txtDriverName.getText(), lblDriverName, 0, 70);
