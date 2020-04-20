@@ -2645,10 +2645,18 @@ private void cbxShipToNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
         boolean isSloc2Valid = wtRegisValidation.validateCbxSelected(cbxSloc2N.getSelectedIndex(), lblSloc2N) && isValidSloc;
         boolean isWeightValid = wtRegisValidation.validateWeighField(txtWeightN.getText(), lblWeightN, 1, 10, 0.001d);
 
+        boolean isVendorTransValid = wtRegisValidation.validateCbxSelected(cbxVendorTransportN.getSelectedIndex(), lblVendorTransportN);
+        if (!isValidVendorTransport) {
+            lblVendorTransportN.setForeground(Color.red);
+        }
+        boolean isVendorLoadValid = true;
+        if(!StringUtil.isEmptyString(txtPOSTONumN.getText().trim())) {
+           isVendorLoadValid = wtRegisValidation.validateCbxSelected(cbxVendorLoadingN.getSelectedIndex(), lblVendorLoadingN);
+        }
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
                 && isCMNDBLValid && isSalanValid && isPOValid && isPOSTOValid && isWeightValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
-                && isNoteValid && isSlocValid && isSloc2Valid && isMaterialTypeValid;
+                && isNoteValid && isSlocValid && isSloc2Valid && isMaterialTypeValid && isVendorTransValid && isVendorLoadValid;
     }
 
     private boolean validateOutPullStation() {
