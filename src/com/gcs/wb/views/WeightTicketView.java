@@ -3715,7 +3715,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 double result = 0d;
                 if (dIn > dOut) {
                     result = dIn - dOut;
-                    if (weightTicket.getRegType() == 'O') {
+                    if (weightTicket.getRegType() == 'O' && !weightTicket.getMode().equals("OUT_SLOC_SLOC")) {
                         JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.iBiggerO"));
                         txfOutQty.setValue(null);
                         txfGoodsQty.setValue(null);
@@ -3726,7 +3726,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     }
                 } else {
                     result = dOut - dIn;
-                    if (weightTicket.getRegType() == 'I') {
+                    if ((weightTicket.getRegType() == 'I') ||
+                            (weightTicket.getRegType() == 'O' && weightTicket.getMode().equals("OUT_SLOC_SLOC"))) {
                         JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.oBiggerI"));
                         txfOutQty.setValue(null);
                         txtOutTime.setText(null);
