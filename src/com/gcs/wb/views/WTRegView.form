@@ -45,7 +45,7 @@
                       <Component id="pnROVRight" max="32767" attributes="0"/>
                   </Group>
                   <Component id="spnResult" alignment="0" pref="1160" max="32767" attributes="2"/>
-                  <Component id="pnPrintControl" alignment="0" pref="1160" max="32767" attributes="1"/>
+                  <Component id="pnPrintControl" alignment="0" max="32767" attributes="1"/>
                   <Component id="pnShowFilter" alignment="0" max="32767" attributes="0"/>
                   <Component id="pnControl" alignment="1" max="32767" attributes="3"/>
               </Group>
@@ -60,7 +60,7 @@
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="pnShowFilter" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
-              <Component id="spnResult" pref="180" max="32767" attributes="0"/>
+              <Component id="spnResult" pref="184" max="32767" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="pnPrintControl" min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -147,9 +147,7 @@
                           </Group>
                       </Group>
                   </Group>
-                  <EmptySpace min="-2" pref="54" max="-2" attributes="0"/>
-                  <Component id="btnHideFilter" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="151" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -194,10 +192,7 @@
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="btnFind" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnHideFilter" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="btnFind" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -424,15 +419,6 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbxModeSearchActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="btnHideFilter">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="btnHideFilter.text"/>
-            <Property name="name" type="java.lang.String" value="btnHideFilter" noResource="true"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnHideFilterActionPerformed"/>
-          </Events>
-        </Component>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JScrollPane" name="spnResult">
@@ -479,7 +465,8 @@
                   <Component id="btnReprint" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="btnEdit" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="832" max="-2" attributes="0"/>
+                  <EmptySpace pref="927" max="32767" attributes="0"/>
+                  <Component id="btnHideFilter" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -488,6 +475,7 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="btnReprint" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnEdit" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnHideFilter" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -510,6 +498,15 @@
             <Property name="text" type="java.lang.String" resourceKey="btnEdit.text"/>
             <Property name="name" type="java.lang.String" value="btnEdit" noResource="true"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnHideFilter">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="btnHideFilter.text"/>
+            <Property name="name" type="java.lang.String" value="btnHideFilter" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnHideFilterActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

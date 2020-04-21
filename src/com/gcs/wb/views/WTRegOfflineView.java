@@ -414,11 +414,11 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
         cbxStatus = new javax.swing.JComboBox();
         lblMode = new javax.swing.JLabel();
         cbxModeSearch = new javax.swing.JComboBox();
-        btnHideFilter = new javax.swing.JButton();
         spnResult = new javax.swing.JScrollPane();
         tabResults = new org.jdesktop.swingx.JXTable();
         pnPrintControl = new javax.swing.JPanel();
         btnReprint = new javax.swing.JButton();
+        btnHideFilter = new javax.swing.JButton();
         pnRegistrationOfVehicle = new javax.swing.JPanel();
         pnROVLeft = new javax.swing.JPanel();
         lblWeightTickerRefN = new javax.swing.JLabel();
@@ -622,14 +622,6 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
             }
         });
 
-        btnHideFilter.setText(resourceMap.getString("btnHideFilter.text")); // NOI18N
-        btnHideFilter.setName("btnHideFilter"); // NOI18N
-        btnHideFilter.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnHideFilterActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout pnFilterLayout = new javax.swing.GroupLayout(pnFilter);
         pnFilter.setLayout(pnFilterLayout);
         pnFilterLayout.setHorizontalGroup(
@@ -673,9 +665,7 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
                                 .addComponent(lblHourTo)
                                 .addGap(18, 18, 18)
                                 .addComponent(cbxHourTo, 0, 70, Short.MAX_VALUE)))))
-                .addGap(54, 54, 54)
-                .addComponent(btnHideFilter)
-                .addContainerGap())
+                .addGap(151, 151, 151))
         );
         pnFilterLayout.setVerticalGroup(
             pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -711,9 +701,7 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
                         .addComponent(dpDateTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(lblDateTo)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnFind)
-                    .addComponent(btnHideFilter))
+                .addComponent(btnFind)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -742,17 +730,28 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
         btnReprint.setText(resourceMap.getString("btnReprint.text")); // NOI18N
         btnReprint.setName("btnReprint"); // NOI18N
 
+        btnHideFilter.setText(resourceMap.getString("btnHideFilter.text")); // NOI18N
+        btnHideFilter.setName("btnHideFilter"); // NOI18N
+        btnHideFilter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHideFilterActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnPrintControlLayout = new javax.swing.GroupLayout(pnPrintControl);
         pnPrintControl.setLayout(pnPrintControlLayout);
         pnPrintControlLayout.setHorizontalGroup(
             pnPrintControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnPrintControlLayout.createSequentialGroup()
                 .addComponent(btnReprint)
-                .addGap(923, 923, 923))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 1027, Short.MAX_VALUE)
+                .addComponent(btnHideFilter))
         );
         pnPrintControlLayout.setVerticalGroup(
             pnPrintControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(btnReprint)
+            .addGroup(pnPrintControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(btnReprint)
+                .addComponent(btnHideFilter))
         );
 
         pnRegistrationOfVehicle.setName("pnRegistrationOfVehicle"); // NOI18N
@@ -1483,7 +1482,7 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
                         .addComponent(pnROVRight, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(pnShowFilter, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pnControl, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnPrintControl, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 1169, Short.MAX_VALUE))
+                    .addComponent(pnPrintControl, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -1493,7 +1492,7 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnShowFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(13, 13, 13)
-                .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
+                .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(pnPrintControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
