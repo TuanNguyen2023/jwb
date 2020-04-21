@@ -22,6 +22,7 @@ public class ComboBoxFilterDecorator<T> {
     private Object selectedItem;
     private FilterEditor filterEditor;
     private String oldText = "";
+    private boolean isSelectingDenied = false;
 
     public ComboBoxFilterDecorator(JComboBox<T> comboBox,
                                    BiPredicate<T, String> userFilter,
@@ -62,8 +63,8 @@ public class ComboBoxFilterDecorator<T> {
                     selectedItem = comboBox.getSelectedItem();
                 } else {//rollback to the last one
                     if (selectedItem != null) {
-                    comboBox.setSelectedItem(selectedItem);
-                    filterEditor.setItem(selectedItem);
+                        comboBox.setSelectedItem(selectedItem);
+                        filterEditor.setItem(selectedItem);
                     }
                 }
             }
@@ -73,8 +74,18 @@ public class ComboBoxFilterDecorator<T> {
         filterText.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
+                if (isSelectingDenied) {
+                    resetFilterComponent();
+                    isSelectingDenied = false;
+                    filterEditor.getFilterText().setText("");
+                    comboBox.setSelectedIndex(-1);
+                }
                 oldText = filterEditor.getFilterText().getText();
+                if (comboBox.getSelectedIndex() == -1) {
+                    oldText = "";
+                }
                 filterEditor.getFilterText().setText("");
+
             }
 
             @Override
@@ -82,6 +93,7 @@ public class ComboBoxFilterDecorator<T> {
                 if ("".equals(filterEditor.getFilterText().getText())) {
                     filterEditor.getFilterText().setText(oldText);
                 }
+
                 resetFilterComponent();
             }
         });
@@ -153,12 +165,13 @@ public class ComboBoxFilterDecorator<T> {
 
             @Override
             public void popupMenuCanceled(PopupMenuEvent e) {
+                selectedItem = comboBox.getSelectedItem();
                 resetFilterComponent();
             }
         });
     }
 
-    private void resetFilterComponent() {
+    public void resetFilterComponent() {
         if (!filterEditor.isEditing()) {
             return;
         }
@@ -169,6 +182,7 @@ public class ComboBoxFilterDecorator<T> {
             model.addElement(item);
         }
         filterEditor.reset();
+        selectedItem = null;
     }
 
     private void applyFilter() {
@@ -208,5 +222,9 @@ public class ComboBoxFilterDecorator<T> {
 
     public boolean isEditing(){
         return filterEditor.isEditing();
+    }
+
+    public void selectedItemDenied(boolean isSelectingDenied){
+        this.isSelectingDenied = isSelectingDenied;
     }
 }

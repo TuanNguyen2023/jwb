@@ -1835,6 +1835,7 @@ private void cbxVendorLoadingNActionPerformed(java.awt.event.ActionEvent evt) {/
                 if (!msgVendorCheck.trim().isEmpty()) {
                     //display errror
                     showWarningDialog(msgVendorCheck);
+                    if (vendorLoadingDcr != null) vendorLoadingDcr.selectedItemDenied(true);
                     lblVendorLoadingN.setForeground(Color.red);
                     isValidVendorLoad = false;
                 } else {
@@ -1872,7 +1873,7 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
                 if (msgVendorCheck != null && !msgVendorCheck.trim().isEmpty()) {
                     //display errror
                     showWarningDialog(msgVendorCheck);
-
+                    if (vendorTransportDcr != null) vendorTransportDcr.selectedItemDenied(true);
                     lblVendorTransportN.setForeground(Color.red);
                     isValidVendorTransport = false;
                 } else {
@@ -3332,6 +3333,7 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
                 showWarningDialog(resourceMapMsg.getString("msg.slocDuplicate"));
                 isValidSloc = false;
                 cbxBatchStockN.setSelectedIndex(-1);
+                slocDcr.selectedItemDenied(true);
                 lblSlocN.setForeground(Color.red);
                 btnSave.setEnabled(false);
                 return;
@@ -3394,6 +3396,7 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
                 showWarningDialog(resourceMapMsg.getString("msg.slocDuplicate"));
                 isValidSloc = false;
                 cbxBatchStock2N.setSelectedIndex(-1);
+                sloc2Dcr.selectedItemDenied(true);
                 lblSloc2N.setForeground(Color.red);
                 btnSave.setEnabled(false);
                 return;
