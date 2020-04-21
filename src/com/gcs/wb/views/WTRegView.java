@@ -439,6 +439,21 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         validateForm();
     }
+    
+    private void loadSLoc2(List<String> lgorts, String lgortSelected) {
+        List<SLoc> sLocs = weightTicketRegistarationController.getListSLoc(lgorts);
+        if (lgortSelected != null && !lgortSelected.isEmpty() && !sLocs.isEmpty()) {
+            SLoc sLoc = sLocs.stream()
+                    .filter(t -> lgortSelected.equals(t.getLgort()))
+                    .findFirst()
+                    .orElse(null);
+
+            cbxSloc2N.setSelectedItem(sLoc);
+        } else {
+            cbxSloc2N.setSelectedIndex(-1);
+        }
+        validateForm();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -5260,7 +5275,7 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
             batchStockDcr.updateCombobox(cbxBatchStockN);
 
             if (modeDetail == MODE_DETAIL.OUT_SLOC_SLOC) {
-                cbxSloc2N.setSelectedItem(new SLoc(newWeightTicket.getRecvLgort()));
+                loadSLoc2(lgorts, newWeightTicket.getRecvLgort());
                 loadBatchStockModel(cbxSloc2N, cbxBatchStock2N, false);
             }
 
