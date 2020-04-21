@@ -2398,17 +2398,17 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
                         }
 
                         if (kunnr != null) {
+                            Customer _customer = syncCustomer(kunnr.trim());
                             customerModel = weightTicketRegistarationController.getCustomerModel();
-                            DefaultComboBoxModel shipToModel = (DefaultComboBoxModel) SerializationUtils.clone(customerModel);
-
                             cbxCustomerN.setModel(customerModel);
-                            cbxCustomerN.setSelectedItem(syncCustomer(kunnr.trim()));
+                            cbxCustomerN.setSelectedItem(_customer);
+                        }
 
-                            if (ship_to != null) {
-                                cbxShipToN.setModel(shipToModel);
-                                shipToDcr.updateCombobox(cbxShipToN);
-                                cbxShipToN.setSelectedItem(syncCustomer(ship_to.trim()));
-                            }
+                        if (ship_to != null) {
+                            Customer _shipTo = syncCustomer(ship_to.trim());
+                            cbxShipToN.setModel(weightTicketRegistarationController.getCustomerModel());
+                            shipToDcr.updateCombobox(cbxShipToN);
+                            cbxShipToN.setSelectedItem(_shipTo);
                         }
                     }
                 }
