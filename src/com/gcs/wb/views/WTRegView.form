@@ -60,7 +60,7 @@
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="pnShowFilter" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
-              <Component id="spnResult" pref="0" max="32767" attributes="0"/>
+              <Component id="spnResult" pref="180" max="32767" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="pnPrintControl" min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
