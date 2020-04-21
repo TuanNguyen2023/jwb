@@ -60,7 +60,7 @@
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="pnShowFilter" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
-              <Component id="spnResult" pref="184" max="32767" attributes="0"/>
+              <Component id="spnResult" pref="187" max="32767" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="pnPrintControl" min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -1186,6 +1186,7 @@
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="btnDOCheckN.text"/>
             <Property name="name" type="java.lang.String" value="btnDOCheckN" noResource="true"/>
+            <Property name="requestFocusEnabled" type="boolean" value="false"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtSONumN">
@@ -1204,6 +1205,7 @@
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="btnSOCheckN.text"/>
             <Property name="name" type="java.lang.String" value="btnSOCheckN" noResource="true"/>
+            <Property name="requestFocusEnabled" type="boolean" value="false"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtPONumN">
@@ -1222,6 +1224,7 @@
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="btnPOCheckN.text"/>
             <Property name="name" type="java.lang.String" value="btnPOCheckN" noResource="true"/>
+            <Property name="requestFocusEnabled" type="boolean" value="false"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtPOSTONumN">
@@ -1240,6 +1243,7 @@
             </Property>
             <Property name="text" type="java.lang.String" resourceKey="btnPOSTOCheckN.text"/>
             <Property name="name" type="java.lang.String" value="btnPOSTOCheckN" noResource="true"/>
+            <Property name="requestFocusEnabled" type="boolean" value="false"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblWeightTicketNo">
