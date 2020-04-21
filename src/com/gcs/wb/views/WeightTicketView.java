@@ -2533,6 +2533,12 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         protected void finished() {
             if (weightTicket != null) {
                 String roles = WeighBridgeApp.getApplication().getLogin().getRoles().toUpperCase();
+
+                if (roles.contains("Z_JWB_SUPERVISOR") || roles.contains("Z_JWB_ADMIN")) {
+                    btnPostAgain.setVisible(true);
+                } else {
+                    btnPostAgain.setVisible(false);
+                }
                 if (!weightTicket.isPosted() && !isStage1() && !isStage2()
                         && !WeighBridgeApp.getApplication().isOfflineMode()
                         && (!weightTicket.getOfflineMode() || weightTicket.isEdited())
