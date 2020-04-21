@@ -46,6 +46,21 @@ public class VendorRepository {
 
         return list;
     }
+    
+    public List<Vendor> getListVendorAll() {
+        List<Vendor> list = new ArrayList<>();
+        try {
+            TypedQuery<Vendor> typedQuery = entityManager.createNamedQuery("Vendor.findAllMandtWplant", Vendor.class);
+            typedQuery.setParameter("mandt", configuration.getSapClient());
+            typedQuery.setParameter("wplant", configuration.getWkPlant());
+            list = typedQuery.getResultList();
+        } catch (Exception ex) {
+            logger.error(null, ex);
+            ExceptionUtil.checkDatabaseDisconnectedException(ex);
+        }
+
+        return list;
+    }
 
     public Vendor findByLifnr(String lifnr) {
         try {

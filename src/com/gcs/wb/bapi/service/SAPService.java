@@ -264,7 +264,7 @@ public class SAPService {
      * @return
      */
     public List<Vendor> syncVendor() {
-        List<Vendor> vendorDBs = vendorRepository.getListVendor();
+        List<Vendor> vendorDBs = vendorRepository.getListVendorAll();
 
         if (!WeighBridgeApp.getApplication().isOfflineMode()) {
             TransportagentGetListBapi bapi = new TransportagentGetListBapi();
@@ -325,7 +325,7 @@ public class SAPService {
             entityManager.clear();
 
             // return data
-            return vendorRepository.getListVendor();
+            return vendorRepository.getListVendorAll();
         }
 
         return vendorDBs;

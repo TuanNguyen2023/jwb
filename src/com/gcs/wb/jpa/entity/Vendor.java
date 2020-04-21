@@ -23,6 +23,7 @@ import javax.persistence.Id;
 @Table(name = "tbl_vendor")
 @NamedQueries({
     @NamedQuery(name = "Vendor.findAll", query = "SELECT v FROM Vendor v WHERE v.groupType IS NULL"),
+    @NamedQuery(name = "Vendor.findAllMandtWplant", query = "SELECT v FROM Vendor v WHERE v.mandt = :mandt AND v.wplant = :wplant"),
     @NamedQuery(name = "Vendor.findByMandtWplant", query = "SELECT v FROM Vendor v WHERE v.mandt = :mandt AND v.wplant = :wplant AND v.groupType IS NULL"),
     @NamedQuery(name = "Vendor.findByMandtWplantLifnr", query = "SELECT v FROM Vendor v WHERE v.mandt = :mandt AND v.wplant = :wplant AND v.lifnr = :lifnr AND v.groupType IS NULL"),
     @NamedQuery(name = "Vendor.findByMandtWplantEkorg", query = "SELECT v FROM Vendor v WHERE v.mandt = :mandt AND v.wplant = :wplant AND v.ekorg = :ekorg AND v.groupType IS NULL"),
@@ -186,6 +187,7 @@ public class Vendor implements Serializable {
         int result = (int) (id ^ (id >>> 31));
         result = 31 * result + (lifnr != null ? lifnr.hashCode() : 0);
         result = 31 * result + (mandt != null ? mandt.hashCode() : 0);
+        result = 31 * result + (wplant != null ? wplant.hashCode() : 0);
         result = 31 * result + (name1 != null ? name1.hashCode() : 0);
         result = 31 * result + (name2 != null ? name2.hashCode() : 0);
         result = 31 * result + (ekorg != null ? ekorg.hashCode() : 0);
