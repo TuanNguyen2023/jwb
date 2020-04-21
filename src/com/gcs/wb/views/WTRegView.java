@@ -439,7 +439,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         validateForm();
     }
-    
+
     private void loadSLoc2(List<String> lgorts, String lgortSelected) {
         List<SLoc> sLocs = weightTicketRegistarationController.getListSLoc(lgorts);
         if (lgortSelected != null && !lgortSelected.isEmpty() && !sLocs.isEmpty()) {
@@ -1228,6 +1228,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         btnDOCheckN.setAction(actionMap.get("checkDO")); // NOI18N
         btnDOCheckN.setText(resourceMap.getString("btnDOCheckN.text")); // NOI18N
         btnDOCheckN.setName("btnDOCheckN"); // NOI18N
+        btnDOCheckN.setRequestFocusEnabled(false);
 
         txtSONumN.setName("txtSONumN"); // NOI18N
         txtSONumN.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1244,6 +1245,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         btnSOCheckN.setAction(actionMap.get("checkSO")); // NOI18N
         btnSOCheckN.setText(resourceMap.getString("btnSOCheckN.text")); // NOI18N
         btnSOCheckN.setName("btnSOCheckN"); // NOI18N
+        btnSOCheckN.setRequestFocusEnabled(false);
 
         txtPONumN.setName("txtPONumN"); // NOI18N
         txtPONumN.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1260,6 +1262,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         btnPOCheckN.setAction(actionMap.get("checkPO")); // NOI18N
         btnPOCheckN.setText(resourceMap.getString("btnPOCheckN.text")); // NOI18N
         btnPOCheckN.setName("btnPOCheckN"); // NOI18N
+        btnPOCheckN.setRequestFocusEnabled(false);
 
         txtPOSTONumN.setName("txtPOSTONumN"); // NOI18N
         txtPOSTONumN.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1276,6 +1279,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         btnPOSTOCheckN.setAction(actionMap.get("checkPOSTO")); // NOI18N
         btnPOSTOCheckN.setText(resourceMap.getString("btnPOSTOCheckN.text")); // NOI18N
         btnPOSTOCheckN.setName("btnPOSTOCheckN"); // NOI18N
+        btnPOSTOCheckN.setRequestFocusEnabled(false);
 
         lblWeightTicketNo.setText(resourceMap.getString("lblWeightTicketNo.text")); // NOI18N
         lblWeightTicketNo.setName("lblWeightTicketNo"); // NOI18N
@@ -1567,7 +1571,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnShowFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(13, 13, 13)
-                .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
+                .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnPrintControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2295,6 +2299,9 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
 
         CheckSOTask(org.jdesktop.application.Application app) {
             super(app);
+
+            btnSOCheckN.setEnabled(false);
+            btnDOCheckN.setEnabled(false);
         }
 
         @Override
@@ -3685,6 +3692,8 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
         CheckDOTask(org.jdesktop.application.Application app) {
             super(app);
             newWeightTicket.setWeightTicketDetails(new ArrayList<>());
+            btnSOCheckN.setEnabled(false);
+            btnDOCheckN.setEnabled(false);
         }
 
         @Override
@@ -4739,6 +4748,9 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
 
         CheckPOTask(Application app) {
             super(app);
+
+            btnPOCheckN.setEnabled(false);
+            btnPOSTOCheckN.setEnabled(false);
         }
 
         @Override
@@ -5050,6 +5062,9 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
 
         CheckPOSTOTask(Application app) {
             super(app);
+
+            btnPOCheckN.setEnabled(false);
+            btnPOSTOCheckN.setEnabled(false);
         }
 
         @Override
