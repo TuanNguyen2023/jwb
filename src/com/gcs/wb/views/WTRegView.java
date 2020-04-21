@@ -1646,9 +1646,13 @@ private void txtDONumNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:even
 }//GEN-LAST:event_txtDONumNKeyReleased
 
 private void cbxSlocNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxSlocNActionPerformed
-    loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
-    if (batchStockDcr != null) {
-        batchStockDcr.updateCombobox(cbxBatchStockN);
+    if (slocDcr != null && !slocDcr.isEditing()) {
+        loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
+        if (batchStockDcr != null) {
+            batchStockDcr.updateCombobox(cbxBatchStockN);
+        }
+    } else if (sloc2Dcr == null) {
+        loadBatchStockModel(cbxSlocN, cbxBatchStockN, true);
     }
 }//GEN-LAST:event_cbxSlocNActionPerformed
 
@@ -1676,9 +1680,13 @@ private void cbxBatchStockNActionPerformed(java.awt.event.ActionEvent evt) {//GE
 }//GEN-LAST:event_cbxBatchStockNActionPerformed
 
 private void cbxSloc2NActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxSloc2NActionPerformed
-    loadBatchStockModel2N(cbxSloc2N, cbxBatchStock2N, false);
-    if (batchStock2Dcr != null) {
-        batchStock2Dcr.updateCombobox(cbxBatchStock2N);
+    if (sloc2Dcr != null && !sloc2Dcr.isEditing()) {
+        loadBatchStockModel2N(cbxSloc2N, cbxBatchStock2N, false);
+        if (batchStock2Dcr != null) {
+            batchStock2Dcr.updateCombobox(cbxBatchStock2N);
+        }
+    } else if (sloc2Dcr == null) {
+        loadBatchStockModel2N(cbxSloc2N, cbxBatchStock2N, false);
     }
 }//GEN-LAST:event_cbxSloc2NActionPerformed
 
@@ -1789,6 +1797,9 @@ private void cbxMaterialTypeNActionPerformed(java.awt.event.ActionEvent evt) {//
 }//GEN-LAST:event_cbxMaterialTypeNActionPerformed
 
 private void cbxVendorLoadingNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxVendorLoadingNActionPerformed
+    if (vendorLoadingDcr != null && vendorLoadingDcr.isEditing()) {
+        return;
+    }
     if (cbxVendorLoadingN.getSelectedItem() != null && !cbxVendorLoadingN.getSelectedItem().toString().equals("")) {
         Vendor vendor = (Vendor) cbxVendorLoadingN.getSelectedItem();
         //check validate vendor
@@ -1804,7 +1815,7 @@ private void cbxVendorLoadingNActionPerformed(java.awt.event.ActionEvent evt) {/
                 }
                 if (!msgVendorCheck.trim().isEmpty()) {
                     //display errror
-                    JOptionPane.showMessageDialog(rootPane, msgVendorCheck);
+                    showWarningDialog(msgVendorCheck);
                     lblVendorLoadingN.setForeground(Color.red);
                     isValidVendorLoad = false;
                 } else {
@@ -1823,6 +1834,9 @@ private void cbxVendorLoadingNActionPerformed(java.awt.event.ActionEvent evt) {/
 }//GEN-LAST:event_cbxVendorLoadingNActionPerformed
 
 private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxVendorTransportNActionPerformed
+    if (vendorTransportDcr != null && vendorTransportDcr.isEditing()) {
+        return;
+    }
     if (cbxVendorTransportN.getSelectedItem() != null && !cbxVendorTransportN.getSelectedItem().toString().equals("")) {
         Vendor vendor = (Vendor) cbxVendorTransportN.getSelectedItem();
         PurchaseOrder purchaseOrder = purchaseOrderRepository.findByPoNumber(newWeightTicket.getWeightTicketDetail().getEbeln());
@@ -1838,7 +1852,7 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
                 }
                 if (msgVendorCheck != null && !msgVendorCheck.trim().isEmpty()) {
                     //display errror
-                    JOptionPane.showMessageDialog(rootPane, msgVendorCheck);
+                    showWarningDialog(msgVendorCheck);
 
                     lblVendorTransportN.setForeground(Color.red);
                     isValidVendorTransport = false;
@@ -2588,6 +2602,7 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
         lblSlocN.setText(resourceMapMsg.getString("lblSlocN.text"));
         lblBatchStockN.setText(resourceMapMsg.getString("lblBatchStockN.text"));
         lblPlateNoN.setText(resourceMapMsg.getString("lblPlateNoN.text"));
+        lblCustomerN.setText(resourceMapMsg.getString("lblCustomerN.text"));
 
         switch (modeDetail) {
             case IN_PO_PURCHASE:
@@ -2661,6 +2676,7 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
     }
 
     private void prepareInPOPurchaseMode() {
+        lblCustomerN.setText(resourceMapMsg.getString("lblShipToN.text"));
         showComponent(txtTicketIdN, lblTicketIdN, true, true);
         showComponent(txtWeightTickerRefN, lblWeightTickerRefN, false, false);
         showComponent(txtRegisterIdN, lblRegisterIdN, true, true);
@@ -3291,9 +3307,7 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
             SLoc sloc = (SLoc) cbxSlocN.getSelectedItem();
             SLoc sloc2N = (SLoc) cbxSloc2N.getSelectedItem();
             if (sloc.getLgort().equals(sloc2N.getLgort())) {
-                JOptionPane.showMessageDialog(rootPane,
-                        resourceMapMsg.getString("msg.slocDuplicate"),
-                        "Warning", JOptionPane.WARNING_MESSAGE);
+                showWarningDialog(resourceMapMsg.getString("msg.slocDuplicate"));
                 isValidSloc = false;
                 cbxBatchStockN.setSelectedIndex(-1);
                 lblSlocN.setForeground(Color.red);
@@ -3355,9 +3369,7 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
                 && cbxSlocN.getSelectedIndex() != -1) {
             SLoc sloc2N = (SLoc) cbxSlocN.getSelectedItem();
             if (sloc.getLgort().equals(sloc2N.getLgort())) {
-                JOptionPane.showMessageDialog(rootPane,
-                        resourceMapMsg.getString("msg.slocDuplicate"),
-                        "Warning", JOptionPane.WARNING_MESSAGE);
+                showWarningDialog(resourceMapMsg.getString("msg.slocDuplicate"));
                 isValidSloc = false;
                 cbxBatchStock2N.setSelectedIndex(-1);
                 lblSloc2N.setForeground(Color.red);
@@ -3403,6 +3415,13 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
         }
 
         validateForm();
+    }
+
+    private void showWarningDialog(String message) {
+        JOptionPane optionPane = new JOptionPane(message, JOptionPane.WARNING_MESSAGE);
+        JDialog duplicateDialog = optionPane.createDialog(rootPane, "Warning");
+        duplicateDialog.setModal(false);
+        duplicateDialog.setVisible(true);
     }
 
     @Action(enabledProperty = "saveNeeded")

@@ -2048,6 +2048,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 lblSLoc.setText(resourceMapMsg.getString("lblSLoc.text"));
                 lblCharg.setText(resourceMapMsg.getString("lblCharg.text"));
                 lblLicPlate.setText(resourceMapMsg.getString("lblLicPlate.text"));
+                lbKunnr.setText(resourceMapMsg.getString("lbKunnr.text"));
 
                 if (Constants.WeighingProcess.MODE_DETAIL.OUT_SLOC_SLOC.name().equals(weightTicket.getMode())) {
                     lblPONo.setText(resourceMapMsg.getString("lblPoTrans"));
@@ -2067,6 +2068,10 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
                 if (Constants.WeighingProcess.MODE_DETAIL.OUT_PLANT_PLANT.name().equals(weightTicket.getMode())) {
                     lblLicPlate.setText(resourceMapMsg.getString("lblVehicleNo"));
+                }
+
+                if (Constants.WeighingProcess.MODE_DETAIL.IN_PO_PURCHASE.name().equals(weightTicket.getMode())) {
+                    lbKunnr.setText(resourceMapMsg.getString("lblShipTo.text"));
                 }
 
                 if (weightTicket.getRegType() == 'I') {
@@ -4123,6 +4128,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         lblCharg.setForeground(Color.black);
         lblCementDesc.setForeground(Color.black);
         lblBatchProduce.setForeground(Color.black);
+        lbKunnr.setText(resourceMapMsg.getString("lbKunnr.text"));
 
         txtRegistrationNo.setText(null);
         txtProcedure.setText(null);

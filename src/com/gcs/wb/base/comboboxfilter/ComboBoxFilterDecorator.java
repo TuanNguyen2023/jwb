@@ -61,8 +61,10 @@ public class ComboBoxFilterDecorator<T> {
                 if (aBoolean) {//commit
                     selectedItem = comboBox.getSelectedItem();
                 } else {//rollback to the last one
+                    if (selectedItem != null) {
                     comboBox.setSelectedItem(selectedItem);
                     filterEditor.setItem(selectedItem);
+                    }
                 }
             }
         });
@@ -202,5 +204,9 @@ public class ComboBoxFilterDecorator<T> {
     public void updateCombobox(JComboBox<T> comboBox) {
         this.comboBox = comboBox;
         init();
+    }
+
+    public boolean isEditing(){
+        return filterEditor.isEditing();
     }
 }
