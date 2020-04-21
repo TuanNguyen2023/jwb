@@ -2693,6 +2693,9 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
         if (!StringUtil.isEmptyString(txtPOSTONumN.getText().trim())) {
             isVendorLoadValid = wtRegisValidation.validateCbxSelected(cbxVendorLoadingN.getSelectedIndex(), lblVendorLoadingN);
         }
+        if (isVendorLoadValid) {
+            lblVendorLoadingN.setForeground(Color.black);
+        }
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
                 && isCMNDBLValid && isSalanValid && isPOValid && isPOSTOValid && isWeightValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
