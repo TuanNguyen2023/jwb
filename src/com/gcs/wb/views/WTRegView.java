@@ -167,6 +167,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
         initDocumentListener(txtWeightN);
         initDocumentListener(txtSlingN);
         initDocumentListener(txtPalletN);
+        changeWindowSize(true);
 
         btnFind.doClick();
     }
@@ -514,10 +515,6 @@ public class WTRegView extends javax.swing.JInternalFrame {
         txtSalanN = new javax.swing.JTextField();
         lblLoadSourceN = new javax.swing.JLabel();
         txtLoadSourceN = new javax.swing.JTextField();
-        pnControl = new javax.swing.JPanel();
-        btnNew = new javax.swing.JButton();
-        btnClear = new javax.swing.JButton();
-        btnSave = new javax.swing.JButton();
         pnROVRight = new javax.swing.JPanel();
         lblMaterialTypeN = new javax.swing.JLabel();
         lblWeightN = new javax.swing.JLabel();
@@ -556,6 +553,10 @@ public class WTRegView extends javax.swing.JInternalFrame {
         lblVendorTransportN = new javax.swing.JLabel();
         pnShowFilter = new javax.swing.JPanel();
         btnShowFilter = new javax.swing.JButton();
+        pnControl = new javax.swing.JPanel();
+        btnNew = new javax.swing.JButton();
+        btnClear = new javax.swing.JButton();
+        btnSave = new javax.swing.JButton();
 
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(com.gcs.wb.WeighBridgeApp.class).getContext().getResourceMap(WTRegView.class);
         jTextField1.setText(resourceMap.getString("jTextField1.text")); // NOI18N
@@ -1146,63 +1147,18 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addContainerGap())
         );
 
-        pnControl.setName("pnControl"); // NOI18N
-
-        btnNew.setAction(actionMap.get("newRecord")); // NOI18N
-        btnNew.setText(resourceMap.getString("btnNew.text")); // NOI18N
-        btnNew.setName("btnNew"); // NOI18N
-
-        btnClear.setAction(actionMap.get("clearForm")); // NOI18N
-        btnClear.setText(resourceMap.getString("btnClear.text")); // NOI18N
-        btnClear.setName("btnClear"); // NOI18N
-
-        btnSave.setAction(actionMap.get("saveRecord")); // NOI18N
-        btnSave.setText(resourceMap.getString("btnSave.text")); // NOI18N
-        btnSave.setName("btnSave"); // NOI18N
-
-        javax.swing.GroupLayout pnControlLayout = new javax.swing.GroupLayout(pnControl);
-        pnControl.setLayout(pnControlLayout);
-        pnControlLayout.setHorizontalGroup(
-            pnControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnControlLayout.createSequentialGroup()
-                .addComponent(btnNew)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnClear)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnSave)
-                .addContainerGap(322, Short.MAX_VALUE))
-        );
-        pnControlLayout.setVerticalGroup(
-            pnControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnControlLayout.createSequentialGroup()
-                .addGap(1, 1, 1)
-                .addGroup(pnControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnNew)
-                    .addComponent(btnClear)
-                    .addComponent(btnSave)))
-        );
-
         javax.swing.GroupLayout pnRegistrationOfVehicleLayout = new javax.swing.GroupLayout(pnRegistrationOfVehicle);
         pnRegistrationOfVehicle.setLayout(pnRegistrationOfVehicleLayout);
         pnRegistrationOfVehicleLayout.setHorizontalGroup(
             pnRegistrationOfVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnRegistrationOfVehicleLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnRegistrationOfVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnRegistrationOfVehicleLayout.createSequentialGroup()
-                        .addComponent(pnROVLeft, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addGroup(pnRegistrationOfVehicleLayout.createSequentialGroup()
-                        .addComponent(pnControl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(11, 11, 11))))
+                .addComponent(pnROVLeft, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         pnRegistrationOfVehicleLayout.setVerticalGroup(
             pnRegistrationOfVehicleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnRegistrationOfVehicleLayout.createSequentialGroup()
-                .addComponent(pnROVLeft, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(pnControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(96, Short.MAX_VALUE))
+            .addComponent(pnROVLeft, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pnROVRight.setName("pnROVRight"); // NOI18N
@@ -1537,6 +1493,42 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addComponent(btnShowFilter))
         );
 
+        pnControl.setName("pnControl"); // NOI18N
+
+        btnNew.setAction(actionMap.get("newRecord")); // NOI18N
+        btnNew.setText(resourceMap.getString("btnNew.text")); // NOI18N
+        btnNew.setName("btnNew"); // NOI18N
+
+        btnClear.setAction(actionMap.get("clearForm")); // NOI18N
+        btnClear.setText(resourceMap.getString("btnClear.text")); // NOI18N
+        btnClear.setName("btnClear"); // NOI18N
+
+        btnSave.setAction(actionMap.get("saveRecord")); // NOI18N
+        btnSave.setText(resourceMap.getString("btnSave.text")); // NOI18N
+        btnSave.setName("btnSave"); // NOI18N
+
+        javax.swing.GroupLayout pnControlLayout = new javax.swing.GroupLayout(pnControl);
+        pnControl.setLayout(pnControlLayout);
+        pnControlLayout.setHorizontalGroup(
+            pnControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnControlLayout.createSequentialGroup()
+                .addComponent(btnNew)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnClear)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnSave)
+                .addContainerGap(937, Short.MAX_VALUE))
+        );
+        pnControlLayout.setVerticalGroup(
+            pnControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnControlLayout.createSequentialGroup()
+                .addGap(1, 1, 1)
+                .addGroup(pnControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnNew)
+                    .addComponent(btnClear)
+                    .addComponent(btnSave)))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -1551,7 +1543,8 @@ public class WTRegView extends javax.swing.JInternalFrame {
                         .addComponent(pnROVRight, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 1160, Short.MAX_VALUE)
                     .addComponent(pnPrintControl, javax.swing.GroupLayout.DEFAULT_SIZE, 1160, Short.MAX_VALUE)
-                    .addComponent(pnShowFilter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(pnShowFilter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnControl, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -1561,17 +1554,19 @@ public class WTRegView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnShowFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(13, 13, 13)
-                .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
+                .addComponent(spnResult, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnPrintControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(13, 13, 13)
                         .addComponent(pnROVRight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(14, 14, 14)
-                        .addComponent(pnRegistrationOfVehicle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(pnRegistrationOfVehicle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(pnControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
@@ -1966,14 +1961,28 @@ private void cbxModeSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
 }//GEN-LAST:event_cbxModeSearchActionPerformed
 
+    private void changeWindowSize(boolean isFull) {
+        if (isFull) {
+            setSize(new Dimension(getWidth(), 1000));
+        } else {
+            setSize(new Dimension(getWidth(), 580));
+        }
+    }
+
 private void btnShowFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnShowFilterActionPerformed
     pnFilter.setVisible(true);
+    spnResult.setVisible(true);
+    pnPrintControl.setVisible(true);
     pnShowFilter.setVisible(false);
+    changeWindowSize(true);
 }//GEN-LAST:event_btnShowFilterActionPerformed
 
 private void btnHideFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHideFilterActionPerformed
     pnFilter.setVisible(false);
+    spnResult.setVisible(false);
+    pnPrintControl.setVisible(false);
     pnShowFilter.setVisible(true);
+    changeWindowSize(false);
 }//GEN-LAST:event_btnHideFilterActionPerformed
 
 private void txtSalanNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSalanNKeyReleased
@@ -5125,6 +5134,7 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
             cbxModeType.setEnabled(false);
             btnEdit.setEnabled(false);
 
+            loadModeTypeModel(selectedWeightTicket.getRegType() == 'I' ? MODE.INPUT : MODE.OUTPUT);
             modeDetail = MODE_DETAIL.valueOf(selectedWeightTicket.getMode());
             cbxModeType.setSelectedItem(new WeighingMode(modeDetail));
         }
