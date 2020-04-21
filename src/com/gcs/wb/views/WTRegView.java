@@ -3690,16 +3690,32 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
                 if (!WeighBridgeApp.getApplication().isOfflineMode()) {
                     outboundDelivery = syncOutboundDelivery(deliveryOrderNo, outboundDelivery);
 
+                    String kunnr = "";
+                    String kunag = "";
                     if (outboundDelivery != null) {
-                        String kunnr = outboundDelivery.getKunnr();
-                        if (kunnr != null && !kunnr.trim().isEmpty()) {
-                            customer = syncCustomer(kunnr.trim());
+                        if (modeDetail == MODE_DETAIL.OUT_SELL_ROAD
+                                || modeDetail == MODE_DETAIL.OUT_SELL_WATERWAY) {
+                            kunnr = outboundDelivery.getKunnr();
+                            if (kunnr != null && !kunnr.trim().isEmpty()) {
+                                shipTo = syncCustomer(kunnr.trim());
+                            }
+
+                            kunag = outboundDelivery.getKunag();
+                            if (kunag != null && !kunag.trim().isEmpty()) {
+                                customer = syncCustomer(kunag.trim());
+                            }
+                        } else {
+                            kunnr = outboundDelivery.getKunnr();
+                            if (kunnr != null && !kunnr.trim().isEmpty()) {
+                                customer = syncCustomer(kunnr.trim());
+                            }
+
+                            kunnr = outboundDelivery.getOutboundDeliveryDetail().getShipTo();
+                            if (kunnr != null && !kunnr.trim().isEmpty()) {
+                                shipTo = syncCustomer(kunnr.trim());
+                            }
                         }
 
-                        kunnr = outboundDelivery.getOutboundDeliveryDetail().getShipTo();
-                        if (kunnr != null && !kunnr.trim().isEmpty()) {
-                            shipTo = syncCustomer(kunnr.trim());
-                        }
                     }
                 }
 
@@ -3808,15 +3824,16 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
 
                     String kunnr = null;
                     Customer cust = (Customer) cbxCustomerN.getSelectedItem();
-                    if (cust != null && !cust.getKunnr().equals(outboundDelivery.getKunnr())) {
-                        kunnr = outboundDelivery.getKunnr();
+                    //update: customer - kunag, shipto-kunnr
+                    if (cust != null && !cust.getKunnr().equals(outboundDelivery.getKunag())) {
+                        kunnr = outboundDelivery.getKunag();
                         mappingErrMsg.add(resourceMapMsg.getString("msg.customerNotMapping"));
                     }
 
                     String ship_to = null;
                     Customer shipToCust = (Customer) cbxShipToN.getSelectedItem();
-                    if (shipToCust != null && !shipToCust.getKunnr().equals(outboundDelivery.getOutboundDeliveryDetail().getShipTo())) {
-                        ship_to = outboundDelivery.getOutboundDeliveryDetail().getShipTo();
+                    if (shipToCust != null && !shipToCust.getKunnr().equals(outboundDelivery.getKunnr())) {
+                        ship_to = outboundDelivery.getKunnr();
                         mappingErrMsg.add(resourceMapMsg.getString("msg.shipToNotMapping"));
                     }
 
@@ -3898,7 +3915,12 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
             weightTicketDetail.setMatnrRef(outboundDelivery.getMatnr());
             weightTicketDetail.setRegItemDescription(outboundDelivery.getArktx());
             weightTicketDetail.setUnit(outboundDelivery.getVrkme());
-            weightTicketDetail.setKunnr(outboundDelivery.getKunnr());
+            if (modeDetail == MODE_DETAIL.OUT_SELL_ROAD
+                    || modeDetail == MODE_DETAIL.OUT_SELL_WATERWAY) {
+                weightTicketDetail.setKunnr(outboundDelivery.getKunag());
+            } else {
+                weightTicketDetail.setKunnr(outboundDelivery.getKunnr());
+            }
             weightTicketDetail.setDeliveryOrderNo(outboundDelivery.getDeliveryOrderNo());
             weightTicketDetail.setRegItemQuantity(outboundDelivery.getLfimg());
             weightTicketDetail.setSoNumber(salesOrder);
