@@ -5209,7 +5209,14 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
         }
 
         @Override
-        protected Object doInBackground() {
+        protected Object doInBackground() throws Exception {
+            // get newest data
+            selectedWeightTicket = weightTicketRepository.getWeightTicketByIdAndMandtAndWplant(selectedWeightTicket.getId(), selectedWeightTicket.getMandt(), selectedWeightTicket.getWplant());
+
+            if (selectedWeightTicket.isPosted()) {
+                throw new Exception(resourceMapMsg.getString("msg.wtIsPosted"));
+            }
+
             newWeightTicket = (WeightTicket) SerializationUtils.clone(selectedWeightTicket);
             weightTicketDetail = newWeightTicket.getWeightTicketDetail();
 
@@ -5310,8 +5317,17 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
         }
 
         @Override
-        protected void failed(Throwable thrwbl) {
+        protected void failed(Throwable cause) {
             isEditMode = false;
+
+            if (!ExceptionUtil.isDatabaseDisconnectedException(cause)) {
+                if (cause instanceof HibersapException && cause.getCause() instanceof JCoException) {
+                    cause = cause.getCause();
+                }
+                logger.error(null, cause);
+                JOptionPane.showMessageDialog(rootPane, cause.getMessage());
+            }
+
             clearForm();
         }
 
