@@ -38,7 +38,8 @@ import javax.persistence.Temporal;
             + " , IN(w.weightTicketDetails) wd "
             + "WHERE w.createdDate BETWEEN :from AND :to"
             + "  AND w.mandt = :mandt"
-            + "  AND w.wplant = :wplant"),
+            + "  AND w.wplant = :wplant"
+            + " ORDER BY w.createdDate, w.createdTime"),
     @NamedQuery(name = "WeightTicket.findByDeliveryOrderNo",
             query = "SELECT w FROM WeightTicket w "
             + " , IN(w.weightTicketDetails) wd "

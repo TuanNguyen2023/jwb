@@ -61,10 +61,10 @@ public class DailyReportController {
         return params;
     }
 
-    public void printReport(Map<String, Object> map, String reportName, JRTableModelDataSource data){
+    public void printReport(Map<String, Object> map, String reportName, JRTableModelDataSource data) {
         jreportService.printReportDataSource(map, reportName, data);
     }
-    
+
     public Object[][] handleWtDatas(Object[][] wtDatas, List<WeightTicket> weightTicketList) {
         List<TransportAgent> transportAgents = transportAgentRepository.getListTransportAgent();
         wtDatas = new Object[weightTicketList.size()][wtColNames.length];
@@ -73,17 +73,6 @@ public class DailyReportController {
             WeightTicket weightTicket = weightTicketList.get(i);
             WeightTicketDetail weightTicketDetail = weightTicket.getWeightTicketDetail();
             List<WeightTicketDetail> weightTicketDetails = weightTicket.getWeightTicketDetails();
-            String time = weightTicket.getCreatedTime().replaceAll(":","");
-            String hh = time.substring(0, 2);
-            String mm = time.substring(2, 4);
-            String ss = time.substring(4, 6);
-            Calendar create_date = Calendar.getInstance();
-            create_date.setTime(weightTicket.getCreatedDate());
-            create_date.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hh));
-            create_date.set(Calendar.MINUTE, Integer.valueOf(mm));
-            create_date.set(Calendar.SECOND, Integer.valueOf(ss));
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-            String createdDateTime = dateFormat.format(create_date.getTime());
             wtDatas[i][0] = i + 1;
             wtDatas[i][1] = weightTicket.getSeqDay();
             wtDatas[i][2] = weightTicket.getDriverName();
@@ -91,24 +80,16 @@ public class DailyReportController {
             wtDatas[i][4] = weightTicket.getPlateNo();
             wtDatas[i][5] = weightTicket.getTrailerId();
             wtDatas[i][6] = weightTicket.getCreator();
-            wtDatas[i][7] = createdDateTime;
+            wtDatas[i][7] = weightTicket.getCreatedDatetime();
             wtDatas[i][8] = weightTicket.getRegType();
             String[] regItemDescriptions = weightTicketDetails.stream()
                     .map(t -> t.getRegItemDescription())
                     .filter(t -> t != null)
                     .toArray(String[]::new);
             wtDatas[i][9] = regItemDescriptions.length > 0 ? String.join(" - ", regItemDescriptions) : "";
-            if (weightTicket.getFTime() != null) {
-                wtDatas[i][10] = dateFormat.format(weightTicket.getFTime());
-            } else {
-                wtDatas[i][10] = weightTicket.getFTime();
-            }
+            wtDatas[i][10] = weightTicket.getFTime();
             wtDatas[i][11] = weightTicket.getFScale() == null ? weightTicket.getFScale() : weightTicket.getFScale().doubleValue() / 1000d;
-            if (weightTicket.getSTime() != null) {
-                wtDatas[i][12] = dateFormat.format(weightTicket.getSTime());
-            } else {
-                wtDatas[i][12] = weightTicket.getSTime();
-            }
+            wtDatas[i][12] = weightTicket.getSTime();
             wtDatas[i][13] = weightTicket.getSScale() == null ? weightTicket.getSScale() : weightTicket.getSScale().doubleValue() / 1000d;
             wtDatas[i][14] = weightTicket.getGQty();
             String[] doNums = weightTicketDetails.stream()

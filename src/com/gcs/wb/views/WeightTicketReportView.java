@@ -88,6 +88,9 @@ public class WeightTicketReportView extends javax.swing.JInternalFrame {
         // Init state combobox
         initStatusCombobox();
 
+        // Init table
+        WeighBridgeApp.getApplication().bindJTableModel(tabWeightTicket, wtDatas, wtColNames, wtColTypes, editable);
+
         btnFind.doClick();
     }
 

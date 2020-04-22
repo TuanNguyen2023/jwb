@@ -299,6 +299,7 @@ public class Constants {
     public static final class Date {
 
         public static final String FORMAT = "dd/MM/yyyy";
+        public static final String FORMAT_DATETIME = "dd/MM/yyyy HH:mm";
         public static final java.util.Date MAX_DATE = new java.util.Date(253402275599000l); // 31/12/9999 23:59:59
     }
 
