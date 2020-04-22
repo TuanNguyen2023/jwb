@@ -5228,6 +5228,7 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
                 throw new Exception(resourceMapMsg.getString("msg.wtIsPosted"));
             }
 
+            selectedWeightTicket.getWeightTicketDetail();
             newWeightTicket = (WeightTicket) SerializationUtils.clone(selectedWeightTicket);
             weightTicketDetail = newWeightTicket.getWeightTicketDetail();
 
