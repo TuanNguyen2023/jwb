@@ -707,12 +707,13 @@ public class WeighBridgeView extends FrameView {
                 }
                 schedulerSync.setLastManualSync(new Date());
                 schedulerSync.setManualSyncStatus(SchedulerSync.SYNC_IN_PROGRESS);
-                schedulerSyncRepository.updateLastSync(schedulerSync);
+                schedulerSyncRepository.updateLastSync(schedulerSync, false);
 
                 Runtime.getRuntime().addShutdownHook(new Thread() {
                     @Override
                     public void run() {
-                        schedulerSyncRepository.syncExitHandler(schedulerSync, false);
+                        schedulerSync.setManualSyncStatus(SchedulerSync.SYNC_ERROR);
+                        schedulerSyncRepository.updateLastSync(schedulerSync, false);
                     }
                 });
 
@@ -727,19 +728,19 @@ public class WeighBridgeView extends FrameView {
 
         @Override
         protected void succeeded(Object result) {
+            if (syncDialog != null) {
+                syncDialog.setVisible(false);
+            }
+
+            if (syncDialogthread != null && syncDialogthread.isAlive()) {
+                syncDialogthread.stop();
+            }
+            
             if (allowToSync) {
                 setStep(2, resourceMapMsg.getString("msg.syncMasterDataSuccess"));
                 synchronized (schedulerSyncLock) {
                     schedulerSync.setManualSyncStatus(SchedulerSync.SYNC_COMPLETED);
-                    schedulerSyncRepository.updateLastSync(schedulerSync);
-                }
-                
-                if (syncDialogthread != null && syncDialogthread.isAlive()) {
-                    syncDialogthread.stop();
-                }
-         
-                if (syncDialog != null) {
-                    syncDialog.setVisible(false);
+                    schedulerSyncRepository.updateLastSync(schedulerSync, false);
                 }
             } else {
                 setStep(2, resourceMapMsg.getString("msg.syncMasterDataCanceled"));
@@ -748,20 +749,20 @@ public class WeighBridgeView extends FrameView {
 
         @Override
         protected void failed(Throwable thrwbl) {
+            if (syncDialog != null) {
+                syncDialog.setVisible(false);
+            }
+
+            if (syncDialogthread != null && syncDialogthread.isAlive()) {
+                syncDialogthread.stop();
+            }
             logger.error(thrwbl);
             setStep(2, resourceMapMsg.getString("msg.syncMasterDataFailed"));
             if (allowToSync) {
                 synchronized (schedulerSyncLock) {
                     schedulerSync.setManualSyncStatus(SchedulerSync.SYNC_ERROR);
-                    schedulerSyncRepository.updateLastSync(schedulerSync);
+                    schedulerSyncRepository.updateLastSync(schedulerSync, false);
                 }
-            }
-            if (syncDialogthread != null && syncDialogthread.isAlive()) {
-                syncDialogthread.stop();
-            }
-            
-            if (syncDialog != null) {
-                syncDialog.setVisible(false);
             }
         }
 
@@ -781,7 +782,8 @@ public class WeighBridgeView extends FrameView {
 
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        schedulerSyncRepository.syncExitHandler(schedulerSync, false);
+                        schedulerSync.setManualSyncStatus(SchedulerSync.SYNC_ERROR);
+                        schedulerSyncRepository.updateLastSync(schedulerSync, false);
                         syncDialog.setVisible(false);
                         syncDialog = null;
                         allowToSync = false;

@@ -43,29 +43,18 @@ public class SchedulerSyncRepository {
 
         return result;
     }
-
-    public synchronized void updateLastSync(SchedulerSync newSchedulerSync) {
-        try {
-            if (!entityTransaction.isActive()) {
-                entityTransaction.begin();
-            }
-            entityManager.merge(newSchedulerSync);
-            entityTransaction.commit();
-            entityManager.clear();
-        } catch (Exception ex) {
-            throw ex;
-        }
-    }
     
-    public synchronized void syncExitHandler(SchedulerSync ss, boolean isAuto) {
+    public synchronized void updateLastSync(SchedulerSync ss, boolean isAuto) {
         SchedulerSync schedulerSync;
         entityManager = JPAConnector.getInstance();
         entityTransaction = entityManager.getTransaction();
         schedulerSync = findByParamMandtWplant(ss.getMandt(), ss.getWplant());
         if (isAuto) {
-            schedulerSync.setAutoSyncStatus(schedulerSync.SYNC_ERROR);
+            schedulerSync.setLastAutoSync(ss.getLastAutoSync());
+            schedulerSync.setAutoSyncStatus(ss.getAutoSyncStatus());
         } else {
-            schedulerSync.setManualSyncStatus(schedulerSync.SYNC_ERROR);
+            schedulerSync.setLastManualSync(ss.getLastManualSync());
+            schedulerSync.setManualSyncStatus(ss.getManualSyncStatus());
         }
         try {
             if (!entityTransaction.isActive()) {

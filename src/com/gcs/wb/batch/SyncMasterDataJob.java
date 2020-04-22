@@ -37,12 +37,13 @@ public class SyncMasterDataJob implements Job {
         }
         schedulerSync.setAutoSyncStatus(SchedulerSync.SYNC_IN_PROGRESS);
         schedulerSync.setLastAutoSync(new Date());
-        schedulerSyncRepository.updateLastSync(schedulerSync);
+        schedulerSyncRepository.updateLastSync(schedulerSync, true);
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
-                schedulerSyncRepository.syncExitHandler(schedulerSync, true);
+                schedulerSync.setAutoSyncStatus(SchedulerSync.SYNC_ERROR);
+                schedulerSyncRepository.updateLastSync(schedulerSync, true);
             }
         });
 
@@ -55,7 +56,7 @@ public class SyncMasterDataJob implements Job {
             logger.error(ex);
             schedulerSync.setAutoSyncStatus(SchedulerSync.SYNC_ERROR);
         } finally {
-            schedulerSyncRepository.updateLastSync(schedulerSync);
+            schedulerSyncRepository.updateLastSync(schedulerSync, true);
         }
     }
 }
