@@ -157,6 +157,13 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         setAllChildPanelsVisible(pnWTLeft);
         setAllChildPanelsVisible(pnWTRight);
         btnPostAgain.setEnabled(false);
+        // setting display for button "Post lai"
+        String roles = WeighBridgeApp.getApplication().getLogin().getRoles().toUpperCase();
+        if (roles.contains("Z_JWB_SUPERVISOR") || roles.contains("Z_JWB_ADMIN")) {
+            btnPostAgain.setVisible(true);
+        } else {
+            btnPostAgain.setVisible(false);
+        }
     }
 
     /**
@@ -2534,11 +2541,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             if (weightTicket != null) {
                 String roles = WeighBridgeApp.getApplication().getLogin().getRoles().toUpperCase();
 
-                if (roles.contains("Z_JWB_SUPERVISOR") || roles.contains("Z_JWB_ADMIN")) {
-                    btnPostAgain.setVisible(true);
-                } else {
-                    btnPostAgain.setVisible(false);
-                }
                 if (!weightTicket.isPosted() && !isStage1() && !isStage2()
                         && !WeighBridgeApp.getApplication().isOfflineMode()
                         && (!weightTicket.getOfflineMode() || weightTicket.isEdited())

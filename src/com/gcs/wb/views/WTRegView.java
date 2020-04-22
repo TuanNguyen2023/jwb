@@ -1898,9 +1898,9 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
 
 private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPlateNoNFocusLost
     String plateNo = txtPlateNoN.getText().trim();
-    plateNo = plateNo.replace("-", "");
-    plateNo = plateNo.replace(".", "");
-    txtPlateNoN.setText(plateNo.toUpperCase());
+    plateNo = plateNo.replace("-", "").replace(".", "").toUpperCase();
+    txtPlateNoN.setText(plateNo);
+    isValidPlateNo = true;
 
     if (!checkPlateWithVendor()) {
         return;
@@ -1908,6 +1908,7 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
 
     if (!plateNoValidDO.isEmpty() && !plateNo.contains(plateNoValidDO)) {
         lblPlateNoN.setForeground(Color.red);
+        isValidPlateNo = false;
         btnSave.setEnabled(false);
 
         String plateName = "xe";
@@ -1926,7 +1927,7 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
 
     private boolean checkPlateWithVendor() throws HeadlessException {
         String plateNo = txtPlateNoN.getText().trim().toUpperCase();
-        isValidPlateNo = true;
+
         btnSave.setEnabled(false);
         if (modeDetail == MODE_DETAIL.OUT_PLANT_PLANT || modeDetail == MODE_DETAIL.OUT_SLOC_SLOC || modeDetail == MODE_DETAIL.OUT_PULL_STATION) {
             Vendor transportVendor = (Vendor) cbxVendorTransportN.getSelectedItem();
@@ -2313,7 +2314,9 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
         protected Object doInBackground() throws Exception {
             String[] val = txtSONumN.getText().trim().split("-");
             String bsGhe = txtPlateNoN.getText().trim().toUpperCase();
+            bsGhe = bsGhe.replace("-", "").replace(".", "");
             String bsRomoc = txtTrailerNoN.getText().trim().toUpperCase();
+            bsRomoc = bsRomoc.replace("-", "").replace(".", "");
 
             if (val.length == listDONumbers.size()) {
                 boolean hasChecked = listDONumbers.stream()
@@ -3014,7 +3017,7 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
                 isValid = validateInOutOther();
                 break;
             case OUT_SELL_ROAD:
-                isValid = validateOutSellRoad() && isValidDO && isValidTrailerNo;
+                isValid = validateOutSellRoad() && isValidDO && isValidPlateNo && isValidTrailerNo;
                 break;
             case OUT_PLANT_PLANT:
                 isValid = validateOutPlantPlant() && isValidPO && isValidVendorLoad && isValidVendorTransport && isValidPlateNo;
@@ -3143,9 +3146,17 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
         boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
 
         String plateNo = txtPlateNoN.getText().trim();
-        isValidPlateNo = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
+        lblPlateNoN.setForeground(Color.black);
+        boolean isValidPlateNoFormat = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
+        if(!isValidPlateNo) {
+            lblPlateNoN.setForeground(Color.red);
+        }
 
+        lblTrailerNoN.setForeground(Color.black);
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
+        if(!isValidTrailerNo) {
+            lblTrailerNoN.setForeground(Color.red);
+        }
         String salan = txtSalanN.getText().trim();
         boolean isSalanValid = salan.isEmpty() || wtRegisValidation.validatePlateNoWater(salan, lblSalanN);
         boolean isSoNiemXaValid = wtRegisValidation.validateLength(txtSoNiemXaN.getText(), lblSoNiemXaN, 0, 60);
@@ -3166,7 +3177,7 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
         boolean isPalletValid = wtRegisValidation.validateIntegerValue(txtPalletN.getText(), lblPalletN);
 
         return isRegisterIdValid && isDriverNameValid && isCMNDBLValid && isValidPlateNo
-                && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
+                && isValidPlateNoFormat && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isSlocValid && isSalanValid && isSlingValid && isPalletValid;
     }
 
@@ -3796,8 +3807,10 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
 
                 // check mapping Plate No
                 String plateNo = txtPlateNoN.getText().trim().toUpperCase();
+                plateNo = plateNo.replace("-", "").replace(".", "");
                 String traid = outboundDelivery.getTraid().trim();
                 String trailerNo = txtTrailerNoN.getText().trim().toUpperCase();
+                trailerNo = trailerNo.replace("-", "").replace(".", "");
                 traid = StringUtil.correctPlateNo(traid).toUpperCase();
                 if (traid.isEmpty() || (!traid.isEmpty() && !traid.startsWith(plateNo))) {
                     String plateName = "xe";
