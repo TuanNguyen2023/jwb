@@ -2790,9 +2790,10 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
                 && cbxSloc2N.getSelectedIndex() != -1) {
             SLoc sloc2N = (SLoc) cbxSloc2N.getSelectedItem();
             if (sloc.getLgort().equals(sloc2N.getLgort())) {
-                showDuplicateDialog();
+                showWarningDialog(resourceMapMsg.getString("msg.slocDuplicate"));
                 isValidSloc = false;
                 cbxBatchStockN.setSelectedIndex(-1);
+                slocDcr.selectedItemDenied();
                 lblSlocN.setForeground(Color.red);
                 btnSave.setEnabled(false);
                 return;
@@ -2836,9 +2837,10 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
                 && cbxSlocN.getSelectedIndex() != -1) {
             SLoc sloc2N = (SLoc) cbxSlocN.getSelectedItem();
             if (sloc.getLgort().equals(sloc2N.getLgort())) {
-                showDuplicateDialog();
+                showWarningDialog(resourceMapMsg.getString("msg.slocDuplicate"));
                 isValidSloc = false;
                 cbxBatchStock2N.setSelectedIndex(-1);
+                sloc2Dcr.selectedItemDenied();
                 lblSloc2N.setForeground(Color.red);
                 btnSave.setEnabled(false);
                 return;
@@ -2870,8 +2872,8 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
         validateForm();
     }
 
-    private void showDuplicateDialog() {
-        JOptionPane optionPane = new JOptionPane(resourceMapMsg.getString("msg.slocDuplicate"), JOptionPane.WARNING_MESSAGE);
+    private void showWarningDialog(String message) {
+        JOptionPane optionPane = new JOptionPane(message, JOptionPane.WARNING_MESSAGE);
         JDialog duplicateDialog = optionPane.createDialog(rootPane, "Warning");
         duplicateDialog.setModal(false);
         duplicateDialog.setVisible(true);

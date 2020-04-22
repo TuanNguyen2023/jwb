@@ -23,7 +23,6 @@ public class ComboBoxFilterDecorator<T> {
     private Object selectedItem;
     private FilterEditor filterEditor;
     private String oldText = "";
-    private boolean isSelectingDenied = false;
 
     public ComboBoxFilterDecorator(JComboBox<T> comboBox,
             BiPredicate<T, String> userFilter,
@@ -74,12 +73,6 @@ public class ComboBoxFilterDecorator<T> {
         filterText.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (isSelectingDenied) {
-                    resetFilterComponent();
-                    isSelectingDenied = false;
-                    filterEditor.getFilterText().setText("");
-                    comboBox.setSelectedIndex(-1);
-                }
                 oldText = filterEditor.getFilterText().getText();
                 if (comboBox.getSelectedIndex() == -1) {
                     oldText = "";
@@ -90,11 +83,6 @@ public class ComboBoxFilterDecorator<T> {
 
             @Override
             public void focusLost(FocusEvent e) {
-                if ("".equals(filterEditor.getFilterText().getText())) {
-                    filterEditor.getFilterText().setText(oldText);
-                }
-
-                resetFilterComponent();
             }
         });
 
@@ -167,6 +155,14 @@ public class ComboBoxFilterDecorator<T> {
             public void popupMenuCanceled(PopupMenuEvent e) {
                 selectedItem = comboBox.getSelectedItem();
                 resetFilterComponent();
+                if ("".equals(filterEditor.getFilterText().getText())) {
+                    filterEditor.getFilterText().setText(oldText);
+                }
+                if (selectedItem == null && comboBox.getSelectedItem() == null) {
+                    filterEditor.getFilterText().setText("");
+                }
+
+                resetFilterComponent();
             }
         });
     }
@@ -224,7 +220,9 @@ public class ComboBoxFilterDecorator<T> {
         return filterEditor.isEditing();
     }
 
-    public void selectedItemDenied(boolean isSelectingDenied) {
-        this.isSelectingDenied = isSelectingDenied;
+    public void selectedItemDenied() {
+        resetFilterComponent();
+        filterEditor.getFilterText().setText("");
+        comboBox.setSelectedIndex(-1);
     }
 }

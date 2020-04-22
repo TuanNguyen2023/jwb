@@ -28,10 +28,12 @@ public class HtmlHighlighter {
     }
 
     public static String removeAccent(String s) {
-
         String temp = Normalizer.normalize(s, Normalizer.Form.NFD);
         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
-        return pattern.matcher(temp).replaceAll("");
+        String result = pattern.matcher(temp).replaceAll("");
+        result = result.replace('đ', 'd');
+        result = result.replace('Đ', 'D');
+        return result;
     }
     
 }
