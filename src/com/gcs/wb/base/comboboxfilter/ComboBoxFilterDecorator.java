@@ -15,6 +15,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class ComboBoxFilterDecorator<T> {
+
     private JComboBox<T> comboBox;
     private BiPredicate<T, String> userFilter;
     private Function<T, String> comboDisplayTextMapper;
@@ -25,18 +26,18 @@ public class ComboBoxFilterDecorator<T> {
     private boolean isSelectingDenied = false;
 
     public ComboBoxFilterDecorator(JComboBox<T> comboBox,
-                                   BiPredicate<T, String> userFilter,
-                                   Function<T, String> comboDisplayTextMapper) {
+            BiPredicate<T, String> userFilter,
+            Function<T, String> comboDisplayTextMapper) {
         this.comboBox = comboBox;
         this.userFilter = userFilter;
         this.comboDisplayTextMapper = comboDisplayTextMapper;
     }
 
     public static <T> ComboBoxFilterDecorator<T> decorate(JComboBox<T> comboBox,
-                                                          Function<T, String> comboDisplayTextMapper,
-                                                          BiPredicate<T, String> userFilter) {
-        ComboBoxFilterDecorator decorator =
-                new ComboBoxFilterDecorator(comboBox, userFilter, comboDisplayTextMapper);
+            Function<T, String> comboDisplayTextMapper,
+            BiPredicate<T, String> userFilter) {
+        ComboBoxFilterDecorator decorator
+                = new ComboBoxFilterDecorator(comboBox, userFilter, comboDisplayTextMapper);
         decorator.init();
         return decorator;
     }
@@ -53,7 +54,6 @@ public class ComboBoxFilterDecorator<T> {
         for (int i = 0; i < model.getSize(); i++) {
             this.originalItems.add(model.getElementAt(i));
         }
-
 
         filterEditor = new FilterEditor(comboDisplayTextMapper, new Consumer<Boolean>() {
             //editing mode (commit/cancel) change listener
@@ -84,7 +84,7 @@ public class ComboBoxFilterDecorator<T> {
                 if (comboBox.getSelectedIndex() == -1) {
                     oldText = "";
                 }
-                filterEditor.getFilterText().setText("");
+                filterEditor.getFilterText().selectAll();
 
             }
 
@@ -97,7 +97,7 @@ public class ComboBoxFilterDecorator<T> {
                 resetFilterComponent();
             }
         });
-        
+
         comboBox.setEditor(filterEditor);
         comboBox.setEditable(true);
     }
@@ -105,40 +105,40 @@ public class ComboBoxFilterDecorator<T> {
     private void initComboKeyListener() {
         filterEditor.getFilterText().addKeyListener(
                 new KeyAdapter() {
-                    @Override
-                    public void keyPressed(KeyEvent e) {
-                        char keyChar = e.getKeyChar();
-                        if (!Character.isDefined(keyChar)) {
-                            return;
-                        }
-                        int keyCode = e.getKeyCode();
-                        switch (keyCode) {
-                            case KeyEvent.VK_DELETE:
-                                return;
-                            case KeyEvent.VK_ENTER:
-                                selectedItem = comboBox.getSelectedItem();
-                                resetFilterComponent();
-                                return;
-                            case KeyEvent.VK_ESCAPE:
-                                resetFilterComponent();
-                                return;
-                            case KeyEvent.VK_BACK_SPACE:
-                                filterEditor.removeCharAtEnd();
-                                break;
-                            default:
-                                filterEditor.addChar(keyChar);
-                        }
-                        if (!comboBox.isPopupVisible()) {
-                            comboBox.showPopup();
-                        }
-                        if (filterEditor.isEditing() && filterEditor.getText().length() >= 0) {
-                            applyFilter();
-                        } else {
-                            comboBox.hidePopup();
-                            resetFilterComponent();
-                        }
-                    }
+            @Override
+            public void keyPressed(KeyEvent e) {
+                char keyChar = e.getKeyChar();
+                if (!Character.isDefined(keyChar)) {
+                    return;
                 }
+                int keyCode = e.getKeyCode();
+                switch (keyCode) {
+                    case KeyEvent.VK_DELETE:
+                        return;
+                    case KeyEvent.VK_ENTER:
+                        selectedItem = comboBox.getSelectedItem();
+                        resetFilterComponent();
+                        return;
+                    case KeyEvent.VK_ESCAPE:
+                        resetFilterComponent();
+                        return;
+                    case KeyEvent.VK_BACK_SPACE:
+                        filterEditor.removeCharAtEnd();
+                        break;
+                    default:
+                        filterEditor.addChar(keyChar);
+                }
+                if (!comboBox.isPopupVisible()) {
+                    comboBox.showPopup();
+                }
+                if (filterEditor.isEditing() && filterEditor.getText().length() >= 0) {
+                    applyFilter();
+                } else {
+                    comboBox.hidePopup();
+                    resetFilterComponent();
+                }
+            }
+        }
         );
     }
 
@@ -193,9 +193,9 @@ public class ComboBoxFilterDecorator<T> {
         for (T item : originalItems) {
             String text = filterEditor.getFilterText().getText();
             String saveText = filterEditor.getText();
-            
+
             if (text.length() < saveText.length()) {
-                text += saveText.charAt(saveText.length()-1);
+                text += saveText.charAt(saveText.length() - 1);
             } else if (text.length() > saveText.length()) {
                 text = text.substring(0, text.length() - 1);
             }
@@ -209,22 +209,22 @@ public class ComboBoxFilterDecorator<T> {
 
         //red color when no match
         filterEditor.getFilterText()
-                    .setForeground(model.getSize() == 0 ?
-                            Color.red : UIManager.getColor("Label.foreground"));
+                .setForeground(model.getSize() == 0
+                        ? Color.red : UIManager.getColor("Label.foreground"));
         //add unmatched items
         filteredItems.forEach(model::addElement);
     }
-    
+
     public void updateCombobox(JComboBox<T> comboBox) {
         this.comboBox = comboBox;
         init();
     }
 
-    public boolean isEditing(){
+    public boolean isEditing() {
         return filterEditor.isEditing();
     }
 
-    public void selectedItemDenied(boolean isSelectingDenied){
+    public void selectedItemDenied(boolean isSelectingDenied) {
         this.isSelectingDenied = isSelectingDenied;
     }
 }

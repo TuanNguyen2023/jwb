@@ -67,7 +67,6 @@ public class JReportService {
         public MyJasperViewer(JasperPrint jasperPrint) {
             super(jasperPrint, false);
             viewer.setSaveContributors(new JRSaveContributor[]{new JRPdfSaveContributor(Locale.getDefault(), null),
-                new JRCsvSaveContributor(Locale.getDefault(), null),
                 new JRSingleSheetXlsSaveContributor(Locale.getDefault(), null)});
         }
     }

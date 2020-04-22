@@ -776,7 +776,7 @@ public class WeighBridgeView extends FrameView {
     private void showSyncingDialog() {
         syncDialogthread = new Thread() {
             public void run() {
-                JButton btnCancel = new JButton("Hủy đồng bộ và khởi động lại");
+                JButton btnCancel = new JButton("Thoát");
                 btnCancel.addMouseListener(new MouseAdapter() {
 
                     @Override
