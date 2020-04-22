@@ -26,18 +26,14 @@ import java.awt.event.WindowAdapter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import javax.swing.Timer;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
-import javax.swing.event.MouseInputListener;
 import net.sf.jasperreports.view.JasperViewer;
 import org.apache.log4j.Logger;
 import org.jdesktop.application.Application;
@@ -735,7 +731,7 @@ public class WeighBridgeView extends FrameView {
             if (syncDialogthread != null && syncDialogthread.isAlive()) {
                 syncDialogthread.stop();
             }
-            
+
             if (allowToSync) {
                 setStep(2, resourceMapMsg.getString("msg.syncMasterDataSuccess"));
                 synchronized (schedulerSyncLock) {
@@ -792,8 +788,8 @@ public class WeighBridgeView extends FrameView {
                     }
                 });
                 Object[] options = {btnCancel};
-                String message = "Vui lòng chờ! Dữ liệu đang được đồng bộ...";
-                String title = "Đang đồng bộ dữ liệu";
+                String message = "Dữ liệu đang được đồng bộ...";
+                String title = "Đồng bộ dữ liệu";
                 JOptionPane pane = new JOptionPane(message, JOptionPane.QUESTION_MESSAGE, JOptionPane.INFORMATION_MESSAGE, busyIcons[0], options);
                 syncDialog = pane.createDialog(WeighBridgeApp.getApplication().getMainFrame(), title);
                 syncDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);

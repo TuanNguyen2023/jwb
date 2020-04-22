@@ -23,7 +23,6 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import org.hibersap.session.Credentials;
-import org.hibersap.session.Session;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
@@ -31,7 +30,6 @@ import org.jdesktop.application.SingleFrameApplication;
 import javax.swing.table.DefaultTableModel;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.text.ParseException;
 import java.util.TooManyListenersException;
 import java.util.logging.Level;
 import javax.swing.UIManager;
@@ -128,11 +126,7 @@ public class WeighBridgeApp extends SingleFrameApplication {
                         vSetting = null;
                     }
                 }
-                vMain = new WeighBridgeView(getApplication());
-                vMain.getComponent().setSize(800, 600);
-                vMain.getFrame().setSize(800, 600);
-                vMain.getRootPane().setSize(800, 600);
-                show(vMain);
+                showMainView();
                 vLogin = null;
             } else {
                 exit();
@@ -140,11 +134,30 @@ public class WeighBridgeApp extends SingleFrameApplication {
         }
     }
 
+    private void showMainView() {
+        vMain = new WeighBridgeView(getApplication());
+        vMain.getComponent().setSize(800, 600);
+        vMain.getFrame().setSize(800, 600);
+        vMain.getRootPane().setSize(800, 600);
+        show(vMain);
+    }
+
     public void restartApplication() {
         getApplication().hide(vMain);
+        vMain.getFrame().dispose();
         vMain = null;
+
+        // close db connection
         JReportConnector.close();
         JPAConnector.close();
+
+        // close serial signal
+        disconnectWB();
+
+        // close SAP connection
+        if (_SAPSession != null && !_SAPSession.isClosed()) {
+            _SAPSession.close();
+        }
 
         try {
             CronTriggerService.close();
@@ -156,13 +169,27 @@ public class WeighBridgeApp extends SingleFrameApplication {
         launch(this.getClass(), null);
     }
 
+    public void refreshApplicationView() {
+        getApplication().hide(vMain);
+        vMain.getFrame().dispose();
+        vMain = null;
+
+        showMainView();
+    }
+
     @Override
     protected void shutdown() {
+        // close db connection
+        JReportConnector.close();
         JPAConnector.close();
+
+        // close serial signal
+        disconnectWB();
 
         if (_SAPSession != null && !_SAPSession.isClosed()) {
             _SAPSession.close();
         }
+
         super.shutdown();
     }
 

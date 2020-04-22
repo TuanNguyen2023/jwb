@@ -155,7 +155,7 @@ public class ScaleMettler implements SerialPortDataListener {
                 
                 int size = Integer.parseInt(mettlerParam[0]);
                 if(strVal.length() == size) {
-                    Logger.getLogger(this.getClass()).error("@ScaleMettler, Value@" + strVal);
+                    Logger.getLogger(this.getClass()).error("@ScaleMettler, value@" + strVal);
                     strVal = strVal.substring(Integer.parseInt(mettlerParam[1]), Integer.parseInt(mettlerParam[2]));
                     BigInteger intVal = new BigInteger(strVal);
                     control.setValue(intVal);

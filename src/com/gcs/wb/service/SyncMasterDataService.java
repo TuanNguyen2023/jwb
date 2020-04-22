@@ -22,6 +22,7 @@ import com.gcs.wb.jpa.repositorys.SaleOrderRepository;
 import com.gcs.wb.jpa.repositorys.VendorRepository;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 import org.apache.log4j.Logger;
 
 /**
@@ -90,8 +91,8 @@ public class SyncMasterDataService {
 
         logger.info("Sync master data is finished...");
 
-        logger.info("Restart app...");
-        WeighBridgeApp.getApplication().restartApplication();
+        logger.info("Confirm refresh app...");
+        handleRefreshApplication();
     }
 
     public void syncMasterDataWhenLogin() throws Exception {
@@ -190,5 +191,14 @@ public class SyncMasterDataService {
 
     public void syncPartner() {
         sapService.syncPartnerDatas();
+    }
+
+    public void handleRefreshApplication() {
+        int answer = JOptionPane.showConfirmDialog(WeighBridgeApp.getApplication().getMainFrame(),
+                "Đồng bộ dữ liệu thành công. Cập nhật lại ứng dụng?", "Đồng bộ dữ liệu", JOptionPane.YES_NO_OPTION);
+
+        if (answer == JOptionPane.YES_OPTION) {
+            WeighBridgeApp.getApplication().refreshApplicationView();
+        }
     }
 }
