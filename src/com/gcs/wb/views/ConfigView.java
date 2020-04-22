@@ -1132,8 +1132,7 @@ private void txtSapPasswordKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST
                 }
 
                 dispose();
-                WeighBridgeApp app = new WeighBridgeApp();
-                app.restartApplication();
+                WeighBridgeApp.getApplication().restartApplication();
             } else {
                 JOptionPane.showMessageDialog(rootPane, msg.toString(), "Error", JOptionPane.ERROR_MESSAGE);
                 syncIconLoading.setVisible(false);
