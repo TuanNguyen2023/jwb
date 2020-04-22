@@ -1925,7 +1925,7 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
 }//GEN-LAST:event_txtPlateNoNFocusLost
 
     private boolean checkPlateWithVendor() throws HeadlessException {
-        String plateNo = txtPlateNoN.getText().trim();
+        String plateNo = txtPlateNoN.getText().trim().toUpperCase();
         isValidPlateNo = true;
         btnSave.setEnabled(false);
         if (modeDetail == MODE_DETAIL.OUT_PLANT_PLANT || modeDetail == MODE_DETAIL.OUT_SLOC_SLOC || modeDetail == MODE_DETAIL.OUT_PULL_STATION) {
@@ -2312,8 +2312,8 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
         @Override
         protected Object doInBackground() throws Exception {
             String[] val = txtSONumN.getText().trim().split("-");
-            String bsGhe = txtPlateNoN.getText().trim();
-            String bsRomoc = txtTrailerNoN.getText().trim();
+            String bsGhe = txtPlateNoN.getText().trim().toUpperCase();
+            String bsRomoc = txtTrailerNoN.getText().trim().toUpperCase();
 
             if (val.length == listDONumbers.size()) {
                 boolean hasChecked = listDONumbers.stream()
@@ -3795,10 +3795,9 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
                 }
 
                 // check mapping Plate No
-                String plateNo = txtPlateNoN.getText().trim();
+                String plateNo = txtPlateNoN.getText().trim().toUpperCase();
                 String traid = outboundDelivery.getTraid().trim();
-                String trailerNo = txtTrailerNoN.getText().trim();
-                String trailerDo = "";
+                String trailerNo = txtTrailerNoN.getText().trim().toUpperCase();
                 traid = StringUtil.correctPlateNo(traid).toUpperCase();
                 if (traid.isEmpty() || (!traid.isEmpty() && !traid.startsWith(plateNo))) {
                     String plateName = "xe";
@@ -3820,7 +3819,7 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
                 //check exist bs romoc
                 if (modeDetail == MODE_DETAIL.OUT_SELL_ROAD) {
                     if (traid.split("\\|").length > 1) {
-                        trailerDo = traid.split("\\|")[1];
+                        String trailerDo = traid.split("\\|")[1];
                         trailerNoValidDO = trailerDo;
                         if (StringUtil.isEmptyString(trailerNo)) {
                             // vui long nhap BS ro moc
@@ -4131,8 +4130,8 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
             newWeightTicket.setRegisteredNumber(txtRegisterIdN.getText().trim());
             newWeightTicket.setDriverName(txtDriverNameN.getText().trim());
             newWeightTicket.setDriverIdNo(txtCMNDN.getText().trim());
-            newWeightTicket.setPlateNo(txtPlateNoN.getText().trim());
-            newWeightTicket.setTrailerId(txtTrailerNoN.getText().trim());
+            newWeightTicket.setPlateNo(txtPlateNoN.getText().trim().toUpperCase());
+            newWeightTicket.setTrailerId(txtTrailerNoN.getText().trim().toUpperCase());
             if (modeDetail != MODE_DETAIL.IN_WAREHOUSE_TRANSFER) {
                 Number sling = (Number) txtSlingN.getValue();
                 newWeightTicket.setSling(sling.intValue());
@@ -4146,7 +4145,7 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
             newWeightTicket.setBatch(txtProductionBatchN.getText().trim());
             newWeightTicket.setNote(txtNoteN.getText().trim());
             newWeightTicket.setTicketId(txtTicketIdN.getText().trim());
-            newWeightTicket.setChargEnh(txtSalanN.getText().trim());
+            newWeightTicket.setChargEnh(txtSalanN.getText().trim().toUpperCase());
 
             // set for oubdel
             List<OutboundDeliveryDetail> deliveryDetails = null;

@@ -3141,13 +3141,13 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
             newWeightTicket.setRegisteredNumber(txtRegisterIdN.getText().trim());
             newWeightTicket.setDriverName(txtDriverNameN.getText().trim());
             newWeightTicket.setDriverIdNo(txtCMNDN.getText().trim());
-            newWeightTicket.setPlateNo(txtPlateNoN.getText().trim());
-            newWeightTicket.setTrailerId(txtTrailerNoN.getText().trim());
+            newWeightTicket.setPlateNo(txtPlateNoN.getText().trim().toUpperCase());
+            newWeightTicket.setTrailerId(txtTrailerNoN.getText().trim().toUpperCase());
             newWeightTicket.setRecvPlant(configuration.getWkPlant());
             newWeightTicket.setSoNiemXa(txtSoNiemXaN.getText().trim());
             newWeightTicket.setBatch(txtProductionBatchN.getText().trim());
             newWeightTicket.setNote(txtNoteN.getText().trim());
-            newWeightTicket.setChargEnh(txtSalanN.getText().trim());
+            newWeightTicket.setChargEnh(txtSalanN.getText().trim().toUpperCase());
 
             switch (modeDetail) {
                 case IN_PO_PURCHASE:
