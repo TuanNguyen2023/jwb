@@ -772,6 +772,7 @@ public class WeighBridgeView extends FrameView {
 
     private void showSyncingDialog() {
         syncDialogthread = new Thread() {
+            @Override
             public void run() {
                 JButton btnCancel = new JButton("Thoát");
                 btnCancel.addMouseListener(new MouseAdapter() {
@@ -783,7 +784,7 @@ public class WeighBridgeView extends FrameView {
                         syncDialog.setVisible(false);
                         syncDialog = null;
                         allowToSync = false;
-                        WeighBridgeApp.getApplication().restartApplication();
+                        WeighBridgeApp.getApplication().refreshApplicationView();
 
                     }
                 });
