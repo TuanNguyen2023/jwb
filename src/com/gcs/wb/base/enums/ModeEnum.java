@@ -15,8 +15,8 @@ public enum ModeEnum {
     IN_WAREHOUSE_TRANSFER("Nhập - Chuyển Kho"),
     IN_OTHER("Nhập - Cân khác"),
     OUT_SELL_ROAD("Xuất - Bán Hàng (Bộ)"),
-    OUT_PLANT_PLANT("Xuất - Plant - Plant"),
-    OUT_SLOC_SLOC("Xuất - Sloc - Sloc"),
+    OUT_PLANT_PLANT("Xuất - VCNB - Ngoài NM"),
+    OUT_SLOC_SLOC("Xuất - VCNB - Trong NM"),
     OUT_PULL_STATION("Xuất - Nhập Bến Kéo"),
     OUT_SELL_WATERWAY("Xuất - Bán Hàng (Thủy)"),
     OUT_OTHER("Xuất - Cân khác");
