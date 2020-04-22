@@ -1898,9 +1898,8 @@ private void cbxVendorTransportNActionPerformed(java.awt.event.ActionEvent evt) 
 
 private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPlateNoNFocusLost
     String plateNo = txtPlateNoN.getText().trim();
-    plateNo = plateNo.replace("-", "");
-    plateNo = plateNo.replace(".", "");
-    txtPlateNoN.setText(plateNo.toUpperCase());
+    plateNo = plateNo.replace("-", "").replace(".", "").toUpperCase();
+    txtPlateNoN.setText(plateNo);
     isValidPlateNo = true;
 
     if (!checkPlateWithVendor()) {
@@ -2315,7 +2314,9 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
         protected Object doInBackground() throws Exception {
             String[] val = txtSONumN.getText().trim().split("-");
             String bsGhe = txtPlateNoN.getText().trim().toUpperCase();
+            bsGhe = bsGhe.replace("-", "").replace(".", "");
             String bsRomoc = txtTrailerNoN.getText().trim().toUpperCase();
+            bsRomoc = bsRomoc.replace("-", "").replace(".", "");
 
             if (val.length == listDONumbers.size()) {
                 boolean hasChecked = listDONumbers.stream()
@@ -3806,8 +3807,10 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
 
                 // check mapping Plate No
                 String plateNo = txtPlateNoN.getText().trim().toUpperCase();
+                plateNo = plateNo.replace("-", "").replace(".", "");
                 String traid = outboundDelivery.getTraid().trim();
                 String trailerNo = txtTrailerNoN.getText().trim().toUpperCase();
+                trailerNo = trailerNo.replace("-", "").replace(".", "");
                 traid = StringUtil.correctPlateNo(traid).toUpperCase();
                 if (traid.isEmpty() || (!traid.isEmpty() && !traid.startsWith(plateNo))) {
                     String plateName = "xe";
