@@ -39,8 +39,8 @@ public class Constants {
         public static List<WeighingMode> getOutputModeList() {
             List<WeighingMode> mode = new ArrayList<>();
             mode.add(new WeighingMode(MODE_DETAIL.OUT_SELL_ROAD, "Bán Hàng (Bộ)"));
-            mode.add(new WeighingMode(MODE_DETAIL.OUT_PLANT_PLANT, "Plant - Plant"));
-            mode.add(new WeighingMode(MODE_DETAIL.OUT_SLOC_SLOC, "Sloc - Sloc"));
+            mode.add(new WeighingMode(MODE_DETAIL.OUT_PLANT_PLANT, "VCNB - Ngoài NM"));
+            mode.add(new WeighingMode(MODE_DETAIL.OUT_SLOC_SLOC, "VCNB - Trong NM"));
             mode.add(new WeighingMode(MODE_DETAIL.OUT_PULL_STATION, "Nhập Bến Kéo"));
             mode.add(new WeighingMode(MODE_DETAIL.OUT_SELL_WATERWAY, "Bán Hàng (Thủy)"));
             mode.add(new WeighingMode(MODE_DETAIL.OUT_OTHER, "Cân khác"));
@@ -299,6 +299,7 @@ public class Constants {
     public static final class Date {
 
         public static final String FORMAT = "dd/MM/yyyy";
+        public static final String FORMAT_DATETIME = "dd/MM/yyyy HH:mm";
         public static final java.util.Date MAX_DATE = new java.util.Date(253402275599000l); // 31/12/9999 23:59:59
     }
 

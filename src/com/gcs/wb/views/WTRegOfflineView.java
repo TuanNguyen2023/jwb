@@ -13,6 +13,7 @@ import com.gcs.wb.base.constant.Constants.WeighingProcess.MODE;
 import com.gcs.wb.base.constant.Constants.WeighingProcess.MODE_DETAIL;
 import com.gcs.wb.base.enums.ModeEnum;
 import com.gcs.wb.base.enums.StatusEnum;
+import com.gcs.wb.base.util.DateUtil;
 import com.gcs.wb.base.util.ExceptionUtil;
 import com.gcs.wb.base.util.StringUtil;
 import com.gcs.wb.base.validator.DateFromToValidator;
@@ -37,9 +38,12 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
+import javax.swing.RowSorter.SortKey;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import org.apache.commons.lang.SerializationUtils;
 import org.jdesktop.application.Application;
 
@@ -143,6 +147,8 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
     }
 
     private void initTableEvent() {
+        WeighBridgeApp.getApplication().bindJTableModel(tabResults, wtData, wtCols, wtTypes, editable);
+
         tabResults.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
             try {
                 selectedWeightTicket = weightTicketList.get(tabResults.convertRowIndexToModel(tabResults.getSelectedRow()));
@@ -1596,7 +1602,7 @@ private void cbxSloc2NActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIR
     if (sloc2Dcr != null && !sloc2Dcr.isEditing()) {
         loadBatchStockModel2N(cbxSloc2N, cbxBatchStock2N, false);
         if (batchStock2Dcr != null) {
-                    batchStock2Dcr.updateCombobox(cbxBatchStock2N);
+            batchStock2Dcr.updateCombobox(cbxBatchStock2N);
         }
     } else if (sloc2Dcr == null) {
         loadBatchStockModel2N(cbxSloc2N, cbxBatchStock2N, false);
@@ -2930,9 +2936,7 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
                 wtData[i][8] = doNums.length > 0 ? String.join(" - ", doNums) : "";
                 wtData[i][9] = item.getCreator();
                 wtData[i][10] = item.getSeqMonth();
-
-                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                wtData[i][11] = dateFormat.format(item.getCreatedDate());
+                wtData[i][11] = item.getCreatedDatetime();
                 String time = item.getCreatedTime().replaceAll(":", "");
                 String hh = time.substring(0, 2);
                 String mm = time.substring(2, 4);
@@ -2990,6 +2994,12 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
         protected void succeeded(Object result) {
             setMessage(resourceMapMsg.getString("msg.finished"));
             WeighBridgeApp.getApplication().bindJTableModel(tabResults, wtData, wtCols, wtTypes, editable);
+            // format Date column
+            tabResults.getColumnModel().getColumn(11).setCellRenderer(DateUtil.getTableCellRendererForDate());
+            // setting sort in Date
+            TableRowSorter<TableModel> sorter = new TableRowSorter<>(tabResults.getModel());
+            sorter.setComparator(11, (Date s1, Date s2) -> s1.compareTo(s2));
+            tabResults.setRowSorter(sorter);
 
             setCreatable(true);
             setFormEditable(false);

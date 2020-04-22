@@ -19,12 +19,16 @@ import org.jdesktop.application.Action;
 import org.jdesktop.application.Task;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.base.constant.Constants;
+import com.gcs.wb.base.util.DateUtil;
 import com.gcs.wb.base.util.ExceptionUtil;
 import com.gcs.wb.base.validator.DateFromToValidator;
 import com.gcs.wb.controller.DailyReportController;
 import com.gcs.wb.jpa.entity.WeightTicket;
 import java.awt.Color;
+import java.util.Date;
 import java.util.Map;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import net.sf.jasperreports.engine.data.JRTableModelDataSource;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.ResourceMap;
@@ -54,6 +58,9 @@ public class DailyReportView extends javax.swing.JInternalFrame {
         dpDateFrom.setFormats(Constants.Date.FORMAT);
         dpDateTo.setFormats(Constants.Date.FORMAT);
         weightTicketList = new ArrayList();
+
+        // Init table
+        WeighBridgeApp.getApplication().bindJTableModel(tabResults, wtDatas, wtColNames, wtColTypes, editable);
 
         btnFilter.doClick();
     }
@@ -223,6 +230,19 @@ private void dpDateFromPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN
         }
     }
 
+    private void setTableRender() {
+        // format Date column
+        tabResults.getColumnModel().getColumn(7).setCellRenderer(DateUtil.getTableCellRendererForDate(true));
+        tabResults.getColumnModel().getColumn(10).setCellRenderer(DateUtil.getTableCellRendererForDate(true));
+        tabResults.getColumnModel().getColumn(12).setCellRenderer(DateUtil.getTableCellRendererForDate(true));
+        // setting sort in Date
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>(tabResults.getModel());
+        sorter.setComparator(7, (Date s1, Date s2) -> s1.compareTo(s2));
+        sorter.setComparator(10, (Date s1, Date s2) -> s1.compareTo(s2));
+        sorter.setComparator(12, (Date s1, Date s2) -> s1.compareTo(s2));
+        tabResults.setRowSorter(sorter);
+    }
+
     @Action(block = Task.BlockingScope.ACTION)
     public Task filterAction() {
         return new FilterActionTask(Application.getInstance(WeighBridgeApp.class));
@@ -266,6 +286,7 @@ private void dpDateFromPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN
         protected void finished() {
             setMessage(resourceMapMsg.getString("msg.finished"));
             WeighBridgeApp.getApplication().bindJTableModel(tabResults, wtDatas, wtColNames, wtColTypes, editable);
+            setTableRender();
         }
 
         @Override
@@ -309,6 +330,7 @@ private void dpDateFromPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN
                     editable[i] = false;
                 }
                 WeighBridgeApp.getApplication().bindJTableModel(tabResults, wtDatas, wtColNames, wtColTypes, editable);
+                setTableRender();
                 setProgress(4, 0, 4);
 
                 Map<String, Object> params = dailyReportController.getParamsReport(dpDateFrom, dpDateTo);
