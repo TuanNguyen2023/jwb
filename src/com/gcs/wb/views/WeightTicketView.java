@@ -2988,7 +2988,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     if (purchaseOrder != null && weightTicket.getMode().equals("OUT_SLOC_SLOC")) {
                         objBapi = getGiMB1BBapi(weightTicket);
                         objBapi_Po = getGrPoMigoBapi(weightTicket, purchaseOrder);
-                        if (weightTicket.getPosto() != null) {
+                        if (!StringUtil.isEmptyString(weightTicket.getPosto())) {
                             purchaseOrder = purchaseOrderRepository.findByPoNumber(weightTicket.getPosto());
                             objBapi_Posto = getGrPoMigoBapi(weightTicket, purchaseOrder);
                         }
