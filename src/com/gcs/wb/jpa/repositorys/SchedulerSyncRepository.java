@@ -24,7 +24,7 @@ public class SchedulerSyncRepository {
     private Logger logger = Logger.getLogger(this.getClass());
     EntityManager entityManager = JPAConnector.getInstance();
     EntityTransaction entityTransaction = entityManager.getTransaction();
-        
+
     public SchedulerSync findByParamMandtWplant(String mandt, String wplant) {
         SchedulerSync result = null;
         try {
@@ -43,24 +43,32 @@ public class SchedulerSyncRepository {
 
         return result;
     }
-    
+
     public synchronized void updateLastSync(SchedulerSync ss, boolean isAuto) {
         SchedulerSync schedulerSync;
         entityManager = JPAConnector.getInstance();
         entityTransaction = entityManager.getTransaction();
         schedulerSync = findByParamMandtWplant(ss.getMandt(), ss.getWplant());
-        if (isAuto) {
-            schedulerSync.setLastAutoSync(ss.getLastAutoSync());
-            schedulerSync.setAutoSyncStatus(ss.getAutoSyncStatus());
-        } else {
-            schedulerSync.setLastManualSync(ss.getLastManualSync());
-            schedulerSync.setManualSyncStatus(ss.getManualSyncStatus());
+        if (schedulerSync != null) {
+            if (isAuto) {
+                schedulerSync.setLastAutoSync(ss.getLastAutoSync());
+                schedulerSync.setAutoSyncStatus(ss.getAutoSyncStatus());
+            } else {
+                schedulerSync.setLastManualSync(ss.getLastManualSync());
+                schedulerSync.setManualSyncStatus(ss.getManualSyncStatus());
+            }
         }
+
         try {
             if (!entityTransaction.isActive()) {
                 entityTransaction.begin();
             }
-            entityManager.merge(schedulerSync);
+
+            if (schedulerSync == null) {
+                entityManager.persist(ss);
+            } else {
+                entityManager.merge(schedulerSync);
+            }
             entityTransaction.commit();
             entityManager.clear();
         } catch (Exception ex) {
