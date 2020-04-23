@@ -73,4 +73,19 @@ public class BatchStockRepository {
 
         return false;
     }
+
+    public List<BatchStock> getListBatchStock(String mandt, String wplant) {
+        List<BatchStock> list = new ArrayList<>();
+        try {
+            TypedQuery<BatchStock> typedQuery = entityManager.createNamedQuery("BatchStock.findByMandtWplant", BatchStock.class);
+            typedQuery.setParameter("mandt", mandt);
+            typedQuery.setParameter("wplant", wplant);
+            list = typedQuery.getResultList();
+        } catch (Exception ex) {
+            logger.error(null, ex);
+            ExceptionUtil.checkDatabaseDisconnectedException(ex);
+        }
+
+        return list;
+    }
 }

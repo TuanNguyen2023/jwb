@@ -481,6 +481,66 @@ public class SAPService {
     }
 
     /**
+     * sync Batch Stocks
+     *
+     * @param lgortSloc
+     * @param matnr
+     * @param dbBatchStocks
+     */
+    public void syncBatchStocks(String lgortSloc, String matnr, List<BatchStock> dbBatchStocks) {
+        entityTransaction = entityManager.getTransaction();
+
+        // get data SAP
+        BatchStocksGetListBapi bBatch = new BatchStocksGetListBapi();
+        bBatch.setIdMandt(configuration.getSapClient());
+        bBatch.setIdWerks(configuration.getWkPlant());
+        bBatch.setIdLgort(lgortSloc);
+        bBatch.setIdMatnr(matnr);
+        try {
+            logger.info("[SAP] Get list Batch Stock: " + bBatch.toString());
+            if (interactiveObject == InteractiveObject.USER) {
+                session.execute(bBatch);
+            } else {
+                session.executeInBackground(bBatch);
+            }
+
+            List<BatchStock> sapBatchStocks = new ArrayList<>();
+            for (BatchStocksStructure b : bBatch.getBatchStocks()) {
+                BatchStock bs = new BatchStock(configuration.getSapClient(), configuration.getWkPlant(), b.getLgort(), b.getMatnr(), b.getCharg());
+                bs.setLvorm(b.getLvorm() == null || b.getLvorm().trim().isEmpty() ? ' ' : b.getLvorm().charAt(0));
+
+                sapBatchStocks.add(bs);
+            }
+
+            //sync data
+            if (!entityTransaction.isActive()) {
+                entityTransaction.begin();
+            }
+
+            //case persit/merge
+            for (BatchStock bs : sapBatchStocks) {
+                int index = dbBatchStocks.indexOf(bs);
+                if (index == -1) {
+                    entityManager.persist(bs);
+                } else {
+                    bs.setId(dbBatchStocks.get(index).getId());
+                    entityManager.merge(bs);
+                }
+            }
+
+            entityTransaction.commit();
+            entityManager.clear();
+        } catch (Exception ex) {
+            logger.error(ex);
+            if (entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
+
+            throw ex;
+        }
+    }
+
+    /**
      * get data Customer detail
      *
      * @param kunnr
@@ -1117,41 +1177,37 @@ public class SAPService {
     }
 
     public void syncPartnerDatas() {
-        List<Partner> partners = getListPartner();
+        List<Partner> sapPartners = getListPartner();
+        List<Partner> dbPartners = partnerRepository.getListPartner();
 
-        partners.forEach(sapPartner -> {
-            try {
-                Partner partner = partnerRepository.findPartner(
-                        configuration.getSapClient(),
-                        sapPartner.getKunnr(),
-                        sapPartner.getVkorg(),
-                        sapPartner.getVtweg(),
-                        sapPartner.getSpart(),
-                        sapPartner.getParvw(),
-                        sapPartner.getParza()
-                );
+        try {
+            if (!entityTransaction.isActive()) {
+                entityTransaction.begin();
+            }
 
-                if (!entityTransaction.isActive()) {
-                    entityTransaction.begin();
-                }
-
-                if (partner == null) {
+            sapPartners.forEach(sapPartner -> {
+                int index = dbPartners.indexOf(sapPartner);
+                if (index == -1) {
                     sapPartner.setMandt(configuration.getSapClient());
                     sapPartner.setCreatedDate(new Date());
                     entityManager.persist(sapPartner);
                 } else {
+                    Partner partner = dbPartners.get(index);
                     partner.setKunn2(sapPartner.getKunn2());
-                    partner.setUpdatedDate(new Date());
                     entityManager.merge(partner);
                 }
+            });
 
-                entityTransaction.commit();
-                entityManager.clear();
-            } catch (Exception ex) {
-                logger.error(ex);
-                throw ex;
+            entityTransaction.commit();
+            entityManager.clear();
+        } catch (Exception ex) {
+            if (entityTransaction.isActive()) {
+                entityTransaction.rollback();
             }
-        });
+
+            logger.error(ex);
+            throw ex;
+        }
     }
 
     public SaleOrderGetDetailBapi getSalesOrderDetail(String soNumber) {

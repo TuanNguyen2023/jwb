@@ -8,6 +8,7 @@ package com.gcs.wb.service;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.bapi.service.SAPService;
 import com.gcs.wb.base.constant.Constants.InteractiveObject;
+import com.gcs.wb.jpa.entity.BatchStock;
 import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.SAPSetting;
@@ -53,6 +54,9 @@ public class SyncMasterDataService {
     }
 
     public void syncMasterData() throws Exception {
+        String mandt = configuration.getSapClient();
+        String wplant = configuration.getWkPlant();
+
         logger.info("Sync master data is processing...");
 
         logger.info("Sync SAP setting...");
@@ -66,15 +70,14 @@ public class SyncMasterDataService {
         List<Material> materials = syncMaterial();
 
         logger.info("Sync sloc...");
-        List<SLoc> slocs = syncSloc();
+        syncSloc();
 
         logger.info("Sync batch stock...");
-        if (!materials.isEmpty() && !slocs.isEmpty()) {
-            for (SLoc sloc : slocs) {
-                for (Material material : materials) {
-                    syncBatchStock(sloc.getLgort(), material.getMatnr());
-                }
-            }
+        if (!materials.isEmpty()) {
+            List<BatchStock> dbBatchStocks = batchStockRepository.getListBatchStock(mandt, wplant);
+            materials.forEach((material) -> {
+                syncBatchStock(material.getLgort(), material.getMatnr(), dbBatchStocks);
+            });
         }
 
         logger.info("Sync PO, POSTO...");
@@ -117,19 +120,15 @@ public class SyncMasterDataService {
         }
 
         logger.info("Sync sloc...");
-        List<SLoc> slocs = new ArrayList<>();
         if (!sLocRepository.hasData(mandt, wplant)) {
-            slocs = syncSloc();
+            syncSloc();
         }
 
         logger.info("Sync batch stock...");
-        if (!batchStockRepository.hasData(mandt, wplant)) {
-            if (!materials.isEmpty() && !slocs.isEmpty()) {
-                for (SLoc sloc : slocs) {
-                    for (Material material : materials) {
-                        syncBatchStock(sloc.getLgort(), material.getMatnr());
-                    }
-                }
+        List<BatchStock> dbBatchStocks = batchStockRepository.getListBatchStock(mandt, wplant);
+        if (dbBatchStocks.isEmpty()) {
+            for (Material material : materials) {
+                syncBatchStock(material.getLgort(), material.getMatnr(), dbBatchStocks);
             }
         }
 
@@ -172,8 +171,8 @@ public class SyncMasterDataService {
         return sapService.syncSloc();
     }
 
-    public void syncBatchStock(String lgort, String matnr) {
-        sapService.syncBatchStocks(lgort, matnr);
+    public void syncBatchStock(String lgort, String matnr, List<BatchStock> dbBatchStocks) {
+        sapService.syncBatchStocks(lgort, matnr, dbBatchStocks);
     }
 
     // sync for offline
