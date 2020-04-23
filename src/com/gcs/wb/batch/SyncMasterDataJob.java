@@ -50,6 +50,7 @@ public class SyncMasterDataJob implements Job {
         try {
             SyncMasterDataService syncMasterDataService = new SyncMasterDataService(interactiveObject);
             syncMasterDataService.syncMasterData();
+            syncMasterDataService.handleRefreshApplication();
 
             schedulerSync.setAutoSyncStatus(SchedulerSync.SYNC_COMPLETED);
         } catch (Exception ex) {

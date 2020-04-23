@@ -33,6 +33,7 @@ public class SchedulerSync implements Serializable{
     public static final String SYNC_COMPLETED = "COMPLETED";
     public static final String SYNC_ERROR = "ERROR";
     public static final String SYNC_IN_PROGRESS = "INPROGRESS";
+    public static final String SYNC_CANCELED = "CANCELED";
     public static final int AN_HOUR = 3600000;
     
     private static final long serialVersionUID = 1L;

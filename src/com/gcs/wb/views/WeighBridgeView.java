@@ -384,7 +384,7 @@ public class WeighBridgeView extends FrameView {
                 .addComponent(txt_status)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblOffline)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 252, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 345, Short.MAX_VALUE)
                 .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addComponent(statusPanelSeparator, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 640, Short.MAX_VALUE)
@@ -669,6 +669,8 @@ public class WeighBridgeView extends FrameView {
 
     private class SyncMasterDataTask extends Task<Object, Void> {
 
+        SyncMasterDataService syncMasterDataService;
+
         SyncMasterDataTask(Application app) {
             super(app);
         }
@@ -690,12 +692,10 @@ public class WeighBridgeView extends FrameView {
                         JDialog.setDefaultLookAndFeelDecorated(true);
                         int response = JOptionPane.showConfirmDialog(null, resourceMapMsg.getString("msg.manualSyncDenied"), "Confirm",
                                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-                        if (response == JOptionPane.NO_OPTION) {
+                        if (response == JOptionPane.NO_OPTION || response == JOptionPane.CLOSED_OPTION) {
                             return null;
                         } else if (response == JOptionPane.YES_OPTION) {
                             allowToSync = true;
-                        } else if (response == JOptionPane.CLOSED_OPTION) {
-                            return null;
                         }
                     }
                 } else {
@@ -716,7 +716,7 @@ public class WeighBridgeView extends FrameView {
                 showSyncingDialog();
 
                 setStep(1, resourceMapMsg.getString("msg.isSyncMasterData"));
-                SyncMasterDataService syncMasterDataService = new SyncMasterDataService();
+                syncMasterDataService = new SyncMasterDataService();
                 syncMasterDataService.syncMasterData();
                 return null;  // return your result
             }
@@ -741,6 +741,8 @@ public class WeighBridgeView extends FrameView {
             } else {
                 setStep(2, resourceMapMsg.getString("msg.syncMasterDataCanceled"));
             }
+
+            syncMasterDataService.handleRefreshApplication();
         }
 
         @Override
@@ -768,38 +770,38 @@ public class WeighBridgeView extends FrameView {
             }
             setProgress(step, 1, 2);
         }
-    }
 
-    private void showSyncingDialog() {
-        syncDialogthread = new Thread() {
-            @Override
-            public void run() {
-                JButton btnCancel = new JButton("Thoát");
-                btnCancel.addMouseListener(new MouseAdapter() {
+        private void showSyncingDialog() {
+            syncDialogthread = new Thread() {
+                @Override
+                public void run() {
+                    JButton btnCancel = new JButton("Thoát");
+                    btnCancel.addMouseListener(new MouseAdapter() {
 
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        schedulerSync.setManualSyncStatus(SchedulerSync.SYNC_ERROR);
-                        schedulerSyncRepository.updateLastSync(schedulerSync, false);
-                        syncDialog.setVisible(false);
-                        syncDialog = null;
-                        allowToSync = false;
-                        WeighBridgeApp.getApplication().refreshApplicationView();
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                            cancel(true);
 
-                    }
-                });
-                Object[] options = {btnCancel};
-                String message = "Dữ liệu đang được đồng bộ...";
-                String title = "Đồng bộ dữ liệu";
-                JOptionPane pane = new JOptionPane(message, JOptionPane.QUESTION_MESSAGE, JOptionPane.INFORMATION_MESSAGE, busyIcons[0], options);
-                syncDialog = pane.createDialog(WeighBridgeApp.getApplication().getMainFrame(), title);
-                syncDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-                syncDialog.setVisible(true);
-            }
-        };
+                            schedulerSync.setManualSyncStatus(SchedulerSync.SYNC_CANCELED);
+                            schedulerSyncRepository.updateLastSync(schedulerSync, false);
+                            syncDialog.setVisible(false);
+                            syncDialog = null;
+                            allowToSync = false;
+                            syncMasterDataService.handleRefreshApplication();
+                        }
+                    });
+                    Object[] options = {btnCancel};
+                    String message = "Dữ liệu đang được đồng bộ...";
+                    String title = "Đồng bộ dữ liệu";
+                    JOptionPane pane = new JOptionPane(message, JOptionPane.QUESTION_MESSAGE, JOptionPane.INFORMATION_MESSAGE, busyIcons[0], options);
+                    syncDialog = pane.createDialog(WeighBridgeApp.getApplication().getMainFrame(), title);
+                    syncDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+                    syncDialog.setVisible(true);
+                }
+            };
 
-        syncDialogthread.start();
-
+            syncDialogthread.start();
+        }
     }
 
     // </editor-fold>

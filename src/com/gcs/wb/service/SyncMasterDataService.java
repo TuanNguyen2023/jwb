@@ -93,9 +93,6 @@ public class SyncMasterDataService {
         syncPartner();
 
         logger.info("Sync master data is finished...");
-
-        logger.info("Confirm refresh app...");
-        handleRefreshApplication();
     }
 
     public void syncMasterDataWhenLogin() throws Exception {
@@ -156,48 +153,91 @@ public class SyncMasterDataService {
     }
 
     public SAPSetting syncSapSetting() {
-        return sapService.syncSapSetting(configuration.getSapClient(), configuration.getWkPlant());
+        try {
+            return sapService.syncSapSetting(configuration.getSapClient(), configuration.getWkPlant());
+        } catch (Exception ex) {
+            logger.error(ex);
+            return null;
+        }
     }
 
     public void syncVendor() {
-        sapService.syncVendor();
+        try {
+            sapService.syncVendor();
+        } catch (Exception ex) {
+            logger.error(ex);
+        }
     }
 
     public List<Material> syncMaterial() {
-        return sapService.syncMaterial();
+        try {
+            return sapService.syncMaterial();
+        } catch (Exception ex) {
+            logger.error(ex);
+            return new ArrayList();
+        }
     }
 
-    public List<SLoc> syncSloc() {
-        return sapService.syncSloc();
+    public void syncSloc() {
+        try {
+            sapService.syncSloc();
+        } catch (Exception ex) {
+            logger.error(ex);
+        }
     }
 
     public void syncBatchStock(String lgort, String matnr, List<BatchStock> dbBatchStocks) {
-        sapService.syncBatchStocks(lgort, matnr, dbBatchStocks);
+        try {
+            sapService.syncBatchStocks(lgort, matnr, dbBatchStocks);
+        } catch (Exception ex) {
+            logger.error(ex);
+        }
     }
 
     // sync for offline
-    public void syncPoPostoDatas() throws Exception {
-        sapService.syncPoPostoDatas();
+    public void syncPoPostoDatas() {
+        try {
+            sapService.syncPoPostoDatas();
+        } catch (Exception ex) {
+            logger.error(ex);
+        }
     }
 
     public void syncSoDatas() {
-        sapService.syncSoDatas();
+        try {
+            sapService.syncSoDatas();
+        } catch (Exception ex) {
+            logger.error(ex);
+        }
     }
 
     public void syncCustomer() {
-        sapService.syncCustomer();
+        try {
+            sapService.syncCustomer();
+        } catch (Exception ex) {
+            logger.error(ex);
+        }
     }
 
     public void syncPartner() {
-        sapService.syncPartnerDatas();
+        try {
+            sapService.syncPartnerDatas();
+        } catch (Exception ex) {
+            logger.error(ex);
+        }
     }
 
     public void handleRefreshApplication() {
+        logger.info("Confirm refresh app...");
+
         int answer = JOptionPane.showConfirmDialog(WeighBridgeApp.getApplication().getMainFrame(),
                 "Đồng bộ dữ liệu thành công. Cập nhật lại ứng dụng?", "Đồng bộ dữ liệu", JOptionPane.YES_NO_OPTION);
 
         if (answer == JOptionPane.YES_OPTION) {
+            logger.info("Refresh app: yes");
             WeighBridgeApp.getApplication().refreshApplicationView();
+        } else {
+            logger.info("Refresh app: no");
         }
     }
 }

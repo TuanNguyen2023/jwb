@@ -326,7 +326,7 @@
                   <Component id="txt_status" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="lblOffline" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="252" max="32767" attributes="0"/>
+                  <EmptySpace pref="345" max="32767" attributes="0"/>
                   <Component id="progressBar" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
