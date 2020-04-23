@@ -3838,7 +3838,7 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
                 String trailerNo = txtTrailerNoN.getText().trim().toUpperCase();
                 trailerNo = trailerNo.replace("-", "").replace(".", "");
                 traid = StringUtil.correctPlateNo(traid).toUpperCase();
-                if (traid.isEmpty() || (!traid.isEmpty() && !traid.startsWith(plateNo))) {
+                if (traid.isEmpty() || (!traid.isEmpty() && !(traid.split("\\|", 2)[0]).equals(plateNo))) {
                     String plateName = "xe";
                     if (modeDetail == MODE_DETAIL.OUT_SELL_WATERWAY) {
                         plateName = "ghe";
