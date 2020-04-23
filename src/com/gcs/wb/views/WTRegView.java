@@ -83,7 +83,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
     private BigDecimal numCheckWeight = BigDecimal.ZERO;
     private String plateNoValidDO = "";
     private String trailerNoValidDO = "";
-    private boolean isValidPlateNo = false;
+    private boolean isValidPlateNo = true;
     private boolean isValidTrailerNo = true;
     private String checkedCharg = "";
     private String validSO = null;
@@ -4516,7 +4516,8 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
         isValidVendorLoad = false;
         isValidVendorTransport = false;
         plateNoValidDO = "";
-        isValidPlateNo = false;
+        isValidPlateNo = true;
+        isValidTrailerNo = true;
         checkedCharg = "";
         cleanAudit();
 
