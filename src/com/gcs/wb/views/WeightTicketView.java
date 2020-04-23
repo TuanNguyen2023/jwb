@@ -3580,6 +3580,11 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             }
 
             entityManager.merge(weightTicket);
+
+            if (offlineMode) {
+                outbDel_list.forEach(t -> entityManager.merge(t));
+            }
+
             entityManager.getTransaction().commit();
             entityManager.clear();
             if (completed) {
