@@ -8,7 +8,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class FilterEditor<T> extends BasicComboBoxEditor {
-    private JTextField filterText = new JTextField(50);
+    private JTextField filterText = new JTextField(76);
     private String text = "";
     boolean editing;
     private Function<T, String> displayTextFunction;
@@ -53,6 +53,7 @@ public class FilterEditor<T> extends BasicComboBoxEditor {
             editing = false;
             editingChangeListener.accept(false);
         }
+        filterText.setCaretPosition(0);
     }
 
     @Override

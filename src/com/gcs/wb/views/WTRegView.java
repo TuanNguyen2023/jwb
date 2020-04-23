@@ -16,6 +16,7 @@ import com.gcs.wb.base.enums.ModeEnum;
 import com.gcs.wb.base.enums.StatusEnum;
 import com.gcs.wb.base.comboboxfilter.ComboBoxFilterDecorator;
 import com.gcs.wb.base.comboboxfilter.CustomComboRenderer;
+import com.gcs.wb.base.comboboxfilter.FilterEditor;
 import com.gcs.wb.base.comboboxfilter.HtmlHighlighter;
 import com.gcs.wb.base.util.DateUtil;
 import com.gcs.wb.base.util.ExceptionUtil;
@@ -3037,7 +3038,32 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
                 break;
         }
 
+        resetAllComboboxCaret();
         btnSave.setEnabled(isValid);
+    }
+
+    private void resetComboboxCaret(JComboBox cbx) {
+        if (cbx.getEditor() instanceof FilterEditor ) {
+            FilterEditor fe = (FilterEditor)cbx.getEditor();
+            if (!fe.isEditing()) {
+                fe.getFilterText().setCaretPosition(0);
+            }
+        }
+    }
+
+    private void resetAllComboboxCaret() {
+        resetComboboxCaret(cbxBatchStock2N);
+        resetComboboxCaret(cbxBatchStockN);
+        resetComboboxCaret(cbxCustomerN);
+        resetComboboxCaret(cbxMaterialType);
+        resetComboboxCaret(cbxMaterialTypeN);
+        resetComboboxCaret(cbxModeSearch);
+        resetComboboxCaret(cbxShipToN);
+        resetComboboxCaret(cbxSloc2N);
+        resetComboboxCaret(cbxSlocN);
+        resetComboboxCaret(cbxStatus);
+        resetComboboxCaret(cbxVendorLoadingN);
+        resetComboboxCaret(cbxVendorTransportN);
     }
 
     private void validateButtonCheck(JButton button, boolean checkInput, boolean checkSAP) {

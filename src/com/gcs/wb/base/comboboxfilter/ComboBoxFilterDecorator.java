@@ -4,6 +4,8 @@ import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
@@ -13,6 +15,8 @@ import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 public class ComboBoxFilterDecorator<T> {
 
@@ -70,6 +74,7 @@ public class ComboBoxFilterDecorator<T> {
         });
 
         JTextField filterText = filterEditor.getFilterText();
+        filterEditor.getFilterText().setCaretPosition(0);
         filterText.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -83,6 +88,7 @@ public class ComboBoxFilterDecorator<T> {
 
             @Override
             public void focusLost(FocusEvent e) {
+                filterEditor.getFilterText().setCaretPosition(0);
             }
         });
 
