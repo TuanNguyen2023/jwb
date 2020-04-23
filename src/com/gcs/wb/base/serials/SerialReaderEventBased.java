@@ -10,6 +10,7 @@ import com.fazecast.jSerialComm.SerialPortEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
+import java.util.HashMap;
 import javax.swing.JFormattedTextField;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.jpa.entity.Configuration;
@@ -100,12 +101,17 @@ public class SerialReaderEventBased implements SerialPortDataListener {
             // delay
         }
     }
-    
-    @Override
-    public void serialEvent(SerialPortEvent event) {
-        Logger.getLogger(this.getClass()).error("@jSerialComm, Start.. " + event.getEventType());
-        if (event.getEventType() == SerialPort.LISTENING_EVENT_DATA_AVAILABLE) {
-            // we get here if data has been received
+
+    private int getSeqSignalSize() {
+        try {
+            String[] mettlerParam = configuration.getWb1MettlerParam().split("-");
+            return Integer.parseInt(mettlerParam[0]);
+        } catch (Exception e) {}
+        return 0;
+    }
+
+    private void processSignals() {
+        // we get here if data has been received
         byte[] readBuffer = new byte[20];
         try {
             // read data
@@ -114,10 +120,9 @@ public class SerialReaderEventBased implements SerialPortDataListener {
             }
             // print data
             String result = new String(readBuffer);
-           
+
             //result = result.replaceAll( "[^\\d]", "" );
             result = this.getWeight(result);
-            Logger.getLogger(this.getClass()).error("@jSerialComm, 7777777 weight bridge signal: " + result);
 
             BigInteger ival = BigInteger.ZERO;
             try {
@@ -130,7 +135,7 @@ public class SerialReaderEventBased implements SerialPortDataListener {
 
             //Times of delay to refresh screen
             if (this.count > this.times_delay) {
-                Logger.getLogger(this.getClass()).error("@jSerialComm, @" + result);
+                Logger.getLogger(this.getClass()).error("@jSerialComm, value@" + result);
                 WeighBridgeApp.getApplication().setLast(WeighBridgeApp.getApplication().getNow());
                 WeighBridgeApp.getApplication().setNow(ival);
                 if (WeighBridgeApp.getApplication().getNow().doubleValue() > WeighBridgeApp.getApplication().getMax().doubleValue()) {
@@ -142,12 +147,83 @@ public class SerialReaderEventBased implements SerialPortDataListener {
             } else {
                 this.count++;
             }
-            
+
             delay(configuration.getWb1Delay());
-            Logger.getLogger(this.getClass()).error("@jSerialComm, End.. " + event.getEventType());
         }
         catch (IOException ex) {
         }
-      }
+    }
+
+    // Fix for Tay Ninh - Tram Can Mo
+    private void processSeqSignals(int size) {
+        // we get here if data has been received
+        HashMap<Character, String> numbers = new HashMap<Character, String>();
+        String result = "";
+        StringBuilder buffer = new StringBuilder();
+        String[] arrNum = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "+", "."};
+
+        for (int i = 0; i < arrNum.length; i++) {
+            numbers.put(arrNum[i].charAt(0), String.valueOf(i));
+        }
+        numbers.put("+".charAt(0), "+");
+        numbers.put(".".charAt(0), ".");
+
+        try {
+            while (in.available() > 0) {
+                int b = in.read();
+                if (b == 0x0002 || b == 0x0003) // || b == 0x002E || !(b > 0x002F && b < 0x003A)) {
+                {
+                    buffer = new StringBuilder();
+                    continue;
+                }
+                Character c = (char) b;
+                String val = c.toString();
+                if (val == null) {
+                    buffer = new StringBuilder();
+                    continue;
+                }
+                buffer.append(val);
+                String strVal = buffer.toString().trim();
+                result = strVal;
+
+                if(strVal.length() >= size) {
+                    result = this.getWeight(result);
+                    BigInteger ival = BigInteger.ZERO;
+                    try {
+                        ival = new BigInteger(result);
+
+                    } catch (Exception ex) {
+                        ival = BigInteger.ZERO;
+                    }
+
+                    //Times of delay to refresh screen
+                    if (this.count > this.times_delay) {
+                        Logger.getLogger(this.getClass()).error("@jSerialComm, seq value@ " + result);
+                        WeighBridgeApp.getApplication().setLast(WeighBridgeApp.getApplication().getNow());
+                        WeighBridgeApp.getApplication().setNow(ival);
+                        if (WeighBridgeApp.getApplication().getNow().doubleValue() > WeighBridgeApp.getApplication().getMax().doubleValue()) {
+                            WeighBridgeApp.getApplication().setMax(WeighBridgeApp.getApplication().getNow());
+                        }
+                        control.setValue(ival);
+                        control.repaint(500);
+                        this.count = 0;
+                    } else {
+                        this.count++;
+                    }
+                }
+            }
+        } catch (IOException ex) {}
+    }
+
+    @Override
+    public void serialEvent(SerialPortEvent event) {
+        if (event.getEventType() == SerialPort.LISTENING_EVENT_DATA_AVAILABLE) {
+            int size = getSeqSignalSize();
+            if (size > 0) {
+                processSeqSignals(size);
+            } else {
+                processSignals();
+            }
+        }
     }
 }
