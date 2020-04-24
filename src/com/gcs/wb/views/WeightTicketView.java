@@ -2102,6 +2102,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         || Constants.WeighingProcess.MODE_DETAIL.OUT_SELL_WATERWAY.name().equals(weightTicket.getMode())
                         || Constants.WeighingProcess.MODE_DETAIL.OUT_PULL_STATION.name().equals(weightTicket.getMode())
                         || Constants.WeighingProcess.MODE_DETAIL.OUT_OTHER.name().equals(weightTicket.getMode())
+                        || Constants.WeighingProcess.MODE_DETAIL.IN_WAREHOUSE_TRANSFER.name().equals(weightTicket.getMode())
                         || Constants.WeighingProcess.MODE_DETAIL.IN_OTHER.name().equals(weightTicket.getMode())) {
                     txtSling.setText(NumberFormat.getInstance().format(weightTicket.getSling()));
                     txtPallet.setText(NumberFormat.getInstance().format(weightTicket.getPallet()));
