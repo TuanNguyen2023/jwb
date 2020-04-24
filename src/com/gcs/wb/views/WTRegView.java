@@ -1934,6 +1934,7 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
             Vendor transportVendor = (Vendor) cbxVendorTransportN.getSelectedItem();
 
             boolean isPlateNoValid;
+            isValidPlateNo = true;
             if (modeDetail == MODE_DETAIL.OUT_SLOC_SLOC) {
                 isPlateNoValid = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
             } else {
