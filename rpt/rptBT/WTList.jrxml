@@ -22,12 +22,12 @@
 	<field name="COLUMN_4" class="java.lang.String"/>
 	<field name="COLUMN_5" class="java.lang.String"/>
 	<field name="COLUMN_6" class="java.lang.Integer"/>
-	<field name="COLUMN_7" class="java.lang.String"/>
+	<field name="COLUMN_7" class="java.util.Date"/>
 	<field name="COLUMN_8" class="java.lang.Character"/>
 	<field name="COLUMN_9" class="java.lang.String"/>
-	<field name="COLUMN_10" class="java.lang.String"/>
+	<field name="COLUMN_10" class="java.util.Date"/>
 	<field name="COLUMN_11" class="java.lang.Double"/>
-	<field name="COLUMN_12" class="java.lang.String"/>
+	<field name="COLUMN_12" class="java.util.Date"/>
 	<field name="COLUMN_13" class="java.lang.Double"/>
 	<field name="COLUMN_14" class="java.math.BigDecimal"/>
 	<field name="COLUMN_15" class="java.lang.String"/>
@@ -297,7 +297,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{COLUMN_13}]]></textFieldExpression>
 			</textField>
-			<textField evaluationTime="Auto" pattern="" isBlankWhenNull="true">
+			<textField evaluationTime="Auto" pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="true">
 				<reportElement x="570" y="0" width="115" height="20"/>
 				<box leftPadding="2" rightPadding="2"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
@@ -329,7 +329,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{COLUMN_3}]]></textFieldExpression>
 			</textField>
-			<textField evaluationTime="Auto" pattern="" isBlankWhenNull="true">
+			<textField evaluationTime="Auto" pattern="dd/MM/yyyy HH:mm" isBlankWhenNull="true">
 				<reportElement x="1078" y="0" width="115" height="20"/>
 				<box leftPadding="2" rightPadding="2"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">

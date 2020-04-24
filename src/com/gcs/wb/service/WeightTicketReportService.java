@@ -83,18 +83,6 @@ public class WeightTicketReportService {
             WeightTicket item = weightTickets.get(i);
             WeightTicketDetail weightTicketDetail = item.getWeightTicketDetail();
             List<WeightTicketDetail> weightTicketDetails = item.getWeightTicketDetails();
-
-            String time = item.getCreatedTime().replaceAll(":", "");
-            String hh = time.substring(0, 2);
-            String mm = time.substring(2, 4);
-            String ss = time.substring(4, 6);
-            Calendar create_date = Calendar.getInstance();
-            create_date.setTime(item.getCreatedDate());
-            create_date.set(Calendar.HOUR_OF_DAY, Integer.valueOf(hh));
-            create_date.set(Calendar.MINUTE, Integer.valueOf(mm));
-            create_date.set(Calendar.SECOND, Integer.valueOf(ss));
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-            String createdDateTime = dateFormat.format(create_date.getTime());
             wtDatas[i][0] = i + 1;// item.getSeqByMonth();
             wtDatas[i][1] = item.getSeqDay();
             wtDatas[i][2] = item.getDriverName();
@@ -102,24 +90,16 @@ public class WeightTicketReportService {
             wtDatas[i][4] = item.getPlateNo();
             wtDatas[i][5] = item.getTrailerId();
             wtDatas[i][6] = item.getCreator();
-            wtDatas[i][7] = createdDateTime;
+            wtDatas[i][7] = item.getCreatedDatetime();
             wtDatas[i][8] = item.getRegType();
             String[] regItemDescriptions = weightTicketDetails.stream()
                     .map(t -> t.getRegItemDescription())
                     .filter(t -> t != null)
                     .toArray(String[]::new);
             wtDatas[i][9] = regItemDescriptions.length > 0 ? String.join(" - ", regItemDescriptions) : "";
-            if (item.getFTime() != null) {
-                wtDatas[i][10] = dateFormat.format(item.getFTime());
-            } else {
-                wtDatas[i][10] = item.getFTime();
-            }
+            wtDatas[i][10] = item.getFTime();
             wtDatas[i][11] = item.getFScale() == null ? item.getFScale() : item.getFScale().doubleValue() / 1000d;
-            if (item.getFTime() != null) {
-                wtDatas[i][12] = dateFormat.format(item.getFTime());
-            } else {
-                wtDatas[i][12] = item.getFTime();
-            }
+            wtDatas[i][12] = item.getFTime();
             wtDatas[i][13] = item.getSScale() == null ? item.getSScale() : item.getSScale().doubleValue() / 1000d;
             wtDatas[i][14] = item.getGQty();
             String[] doNums = weightTicketDetails.stream()

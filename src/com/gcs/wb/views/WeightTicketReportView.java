@@ -18,6 +18,7 @@ import org.jdesktop.application.Task;
 import com.gcs.wb.WeighBridgeApp;
 import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.base.enums.StatusEnum;
+import com.gcs.wb.base.util.DateUtil;
 import com.gcs.wb.base.util.ExceptionUtil;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.TransportAgent;
@@ -31,6 +32,8 @@ import com.gcs.wb.controller.WeightTicketReportController;
 import java.util.ArrayList;
 import java.util.Map;
 import javax.swing.JOptionPane;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import net.sf.jasperreports.engine.data.JRTableModelDataSource;
 import org.apache.log4j.Logger;
 import org.jdesktop.application.Application;
@@ -394,6 +397,19 @@ private void cbxModeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:
         return weighTicketReportController.getMaterialsModel();
     }
 
+    private void setTableRender() {
+        // format Date column
+        tabWeightTicket.getColumnModel().getColumn(7).setCellRenderer(DateUtil.getTableCellRendererForDate(true));
+        tabWeightTicket.getColumnModel().getColumn(10).setCellRenderer(DateUtil.getTableCellRendererForDate(true));
+        tabWeightTicket.getColumnModel().getColumn(12).setCellRenderer(DateUtil.getTableCellRendererForDate(true));
+        // setting sort in Date
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>(tabWeightTicket.getModel());
+        sorter.setComparator(7, (Date s1, Date s2) -> s1.compareTo(s2));
+        sorter.setComparator(10, (Date s1, Date s2) -> s1.compareTo(s2));
+        sorter.setComparator(12, (Date s1, Date s2) -> s1.compareTo(s2));
+        tabWeightTicket.setRowSorter(sorter);
+    }
+
     @Action(block = Task.BlockingScope.ACTION)
     public Task findWeightTickets() {
         return new FindWeightTicketsTask(Application.getInstance(WeighBridgeApp.class));
@@ -454,6 +470,8 @@ private void cbxModeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:
         @Override
         protected void finished() {
             WeighBridgeApp.getApplication().bindJTableModel(tabWeightTicket, wtDatas, wtColNames, wtColTypes, editable);
+            setTableRender();
+
             btnFind.setEnabled(true);
         }
     }
@@ -485,6 +503,7 @@ private void cbxModeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:
                     editable[i] = false;
                 }
                 WeighBridgeApp.getApplication().bindJTableModel(tabWeightTicket, wtDatas, wtColNames, wtColTypes, editable);
+                setTableRender();
 
                 Map<String, Object> params = weighTicketReportController.getParamReport(cbxTransportAgent, cbxMonth, cbxYear);
                 String reportName = weighTicketReportController.getReportName();
