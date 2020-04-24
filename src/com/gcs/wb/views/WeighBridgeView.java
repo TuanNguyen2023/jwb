@@ -670,6 +670,7 @@ public class WeighBridgeView extends FrameView {
     private class SyncMasterDataTask extends Task<Object, Void> {
 
         SyncMasterDataService syncMasterDataService;
+        boolean hasError = false;
 
         SyncMasterDataTask(Application app) {
             super(app);
@@ -717,7 +718,11 @@ public class WeighBridgeView extends FrameView {
 
                 setStep(1, resourceMapMsg.getString("msg.isSyncMasterData"));
                 syncMasterDataService = new SyncMasterDataService();
-                syncMasterDataService.syncMasterData();
+                hasError = syncMasterDataService.syncMasterData();
+                if (hasError) {
+                    throw new Exception();
+                }
+
                 return null;  // return your result
             }
         }
@@ -761,6 +766,10 @@ public class WeighBridgeView extends FrameView {
                     schedulerSync.setManualSyncStatus(SchedulerSync.SYNC_ERROR);
                     schedulerSyncRepository.updateLastSync(schedulerSync, false);
                 }
+            }
+
+            if (hasError) {
+                syncMasterDataService.handleRefreshApplication();
             }
         }
 

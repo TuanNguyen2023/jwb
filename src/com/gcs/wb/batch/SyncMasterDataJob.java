@@ -49,10 +49,14 @@ public class SyncMasterDataJob implements Job {
 
         try {
             SyncMasterDataService syncMasterDataService = new SyncMasterDataService(interactiveObject);
-            syncMasterDataService.syncMasterData();
+            boolean hasError = syncMasterDataService.syncMasterData();
             syncMasterDataService.handleRefreshApplication();
 
-            schedulerSync.setAutoSyncStatus(SchedulerSync.SYNC_COMPLETED);
+            if (hasError) {
+                schedulerSync.setAutoSyncStatus(SchedulerSync.SYNC_ERROR);
+            } else {
+                schedulerSync.setAutoSyncStatus(SchedulerSync.SYNC_COMPLETED);
+            }
         } catch (Exception ex) {
             logger.error(ex);
             schedulerSync.setAutoSyncStatus(SchedulerSync.SYNC_ERROR);
