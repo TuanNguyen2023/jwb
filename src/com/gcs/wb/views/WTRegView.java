@@ -4037,6 +4037,7 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
         @Override
         protected void succeeded(Object t) {
             isValidDO = true;
+            isValidPlateNo = true;
             validDO = txtDONumN.getText().trim();
             if (isEditMode) {
                 String strMatnr = matnrs.get(0);
