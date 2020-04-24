@@ -240,7 +240,11 @@ public class SyncMasterDataService {
     }
 
     public void handleRefreshApplication() {
-        handleRefreshApplication("Đồng bộ dữ liệu thành công. Cập nhật lại ứng dụng?");
+        handleRefreshApplication("Đồng bộ dữ liệu thành công.\nCập nhật lại ứng dụng?");
+    }
+
+    public void handleRefreshApplicationWithError() {
+        handleRefreshApplication("Đồng bộ dữ liệu không thành công.\nCập nhật lại ứng dụng?");
     }
 
     public void handleRefreshApplicationWithError(List<String> msgErrors) {

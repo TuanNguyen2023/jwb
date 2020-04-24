@@ -798,7 +798,8 @@ public class WeighBridgeView extends FrameView {
                             syncDialog.setVisible(false);
                             syncDialog = null;
                             allowToSync = false;
-                            syncMasterDataService.handleRefreshApplication();
+
+                            syncMasterDataService.handleRefreshApplicationWithError();
                         }
                     });
                     Object[] options = {btnCancel};
