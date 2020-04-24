@@ -23,6 +23,7 @@ import com.gcs.wb.jpa.repositorys.VendorRepository;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -43,7 +44,7 @@ public class SyncMasterDataService {
     private SAPService sapService;
     private Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
     public static Logger logger = Logger.getLogger(SyncMasterDataService.class);
-    boolean hasError = false;
+    List<String> msgErrors = new ArrayList<>();
 
     public SyncMasterDataService() {
         this.sapService = new SAPService();
@@ -53,8 +54,8 @@ public class SyncMasterDataService {
         this.sapService = new SAPService(interactiveObject);
     }
 
-    public boolean syncMasterData() throws Exception {
-        hasError = false;
+    public List<String> syncMasterData() throws Exception {
+        msgErrors.clear();
         String mandt = configuration.getSapClient();
         String wplant = configuration.getWkPlant();
 
@@ -94,7 +95,7 @@ public class SyncMasterDataService {
         syncPartner();
 
         logger.info("Sync master data is finished...");
-        return hasError;
+        return msgErrors;
     }
 
     public void syncMasterDataWhenLogin() throws Exception {
@@ -159,7 +160,7 @@ public class SyncMasterDataService {
             return sapService.syncSapSetting(configuration.getSapClient(), configuration.getWkPlant());
         } catch (Exception ex) {
             logger.error(ex);
-            hasError = true;
+            msgErrors.add("\"SAP Setting\"");
             return null;
         }
     }
@@ -169,7 +170,7 @@ public class SyncMasterDataService {
             sapService.syncVendor();
         } catch (Exception ex) {
             logger.error(ex);
-            hasError = true;
+            msgErrors.add("\"Vendor\"");
         }
     }
 
@@ -178,7 +179,7 @@ public class SyncMasterDataService {
             return sapService.syncMaterial();
         } catch (Exception ex) {
             logger.error(ex);
-            hasError = true;
+            msgErrors.add("\"Loại hàng\"");
             return new ArrayList();
         }
     }
@@ -188,7 +189,7 @@ public class SyncMasterDataService {
             sapService.syncSloc();
         } catch (Exception ex) {
             logger.error(ex);
-            hasError = true;
+            msgErrors.add("\"Kho\"");
         }
     }
 
@@ -197,7 +198,7 @@ public class SyncMasterDataService {
             sapService.syncBatchStocks(lgort, matnr, dbBatchStocks);
         } catch (Exception ex) {
             logger.error(ex);
-            hasError = true;
+            msgErrors.add("\"Lô\"");
         }
     }
 
@@ -207,7 +208,7 @@ public class SyncMasterDataService {
             sapService.syncPoPostoDatas();
         } catch (Exception ex) {
             logger.error(ex);
-            hasError = true;
+            msgErrors.add("\"PO/POSTO\"");
         }
     }
 
@@ -216,7 +217,7 @@ public class SyncMasterDataService {
             sapService.syncSoDatas();
         } catch (Exception ex) {
             logger.error(ex);
-            hasError = true;
+            msgErrors.add("\"SO\"");
         }
     }
 
@@ -225,7 +226,7 @@ public class SyncMasterDataService {
             sapService.syncCustomer();
         } catch (Exception ex) {
             logger.error(ex);
-            hasError = true;
+            msgErrors.add("\"Khách hàng\"");
         }
     }
 
@@ -234,15 +235,26 @@ public class SyncMasterDataService {
             sapService.syncPartnerDatas();
         } catch (Exception ex) {
             logger.error(ex);
-            hasError = true;
+            msgErrors.add("\"Nhà cung cấp\"");
         }
     }
 
     public void handleRefreshApplication() {
+        handleRefreshApplication("Đồng bộ dữ liệu thành công. Cập nhật lại ứng dụng?");
+    }
+
+    public void handleRefreshApplicationWithError(List<String> msgErrors) {
+        String msg = "Đồng bộ dữ liệu ";
+        msg += StringUtils.join(msgErrors, ", ") + " không thành công.\n";
+        msg += "Cập nhật lại ứng dụng?";
+        handleRefreshApplication(msg);
+    }
+
+    public void handleRefreshApplication(String msg) {
         logger.info("Confirm refresh app...");
 
         int answer = JOptionPane.showConfirmDialog(WeighBridgeApp.getApplication().getMainFrame(),
-                "Đồng bộ dữ liệu kết thúc. Cập nhật lại ứng dụng?", "Đồng bộ dữ liệu", JOptionPane.YES_NO_OPTION);
+                msg, "Đồng bộ dữ liệu", JOptionPane.YES_NO_OPTION);
 
         if (answer == JOptionPane.YES_OPTION) {
             logger.info("Refresh app: yes");

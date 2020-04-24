@@ -7,6 +7,7 @@ import com.gcs.wb.jpa.entity.SchedulerSync;
 import com.gcs.wb.jpa.repositorys.SchedulerSyncRepository;
 import com.gcs.wb.service.SyncMasterDataService;
 import java.util.Date;
+import java.util.List;
 import org.apache.log4j.Logger;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -49,13 +50,14 @@ public class SyncMasterDataJob implements Job {
 
         try {
             SyncMasterDataService syncMasterDataService = new SyncMasterDataService(interactiveObject);
-            boolean hasError = syncMasterDataService.syncMasterData();
-            syncMasterDataService.handleRefreshApplication();
+            List<String> msgErrors = syncMasterDataService.syncMasterData();
 
-            if (hasError) {
+            if (msgErrors.size() > 0) {
                 schedulerSync.setAutoSyncStatus(SchedulerSync.SYNC_ERROR);
+                syncMasterDataService.handleRefreshApplicationWithError(msgErrors);
             } else {
                 schedulerSync.setAutoSyncStatus(SchedulerSync.SYNC_COMPLETED);
+                syncMasterDataService.handleRefreshApplication();
             }
         } catch (Exception ex) {
             logger.error(ex);

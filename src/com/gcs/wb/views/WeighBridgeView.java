@@ -23,8 +23,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.swing.Timer;
 import javax.swing.Icon;
@@ -670,7 +672,7 @@ public class WeighBridgeView extends FrameView {
     private class SyncMasterDataTask extends Task<Object, Void> {
 
         SyncMasterDataService syncMasterDataService;
-        boolean hasError = false;
+        List<String> msgErrors = new ArrayList<>();
 
         SyncMasterDataTask(Application app) {
             super(app);
@@ -718,8 +720,8 @@ public class WeighBridgeView extends FrameView {
 
                 setStep(1, resourceMapMsg.getString("msg.isSyncMasterData"));
                 syncMasterDataService = new SyncMasterDataService();
-                hasError = syncMasterDataService.syncMasterData();
-                if (hasError) {
+                msgErrors = syncMasterDataService.syncMasterData();
+                if (msgErrors.size() > 0) {
                     throw new Exception();
                 }
 
@@ -768,8 +770,8 @@ public class WeighBridgeView extends FrameView {
                 }
             }
 
-            if (hasError) {
-                syncMasterDataService.handleRefreshApplication();
+            if (msgErrors.size() > 0) {
+                syncMasterDataService.handleRefreshApplicationWithError(msgErrors);
             }
         }
 
