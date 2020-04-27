@@ -102,8 +102,10 @@ public class ScaleMettler implements SerialPortDataListener {
     private void write(byte[] data) {
         try {
             out.write(data);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(ScaleMettler.class.getName()).error(null, ex);
+        } finally {
+            // NOP Logger.getLogger(ScaleMettler.class.getName()).error(null);
         }
     }
 
