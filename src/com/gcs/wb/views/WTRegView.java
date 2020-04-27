@@ -192,6 +192,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
             public void changedUpdate(DocumentEvent e) {
                 validateForm();
             }
+            
         });
     }
 
@@ -3013,7 +3014,7 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
                 isValid = validateInPoPurchase() && isValidPO && isValidWeight;
                 break;
             case IN_WAREHOUSE_TRANSFER:
-                isValid = validateInWarehouseTransfer() && isValidDO;
+                isValid = validateInWarehouseTransfer() && isValidDO && isValidPlateNo;
                 break;
             case IN_OTHER:
                 isValid = validateInOutOther();
@@ -3032,7 +3033,7 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
                 isValid = validateOutPullStation() && isValidPO && isValidPOSTO && isValidVendorLoad && isValidVendorTransport && isValidPlateNo;
                 break;
             case OUT_SELL_WATERWAY:
-                isValid = validateOutSellWateway() && isValidSO && isValidDO;
+                isValid = validateOutSellWateway() && isValidSO && isValidDO && isValidPlateNo;
                 break;
             case OUT_OTHER:
                 isValid = validateInOutOther();
@@ -3112,7 +3113,10 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
         boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
 
         String plateNo = txtPlateNoN.getText().trim();
-        isValidPlateNo = wtRegisValidation.validateVehicle(plateNo, lblPlateNoN);
+        boolean isValidPlateNoFormat = wtRegisValidation.validateVehicle(plateNo, lblPlateNoN);
+        if(!isValidPlateNo) {
+            lblPlateNoN.setForeground(Color.red);
+        }
 
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
         String salan = txtSalanN.getText().trim();
@@ -3132,7 +3136,7 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
 
         boolean isSlocValid = wtRegisValidation.validateCbxSelected(cbxSlocN.getSelectedIndex(), lblSlocN);
         return isTicketIdValid && isRegisterIdValid && isDriverNameValid
-                && isCMNDBLValid && isValidPlateNo && isSalanValid
+                && isCMNDBLValid && isValidPlateNoFormat && isSalanValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isSlocValid && isLoadSourceValid;
     }
@@ -3173,7 +3177,6 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
         boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
 
         String plateNo = txtPlateNoN.getText().trim();
-        lblPlateNoN.setForeground(Color.black);
         boolean isValidPlateNoFormat = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
         if(!isValidPlateNo) {
             lblPlateNoN.setForeground(Color.red);
@@ -3329,7 +3332,10 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
         boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
 
         String plateNo = txtPlateNoN.getText().trim();
-        isValidPlateNo = wtRegisValidation.validatePlateNoWater(plateNo, lblPlateNoN);
+        boolean isValidPlateNoFormat = wtRegisValidation.validatePlateNoWater(plateNo, lblPlateNoN);
+        if(!isValidPlateNo) {
+            lblPlateNoN.setForeground(Color.red);
+        }
 
         boolean isTrailerNoValid = wtRegisValidation.validateLength(txtTrailerNoN.getText(), lblTrailerNoN, 0, 10);
         String salan = txtSalanN.getText().trim();
@@ -3356,7 +3362,7 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
         boolean isPalletValid = wtRegisValidation.validateIntegerValue(txtPalletN.getText(), lblPalletN);
 
         return isRegisterIdValid && isDriverNameValid
-                && isCMNDBLValid && isValidPlateNo && isSalanValid
+                && isCMNDBLValid && isValidPlateNoFormat && isSalanValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isSlocValid && isSlingValid && isPalletValid;
     }
@@ -4031,6 +4037,7 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
         @Override
         protected void succeeded(Object t) {
             isValidDO = true;
+            isValidPlateNo = true;
             validDO = txtDONumN.getText().trim();
             if (isEditMode) {
                 String strMatnr = matnrs.get(0);
