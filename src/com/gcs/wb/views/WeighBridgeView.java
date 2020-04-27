@@ -55,6 +55,7 @@ public class WeighBridgeView extends FrameView {
     boolean allowToSync = true;
     Thread syncDialogthread;
     JDialog syncDialog;
+    SyncMasterDataTask syncTask = new SyncMasterDataTask(getApplication());
     private static final Object schedulerSyncLock = new Object();
 
     public WeighBridgeView(SingleFrameApplication app) {

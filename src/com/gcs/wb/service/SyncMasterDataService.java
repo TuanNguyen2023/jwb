@@ -45,6 +45,7 @@ public class SyncMasterDataService {
     private Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
     public static Logger logger = Logger.getLogger(SyncMasterDataService.class);
     List<String> msgErrors = new ArrayList<>();
+    boolean forceStop = false;
 
     public SyncMasterDataService() {
         this.sapService = new SAPService();
@@ -56,22 +57,23 @@ public class SyncMasterDataService {
 
     public List<String> syncMasterData() throws Exception {
         msgErrors.clear();
+        forceStop = false;
         String mandt = configuration.getSapClient();
         String wplant = configuration.getWkPlant();
 
-        logger.info("Sync master data is processing...");
+        logger.info("Sync master data is processing..." + (forceStop?" Canceled":""));
 
-        logger.info("Sync SAP setting...");
+        logger.info("Sync SAP setting..." + (forceStop?" Canceled":""));
         SAPSetting sapSetting = syncSapSetting();
         WeighBridgeApp.getApplication().setSapSetting(sapSetting);
 
-        logger.info("Sync vendor...");
+        logger.info("Sync vendor..." + (forceStop?" Canceled":""));
         syncVendor();
 
-        logger.info("Sync material...");
+        logger.info("Sync material..." + (forceStop?" Canceled":""));
         List<Material> materials = syncMaterial();
 
-        logger.info("Sync sloc...");
+        logger.info("Sync sloc..." + (forceStop?" Canceled":""));
         syncSloc();
 
         logger.info("Sync batch stock...");
@@ -82,16 +84,16 @@ public class SyncMasterDataService {
             });
         }
 
-        logger.info("Sync PO, POSTO...");
+        logger.info("Sync PO, POSTO..." + (forceStop?" Canceled":""));
         syncPoPostoDatas();
 
-        logger.info("Sync SO...");
+        logger.info("Sync SO..." + (forceStop?" Canceled":""));
         syncSoDatas();
 
-        logger.info("Sync customer...");
+        logger.info("Sync customer..." + (forceStop?" Canceled":""));
         syncCustomer();
 
-        logger.info("Sync Weigh Bridge vendor master data oubound...");
+        logger.info("Sync Weigh Bridge vendor master data oubound..." + (forceStop?" Canceled":""));
         syncPartner();
 
         logger.info("Sync master data is finished...");
@@ -159,6 +161,9 @@ public class SyncMasterDataService {
         try {
             return sapService.syncSapSetting(configuration.getSapClient(), configuration.getWkPlant());
         } catch (Exception ex) {
+            if (forceStop && ex instanceof NullPointerException) {
+                return null;
+            }
             logger.error(ex);
             msgErrors.add("\"SAP Setting\"");
             return null;
@@ -169,6 +174,9 @@ public class SyncMasterDataService {
         try {
             sapService.syncVendor();
         } catch (Exception ex) {
+            if (forceStop && ex instanceof NullPointerException) {
+                return;
+            }
             logger.error(ex);
             msgErrors.add("\"Vendor\"");
         }
@@ -178,6 +186,9 @@ public class SyncMasterDataService {
         try {
             return sapService.syncMaterial();
         } catch (Exception ex) {
+            if (forceStop && ex instanceof NullPointerException) {
+                return new ArrayList();
+            }
             logger.error(ex);
             msgErrors.add("\"Loại hàng\"");
             return new ArrayList();
@@ -188,6 +199,9 @@ public class SyncMasterDataService {
         try {
             sapService.syncSloc();
         } catch (Exception ex) {
+            if (forceStop && ex instanceof NullPointerException) {
+                return;
+            }
             logger.error(ex);
             msgErrors.add("\"Kho\"");
         }
@@ -197,6 +211,9 @@ public class SyncMasterDataService {
         try {
             sapService.syncBatchStocks(lgort, matnr, dbBatchStocks);
         } catch (Exception ex) {
+            if (forceStop && ex instanceof NullPointerException) {
+                return;
+            }
             logger.error(ex);
             msgErrors.add("\"Lô\"");
         }
@@ -207,6 +224,9 @@ public class SyncMasterDataService {
         try {
             sapService.syncPoPostoDatas();
         } catch (Exception ex) {
+            if (forceStop && ex instanceof NullPointerException) {
+                return;
+            }
             logger.error(ex);
             msgErrors.add("\"PO/POSTO\"");
         }
@@ -216,6 +236,9 @@ public class SyncMasterDataService {
         try {
             sapService.syncSoDatas();
         } catch (Exception ex) {
+            if (forceStop && ex instanceof NullPointerException) {
+                return;
+            }
             logger.error(ex);
             msgErrors.add("\"SO\"");
         }
@@ -225,6 +248,9 @@ public class SyncMasterDataService {
         try {
             sapService.syncCustomer();
         } catch (Exception ex) {
+            if (forceStop && ex instanceof NullPointerException) {
+                return;
+            }
             logger.error(ex);
             msgErrors.add("\"Khách hàng\"");
         }
@@ -234,27 +260,30 @@ public class SyncMasterDataService {
         try {
             sapService.syncPartnerDatas();
         } catch (Exception ex) {
+            if (forceStop && ex instanceof NullPointerException) {
+                return;
+            }
             logger.error(ex);
             msgErrors.add("\"Nhà cung cấp\"");
         }
     }
 
     public void handleRefreshApplication() {
-        handleRefreshApplication("Đồng bộ dữ liệu thành công.\nCập nhật lại ứng dụng?");
+        handleRefreshApplication("Đồng bộ dữ liệu thành công.\nCập nhật lại ứng dụng?", false);
     }
 
     public void handleRefreshApplicationWithError() {
-        handleRefreshApplication("Đồng bộ dữ liệu không thành công.\nCập nhật lại ứng dụng?");
+        handleRefreshApplication("Đồng bộ dữ liệu không thành công.\nCập nhật lại ứng dụng?", true);
     }
 
     public void handleRefreshApplicationWithError(List<String> msgErrors) {
         String msg = "Đồng bộ dữ liệu ";
         msg += StringUtils.join(msgErrors, ", ") + " không thành công.\n";
         msg += "Cập nhật lại ứng dụng?";
-        handleRefreshApplication(msg);
+        handleRefreshApplication(msg, false);
     }
 
-    public void handleRefreshApplication(String msg) {
+    public void handleRefreshApplication(String msg, boolean forceStop) {
         logger.info("Confirm refresh app...");
 
         int answer = JOptionPane.showConfirmDialog(WeighBridgeApp.getApplication().getMainFrame(),
@@ -262,6 +291,10 @@ public class SyncMasterDataService {
 
         if (answer == JOptionPane.YES_OPTION) {
             logger.info("Refresh app: yes");
+            if (forceStop) {
+                sapService = null;
+                this.forceStop = forceStop;
+            }   
             WeighBridgeApp.getApplication().refreshApplicationView();
         } else {
             logger.info("Refresh app: no");
