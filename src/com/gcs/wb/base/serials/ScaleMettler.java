@@ -85,9 +85,6 @@ public class ScaleMettler implements SerialPortDataListener {
                 }
             }
         }
-        write(new byte[]{0x53}); //S
-        write(new byte[]{0x0D}); //S
-        write(new byte[]{0x0A}); //S
 
         flush();
     }
@@ -104,7 +101,7 @@ public class ScaleMettler implements SerialPortDataListener {
             out.write(data);
         } catch (IOException ex) {
             Logger.getLogger(ScaleMettler.class.getName()).error(null, ex);
-        }
+        } 
     }
 
     public String hexToAscii(String hexStr) {
