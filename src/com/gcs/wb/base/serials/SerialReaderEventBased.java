@@ -10,11 +10,16 @@ import com.fazecast.jSerialComm.SerialPortEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.HashMap;
 import javax.swing.JFormattedTextField;
 import com.gcs.wb.WeighBridgeApp;
+import com.gcs.wb.base.util.StringUtil;
 import com.gcs.wb.jpa.entity.Configuration;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
+import java.util.stream.IntStream;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Handles the input coming from the serial port. A new line character
@@ -107,9 +112,59 @@ public class SerialReaderEventBased implements SerialPortDataListener {
             String[] mettlerParam = configuration.getWb1MettlerParam().split("-");
             return Integer.parseInt(mettlerParam[0]);
         } catch (Exception e) {}
+
         return 0;
     }
 
+    private int getSubSignalSize() {
+        try {
+            return configuration.getWb1MettlerParam().split("-").length;
+        } catch (Exception e) {}
+
+        return 0;
+    }
+
+    private String getSignalValue(String input) {
+        String l = ""; // left
+        String r = ""; // right
+        try {
+            String[] mettlerParam = configuration.getWb1MettlerParam().split("-");
+            l = mettlerParam[0];
+            r = mettlerParam[1];
+        } catch (Exception e) {
+            // NOP
+        }
+
+        // Ben Keo
+        if ("+".equals(l) && "k".equals(r)) {
+            try {
+                if (input.contains(r))
+                {
+                    return input.split(r)[0];
+                }
+            } catch (Exception ex) {
+                return null;
+            }
+        }
+
+        // Hiep Phuoc
+        if ("s".equals(l) && "k".equals(r)) {
+            try {
+                String strs[] = input.trim().split("\\s+");
+                int index = IntStream.range(0, strs.length)
+                        .filter(i -> ("k").equalsIgnoreCase(strs[i]))
+                        .findFirst()
+                        .orElse(-1);
+                return strs[index - 1];
+            } catch (Exception ex) {
+                return null;
+            }
+        }
+
+        return null;
+    }
+
+    // General not seq. signal
     private void processSignals() {
         // we get here if data has been received
         byte[] readBuffer = new byte[20];
@@ -154,7 +209,52 @@ public class SerialReaderEventBased implements SerialPortDataListener {
         }
     }
 
-    // Fix for Tay Ninh - Tram Can Mo
+    // Hiep Phuoc - Ben Keo
+    private void processSubSignals() {
+        // we get here if data has been received
+        try {
+            StringBuilder buffer = new StringBuilder();
+            while (in.available() > 0) {
+                int b = in.read();
+                if (b == 0x0002 || b == 0x0003) // || b == 0x002E || !(b > 0x002F && b < 0x003A)) {
+                {
+                    buffer = new StringBuilder();
+                    continue;
+                }
+                Character c = (char) b;
+                String val = c.toString();
+                if (val == null) {
+                    buffer = new StringBuilder();
+                    continue;
+                }
+                buffer.append(val);
+                String strVal = buffer.toString().trim();
+                String result = getSignalValue(strVal.trim());
+                if (StringUtil.isNotEmptyString(result)) {
+                    BigInteger ival = BigInteger.ZERO;
+                    try {
+                        ival = new BigInteger(result);
+
+                    } catch (Exception ex) {
+                        ival = BigInteger.ZERO;
+                    }
+
+                    Logger.getLogger(this.getClass()).error("@jSerialComm, value@" + result);
+                    WeighBridgeApp.getApplication().setLast(WeighBridgeApp.getApplication().getNow());
+                    WeighBridgeApp.getApplication().setNow(ival);
+                    if (WeighBridgeApp.getApplication().getNow().doubleValue() > WeighBridgeApp.getApplication().getMax().doubleValue()) {
+                        WeighBridgeApp.getApplication().setMax(WeighBridgeApp.getApplication().getNow());
+                    }
+                    control.setValue(ival);
+                    control.repaint(90);
+                }
+            }
+        }
+        catch (IOException ex) {
+        }
+    }
+
+    // Tay Ninh - Tram Can Mo
     private void processSeqSignals(int size) {
         // we get here if data has been received
         HashMap<Character, String> numbers = new HashMap<Character, String>();
@@ -184,10 +284,9 @@ public class SerialReaderEventBased implements SerialPortDataListener {
                 }
                 buffer.append(val);
                 String strVal = buffer.toString().trim();
-                result = strVal;
-
+                Logger.getLogger(this.getClass()).error("@jSerialComm, value@" + strVal);
                 if(strVal.length() >= size) {
-                    result = this.getWeight(result);
+                    result = this.getWeight(strVal);
                     BigInteger ival = BigInteger.ZERO;
                     try {
                         ival = new BigInteger(result);
@@ -198,7 +297,7 @@ public class SerialReaderEventBased implements SerialPortDataListener {
 
                     //Times of delay to refresh screen
                     if (this.count > this.times_delay) {
-                        Logger.getLogger(this.getClass()).error("@jSerialComm, seq value@ " + result);
+                        Logger.getLogger(this.getClass()).error("@jSerialComm, seq value@" + result);
                         WeighBridgeApp.getApplication().setLast(WeighBridgeApp.getApplication().getNow());
                         WeighBridgeApp.getApplication().setNow(ival);
                         if (WeighBridgeApp.getApplication().getNow().doubleValue() > WeighBridgeApp.getApplication().getMax().doubleValue()) {
@@ -221,6 +320,8 @@ public class SerialReaderEventBased implements SerialPortDataListener {
             int size = getSeqSignalSize();
             if (size > 0) {
                 processSeqSignals(size);
+            } else if (getSubSignalSize() != 0){
+                processSubSignals();
             } else {
                 processSignals();
             }
