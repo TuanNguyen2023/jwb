@@ -76,8 +76,8 @@ public class SyncMasterDataService {
         logger.info("Sync sloc..." + (forceStop?" Canceled":""));
         syncSloc();
 
-        logger.info("Sync batch stock...");
-        if (!materials.isEmpty()) {
+        logger.info("Sync batch stock..." + (forceStop?" Canceled":""));
+        if (!materials.isEmpty() && !forceStop) {
             List<BatchStock> dbBatchStocks = batchStockRepository.getListBatchStock(mandt, wplant);
             materials.forEach((material) -> {
                 syncBatchStock(material.getLgort(), material.getMatnr(), dbBatchStocks);
