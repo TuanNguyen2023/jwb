@@ -1332,9 +1332,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         txfInQty.setValue(null);
         txtInTime.setText(null);
         txfGoodsQty.setValue(null);
-        //  Temporary enable Accept Button
-//        btnAccept.setEnabled(true);
-        grbBridge.clearSelection();
         btnIScaleReset.setEnabled(false);
         setSaveNeeded(isValidated());
     }//GEN-LAST:event_btnIScaleResetActionPerformed
@@ -1343,9 +1340,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         txfOutQty.setValue(null);
         txtOutTime.setText(null);
         txfGoodsQty.setValue(null);
-        // enable button print
-        btnReprint.setEnabled(true);
-        grbBridge.clearSelection();
         btnOScaleReset.setEnabled(false);
         setSaveNeeded(isValidated());
     }//GEN-LAST:event_btnOScaleResetActionPerformed
@@ -1524,7 +1518,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 }
             }
         }
-        
+
         txfCurScale.setEditable(true);
         return new AcceptScaleTask(WeighBridgeApp.getApplication());
     }
@@ -2559,6 +2553,14 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 if (weightTicket.isPosted()) {
                     btnSave.setEnabled(false);
                 }
+            }
+
+            if (grbBridge.getSelection() == null) {
+                txfCurScale.setText("0");
+                txfCurScale.setValue(0);
+                txfCurScale.setEditable(false);
+
+                btnAccept.setEnabled(false);
             }
         }
     }
@@ -3698,7 +3700,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             WeighBridgeApp.getApplication().disconnectWB();
             formatter.applyPattern(WeighBridgeApp.DATE_TIME_DISPLAY_FORMAT);
             Date now = weightTicketController.getServerTime();
-            grbBridge.clearSelection();
             btnAccept.setEnabled(false);
             boolean checkVariant = false;
             if (isStage1()) {
