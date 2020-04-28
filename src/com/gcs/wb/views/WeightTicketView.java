@@ -3588,11 +3588,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
             entityManager.getTransaction().commit();
             entityManager.clear();
-            if (completed) {
-                if (!weightTicket.isDissolved() || weightTicket.isPosted()) {
-                    setMessage(resourceMapMsg.getString("msg.printing"));
-                    printWT(weightTicket, false);
-                }
+            if (!weightTicket.isDissolved() || weightTicket.isPosted()) {
+                setMessage(resourceMapMsg.getString("msg.printing"));
+                printWT(weightTicket, false);
             }
             btnSave.setEnabled(false);
             return null;
