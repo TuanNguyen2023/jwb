@@ -1284,8 +1284,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         config = WeighBridgeApp.getApplication().getConfig();
         configuration = config.getConfiguration();
         try {
-
-            btnAccept.setEnabled(WeighBridgeApp.getApplication().connectWB(
+            boolean serialConnected = WeighBridgeApp.getApplication().connectWB(
                     configuration.getWb1AutoSignal(),
                     configuration.getWb1Port(), //string
                     configuration.getWb1BaudRate(), //int 
@@ -1293,12 +1292,13 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     configuration.getWb1StopBit().shortValue(), //short 
                     configuration.getWb1ParityControl().shortValue(), //short
                     configuration.getWb1Mettler(),
-                    txfCurScale));
+                    txfCurScale);
 
+            btnAccept.setEnabled(serialConnected);
+            txfCurScale.setEditable(!configuration.getWb1AutoSignal());
             setSaveNeeded(isValidated());
 
         } catch (SerialPortInvalidPortException | IllegalPortException | IOException | TooManyListenersException ex) {
-
             java.util.logging.Logger.getLogger(WeightTicketView.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -1309,7 +1309,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         config = WeighBridgeApp.getApplication().getConfig();
         configuration = config.getConfiguration();
         try {
-            btnAccept.setEnabled(WeighBridgeApp.getApplication().connectWB(
+            boolean serialConnected = WeighBridgeApp.getApplication().connectWB(
                     configuration.getWb2AutoSignal(),
                     configuration.getWb2Port(), //string
                     configuration.getWb2BaudRate(), //int 
@@ -1317,7 +1317,10 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     configuration.getWb2StopBit().shortValue(), //short 
                     configuration.getWb2ParityControl().shortValue(), //short
                     configuration.getWb2Mettler(),
-                    txfCurScale));
+                    txfCurScale);
+
+            btnAccept.setEnabled(serialConnected);
+            txfCurScale.setEditable(!configuration.getWb2AutoSignal());
             setSaveNeeded(isValidated());
 
         } catch (SerialPortInvalidPortException | IllegalPortException | IOException | TooManyListenersException ex) {
@@ -1521,6 +1524,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 }
             }
         }
+        
+        txfCurScale.setEditable(true);
         return new AcceptScaleTask(WeighBridgeApp.getApplication());
     }
 
