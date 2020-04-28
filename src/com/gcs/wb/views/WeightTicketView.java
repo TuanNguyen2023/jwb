@@ -1295,13 +1295,13 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     txfCurScale);
 
             btnAccept.setEnabled(serialConnected);
-            txfCurScale.setEditable(!configuration.getWb1AutoSignal());
+            txfCurScale.setEditable(!configuration.getWb1AutoSignal() && serialConnected);
             setSaveNeeded(isValidated());
 
         } catch (SerialPortInvalidPortException | IllegalPortException | IOException | TooManyListenersException ex) {
             java.util.logging.Logger.getLogger(WeightTicketView.class.getName()).log(Level.SEVERE, null, ex);
+            txfCurScale.setEditable(false);
         }
-
 
     }//GEN-LAST:event_rbtBridge1ActionPerformed
 
@@ -1320,11 +1320,12 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     txfCurScale);
 
             btnAccept.setEnabled(serialConnected);
-            txfCurScale.setEditable(!configuration.getWb2AutoSignal());
+            txfCurScale.setEditable(!configuration.getWb1AutoSignal() && serialConnected);
             setSaveNeeded(isValidated());
 
         } catch (SerialPortInvalidPortException | IllegalPortException | IOException | TooManyListenersException ex) {
             java.util.logging.Logger.getLogger(WeightTicketView.class.getName()).log(Level.SEVERE, null, ex);
+            txfCurScale.setEditable(false);
         }
     }//GEN-LAST:event_rbtBridge2ActionPerformed
 
