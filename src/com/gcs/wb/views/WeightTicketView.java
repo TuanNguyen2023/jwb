@@ -1284,8 +1284,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         config = WeighBridgeApp.getApplication().getConfig();
         configuration = config.getConfiguration();
         try {
-
-            btnAccept.setEnabled(WeighBridgeApp.getApplication().connectWB(
+            boolean serialConnected = WeighBridgeApp.getApplication().connectWB(
                     configuration.getWb1AutoSignal(),
                     configuration.getWb1Port(), //string
                     configuration.getWb1BaudRate(), //int 
@@ -1293,15 +1292,16 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     configuration.getWb1StopBit().shortValue(), //short 
                     configuration.getWb1ParityControl().shortValue(), //short
                     configuration.getWb1Mettler(),
-                    txfCurScale));
+                    txfCurScale);
 
+            btnAccept.setEnabled(serialConnected);
+            txfCurScale.setEditable(!configuration.getWb1AutoSignal() && serialConnected);
             setSaveNeeded(isValidated());
 
         } catch (SerialPortInvalidPortException | IllegalPortException | IOException | TooManyListenersException ex) {
-
             java.util.logging.Logger.getLogger(WeightTicketView.class.getName()).log(Level.SEVERE, null, ex);
+            txfCurScale.setEditable(false);
         }
-
 
     }//GEN-LAST:event_rbtBridge1ActionPerformed
 
@@ -1309,7 +1309,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         config = WeighBridgeApp.getApplication().getConfig();
         configuration = config.getConfiguration();
         try {
-            btnAccept.setEnabled(WeighBridgeApp.getApplication().connectWB(
+            boolean serialConnected = WeighBridgeApp.getApplication().connectWB(
                     configuration.getWb2AutoSignal(),
                     configuration.getWb2Port(), //string
                     configuration.getWb2BaudRate(), //int 
@@ -1317,11 +1317,15 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     configuration.getWb2StopBit().shortValue(), //short 
                     configuration.getWb2ParityControl().shortValue(), //short
                     configuration.getWb2Mettler(),
-                    txfCurScale));
+                    txfCurScale);
+
+            btnAccept.setEnabled(serialConnected);
+            txfCurScale.setEditable(!configuration.getWb1AutoSignal() && serialConnected);
             setSaveNeeded(isValidated());
 
         } catch (SerialPortInvalidPortException | IllegalPortException | IOException | TooManyListenersException ex) {
             java.util.logging.Logger.getLogger(WeightTicketView.class.getName()).log(Level.SEVERE, null, ex);
+            txfCurScale.setEditable(false);
         }
     }//GEN-LAST:event_rbtBridge2ActionPerformed
 
@@ -1329,9 +1333,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         txfInQty.setValue(null);
         txtInTime.setText(null);
         txfGoodsQty.setValue(null);
-        //  Temporary enable Accept Button
-//        btnAccept.setEnabled(true);
-        grbBridge.clearSelection();
         btnIScaleReset.setEnabled(false);
         setSaveNeeded(isValidated());
     }//GEN-LAST:event_btnIScaleResetActionPerformed
@@ -1340,9 +1341,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         txfOutQty.setValue(null);
         txtOutTime.setText(null);
         txfGoodsQty.setValue(null);
-        // enable button print
-        btnReprint.setEnabled(true);
-        grbBridge.clearSelection();
         btnOScaleReset.setEnabled(false);
         setSaveNeeded(isValidated());
     }//GEN-LAST:event_btnOScaleResetActionPerformed
@@ -1521,6 +1519,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 }
             }
         }
+
+        txfCurScale.setEditable(true);
         return new AcceptScaleTask(WeighBridgeApp.getApplication());
     }
 
@@ -2555,6 +2555,14 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     btnSave.setEnabled(false);
                 }
             }
+
+            if (grbBridge.getSelection() == null) {
+                txfCurScale.setText("0");
+                txfCurScale.setValue(0);
+                txfCurScale.setEditable(false);
+
+                btnAccept.setEnabled(false);
+            }
         }
     }
 
@@ -3588,11 +3596,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
             entityManager.getTransaction().commit();
             entityManager.clear();
-            if (completed) {
-                if (!weightTicket.isDissolved() || weightTicket.isPosted()) {
-                    setMessage(resourceMapMsg.getString("msg.printing"));
-                    printWT(weightTicket, false);
-                }
+            if (!weightTicket.isDissolved() || weightTicket.isPosted()) {
+                setMessage(resourceMapMsg.getString("msg.printing"));
+                printWT(weightTicket, false);
             }
             btnSave.setEnabled(false);
             return null;
@@ -3695,7 +3701,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             WeighBridgeApp.getApplication().disconnectWB();
             formatter.applyPattern(WeighBridgeApp.DATE_TIME_DISPLAY_FORMAT);
             Date now = weightTicketController.getServerTime();
-            grbBridge.clearSelection();
             btnAccept.setEnabled(false);
             boolean checkVariant = false;
             if (isStage1()) {
