@@ -2557,12 +2557,11 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             }
 
             if (grbBridge.getSelection() == null) {
-                txfCurScale.setText("0");
-                txfCurScale.setValue(0);
                 txfCurScale.setEditable(false);
-
                 btnAccept.setEnabled(false);
             }
+            txfCurScale.setText("0");
+            txfCurScale.setValue(0);
         }
     }
 
