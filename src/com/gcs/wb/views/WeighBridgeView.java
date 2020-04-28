@@ -691,7 +691,6 @@ public class WeighBridgeView extends FrameView {
                     allowToSync = schedulerSync.isManualSyncAllowed();
                     if (!allowToSync) {
                         logger.info("The master data is syncing in another progress.");
-                        //JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.manualSyncDenied"));
                         JDialog.setDefaultLookAndFeelDecorated(true);
                         int response = JOptionPane.showConfirmDialog(null, resourceMapMsg.getString("msg.manualSyncDenied"), "Confirm",
                                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);

@@ -291,13 +291,13 @@ public class SyncMasterDataService {
 
         if (answer == JOptionPane.YES_OPTION) {
             logger.info("Refresh app: yes");
-            if (forceStop) {
-                sapService = null;
-                this.forceStop = forceStop;
-            }   
             WeighBridgeApp.getApplication().refreshApplicationView();
         } else {
             logger.info("Refresh app: no");
+        }
+        if (forceStop) {
+            sapService = null;
+            this.forceStop = forceStop;
         }
     }
 }
