@@ -33,12 +33,59 @@ public class SerialReaderEventBased implements SerialPortDataListener {
     private int times_delay;
     private int count;
     private Configuration configuration = WeighBridgeApp.getApplication().getConfig().getConfiguration();
+    private SignalType SIGNAL_TYPE = SignalType.NONE;
+    private int SIGNAL_SIZE = 0;
+
+    private enum SignalType {
+        SEQ("SEQ"),
+        PLUS("PLUS"),
+        MINUS("MINUS"),
+        SPACE("SPACE"),
+        NONE("NONE");
+
+        private final String type;
+
+        public String getType() {
+            return this.type;
+        }
+
+        private SignalType(String type) {
+            this.type = type;
+        }
+    }
 
     public SerialReaderEventBased(InputStream in, JFormattedTextField control) throws IOException {
         this.in = in;
         this.control = control;
         this.times_delay = WeighBridgeApp.TIME_DELAY;
         this.count = 0;
+        setSignalType();
+    }
+
+    private void setSignalType() {
+        if(StringUtil.isNotEmptyString(configuration.getWb1MettlerParam())) {
+            try {
+                String[] mettlerParam = configuration.getWb1MettlerParam().split("\\|");
+                if ("+".equals(mettlerParam[0])) {
+                    this.SIGNAL_TYPE = SignalType.PLUS;
+                    return;
+                }
+                if ("-".equals(mettlerParam[0])) {
+                    this.SIGNAL_TYPE = SignalType.MINUS;
+                    return;
+                }
+                if ("s".equals(mettlerParam[0])) {
+                    this.SIGNAL_TYPE = SignalType.SPACE;
+                    return;
+                }
+
+                this.SIGNAL_TYPE = SignalType.SEQ;
+                this.SIGNAL_SIZE = Integer.parseInt(mettlerParam[0].trim());
+
+            } catch (Exception e) {
+                // NOP
+            }
+        }
     }
 
     @Override
@@ -94,9 +141,6 @@ public class SerialReaderEventBased implements SerialPortDataListener {
             WeighBridgeApp.getApplication().setNow(WeighBridgeApp.getApplication().getLast());
         }
 
-
-
-
         return result;
     }
 
@@ -107,48 +151,35 @@ public class SerialReaderEventBased implements SerialPortDataListener {
         }
     }
 
-    private int getSeqSignalSize() {
-        try {
-            String[] mettlerParam = configuration.getWb1MettlerParam().split("-");
-            return Integer.parseInt(mettlerParam[0]);
-        } catch (Exception e) {}
-
-        return 0;
-    }
-
-    private int getSubSignalSize() {
-        try {
-            return configuration.getWb1MettlerParam().split("-").length;
-        } catch (Exception e) {}
-
-        return 0;
-    }
-
     private String getSignalValue(String input) {
-        String l = ""; // left
-        String r = ""; // right
-        try {
-            String[] mettlerParam = configuration.getWb1MettlerParam().split("-");
-            l = mettlerParam[0];
-            r = mettlerParam[1];
-        } catch (Exception e) {
-            // NOP
-        }
-
         // Ben Keo
-        if ("+".equals(l) && "k".equals(r)) {
+        if (SignalType.PLUS.equals(this.SIGNAL_TYPE)) {
             try {
-                if (input.contains(r))
+                if (input.contains("k"))
                 {
-                    return input.split(r)[0];
+                    return input.split("k")[0];
                 }
             } catch (Exception ex) {
                 return null;
             }
         }
 
+        // Binh Duong
+        if (SignalType.MINUS.equals(this.SIGNAL_TYPE)) {
+            try {
+                String strs[] = input.trim().split("\\s+");
+                int index = IntStream.range(0, strs.length)
+                        .filter(i -> ("kg").equalsIgnoreCase(strs[i]) && strs[i-2].contains(","))
+                        .findFirst()
+                        .orElse(-1);
+                return strs[index - 1];
+            } catch (Exception ex) {
+                return null;
+            }
+        }
+
         // Hiep Phuoc
-        if ("s".equals(l) && "k".equals(r)) {
+        if (SignalType.SPACE.equals(this.SIGNAL_TYPE)) {
             try {
                 String strs[] = input.trim().split("\\s+");
                 int index = IntStream.range(0, strs.length)
@@ -164,7 +195,7 @@ public class SerialReaderEventBased implements SerialPortDataListener {
         return null;
     }
 
-    // General not seq. signal
+    // Binh Duong
     private void processSignals() {
         // we get here if data has been received
         byte[] readBuffer = new byte[20];
@@ -177,31 +208,27 @@ public class SerialReaderEventBased implements SerialPortDataListener {
             String result = new String(readBuffer);
 
             //result = result.replaceAll( "[^\\d]", "" );
-            result = this.getWeight(result);
+            result = this.getSignalValue(result);
+            if (StringUtil.isNotEmptyString(result)) {
+                BigInteger ival = BigInteger.ZERO;
+                try {
+                    ival = new BigInteger(result);
 
-            BigInteger ival = BigInteger.ZERO;
-            try {
-                ival = new BigInteger(result);
+                } catch (Exception ex) {
+                    ival = BigInteger.ZERO;
+                }
+                //control.setValue(ival);
 
-            } catch (Exception ex) {
-                ival = BigInteger.ZERO;
-            }
-            //control.setValue(ival);
-
-            //Times of delay to refresh screen
-            if (this.count > this.times_delay) {
+                //Times of delay to refresh screen
                 WeighBridgeApp.getApplication().setLast(WeighBridgeApp.getApplication().getNow());
                 WeighBridgeApp.getApplication().setNow(ival);
                 if (WeighBridgeApp.getApplication().getNow().doubleValue() > WeighBridgeApp.getApplication().getMax().doubleValue()) {
                     WeighBridgeApp.getApplication().setMax(WeighBridgeApp.getApplication().getNow());
                 }
                 control.setValue(ival);
-                control.repaint(500);
+                control.repaint(90);
                 this.count = 0;
-            } else {
-                this.count++;
             }
-
             delay(configuration.getWb1Delay());
         }
         catch (IOException ex) {
@@ -237,14 +264,18 @@ public class SerialReaderEventBased implements SerialPortDataListener {
                     } catch (Exception ex) {
                         ival = BigInteger.ZERO;
                     }
+                    if (this.count > this.times_delay) {
+                        WeighBridgeApp.getApplication().setLast(WeighBridgeApp.getApplication().getNow());
+                        WeighBridgeApp.getApplication().setNow(ival);
+                        if (WeighBridgeApp.getApplication().getNow().doubleValue() > WeighBridgeApp.getApplication().getMax().doubleValue()) {
+                            WeighBridgeApp.getApplication().setMax(WeighBridgeApp.getApplication().getNow());
+                        }
+                        control.setValue(ival);
+                        control.repaint(90);
 
-                    WeighBridgeApp.getApplication().setLast(WeighBridgeApp.getApplication().getNow());
-                    WeighBridgeApp.getApplication().setNow(ival);
-                    if (WeighBridgeApp.getApplication().getNow().doubleValue() > WeighBridgeApp.getApplication().getMax().doubleValue()) {
-                        WeighBridgeApp.getApplication().setMax(WeighBridgeApp.getApplication().getNow());
+                    } else {
+                        this.count++;
                     }
-                    control.setValue(ival);
-                    control.repaint(90);
                 }
             }
         }
@@ -313,13 +344,20 @@ public class SerialReaderEventBased implements SerialPortDataListener {
     @Override
     public void serialEvent(SerialPortEvent event) {
         if (event.getEventType() == SerialPort.LISTENING_EVENT_DATA_AVAILABLE) {
-            int size = getSeqSignalSize();
-            if (size > 0) {
-                processSeqSignals(size);
-            } else if (getSubSignalSize() != 0){
-                processSubSignals();
-            } else {
-                processSignals();
+            switch(SIGNAL_TYPE)
+            {
+                case SEQ:
+                    processSeqSignals(SIGNAL_SIZE);
+                    break;
+                case PLUS:
+                case SPACE:
+                    processSubSignals();
+                    break;
+                case MINUS:
+                    processSignals();
+                    break;
+                default:
+                    break;
             }
         }
     }
