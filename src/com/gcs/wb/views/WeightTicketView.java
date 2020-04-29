@@ -1320,7 +1320,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     txfCurScale);
 
             btnAccept.setEnabled(serialConnected);
-            txfCurScale.setEditable(!configuration.getWb1AutoSignal() && serialConnected);
+            txfCurScale.setEditable(!configuration.getWb2AutoSignal() && serialConnected);
             setSaveNeeded(isValidated());
 
         } catch (SerialPortInvalidPortException | IllegalPortException | IOException | TooManyListenersException ex) {
@@ -2507,6 +2507,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 txtRemark.setEnabled(isStage1() || isStage2());
             }
 
+            setStartPositionTextField();
+
             return null;  // return your result
         }
 
@@ -2759,6 +2761,17 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             txtVendorLoading.setVisible(false);
             txtVendorTransport.setVisible(false);
         }
+    }
+
+    private void setStartPositionTextField() {
+        txtCustomer.setCaretPosition(0);
+        txtShipTo.setCaretPosition(0);
+        txtVendorLoading.setCaretPosition(0);
+        txtVendorTransport.setCaretPosition(0);
+        txtGRText.setCaretPosition(0);
+        txtLoadSource.setCaretPosition(0);
+        txtRegItem.setCaretPosition(0);
+        txtRemark.setCaretPosition(0);
     }
 
     private class ReadPOTask extends Task<Object, Void> {
@@ -4159,6 +4172,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         txtPoPosto.setText(null);
         txtVendorLoading.setText(null);
         txtVendorTransport.setText(null);
+        txtLoadSource.setText(null);
+        txtShipTo.setText(null);
 
         setAllChildPanelsVisible(pnWTLeft);
         setAllChildPanelsVisible(pnWTRight);
