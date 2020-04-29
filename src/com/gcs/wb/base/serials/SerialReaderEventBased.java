@@ -190,7 +190,6 @@ public class SerialReaderEventBased implements SerialPortDataListener {
 
             //Times of delay to refresh screen
             if (this.count > this.times_delay) {
-                Logger.getLogger(this.getClass()).error("@jSerialComm, value@" + result);
                 WeighBridgeApp.getApplication().setLast(WeighBridgeApp.getApplication().getNow());
                 WeighBridgeApp.getApplication().setNow(ival);
                 if (WeighBridgeApp.getApplication().getNow().doubleValue() > WeighBridgeApp.getApplication().getMax().doubleValue()) {
@@ -239,7 +238,6 @@ public class SerialReaderEventBased implements SerialPortDataListener {
                         ival = BigInteger.ZERO;
                     }
 
-                    Logger.getLogger(this.getClass()).error("@jSerialComm, value@" + result);
                     WeighBridgeApp.getApplication().setLast(WeighBridgeApp.getApplication().getNow());
                     WeighBridgeApp.getApplication().setNow(ival);
                     if (WeighBridgeApp.getApplication().getNow().doubleValue() > WeighBridgeApp.getApplication().getMax().doubleValue()) {
@@ -284,7 +282,6 @@ public class SerialReaderEventBased implements SerialPortDataListener {
                 }
                 buffer.append(val);
                 String strVal = buffer.toString().trim();
-                Logger.getLogger(this.getClass()).error("@jSerialComm, value@" + strVal);
                 if(strVal.length() >= size) {
                     result = this.getWeight(strVal);
                     BigInteger ival = BigInteger.ZERO;
@@ -297,7 +294,6 @@ public class SerialReaderEventBased implements SerialPortDataListener {
 
                     //Times of delay to refresh screen
                     if (this.count > this.times_delay) {
-                        Logger.getLogger(this.getClass()).error("@jSerialComm, seq value@" + result);
                         WeighBridgeApp.getApplication().setLast(WeighBridgeApp.getApplication().getNow());
                         WeighBridgeApp.getApplication().setNow(ival);
                         if (WeighBridgeApp.getApplication().getNow().doubleValue() > WeighBridgeApp.getApplication().getMax().doubleValue()) {
