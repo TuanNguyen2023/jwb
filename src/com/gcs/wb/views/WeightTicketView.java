@@ -4061,6 +4061,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     item.setsTime(now);
                     item.setUpdatedDate(now);
                 }
+
+                weightTicket.setStatus(Constants.WeightTicket.STATUS_INCOMPLETED);
             }
             return null;
         }
