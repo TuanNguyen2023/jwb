@@ -804,7 +804,7 @@ public class WeighBridgeView extends FrameView {
                     Object[] options = {};
                     String message = "Dữ liệu đang được đồng bộ...";
                     String title = "Đồng bộ dữ liệu";
-                    JOptionPane pane = new JOptionPane(message, JOptionPane.WARNING_MESSAGE, JOptionPane.INFORMATION_MESSAGE, null, options);
+                    JOptionPane pane = new JOptionPane(message, JOptionPane.INFORMATION_MESSAGE, JOptionPane.INFORMATION_MESSAGE, null, options);
                     syncDialog = pane.createDialog(WeighBridgeApp.getApplication().getMainFrame(), title);
                     syncDialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
                     syncDialog.setVisible(true);
