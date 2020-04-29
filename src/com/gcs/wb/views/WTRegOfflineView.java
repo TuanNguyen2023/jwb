@@ -34,6 +34,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
+import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -654,9 +655,9 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
                             .addComponent(lblStatus))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbxStatus, 0, 190, Short.MAX_VALUE)
-                            .addComponent(txtPlateNo, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
-                            .addComponent(dpDateTo, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE))
+                            .addComponent(cbxStatus, 0, 218, Short.MAX_VALUE)
+                            .addComponent(txtPlateNo, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
+                            .addComponent(dpDateTo, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE))
                         .addGap(42, 42, 42)
                         .addGroup(pnFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(lblCreator)
@@ -751,7 +752,7 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
             pnPrintControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnPrintControlLayout.createSequentialGroup()
                 .addComponent(btnReprint)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 1027, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 1055, Short.MAX_VALUE)
                 .addComponent(btnHideFilter))
         );
         pnPrintControlLayout.setVerticalGroup(
@@ -1154,6 +1155,9 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
             }
         });
         txtDONumN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtDONumNKeyPressed(evt);
+            }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtDONumNKeyReleased(evt);
             }
@@ -1169,6 +1173,9 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
             }
         });
         txtSONumN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtSONumNKeyPressed(evt);
+            }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtSONumNKeyReleased(evt);
             }
@@ -1184,6 +1191,9 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
             }
         });
         txtPONumN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtPONumNKeyPressed(evt);
+            }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtPONumNKeyReleased(evt);
             }
@@ -1199,6 +1209,9 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
             }
         });
         txtPOSTONumN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtPOSTONumNKeyPressed(evt);
+            }
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtPOSTONumNKeyReleased(evt);
             }
@@ -1428,7 +1441,7 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
         pnShowFilterLayout.setHorizontalGroup(
             pnShowFilterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnShowFilterLayout.createSequentialGroup()
-                .addContainerGap(1074, Short.MAX_VALUE)
+                .addContainerGap(1102, Short.MAX_VALUE)
                 .addComponent(btnShowFilter))
         );
         pnShowFilterLayout.setVerticalGroup(
@@ -1462,7 +1475,7 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
                 .addComponent(btnClear)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnSave)
-                .addContainerGap(946, Short.MAX_VALUE))
+                .addContainerGap(974, Short.MAX_VALUE))
         );
         pnControlLayout.setVerticalGroup(
             pnControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1481,7 +1494,7 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(spnResult, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 1169, Short.MAX_VALUE)
+                    .addComponent(spnResult, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 1197, Short.MAX_VALUE)
                     .addComponent(pnFilter, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addComponent(pnRegistrationOfVehicle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1499,7 +1512,7 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnShowFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(13, 13, 13)
-                .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                .addComponent(spnResult, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(pnPrintControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -1922,6 +1935,34 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
 
     validateForm();
 }//GEN-LAST:event_txtTrailerNoNFocusLost
+
+private void txtSONumNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSONumNKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+        txtSONumNFocusLost(null);
+        btnSOCheckN.doClick();
+    }
+}//GEN-LAST:event_txtSONumNKeyPressed
+
+private void txtDONumNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDONumNKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+        txtDONumNFocusLost(null);
+        btnDOCheckN.doClick();
+    }
+}//GEN-LAST:event_txtDONumNKeyPressed
+
+private void txtPONumNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPONumNKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+        txtPONumNFocusLost(null);
+        btnPOCheckN.doClick();
+    }
+}//GEN-LAST:event_txtPONumNKeyPressed
+
+private void txtPOSTONumNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPOSTONumNKeyPressed
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+        txtPOSTONumNFocusLost(null);
+        btnPOSTOCheckN.doClick();
+    }
+}//GEN-LAST:event_txtPOSTONumNKeyPressed
 
     private void validateFilterForm() {
         boolean isDriverNameValid = wtRegisValidation.validateLength(txtDriverName.getText(), lblDriverName, 0, 70);

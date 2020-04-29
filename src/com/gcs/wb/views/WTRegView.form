@@ -44,7 +44,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="pnROVRight" max="32767" attributes="0"/>
                   </Group>
-                  <Component id="spnResult" alignment="0" pref="1160" max="32767" attributes="2"/>
+                  <Component id="spnResult" alignment="0" pref="1188" max="32767" attributes="2"/>
                   <Component id="pnPrintControl" alignment="0" max="32767" attributes="1"/>
                   <Component id="pnShowFilter" alignment="0" max="32767" attributes="0"/>
                   <Component id="pnControl" alignment="1" max="32767" attributes="3"/>
@@ -60,7 +60,7 @@
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="pnShowFilter" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
-              <Component id="spnResult" pref="187" max="32767" attributes="0"/>
+              <Component id="spnResult" pref="195" max="32767" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="pnPrintControl" min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -123,9 +123,9 @@
                           </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="cbxStatus" pref="181" max="32767" attributes="0"/>
-                              <Component id="txtPlateNo" pref="181" max="32767" attributes="1"/>
-                              <Component id="dpDateTo" alignment="0" pref="181" max="32767" attributes="1"/>
+                              <Component id="cbxStatus" pref="209" max="32767" attributes="0"/>
+                              <Component id="txtPlateNo" pref="209" max="32767" attributes="1"/>
+                              <Component id="dpDateTo" alignment="0" pref="209" max="32767" attributes="1"/>
                           </Group>
                           <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
@@ -465,7 +465,7 @@
                   <Component id="btnReprint" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="btnEdit" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="927" max="32767" attributes="0"/>
+                  <EmptySpace pref="955" max="32767" attributes="0"/>
                   <Component id="btnHideFilter" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -1176,6 +1176,7 @@
           </Properties>
           <Events>
             <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtDONumNFocusLost"/>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtDONumNKeyPressed"/>
             <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtDONumNKeyReleased"/>
           </Events>
         </Component>
@@ -1195,6 +1196,7 @@
           </Properties>
           <Events>
             <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtSONumNFocusLost"/>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtSONumNKeyPressed"/>
             <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtSONumNKeyReleased"/>
           </Events>
         </Component>
@@ -1214,6 +1216,7 @@
           </Properties>
           <Events>
             <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtPONumNFocusLost"/>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtPONumNKeyPressed"/>
             <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtPONumNKeyReleased"/>
           </Events>
         </Component>
@@ -1233,6 +1236,7 @@
           </Properties>
           <Events>
             <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="txtPOSTONumNFocusLost"/>
+            <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtPOSTONumNKeyPressed"/>
             <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtPOSTONumNKeyReleased"/>
           </Events>
         </Component>
@@ -1404,7 +1408,7 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace pref="1065" max="32767" attributes="0"/>
+                  <EmptySpace pref="1093" max="32767" attributes="0"/>
                   <Component id="btnShowFilter" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -1444,7 +1448,7 @@
                   <Component id="btnClear" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="btnSave" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="937" max="32767" attributes="0"/>
+                  <EmptySpace pref="965" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
