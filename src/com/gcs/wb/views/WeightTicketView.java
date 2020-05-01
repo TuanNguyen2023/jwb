@@ -3863,23 +3863,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                             btnOScaleReset.setEnabled(false);
                             return null;
                         }
-                    } else if (weightTicket.getMode().equals("OUT_SELL_ROAD")
-                            || weightTicket.getMode().equals("OUT_SELL_WATERWAY")) {
-                        double upper = qty + (qty * valueUp) / 100;
-                        if ((result <= upper)) {
-                            txfGoodsQty.setValue(result);
-                            weightTicket.setGQty(new BigDecimal(Double.toString(result)).setScale(3, RoundingMode.HALF_UP));
-                        } else {
-                            String msg = "Chênh lệch vượt dung sai cho phép!";
-                            JOptionPane.showMessageDialog(rootPane, msg);
-                            txfOutQty.setValue(null);
-                            txtOutTime.setText(null);
-                            txfGoodsQty.setValue(null);
-                            weightTicket.setGQty(null);
-                            btnAccept.setEnabled(false);
-                            btnOScaleReset.setEnabled(false);
-                            return null;
-                        }
                     } else {
                         txfGoodsQty.setValue(result);
                         weightTicket.setGQty(new BigDecimal(Double.toString(result)).setScale(3, RoundingMode.HALF_UP));

@@ -2160,14 +2160,6 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
             isValidTrailerNo = false;
             JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.trailerNoNotMapping", trailerNo));
         }
-        if (trailerNoValidDO.isEmpty()
-                && !trailerNo.isEmpty()) {
-            lblTrailerNoN.setForeground(Color.red);
-            btnSave.setEnabled(false);
-            isValidTrailerNo = false;
-            JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.trailerNoEmpty"));
-        }
-
     } else {
         validateForm();
     }
@@ -2907,7 +2899,7 @@ private void txtPOSTONumNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
         showComponent(txtPONumN, lblPONumN, btnPOCheckN, true, true);
         showComponent(txtPOSTONumN, lblPOSTONumN, btnPOSTOCheckN, false, false);
         showComponent(cbxMaterialTypeN, lblMaterialTypeN, true, false);
-        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, false);
+        showComponent(txtWeightN, lblWeightN, lblWeightUnitN, true, true);
         showComponent(cbxSlocN, lblSlocN, true, true);
         showComponent(cbxSloc2N, lblSloc2N, false, false);
         showComponent(cbxBatchStockN, lblBatchStockN, true, true);
@@ -3218,7 +3210,7 @@ private void txtPOSTONumNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
         boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
 
         String plateNo = txtPlateNoN.getText().trim();
-        boolean isValidPlateNoFormat = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
+        boolean isValidPlateNoFormat = true;//wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
         if(!isValidPlateNo) {
             lblPlateNoN.setForeground(Color.red);
         }
@@ -3373,7 +3365,7 @@ private void txtPOSTONumNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
         boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
 
         String plateNo = txtPlateNoN.getText().trim();
-        boolean isValidPlateNoFormat = wtRegisValidation.validatePlateNoWater(plateNo, lblPlateNoN);
+        boolean isValidPlateNoFormat = true;//wtRegisValidation.validatePlateNoWater(plateNo, lblPlateNoN);
         if(!isValidPlateNo) {
             lblPlateNoN.setForeground(Color.red);
         }
@@ -3917,12 +3909,6 @@ private void txtPOSTONumNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
                             lblTrailerNoN.setForeground(Color.red);
                             throw new Exception(resourceMapMsg.getString("msg.trailerNoNotMapping", trailerNo));
                         }
-                    } else {
-                        if (!StringUtil.isEmptyString(trailerNo)) {
-                            // DO nay khong co so Romoc
-                            lblTrailerNoN.setForeground(Color.red);
-                            throw new Exception(resourceMapMsg.getString("msg.trailerNoEmpty"));
-                        }
                     }
                 }
                 // check customer
@@ -4421,6 +4407,9 @@ private void txtPOSTONumNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
 
         public void updateDataForOutPlantPlant() {
             newWeightTicket.setLoadSource(txtLoadSourceN.getText().trim());
+            WeightTicketDetail weightTicketDetail = newWeightTicket.getWeightTicketDetail();
+            String val = txtWeightN.getText().trim().replace(",", "");
+            weightTicketDetail.setRegItemQuantity(new BigDecimal(val));
         }
 
         public void updateDataForInPoPurchaseMode() {
