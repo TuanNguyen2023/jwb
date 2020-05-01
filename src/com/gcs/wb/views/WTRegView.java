@@ -3282,8 +3282,9 @@ private void txtPOSTONumNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
 
         boolean isSlingValid = wtRegisValidation.validateIntegerValue(txtSlingN.getText(), lblSlingN);
         boolean isPalletValid = wtRegisValidation.validateIntegerValue(txtPalletN.getText(), lblPalletN);
+        boolean isWeightValid = wtRegisValidation.validateWeighField(txtWeightN.getText(), lblWeightN, 1, 10, 0.001d);
 
-        return isTicketIdValid && isRegisterIdValid && isDriverNameValid
+        return isTicketIdValid && isRegisterIdValid && isDriverNameValid && isWeightValid
                 && isCMNDBLValid && isSalanValid && isLoadSourceValid && isSlingValid && isPalletValid
                 && isTrailerNoValid && isSoNiemXaValid && isProductionBatchValid
                 && isNoteValid && isSlocValid && isVendorTransValid;
