@@ -2268,17 +2268,25 @@ private void txtPOSTONumNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
     private boolean checkInputPlateNo() throws HeadlessException {
         boolean isPlateNoValid;
         String plateNo = txtPlateNoN.getText().trim();
-        if (modeDetail == MODE_DETAIL.OUT_SELL_WATERWAY) {
+        if (modeDetail == MODE_DETAIL.OUT_SELL_ROAD) {
+            isPlateNoValid = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
+            if (!isPlateNoValid) {
+                if (plateNo.isEmpty()) {
+                    JOptionPane.showMessageDialog(rootPane,
+                            resourceMapMsg.getString("msg.plzInputPlateNo", "xe"));
+                    return false;
+                } 
+                return true;
+            }
+        } else if (modeDetail == MODE_DETAIL.OUT_SELL_WATERWAY) {
             isPlateNoValid = wtRegisValidation.validatePlateNoWater(plateNo, lblPlateNoN);
             if (!isPlateNoValid) {
                 if (plateNo.isEmpty()) {
                     JOptionPane.showMessageDialog(rootPane,
                             resourceMapMsg.getString("msg.plzInputPlateNo", "ghe"));
-                } else {
-                    JOptionPane.showMessageDialog(rootPane,
-                            resourceMapMsg.getString("msg.plzCheckPlateNo", "ghe"));
-                }
-                return false;
+                    return false;
+                } 
+                return true;
             }
         } else if (modeDetail == MODE_DETAIL.IN_WAREHOUSE_TRANSFER) {
             isPlateNoValid = wtRegisValidation.validateVehicle(plateNo, lblPlateNoN);
