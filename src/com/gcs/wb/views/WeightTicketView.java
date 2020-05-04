@@ -3715,6 +3715,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             Date now = weightTicketController.getServerTime();
             btnAccept.setEnabled(false);
             boolean checkVariant = false;
+            boolean cementBag = false;
             if (isStage1()) {
                 double dIn = ((Number) txfCurScale.getValue()).doubleValue();
                 if (dIn < 0) {
@@ -3832,6 +3833,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         }
                     }
 
+                    // check ximang bao
+                    cementBag = weightTicketController.checkBagCement(param);
+
                     Variant vari = weightTicketController.findByParamMandtWplant(param, configuration.getSapClient(), configuration.getWkPlant());
                     double valueUp = 0;
                     double valueDown = 0;
@@ -3890,6 +3894,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         Variant vari = weightTicketController.findByParamMandtWplant(param, configuration.getSapClient(), configuration.getWkPlant());
                         double valueUp = 0;
                         double valueDown = 0;
+
+                        // check ximang bao
+                        cementBag = weightTicketController.checkBagCement(param);
 
                         if (vari != null) {
                             if (vari.getValueUp() != null && !vari.getValueUp().isEmpty()) {
@@ -4022,7 +4029,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                             item.setUpdatedDate(now);
                             remain = remain - item.getLfimg().doubleValue();
                         } else {
-                            if (checkVariant) {
+                            if (checkVariant && cementBag) {
                                 item.setGoodsQty(item.getLfimg());
                             } else {
                                 item.setGoodsQty(BigDecimal.valueOf(remain).setScale(3, RoundingMode.HALF_UP));
@@ -4036,7 +4043,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     BigDecimal div = BigDecimal.valueOf(1000);
                     item = outDetails_lits.get(0);
                     item.setOutScale(weightTicket.getSScale().divide(div).setScale(3, RoundingMode.HALF_UP));
-                    if (checkVariant) {
+                    if (checkVariant && cementBag) {
                         item.setGoodsQty(item.getLfimg());
                     } else {
                         item.setGoodsQty((weightTicket.getSScale().subtract(weightTicket.getFScale()).divide(div).abs()).setScale(3, RoundingMode.HALF_UP));
@@ -4295,8 +4302,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             materialConstraint = weightTicketController.getMaterialConstraintByMatnr(weightTicket.getWeightTicketDetail().getMatnrRef());
             if (isStage2()
                     && materialConstraint != null && materialConstraint.getRequiredNiemXa()
-                    && (txtCementDesc.getText().trim() == null || txtCementDesc.getText().trim().equals(""))
-                    && validateLength(txtCementDesc.getText().trim(), lblCementDesc, 0, 60)) {
+                    && ((txtCementDesc.getText().trim() == null || txtCementDesc.getText().trim().equals(""))
+                    || !validateLength(txtCementDesc.getText().trim(), lblCementDesc, 0, 60))) {
                 bNiemXa = false;
             }
             if (bNiemXa) {
@@ -4308,8 +4315,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             }
             if (isStage2()
                     && materialConstraint != null && materialConstraint.getRequiredBatch()
-                    && (txtBatchProduce.getText().trim() == null || txtBatchProduce.getText().trim().equals(""))
-                    && validateLength(txtBatchProduce.getText().trim(), lblBatchProduce, 0, 128)) {
+                    && ((txtBatchProduce.getText().trim() == null || txtBatchProduce.getText().trim().equals(""))
+                    || !validateLength(txtBatchProduce.getText().trim(), lblBatchProduce, 0, 128))) {
                 bBatchProduce = false;
             }
             if (bBatchProduce) {

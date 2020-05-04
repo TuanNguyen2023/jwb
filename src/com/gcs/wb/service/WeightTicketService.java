@@ -1349,7 +1349,7 @@ public class WeightTicketService {
         return bapi;
     }
 
-    private boolean checkBagCement(String matnr) {
+    public boolean checkBagCement(String matnr) {
         Material mat = materialRepository.findByMatnr(matnr);
         if (mat == null || StringUtil.isEmptyString(mat.getGroes())) {
             return false;

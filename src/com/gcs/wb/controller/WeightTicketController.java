@@ -195,4 +195,8 @@ public class WeightTicketController {
     public DefaultComboBoxModel getVendorModel() {
         return new DefaultComboBoxModel(vendorRepository.getListVendor().toArray());
     }
+    
+    public boolean checkBagCement(String matnr) {
+        return weightTicketService.checkBagCement(matnr);
+    }
 }
