@@ -1609,6 +1609,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
             weightTicket.setNote(txtGRText.getText().trim());
             weightTicket.setRemark(txtRemark.getText().trim());
+            weightTicket.setSoNiemXa(txtCementDesc.getText().trim());
+            weightTicket.setBatch(txtBatchProduce.getText().trim());
             for (int i = 0; i < outbDel_list.size(); i++) {
                 outdel_tmp = outbDel_list.get(i);
                 try {

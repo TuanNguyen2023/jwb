@@ -4159,6 +4159,7 @@ private void txtPOSTONumNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
     private class SaveWeightTicketTask extends org.jdesktop.application.Task<Object, Void> {
 
         private boolean checkVariant = false;
+        private boolean cementBag = false;
 
         SaveWeightTicketTask(org.jdesktop.application.Application app) {
             super(app);
@@ -4259,6 +4260,9 @@ private void txtPOSTONumNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
                                 double remain = newWeightTicket.getGQty().doubleValue();
                                 // check variant
                                 checkVariant(outboundDelivery.getMatnr(), weightRegQtyTemp.doubleValue(), newWeightTicket.getGQty().doubleValue());
+                                
+                                // check ximang bao
+                                cementBag = weightTicketController.checkBagCement(outboundDelivery.getMatnr());
 
                                 // chia cân
                                 if (deliveryDetails.size() > 1) {
@@ -4277,7 +4281,7 @@ private void txtPOSTONumNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
                                         detail.setOutScale(detail.getInScale().add(detail.getLfimg()).setScale(3, RoundingMode.HALF_UP));
                                         remain = remain - detail.getLfimg().doubleValue();
                                     } else {
-                                        if (checkVariant) {
+                                        if (checkVariant && cementBag) {
                                             detail.setGoodsQty(weightRegQtyTemp);
                                         } else {
                                             detail.setGoodsQty(BigDecimal.valueOf(remain).setScale(3, RoundingMode.HALF_UP));
@@ -4300,7 +4304,7 @@ private void txtPOSTONumNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
                                     detail.setLfimg_ori(detail.getLfimg());
                                     detail.setfTime(newWeightTicket.getFTime());
                                     detail.setsTime(newWeightTicket.getSTime());
-                                    if (checkVariant) {
+                                    if (checkVariant && cementBag) {
                                         detail.setGoodsQty(weightRegQtyTemp);
                                     } else {
                                         detail.setGoodsQty(newWeightTicket.getGQty());
