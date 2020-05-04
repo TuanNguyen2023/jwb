@@ -183,7 +183,7 @@ public class SerialReaderEventBased implements SerialPortDataListener {
             try {
                 String strs[] = input.trim().split("\\s+");
                 int index = IntStream.range(0, strs.length)
-                        .filter(i -> ("k").equalsIgnoreCase(strs[i]))
+                        .filter(i -> ("kg").equalsIgnoreCase(strs[i]))
                         .findFirst()
                         .orElse(-1);
                 return strs[index - 1];
@@ -350,9 +350,9 @@ public class SerialReaderEventBased implements SerialPortDataListener {
                     processSeqSignals(SIGNAL_SIZE);
                     break;
                 case PLUS:
-                case SPACE:
                     processSubSignals();
                     break;
+                case SPACE:
                 case MINUS:
                     processSignals();
                     break;
