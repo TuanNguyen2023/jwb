@@ -7,12 +7,17 @@ package com.gcs.wb.service;
 import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.base.enums.StatusEnum;
 import com.gcs.wb.base.util.FunctionalUtil;
+import com.gcs.wb.base.util.StringUtil;
+import com.gcs.wb.jpa.entity.Customer;
 import com.gcs.wb.jpa.entity.Material;
 import com.gcs.wb.jpa.entity.TransportAgent;
+import com.gcs.wb.jpa.entity.Vendor;
 import com.gcs.wb.jpa.entity.WeightTicket;
 import com.gcs.wb.jpa.entity.WeightTicketDetail;
+import com.gcs.wb.jpa.repositorys.CustomerRepository;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
 import com.gcs.wb.jpa.repositorys.TransportAgentRepository;
+import com.gcs.wb.jpa.repositorys.VendorRepository;
 import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,6 +36,8 @@ public class WeightTicketReportService {
     private MaterialRepository materialRepository = new MaterialRepository();
     private Object[] wtColNames = Constants.WeightTicketReport.WT_COL_NAMES;
     List<TransportAgent> transportAgents = new ArrayList<>();
+    private CustomerRepository customerRepository = new CustomerRepository();
+    private VendorRepository vendorRepository = new VendorRepository();
 
     public List<Character> getModeItemStateChanged(List<Character> modes, int mode) {
         modes = new ArrayList<>();
@@ -107,11 +114,37 @@ public class WeightTicketReportService {
                     .filter(t -> t != null)
                     .toArray(String[]::new);
             wtDatas[i][15] = doNums.length > 0 ? String.join(" - ", doNums) : "";
-            wtDatas[i][16] = weightTicketDetail.getMatDoc();
-            if (item.isPosted()) {
-                wtDatas[i][17] = true;
+            String[] soNums = weightTicketDetails.stream()
+                    .map(t -> t.getSoNumber())
+                    .filter(t -> t != null)
+                    .toArray(String[]::new);
+            wtDatas[i][16] = soNums.length > 0 ? String.join(" - ", soNums) : "";
+            String name = "";
+            if (item.getMode().equals("IN_PO_PURCHASE")) {
+                Vendor vendor = vendorRepository.findByLifnrIsCustomer(weightTicketDetail.getKunnr());
+                if (vendor != null) {
+                    name = vendor.getName1() + " " + vendor.getName2();
+                }
             } else {
-                wtDatas[i][17] = false;
+                Customer customer = customerRepository.findByKunnr(weightTicketDetail.getKunnr());
+                if (customer != null) {
+                    name = customer.getName2();
+                    if (!StringUtil.isEmptyString(customer.getName3())) {
+                        name += " " + customer.getName3();
+                    }
+                    if (!StringUtil.isEmptyString(customer.getName4())) {
+                        name += " " + customer.getName4();
+                    }
+                    name = (!StringUtil.isEmptyString(name) ? name : customer.getName1());
+                }
+            }
+            
+            wtDatas[i][17] = name;
+            wtDatas[i][18] = weightTicketDetail.getMatDoc();
+            if (item.isPosted()) {
+                wtDatas[i][19] = true;
+            } else {
+                wtDatas[i][19] = false;
             }
             TransportAgent transportAgent = transportAgents.stream()
                     .filter(t -> {
@@ -120,12 +153,12 @@ public class WeightTicketReportService {
                     })
                     .findAny()
                     .orElse(null);
-            wtDatas[i][18] = transportAgent != null ? transportAgent.getName() : "";
+            wtDatas[i][20] = transportAgent != null ? transportAgent.getName() : "";
             String[] poNums = weightTicketDetails.stream()
                     .map(t -> t.getEbeln())
                     .filter(t -> t != null)
                     .toArray(String[]::new);
-            wtDatas[i][19] = poNums.length > 0 ? String.join(" - ", poNums) : "";
+            wtDatas[i][21] = poNums.length > 0 ? String.join(" - ", poNums) : "";
         }
         return wtDatas;
     }
