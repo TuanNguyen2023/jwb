@@ -569,7 +569,7 @@ $F{RECV_LGORT} != null ? $F{RECV_LGORT} : null]]></textFieldExpression>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{SO_NIEM_XA}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{SO_NIEM_XA}.length() <= 30 ? $F{SO_NIEM_XA} : $F{SO_NIEM_XA}.substring(0, 30) + " " + $F{SO_NIEM_XA}.substring(30)]]></textFieldExpression>
 				</textField>
 				<rectangle>
 					<reportElement x="36" y="100" width="59" height="20"/>
