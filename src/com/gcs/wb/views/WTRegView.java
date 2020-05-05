@@ -2266,52 +2266,13 @@ private void txtPOSTONumNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
     }
 
     private boolean checkInputPlateNo() throws HeadlessException {
-        boolean isPlateNoValid;
         String plateNo = txtPlateNoN.getText().trim();
-        if (modeDetail == MODE_DETAIL.OUT_SELL_ROAD) {
-            isPlateNoValid = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
-            if (!isPlateNoValid) {
-                if (plateNo.isEmpty()) {
-                    JOptionPane.showMessageDialog(rootPane,
-                            resourceMapMsg.getString("msg.plzInputPlateNo", "xe"));
-                    return false;
-                } 
-                return true;
-            }
-        } else if (modeDetail == MODE_DETAIL.OUT_SELL_WATERWAY) {
-            isPlateNoValid = wtRegisValidation.validatePlateNoWater(plateNo, lblPlateNoN);
-            if (!isPlateNoValid) {
-                if (plateNo.isEmpty()) {
-                    JOptionPane.showMessageDialog(rootPane,
-                            resourceMapMsg.getString("msg.plzInputPlateNo", "ghe"));
-                    return false;
-                } 
-                return true;
-            }
-        } else if (modeDetail == MODE_DETAIL.IN_WAREHOUSE_TRANSFER) {
-            isPlateNoValid = wtRegisValidation.validateVehicle(plateNo, lblPlateNoN);
-            if (!isPlateNoValid) {
-                if (plateNo.isEmpty()) {
-                    JOptionPane.showMessageDialog(rootPane,
-                            resourceMapMsg.getString("msg.plzInputPlateNo", "phương tiện"));
-                } else {
-                    JOptionPane.showMessageDialog(rootPane,
-                            resourceMapMsg.getString("msg.plzCheckPlateNo", "phương tiện"));
-                }
-                return false;
-            }
-        } else {
-            isPlateNoValid = wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
-            if (!isPlateNoValid) {
-                if (plateNo.isEmpty()) {
-                    JOptionPane.showMessageDialog(rootPane,
-                            resourceMapMsg.getString("msg.plzInputPlateNo", "xe"));
-                } else {
-                    JOptionPane.showMessageDialog(rootPane,
-                            resourceMapMsg.getString("msg.plzCheckPlateNo", "xe"));
-                }
-                return false;
-            }
+        boolean isPlateNoValid = wtRegisValidation.validateVehicle(plateNo, lblPlateNoN);
+
+        if (!isPlateNoValid) {
+            JOptionPane.showMessageDialog(rootPane,
+                    resourceMapMsg.getString("msg.plzInputPlateNo", "phương tiện"));
+            return false;
         }
 
         return true;
@@ -2975,6 +2936,7 @@ private void txtPOSTONumNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
     private void prepareOutPullStation() {
         lblPONumN.setText(resourceMapMsg.getString("lblPoOut"));
         lblPOSTONumN.setText(resourceMapMsg.getString("lblPostoIn"));
+        lblPlateNoN.setText(resourceMapMsg.getString("lblVehicleNo"));
 
         showComponent(txtTicketIdN, lblTicketIdN, true, true);
         showComponent(txtWeightTickerRefN, lblWeightTickerRefN, false, false);
@@ -3011,7 +2973,6 @@ private void txtPOSTONumNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
     }
 
     private void prepareOutSellWateway() {
-        lblPlateNoN.setText(resourceMapMsg.getString("lblPlateNoWater"));
         lblPlateNoN.setText(resourceMapMsg.getString("lblVehicleNo"));
         showComponent(txtTicketIdN, lblTicketIdN, false, false);
         showComponent(txtWeightTickerRefN, lblWeightTickerRefN, false, false);
@@ -3220,8 +3181,8 @@ private void txtPOSTONumNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
         boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
 
         String plateNo = txtPlateNoN.getText().trim();
-        boolean isValidPlateNoFormat = true;//wtRegisValidation.validatePlateNo(plateNo, lblPlateNoN);
-        if(!isValidPlateNo) {
+        boolean isValidPlateNoFormat = wtRegisValidation.validateVehicle(plateNo, lblPlateNoN);
+        if (!isValidPlateNo) {
             lblPlateNoN.setForeground(Color.red);
         }
 
@@ -3376,8 +3337,8 @@ private void txtPOSTONumNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
         boolean isCMNDBLValid = wtRegisValidation.validateLength(txtCMNDN.getText(), lblCMNDN, 1, 25);
 
         String plateNo = txtPlateNoN.getText().trim();
-        boolean isValidPlateNoFormat = true;//wtRegisValidation.validatePlateNoWater(plateNo, lblPlateNoN);
-        if(!isValidPlateNo) {
+        boolean isValidPlateNoFormat = wtRegisValidation.validateVehicle(plateNo, lblPlateNoN);
+        if (!isValidPlateNo) {
             lblPlateNoN.setForeground(Color.red);
         }
 
