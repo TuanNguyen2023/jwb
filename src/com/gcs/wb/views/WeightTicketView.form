@@ -118,7 +118,7 @@
                           <Component id="jButton2" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace pref="62" max="32767" attributes="0"/>
+                  <EmptySpace pref="67" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -707,7 +707,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <Group type="103" groupAlignment="1" max="-2" attributes="0">
                       <Component id="pnWTLeft" alignment="0" max="32767" attributes="1"/>
-                      <Component id="pnWTRight" alignment="0" pref="408" max="32767" attributes="1"/>
+                      <Component id="pnWTRight" alignment="0" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -1175,7 +1175,6 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="txtShipTo" pref="373" max="32767" attributes="0"/>
                           <Component id="txtSO" alignment="1" pref="373" max="32767" attributes="2"/>
                           <Component id="txtDelNum" alignment="1" pref="373" max="32767" attributes="2"/>
                           <Component id="txtPONo" alignment="1" pref="373" max="32767" attributes="2"/>
@@ -1188,6 +1187,7 @@
                           </Group>
                           <Component id="txtCustomer" alignment="0" pref="373" max="32767" attributes="0"/>
                           <Component id="txtRegItem" alignment="1" pref="373" max="32767" attributes="2"/>
+                          <Component id="txtShipTo" alignment="0" pref="373" max="32767" attributes="0"/>
                           <Component id="txtSLoc" alignment="0" pref="373" max="32767" attributes="0"/>
                           <Component id="txtLgortIn" alignment="0" pref="373" max="32767" attributes="2"/>
                           <Component id="txtCharg" alignment="0" pref="373" max="32767" attributes="0"/>
@@ -1246,7 +1246,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="lblShipTo" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtShipTo" alignment="3" min="-2" pref="15" max="-2" attributes="0"/>
+                          <Component id="txtShipTo" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">

@@ -60,7 +60,7 @@
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="pnShowFilter" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
-              <Component id="spnResult" pref="194" max="32767" attributes="0"/>
+              <Component id="spnResult" pref="195" max="32767" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="pnPrintControl" min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -568,35 +568,35 @@
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="txtProductionBatchN" pref="397" max="32767" attributes="1"/>
-                          <Component id="txtLoadSourceN" alignment="0" pref="397" max="32767" attributes="0"/>
-                          <Component id="txtSalanN" alignment="0" pref="397" max="32767" attributes="0"/>
-                          <Component id="txtSoNiemXaN" alignment="0" pref="397" max="32767" attributes="1"/>
-                          <Component id="cbxModeType" alignment="0" pref="397" max="32767" attributes="0"/>
-                          <Component id="txtTicketIdN" alignment="0" pref="397" max="32767" attributes="1"/>
-                          <Component id="txtCMNDN" alignment="0" pref="397" max="32767" attributes="1"/>
-                          <Component id="txtWeightTickerRefN" alignment="0" pref="397" max="32767" attributes="1"/>
-                          <Component id="txtDriverNameN" alignment="0" pref="397" max="32767" attributes="1"/>
-                          <Component id="txtRegisterIdN" alignment="0" pref="397" max="32767" attributes="1"/>
+                          <Component id="txtProductionBatchN" pref="383" max="32767" attributes="1"/>
+                          <Component id="txtLoadSourceN" alignment="0" pref="383" max="32767" attributes="0"/>
+                          <Component id="txtSalanN" alignment="0" pref="383" max="32767" attributes="0"/>
+                          <Component id="txtSoNiemXaN" alignment="0" pref="383" max="32767" attributes="1"/>
+                          <Component id="cbxModeType" alignment="0" pref="383" max="32767" attributes="0"/>
+                          <Component id="txtTicketIdN" alignment="0" pref="383" max="32767" attributes="1"/>
+                          <Component id="txtCMNDN" alignment="0" pref="383" max="32767" attributes="1"/>
+                          <Component id="txtWeightTickerRefN" alignment="0" pref="383" max="32767" attributes="1"/>
+                          <Component id="txtDriverNameN" alignment="0" pref="383" max="32767" attributes="1"/>
+                          <Component id="txtRegisterIdN" alignment="0" pref="383" max="32767" attributes="1"/>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="txtPlateNoN" min="-2" pref="91" max="-2" attributes="1"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="lblTrailerNoN" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="txtTrailerNoN" pref="99" max="32767" attributes="1"/>
+                              <Component id="txtTrailerNoN" pref="92" max="32767" attributes="1"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="lblTonnageN" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="txtTonnageN" pref="60" max="32767" attributes="0"/>
+                              <Component id="txtTonnageN" pref="53" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="txtSlingN" min="-2" pref="140" max="-2" attributes="1"/>
                               <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
                               <Component id="lblPalletN" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="txtPalletN" pref="161" max="32767" attributes="1"/>
+                              <Component id="txtPalletN" pref="147" max="32767" attributes="1"/>
                           </Group>
-                          <Component id="txtNoteN" alignment="0" pref="397" max="32767" attributes="1"/>
+                          <Component id="txtNoteN" alignment="0" pref="383" max="32767" attributes="1"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="lblTonngageUnitN" min="-2" max="-2" attributes="0"/>
@@ -983,21 +983,21 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="cbxVendorTransportN" pref="391" max="32767" attributes="1"/>
-                      <Component id="cbxShipToN" pref="391" max="32767" attributes="0"/>
-                      <Component id="cbxCustomerN" pref="391" max="32767" attributes="1"/>
-                      <Component id="txtPONumN" alignment="0" pref="391" max="32767" attributes="1"/>
-                      <Component id="txtPOSTONumN" alignment="0" pref="391" max="32767" attributes="0"/>
-                      <Component id="cbxMaterialTypeN" alignment="0" pref="391" max="32767" attributes="1"/>
-                      <Component id="txtWeightN" alignment="0" pref="391" max="32767" attributes="1"/>
-                      <Component id="txtWeightTicketNo" alignment="0" pref="391" max="32767" attributes="0"/>
-                      <Component id="txtSONumN" alignment="0" pref="391" max="32767" attributes="1"/>
-                      <Component id="txtDONumN" pref="391" max="32767" attributes="1"/>
-                      <Component id="cbxSlocN" alignment="0" pref="391" max="32767" attributes="1"/>
-                      <Component id="cbxSloc2N" alignment="0" pref="391" max="32767" attributes="1"/>
-                      <Component id="cbxBatchStockN" alignment="0" pref="391" max="32767" attributes="1"/>
-                      <Component id="cbxBatchStock2N" alignment="0" pref="391" max="32767" attributes="1"/>
-                      <Component id="cbxVendorLoadingN" alignment="0" pref="391" max="32767" attributes="1"/>
+                      <Component id="cbxVendorTransportN" pref="377" max="32767" attributes="1"/>
+                      <Component id="cbxShipToN" pref="377" max="32767" attributes="0"/>
+                      <Component id="cbxCustomerN" pref="377" max="32767" attributes="1"/>
+                      <Component id="txtPONumN" alignment="0" pref="377" max="32767" attributes="1"/>
+                      <Component id="txtPOSTONumN" alignment="0" pref="377" max="32767" attributes="0"/>
+                      <Component id="cbxMaterialTypeN" alignment="0" pref="377" max="32767" attributes="1"/>
+                      <Component id="txtWeightN" alignment="0" pref="377" max="32767" attributes="1"/>
+                      <Component id="txtWeightTicketNo" alignment="0" pref="377" max="32767" attributes="0"/>
+                      <Component id="txtSONumN" alignment="0" pref="377" max="32767" attributes="1"/>
+                      <Component id="txtDONumN" pref="377" max="32767" attributes="1"/>
+                      <Component id="cbxSlocN" alignment="0" pref="377" max="32767" attributes="1"/>
+                      <Component id="cbxSloc2N" alignment="0" pref="377" max="32767" attributes="1"/>
+                      <Component id="cbxBatchStockN" alignment="0" pref="377" max="32767" attributes="1"/>
+                      <Component id="cbxBatchStock2N" alignment="0" pref="377" max="32767" attributes="1"/>
+                      <Component id="cbxVendorLoadingN" alignment="0" pref="377" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
