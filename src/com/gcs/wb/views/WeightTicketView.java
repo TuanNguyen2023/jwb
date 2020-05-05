@@ -4305,7 +4305,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             if (isStage2()
                     && materialConstraint != null && materialConstraint.getRequiredNiemXa()
                     && ((txtCementDesc.getText().trim() == null || txtCementDesc.getText().trim().equals(""))
-                    || !validateLength(txtCementDesc.getText().trim(), lblCementDesc, 0, 60))) {
+                    || !validateLength(txtCementDesc.getText().trim(), lblCementDesc, 0, 120))) {
                 bNiemXa = false;
             }
             if (bNiemXa) {
