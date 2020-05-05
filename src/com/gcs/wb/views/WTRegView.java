@@ -4928,7 +4928,7 @@ private void txtPOSTONumNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
                 Vendor cust = (Vendor) cbxCustomerN.getSelectedItem();
                 if (cust != null && !cust.getLifnr().equals(purchaseOrderPO.getVendor())) {
                     kunnr = purchaseOrderPO.getVendor();
-                    mappingErrMsg.add(resourceMapMsg.getString("msg.customerNotMapping"));
+                    mappingErrMsg.add(resourceMapMsg.getString("msg.vendorCustomerNotMapping"));
                 }
 
                 if (matnr != null || kunnr != null) {
