@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Weight Ticket" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="185"/>
+	<property name="ireport.y" value="0"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -181,35 +181,35 @@
 	<title>
 		<band height="64" splitType="Stretch">
 			<textField isStretchWithOverflow="true">
-				<reportElement x="0" y="-19" width="304" height="10"/>
+				<reportElement x="36" y="-17" width="304" height="10"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" size="8" isBold="true" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{P_HEADER_RPT} != null ? $P{P_HEADER_RPT} : "CÔNG TY CỔ PHẦN XI MĂNG FICO TÂY NINH"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="-7" width="304" height="12" isRemoveLineWhenBlank="true"/>
+				<reportElement x="36" y="-7" width="304" height="12" isRemoveLineWhenBlank="true"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" size="8" isBold="true" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{PName_RPT}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="4" width="304" height="15" isRemoveLineWhenBlank="true"/>
+				<reportElement x="36" y="5" width="304" height="15" isRemoveLineWhenBlank="true"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" size="8" isBold="true" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{PAddress}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="20" width="304" height="15"/>
+				<reportElement x="36" y="19" width="304" height="15"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" size="8" isBold="true" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[($F{PPhone} != null ? "Tel: "+$F{PPhone} : "") + ( $F{PFAX} != null ? " - Fax: " + $F{PFAX} : "")]]></textFieldExpression>
 			</textField>
 			<image hAlign="Left" vAlign="Middle" onErrorType="Blank">
-				<reportElement x="450" y="-19" width="85" height="65"/>
+				<reportElement x="460" y="-17" width="85" height="65"/>
 				<imageExpression><![CDATA["./rpt/TaFiCo_TM2.jpg"]]></imageExpression>
 			</image>
 			<componentElement>
@@ -908,7 +908,7 @@ $F{RECV_LGORT} != null ? $F{RECV_LGORT} : null]]></textFieldExpression>
 					<textFieldExpression><![CDATA[($F{S_SCALE} == null) ? $F{SIGN3} : "Bảo vệ"]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="0" y="1" width="149" height="19"/>
+					<reportElement x="12" y="1" width="137" height="19"/>
 					<box leftPadding="2" rightPadding="0"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
@@ -946,7 +946,7 @@ $F{RECV_LGORT} != null ? $F{RECV_LGORT} : null]]></textFieldExpression>
 						<font fontName="DejaVu Sans" size="8" isBold="true"/>
 						<paragraph leftIndent="2" rightIndent="2"/>
 					</textElement>
-					<text><![CDATA[Tổng cộng :]]></text>
+					<text><![CDATA[Tổng cộng]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="true" pattern="#,##0;-#,##0" isBlankWhenNull="true">
 					<reportElement x="465" y="0" width="44" height="16"/>
@@ -961,7 +961,7 @@ $F{RECV_LGORT} != null ? $F{RECV_LGORT} : null]]></textFieldExpression>
 					<textElement textAlignment="Right" verticalAlignment="Middle" markup="none">
 						<font fontName="DejaVu Sans" size="8" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$P{P_PCB40BAG} != null ? "Tổng số bao: " : ""]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{P_PCB40BAG} != null ? "Tổng số bao " : ""]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0.000;-#,##0.000" isBlankWhenNull="true">
 					<reportElement x="266" y="0" width="54" height="15"/>

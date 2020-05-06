@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Weight Ticket" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true">
 	<property name="ireport.zoom" value="1.9487171000000014"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="75"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="P_MANDT" class="java.lang.String"/>
 	<parameter name="P_WPlant" class="java.lang.String"/>
 	<parameter name="P_ID" class="java.lang.String"/>
@@ -97,35 +97,35 @@
 	<title>
 		<band height="53" splitType="Stretch">
 			<textField isStretchWithOverflow="true">
-				<reportElement x="0" y="-19" width="304" height="15"/>
+				<reportElement x="36" y="-19" width="304" height="15"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" size="8" isBold="true" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{P_HEADER_RPT} != null ? $P{P_HEADER_RPT} : "CÔNG TY CỔ PHẦN XI MĂNG FICO TÂY NINH"]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="-4" width="304" height="15" isRemoveLineWhenBlank="true"/>
+				<reportElement x="36" y="-4" width="304" height="15" isRemoveLineWhenBlank="true"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" size="8" isBold="true" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{PName_RPT}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="11" width="304" height="15" isRemoveLineWhenBlank="true"/>
+				<reportElement x="36" y="11" width="304" height="15" isRemoveLineWhenBlank="true"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" size="8" isBold="true" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{PAddress}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="0" y="25" width="304" height="21"/>
+				<reportElement x="36" y="26" width="304" height="21"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
 					<font fontName="DejaVu Sans" size="8" isBold="true" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[($F{PPhone} != null ? "Tel: "+$F{PPhone} : "") + ( $F{PFAX} != null ? " - Fax: " + $F{PFAX} : "")]]></textFieldExpression>
 			</textField>
 			<image hAlign="Left" vAlign="Middle" onErrorType="Blank">
-				<reportElement x="459" y="-19" width="85" height="65"/>
+				<reportElement x="459" y="-17" width="85" height="65"/>
 				<imageExpression><![CDATA["./rpt/TaFiCo_TM2.jpg"]]></imageExpression>
 			</image>
 		</band>
