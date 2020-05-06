@@ -736,42 +736,6 @@ public class SAPService {
                  * @param transportDBs
                  * @param transportSaps
                  */
-                // delete data DB not exist SAP
-                for (TransportAgent transportAgent : transportDBs) {
-                    if (transportSaps.indexOf(transportAgent) == -1) {
-                        // delete in table Vehicle
-                        List<TransportAgentVehicle> transportAgentVehicles = transportAgentVehicleRepository.findByTransportAgentId(transportAgent.getId());
-
-                        if (!entityTransaction.isActive()) {
-                            entityTransaction.begin();
-                        }
-
-                        try {
-                            for (TransportAgentVehicle transportAgentVehicle : transportAgentVehicles) {
-                                entityManager.remove(transportAgentVehicle);
-                            }
-                        } catch (Exception ex) {
-                            JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.deleteVehicleFalse"));
-                            entityTransaction.rollback();
-                            continue;
-                        }
-
-                        // delete dvvc
-                        try {
-                            if (!entityManager.contains(transportAgent)) {
-                                transportAgent = entityManager.merge(transportAgent);
-                            }
-                            entityManager.remove(transportAgent);
-                        } catch (Exception ex) {
-                            JOptionPane.showMessageDialog(mainFrame, resourceMapMsg.getString("msg.deleteProviderFalse"));
-                            entityTransaction.rollback();
-                            continue;
-                        }
-
-                        entityTransaction.commit();
-                        entityManager.clear();
-                    }
-                }
 
                 try {
                     if (!entityTransaction.isActive()) {
