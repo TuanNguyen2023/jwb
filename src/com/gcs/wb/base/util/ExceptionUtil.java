@@ -5,12 +5,17 @@
  */
 package com.gcs.wb.base.util;
 
+
+
 import com.gcs.wb.WeighBridgeApp;
 import com.sap.conn.jco.JCoException;
 import com.gcs.wb.base.constant.Constants;
+import java.net.SocketException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import org.eclipse.persistence.exceptions.DatabaseException;
+
+
 
 /**
  *
@@ -18,11 +23,17 @@ import org.eclipse.persistence.exceptions.DatabaseException;
  */
 public class ExceptionUtil {
 
+
+
     static JFrame mainFrame = WeighBridgeApp.getApplication().getMainFrame();
+
+
 
     public static <E extends Throwable> void sneakyThrow(Throwable e) throws E {
         throw (E) e;
     }
+
+
 
     public static boolean isSapDisConnectedException(Throwable ex) {
         if (ex.getCause() instanceof JCoException) {
@@ -32,8 +43,12 @@ public class ExceptionUtil {
             }
         }
 
+
+
         return false;
     }
+
+
 
     public static void checkDatabaseDisconnectedException(Exception ex) {
         if (ex.getCause() instanceof DatabaseException) {
@@ -41,10 +56,16 @@ public class ExceptionUtil {
             if (dbex.isCommunicationFailure()) {
                 JOptionPane.showMessageDialog(mainFrame, Constants.Message.DB_DISCONNECTED);
             }
+        } else if (ex.getCause() instanceof SocketException) {
+            JOptionPane.showMessageDialog(mainFrame, Constants.Message.DB_DISCONNECTED);
         }
+
+
 
         sneakyThrow(ex);
     }
+
+
 
     public static boolean isDatabaseDisconnectedException(Throwable ex) {
         if (ex.getCause() instanceof DatabaseException) {
@@ -52,7 +73,11 @@ public class ExceptionUtil {
             if (dbex.isCommunicationFailure()) {
                 return true;
             }
+        } else if (ex.getCause() instanceof SocketException) {
+            return true;
         }
+
+
 
         return false;
     }

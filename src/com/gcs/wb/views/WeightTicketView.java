@@ -117,6 +117,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     PurchaseOrder purchaseOrder = new PurchaseOrder();
     private boolean flgPost = false;
     private DecimalFormat df = new DecimalFormat("#,##0.000");
+    private boolean isValidTonnage = true;
 
     public WeightTicketView() {
         weightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
@@ -164,6 +165,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         } else {
             btnPostAgain.setVisible(false);
         }
+
+        txfCurScale.setEditable(false);
+        btnAccept.setEnabled(false);
     }
 
     /**
@@ -1734,7 +1738,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     public static final String PROP_MATAVAILSTOCKS = Constants.WeightTicketView.PROP_MATAVAILSTOCKS;
     private boolean mvt311 = false;
     public static final String PROP_MVT311 = Constants.WeightTicketView.PROP_MVT311;
-    private boolean checkPlant = false;
 
     /**
      * Get the value of stage2
@@ -2022,6 +2025,29 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         txtPoPosto.setEnabled(true);
         txtPoPosto.setEditable(false);
         txtPoPosto.setBackground(new Color(222, 225, 229));
+    }
+
+    private void validateVehicleTonnage(Double goodsQty) {
+        String plateNo = txtLicPlate.getText().trim();
+        if(!StringUtil.isEmptyString(txtTrailerPlate.getText())) {
+            plateNo = txtTrailerPlate.getText().trim();
+        }
+        Double tonnage = new Double(weightTicketRegistarationController.loadVehicleLoading(plateNo));
+        tonnage = (double) Math.round(tonnage * 1000) / 1000;
+        isValidTonnage = true;
+        if ((!(weightTicket.getRegType() == 'I'))
+                && isStage2() && (tonnage > 0)) {
+            if (tonnage < goodsQty) {
+                isValidTonnage = false;
+                String msg = resourceMapMsg.getString("msg.realityQuanlityOverload", tonnage );
+                Integer lv_return = JOptionPane.showConfirmDialog(WeighBridgeApp.getApplication().getMainFrame(), msg, resourceMapMsg.getString("msg.question"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                if (lv_return == JOptionPane.YES_OPTION) {
+                    isValidTonnage = true;
+                } else {
+                    isValidTonnage = false;
+                }
+            }
+        }
     }
 
     private class ReadWTTask extends Task<Object, Void> {
@@ -2985,7 +3011,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             boolean offlineMode = WeighBridgeApp.getApplication().isOfflineMode();
 
             if (!offlineMode && (!weightTicket.getOfflineMode() || (weightTicket.getOfflineMode() && weightTicket.isEdited()))
-                    && (((isStage1()) && checkPlant) || ((isStage2() || (!isStage1() && !isStage2())) && !weightTicket.isDissolved())
+                    && (((isStage2() || (!isStage1() && !isStage2())) && !weightTicket.isDissolved())
                     || (!isStage1() && !isStage2() && !weightTicket.isDissolved()
                     && (weightTicket != null && !weightTicket.isPosted())))) {
 
@@ -3790,7 +3816,16 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     btnOScaleReset.setEnabled(false);
                     return null;
                 }
-                //  Conver result from KG unit to TON unit
+                //  check vehicle tonnage
+                 validateVehicleTonnage(result);
+                 if(!isValidTonnage) {
+                    txfOutQty.setValue(null);
+                    txfGoodsQty.setValue(null);
+                    txtOutTime.setText(null);
+                    weightTicket.setGQty(null);
+                    btnOScaleReset.setEnabled(false);
+                    return null;
+                 }
 
                 // check tolorance for PO mua hang
                 if (weightTicket.getMode().equals("IN_PO_PURCHASE") && !weightTicket.getOfflineMode()) {
@@ -3810,6 +3845,34 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         return null;
                     }
                 }
+
+                // check chenh lech 1%
+                String material = weightTicket.getWeightTicketDetail().getMatnrRef() != null ? weightTicket.getWeightTicketDetail().getMatnrRef() : "";
+                if(!weightTicket.getMode().equals("IN_PO_PURCHASE")
+                        && !weightTicket.getMode().equals("OUT_SELL_ROAD")
+                        && !weightTicket.getMode().equals("OUT_SELL_WATERWAY")
+                        && weightTicketController.checkBagCement(material)) {
+                    double tolerance = 1;
+                    double regQty = weightTicket.getWeightTicketDetail().getRegItemQuantity().doubleValue();
+                    double upper = new BigDecimal(regQty + (regQty * tolerance) / 100).setScale(3, RoundingMode.HALF_UP).doubleValue();
+                    double lower = new BigDecimal(regQty - (regQty * tolerance) / 100).setScale(3, RoundingMode.HALF_UP).doubleValue();
+
+                    if (lower <= result && result <= upper) {
+                        txfGoodsQty.setValue(result);
+                        weightTicket.setGQty(new BigDecimal(Double.toString(result)).setScale(3, RoundingMode.HALF_UP));
+                    } else {
+                        String msg = "Chênh lệch dung sai vượt quá cho phép!";
+                        JOptionPane.showMessageDialog(rootPane, msg);
+                        txfOutQty.setValue(null);
+                        txtOutTime.setText(null);
+                        txfGoodsQty.setValue(null);
+                        weightTicket.setGQty(null);
+                        btnAccept.setEnabled(false);
+                        btnOScaleReset.setEnabled(false);
+                        return null;
+                    }
+
+                }
                 double main_qty = 0;
                 double qty = 0;
                 if (outbDel != null) {
@@ -3825,7 +3888,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     qty = total_qty_goods.doubleValue() + total_qty_free.doubleValue();
                 }
 
-                if (outbDel != null && !weightTicket.getOfflineMode()) {
+                if (outbDel != null && !weightTicket.getOfflineMode() && !weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER")) {
                     String param = (outbDel != null && outbDel.getMatnr() != null) ? outbDel.getMatnr().toString() : "";
 
                     if (param.equals("") && purOrder != null) {
@@ -3950,7 +4013,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 weightTicket.setFTime(now);
                 lblIScale.setForeground(Color.black);
                 OutboundDeliveryDetail item;
-                checkPlant = false;
                 if (outDetails_lits.size() > 0) {
                     for (int i = 0; i < outDetails_lits.size(); i++) {
                         item = outDetails_lits.get(i);
@@ -3959,27 +4021,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         item.setfTime(now);
                         item.setLfimg_ori(item.getLfimg());
                         item.setUpdatedDate(now);
-                        // tinh toan cho Nhap kho tu plant xuat > plant nhap
-                        if (weightTicket.getMode().equals("IN_WAREHOUSE_TRANSFER")) {
-                            if (checkPlantOutToIn(item, outbDel.getWerks())) {
-                                double outSScalePlant = 0;
-                                double result = ((Number) txfInQty.getValue()).doubleValue();
-                                outSScalePlant = item.getSscale().doubleValue();
-                                // check can 1 cua nhap voi can 2 xuat chenh lech 1%
-                                double upper = outSScalePlant + (outSScalePlant * 1) / 100;
-                                double lower = outSScalePlant - (outSScalePlant * 1) / 100;
-                                if ((lower <= result && result <= upper)) {
-                                    item.setGoodsQty(item.getLfimg());
-                                    item.setOutScale((BigDecimal.valueOf(item.getInScale().doubleValue() - item.getGoodsQty().doubleValue())).setScale(3, RoundingMode.HALF_UP));
-                                    item.setsTime(now);
-                                    weightTicket.setSCreator(WeighBridgeApp.getApplication().getLogin().getUid());
-                                    weightTicket.setSScale((BigDecimal.valueOf((item.getInScale().doubleValue() - item.getGoodsQty().doubleValue()) * 1000)).setScale(3, RoundingMode.HALF_UP));
-                                    weightTicket.setSTime(now);
-                                    weightTicket.setGQty((BigDecimal.valueOf(item.getInScale().doubleValue() - item.getOutScale().doubleValue())).setScale(3, RoundingMode.HALF_UP));
-                                    checkPlant = true;
-                                }
-                            }
-                        }
                     }
 
                     for (int i = 0; i < outbDel_list.size(); i++) {
@@ -4002,6 +4043,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 lblOScale.setForeground(Color.black);
                 OutboundDeliveryDetail item;
                 double remain = (((Number) txfCurScale.getValue()).doubleValue() - ((Number) txfInQty.getValue()).doubleValue()) / 1000;
+                remain = Math.abs(remain);
 
                 // chia cân
                 if (outDetails_lits.size() > 1) {

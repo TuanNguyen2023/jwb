@@ -2206,12 +2206,14 @@ private void txtPOSTONumNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
             JTextField textField = (JTextField) component;
             textField.setEditable(isEditable);
             textField.setEnabled(isVisible);
+            textField.setDisabledTextColor(Color.black);
         } else if (component instanceof JComboBox) {
             component.setEnabled(isEditable);
             Component editorComponent = ((JComboBox) component).getEditor().getEditorComponent();
             if (editorComponent instanceof JTextField) {
                 ((JTextField) editorComponent).setEditable(false);
                 ((JTextField) editorComponent).setEnabled(true);
+                ((JTextField) editorComponent).setDisabledTextColor(Color.black);
             }
         }
     }
@@ -2225,12 +2227,14 @@ private void txtPOSTONumNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
             JTextField textField = (JTextField) component;
             textField.setEditable(isEditable);
             textField.setEnabled(isVisible);
+            textField.setDisabledTextColor(Color.black);
         } else if (component instanceof JComboBox) {
             component.setEnabled(isEditable);
             Component editorComponent = ((JComboBox) component).getEditor().getEditorComponent();
             if (editorComponent instanceof JTextField) {
                 ((JTextField) editorComponent).setEditable(false);
                 ((JTextField) editorComponent).setEnabled(true);
+                ((JTextField) editorComponent).setDisabledTextColor(Color.black);
             }
         }
     }

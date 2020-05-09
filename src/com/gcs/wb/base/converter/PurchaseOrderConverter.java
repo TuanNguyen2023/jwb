@@ -14,7 +14,10 @@ import com.gcs.wb.jpa.entity.PurchaseOrder;
 import com.gcs.wb.jpa.entity.PurchaseOrderDetail;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+import org.apache.commons.collections.CollectionUtils;
 
 /**
  *
@@ -49,6 +52,7 @@ public class PurchaseOrderConverter extends AbstractThrowableParamConverter<PoGe
         String kunnr = shippingExps.size() > 0 ? shippingExps.get(0).getCUSTOMER() : "";
         result.setCustomer(kunnr);
         
+        List<PurchaseOrderDetail> purchaseOrderDetails = new ArrayList<>();       
         for (int i = 0; i < items.size(); i++) {
             PoGetDetailItemStructure item = items.get(i);
             PurchaseOrderDetail purchaseOrderDetail = new PurchaseOrderDetail();
@@ -110,9 +114,16 @@ public class PurchaseOrderConverter extends AbstractThrowableParamConverter<PoGe
                 }
             }
 
-            result.addPurchaseOrderDetail(purchaseOrderDetail);
+            purchaseOrderDetails.add(purchaseOrderDetail);          
         }
 
+        //only get first one. the rest is unused.
+        if(CollectionUtils.isNotEmpty(purchaseOrderDetails)) {
+                result.addPurchaseOrderDetail(purchaseOrderDetails.stream()
+		.sorted(Comparator.comparing(PurchaseOrderDetail::getPoItem))
+		.collect(Collectors.toList()).get(0));
+        }
+       
         return result;
     }
 

@@ -19,6 +19,7 @@ public class FilterEditor<T> extends BasicComboBoxEditor {
                  Consumer<Boolean> editingChangeListener) {
         this.displayTextFunction = displayTextFunction;
         this.editingChangeListener = editingChangeListener;
+        this.filterText.setDisabledTextColor(Color.black);
     }
 
     public void addChar(char c) {

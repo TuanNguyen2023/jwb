@@ -87,6 +87,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
     private String trailerNoValidDO = "";
     private boolean isValidPlateNo = true;
     private boolean isValidTrailerNo = true;
+    private boolean isValidTonnage = true;
     private String checkedCharg = "";
     private String validSO = null;
     private String validDO = null;
@@ -926,6 +927,11 @@ public class WTRegView extends javax.swing.JInternalFrame {
         txtTonnageN.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
         txtTonnageN.setText(resourceMap.getString("txtTonnageN.text")); // NOI18N
         txtTonnageN.setName("txtTonnageN"); // NOI18N
+        txtTonnageN.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtTonnageNFocusLost(evt);
+            }
+        });
 
         txtTrailerNoN.setName("txtTrailerNoN"); // NOI18N
         txtTrailerNoN.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -1214,6 +1220,11 @@ public class WTRegView extends javax.swing.JInternalFrame {
 
         txtWeightN.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#,##0.000"))));
         txtWeightN.setName("txtWeightN"); // NOI18N
+        txtWeightN.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtWeightNFocusLost(evt);
+            }
+        });
         txtWeightN.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtWeightNKeyReleased(evt);
@@ -1917,7 +1928,7 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
     txtPlateNoN.setText(plateNo);
     isValidPlateNo = true;
 
-    if (!checkPlateWithVendor()) {
+    if (!plateNoValidDO.isEmpty() && !checkPlateWithVendor()) {
         return;
     }
 
@@ -1935,7 +1946,11 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
         validateForm();
 
         if (isValidPlateNo) {
-            txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(plateNo).toString());
+            String tonnageValue = plateNo;
+            if(!StringUtil.isEmptyString(txtTrailerNoN.getText())) {
+                tonnageValue = txtTrailerNoN.getText().trim();
+            }
+            txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(tonnageValue).toString());
         }
     }
 }//GEN-LAST:event_txtPlateNoNFocusLost
@@ -2162,6 +2177,13 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
         }
     } else {
         validateForm();
+        if (isValidTrailerNo) {
+            String tonnageValue = txtPlateNoN.getText().trim();
+            if(!StringUtil.isEmptyString(trailerNo)) {
+                tonnageValue = trailerNo;
+            }
+            txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(tonnageValue).toString());
+        }
     }
 }//GEN-LAST:event_txtTrailerNoNFocusLost
 
@@ -2192,6 +2214,17 @@ private void txtPOSTONumNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
         btnPOSTOCheckN.doClick();
     }
 }//GEN-LAST:event_txtPOSTONumNKeyPressed
+
+private void txtTonnageNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTonnageNFocusLost
+
+}//GEN-LAST:event_txtTonnageNFocusLost
+
+private void txtWeightNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtWeightNFocusLost
+// validate vehicle tonnage
+    lblWeightN.setForeground(Color.black);
+    isValidTonnage = true;
+    validateForm();
+}//GEN-LAST:event_txtWeightNFocusLost
 
     private void validateFilterForm() {
         boolean isDriverNameValid = wtRegisValidation.validateLength(txtDriverName.getText(), lblDriverName, 0, 70);
@@ -2301,6 +2334,31 @@ private void txtPOSTONumNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
     }
 
     List<DOCheckStructure> listDONumbers = new ArrayList<>();
+
+    private void validateVehicleTonnage() {
+        lblWeightN.setForeground(Color.black);
+        isValidTonnage = true;
+        if (!(modeDetail == MODE_DETAIL.IN_PO_PURCHASE)
+                && !(modeDetail == MODE_DETAIL.IN_WAREHOUSE_TRANSFER)
+                && !(modeDetail == MODE_DETAIL.IN_OTHER)) {
+            double tonnage = new BigDecimal(txtTonnageN.getText()).setScale(3, RoundingMode.HALF_UP).doubleValue();
+            if (tonnage > 0) {
+                String valReg = txtWeightN.getText().trim().replace(",", "");
+                double regQty = new Double(valReg).doubleValue();
+
+                if (tonnage < regQty) {
+                    isValidTonnage = false;
+                    lblWeightN.setForeground(Color.red);
+                    String msg = resourceMapMsg.getString("msg.regQuanlityOverload");
+                    Integer lv_return = JOptionPane.showConfirmDialog(WeighBridgeApp.getApplication().getMainFrame(), msg, resourceMapMsg.getString("msg.question"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    if (lv_return == JOptionPane.YES_OPTION) {
+                        isValidTonnage = true;
+                        lblWeightN.setForeground(Color.black);
+                    }
+                }
+            }
+        }
+    }
 
     private class CheckSOTask extends org.jdesktop.application.Task<Object, Void> {
 
@@ -2681,12 +2739,14 @@ private void txtPOSTONumNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
             JTextField textField = (JTextField) component;
             textField.setEditable(isEditable);
             textField.setEnabled(isVisible);
+            textField.setDisabledTextColor(Color.black);
         } else if (component instanceof JComboBox) {
             component.setEnabled(isEditable);
             Component editorComponent = ((JComboBox) component).getEditor().getEditorComponent();
             if (editorComponent instanceof JTextField) {
                 ((JTextField) editorComponent).setEditable(false);
                 ((JTextField) editorComponent).setEnabled(true);
+                ((JTextField) editorComponent).setDisabledTextColor(Color.black);
             }
         }
     }
@@ -2700,12 +2760,14 @@ private void txtPOSTONumNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
             JTextField textField = (JTextField) component;
             textField.setEditable(isEditable);
             textField.setEnabled(isVisible);
+            textField.setDisabledTextColor(Color.black);
         } else if (component instanceof JComboBox) {
             component.setEnabled(isEditable);
             Component editorComponent = ((JComboBox) component).getEditor().getEditorComponent();
             if (editorComponent instanceof JTextField) {
                 ((JTextField) editorComponent).setEditable(false);
                 ((JTextField) editorComponent).setEnabled(true);
+                ((JTextField) editorComponent).setDisabledTextColor(Color.black);
             }
         }
     }
@@ -3504,6 +3566,10 @@ private void txtPOSTONumNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
 
     @Action(enabledProperty = "saveNeeded")
     public Task saveRecord() {
+        validateVehicleTonnage();
+        if(!isValidTonnage) {
+            return null;
+        }
         int answer = JOptionPane.showConfirmDialog(
                 this.getRootPane(),
                 resourceMapMsg.getString("msg.questtionSave"),
@@ -4002,6 +4068,9 @@ private void txtPOSTONumNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
             }
             weightTicketDetail.setDeliveryOrderNo(outboundDelivery.getDeliveryOrderNo());
             weightTicketDetail.setRegItemQuantity(outboundDelivery.getLfimg());
+            if((salesOrder == null || StringUtil.isEmptyString(salesOrder)) && (modeDetail != MODE_DETAIL.IN_WAREHOUSE_TRANSFER)) {
+                salesOrder = outboundDelivery.getOutboundDeliveryDetail().getVgbel();
+            }
             weightTicketDetail.setSoNumber(salesOrder);
             weightTicketDetail.setShipTo(outboundDelivery.getOutboundDeliveryDetail().getShipTo());
 
@@ -5293,8 +5362,12 @@ private void txtPOSTONumNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
             txtCMNDN.setText(newWeightTicket.getDriverIdNo());
             txtPlateNoN.setText(newWeightTicket.getPlateNo());
             txtPlateNoN.setEditable(false);
-            txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(newWeightTicket.getPlateNo()).toString());
             txtTrailerNoN.setText(newWeightTicket.getTrailerId());
+            String tonnageValue = txtPlateNoN.getText().trim();
+            if(!StringUtil.isEmptyString(txtTrailerNoN.getText())) {
+                tonnageValue = txtTrailerNoN.getText().trim();
+            }
+            txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(tonnageValue).toString());
             txtSlingN.setText(Integer.toString(newWeightTicket.getSling()));
             txtSlingN.setValue(newWeightTicket.getSling());
             txtPalletN.setText(Integer.toString(newWeightTicket.getPallet()));
