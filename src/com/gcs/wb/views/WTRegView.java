@@ -2174,6 +2174,15 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
             btnSave.setEnabled(false);
             isValidTrailerNo = false;
             JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.trailerNoNotMapping", trailerNo));
+        } else {
+            validateForm();
+            if (isValidTrailerNo) {
+                String tonnageValue = txtPlateNoN.getText().trim();
+                if (!StringUtil.isEmptyString(trailerNo)) {
+                    tonnageValue = trailerNo;
+                }
+                txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(tonnageValue).toString());
+            }
         }
     } else {
         validateForm();
