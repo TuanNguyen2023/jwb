@@ -132,7 +132,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         setBridge2(configuration.getWb2Port() != null);
 
         formatter = new SimpleDateFormat();
-        txfCurScale.setEditable(true);
         sapSetting = WeighBridgeApp.getApplication().getSapSetting();
         login = WeighBridgeApp.getApplication().getLogin();
         entityManager.clear();
@@ -1526,7 +1525,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             }
         }
 
-        txfCurScale.setEditable(true);
         return new AcceptScaleTask(WeighBridgeApp.getApplication());
     }
 
