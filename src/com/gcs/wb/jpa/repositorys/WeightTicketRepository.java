@@ -361,7 +361,7 @@ public class WeightTicketRepository {
             }
         }
 
-        query += " AND w.status <> '" + Constants.WeightTicket.STATUS_DISSOLVED + "'";
+        query += " AND (w.status IS NULL OR w.status <> '" + Constants.WeightTicket.STATUS_DISSOLVED + "')";
         switch (status) {
             case POSTED:
                 query += "  AND w.status = '" + Constants.WeightTicket.STATUS_POSTED + "'";
@@ -418,7 +418,7 @@ public class WeightTicketRepository {
             query += "  AND w.mode = '" + mode + "'";
         }
 
-        query += " AND w.status <> '" + Constants.WeightTicket.STATUS_DISSOLVED + "'";
+        query += " AND (w.status IS NULL OR w.status <> '" + Constants.WeightTicket.STATUS_DISSOLVED + "')";
         switch (status) {
             case POSTED:
                 query += "  AND w.status = '" + Constants.WeightTicket.STATUS_POSTED + "'";
