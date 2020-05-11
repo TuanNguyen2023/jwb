@@ -8,7 +8,7 @@ package com.gcs.wb.base.util;
 import com.gcs.wb.WeighBridgeApp;
 import com.sap.conn.jco.JCoException;
 import com.gcs.wb.base.constant.Constants;
-import java.net.SocketException;
+import javax.persistence.PersistenceException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import org.eclipse.persistence.exceptions.DatabaseException;
@@ -42,7 +42,7 @@ public class ExceptionUtil {
             if (dbex.isCommunicationFailure()) {
                 JOptionPane.showMessageDialog(mainFrame, Constants.Message.DB_DISCONNECTED);
             }
-        } else if (ex.getCause() instanceof NullPointerException) {
+        } else if (ex.getCause() instanceof PersistenceException) {
             JOptionPane.showMessageDialog(mainFrame, Constants.Message.DB_DISCONNECTED);
         }
 
@@ -55,7 +55,7 @@ public class ExceptionUtil {
             if (dbex.isCommunicationFailure()) {
                 return true;
             }
-        } else if (ex.getCause() instanceof NullPointerException) {
+        } else if (ex.getCause() instanceof PersistenceException) {
             return true;
         }
 
