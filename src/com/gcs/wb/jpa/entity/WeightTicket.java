@@ -32,13 +32,15 @@ import javax.persistence.Temporal;
     @NamedQuery(name = "WeightTicket.findByIdAndMandtAndWplant",
             query = "SELECT w FROM WeightTicket w WHERE w.id = :id"
             + " AND w.mandt = :mandt"
-            + " AND w.wplant = :wplant"),
+            + " AND w.wplant = :wplant"
+            + " AND w.status <> '" + Constants.WeightTicket.STATUS_DISSOLVED + "'"),
     @NamedQuery(name = "WeightTicket.findByCreatedDateRange",
             query = "SELECT DISTINCT w FROM WeightTicket w "
             + " , IN(w.weightTicketDetails) wd "
             + "WHERE w.createdDate BETWEEN :from AND :to"
             + "  AND w.mandt = :mandt"
             + "  AND w.wplant = :wplant"
+            + "  AND w.status <> '" + Constants.WeightTicket.STATUS_DISSOLVED + "'"
             + " ORDER BY w.createdDate, w.createdTime"),
     @NamedQuery(name = "WeightTicket.findByDeliveryOrderNo",
             query = "SELECT w FROM WeightTicket w "
@@ -118,12 +120,14 @@ import javax.persistence.Temporal;
             query = "SELECT w FROM WeightTicket w "
             + " , IN(w.weightTicketDetails) wd "
             + " WHERE wd.deliveryOrderNo LIKE :deliveryOrderNo "
-            + " AND (wd.ebeln IS NULL OR wd.ebeln = '') "),
+            + " AND (wd.ebeln IS NULL OR wd.ebeln = '') "
+            + " AND w.status <> '" + Constants.WeightTicket.STATUS_DISSOLVED + "'"),
     @NamedQuery(name = "WeightTicket.findByDeliveryOrderNoExistEbelnIn",
             query = "SELECT w FROM WeightTicket w "
             + " , IN(w.weightTicketDetails) wd "
             + " WHERE wd.deliveryOrderNo LIKE :deliveryOrderNo "
-            + " AND w.regType = '" + Constants.WeightTicket.REG_TYPE_IN + "'  "),
+            + " AND w.regType = '" + Constants.WeightTicket.REG_TYPE_IN + "'  "
+            + " AND w.status <> '" + Constants.WeightTicket.STATUS_DISSOLVED + "'"),
     @NamedQuery(name = "WeightTicket.findByQtyPOisPOSTED",
             query = "SELECT DISTINCT w FROM WeightTicket w "
             + " , IN(w.weightTicketDetails) wd "
