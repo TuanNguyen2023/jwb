@@ -114,8 +114,10 @@ public class WeightTicketRepository {
                         .orElse(null);
             }
         } catch (Exception ex) {
-            logger.error(null, ex);
-            ExceptionUtil.checkDatabaseDisconnectedException(ex);
+            if (!ExceptionUtil.isDatabaseDisconnectedException(ex)) {
+                logger.error(null, ex);
+                ExceptionUtil.checkDatabaseDisconnectedException(ex);
+            }
         }
 
         return weightTicket;
@@ -131,8 +133,10 @@ public class WeightTicketRepository {
                         .orElse(null);
             }
         } catch (Exception ex) {
-            logger.error(null, ex);
-            ExceptionUtil.checkDatabaseDisconnectedException(ex);
+            if (!ExceptionUtil.isDatabaseDisconnectedException(ex)) {
+                logger.error(null, ex);
+                ExceptionUtil.checkDatabaseDisconnectedException(ex);
+            }
         }
 
         return weightTicket;
