@@ -384,16 +384,24 @@ public class WeightTicketService {
         BigDecimal kl = BigDecimal.ZERO;
         BigDecimal kl_km = BigDecimal.ZERO;
         BigDecimal kl_total = BigDecimal.ZERO;
-        for (int i = 0; i < outDetails_lits.size(); i++) {
-            item = outDetails_lits.get(i);
-            if (item.getDeliveryOrderNo().contains(doNum)) {
-                if (item.getFreeItem() == null || item.getFreeItem().equals("")) {
-                    kl = kl.add((item.getGoodsQty() != null) ? item.getGoodsQty() : BigDecimal.ZERO);
-                } else {
-                    kl_km = kl_km.add((item.getGoodsQty() != null) ? item.getGoodsQty() : BigDecimal.ZERO);
+
+        if (outbDel != null 
+                && wt.getMode().equals("IN_WAREHOUSE_TRANSFER")
+                && checkBagCement(weightTicketDetail.getMatnrRef())) {
+            kl = outbDel.getLfimg();
+        } else {
+            for (int i = 0; i < outDetails_lits.size(); i++) {
+                item = outDetails_lits.get(i);
+                if (item.getDeliveryOrderNo().contains(doNum)) {
+                    if (item.getFreeItem() == null || item.getFreeItem().equals("")) {
+                        kl = kl.add((item.getGoodsQty() != null) ? item.getGoodsQty() : BigDecimal.ZERO);
+                    } else {
+                        kl_km = kl_km.add((item.getGoodsQty() != null) ? item.getGoodsQty() : BigDecimal.ZERO);
+                    }
                 }
             }
         }
+
         kl_total = kl.add(kl_km);
         if (outbDel == null) {
             tab_wa.setDeliv_numb(weightTicketDetail.getDeliveryOrderNo());
@@ -470,7 +478,12 @@ public class WeightTicketService {
         tab_wa.setStge_loc(wt.getLgort());
         tab_wa.setBatch(wt.getCharg());
         tab_wa.setGr_rcpt(wt.getSCreator());
-        tab_wa.setEntry_qnt(wt.getGQty());
+        if (!wt.getMode().equals("IN_PO_PURCHASE")
+                && checkBagCement(weightTicketDetail.getMatnrRef())) {
+            tab_wa.setEntry_qnt(weightTicketDetail.getRegItemQuantity());
+        } else {
+            tab_wa.setEntry_qnt(wt.getGQty());
+        }
         tab_wa.setEntry_uom(weightTicketDetail.getUnit());
 
         if (wt.getNoMoreGr() != null && wt.getNoMoreGr() == '2') {
@@ -581,7 +594,11 @@ public class WeightTicketService {
         //tab_wa.setMove_type(wt.getMoveType());
         tab_wa.setMove_type("311");
         tab_wa.setMvt_ind(null);
-        tab_wa.setEntry_qnt(wt.getGQty());
+        if (checkBagCement(weightTicketDetail.getMatnrRef())) {
+            tab_wa.setEntry_qnt(weightTicketDetail.getRegItemQuantity());
+        } else {
+            tab_wa.setEntry_qnt(wt.getGQty());
+        }
         tab_wa.setEntry_uom(weightTicketDetail.getUnit());
 
         //vat tu, kho, lo nhan
@@ -670,7 +687,12 @@ public class WeightTicketService {
                 && weightTicketDetail.getMatnrRef() != null) {
             _StockTransItems.add(new OutbDeliveryCreateStoStructure(weightTicketDetail.getEbeln(), weightTicketDetail.getItem(), weightTicketDetail.getRegItemQuantity(), weightTicketDetail.getUnit()));
         } else if (outbDel == null) {
-            _StockTransItems.add(new OutbDeliveryCreateStoStructure(weightTicketDetail.getEbeln(), weightTicketDetail.getItem(), wt.getGQty(), weightTicketDetail.getUnit()));
+            BigDecimal qty = wt.getGQty();
+            if(checkBagCement(weightTicketDetail.getMatnrRef())) {
+                qty = weightTicketDetail.getRegItemQuantity();
+            }
+
+            _StockTransItems.add(new OutbDeliveryCreateStoStructure(weightTicketDetail.getEbeln(), weightTicketDetail.getItem(), qty, weightTicketDetail.getUnit()));
         } else {
             _StockTransItems.add(new OutbDeliveryCreateStoStructure(weightTicketDetail.getEbeln(), weightTicketDetail.getItem(), kl_total, weightTicketDetail.getUnit()));
         }
@@ -694,8 +716,13 @@ public class WeightTicketService {
         tab_wa.setCharg(wt.getCharg());
         tab_wa.setLianp("X");
         if (outbDel == null) {
-            tab_wa.setPikmg(wt.getGQty());
-            tab_wa.setLfimg(wt.getGQty());
+            if(checkBagCement(weightTicketDetail.getMatnrRef())) {
+                tab_wa.setPikmg(weightTicketDetail.getRegItemQuantity());
+                tab_wa.setLfimg(weightTicketDetail.getRegItemQuantity());
+            } else {
+                tab_wa.setPikmg(wt.getGQty());
+                tab_wa.setLfimg(wt.getGQty());
+            }
         } else {
             tab_wa.setPikmg(kl_total);
             tab_wa.setLfimg(kl_total);
@@ -796,8 +823,13 @@ public class WeightTicketService {
         tab_wa.setCharg(wt.getCharg());
         tab_wa.setLianp("X");
         if (outbDel == null) {
-            tab_wa.setPikmg(wt.getGQty());
-            tab_wa.setLfimg(wt.getGQty());
+            if(checkBagCement(weightTicketDetail.getMatnrRef())) {
+                tab_wa.setPikmg(weightTicketDetail.getRegItemQuantity());
+                tab_wa.setLfimg(weightTicketDetail.getRegItemQuantity());
+            } else {
+                tab_wa.setPikmg(wt.getGQty());
+                tab_wa.setLfimg(wt.getGQty());
+            }
         } else {
             tab_wa.setPikmg(kl_total);
             tab_wa.setLfimg(kl_total);
@@ -837,13 +869,19 @@ public class WeightTicketService {
         BigDecimal kl_km = BigDecimal.ZERO;
         BigDecimal kl_total = BigDecimal.ZERO;
 
-        for (int i = 0; i < outDetails_lits.size(); i++) {
-            item = outDetails_lits.get(i);
-            if (item.getDeliveryOrderNo().contains(doNum)) {
-                if (item.getFreeItem() == null || item.getFreeItem().equals("")) {
-                    kl = kl.add((item.getGoodsQty() != null) ? item.getGoodsQty() : BigDecimal.ZERO);
-                } else {
-                    kl_km = kl_km.add((item.getGoodsQty() != null) ? item.getGoodsQty() : BigDecimal.ZERO);
+        if (outbDel != null
+                && wt.getMode().equals("IN_WAREHOUSE_TRANSFER")
+                && checkBagCement(weightTicketDetail.getMatnrRef())) {
+            kl = outbDel.getLfimg();
+        } else {
+            for (int i = 0; i < outDetails_lits.size(); i++) {
+                item = outDetails_lits.get(i);
+                if (item.getDeliveryOrderNo().contains(doNum)) {
+                    if (item.getFreeItem() == null || item.getFreeItem().equals("")) {
+                        kl = kl.add((item.getGoodsQty() != null) ? item.getGoodsQty() : BigDecimal.ZERO);
+                    } else {
+                        kl_km = kl_km.add((item.getGoodsQty() != null) ? item.getGoodsQty() : BigDecimal.ZERO);
+                    }
                 }
             }
         }
@@ -1007,11 +1045,14 @@ public class WeightTicketService {
                 if (!wt.isDissolved()) {
                     Double tmp = null;
                     BigDecimal weightActual = BigDecimal.ZERO;
-                    if (wt.getMode().equals("OUT_PLANT_PLANT") && wt.getGQty() != null) {
-                        weightActual = wt.getGQty();
-                    } else {
+                    if((wt.getGQty() == null)
+                        || (!wt.getMode().equals("IN_PO_PURCHASE")
+                        && checkBagCement(weightTicketDetail.getMatnrRef()))) {
                         weightActual = weightTicketDetail.getRegItemQuantity();
+                    } else {
+                        weightActual = wt.getGQty() != null ? wt.getGQty() : BigDecimal.ZERO;
                     }
+
                     if ((StringUtil.isNotEmptyString(weightTicketDetail.getMatnrRef()))
                             && checkBagCement(weightTicketDetail.getMatnrRef())) {
                         tmp = ((weightActual.doubleValue()) * 1000d) / baoWeigh;
@@ -1260,7 +1301,11 @@ public class WeightTicketService {
         tab_wa.setBatch(wt.getCharg());
         tab_wa.setVendor(purOrderPosto.getVendor());
         tab_wa.setGr_rcpt(wt.getSCreator());
-        tab_wa.setEntry_qnt(wt.getGQty());
+        if (checkBagCement(weightTicketDetail.getMatnrRef())) {
+            tab_wa.setEntry_qnt(weightTicketDetail.getRegItemQuantity());
+        } else {
+            tab_wa.setEntry_qnt(wt.getGQty());
+        }
         tab_wa.setEntry_uom(weightTicketDetail.getUnit());
 
         if (wt.getNoMoreGr() != null && wt.getNoMoreGr() == '2') {
@@ -1334,8 +1379,13 @@ public class WeightTicketService {
         tab_waVp.setLgort(wt.getLgort());
         tab_waVp.setCharg(wt.getCharg());
         tab_waVp.setLianp("X");
-        tab_waVp.setPikmg(wt.getGQty());
-        tab_waVp.setLfimg(wt.getGQty());
+        if (checkBagCement(weightTicketDetail.getMatnrRef())) {
+            tab_waVp.setPikmg(weightTicketDetail.getRegItemQuantity());
+            tab_waVp.setLfimg(weightTicketDetail.getRegItemQuantity());
+        } else {
+            tab_waVp.setPikmg(wt.getGQty());
+            tab_waVp.setLfimg(wt.getGQty());
+        }
         tab_waVp.setVrkme(purOrder.getPurchaseOrderDetail().getPoUnit());
         tab_waVp.setMeins(purOrder.getPurchaseOrderDetail().getPoUnit());
         tabVp.add(tab_waVp);
