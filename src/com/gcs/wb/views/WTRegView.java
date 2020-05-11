@@ -4007,7 +4007,11 @@ private void txtWeightNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
             }
 
             // check out together
-            if (deliveryOrderNos.length > 1 && !checkMaterial(matnrs)) {
+            if (matnrs.size() > 1 && modeDetail == MODE_DETAIL.IN_WAREHOUSE_TRANSFER) {
+                throw new Exception(resourceMapMsg.getString("msg.materialNotSame"));
+            }
+
+            if (deliveryOrderNos.length > 1 && matnrs.size() > 1 && !checkMaterial(matnrs)) {
                 throw new Exception(resourceMapMsg.getString("msg.materialNotTogether"));
             }
 
