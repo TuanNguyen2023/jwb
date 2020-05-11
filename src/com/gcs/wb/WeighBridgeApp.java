@@ -264,8 +264,12 @@ public class WeighBridgeApp extends SingleFrameApplication {
         try {
             if (normScale != null) {
                 normScale.disconnect();
-            } else if (mettlerScale != null) {
+                normScale = null;
+            } 
+
+            if (mettlerScale != null) {
                 mettlerScale.disconnect();
+                mettlerScale = null;
             }
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(this.getMainFrame(), ex.getMessage(), "Thông báo thoát", JOptionPane.WARNING_MESSAGE);

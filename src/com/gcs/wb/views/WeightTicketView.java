@@ -1338,6 +1338,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         txtInTime.setText(null);
         txfGoodsQty.setValue(null);
         btnIScaleReset.setEnabled(false);
+        btnAccept.setEnabled(true);
         setSaveNeeded(isValidated());
     }//GEN-LAST:event_btnIScaleResetActionPerformed
 
@@ -1346,6 +1347,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         txtOutTime.setText(null);
         txfGoodsQty.setValue(null);
         btnOScaleReset.setEnabled(false);
+        btnAccept.setEnabled(true);
         setSaveNeeded(isValidated());
     }//GEN-LAST:event_btnOScaleResetActionPerformed
 
@@ -1474,8 +1476,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         setSaveNeeded(isValidated());
     }
 
-    @Action(block = Task.BlockingScope.ACTION)
-    public Task acceptScale() {
+    @Action
+    public Task acceptScale() {    
         String last = WeighBridgeApp.getApplication().getLast().toString();
         String now = WeighBridgeApp.getApplication().getNow().toString();
         if (!last.equals(now)) {
@@ -3738,7 +3740,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
         @Override
         protected Object doInBackground() throws Exception {
-            WeighBridgeApp.getApplication().disconnectWB();
             formatter.applyPattern(WeighBridgeApp.DATE_TIME_DISPLAY_FORMAT);
             Date now = weightTicketController.getServerTime();
             btnAccept.setEnabled(false);
