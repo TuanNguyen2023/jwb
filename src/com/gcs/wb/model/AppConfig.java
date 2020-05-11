@@ -35,6 +35,7 @@ public class AppConfig {
             getDbName();
             getDbUsername();
             getDbPassword();
+            getAutoSync();
         } catch (ConfigurationException ex) {
             try {
                 config.save();
@@ -65,6 +66,10 @@ public class AppConfig {
      * Configuration Key: WB_ID
      */
     public static final String WB_ID = "WB_ID";
+    /**
+     * Configuration Key: AUTO_SYNC
+     */
+    public static final String AUTO_SYNC = "AUTO_SYNC";
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Configuration Attributes">
@@ -88,6 +93,10 @@ public class AppConfig {
      * ma cau can
      */
     private String wbId = null;
+    /**
+     * Auto sync flag
+     */
+    private boolean autoSync = false;
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Attribute's Getter Setter">
@@ -218,6 +227,24 @@ public class AppConfig {
     public void setWbId(String wbId) {
         config.setProperty(WB_ID, Base64_Utils.encodeNTimes(wbId));
         this.wbId = wbId;
+    }
+    
+    /**
+     * Auto Sync Boolean
+     * @return the Auto Sync
+     */
+    public boolean getAutoSync() {
+        autoSync = config.getBoolean(AUTO_SYNC, false);
+        return autoSync;
+    }
+
+    /**
+     * Auto Sync Boolean
+     * @param isAutoSync the flag to set
+     */
+    public void setAutoSync(boolean isAutoSync) {
+        config.setProperty(AUTO_SYNC, isAutoSync);
+        this.autoSync = isAutoSync;
     }
 
     public Configuration getConfiguration() {
