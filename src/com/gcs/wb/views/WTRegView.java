@@ -1928,7 +1928,7 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
     txtPlateNoN.setText(plateNo);
     isValidPlateNo = true;
 
-    if (!plateNoValidDO.isEmpty() && !checkPlateWithVendor()) {
+    if (!checkPlateWithVendor()) {
         return;
     }
 
