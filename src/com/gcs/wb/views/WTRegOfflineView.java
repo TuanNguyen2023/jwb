@@ -36,6 +36,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -1758,7 +1759,11 @@ private void txtPlateNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:ev
         return;
     }
 
-    txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(plateNo).toString());
+    String tonnageValue = plateNo;
+    if (!StringUtil.isEmptyString(txtTrailerNoN.getText())) {
+        tonnageValue = txtTrailerNoN.getText().trim();
+    }
+    txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(tonnageValue).toString());
 
     validateForm();
 }//GEN-LAST:event_txtPlateNoNFocusLost
@@ -1929,11 +1934,16 @@ private void cbxShipToNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FI
 
 private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTrailerNoNFocusLost
     String trailerNo = txtTrailerNoN.getText().trim();
-    trailerNo = trailerNo.replace("-", "");
-    trailerNo = trailerNo.replace(".", "");
+    trailerNo = trailerNo.replace("-", "").replace(".", "");
     txtTrailerNoN.setText(trailerNo.toUpperCase());
 
     validateForm();
+    
+    String tonnageValue = txtPlateNoN.getText().trim();
+    if (!StringUtil.isEmptyString(trailerNo)) {
+        tonnageValue = trailerNo;
+    }
+    txtTonnageN.setText(weightTicketRegistarationController.loadVehicleLoading(tonnageValue).toString());
 }//GEN-LAST:event_txtTrailerNoNFocusLost
 
 private void txtSONumNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSONumNKeyPressed
@@ -2953,9 +2963,38 @@ private void txtPOSTONumNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
         duplicateDialog.setModal(false);
         duplicateDialog.setVisible(true);
     }
+    
+    private boolean validateVehicleTonnage() {
+        boolean result = true;
+
+        if (mode == MODE.OUTPUT) {
+            double tonnage = new BigDecimal(txtTonnageN.getText()).setScale(3, RoundingMode.HALF_UP).doubleValue();
+            if (tonnage > 0) {
+                String valReg = txtWeightN.getText().trim().replace(",", "");
+                double regQty = new Double(valReg);
+
+                if (tonnage < regQty) {
+                    result = false;
+                    lblWeightN.setForeground(Color.red);
+                    String msg = resourceMapMsg.getString("msg.regQuanlityOverload");
+                    Integer lv_return = JOptionPane.showConfirmDialog(WeighBridgeApp.getApplication().getMainFrame(), msg, resourceMapMsg.getString("msg.question"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    if (lv_return == JOptionPane.YES_OPTION) {
+                        lblWeightN.setForeground(Color.black);
+                        result = true;
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
 
     @Action(enabledProperty = "saveNeeded")
     public Task saveRecord() {
+        if(!validateVehicleTonnage()) {
+            return null;
+        }
+
         int answer = JOptionPane.showConfirmDialog(
                 this.getRootPane(),
                 resourceMapMsg.getString("msg.questtionSave"),

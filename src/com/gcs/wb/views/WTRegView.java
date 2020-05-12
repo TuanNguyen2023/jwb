@@ -2162,8 +2162,7 @@ private void txtSONumNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:even
 
 private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtTrailerNoNFocusLost
     String trailerNo = txtTrailerNoN.getText().trim();
-    trailerNo = trailerNo.replace("-", "");
-    trailerNo = trailerNo.replace(".", "");
+    trailerNo = trailerNo.replace("-", "").replace(".", "");
     txtTrailerNoN.setText(trailerNo.toUpperCase());
     lblTrailerNoN.setForeground(Color.black);
     isValidTrailerNo = true;
@@ -2347,13 +2346,11 @@ private void txtWeightNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
     private void validateVehicleTonnage() {
         lblWeightN.setForeground(Color.black);
         isValidTonnage = true;
-        if (!(modeDetail == MODE_DETAIL.IN_PO_PURCHASE)
-                && !(modeDetail == MODE_DETAIL.IN_WAREHOUSE_TRANSFER)
-                && !(modeDetail == MODE_DETAIL.IN_OTHER)) {
+        if (mode == MODE.OUTPUT) {
             double tonnage = new BigDecimal(txtTonnageN.getText()).setScale(3, RoundingMode.HALF_UP).doubleValue();
             if (tonnage > 0) {
                 String valReg = txtWeightN.getText().trim().replace(",", "");
-                double regQty = new Double(valReg).doubleValue();
+                double regQty = new Double(valReg);
 
                 if (tonnage < regQty) {
                     isValidTonnage = false;
