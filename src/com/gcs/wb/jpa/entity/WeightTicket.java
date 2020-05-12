@@ -732,6 +732,19 @@ public class WeightTicket implements Serializable {
 
         return weightTicketDetails.get(0);
     }
+    
+    public BigDecimal getTotalWeight() {
+        BigDecimal result = BigDecimal.ZERO;
+        if (!weightTicketDetails.isEmpty()) {
+            weightTicketDetails.forEach(t -> {
+                if (t != null && t.getRegItemQuantity() != null) {
+                    result.add(t.getRegItemQuantity());
+                }
+            });
+        }
+
+        return result;
+    }
 
     @Override
     public boolean equals(Object o) {
