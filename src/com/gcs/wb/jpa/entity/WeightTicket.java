@@ -736,11 +736,11 @@ public class WeightTicket implements Serializable {
     public BigDecimal getTotalWeight() {
         BigDecimal result = BigDecimal.ZERO;
         if (!weightTicketDetails.isEmpty()) {
-            weightTicketDetails.forEach(t -> {
-                if (t != null && t.getRegItemQuantity() != null) {
-                    result.add(t.getRegItemQuantity());
+            for (WeightTicketDetail weightTicketDetail : weightTicketDetails) {
+                if (weightTicketDetail != null && weightTicketDetail.getRegItemQuantity() != null) {
+                    result = result.add(weightTicketDetail.getRegItemQuantity());
                 }
-            });
+            }
         }
 
         return result;
