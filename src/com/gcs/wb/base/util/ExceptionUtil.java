@@ -42,7 +42,7 @@ public class ExceptionUtil {
             if (dbex.isCommunicationFailure()) {
                 JOptionPane.showMessageDialog(mainFrame, Constants.Message.DB_DISCONNECTED);
             }
-        } else if (ex.getCause() instanceof PersistenceException) {
+        } else if (ex instanceof PersistenceException && ex.getCause() instanceof NullPointerException) {
             JOptionPane.showMessageDialog(mainFrame, Constants.Message.DB_DISCONNECTED);
         }
 
@@ -55,7 +55,7 @@ public class ExceptionUtil {
             if (dbex.isCommunicationFailure()) {
                 return true;
             }
-        } else if (ex.getCause() instanceof PersistenceException) {
+        } else if (ex instanceof PersistenceException && ex.getCause() instanceof NullPointerException) {
             return true;
         }
 

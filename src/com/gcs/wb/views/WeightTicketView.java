@@ -1299,8 +1299,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
             btnAccept.setEnabled(serialConnected);
             txfCurScale.setEditable(!configuration.getWb1AutoSignal() && serialConnected);
-            setSaveNeeded(isValidated());
-
         } catch (SerialPortInvalidPortException | IllegalPortException | IOException | TooManyListenersException ex) {
             java.util.logging.Logger.getLogger(WeightTicketView.class.getName()).log(Level.SEVERE, null, ex);
             txfCurScale.setEditable(false);
@@ -1324,8 +1322,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
             btnAccept.setEnabled(serialConnected);
             txfCurScale.setEditable(!configuration.getWb2AutoSignal() && serialConnected);
-            setSaveNeeded(isValidated());
-
         } catch (SerialPortInvalidPortException | IllegalPortException | IOException | TooManyListenersException ex) {
             java.util.logging.Logger.getLogger(WeightTicketView.class.getName()).log(Level.SEVERE, null, ex);
             txfCurScale.setEditable(false);
@@ -3861,7 +3857,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         && !weightTicket.getMode().equals("OUT_SELL_WATERWAY")
                         && weightTicketController.checkBagCement(material)) {
                     double tolerance = 1;
-                    double regQty = weightTicket.getWeightTicketDetail().getRegItemQuantity().doubleValue();
+                    double regQty = weightTicket.getTotalWeight().doubleValue();
                     double upper = new BigDecimal(regQty + (regQty * tolerance) / 100).setScale(3, RoundingMode.HALF_UP).doubleValue();
                     double lower = new BigDecimal(regQty - (regQty * tolerance) / 100).setScale(3, RoundingMode.HALF_UP).doubleValue();
 
