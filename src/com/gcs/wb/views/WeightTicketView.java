@@ -1873,7 +1873,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     public void setSaveNeeded(boolean b) {
         boolean old = isSaveNeeded();
         this.saveNeeded = b;
-        firePropertyChange(PROP_SAVENEEDED, old, isSaveNeeded());
+        firePropertyChange(PROP_SAVENEEDED, old, b);
     }
 
     /**
@@ -4102,6 +4102,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
                 weightTicket.setStatus(Constants.WeightTicket.STATUS_INCOMPLETED);
             }
+
+            isValidated();
             return null;
         }
 
