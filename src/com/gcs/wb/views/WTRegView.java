@@ -3744,7 +3744,7 @@ private void txtWeightNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
 
         @Override
         protected void failed(Throwable cause) {
-            JOptionPane.showMessageDialog(rootPane, cause);
+            JOptionPane.showMessageDialog(rootPane, cause.getMessage());
         }
 
         @Override

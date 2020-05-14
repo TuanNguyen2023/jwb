@@ -88,9 +88,12 @@ public class WeightTicketRegistarationController {
         jreportService.printReport(map, reportName);
     }
 
-    public void printRegWT(WeightTicket wt, boolean reprint) {
+    public void printRegWT(WeightTicket wt, boolean reprint) throws Exception {
         if (reprint) {
             wt = weightTicketRepository.getWeightTicketByIdAndMandtAndWplant(wt.getId(), wt.getMandt(), wt.getWplant());
+            if (wt == null) {
+                throw new Exception("Phiếu cân không tồn tại. Vui lòng kiểm tra lại.");
+            }
         }
 
         List<WeightTicketDetail> weightTicketDetails = wt.getWeightTicketDetails();

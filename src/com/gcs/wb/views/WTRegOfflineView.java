@@ -3163,7 +3163,7 @@ private void txtPOSTONumNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
 
         @Override
         protected void failed(Throwable cause) {
-            JOptionPane.showMessageDialog(rootPane, cause);
+            JOptionPane.showMessageDialog(rootPane, cause.getMessage());
         }
 
         @Override
