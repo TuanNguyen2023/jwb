@@ -1368,8 +1368,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_txtCementDescActionPerformed
 
     private void btnAcceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAcceptActionPerformed
-        // TODO add your handling code here:
-        setSaveNeeded(isValidated());
+
     }//GEN-LAST:event_btnAcceptActionPerformed
 
     private void txtOutTimeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtOutTimeKeyReleased
