@@ -1070,6 +1070,8 @@ public class WeightTicketService {
 
             } else {
                 for (int i = 0; i < outbDel_list.size(); i++) {
+                    bags = null;
+                    map = new HashMap<>();
                     item = outbDel_list.get(i);
                     List<WeightTicketDetail> weightTicketDetails = wt.getWeightTicketDetails();
 
