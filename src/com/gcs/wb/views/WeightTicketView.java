@@ -119,6 +119,11 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     private DecimalFormat df = new DecimalFormat("#,##0.000");
     private boolean isValidTonnage = true;
 
+    public void resetBridges() {
+        setBridge1(configuration.getWb1Port() != null);
+        setBridge2(configuration.getWb2Port() != null);
+    }
+            
     public WeightTicketView() {
         weightTicket = new com.gcs.wb.jpa.entity.WeightTicket();
         purOrder = new com.gcs.wb.jpa.entity.PurchaseOrder();
@@ -128,8 +133,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         materialConstraint = new MaterialConstraint();
         initComponents();
 
-        setBridge1(configuration.getWb1Port() != null);
-        setBridge2(configuration.getWb2Port() != null);
+        resetBridges();
 
         formatter = new SimpleDateFormat();
         txfCurScale.setEditable(true);
@@ -1338,6 +1342,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         txtInTime.setText(null);
         txfGoodsQty.setValue(null);
         btnIScaleReset.setEnabled(false);
+        resetBridges();
         setSaveNeeded(isValidated());
     }//GEN-LAST:event_btnIScaleResetActionPerformed
 
@@ -1346,6 +1351,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
         txtOutTime.setText(null);
         txfGoodsQty.setValue(null);
         btnOScaleReset.setEnabled(false);
+        resetBridges();
         setSaveNeeded(isValidated());
     }//GEN-LAST:event_btnOScaleResetActionPerformed
 
@@ -2062,8 +2068,10 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             grbCat.clearSelection();
             config = WeighBridgeApp.getApplication().getConfig();
             btnSave.setEnabled(false);
-
+            setBridge1(configuration.getWb1Port() != null);
+            setBridge2(configuration.getWb2Port() != null);
         }
+
 
         @Override
         protected Object doInBackground() throws Exception {
@@ -3742,6 +3750,8 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             formatter.applyPattern(WeighBridgeApp.DATE_TIME_DISPLAY_FORMAT);
             Date now = weightTicketController.getServerTime();
             btnAccept.setEnabled(false);
+            setBridge1(false);
+            setBridge2(false);
             boolean checkVariant = false;
             boolean cementBag = false;
             if (isStage1()) {
@@ -3751,6 +3761,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     txfInQty.setValue(null);
                     txtInTime.setText(null);
                     btnOScaleReset.setEnabled(false);
+                    resetBridges();
                     return null;
                 }
                 txfInQty.setValue(txfCurScale.getValue());
@@ -3763,6 +3774,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     txfOutQty.setValue(null);
                     txtOutTime.setText(null);
                     btnOScaleReset.setEnabled(false);
+                    resetBridges();
                     return null;
                 }
                 txfOutQty.setValue(txfCurScale.getValue());
@@ -3782,6 +3794,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         txtOutTime.setText(null);
                         weightTicket.setGQty(null);
                         btnOScaleReset.setEnabled(false);
+                        resetBridges();
                         return null;
                     }
                 } else {
@@ -3794,6 +3807,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         txfGoodsQty.setValue(null);
                         weightTicket.setGQty(null);
                         btnOScaleReset.setEnabled(false);
+                        resetBridges();
                         return null;
                     }
                 }
@@ -3805,6 +3819,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     txtOutTime.setText(null);
                     weightTicket.setGQty(null);
                     btnOScaleReset.setEnabled(false);
+                    resetBridges();
                     return null;
                 } else if (configuration.getWeightLimit() > 0
                         && result > configuration.getWeightLimit()) {
@@ -3814,6 +3829,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     txtOutTime.setText(null);
                     weightTicket.setGQty(null);
                     btnOScaleReset.setEnabled(false);
+                    resetBridges();
                     return null;
                 }
                 //  check vehicle tonnage
@@ -3824,6 +3840,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     txtOutTime.setText(null);
                     weightTicket.setGQty(null);
                     btnOScaleReset.setEnabled(false);
+                    resetBridges();
                     return null;
                  }
 
@@ -3842,6 +3859,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         weightTicket.setGQty(null);
                         btnAccept.setEnabled(false);
                         btnOScaleReset.setEnabled(false);
+                        resetBridges();
                         return null;
                     }
                 }
@@ -3869,6 +3887,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         weightTicket.setGQty(null);
                         btnAccept.setEnabled(false);
                         btnOScaleReset.setEnabled(false);
+                        resetBridges();
                         return null;
                     }
 
@@ -3930,6 +3949,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                             weightTicket.setGQty(null);
                             btnAccept.setEnabled(false);
                             btnOScaleReset.setEnabled(false);
+                            resetBridges();
                             return null;
                         }
                     } else {
@@ -3949,6 +3969,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                         txtOutTime.setText(null);
                         weightTicket.setGQty(null);
                         btnOScaleReset.setEnabled(false);
+                        resetBridges();
                     }
                 } else {
                     if (weightTicket.getMode().equals("OUT_SELL_ROAD")
@@ -3986,6 +4007,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                                 weightTicket.setGQty(null);
                                 btnAccept.setEnabled(false);
                                 btnOScaleReset.setEnabled(false);
+                                resetBridges();
                                 return null;
                             }
                         } else if ((result > reqQty)) {
@@ -3997,6 +4019,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                             weightTicket.setGQty(null);
                             btnAccept.setEnabled(false);
                             btnOScaleReset.setEnabled(true);
+                            resetBridges();
                             return null;
                         }
                     }
