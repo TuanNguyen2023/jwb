@@ -3746,7 +3746,6 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
         @Override
         protected Object doInBackground() throws Exception {
-            WeighBridgeApp.getApplication().disconnectWB();
             formatter.applyPattern(WeighBridgeApp.DATE_TIME_DISPLAY_FORMAT);
             Date now = weightTicketController.getServerTime();
             btnAccept.setEnabled(false);
