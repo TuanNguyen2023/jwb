@@ -5,12 +5,14 @@
 package com.gcs.wb.jpa.repositorys;
 
 import com.gcs.wb.WeighBridgeApp;
+import com.gcs.wb.base.constant.Constants;
 import com.gcs.wb.base.util.ExceptionUtil;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.Configuration;
 import com.gcs.wb.jpa.entity.Material;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -103,6 +105,7 @@ public class MaterialRepository {
             typedQuery.setParameter("matnr", matnr);
             List<Material> materials = typedQuery.getResultList();
             list = materials.stream()
+                    .filter(t -> !Objects.equals(t.getLvorm(), Constants.CharacterType.DELETION))
                     .map(t -> t.getLgort())
                     .filter(t -> t != null && !t.isEmpty())
                     .distinct()
@@ -128,6 +131,7 @@ public class MaterialRepository {
             typedQuery.setParameter("matnrs", matnrs);
             List<Material> materials = typedQuery.getResultList();
             list = materials.stream()
+                    .filter(t -> !Objects.equals(t.getLvorm(), Constants.CharacterType.DELETION))
                     .map(t -> t.getLgort())
                     .filter(t -> t != null && !t.isEmpty())
                     .distinct()
