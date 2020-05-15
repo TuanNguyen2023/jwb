@@ -361,9 +361,4 @@ public class Constants {
 
         public static final String PARVW = "WE";
     }
-
-    public static final class CharacterType {
-
-        public static final Character DELETION = 'X';
-    }
 }
