@@ -228,7 +228,7 @@ public class AppConfig {
         config.setProperty(WB_ID, Base64_Utils.encodeNTimes(wbId));
         this.wbId = wbId;
     }
-    
+
     /**
      * Auto Sync Boolean
      * @return the Auto Sync

@@ -1938,7 +1938,7 @@ private void txtTrailerNoNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:
     txtTrailerNoN.setText(trailerNo.toUpperCase());
 
     validateForm();
-    
+
     String tonnageValue = txtPlateNoN.getText().trim();
     if (!StringUtil.isEmptyString(trailerNo)) {
         tonnageValue = trailerNo;
@@ -2963,7 +2963,7 @@ private void txtPOSTONumNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
         duplicateDialog.setModal(false);
         duplicateDialog.setVisible(true);
     }
-    
+
     private boolean validateVehicleTonnage() {
         boolean result = true;
 

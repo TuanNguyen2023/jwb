@@ -732,7 +732,7 @@ public class WeightTicket implements Serializable {
 
         return weightTicketDetails.get(0);
     }
-    
+
     public BigDecimal getTotalWeight() {
         BigDecimal result = BigDecimal.ZERO;
         if (!weightTicketDetails.isEmpty()) {

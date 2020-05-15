@@ -385,7 +385,7 @@ public class WeightTicketService {
         BigDecimal kl_km = BigDecimal.ZERO;
         BigDecimal kl_total = BigDecimal.ZERO;
 
-        if (outbDel != null 
+        if (outbDel != null
                 && wt.getMode().equals("IN_WAREHOUSE_TRANSFER")
                 && checkBagCement(weightTicketDetail.getMatnrRef())) {
             kl = outbDel.getLfimg();
