@@ -3753,8 +3753,9 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
             setBridge2(false);
             boolean checkVariant = false;
             boolean cementBag = false;
+            BigDecimal acceptedScale = new BigDecimal(((Number) txfCurScale.getValue()).doubleValue());
             if (isStage1()) {
-                double dIn = ((Number) txfCurScale.getValue()).doubleValue();
+                double dIn = acceptedScale.doubleValue();
                 if (dIn < 0) {
                     JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.massOrderInvalid"));
                     txfInQty.setValue(null);
@@ -3763,11 +3764,11 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     resetBridges();
                     return null;
                 }
-                txfInQty.setValue(txfCurScale.getValue());
+                txfInQty.setValue(acceptedScale);
                 txtInTime.setText(formatter.format(now));
                 btnIScaleReset.setEnabled(true);
             } else if (isStage2()) {
-                double dOut = ((Number) txfCurScale.getValue()).doubleValue();
+                double dOut = acceptedScale.doubleValue();
                 if (dOut < 0) {
                     JOptionPane.showMessageDialog(rootPane, resourceMapMsg.getString("msg.massOrderInvalid"));
                     txfOutQty.setValue(null);
@@ -3776,7 +3777,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     resetBridges();
                     return null;
                 }
-                txfOutQty.setValue(txfCurScale.getValue());
+                txfOutQty.setValue(acceptedScale);
                 txtOutTime.setText(formatter.format(now));
                 btnOScaleReset.setEnabled(true);
             }
@@ -4028,7 +4029,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                 }
             }
             if (isStage1()) {
-                txfInQty.setValue(txfCurScale.getValue());
+                txfInQty.setValue(acceptedScale);
                 txtInTime.setText(formatter.format(now));
                 weightTicket.setFCreator(WeighBridgeApp.getApplication().getLogin().getUid());
                 weightTicket.setFScale(new BigDecimal(((Number) txfInQty.getValue()).doubleValue()).setScale(3, RoundingMode.HALF_UP));
@@ -4057,14 +4058,14 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
                     }
                 }
             } else if (isStage2()) {
-                txfOutQty.setValue(txfCurScale.getValue());
+                txfOutQty.setValue(acceptedScale);
                 txtOutTime.setText(formatter.format(now));
                 weightTicket.setSCreator(WeighBridgeApp.getApplication().getLogin().getUid());
                 weightTicket.setSScale(new BigDecimal(((Number) txfOutQty.getValue()).doubleValue()).setScale(3, RoundingMode.HALF_UP));
                 weightTicket.setSTime(now);
                 lblOScale.setForeground(Color.black);
                 OutboundDeliveryDetail item;
-                double remain = (((Number) txfCurScale.getValue()).doubleValue() - ((Number) txfInQty.getValue()).doubleValue()) / 1000;
+                double remain = (acceptedScale.doubleValue() - ((Number) txfInQty.getValue()).doubleValue()) / 1000;
                 remain = Math.abs(remain);
 
                 // chia cân
