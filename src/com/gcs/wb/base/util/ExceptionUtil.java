@@ -8,6 +8,7 @@ package com.gcs.wb.base.util;
 import com.gcs.wb.WeighBridgeApp;
 import com.sap.conn.jco.JCoException;
 import com.gcs.wb.base.constant.Constants;
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 import javax.persistence.PersistenceException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -44,6 +45,8 @@ public class ExceptionUtil {
             }
         } else if (ex instanceof PersistenceException && ex.getCause() instanceof NullPointerException) {
             JOptionPane.showMessageDialog(mainFrame, Constants.Message.DB_DISCONNECTED);
+        } else if (ex instanceof SQLServerException) {
+            JOptionPane.showMessageDialog(mainFrame, Constants.Message.DB_DISCONNECTED);
         }
 
         sneakyThrow(ex);
@@ -56,6 +59,8 @@ public class ExceptionUtil {
                 return true;
             }
         } else if (ex instanceof PersistenceException && ex.getCause() instanceof NullPointerException) {
+            return true;
+        } else if (ex instanceof SQLServerException) {
             return true;
         }
 
