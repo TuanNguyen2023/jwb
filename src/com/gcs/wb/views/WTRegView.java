@@ -3601,49 +3601,54 @@ private void txtWeightNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
         }
 
         private void setWeightTicketData() {
-            for (int i = 0; i < weightTicketList.size(); i++) {
-                WeightTicket item = weightTicketList.get(i);
-                List<WeightTicketDetail> weightTicketDetails = item.getWeightTicketDetails();
-                wtData[i][0] = item.getSeqDay();
-                wtData[i][1] = item.getDriverName();
-                wtData[i][2] = item.getDriverIdNo();
-                wtData[i][3] = item.getPlateNo();
-                wtData[i][4] = item.getTrailerId();
-                wtData[i][5] = item.getRegType();
+            try {
+                for (int i = 0; i < weightTicketList.size(); i++) {
+                    WeightTicket item = weightTicketList.get(i);
+                    List<WeightTicketDetail> weightTicketDetails = item.getWeightTicketDetails();
+                    wtData[i][0] = item.getSeqDay();
+                    wtData[i][1] = item.getDriverName();
+                    wtData[i][2] = item.getDriverIdNo();
+                    wtData[i][3] = item.getPlateNo();
+                    wtData[i][4] = item.getTrailerId();
+                    wtData[i][5] = item.getRegType();
 
-                List<String> regItemDescriptions = new ArrayList<>();
-                for (WeightTicketDetail weightTicketDetail : weightTicketDetails) {
-                    String description = weightTicketDetail.getRegItemDescription();
-                    if (description != null && !description.isEmpty()) {
-                        regItemDescriptions.add(description);
+                    List<String> regItemDescriptions = new ArrayList<>();
+                    for (WeightTicketDetail weightTicketDetail : weightTicketDetails) {
+                        String description = weightTicketDetail.getRegItemDescription();
+                        if (description != null && !description.isEmpty()) {
+                            regItemDescriptions.add(description);
+                        }
+                    }
+
+                    wtData[i][6] = regItemDescriptions.size() > 0 ? String.join(" - ", regItemDescriptions) : "";
+
+                    BigDecimal sumRegQty = BigDecimal.ZERO;
+                    for (WeightTicketDetail wt : weightTicketDetails) {
+                        sumRegQty = sumRegQty.add(wt.getRegItemQuantity());
+                    }
+                    wtData[i][7] = sumRegQty;
+                    String[] doNums = weightTicketDetails.stream()
+                            .map(t -> t.getDeliveryOrderNo())
+                            .filter(t -> t != null)
+                            .toArray(String[]::new);
+                    wtData[i][8] = doNums.length > 0 ? String.join(" - ", doNums) : "";
+                    wtData[i][9] = item.getCreator();
+                    wtData[i][10] = item.getSeqMonth();
+                    wtData[i][11] = item.getCreatedDatetime();
+                    String time = item.getCreatedTime().replaceAll(":", "");
+                    String hh = time.substring(0, 2);
+                    String mm = time.substring(2, 4);
+                    String ss = time.substring(4, 6);
+                    wtData[i][12] = hh + ":" + mm + ":" + ss;
+                    if (item.isPosted()) {
+                        wtData[i][13] = true;
+                    } else {
+                        wtData[i][13] = false;
                     }
                 }
-
-                wtData[i][6] = regItemDescriptions.size() > 0 ? String.join(" - ", regItemDescriptions) : "";
-
-                BigDecimal sumRegQty = BigDecimal.ZERO;
-                for (WeightTicketDetail wt : weightTicketDetails) {
-                    sumRegQty = sumRegQty.add(wt.getRegItemQuantity());
-                }
-                wtData[i][7] = sumRegQty;
-                String[] doNums = weightTicketDetails.stream()
-                        .map(t -> t.getDeliveryOrderNo())
-                        .filter(t -> t != null)
-                        .toArray(String[]::new);
-                wtData[i][8] = doNums.length > 0 ? String.join(" - ", doNums) : "";
-                wtData[i][9] = item.getCreator();
-                wtData[i][10] = item.getSeqMonth();
-                wtData[i][11] = item.getCreatedDatetime();
-                String time = item.getCreatedTime().replaceAll(":", "");
-                String hh = time.substring(0, 2);
-                String mm = time.substring(2, 4);
-                String ss = time.substring(4, 6);
-                wtData[i][12] = hh + ":" + mm + ":" + ss;
-                if (item.isPosted()) {
-                    wtData[i][13] = true;
-                } else {
-                    wtData[i][13] = false;
-                }
+            } catch (Exception ex) {
+                logger.error(null, ex);
+                ExceptionUtil.checkDatabaseDisconnectedException(ex);
             }
         }
 
