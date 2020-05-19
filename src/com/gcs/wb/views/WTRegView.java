@@ -30,6 +30,7 @@ import com.gcs.wb.jpa.repositorys.MaterialGroupRepository;
 import com.gcs.wb.jpa.repositorys.MaterialInternalRepository;
 import com.gcs.wb.jpa.repositorys.OutboundDetailRepository;
 import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
+import com.gcs.wb.jpa.repositorys.SPValidateWTDataRepository;
 import com.gcs.wb.jpa.repositorys.WeightTicketDetailRepository;
 import com.gcs.wb.jpa.repositorys.WeightTicketRepository;
 import com.gcs.wb.model.WeighingMode;
@@ -120,6 +121,7 @@ public class WTRegView extends javax.swing.JInternalFrame {
     OutboundDetailRepository detailRepository = new OutboundDetailRepository();
     WeightTicketDetailRepository weightTicketDetailRepository = new WeightTicketDetailRepository();
     WeightTicketRepository weightTicketRepository = new WeightTicketRepository();
+    SPValidateWTDataRepository spValidateWTDataRepository = new SPValidateWTDataRepository();
 
     DefaultComboBoxModel materialModel = weightTicketRegistarationController.getListMaterial();
     DefaultComboBoxModel materialInternalModel = weightTicketRegistarationController.getListMaterialInternal();
@@ -1655,6 +1657,13 @@ private void txtWeightTickerRefNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-
 }//GEN-LAST:event_txtWeightTickerRefNKeyReleased
 
 private void txtRegisterIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRegisterIdNKeyReleased
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+        String registerId = txtRegisterIdN.getText().trim();
+        if (!registerId.isEmpty()) {
+            spValidateWTDataRepository.beforeRegistrationWT(registerId);
+        }
+    }
+
     validateForm();
 }//GEN-LAST:event_txtRegisterIdNKeyReleased
 
@@ -4438,6 +4447,8 @@ private void txtWeightNFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:eve
 
                 entityTransaction.commit();
                 entityManager.clear();
+                
+                spValidateWTDataRepository.afterRegistrationWT(newWeightTicket.getId(), newWeightTicket.getRegisteredNumber());
             } catch (Exception ex) {
                 throw ex;
             }
