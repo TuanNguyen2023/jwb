@@ -39,6 +39,7 @@ import com.gcs.wb.jpa.repositorys.MaterialInterPlantRepository;
 import com.gcs.wb.jpa.repositorys.MaterialInternalRepository;
 import com.gcs.wb.jpa.repositorys.MaterialRepository;
 import com.gcs.wb.jpa.repositorys.PurchaseOrderRepository;
+import com.gcs.wb.jpa.repositorys.SPValidateWTDataRepository;
 import com.gcs.wb.jpa.repositorys.VendorRepository;
 import com.gcs.wb.jpa.repositorys.WeightTicketDetailRepository;
 import com.gcs.wb.model.AppConfig;
@@ -106,6 +107,7 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
     ToleranceUtil toleranceUtil = new ToleranceUtil();
     MaterialRepository materialRepository = new MaterialRepository();
     MaterialInternalRepository materialInternalRepository = new MaterialInternalRepository();
+    SPValidateWTDataRepository spValidateWTDataRepository = new SPValidateWTDataRepository();
 
     WeightTicketController weightTicketController = new WeightTicketController();
     WeightTicketRegistarationController weightTicketRegistarationController = new WeightTicketRegistarationController();
@@ -3644,6 +3646,13 @@ public class WeightTicketView extends javax.swing.JInternalFrame {
 
             entityManager.getTransaction().commit();
             entityManager.clear();
+
+            if (isStage1()) {
+                spValidateWTDataRepository.inScaleWT(weightTicket.getId(), now);
+            } else if (isStage2()) {
+                spValidateWTDataRepository.outScaleWT(weightTicket.getId(), now);
+            }
+
             if (!weightTicket.isDissolved() || weightTicket.isPosted()) {
                 setMessage(resourceMapMsg.getString("msg.printing"));
                 printWT(weightTicket, false);

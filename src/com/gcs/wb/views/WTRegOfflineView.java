@@ -21,6 +21,7 @@ import com.gcs.wb.base.validator.DateFromToValidator;
 import com.gcs.wb.controller.WeightTicketRegistarationController;
 import com.gcs.wb.jpa.JPAConnector;
 import com.gcs.wb.jpa.entity.*;
+import com.gcs.wb.jpa.repositorys.SPValidateWTDataRepository;
 import com.gcs.wb.model.WeighingMode;
 import com.gcs.wb.views.validations.WeightTicketRegistrationValidation;
 import org.apache.log4j.Logger;
@@ -78,6 +79,7 @@ public class WTRegOfflineView extends javax.swing.JInternalFrame {
     private final DateFromToValidator dateFromToValidator = new DateFromToValidator();
     public static final String SDATE = "date";
     private WeightTicketRegistrationValidation wtRegisValidation;
+    SPValidateWTDataRepository spValidateWTDataRepository = new SPValidateWTDataRepository();
 
     DefaultComboBoxModel materialModel = weightTicketRegistarationController.getListMaterial();
     DefaultComboBoxModel materialInternalModel = weightTicketRegistarationController.getListMaterialInternal();
@@ -1562,6 +1564,13 @@ private void txtWeightTickerRefNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-
 }//GEN-LAST:event_txtWeightTickerRefNKeyReleased
 
 private void txtRegisterIdNKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRegisterIdNKeyReleased
+    if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+        String registerId = txtRegisterIdN.getText().trim();
+        if (!registerId.isEmpty()) {
+            spValidateWTDataRepository.beforeRegistrationWT(registerId);
+        }
+    }
+
     validateForm();
 }//GEN-LAST:event_txtRegisterIdNKeyReleased
 
@@ -3315,6 +3324,8 @@ private void txtPOSTONumNKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:ev
 
                 entityTransaction.commit();
                 entityManager.clear();
+                
+                spValidateWTDataRepository.afterRegistrationWT(newWeightTicket.getId(), newWeightTicket.getRegisteredNumber());
             } catch (Exception ex) {
                 throw ex;
             }
