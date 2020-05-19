@@ -21,6 +21,8 @@ import org.eclipse.persistence.exceptions.DatabaseException;
 public class ExceptionUtil {
 
     static JFrame mainFrame = WeighBridgeApp.getApplication().getMainFrame();
+    
+    static final String TIMEOUT_CODE = "HY008";
 
     public static <E extends Throwable> void sneakyThrow(Throwable e) throws E {
         throw (E) e;
@@ -40,14 +42,23 @@ public class ExceptionUtil {
     public static void checkDatabaseDisconnectedException(Exception ex) {
         if (ex.getCause() instanceof DatabaseException) {
             DatabaseException dbex = (DatabaseException) ex.getCause();
+            if (dbex.getCause() instanceof SQLServerException) {
+                SQLServerException dbtimeout = (SQLServerException) dbex.getCause();
+                if(TIMEOUT_CODE.equalsIgnoreCase(dbtimeout.getSQLState())) {
+                     JOptionPane.showMessageDialog(mainFrame, Constants.Message.DB_DISCONNECTED);
+                }
+            }                
             if (dbex.isCommunicationFailure()) {
                 JOptionPane.showMessageDialog(mainFrame, Constants.Message.DB_DISCONNECTED);
             }
         } else if (ex instanceof PersistenceException && ex.getCause() instanceof NullPointerException) {
             JOptionPane.showMessageDialog(mainFrame, Constants.Message.DB_DISCONNECTED);
-        } else if (ex instanceof SQLServerException) {
-            JOptionPane.showMessageDialog(mainFrame, Constants.Message.DB_DISCONNECTED);
-        }
+        } else if (ex.getCause()  instanceof SQLServerException) {
+            SQLServerException dbtimeout = (SQLServerException) ex.getCause();
+            if(TIMEOUT_CODE.equalsIgnoreCase(dbtimeout.getSQLState())) {
+                 JOptionPane.showMessageDialog(mainFrame, Constants.Message.DB_DISCONNECTED);
+            }
+        } 
 
         sneakyThrow(ex);
     }
@@ -58,11 +69,20 @@ public class ExceptionUtil {
             if (dbex.isCommunicationFailure()) {
                 return true;
             }
+            if (dbex.getCause() instanceof SQLServerException) {
+                SQLServerException dbtimeout = (SQLServerException) dbex.getCause();
+                if(TIMEOUT_CODE.equalsIgnoreCase(dbtimeout.getSQLState())) {
+                     return true;
+                }
+            }  
         } else if (ex instanceof PersistenceException && ex.getCause() instanceof NullPointerException) {
             return true;
-        } else if (ex instanceof SQLServerException) {
-            return true;
-        }
+        } else if (ex.getCause() instanceof SQLServerException) {
+            SQLServerException dbtimeout = (SQLServerException) ex.getCause();
+            if(TIMEOUT_CODE.equalsIgnoreCase(dbtimeout.getSQLState())) {
+                 return true;
+            }
+        } 
 
         return false;
     }
