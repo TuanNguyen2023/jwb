@@ -87,9 +87,6 @@ public class SyncMasterDataService {
         logger.info("Sync PO, POSTO..." + (forceStop?" Canceled":""));
         syncPoPostoDatas();
 
-        logger.info("Sync SO..." + (forceStop?" Canceled":""));
-        syncSoDatas();
-
         logger.info("Sync customer..." + (forceStop?" Canceled":""));
         syncCustomer();
 
@@ -137,11 +134,6 @@ public class SyncMasterDataService {
         logger.info("Sync PO, POSTO...");
         if (!purchaseOrderRepository.hasData()) {
             syncPoPostoDatas();
-        }
-
-        logger.info("Sync SO...");
-        if (!saleOrderRepository.hasData()) {
-            syncSoDatas();
         }
 
         logger.info("Sync customer...");
