@@ -21,7 +21,7 @@ import org.hibersap.annotations.Table;
 @Bapi(BOMReadConstants.BAPI_NAME)
 public class BOMReadBapi implements Serializable {
 
-    /**Material*/
+    /**Material ntest */
     @Import
     @Parameter(BOMReadConstants.MATERIAL)
     private String _material;
@@ -63,6 +63,7 @@ public class BOMReadBapi implements Serializable {
      */
     public void setBom_usage(String bom_usage) {
         this._bom_usage = bom_usage;
+        string sstr = "";
     }
 
     /**
