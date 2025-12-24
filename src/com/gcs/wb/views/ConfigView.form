@@ -1,0 +1,874 @@
+<?xml version="1.1" encoding="UTF-8" ?>
+
+<Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
+  <Properties>
+    <Property name="defaultCloseOperation" type="int" value="2"/>
+    <Property name="title" type="java.lang.String" resourceKey="Form.title"/>
+    <Property name="modal" type="boolean" value="true"/>
+    <Property name="name" type="java.lang.String" value="Form" noResource="true"/>
+    <Property name="resizable" type="boolean" value="false"/>
+  </Properties>
+  <SyntheticProperties>
+    <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+  </SyntheticProperties>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="2"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="pnMySQLCon" alignment="0" max="32767" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="pnSAPConfig" max="32767" attributes="2"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="pnWorkingPlant" pref="178" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="pnWB1Config" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="pnWB2Config" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Component id="syncIconLoading" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="lblSyncData" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="336" max="32767" attributes="0"/>
+                      <Component id="btnSave" min="-2" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" max="-2" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="pnMySQLCon" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="pnWorkingPlant" pref="146" max="32767" attributes="1"/>
+                  <Component id="pnSAPConfig" alignment="0" max="32767" attributes="1"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="pnWB2Config" max="32767" attributes="1"/>
+                  <Component id="pnWB1Config" alignment="0" max="32767" attributes="1"/>
+              </Group>
+              <EmptySpace max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="btnSave" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblSyncData" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Component id="syncIconLoading" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="32767" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Container class="javax.swing.JPanel" name="pnMySQLCon">
+      <Properties>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+            <TitledBorder title="Thi&#x1ebf;t l&#x1ead;p k&#x1ebf;t n&#x1ed1;i m&#xe1;y ch&#x1ee7; CSDL SQL Server">
+              <Property name="titleX" resourceKey="pnMySQLCon.border.title"/>
+            </TitledBorder>
+          </Border>
+        </Property>
+        <Property name="name" type="java.lang.String" value="pnMySQLCon" noResource="true"/>
+      </Properties>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Component id="lblDBUsr" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblDBHost" alignment="1" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="btnCheckDbConnection" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="iconLoading" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="txtDBUsr" pref="174" max="32767" attributes="2"/>
+                              <Component id="txtDBHost" pref="174" max="32767" attributes="2"/>
+                          </Group>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="lblDBName" min="-2" max="-2" attributes="0"/>
+                              <Component id="lblDBPwd" min="-2" pref="62" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Component id="txtDBPwd" pref="174" max="32767" attributes="2"/>
+                              <Component id="txtDBName" alignment="1" pref="174" max="32767" attributes="2"/>
+                          </Group>
+                      </Group>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="txtDBHost" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblDBHost" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtDBName" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblDBName" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblDBUsr" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtDBUsr" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtDBPwd" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblDBPwd" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="btnCheckDbConnection" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="iconLoading" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JLabel" name="lblDBHost">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" resourceKey="lblDBHost.text"/>
+            <Property name="name" type="java.lang.String" value="lblDBHost" noResource="true"/>
+            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[60, 14]"/>
+            </Property>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtDBHost">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="txtDBHost" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtDBHostKeyReleased"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblDBName">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblDBName.text"/>
+            <Property name="name" type="java.lang.String" value="lblDBName" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtDBName">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="txtDBName" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtDBNameKeyReleased"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblDBUsr">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblDBUsr.text"/>
+            <Property name="name" type="java.lang.String" value="lblDBUsr" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtDBUsr">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="txtDBUsr" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtDBUsrKeyReleased"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblDBPwd">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="text" type="java.lang.String" resourceKey="lblDBPwd.text"/>
+            <Property name="name" type="java.lang.String" value="lblDBPwd" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JPasswordField" name="txtDBPwd">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="txtDBPwd" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtDBPwdKeyReleased"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btnCheckDbConnection">
+          <Properties>
+            <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+              <action class="com.gcs.wb.views.ConfigView" id="checkDbConnection" methodName="checkDbConnection"/>
+            </Property>
+            <Property name="text" type="java.lang.String" resourceKey="btnCheckDbConnection.text"/>
+            <Property name="name" type="java.lang.String" value="btnCheckDbConnection" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="org.jdesktop.swingx.JXBusyLabel" name="iconLoading">
+          <Properties>
+            <Property name="busy" type="boolean" value="true"/>
+            <Property name="direction" type="org.jdesktop.swingx.JXBusyLabel$Direction" editor="org.netbeans.modules.form.editors.EnumEditor">
+              <Value id="RIGHT"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="iconLoading" noResource="true"/>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JPanel" name="pnSAPConfig">
+      <Properties>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+            <TitledBorder title="Thi&#x1ebf;t l&#x1ead;p k&#x1ebf;t n&#x1ed1;i m&#xe1;y ch&#x1ee7; SAP">
+              <Property name="titleX" resourceKey="pnSAPConfig.border.title"/>
+            </TitledBorder>
+          </Border>
+        </Property>
+        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[247, 84]"/>
+        </Property>
+        <Property name="name" type="java.lang.String" value="pnSAPConfig" noResource="true"/>
+      </Properties>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Component id="lblRString" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblHost" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblSapUsername" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblSapPassword" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="txtSapPassword" pref="137" max="32767" attributes="0"/>
+                      <Component id="txtSapUpsername" alignment="0" pref="137" max="32767" attributes="0"/>
+                      <Component id="txtRString" alignment="0" pref="137" max="32767" attributes="2"/>
+                      <Component id="txtHost" alignment="0" pref="137" max="32767" attributes="2"/>
+                  </Group>
+                  <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                      <Component id="lblDClient" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblSId" alignment="1" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Component id="txtDClient" alignment="1" min="-2" pref="34" max="-2" attributes="1"/>
+                      <Component id="txtSNo" alignment="0" min="-2" pref="34" max="-2" attributes="1"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblHost" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtHost" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtSNo" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblSId" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblRString" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtRString" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtDClient" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblDClient" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblSapUsername" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtSapUpsername" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="txtSapPassword" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblSapPassword" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace pref="18" max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JLabel" name="lblHost">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblHost.text"/>
+            <Property name="name" type="java.lang.String" value="lblHost" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtHost">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="txtHost" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtHostKeyReleased"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblSId">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblSId.text"/>
+            <Property name="name" type="java.lang.String" value="lblSId" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JFormattedTextField" name="txtSNo">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="name" type="java.lang.String" value="txtSNo" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtSNoKeyReleased"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblRString">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblRString.text"/>
+            <Property name="name" type="java.lang.String" value="lblRString" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtRString">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="txtRString" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtRStringKeyReleased"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblDClient">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblDClient.text"/>
+            <Property name="name" type="java.lang.String" value="lblDClient" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JFormattedTextField" name="txtDClient">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
+            <Property name="name" type="java.lang.String" value="txtDClient" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtDClientKeyReleased"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblSapUsername">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblSapUsername.text"/>
+            <Property name="name" type="java.lang.String" value="lblSapUsername" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblSapPassword">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblSapPassword.text"/>
+            <Property name="name" type="java.lang.String" value="lblSapPassword" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtSapUpsername">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="txtSapUpsername.text"/>
+            <Property name="name" type="java.lang.String" value="txtSapUpsername" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtSapUpsernameKeyReleased"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JPasswordField" name="txtSapPassword">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="txtSapPassword.text"/>
+            <Property name="name" type="java.lang.String" value="txtSapPassword" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtSapPasswordKeyReleased"/>
+          </Events>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JPanel" name="pnWB1Config">
+      <Properties>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+            <TitledBorder title="Thi&#x1ebf;t l&#x1ead;p c&#x1ea7;u c&#xe2;n 1">
+              <Property name="titleX" resourceKey="pnWB1Config.border.title"/>
+            </TitledBorder>
+          </Border>
+        </Property>
+        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[230, 170]"/>
+        </Property>
+        <Property name="name" type="java.lang.String" value="pnWB1Config" noResource="true"/>
+      </Properties>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Component id="lblPort1" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblSpeed1" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblDataBits1" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblStopBits1" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblPControl1" alignment="1" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="chbAutoSignal1" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="chbMettler1" alignment="0" max="32767" attributes="0"/>
+                      <Component id="cbxSpeed1" pref="165" max="32767" attributes="0"/>
+                      <Component id="cbxPort1" alignment="0" pref="165" max="32767" attributes="0"/>
+                      <Component id="cbxDataBits1" alignment="0" pref="165" max="32767" attributes="0"/>
+                      <Component id="cbxStopBits1" alignment="0" pref="165" max="32767" attributes="0"/>
+                      <Component id="cbxPControl1" alignment="0" pref="165" max="32767" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblPort1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="cbxPort1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblSpeed1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="cbxSpeed1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblDataBits1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="cbxDataBits1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblStopBits1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="cbxStopBits1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblPControl1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="cbxPControl1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="chbMettler1" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="chbAutoSignal1" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="12" max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JLabel" name="lblPort1">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblPort1.text"/>
+            <Property name="name" type="java.lang.String" value="lblPort1" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbxPort1">
+          <Properties>
+            <Property name="editable" type="boolean" value="true"/>
+            <Property name="name" type="java.lang.String" value="cbxPort1" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbxPort1ItemStateChanged"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblSpeed1">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblSpeed1.text"/>
+            <Property name="name" type="java.lang.String" value="lblSpeed1" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbxSpeed1">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="getSpeedModel()" type="code"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="cbxSpeed1" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbxSpeed1ItemStateChanged"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblDataBits1">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblDataBits1.text"/>
+            <Property name="name" type="java.lang.String" value="lblDataBits1" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbxDataBits1">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="getDBitsModel()" type="code"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="cbxDataBits1" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbxDataBits1ItemStateChanged"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblStopBits1">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblStopBits1.text"/>
+            <Property name="name" type="java.lang.String" value="lblStopBits1" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbxStopBits1">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="getSBitsModel()" type="code"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="cbxStopBits1" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbxStopBits1ItemStateChanged"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblPControl1">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblPControl1.text"/>
+            <Property name="name" type="java.lang.String" value="lblPControl1" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbxPControl1">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="getParityModel()" type="code"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="cbxPControl1" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbxPControl1ItemStateChanged"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="chbMettler1">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="chbMettler1.text"/>
+            <Property name="name" type="java.lang.String" value="chbMettler1" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="chbAutoSignal1">
+          <Properties>
+            <Property name="selected" type="boolean" value="true"/>
+            <Property name="text" type="java.lang.String" resourceKey="chbAutoSignal1.text"/>
+            <Property name="name" type="java.lang.String" value="chbAutoSignal1" noResource="true"/>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JPanel" name="pnWB2Config">
+      <Properties>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+            <TitledBorder title="Thi&#x1ebf;t l&#x1ead;p c&#x1ea7;u c&#xe2;n 2">
+              <Property name="titleX" resourceKey="pnWB2Config.border.title"/>
+            </TitledBorder>
+          </Border>
+        </Property>
+        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[230, 170]"/>
+        </Property>
+        <Property name="name" type="java.lang.String" value="pnWB2Config" noResource="true"/>
+      </Properties>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Component id="lblPort2" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblSpeed2" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblDataBits2" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblStopBits2" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblPControl2" alignment="1" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="chbAutoSignal2" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="chbMettler2" alignment="0" max="32767" attributes="0"/>
+                      <Component id="cbxSpeed2" alignment="0" pref="165" max="32767" attributes="0"/>
+                      <Component id="cbxPort2" alignment="0" pref="165" max="32767" attributes="0"/>
+                      <Component id="cbxDataBits2" alignment="0" pref="165" max="32767" attributes="0"/>
+                      <Component id="cbxStopBits2" alignment="0" pref="165" max="32767" attributes="0"/>
+                      <Component id="cbxPControl2" alignment="0" pref="165" max="32767" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblPort2" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="cbxPort2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblSpeed2" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="cbxSpeed2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblDataBits2" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="cbxDataBits2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblStopBits2" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="cbxStopBits2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblPControl2" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="cbxPControl2" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="chbMettler2" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="chbAutoSignal2" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="12" max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JLabel" name="lblPort2">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblPort2.text"/>
+            <Property name="name" type="java.lang.String" value="lblPort2" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbxPort2">
+          <Properties>
+            <Property name="editable" type="boolean" value="true"/>
+            <Property name="name" type="java.lang.String" value="cbxPort2" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbxPort2ItemStateChanged"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblSpeed2">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblSpeed2.text"/>
+            <Property name="name" type="java.lang.String" value="lblSpeed2" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbxSpeed2">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="getSpeedModel()" type="code"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="cbxSpeed2" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbxSpeed2ItemStateChanged"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblDataBits2">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblDataBits2.text"/>
+            <Property name="name" type="java.lang.String" value="lblDataBits2" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbxDataBits2">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="getDBitsModel()" type="code"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="cbxDataBits2" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbxDataBits2ItemStateChanged"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblStopBits2">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblStopBits2.text"/>
+            <Property name="name" type="java.lang.String" value="lblStopBits2" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbxStopBits2">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="getSBitsModel()" type="code"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="cbxStopBits2" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbxStopBits2ItemStateChanged"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblPControl2">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblPControl2.text"/>
+            <Property name="name" type="java.lang.String" value="lblPControl2" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="cbxPControl2">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+              <Connection code="getParityModel()" type="code"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="cbxPControl2" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cbxPControl2ItemStateChanged"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="chbMettler2">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="chbMettler2.text"/>
+            <Property name="name" type="java.lang.String" value="chbMettler2" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="chbAutoSignal2">
+          <Properties>
+            <Property name="selected" type="boolean" value="true"/>
+            <Property name="text" type="java.lang.String" resourceKey="chbAutoSignal2.text"/>
+            <Property name="name" type="java.lang.String" value="chbAutoSignal2" noResource="true"/>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JPanel" name="pnWorkingPlant">
+      <Properties>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+          <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+            <TitledBorder title="Thi&#x1ebf;t l&#x1ead;p Plant">
+              <Property name="titleX" resourceKey="pnWorkingPlant.border.title"/>
+            </TitledBorder>
+          </Border>
+        </Property>
+        <Property name="name" type="java.lang.String" value="pnWorkingPlant" noResource="true"/>
+        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[640, 69]"/>
+        </Property>
+      </Properties>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="jLabel1" max="32767" attributes="1"/>
+                      <Component id="lblPlant" alignment="0" max="32767" attributes="1"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="txtWBID" max="32767" attributes="1"/>
+                      <Component id="txtPlant" alignment="0" pref="66" max="32767" attributes="1"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="lblPlant" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtPlant" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="txtWBID" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace pref="72" max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JLabel" name="lblPlant">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="lblPlant.text"/>
+            <Property name="name" type="java.lang.String" value="lblPlant" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtPlant">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="txtPlant" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtPlantKeyReleased"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtWBID">
+          <Properties>
+            <Property name="name" type="java.lang.String" value="txtWBID" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel1">
+          <Properties>
+            <Property name="text" type="java.lang.String" resourceKey="jLabel1.text"/>
+            <Property name="name" type="java.lang.String" value="jLabel1" noResource="true"/>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Component class="javax.swing.JButton" name="btnSave">
+      <Properties>
+        <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+          <action class="com.gcs.wb.views.ConfigView" id="saveConfig" methodName="saveConfig"/>
+        </Property>
+        <Property name="text" type="java.lang.String" resourceKey="btnSave.text"/>
+        <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[85, 23]"/>
+        </Property>
+        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[85, 23]"/>
+        </Property>
+        <Property name="name" type="java.lang.String" value="btnSave" noResource="true"/>
+        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="null"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="org.jdesktop.swingx.JXBusyLabel" name="syncIconLoading">
+      <Properties>
+        <Property name="busy" type="boolean" value="true"/>
+        <Property name="direction" type="org.jdesktop.swingx.JXBusyLabel$Direction" editor="org.netbeans.modules.form.editors.EnumEditor">
+          <Value id="RIGHT"/>
+        </Property>
+        <Property name="name" type="java.lang.String" value="syncIconLoading" noResource="true"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblSyncData">
+      <Properties>
+        <Property name="text" type="java.lang.String" resourceKey="lblSyncData.text"/>
+        <Property name="name" type="java.lang.String" value="lblSyncData" noResource="true"/>
+      </Properties>
+    </Component>
+  </SubComponents>
+</Form>

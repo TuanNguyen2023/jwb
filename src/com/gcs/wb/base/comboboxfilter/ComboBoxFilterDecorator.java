@@ -1,0 +1,234 @@
+package com.gcs.wb.base.comboboxfilter;
+
+import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.function.BiPredicate;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
+public class ComboBoxFilterDecorator<T> {
+
+    private JComboBox<T> comboBox;
+    private BiPredicate<T, String> userFilter;
+    private Function<T, String> comboDisplayTextMapper;
+    java.util.List<T> originalItems;
+    private Object selectedItem;
+    private FilterEditor filterEditor;
+    private String oldText = "";
+
+    public ComboBoxFilterDecorator(JComboBox<T> comboBox,
+            BiPredicate<T, String> userFilter,
+            Function<T, String> comboDisplayTextMapper) {
+        this.comboBox = comboBox;
+        this.userFilter = userFilter;
+        this.comboDisplayTextMapper = comboDisplayTextMapper;
+    }
+
+    public static <T> ComboBoxFilterDecorator<T> decorate(JComboBox<T> comboBox,
+            Function<T, String> comboDisplayTextMapper,
+            BiPredicate<T, String> userFilter) {
+        ComboBoxFilterDecorator decorator
+                = new ComboBoxFilterDecorator(comboBox, userFilter, comboDisplayTextMapper);
+        decorator.init();
+        return decorator;
+    }
+
+    private void init() {
+        prepareComboFiltering();
+        initComboPopupListener();
+        initComboKeyListener();
+    }
+
+    private void prepareComboFiltering() {
+        DefaultComboBoxModel<T> model = (DefaultComboBoxModel<T>) comboBox.getModel();
+        this.originalItems = new ArrayList<>();
+        for (int i = 0; i < model.getSize(); i++) {
+            this.originalItems.add(model.getElementAt(i));
+        }
+
+        filterEditor = new FilterEditor(comboDisplayTextMapper, new Consumer<Boolean>() {
+            //editing mode (commit/cancel) change listener
+            @Override
+            public void accept(Boolean aBoolean) {
+                if (aBoolean) {//commit
+                    selectedItem = comboBox.getSelectedItem();
+                } else {//rollback to the last one
+                    if (selectedItem != null) {
+                        comboBox.setSelectedItem(selectedItem);
+                        filterEditor.setItem(selectedItem);
+                    }
+                }
+            }
+        });
+
+        JTextField filterText = filterEditor.getFilterText();
+        filterEditor.getFilterText().setCaretPosition(0);
+        filterText.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                oldText = filterEditor.getFilterText().getText();
+                if (comboBox.getSelectedIndex() == -1) {
+                    oldText = "";
+                }
+                filterEditor.getFilterText().selectAll();
+
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                filterEditor.getFilterText().setCaretPosition(0);
+            }
+        });
+
+        comboBox.setEditor(filterEditor);
+        comboBox.setEditable(true);
+    }
+
+    private void initComboKeyListener() {
+        filterEditor.getFilterText().addKeyListener(
+                new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                char keyChar = e.getKeyChar();
+                if (!Character.isDefined(keyChar)) {
+                    return;
+                }
+                int keyCode = e.getKeyCode();
+                switch (keyCode) {
+                    case KeyEvent.VK_DELETE:
+                        return;
+                    case KeyEvent.VK_ENTER:
+                        selectedItem = comboBox.getSelectedItem();
+                        resetFilterComponent();
+                        return;
+                    case KeyEvent.VK_ESCAPE:
+                        resetFilterComponent();
+                        return;
+                    case KeyEvent.VK_BACK_SPACE:
+                        filterEditor.removeCharAtEnd();
+                        break;
+                    default:
+                        filterEditor.addChar(keyChar);
+                }
+                if (!comboBox.isPopupVisible()) {
+                    comboBox.showPopup();
+                }
+                if (filterEditor.isEditing() && filterEditor.getText().length() >= 0) {
+                    applyFilter();
+                } else {
+                    comboBox.hidePopup();
+                    resetFilterComponent();
+                }
+            }
+        }
+        );
+    }
+
+    public Supplier<String> getFilterTextSupplier() {
+        return () -> {
+            if (filterEditor.isEditing()) {
+                return filterEditor.getFilterText().getText();
+            }
+            return "";
+        };
+    }
+
+    private void initComboPopupListener() {
+        comboBox.addPopupMenuListener(new PopupMenuListener() {
+            @Override
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+            }
+
+            @Override
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                selectedItem = comboBox.getSelectedItem();
+                resetFilterComponent();
+            }
+
+            @Override
+            public void popupMenuCanceled(PopupMenuEvent e) {
+                selectedItem = comboBox.getSelectedItem();
+                resetFilterComponent();
+                if ("".equals(filterEditor.getFilterText().getText())) {
+                    filterEditor.getFilterText().setText(oldText);
+                }
+                if (selectedItem == null && comboBox.getSelectedItem() == null) {
+                    filterEditor.getFilterText().setText("");
+                }
+
+                resetFilterComponent();
+            }
+        });
+    }
+
+    public void resetFilterComponent() {
+        if (!filterEditor.isEditing()) {
+            return;
+        }
+        //restore original order
+        DefaultComboBoxModel<T> model = (DefaultComboBoxModel<T>) comboBox.getModel();
+        model.removeAllElements();
+        for (T item : originalItems) {
+            model.addElement(item);
+        }
+        filterEditor.reset();
+        selectedItem = null;
+    }
+
+    private void applyFilter() {
+        DefaultComboBoxModel<T> model = (DefaultComboBoxModel<T>) comboBox.getModel();
+        model.removeAllElements();
+        java.util.List<T> filteredItems = new ArrayList<>();
+        //add matched items at top
+        for (T item : originalItems) {
+            String text = filterEditor.getFilterText().getText();
+            String saveText = filterEditor.getText();
+
+            if (text.length() < saveText.length()) {
+                text += saveText.charAt(saveText.length() - 1);
+            } else if (text.length() > saveText.length()) {
+                text = text.substring(0, text.length() - 1);
+            }
+
+            if (userFilter.test(item, text)) {
+                model.addElement(item);
+            } else {
+                filteredItems.add(item);
+            }
+        }
+
+        //red color when no match
+        filterEditor.getFilterText()
+                .setForeground(model.getSize() == 0
+                        ? Color.red : UIManager.getColor("Label.foreground"));
+        //add unmatched items
+        filteredItems.forEach(model::addElement);
+    }
+
+    public void updateCombobox(JComboBox<T> comboBox) {
+        this.comboBox = comboBox;
+        init();
+    }
+
+    public boolean isEditing() {
+        return filterEditor.isEditing();
+    }
+
+    public void selectedItemDenied() {
+        resetFilterComponent();
+        filterEditor.getFilterText().setText("");
+        comboBox.setSelectedIndex(-1);
+    }
+}

@@ -1,0 +1,78 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.gcs.wb.jpa.repositorys;
+
+import com.gcs.wb.base.util.ExceptionUtil;
+import com.gcs.wb.jpa.JPAConnector;
+import com.gcs.wb.jpa.entity.SchedulerSync;
+import java.util.Date;
+import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.TypedQuery;
+import org.apache.log4j.Logger;
+
+/**
+ *
+ * @author TaiTQ
+ */
+public class SchedulerSyncRepository {
+
+    private Logger logger = Logger.getLogger(this.getClass());
+    EntityManager entityManager = JPAConnector.getInstance();
+    EntityTransaction entityTransaction = entityManager.getTransaction();
+
+    public SchedulerSync findByParamMandtWplant(String mandt, String wplant) {
+        SchedulerSync result = null;
+        try {
+            entityManager.clear();
+            TypedQuery<SchedulerSync> query = entityManager.createNamedQuery("SchedulerSync.findByMandtWplant", SchedulerSync.class);
+            query.setParameter("mandt", mandt);
+            query.setParameter("wplant", wplant);
+            List<SchedulerSync> schedulerSync = query.getResultList();
+            if (schedulerSync != null && schedulerSync.size() > 0) {
+                return schedulerSync.get(0);
+            }
+        } catch (Exception ex) {
+            logger.error(null, ex);
+            ExceptionUtil.checkDatabaseDisconnectedException(ex);
+        }
+
+        return result;
+    }
+
+    public synchronized void updateLastSync(SchedulerSync ss, boolean isAuto) {
+        SchedulerSync schedulerSync;
+        entityManager = JPAConnector.getInstance();
+        entityTransaction = entityManager.getTransaction();
+        schedulerSync = findByParamMandtWplant(ss.getMandt(), ss.getWplant());
+        if (schedulerSync != null) {
+            if (isAuto) {
+                schedulerSync.setLastAutoSync(ss.getLastAutoSync());
+                schedulerSync.setAutoSyncStatus(ss.getAutoSyncStatus());
+            } else {
+                schedulerSync.setLastManualSync(ss.getLastManualSync());
+                schedulerSync.setManualSyncStatus(ss.getManualSyncStatus());
+            }
+        }
+
+        try {
+            if (!entityTransaction.isActive()) {
+                entityTransaction.begin();
+            }
+
+            if (schedulerSync == null) {
+                entityManager.persist(ss);
+            } else {
+                entityManager.merge(schedulerSync);
+            }
+            entityTransaction.commit();
+            entityManager.clear();
+        } catch (Exception ex) {
+            throw ex;
+        }
+    }
+}
